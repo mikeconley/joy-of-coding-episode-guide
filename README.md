@@ -17,3 +17,7 @@ We should have an index page that lists links to each episodes guide, which natu
 Each guide should link to the various streams that exist for that particular episode. I think it'd be a good idea to have a copy of each agenda in each folder as well. Normally, I'd balk at that kind of redundancy, but these agenda's don't change much after the episodes change, and I'd like to ensure that these guides can mostly stand on their own.
 
 Beyond that, I'm not sure how to structure these things. Let's just make them as useful as possible.
+
+# Index
+
+- [Episode 0098](episode-0098/README.md)
