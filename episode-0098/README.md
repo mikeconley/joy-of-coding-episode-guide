@@ -1,5 +1,7 @@
-## Episode 0098
+## [Episode 0098](https://www.evernote.com/shard/s434/sh/5c5f542f-50dd-4742-ab59-6fb1c3af99ca/4ced5bddf183caad)
 **April 19th, 2017**
+
+### Watch this episode: https://air.mozilla.org/the-joy-of-coding-episode-98/
 
 **Reminder - no plan survives breakfast.**
 
