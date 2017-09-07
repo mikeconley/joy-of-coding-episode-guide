@@ -20,6 +20,7 @@ Beyond that, I'm not sure how to structure these things. Let's just make them as
 
 # Index
 
+## 2015
 - [Episode 0001](episode-0001/README.md)
 - [Episode 0002](episode-0002/README.md)
 - [Episode 0003](episode-0003/README.md)
@@ -58,7 +59,10 @@ Beyond that, I'm not sure how to structure these things. Let's just make them as
 - [Episode 0036](episode-0036/README.md)
 - [Episode 0037](episode-0037/README.md)
 - [Episode 0038](episode-0038/README.md)
+
+## 2016
 - [Episode 0039](episode-0039/README.md)
+
 - [Episode 0040](episode-0040/README.md)
 - [Episode 0041](episode-0041/README.md)
 - [Episode 0042](episode-0042/README.md)
@@ -104,6 +108,8 @@ Beyond that, I'm not sure how to structure these things. Let's just make them as
 - [Episode 0082](episode-0082/README.md)
 - [Episode 0083](episode-0083/README.md)
 - [Episode 0084](episode-0084/README.md)
+
+## 2017
 - [Episode 0085](episode-0085/README.md)
 - [Episode 0086](episode-0086/README.md)
 - [Episode 0087](episode-0087/README.md)
