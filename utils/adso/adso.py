@@ -4,10 +4,12 @@ import argparse
 import logging
 import os
 import progressbar
+import re
 import requests
 import subprocess
 import sys
 import scipy.io.wavfile as wav
+import textwrap
 
 
 from deepspeech.model import Model
@@ -40,6 +42,15 @@ VALID_WORD_COUNT_WEIGHT = 1.00
 AUDIO_SEGMENT_SAMPLES = 16000 * 5 # 5 seconds
 
 DOWNLOAD_CHUNK_SIZE = 4096 # bytes
+
+MAX_CAPTION_WIDTH = 40
+
+INFERENCE_REPLACEMENTS = {
+  "i": "I",
+  "im": "I'm",
+  "joy of coding": "Joy of Coding",
+}
+
 
 def sample_index_to_time(index):
     duration_seconds = index / 16000
@@ -138,6 +149,11 @@ WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
 
         if not inference:
             continue
+
+        for search, replace in INFERENCE_REPLACEMENTS.iteritems():
+            inference = re.sub(r"\b" + search + r"\b", replace, inference)
+
+        inference = textwrap.fill(inference, width=MAX_CAPTION_WIDTH)
 
         start = WebVTTTime(start_hours, start_minutes, start_seconds)
         end = WebVTTTime(end_hours, end_minutes, end_seconds)
