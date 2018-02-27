@@ -6,9 +6,9 @@ Adso is named after the character Adso of Melk from Umberto Eco's [The Name of t
 
 ## Usage
 
-You must ensure that the WAV file has a sample rate of 16000hz (you can use [Audacity](https://www.audacityteam.org/) to convert if needs be) and is 16-bit.
+A recent version of `[ffmpeg](https://www.ffmpeg.org/)` must be available on the system for Adso to work properly.
 
-I recommend creating a [virtualenv](https://virtualenv.pypa.io/en/stable/) while working with Adso.
+I also recommend creating a [virtualenv](https://virtualenv.pypa.io/en/stable/) while working with Adso.
 
 Once inside your virtual environment, install the dependencies:
 
@@ -16,10 +16,10 @@ Once inside your virtual environment, install the dependencies:
 
 And then [download the pre-trained speech and language models for Mozilla Deepspeech](https://github.com/mozilla/DeepSpeech/releases). This should be the `deepspeech-x.x.x-models.tar.gz` file. Decompress that file somewhere, and then you can use Adso like so:
 
-    python adso.py --wav <path-to-wave> --deepspeech-model-dir <path-to-deepspeech-model> --output <name-of-VTT-output>
+    python adso.py --vid-url <URL-to-video> --deepspeech-model-dir <path-to-deepspeech-model> --output <name-of-VTT-output>
 
 Example:
 
-    python adso.py --wav JoC129.wav --deepspeech-model-dir ~/Projects/deepspeech-model --output JoC129.vtt
+    python adso.py --vid-url "https://vid.ly/i6y5i9?content=video&format=webm" --deepspeech-model-dir ~/Projects/deepspeech-model --output JoC129.vtt
 
-Then sit back and wait. The transcription might take a few hours depending on the speed of your machine.
+Then sit back and wait a while. The transcription might take a few hours depending on the speed of your machine.

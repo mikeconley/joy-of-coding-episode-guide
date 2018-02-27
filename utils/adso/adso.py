@@ -4,13 +4,14 @@ import argparse
 import logging
 import os
 import progressbar
+import requests
+import subprocess
 import sys
-
-
 import scipy.io.wavfile as wav
 
 
 from deepspeech.model import Model
+from tempfile import NamedTemporaryFile, mkstemp
 from pyvtt import (WebVTTFile,
                    WebVTTItem,
                    WebVTTTime)
@@ -38,6 +39,7 @@ VALID_WORD_COUNT_WEIGHT = 1.00
 
 AUDIO_SEGMENT_SAMPLES = 16000 * 5 # 5 seconds
 
+DOWNLOAD_CHUNK_SIZE = 4096 # bytes
 
 def sample_index_to_time(index):
     duration_seconds = index / 16000
@@ -46,11 +48,53 @@ def sample_index_to_time(index):
     return duration_hours, duration_minutes, duration_seconds
 
 
+def run_ffmpeg(args):
+    try:
+        all_args = ["ffmpeg"] + args
+        print "Running: %s" % (' '.join(all_args))
+        subprocess.call(["ffmpeg"] + args)
+        return True
+    except OSError as e:
+        return False
+
+
 def main(options):
+    # Ensure ffmpeg is around
+    if not run_ffmpeg(['-version']):
+        logging.error("ffmpeg needs to be available to strip audio from the video file.")
+        sys.exit(1)
+
+    with NamedTemporaryFile(delete=True) as vid_file:
+        logging.info("Downloading %s - this might take a while." % options.vid_url)
+        response = requests.get(options.vid_url, stream=True)
+        total_length = response.headers.get("content-length")
+        if total_length is None: # no content length header
+            logging.info("Unknown length - can't predict how long this will take.")
+            f.write(response.content)
+        else:
+            bar = progressbar.ProgressBar(max_value=int(total_length))
+            dl = 0
+            for data in response.iter_content(chunk_size=DOWNLOAD_CHUNK_SIZE):
+                dl += len(data)
+                vid_file.write(data)
+                vid_file.flush()
+                bar.update(dl)
+
+        logging.info("Download done. Stripping audio.")
+        (wav_file, wav_file_name) = mkstemp('.wav')
+        result = run_ffmpeg(["-i", vid_file.name, "-vn", "-acodec", "pcm_s16le",
+                            "-ar", "16000", "-ac", "1", wav_file_name])
+        if not result:
+            os.close(wav_file)
+            logging.error("ffmpeg failed. Bailing.")
+            sys.exit(1)
+
+        fs, audio = wav.read(wav_file_name)
+        os.close(wav_file)
+
     logging.info("Will write VTT to %s" % options.output)
     # Make sure the WAV is to code...
-    logging.info("Loading up WAV file at %s..." % options.wav)
-    fs, audio = wav.read(options.wav)
+    logging.info("Loading up WAV file...")
 
     if fs != 16000:
         logging.error("Only 16000hz WAV files are usable.")
@@ -112,8 +156,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--deepspeech-model-dir", type=str, required=True,
                         help="The folder where the Deepspeech pre-trained model is.")
-    parser.add_argument("--wav", type=str, required=True,
-                        help="16-bit 16000hz WAV to attempt to auto-transcribe.")
+    parser.add_argument("--vid-url", type=str, required=True,
+                        help="URL of video to download, strip audio and transcribe.")
     parser.add_argument("--output", type=str, required=True,
                         help="Place to write the WebVTT output.")
     parser.add_argument("--verbose", action="store_true",
