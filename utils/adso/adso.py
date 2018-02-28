@@ -11,13 +11,9 @@ import sys
 import scipy.io.wavfile as wav
 import textwrap
 
-
 from deepspeech.model import Model
 from tempfile import NamedTemporaryFile, mkstemp
-from pyvtt import (WebVTTFile,
-                   WebVTTItem,
-                   WebVTTTime)
-
+from pyvtt import (WebVTTFile, WebVTTItem, WebVTTTime)
 
 MODEL_DIR = "models"
 MODEL_FILE = "output_graph.pb"
@@ -39,19 +35,19 @@ WORD_COUNT_WEIGHT = 1.00
 # when the inserted word is part of the vocabulary
 VALID_WORD_COUNT_WEIGHT = 1.00
 
-AUDIO_SEGMENT_SAMPLES = 16000 * 5 # 5 seconds
+AUDIO_SEGMENT_SAMPLES = 16000 * 5  # 5 seconds
 
-DOWNLOAD_CHUNK_SIZE = 4096 # bytes
+DOWNLOAD_CHUNK_SIZE = 4096  # bytes
 
 MAX_CAPTION_WIDTH = 40
 
 INFERENCE_REPLACEMENTS = {
-  "cant": "can't",
-  "dont": "don't",
-  "i": "I",
-  "im": "I'm",
-  "joy of coding": "Joy of Coding",
-  "mike": "Mike",
+    "cant": "can't",
+    "dont": "don't",
+    "i": "I",
+    "im": "I'm",
+    "joy of coding": "Joy of Coding",
+    "mike": "Mike",
 }
 
 
@@ -75,15 +71,18 @@ def run_ffmpeg(args):
 def main(options):
     # Ensure ffmpeg is around
     if not run_ffmpeg(['-version']):
-        logging.error("ffmpeg needs to be available to strip audio from the video file.")
+        logging.error(
+            "ffmpeg needs to be available to strip audio from the video file.")
         sys.exit(1)
 
     with NamedTemporaryFile(delete=True) as vid_file:
-        logging.info("Downloading %s - this might take a while." % options.vid_url)
+        logging.info(
+            "Downloading %s - this might take a while." % options.vid_url)
         response = requests.get(options.vid_url, stream=True)
         total_length = response.headers.get("content-length")
-        if total_length is None: # no content length header
-            logging.info("Unknown length - can't predict how long this will take.")
+        if total_length is None:  # no content length header
+            logging.info(
+                "Unknown length - can't predict how long this will take.")
             f.write(response.content)
         else:
             bar = progressbar.ProgressBar(max_value=int(total_length))
@@ -96,8 +95,10 @@ def main(options):
 
         logging.info("Download done. Stripping audio.")
         (wav_file, wav_file_name) = mkstemp('.wav')
-        result = run_ffmpeg(["-y", "-i", vid_file.name, "-vn", "-acodec", "pcm_s16le",
-                            "-ar", "16000", "-ac", "1", wav_file_name])
+        result = run_ffmpeg([
+            "-y", "-i", vid_file.name, "-vn", "-acodec", "pcm_s16le", "-ar",
+            "16000", "-ac", "1", wav_file_name
+        ])
         if not result:
             os.close(wav_file)
             logging.error("ffmpeg failed. Bailing.")
@@ -115,8 +116,10 @@ def main(options):
         sys.exit(1)
 
     total_samples = len(audio)
-    duration_hours, duration_minutes, duration_seconds = sample_index_to_time(len(audio))
-    logging.info("Approximate duration: %d:%02d:%02d" % (duration_hours, duration_minutes, duration_seconds))
+    duration_hours, duration_minutes, duration_seconds = sample_index_to_time(
+        len(audio))
+    logging.info("Approximate duration: %d:%02d:%02d" %
+                 (duration_hours, duration_minutes, duration_seconds))
 
     # Let's load up DeepSpeech and get it ready.
     logging.info("Loading pre-trained DeepSpeech model...")
@@ -132,7 +135,7 @@ def main(options):
 
     logging.info("Loading language model...")
     deepspeech.enableDecoderWithLM(alphabet, lang_model, trie, LM_WEIGHT,
-WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
+                                   WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
     logging.info("Done loading model.")
 
     playhead = 0
@@ -146,7 +149,8 @@ WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
         inference = deepspeech.stt(segment, fs)
         logging.debug("Inferred: %s" % inference)
 
-        start_hours, start_minutes, start_seconds = sample_index_to_time(playhead)
+        start_hours, start_minutes, start_seconds = sample_index_to_time(
+            playhead)
         playhead = end_point
         end_hours, end_minutes, end_seconds = sample_index_to_time(playhead)
 
@@ -173,14 +177,25 @@ WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--deepspeech-model-dir", type=str, required=True,
-                        help="The folder where the Deepspeech pre-trained model is.")
-    parser.add_argument("--vid-url", type=str, required=True,
-                        help="URL of video to download, strip audio and transcribe.")
-    parser.add_argument("--output", type=str, required=True,
-                        help="Place to write the WebVTT output.")
-    parser.add_argument("--verbose", action="store_true",
-                        help="Print debugging messages to the console.")
+    parser.add_argument(
+        "--deepspeech-model-dir",
+        type=str,
+        required=True,
+        help="The folder where the Deepspeech pre-trained model is.")
+    parser.add_argument(
+        "--vid-url",
+        type=str,
+        required=True,
+        help="URL of video to download, strip audio and transcribe.")
+    parser.add_argument(
+        "--output",
+        type=str,
+        required=True,
+        help="Place to write the WebVTT output.")
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Print debugging messages to the console.")
 
     options, extra = parser.parse_known_args(sys.argv[1:])
 
