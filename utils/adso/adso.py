@@ -46,9 +46,12 @@ DOWNLOAD_CHUNK_SIZE = 4096 # bytes
 MAX_CAPTION_WIDTH = 40
 
 INFERENCE_REPLACEMENTS = {
+  "cant": "can't",
+  "dont": "don't",
   "i": "I",
   "im": "I'm",
   "joy of coding": "Joy of Coding",
+  "mike": "Mike",
 }
 
 
@@ -93,7 +96,7 @@ def main(options):
 
         logging.info("Download done. Stripping audio.")
         (wav_file, wav_file_name) = mkstemp('.wav')
-        result = run_ffmpeg(["-i", vid_file.name, "-vn", "-acodec", "pcm_s16le",
+        result = run_ffmpeg(["-i", "-y", vid_file.name, "-vn", "-acodec", "pcm_s16le",
                             "-ar", "16000", "-ac", "1", wav_file_name])
         if not result:
             os.close(wav_file)
