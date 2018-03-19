@@ -151,7 +151,7 @@ def main(options):
         playhead = end_point
         end_hours, end_minutes, end_seconds = sample_index_to_time(playhead)
 
-        if not inference:
+        if not inference or inference == "ah":
             continue
 
         for search, replace in INFERENCE_REPLACEMENTS.iteritems():
