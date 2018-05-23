@@ -164,3 +164,6 @@ Beyond that, I'm not sure how to structure these things. Let's just make them as
 - [Episode 0134](episode-0134/README.md)
 - [Episode 0135](episode-0135/README.md)
 - [Episode 0136](episode-0136/README.md)
+- [Episode 0137](episode-0137/README.md)
+- [Episode 0138](episode-0138/README.md)
+- [Episode 0139](episode-0139/README.md)
