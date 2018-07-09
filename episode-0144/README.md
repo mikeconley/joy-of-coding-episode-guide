@@ -7,9 +7,8 @@
     * [Here is a spreadsheet](https://docs.google.com/spreadsheets/d/1LiDWBkZ762LZQDYyFPmiXEGCJLT7cnLiAh3inehjdWc/edit#gid=0) with current auto-transcription state
 
 ## Topics
-* *[Bug 1469825](https://bugzilla.mozilla.org/show_bug.cgi?id=1469825) - Intermittent browser/components/places/tests/browser/browser_bookmarkProperties_newFolder.js | Test timed out -
-    * [Discovery!](https://bugzilla.mozilla.org/show_bug.cgi?id=1469825#c7)
+* [Bug 1469825](https://bugzilla.mozilla.org/show_bug.cgi?id=1469825) - Intermittent browser/components/places/tests/browser/browser_bookmarkProperties_newFolder.js | Test timed out -
+  * [Discovery!](https://bugzilla.mozilla.org/show_bug.cgi?id=1469825#c7)
 * [Bug 1420103](https://bugzilla.mozilla.org/show_bug.cgi?id=1420103) - Intermittent toolkit/components/satchel/test/test_form_autocomplete.html | Autocomplete popup not expected during test 253
-
 * [Getting L1 Commit Access](https://www.mozilla.org/en-US/about/governance/policies/commit/access-policy/)
   * [Follow this Procedure](https://www.mozilla.org/en-US/about/governance/policies/commit/)
