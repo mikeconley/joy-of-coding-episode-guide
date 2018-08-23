@@ -26,17 +26,16 @@ $ git pull upstream master && git push origin master
 Change to the project directory
 $ cd joy-of-coding-episode-guide
 
-
 $ git pull origin master
 
 $ git pull upstream master
 
-Create a new brach named like episode1234
+Create a new branch named like episode1234
 $ git checkout -b episodeBranch
 
 # Do work...
 
-Add the newly created folder and READNE.md file
+Add the newly created folder and README.md file, and then update the index.
 $ git add episode-0123
 
 Commit the changes
