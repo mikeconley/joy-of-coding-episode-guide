@@ -16,7 +16,8 @@
  - security.insecure_connection_icon.enabled
  - security.insecure_connection_text.enabled
 * [Bug1480951](https://bugzilla.mozilla.org/show_bug.cgi?id=1480951) - Cleared sessionStorage is resurrected when reopening Firefox
-* TODO :_ File a bug for how crazy DevTools was today, graphically. Super-flashy!
+* File a bug for how crazy DevTools was today, graphically. Super-flashy!
+  * Update: [This got fixed here!](https://bugzilla.mozilla.org/show_bug.cgi?id=1488889)
 * No stream next week
 
 ## Episode 150 ideas?!
