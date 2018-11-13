@@ -7,8 +7,7 @@
 ## Topics
 * Update: [Bug 1498233](https://bugzilla.mozilla.org/show_bug.cgi?id=1498233) - Password Doorhanger is not displayed using custom tabs
 * [Bug 1504133](https://bugzilla.mozilla.org/show_bug.cgi?id=1504133) - sessionrestore seems broken in general
-* [Bug 1505314](https://bugzilla.mozilla.org/show_bug.cgi?id=1505314) - 
-[Linux] Titlebar is no longer hidden
+* [Bug 1505314](https://bugzilla.mozilla.org/show_bug.cgi?id=1505314) - [Linux] Titlebar is no longer hidden
 
 
 ## Other
