@@ -7,7 +7,7 @@
 ## Topics
 * [Bug 1510631](https://bugzilla.mozilla.org/show_bug.cgi?id=1510631) - toolbuttons placed next to menubar unexpectedly move to the right most end
 * [Bug 1505063](https://bugzilla.mozilla.org/show_bug.cgi?id=1505063) - [Firefox 65.0a1] - RDM toggle clears the address and local file rendering page empty - [Notes](https://www.evernote.com/l/AbL0lN7kfDFEN6fqxYgZE5OKUNiA0Vmdcds)
-* [
+
 ## Other
 * [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
 * [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
