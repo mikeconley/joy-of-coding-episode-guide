@@ -190,3 +190,4 @@ Beyond that, I'm not sure how to structure these things. Let's just make them as
 - [Episode 0160](episode-0160/README.md)
 
 ## 2019
+- [Episode 0161](episode-0161/README.md)
