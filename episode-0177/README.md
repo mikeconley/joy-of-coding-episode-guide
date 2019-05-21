@@ -1,4 +1,4 @@
-# Episode 177: May 8st, 2019
+# Episode 177: May 8th, 2019
 
 ## Links
 * [Watch this episode on new Air Mozilla](https://air.mozilla.org/event-redirect/329971/)
