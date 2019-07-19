@@ -1,62 +1,84 @@
-## First time, do : 
-Create github account via browser and http://www.github.com
+## How to Contribute
 
-Fork mikes repo from https://github.com/mikeconley/joy-of-coding-episode-guide
+### Getting Started
 
-When you are in your Forked copy, press the Clone or download green button on github.
-Press Use SSH and copy the git@ url
+1. If you don't already have a GitHub account, head over to
+   [their website][gh] to create one.
+2. [Create a fork and clone a copy][fork]
 
-Clone main repo
+If you're new to Git, here's some resources to help you:
 
-$ git clone git@github.com:<user>/joy-of-coding-episode-guide.git
+* https://learngitbranching.js.org/
+* https://github.com/jlord/git-it-electron#what-to-install
 
-Change into new project directory
+### Add a new episode
 
-$ cd joy-of-coding-episode-guide
+0. Go to your project directory
 
-Connect your local repo to the upstream repo
+   ```
+   cd /path/to/joy-of-coding-episode-guide
+   ```
+0. Update your master branch
+   
+   ```
+   git pull upstream master
+   ```
+0. Create a new branch (e.g add-episode-1234)
 
-$ git remote add upstream git@github.com:mikeconley/joy-of-coding-episode-guide.git
+   ```
+   git checkout -b add-episode-1234
+   ```
+0. Create a new folder in the `_episodes` folder. The name of your folder should
+   be composed of 4 digits (e.g 1234 for the episode 1234).
+0. Create an `index.md` file inside your newly created folder.
+0. Copy and paste the following template inside the `index.md` file.
 
-Checkout the Master branch
+   ```
+   ---
+   layout: default
+   date: YYYY-MM-DD
+   number: 1234
+   ---
+   
+   ## Episode 1234: MMM DD, YYYY
 
-$ git checkout master
+   ### Links
+   
+   ### Topics
+   
+   ### Other
+   ```
+0. Edit your `index.md` as needed. You can look other episodes' files to see an
+   example.
+0. Save your changes to your fork
+   
+   ```
+   git add 1234
+   git commit -m "add episode 1234
+   git push origin add-episode-1234
+   ```
+0. [Open a Pull Request][pr] and wait for Mike to merge it.
 
-$ git pull upstream master && git push origin master
+### Run a copy of the website locally
 
- 
-## Every other time, do :
+0. [Install Jekyll][jekyll-doc]
+0. Go to your project directory
 
-Change to the project directory
+   ```
+   cd /path/to/joy-of-coding-episode-guide
+   ```
+0. Install the dependencies 
 
-$ cd joy-of-coding-episode-guide
+   ```
+   bundle install --path vendor/bundle
+   ```
+0. Run Jekyll
 
-$ git pull origin master
+   ```
+   bundle exec jekyll serve
+   ```
 
-$ git pull upstream master
-
-Create a new branch named like episode1234
-
-$ git checkout -b episodeBranch
-
-Do your work...
-
-Add the newly created folder and README.md file, and then update the index.
-
-$ git add episode-0123
-
-Add a new line to the README.md file in the joy-of-coding-episode-guide folder.
-
-
-Commit the changes
-
-$ git commit -m 'new episode 1234'
-
-Push your commit to the remote master branch
-
-$  git push -u origin episodeBranch
-
-In your browser, visit https://github.com/mikeconley/joy-of-coding-episode-guide
-
-Press Compare & pull request
-
+[fork]: https://help.github.com/en/articles/fork-a-repo
+[gh]: https://github.com
+[jekyll-doc]: https://jekyllrb.com/docs/
+[pr]: https://help.github.com/en/articles/creating-a-pull-request-from-a-fork
