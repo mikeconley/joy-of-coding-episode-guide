@@ -1,0 +1,27 @@
+<h2>Index</h2>
+
+{% assign episodes = (site.episodes | sort: 'number') | reverse %}
+{% for episode in episodes %}
+  {% assign currentdate = episode.date | date: "%Y" %}
+ 
+  {% if currentdate != date %}
+   
+    {% unless forloop.first %}
+      </ul>
+    {% endunless %}
+ 
+    <h3 id="year-{{episode.date | date: "%Y"}}">{{ currentdate }}</h3>
+    <ul>
+    {% assign date = currentdate %}
+  {% endif %}
+ 
+  <li>
+    <a href="{{ episode.url }}">
+      Episode {{ episode.number }} - {{ episode.date | date: "%b %d, %Y" }}
+    </a>
+  </li>
+  
+  {% if forloop.last %}
+    </ul>
+  {% endif %}
+{% endfor %}
