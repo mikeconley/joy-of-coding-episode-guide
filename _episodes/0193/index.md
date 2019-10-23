@@ -18,7 +18,7 @@ number: 193
 * ./mach doc path/to/doc - will create a local documentation similar to https://firefox-source-docs.mozilla.org 
 * Deepdive into how ./mach doc works
 * After disabling 'sphinx_js' in conf.py things started working
-* Check your version of [Nodes compatability](https://node.green)
+* Check [Node.js compatability] with various JavaScript features (https://node.green)
 
 * [Rate this episode](https://forms.gle/81V9s2Dxua6S4EVM7)
 
