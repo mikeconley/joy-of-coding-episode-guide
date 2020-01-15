@@ -20,7 +20,7 @@ number: 202
   - Announcement from [Mozilla](https://discourse.mozilla.org/t/synchronous-messaging-at-mozilla-the-decision/50620)
   - Announcement from [Matrix](https://matrix.org/blog/2019/12/19/welcoming-mozilla-to-matrix/)
 * Nightly had its [About dialog](https://bugzilla.mozilla.org/show_bug.cgi?id=1607557) looking funky
-  - It was indeed fixed the in next build
+  - It was indeed fixed in the next build
 * No stream on January 29th or February 5th because Mike is away
 * Mike sports a Moustache
 * Mike has a new Microphone
