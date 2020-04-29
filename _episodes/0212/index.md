@@ -20,7 +20,7 @@ number: 212
     it will then stop your browser, download a new snapshot, and you write wether its a good or bad build. Repeat until your window of when the bug appeared is so small its easy to find what revision it might have been introduced in.
 * Was using the Browser Toolbox to debug the problem
 * Getting started [Contributing](https://codetribute.mozilla.org/) to Mozilla
-  - you can if you want, use Git to contribute to Mozilla aswell as Mercurial
+  - you can if you want, use Git to contribute to Mozilla as well as Mercurial
 
 * [Rate this episode](https://forms.gle/apF6hWYmKwiPbmPr7)
 
