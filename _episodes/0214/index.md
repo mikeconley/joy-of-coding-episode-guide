@@ -12,7 +12,7 @@ number: 214
 
 ## Topics
 * Pandemic edition! Mike is streaming from home! Let's hope the wifi holds out
-* Going back to no backround music. Better?
+* Going back to no background music. Better?
 * [Bug 1630234](https://bugzilla.mozilla.org/show_bug.cgi?id=1630234) - About:newtab does not maintain the scroll position after navigating back to the page - [Notes](https://www.evernote.com/l/AbIdnKfcU55Crbvs2mH5Ysin-kPmufiV4rQ)
 * Telemetry network request during tests
 * [Bug 1633913](https://bugzilla.mozilla.org/show_bug.cgi?id=1633913) - Eliminate re-construction of Top Sites and Pocket stories when about:home startup cache loads before Activity Stream initializes
