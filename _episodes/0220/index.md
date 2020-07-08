@@ -4,7 +4,7 @@ date: 2020-07-01
 number: 220
 ---
 
-# Episode 220: Jul 1st, 2020
+# Episode 220: July 1st, 2020
 
 ## Links
 * [Watch this episode on Air Mozilla](https://air.mozilla.org/event-redirect/408806/)
@@ -12,10 +12,10 @@ number: 220
 
 ## Topics
 * Pandemic edition! Mike is streaming from home! Let's hope the wifi holds out
-* Special guest [Yori Wims](https://twitter.com/_yourijwims_)
-* Getting started with firefox [contribution](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Introduction)
+* Special guest [Youri Wims](https://twitter.com/_yourijwims_)
+* Getting started with Firefox [contribution](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Introduction)
   - Quick [reference](https://firefox-source-docs.mozilla.org/contributing/contribution_quickref.html)
-  - Walkthrough of bugzilla
+  - Walkthrough of Bugzilla
 * [Bug 1646958](https://bugzilla.mozilla.org/show_bug.cgi?id=1646958) - The text on the Global Sharing Overlay (when sharing screen) is not displayed correctly when in high contrast on Windows/dark theme on Linux 
 * [Bug 1649032](https://bugzilla.mozilla.org/show_bug.cgi?id=1649032) - If the user closes the WebRTC sharing indicator, all streams should close
 * Shout out to [Compiler Compiler](https://www.twitch.tv/codehag) live stream
