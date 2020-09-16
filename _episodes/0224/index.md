@@ -18,7 +18,7 @@ number: 224
 * [Bug 1643027](https://bugzilla.mozilla.org/show_bug.cgi?id=1643027) - [UX] The "Mute Mic" and "Mute Camera" buttons open the "Permissions" tab instead of muting the mic/camera - [Notes](https://www.evernote.com/l/AbKMRYJF6klGIZeZUNFW-dkvRco1Hp-DsMc)
 * Spicy [Ginger beer](https://www.youtube.com/watch?v=LqPko6a3Wh4) recipe
 * You there, file better performance issue related bugs, so Mozilla can help!
-* Aswell, if you want to help influence Mozillas decision, enable Telemetry
+* As well, if you want to help influence Mozilla's decisions, enable Telemetry
 * If you want to customize your [New tab](https://addons.mozilla.org/en-US/firefox/addon/new-tab-override/) in Firefox
 
 * [Rate this episode](https://forms.gle/FYv7NNuQQVS4ynso9)
