@@ -16,14 +16,6 @@ number: 225
 * Bug ?????? - Add icons to the System Tray on Windows when sharing devices over WebRTC.
 * Rap for nalexander
 * Mike goes left side
-* [Bug 1661304](https://bugzilla.mozilla.org/show_bug.cgi?id=1661304) - Add an API for privileged front-end code to add BHR annotations - [Notes](https://www.evernote.com/l/AbKyddDyw1JEXbFhaMjZVn6SZ4-c6nyWC8w)
-  - [Design-ish](https://docs.google.com/document/d/11zJ7FEiaP_rFsBRnxdnmhiyKcIVf5vCumTZziqODZVs/edit#) document
-* [Fenix issue](https://github.com/mozilla-mobile/fenix/issues/14034) for allowing arbitrary addons installed in Nightly
-* [Bug 1643027](https://bugzilla.mozilla.org/show_bug.cgi?id=1643027) - [UX] The "Mute Mic" and "Mute Camera" buttons open the "Permissions" tab instead of muting the mic/camera - [Notes](https://www.evernote.com/l/AbKMRYJF6klGIZeZUNFW-dkvRco1Hp-DsMc)
-* Spicy [Ginger beer](https://www.youtube.com/watch?v=LqPko6a3Wh4) recipe
-* You there, file better performance issue related bugs, so Mozilla can help!
-* Aswell, if you want to help influence Mozillas decision, enable Telemetry
-* If you want to customize your [New tab](https://addons.mozilla.org/en-US/firefox/addon/new-tab-override/) in Firefox
 
 * [Rate this episode](https://forms.gle/D7uJ3GTfxZBqGMne7)
 
