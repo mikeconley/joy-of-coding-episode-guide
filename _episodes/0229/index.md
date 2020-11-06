@@ -8,7 +8,7 @@ number: 229
 
 ## Links
 * [Watch this episode on Air Mozilla](https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=98c9ce8d-43e2-41eb-b708-ac5b0183ff75)
-* [Evernote Agenda](https://www.evernote.com/shard/s434/client/snv?noteGuid=ee0610e7-c047-4ce1-9f82-3e31da3c43e4&noteKey=9048655339a9fcb9&sn=https%3A%2F%2Fwww.evernote.com%2Fshard%2Fs434%2Fsh%2Fee0610e7-c047-4ce1-9f82-3e31da3c43e4%2F9048655339a9fcb9&title=September%2B30th%252C%2B2020%2B-%2BEpisode%2B227)
+* [Evernote Agenda](https://www.evernote.com/shard/s434/client/snv?noteGuid=f3114a27-213c-437a-8be6-be4c5936c293&noteKey=fe3ed8cc280c028d&sn=https%3A%2F%2Fwww.evernote.com%2Fshard%2Fs434%2Fsh%2Ff3114a27-213c-437a-8be6-be4c5936c293%2Ffe3ed8cc280c028d&title=October%2B21st%252C%2B2020%2B-%2BEpisode%2B229)
 
 ## Topics
 * Pandemic edition! Mike is streaming from home!
