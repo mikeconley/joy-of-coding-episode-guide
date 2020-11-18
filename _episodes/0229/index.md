@@ -22,7 +22,7 @@ number: 229
 * [Bug 1672419](https://bugzilla.mozilla.org/show_bug.cgi?id=1672419) - WebRTC system tray context menu is positioned away from the icon with high DPI
 * Ideas for episode 250, please fill them in the Rate this episode form below.
 * moz-phab patch D12347 --apply-to here
-* There is a possibillity to pull from Try, don't try this at home kids : hg pull try -r <longID>
+* There is a possibility to pull from Try, don't try this at home kids : hg pull try -r <longID>
   - You might need try-server access to even read from try.
 * mach package will create binaries for Firefox under mozilla-central/obj-default/dist. 
 
