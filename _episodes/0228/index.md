@@ -16,7 +16,7 @@ number: 228
 * Making performance videos. Trying to add timestamps with [ffmpeg](https://ffmpeg.org/ffmpeg-filters.html)
   - Mike uses Camtasia for video editing
 * [Bug 1661304](https://bugzilla.mozilla.org/show_bug.cgi?id=1661304) - Add an API for privileged front-end code to add BHR annotations
-* Strings comming from JavaScript land is UTF16
+* Strings coming from JavaScript land is UTF-16 encoded.
 
 * [Rate this episode](https://forms.gle/V5oA3tQdcC7SY5ZF7)
 
