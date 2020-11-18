@@ -14,7 +14,7 @@ number: 231
 * Pandemic edition! Mike is streaming from home!
 * [Bug 1675062](https://bugzilla.mozilla.org/show_bug.cgi?id=1675062) - A snippet is wrongly displayed on the first New Tab to be opened after disabling Snippets - [Notes](https://www.evernote.com/l/AbLDTHhsrWlK_pUgnPCn_1R0IkrDN0ZFB5g)
 * Interesting happenings :
-  - Mikes blog about the about:home [startup cache](https://mikeconley.ca/blog/2020/07/13/improving-firefox-startup-time-with-the-abouthome-startup-cache/)
+  - Mike's blog about the about:home [startup cache](https://mikeconley.ca/blog/2020/07/13/improving-firefox-startup-time-with-the-abouthome-startup-cache/)
   - MDN Webdocs [evolves](https://hacks.mozilla.org/2020/10/mdn-web-docs-evolves-lowdown-on-the-upcoming-new-platform/)
   - The Thunderbird team considers using [TypeScript](https://www.youtube.com/watch?v=7AawNRseLvw)
 
