@@ -13,7 +13,7 @@ number: 250
 ## Topics
 * Pandemic edition! Mike is streaming from home!
 * Happy 250th episode! We did it!!! Lets watch an [old episode](https://www.youtube.com/watch?v=nCOeefQpg58) together.
-* Mike watches the 1st episode of The Joy of Coding, and gives feedback about what happend back then, and answers questions.
+* Mike watches the 1st episode of The Joy of Coding, and gives feedback about what happened back then, and answers questions.
 * Mozilla Hacks blog [Introducing Firefoxs new Site Isolation Security Architecture](https://hacks.mozilla.org/2021/05/introducing-firefox-new-site-isolation-security-architecture/) - Fission
 
 * [Rate this episode](https://forms.gle/BUgaYFCaASAuHdeQ7)
