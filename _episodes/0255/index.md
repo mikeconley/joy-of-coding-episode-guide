@@ -11,7 +11,6 @@ number: 255
 * [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0255.html)
 
 ## Topics
-* Pandemic edition! Mike is streaming from home!
 * [255](https://en.wikipedia.org/wiki/255_(number))
 * [Bug 1712750](https://bugzilla.mozilla.org/show_bug.cgi?id=1712750) - Clear Recent History modal has the Old UI
   - This landed! Check out the 2nd and 3rd patches in the series to get a sense of what got fixed.
@@ -19,9 +18,9 @@ number: 255
 * Did not get to these : 
   - [Bug 1717225](https://bugzilla.mozilla.org/show_bug.cgi?id=1717225) - Bookmarks menu popup doesn't have a border
   - [Bug 1720269](https://bugzilla.mozilla.org/show_bug.cgi?id=1720269) - The Folder icon changes its state when hovered over in about:downloads
-* Mikes good mic is working again.
+* Mike's good mic is working again.
 * Aligning things is hard
-* Prioritizing in firefox
+* Prioritizing in Firefox
   - P1 = Someone is working on it right now
   - P2 = After the P1 is done, we will work on this
   - Prioritizing differs between different mozilla projects
