@@ -14,8 +14,8 @@ number: 252
 * Pandemic edition! Mike is streaming from home!
 * Palindrome episode
 * [Bug 1712750](https://bugzilla.mozilla.org/show_bug.cgi?id=1712750) - Clear Recent History modal has the Old UI
-* hg rebase -r revision --dest central  to rebase revision on top of central
-* hg update -r tip  to then update to that change
+* `hg rebase -r revision --dest central`  to rebase revision on top of central
+* `hg update -r tip`  to then update to that change
 * Mike has updated Sublime Text to v4
 * Deepdive into freemusicarchive.org's audio settings
 * [Capstone](https://www.capstone.cse.msu.edu) works with Mozilla to learn students about opensource
