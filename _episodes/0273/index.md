@@ -1,7 +1,7 @@
 ---
 layout: default
 date: 2021-12-15
-number: 274
+number: 273
 ---
 
 # Episode 273: Dec 15th, 2021
