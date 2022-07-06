@@ -11,7 +11,7 @@ number: 291
 * [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0291.html)
 
 ## Topics
-* Mike streams at [Diode Zone](https://diode.zone) now aswell
+* Mike streams at [Diode Zone](https://diode.zone) now as well
 * [Bug 698873](https://bugzilla.mozilla.org/show_bug.cgi?id=698873) - Disable View > Zoom > "Actual size" when the zoom level is already at default.
 * Languages for first learning to program:
   - [JavaScript](https://developer.mozilla.org/en-US/docs/Learn/JavaScript)
