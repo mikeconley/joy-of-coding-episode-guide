@@ -16,9 +16,7 @@ number: 299
     - I started as a contractor working on Thunderbird for a subsidiary of Mozilla called Mozilla Messaging
     - MZLA Technologies now runs Thunderbird
   - Failing that, in anticipation for the upcoming Monkey Island game, I thought we could examine the [ScummVM](https://www.scummvm.org/) [implementation](https://github.com/scummvm/scummvm) of the SCUMM engine!
-
 * No episodes on September 21st or September 28th due to travel
-
 * Let's [review a patch!](https://phabricator.services.mozilla.com/D144711)
 * Goal: I want the JumpListManager to only ever be accessed off of the main thread, so that the main thread in the parent process never has to await a lock.
     - [x] Get rid of maxListItems, since it doesn't appear to be used
