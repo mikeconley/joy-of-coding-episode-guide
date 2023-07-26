@@ -11,8 +11,8 @@ number: 331
 * [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0331.html)
 
 ## Topics
-* [m/frefox](https://fedia.io/m/firefox)
-* [Mainthread disc access](https://mikeconley.ca/blog/2019/05/16/a-few-words-on-main-thread-disk-access-for-general-audiences/)
+* [m/firefox](https://fedia.io/m/firefox)
+* [Main-thread disc access](https://mikeconley.ca/blog/2019/05/16/a-few-words-on-main-thread-disk-access-for-general-audiences/)
 * WindowsJumpLists! Let's keep going!
 * TODO
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
