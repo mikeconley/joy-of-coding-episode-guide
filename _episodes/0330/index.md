@@ -4,7 +4,7 @@ date: 2023-06-28
 number: 330
 ---
 
-# Episode 339: Jun 28th, 2023
+# Episode 330: Jun 28th, 2023
 
 ## Links
 * [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-06-28)
@@ -28,7 +28,7 @@ number: 330
   - [ ] Write a front-end test that registers a fake nsIWinTaskbar or otherwise produces a fake nsIJumpListBuilder to make sure it gets passed the right things.
   - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
 * Tim Schafer interview with [Cressup](https://www.twitch.tv/videos/1857329968)
-* https://mikeconley.github.io/documents/HowmconleyusesMercurialforMozillacode
+* [https://mikeconley.github.io/documents/HowmconleyusesMercurialforMozillacode](https://mikeconley.github.io/documents/how_mconley_uses_Mercurial_for_Mozilla_code)
 
 * [Rate this episode](https://forms.gle/tgSHNtwTJ4FhTmRa8)
 
