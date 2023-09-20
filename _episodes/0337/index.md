@@ -27,7 +27,7 @@ number: 337
   - [x] Investigate shutdown crashes by adding MOZ_ASSERT(mThread == PR_GetCurrentThread()); basically everywhere. Especially at shutdown.
     - [x] I KNOW WHAT"S HAPPENING. The JumpListBuilder is created on the main thread. That class creates a LazyIdleThread (mIOThread) which is responsible for instantiating the JumpListBackend (aka the NativeJumpListBackend). BUT GUESS WHAT: A LazyIdleThread will shut itself down after a period of inactivity - that's part of how it works! That means that when it comes time to shutting everything down, we're asking a LazyIdleThread to destroy the JumpListBackend which might not be the same thread that created it, thus hitting our assertion! What we might need to do is to either, 1: destroy the JumpListBackend anytime the LazyIdleThread is shut down. 2: move the JumpListBackend destruction responsibility to the main thread.
     - [x] Nika suggests using NS_INLINE_DECL_REFCOUNTING_ONEVENTTARGET
-  - [x] After doing a removal, I saw a NSERRORUNEXPECTED, and then an NSERRORFAILURE for each subsequent update. Why is that?
+  - [x] After doing a removal, I saw a NS_ERROR_UNEXPECTED, and then an NS_ERROR_FAILURE for each subsequent update. Why is that?
     - [x] We need to ask Windows for the set of URLs to remove before we query Places and populate with the new list. That means adding a new function.
   - [ ] Write a GTest for the JumpListBuilder
     - [x] SetAppId
