@@ -8,7 +8,7 @@
 
 **Today**
 
-* WE DID IT! 350 episodes!! Congratulations everybody!!
+* WE DID IT! 350 episodes!! Congratulations everybody!
 * Okay, let's look at decoding Safari's profile mechanism.
 * See you in 2024! Next episode is scheduled for January 10th!
 
