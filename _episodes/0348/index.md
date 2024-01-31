@@ -22,7 +22,7 @@ number: 348
 * Enable new Windows Jump List backend by default in Nightly
   - File rkraesig's thing about arguments
   - File being better about icons (mhowell's thing)
-* Kitsune / SUMO - get rido of doodle variant
+* Kitsune / SUMO - get rid of doodle variant
 * [Bug 1866107](https://bugzilla.mozilla.org/show_bug.cgi?id=1866107) - 5.27 - 3.78% tabpaint / tabpaint + 1 more (Windows) regression on Tue November 14 2023 
 
 * [Rate this episode](https://forms.gle/yZnmvHvmLQEsfojR8)
