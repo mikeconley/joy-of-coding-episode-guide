@@ -20,7 +20,7 @@ number: 372
       - We do not show the CTA
       - The "Restore" section has the right strings
 * File a bug for a backup still being displayed as existing after having disabled backups and restarting
-  -  Done, and we posted a patch!
+  - Done, and we posted a patch!
   - [Bug 1907136](https://bugzilla.mozilla.org/show_bug.cgi?id=1907136)
   - [D216201](https://phabricator.services.mozilla.com/D216201)
 
