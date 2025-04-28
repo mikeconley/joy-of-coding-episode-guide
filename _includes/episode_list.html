@@ -1,0 +1,22 @@
+<h2>List of Episodes</h2>
+
+{% assign episodesByYear =
+    site.episodes |
+    group_by_exp:"episode", "episode.date | date: '%Y'" |
+    reverse %}
+
+{% for year in episodesByYear %}
+  <details name="episode-list" {% if forloop.first %}open{% endif %}>
+    <summary>{{ year.name }}</summary>
+    <ul>
+      {% assign episodes = year.items | reverse %}
+      {% for episode in episodes %}
+      <li>
+        <a href="{{ episode.url }}">
+          Episode {{ episode.number }} - {{ episode.date | date: '%b %d, %Y'}}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </details>
+{% endfor %}
