@@ -7,31 +7,16 @@
 - [Here’s the guide for creating pull requests that smurfd used and recommends](https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/%20)!
 
 **Today**
- 
-* Updating the episode guide
-* Let's keep going with our Rust component for FilterAdult
-	* https://github.com/mozilla/application-services/
-	* Write a tool that can take a list of base64 encoded md5 hashes and produce a .rs file that has those hashes defined as raw bytes, and can be linked into the library
-	* Modify that tool afterwards to also accept a list of base domain strings rather than base64 encoded md5 hashes, so that we can easily update the list
-	  * Make it possible for the tool to merely accept additions, or to fully overwrite
-		  * Maybe removals too?
-	* Design and write the library. It should ideally just expose the following functions:
-		* isAdultURL function
-		* addDomainToListForTesting
-		* removeDomainFromListForTesting
-	* Our utility can use relevancy components "generate-test-data" utility as an example to work from
-	* For next time:
-		* Read in the .mjs file, strip out what we don't need, and then convert each string into the byte representation to generate the Rust file that we need.
-		* Import that Rust file into import-site-list
 
-```
-./import-site-list --from-filteradult-mjs=<path>
-./import-site-list --add=<path>
-./import-site-list --remove=<path>
-./import-site-list --replace=<path>
-```
+- No questions, but got this comment on YouTube:
+    - "hello mikeconlytoronto, I'm leaving this comment today because i wanted to to tell you something, I've been watching your videos for around 9 years to help with coding, through all your help I've actually created a a coding course and have made a good amount of money that will surely help me over my life, i just wanted to say thank you guiding my path to my seven figure business model, thank you so much."
+- On vendoring:
+    - https://en.wikipedia.org/wiki/XZ_Utils_backdoor
+- Got some feedback on filter_adult! Let's address it!
+- Let's review some Picture-in-Picture patches
+- Where are things with TypeScript checks?
 
-**[Rate this episode](https://forms.gle/pTVA361bbFFMqbq4A)**
+**[Rate this episode](https://forms.gle/Dvm4GSG4xHvoD4VW9)**
 
 **Chat**
 
@@ -55,10 +40,10 @@
 - [/r/WatchPeopleCode](https://www.reddit.com/r/WatchPeopleCode) for more livehacking!
 
 **Glossary**
- 
+
 - BHR - “Background Hang Reporter”, a thing that records information about when Firefox performs poorly and sends it over Telemetry
 - e10s ("ee ten ESS") - short for [Electrolysis, which is the multi-process Firefox project](https://wiki.mozilla.org/Electrolysis)
-- CPOW ("ka-POW" or sometimes "SEE-pow") = Cross-Process Object Wrapper. [See this blog post.](http://mikeconley.ca/blog/2015/02/17on-unsafe-cpow-usage-in-firefox-desktop-and-why-is-my-nightly-so-sluggish-with-e10s-enabled/)
+- CPOW ("ka-POW" or sometimes "SEE-pow") = Cross-Process Object Wrapper. [See this blog post.](http://mikeconley.ca/blog/2015/02/17/on-unsafe-cpow-usage-in-firefox-desktop-and-why-is-my-nightly-so-sluggish-with-e10s-enabled/)
 - Deserialize - "turn a serialized object back into the complex object”
 - Serialize - "turn a complex object into something that can be represented as primitives, like strings, integers, etc
 - Regression - something that made behaviour worse rather than better. Regress means to “go backward”, more or less.

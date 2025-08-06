@@ -7,31 +7,20 @@
 - [Here’s the guide for creating pull requests that smurfd used and recommends](https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/%20)!
 
 **Today**
- 
-* Updating the episode guide
-* Let's keep going with our Rust component for FilterAdult
-	* https://github.com/mozilla/application-services/
-	* Write a tool that can take a list of base64 encoded md5 hashes and produce a .rs file that has those hashes defined as raw bytes, and can be linked into the library
-	* Modify that tool afterwards to also accept a list of base domain strings rather than base64 encoded md5 hashes, so that we can easily update the list
-	  * Make it possible for the tool to merely accept additions, or to fully overwrite
-		  * Maybe removals too?
-	* Design and write the library. It should ideally just expose the following functions:
-		* isAdultURL function
-		* addDomainToListForTesting
-		* removeDomainFromListForTesting
-	* Our utility can use relevancy components "generate-test-data" utility as an example to work from
-	* For next time:
-		* Read in the .mjs file, strip out what we don't need, and then convert each string into the byte representation to generate the Rust file that we need.
-		* Import that Rust file into import-site-list
 
-```
-./import-site-list --from-filteradult-mjs=<path>
-./import-site-list --add=<path>
-./import-site-list --remove=<path>
-./import-site-list --replace=<path>
-```
+* No episode next week
+* Q: Not a serious question, but Can you make a fun video whenever you are freee about Reviewing and Explaining how old swf shockwave flash games worked , why swf was banned later from the Internet.
+	* Flash ran as an NPAPI plugin in the browser: Netscape Plugin API
+		* Homestarrunner.com
+		* YouTube
+	* Macromedia: Shockwave Flash
+	* Bought by Adobe
+	* 2008 is the year that the Apple iPhone is revealed
+		* No plugins for the web browser (Safari). No NPAPI.
+	* https://ruffle.rs/
+* For implementing filter in filter_adult - I actually don't think I want to do this. I don't think I want to force the embedders to use a particular class right now - specifically on desktop, because it seems to be used to passing raw objects around with URL properties and just being a bit loose-y goose-y... I don't want to (yet) disturb that. I'm trying to avoid fixing the world. For now, what I'll do is implement filter in the wrapper module which will simply delegate the set lookup to the Rust module.
 
-**[Rate this episode](https://forms.gle/pTVA361bbFFMqbq4A)**
+**[Rate this episode](https://forms.gle/PtsWa9MFzW4G5Pdr6)**
 
 **Chat**
 
@@ -55,10 +44,10 @@
 - [/r/WatchPeopleCode](https://www.reddit.com/r/WatchPeopleCode) for more livehacking!
 
 **Glossary**
- 
+
 - BHR - “Background Hang Reporter”, a thing that records information about when Firefox performs poorly and sends it over Telemetry
 - e10s ("ee ten ESS") - short for [Electrolysis, which is the multi-process Firefox project](https://wiki.mozilla.org/Electrolysis)
-- CPOW ("ka-POW" or sometimes "SEE-pow") = Cross-Process Object Wrapper. [See this blog post.](http://mikeconley.ca/blog/2015/02/17on-unsafe-cpow-usage-in-firefox-desktop-and-why-is-my-nightly-so-sluggish-with-e10s-enabled/)
+- CPOW ("ka-POW" or sometimes "SEE-pow") = Cross-Process Object Wrapper. [See this blog post.](http://mikeconley.ca/blog/2015/02/17/on-unsafe-cpow-usage-in-firefox-desktop-and-why-is-my-nightly-so-sluggish-with-e10s-enabled/)
 - Deserialize - "turn a serialized object back into the complex object”
 - Serialize - "turn a complex object into something that can be represented as primitives, like strings, integers, etc
 - Regression - something that made behaviour worse rather than better. Regress means to “go backward”, more or less.
