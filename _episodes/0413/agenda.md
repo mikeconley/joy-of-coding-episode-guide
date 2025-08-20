@@ -8,28 +8,22 @@
 
 **Today**
 
-* keanu.codes - HTTP code 412
-	* ![b25b2b51cd448602b2b5563b0974f380.png](images/77ceb7a8a5b144afb46a4c60bc4cbb11)
-	* [Precondition failed](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/412)
-* Update the episode guide
-* A lot of permalinks are broken in the episode guide! Not all of them, but a lot of them.
-* Shout-out to Canova, who streamed himself hacking on Firefox Profiler things: https://www.youtube.com/watch?v=mb-oFRnS0M4
-* Advice / tips for people who want to start livehacking (Mozillians or otherwise)
-	* Practice. This takes muscle!
-		* See if you can do 1 hour, 1.5 hours, and see what it does to your voice. See if you can concentrate and actually do things. Watch the recording afterwards - were there big periods of silence where you were thinking in your head and not speaking?
-		* Do a pilot episode and don't make a big deal out of it.
-	* Hardware
-		* Get a good microphone. A Blue Yeti is a classic USB mic that podcasters use. I'm using a Rode NT-1 with a USB interface. Roland UA-25EX.
-		* Get a decent camera - I'm using an OBSBot Tiny.
-		* Use OBS and explore. OBS = Open Broadcaster Software
-		* Have a separate display for OBS.
-	* Turn off notifications on your software when streaming!
-	* Shut down non-necessary software that you don't streamed!
-	* Have a consistent schedule if you can
-	* Reduce how much overhead there is to produce an episode.
-* Another moz-cached-ohttp image bug!
-
-**[Rate this episode](https://forms.gle/YbnHW1iJbDdYp6Hz9)**
+* keanu.codes for HTTP code 413:
+	* ![67a80077d94e0c1e858e8b7c97cd758d.png](images/33432fe483234bb89ce1f0387f13e07d)
+	* https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/413
+* Widget prefs for task list / timer:
+	* `browser.newtabpage.activity-stream.widgets.system.enabled`
+	* `browser.newtabpage.activity-stream.widgets.system.focusTimer.enabled`
+	* `browser.newtabpage.activity-stream.widgets.system.lists.enabled`
+* Let's work on a utility for generating the JSON recipe, like this:
+  ```
+  {
+    "addon_version": "143.0.20250805.140919",
+    "xpi_download_path": "newtab-143.0.0-build1/newtab.xpi"
+  }
+  ```
+  * https://firefox-ci-tc.services.mozilla.com/tasks/groups/YuPgoiBfSy22-ayNWipNaw
+**[Rate this episode](https://forms.gle/T1XfKRQTpPQpbmox5)**
 
 **Chat**
 
