@@ -13,7 +13,8 @@
 	* https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/423
 * Welcome to a special holiday episode!
 	* First, fix the episode guide (OH NO)
-	* 
+		* Fixed
+	* Assume that whisper.cpp output is going to be flat out wrong. So these whisper.cpp transcripts are a good start, but should be considered true transcripts. They are a lossy interpretation of the audio and the hope is that the keywords that come out from them can be used for indexing.
 * Document Picture-in-Picture in today's most recent Nightly
 	* https://mdn.github.io/dom-examples/document-picture-in-picture/
 * Tab notes! Still a work-in-progress.
