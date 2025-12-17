@@ -1,0 +1,3386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 355 - February 14, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 355 - February 14, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c699af97-d589-4035-bc72-b106011b658a</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c699af97-d589-4035-bc72-b106011b658a">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,371 --> 00:00:08,721
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. To the joy of Cody.
+
+2
+00:00:09,001 --> 00:00:12,471
+Hello and welcome to episode 355 of The Joy of Coding.
+
+3
+00:00:12,481 --> 00:00:17,131
+My name is Mike Connolly. It's so good to have you here. We're going to be hacking on some Firefox stuff.
+
+4
+00:00:17,131 --> 00:00:23,250
+We might review a patch, we might work on some some Windows jump list stuff.
+
+5
+00:00:23,251 --> 00:00:27,871
+Again, it's been a while since we talked about that. And let's get right into it.
+
+6
+00:00:27,871 --> 00:00:30,991
+Let me let me Marsh Miller, let me start by sharing my screen.
+
+7
+00:00:31,771 --> 00:00:37,501
+There it is. Yeah. It's February 14th, 2020 for episode 355.
+
+8
+00:00:38,071 --> 00:00:42,390
+A reminder, I see this every time no plan survives breakfast. I think I know what I want to do today.
+
+9
+00:00:42,391 --> 00:00:48,001
+I think I know what I'm going to focus on and what's going to what's going to happen.
+
+10
+00:00:48,121 --> 00:00:50,100
+I don't, but I don't know.
+
+11
+00:00:50,101 --> 00:00:59,131
+You know, stuff suddenly could occur out of the blue things, you know, I might get interrupted with a task or we might get stuck on something.
+
+12
+00:00:59,131 --> 00:01:03,900
+Who knows what will happen? You're you're not watching like a prepared stream or anything.
+
+13
+00:01:03,901 --> 00:01:07,230
+You're watching me do my job as I would normally do it.
+
+14
+00:01:07,231 --> 00:01:14,641
+So just, you know, strap in. It's a little bit like, you know, take take strangers to work day.
+
+15
+00:01:14,761 --> 00:01:18,261
+That's how I like to think of this. That's the first thing.
+
+16
+00:01:18,271 --> 00:01:22,680
+The second thing is that the agenda that we're looking at is something that you have access to.
+
+17
+00:01:22,681 --> 00:01:26,281
+If you're watching this on air Mozilla check of the details section over there.
+
+18
+00:01:26,611 --> 00:01:30,721
+If you're watching this on YouTube or dialed that zone check of the description down below for a link.
+
+19
+00:01:30,721 --> 00:01:34,980
+And if you're watching this on Twitch, it should be down in the channel details a link to the agenda.
+
+20
+00:01:34,981 --> 00:01:38,251
+And as I update the agenda, this little spinny thing will go.
+
+21
+00:01:38,491 --> 00:01:43,831
+And then the the the agenda should be updated if you reload the page.
+
+22
+00:01:43,831 --> 00:01:49,650
+So you know, if I add stuff and you want to click on a link or something, just wait for this little spinny thing to happen,
+
+23
+00:01:49,651 --> 00:01:56,551
+which should happen every couple of seconds after I've made changes and then, you know, reload the page and you'll get them.
+
+24
+00:01:56,881 --> 00:01:59,971
+Okay, what are we working on today? Well, I put this.
+
+25
+00:02:00,511 --> 00:02:04,711
+I realized that today's episode is occurring on Valentine's Day.
+
+26
+00:02:04,711 --> 00:02:08,400
+So if you celebrate Valentine's Day. Happy Valentine's Day.
+
+27
+00:02:08,401 --> 00:02:15,001
+I wore some red today. I don't I didn't have anything with, like, a whole bunch of hearts on it.
+
+28
+00:02:15,961 --> 00:02:22,921
+I had one t shirt with a heart on it, but it was in the wash and I didn't do the laundry in time, so I wore red and that was the best I could do.
+
+29
+00:02:23,731 --> 00:02:24,871
+Happy Valentine's Day.
+
+30
+00:02:24,871 --> 00:02:32,761
+If you celebrate what I wanted to start with, I actually was reviewing a patch, mainly because I'm also waiting for a build to finish.
+
+31
+00:02:33,151 --> 00:02:43,081
+I'm doing the build of a debug build of Firefox on Windows and it's almost done.
+
+32
+00:02:43,231 --> 00:02:48,871
+And I'm thinking that by the time we're done our review here, it will be done and then we can work on the other thing.
+
+33
+00:02:48,871 --> 00:02:53,011
+But before I even get into that, I want to give an update on some things.
+
+34
+00:02:54,061 --> 00:03:00,661
+So update on Windows Job list because that's kind of related to what I'm hoping to work on after the code review.
+
+35
+00:03:01,441 --> 00:03:09,240
+So you may recall that the Windows jump live stuff we were working on for basically all of 2023.
+
+36
+00:03:09,241 --> 00:03:12,481
+You know, it was if you're not familiar, I'll just recap it.
+
+37
+00:03:12,751 --> 00:03:18,091
+The Windows jump list is this thing is going to be like a one minute recap.
+
+38
+00:03:18,091 --> 00:03:22,801
+This is, you know, when you right click on an item, this is a jump list.
+
+39
+00:03:23,011 --> 00:03:31,920
+And we have one for for Firefox that includes things like sites you frequently visited and some important tasks that you might want to perform,
+
+40
+00:03:31,921 --> 00:03:37,951
+like opening a tab, a window or a private window or something. And the mechanism that we'd historically been using and we've been using since the
+
+41
+00:03:37,951 --> 00:03:44,490
+jump list was first introduced in Windows seven was not very what we would say.
+
+42
+00:03:44,491 --> 00:03:49,951
+Performant It did main thread I o it was bad for responsiveness.
+
+43
+00:03:50,671 --> 00:03:54,031
+Now that's not to throw shaded the people who originally wrote it.
+
+44
+00:03:54,031 --> 00:03:59,340
+I don't think they knew when they when they were writing this that the API does mean threat
+
+45
+00:03:59,341 --> 00:04:04,650
+IO because the IO actually occurs in the windows layer when we call inter these mechanisms.
+
+46
+00:04:04,651 --> 00:04:09,571
+And so you know, we noticed that there were hangs showing up in our background hang reports that
+
+47
+00:04:09,571 --> 00:04:15,421
+packets emitted from nightly users that had the jump list stuff on the stack.
+
+48
+00:04:15,421 --> 00:04:23,671
+And so I spent a lot of 2023 designing an off main thread jump list back end and we turned it on by default,
+
+49
+00:04:23,671 --> 00:04:32,831
+I think about a month and a half ago or so on nightly and just Monday, I think it was Monday I got a sign off from Kuwait.
+
+50
+00:04:33,031 --> 00:04:36,451
+She had been testing it for, I think about a week, maybe a little over a week,
+
+51
+00:04:36,841 --> 00:04:45,420
+and they found some low severity issues that were related to the jump list, but nothing that we would consider a blocker for letting it ride out.
+
+52
+00:04:45,421 --> 00:04:51,631
+So I have flipped the pref and unless we learn something new about its behavior on beta,
+
+53
+00:04:51,991 --> 00:04:58,261
+it is set to go out in Firefox 124 and if we take a look at the what trend is it now?
+
+54
+00:04:59,161 --> 00:05:03,361
+Web page 124 let's see.
+
+55
+00:05:03,631 --> 00:05:06,931
+124 will. To release on March 19th.
+
+56
+00:05:07,231 --> 00:05:16,391
+So that's actually not that long from now. Oh, pond own may affect our planned date release date because that happens on March 22, 22nd.
+
+57
+00:05:16,411 --> 00:05:20,491
+That's interesting. But March 19th is when that should.
+
+58
+00:05:20,551 --> 00:05:23,281
+If all goes well rollout to release.
+
+59
+00:05:23,311 --> 00:05:30,751
+So if you are following along with the windows jump live stuff, we're almost on the other side of it where it actually gets into people's hands.
+
+60
+00:05:30,841 --> 00:05:36,121
+So that's fairly exciting. So that's the update there. So let me write that down.
+
+61
+00:05:36,151 --> 00:05:47,671
+Updated Windows Jump list if all goes. Got a got green QR sign off if no surprises on beta.
+
+62
+00:05:48,031 --> 00:06:01,351
+It will go out in enabled by default in Firefox 1.4 in mid-March and then after a release or two we can get rid of the old mechanism.
+
+63
+00:06:02,341 --> 00:06:05,670
+So it's one of the nice ways of kind of the way it was architected.
+
+64
+00:06:05,671 --> 00:06:12,660
+You could like switch between the old one and the new one. And we have the ability, for example, to if we hear that the new mechanism,
+
+65
+00:06:12,661 --> 00:06:18,331
+there's like some major problem with it, we can turn off the new mechanism and switch back to the old one.
+
+66
+00:06:18,331 --> 00:06:24,900
+And so we'll hold on to that old mechanism for a little while. But once we're satisfied that it's doing the job, we can blow away the old mechanism.
+
+67
+00:06:24,901 --> 00:06:29,521
+And that's great. So I'm very happy about that. Dennis, happy Valentine's Day.
+
+68
+00:06:29,551 --> 00:06:33,181
+Yes. Thank you very much for watching me. Happy Valentine's Day.
+
+69
+00:06:33,781 --> 00:06:37,830
+Thank you. Okay. So that's the update on Windows Jumbles.
+
+70
+00:06:37,831 --> 00:06:43,981
+And this this bug later on is related because this is like a little helper that the mechanism uses.
+
+71
+00:06:44,221 --> 00:06:52,290
+That also does mean thread IO. It's not within the jump list code proper, but it's like a utility that a couple of things use.
+
+72
+00:06:52,291 --> 00:06:57,781
+And this does mean thread IO and it would be really nice if we could get this off of the main thread as well.
+
+73
+00:06:58,021 --> 00:07:04,291
+And then I think at that point the jump list is, you know, the IO is completely off of the main threat and that's green.
+
+74
+00:07:05,921 --> 00:07:09,281
+So the first thing I wanted to do, though, is review a patch.
+
+75
+00:07:10,391 --> 00:07:14,621
+The patch came in to me from a member of the onboarding team, the onboarding team.
+
+76
+00:07:15,401 --> 00:07:21,421
+They're the people who manage this thing. Let me, uh, what do we want to do here?
+
+77
+00:07:21,641 --> 00:07:26,981
+Let's build. I'm going to pull the patch down and apply it because I want to poke at it.
+
+78
+00:07:26,981 --> 00:07:33,821
+But if you've ever seen the about welcome, which kind of looks like this, like the welcome screen,
+
+79
+00:07:33,821 --> 00:07:39,701
+this is what we show to people whenever they are, You know, they download Firefox for the first time.
+
+80
+00:07:39,701 --> 00:07:45,221
+They've just installed it. We walk them through importing their stuff from another browser, you know,
+
+81
+00:07:45,221 --> 00:07:48,491
+setting their preferences, that sort of thing, maybe getting an add on or something.
+
+82
+00:07:49,541 --> 00:07:53,200
+And one of the things that we do is we offer to, yeah, do it importing.
+
+83
+00:07:53,201 --> 00:07:56,951
+And so we show the migration wizard that, you know, you may be familiar with.
+
+84
+00:07:57,191 --> 00:08:02,111
+We show the migration wizard and there is a bug here to make it possible to.
+
+85
+00:08:02,141 --> 00:08:04,961
+I'd like to do some UI tweaks.
+
+86
+00:08:05,471 --> 00:08:12,341
+They want to try a couple of different variations of the migration wizard when it's in the the sort of the about welcome.
+
+87
+00:08:12,881 --> 00:08:16,481
+They don't want to change the functionality. They want to change the appearance.
+
+88
+00:08:16,871 --> 00:08:21,551
+So I think they're trying to like, simplify it and reduce some of the noise.
+
+89
+00:08:21,551 --> 00:08:31,301
+Like there's no yeah, there's no it's sometimes has like a fold in unfold but I guess in by default in.
+
+90
+00:08:34,581 --> 00:08:38,631
+By fold and unfold. I mean this story. I mean, let me be clear.
+
+91
+00:08:38,631 --> 00:08:47,421
+This sort of fold and unfold. And I think one of the things they want to do is they want to make that be tweetable, tweetable.
+
+92
+00:08:48,051 --> 00:08:51,931
+It's already they can turn it on, turn it off, but they want to change the appearance a bit.
+
+93
+00:08:52,251 --> 00:08:57,981
+And so I took a look a little bit at this patch today, but I want to finish the review on the stream.
+
+94
+00:08:58,341 --> 00:09:01,341
+And so I'm basically going to start over and, you know, start my review over again.
+
+95
+00:09:02,661 --> 00:09:10,161
+It shouldn't take me too, too long. But one thing I haven't done yet is actually tried to, you know, use the the patch.
+
+96
+00:09:10,161 --> 00:09:19,191
+So the first thing I'm going to do actually is and play it. And the author, Jay Prickett, gives some instructions on how to test it.
+
+97
+00:09:19,911 --> 00:09:23,091
+The patch creates an interface for messages to configure some of the elements of
+
+98
+00:09:23,091 --> 00:09:26,121
+the migration wizard so that can be further customized for use in experiments.
+
+99
+00:09:26,121 --> 00:09:30,200
+The most straightforward way to test this is to add the following screen to the screen's array and about welcome defaults.
+
+100
+00:09:30,201 --> 00:09:36,831
+Then just about welcome to navigate to the screen. And these are the different like things that can be, can be experimented with.
+
+101
+00:09:37,011 --> 00:09:41,601
+What's interesting is that it's like it's some things are like, turn on, turn off.
+
+102
+00:09:42,171 --> 00:09:46,191
+Some of them are strings and others are styles.
+
+103
+00:09:46,311 --> 00:09:55,551
+Like, this is this is being injected right into the CSIS of the of of of the of the migration wizard.
+
+104
+00:09:55,551 --> 00:10:01,760
+So and that's not super unusual. Like you can see some CSV being put in here, some strings being put in here.
+
+105
+00:10:01,761 --> 00:10:08,691
+That's kind of the point of these this mechanism is to be able to sort of customize and set up the state of
+
+106
+00:10:08,691 --> 00:10:14,541
+various components during onboarding and to make it easily to to experiment with easy to experiment with,
+
+107
+00:10:14,541 --> 00:10:20,240
+rather. And so this is just trying to make the migration wizard have a couple of extra options for, for dealing with that.
+
+108
+00:10:20,241 --> 00:10:24,771
+Now, I am no expert when it comes to the onboarding code.
+
+109
+00:10:25,251 --> 00:10:29,031
+I'm actually not going to review anything under about welcome.
+
+110
+00:10:29,031 --> 00:10:32,271
+That's more for the realm of the OMC reviewers.
+
+111
+00:10:32,571 --> 00:10:40,461
+I'm primarily concerned with the changes to the migration wizard that allow for the customization as well as the test and the CSAT.
+
+112
+00:10:40,461 --> 00:10:45,320
+So I'm actually going to skip reviewing these three. I'm just going to review Migration Wizard Dot MDGs.
+
+113
+00:10:45,321 --> 00:10:51,560
+That's the module that that has. The migration was defined in it, the test for it and then the stylesheet for the wizard.
+
+114
+00:10:51,561 --> 00:10:58,771
+So let's get started. Um, And did it apply properly?
+
+115
+00:10:58,771 --> 00:11:06,060
+It did apply properly, so that's nice. So, you know, I'm going to build it while we look at this.
+
+116
+00:11:06,061 --> 00:11:12,811
+So the first thing he does is he adds, he adds a, uh,
+
+117
+00:11:14,671 --> 00:11:22,641
+he adds a private and private property called headers and then adds a bunch of classes to the markup.
+
+118
+00:11:24,001 --> 00:11:27,301
+So the markup is defined inside of this template string.
+
+119
+00:11:29,121 --> 00:11:34,431
+And he adds a bunch of classes. There's a migration wizard header class that seems to be shared in a couple of different places.
+
+120
+00:11:34,701 --> 00:11:38,150
+Each of these dudes like div named page selection page loading.
+
+121
+00:11:38,151 --> 00:11:43,491
+These are different states that the wizard can be in. And so I guess some of them have headers and he's.
+
+122
+00:11:46,731 --> 00:11:52,011
+He's setting the headers there. Where's the next page?
+
+123
+00:11:53,691 --> 00:11:57,951
+I want to make sure he gets all of the pages. Page Progress.
+
+124
+00:11:59,811 --> 00:12:03,471
+And so is this one also supposed to be this is another header?
+
+125
+00:12:05,121 --> 00:12:17,141
+Is the progress header also supposed to be customizable, or are we okay with the default string?
+
+126
+00:12:20,371 --> 00:12:32,891
+There is another header. Which this is another header.
+
+127
+00:12:34,841 --> 00:12:39,611
+Ooh. That's. That's broken. Well, it's not broken, but we're missing a space there.
+
+128
+00:12:40,241 --> 00:12:45,731
+We should get that fixed. It's not critical or anything, but it's good to know.
+
+129
+00:12:46,701 --> 00:12:59,591
+This is another header. He was veteran. Uh.
+
+130
+00:13:01,161 --> 00:13:04,521
+And this letter like, I just want to double check it.
+
+131
+00:13:04,671 --> 00:13:11,871
+It's quite possible that we want these two to keep their default strings.
+
+132
+00:13:13,101 --> 00:13:19,731
+I just want to double check them. There are four similar ones below that mark.
+
+133
+00:13:20,721 --> 00:13:27,921
+Feel free to close these issues if we're okay with the default strings in those states.
+
+134
+00:13:31,091 --> 00:13:43,861
+Um. You know, what's really nice about this, too, is that we should be able to, like, add these to the storybook.
+
+135
+00:13:45,931 --> 00:13:47,760
+And that's one thing I'm going to ask him to do,
+
+136
+00:13:47,761 --> 00:13:56,910
+is maybe we can create a storybook state where you can tweak each of these things so that you can actually see
+
+137
+00:13:56,911 --> 00:14:01,411
+them inside of storybook because the migration wizard can exist within the storybook and that would be nice.
+
+138
+00:14:03,361 --> 00:14:06,750
+Okay, so he's got a headers property class.
+
+139
+00:14:06,751 --> 00:14:14,421
+I'm going to. One thing about Beaver, I have two requests.
+
+140
+00:14:14,431 --> 00:14:31,411
+One. Can we please add story and storybook variant or the migration wizard that exposes these attributes so that we can.
+
+141
+00:14:34,091 --> 00:14:41,201
+Test the different states. And the storybook is here.
+
+142
+00:14:48,931 --> 00:14:53,640
+Dialog mode template by and just see how this works.
+
+143
+00:14:53,641 --> 00:14:57,691
+Template is HTML for dialog mode.
+
+144
+00:14:59,521 --> 00:15:05,911
+You might need. Yeah, you're going to probably need to add more. You'll need to add more.
+
+145
+00:15:11,811 --> 00:15:19,941
+You'll need to add some need to add some new.
+
+146
+00:15:21,561 --> 00:15:24,981
+Add the new properties to the template.
+
+147
+00:15:27,361 --> 00:15:39,401
+Used his storybook hair. I'm fine with this being a photo book if you're pressed for time.
+
+148
+00:15:43,601 --> 00:15:47,021
+We need to document these properties as well. It's the other thing that came to mind.
+
+149
+00:15:47,561 --> 00:15:50,861
+Migration, I believe, has docs here.
+
+150
+00:15:51,491 --> 00:16:03,891
+Migration Wizard. We need to document these attributes here in here.
+
+151
+00:16:08,971 --> 00:16:16,741
+Again, I'm fine with this being a fast follow your first time.
+
+152
+00:16:17,641 --> 00:16:20,861
+A fast follow up. Okay.
+
+153
+00:16:21,281 --> 00:16:26,801
+Let's go. So we had a class for the buttons as well.
+
+154
+00:16:26,801 --> 00:16:32,841
+A migration import button. The labels.
+
+155
+00:16:35,991 --> 00:16:41,001
+This is also an important button. I think there's another one in here.
+
+156
+00:16:41,931 --> 00:16:50,361
+There are more buttons. Where are they? That's the one.
+
+157
+00:16:55,781 --> 00:16:59,621
+But no migration canceled. Done. Continue.
+
+158
+00:17:05,731 --> 00:17:15,671
+Uh. What is what is the string for this very important like button that Elton in migration Safari.
+
+159
+00:17:16,631 --> 00:17:21,341
+What does the string select file? Okay, so that shouldn't be changed.
+
+160
+00:17:23,351 --> 00:17:28,311
+Cancel request permissions. No browsers found import for file.
+
+161
+00:17:28,331 --> 00:17:34,361
+Okay. So we probably want to leave those be okay. And then.
+
+162
+00:17:38,601 --> 00:17:41,721
+So the resource type labels also get a class. That's fine.
+
+163
+00:17:48,061 --> 00:17:54,691
+Then over here we go ahead and just like, hold on to these headers.
+
+164
+00:17:56,251 --> 00:18:05,791
+Okay? And then any time we're showing selection, we're going to upload content customizations that's on showing selection.
+
+165
+00:18:15,371 --> 00:18:19,061
+Just when do we enter this, uh, shopping selection?
+
+166
+00:18:23,301 --> 00:18:34,021
+So we enter the selection page. Um. And content customization.
+
+167
+00:18:34,031 --> 00:18:42,711
+Oh, what's this with this? Doo doo doo.
+
+168
+00:18:43,201 --> 00:18:45,810
+Okay. Inside a method called display,
+
+169
+00:18:45,811 --> 00:18:50,911
+selected resources changes the selected data header text and selected data text based on how many resources are checked.
+
+170
+00:18:51,211 --> 00:18:57,991
+Right. So one of the things we do is as you select items in here, we will change this string.
+
+171
+00:18:58,111 --> 00:19:02,381
+And that's what. That's what this function does.
+
+172
+00:19:03,131 --> 00:19:06,590
+And it looks more complicated than it is like, it's quite complicated.
+
+173
+00:19:06,591 --> 00:19:10,121
+And that's because of localization. We have to make this work for localization.
+
+174
+00:19:10,121 --> 00:19:22,411
+So there's quite a bit of like. Back flipping that we need to do to make that work for different locales and then hit the import button.
+
+175
+00:19:26,111 --> 00:19:33,381
+So this is where we would adjust the. Option Expander Title String.
+
+176
+00:19:41,971 --> 00:19:45,931
+Otherwise we go through here.
+
+177
+00:19:45,961 --> 00:19:48,961
+I see. Okay.
+
+178
+00:19:50,431 --> 00:19:56,641
+That seems okay. So that's like an override option expander title string.
+
+179
+00:20:06,951 --> 00:20:12,350
+That seems okay to me. This is what I was reading before I stopped reviewing this.
+
+180
+00:20:12,351 --> 00:20:21,590
+Before this. This is what is a this is what's called whenever we we show the selection page and it's going
+
+181
+00:20:21,591 --> 00:20:28,881
+to go through and see if there are any attributes on the root element that should be applied.
+
+182
+00:20:28,971 --> 00:20:35,991
+And so what we do is we get all the labels, we get the selected data element.
+
+183
+00:20:38,521 --> 00:20:47,341
+We check to see if we have the Hyde total attribute and if so, then we hide the headers.
+
+184
+00:20:47,911 --> 00:20:51,601
+Oh, okay. I see. We go through the list of headers and we hide them.
+
+185
+00:20:52,351 --> 00:21:04,201
+Otherwise, we don't hide them. If this has an attribute hide option expander subtitle, then we will.
+
+186
+00:21:13,221 --> 00:21:19,341
+Right. Well, hi. Okay. Okay. That's the expander subtitle is the part that's.
+
+187
+00:21:21,231 --> 00:21:26,681
+That's under here. So they're they're thinking of hiding that, if that's set.
+
+188
+00:21:27,831 --> 00:21:34,251
+And then we'll go through we'll look at the selection page. And if we have hide, select all, then we will.
+
+189
+00:21:38,671 --> 00:21:43,181
+Toggle attribute to hide. Select all. Remove attribute select all.
+
+190
+00:21:48,571 --> 00:21:54,401
+So there's already an attribute. Hang on. No, no, no, I didn't mean that.
+
+191
+00:21:56,301 --> 00:21:59,901
+I mean, do that and select all. No, there's not already an attribute.
+
+192
+00:22:03,701 --> 00:22:10,691
+That's interesting. So I. Oh, I see. It's like I see this going on.
+
+193
+00:22:11,051 --> 00:22:16,641
+Okay. Okay. So I have a suggestion. But let's keep going.
+
+194
+00:22:18,201 --> 00:22:26,781
+We checked to see whether or not there is an important button stirring. And if so, then we update the text content that that makes sense in here.
+
+195
+00:22:35,231 --> 00:22:41,771
+Attribute check box margin in line. Now we're setting in line styles on the done see?
+
+196
+00:22:42,041 --> 00:22:49,351
+Okay, here's what I'm going to suggest. If we have important button class that will get.
+
+197
+00:22:54,591 --> 00:23:00,441
+Will add an additional class imposed by the class.
+
+198
+00:23:03,301 --> 00:23:07,081
+Like, what would you do? Primary. Oh, to change the clouds.
+
+199
+00:23:07,171 --> 00:23:11,491
+I see. I see. I see. I see. Okay.
+
+200
+00:23:14,481 --> 00:23:17,691
+Okay, So here's what I'm going to suggest to the author.
+
+201
+00:23:24,661 --> 00:23:33,301
+Very interesting. So there are a few things in here that make sense to do in script.
+
+202
+00:23:34,441 --> 00:23:39,811
+Like setting the where do we set the string?
+
+203
+00:23:42,401 --> 00:23:46,301
+Like setting the text content of the import button.
+
+204
+00:23:49,831 --> 00:24:01,271
+And what's the other one? Setting the class text content and class of the important button.
+
+205
+00:24:03,681 --> 00:24:15,861
+There are other things here, however, that look like they'd maybe be more suited to being done in CC.
+
+206
+00:24:15,951 --> 00:24:24,581
+We can, for example. Migration was her success.
+
+207
+00:24:24,891 --> 00:24:30,051
+I think there are like host matching rules we can use.
+
+208
+00:24:32,081 --> 00:24:46,401
+Hide all. Headers without script using additional scripts using this CSA rule.
+
+209
+00:24:48,721 --> 00:24:57,751
+So, for example, there he's doing hiding title and he's hiding all the headers, so.
+
+210
+00:25:03,011 --> 00:25:11,441
+Host. Host hired title.
+
+211
+00:25:17,041 --> 00:25:22,471
+And then where the header is called. What's the class?
+
+212
+00:25:25,771 --> 00:25:36,221
+Migration Wizard header. Display?
+
+213
+00:25:36,221 --> 00:25:47,171
+None. Or what he's been doing Hidden Is that display?
+
+214
+00:25:47,181 --> 00:25:51,821
+None. Again, I can't remember. Let's see. Trying to remember what Dot Hidden does.
+
+215
+00:25:55,311 --> 00:25:59,751
+Here's the header. Not hidden.
+
+216
+00:25:59,941 --> 00:26:06,771
+It's true. Hidden. Hidden. Hidden. But.
+
+217
+00:26:10,331 --> 00:26:16,761
+What does it mean to be hidden? I think we're probably inheriting some styles.
+
+218
+00:26:16,791 --> 00:26:22,291
+Where do I see the inherited styles? Computed.
+
+219
+00:26:22,381 --> 00:26:25,500
+Oh, I can see it zero by zero. It's display none.
+
+220
+00:26:25,501 --> 00:26:31,570
+So yeah, hidden is display none. And now it's display blocks.
+
+221
+00:26:31,571 --> 00:26:39,021
+So display none. I think that sort of.
+
+222
+00:26:45,321 --> 00:26:50,631
+That sort of thing makes better sense in our system.
+
+223
+00:26:50,991 --> 00:26:58,401
+The more we can do as he says and avoid script, the better.
+
+224
+00:27:01,561 --> 00:27:08,041
+But the more generally speaking, the more we can do with cost and avoid script, the better.
+
+225
+00:27:18,711 --> 00:27:30,701
+It also means that. It also generally simplifies things because we can get rid of headers.
+
+226
+00:27:35,561 --> 00:27:49,931
+Since also since these are since these I have the the selector migration wizard header.
+
+227
+00:27:51,281 --> 00:27:54,851
+Should these be hide headers?
+
+228
+00:28:04,551 --> 00:28:11,871
+Classes. Class should. Should this be high headers or high headers for consistency?
+
+229
+00:28:15,451 --> 00:28:26,241
+Um. I'm. For the styles here.
+
+230
+00:28:27,021 --> 00:28:34,191
+This in particular is a place where you are doing.
+
+231
+00:28:37,391 --> 00:28:50,831
+What I would recommend here, instead of setting in line styles, is to use scripts to set some CSS variables that are then used for the margins.
+
+232
+00:28:53,891 --> 00:28:58,751
+I think Do we have an example of doing that in the migration wizard?
+
+233
+00:28:59,801 --> 00:29:03,221
+Um. Hold on. You have variables.
+
+234
+00:29:09,771 --> 00:29:19,561
+Set property values. This is a set of variable from scripts.
+
+235
+00:29:19,651 --> 00:29:33,361
+I need to get it's. Hmm.
+
+236
+00:29:43,671 --> 00:29:48,251
+Set property. Oh, okay.
+
+237
+00:29:49,991 --> 00:29:56,381
+My FA. So if I find a set property, here we go.
+
+238
+00:29:59,261 --> 00:30:13,331
+So what we could do is like. If we have the in the margins on the.
+
+239
+00:30:16,811 --> 00:30:20,921
+Label of resource type labels. Resource type labels.
+
+240
+00:30:27,751 --> 00:30:33,041
+The margin. If we had the margins.
+
+241
+00:30:33,221 --> 00:30:38,411
+What's up? Hey, I'm just saying hi to some people outside the door, some valued colleagues.
+
+242
+00:30:38,741 --> 00:30:47,381
+If we have the margins on the labels, defaults to some rule like this.
+
+243
+00:30:49,901 --> 00:30:57,021
+Labels success. Uh, sorry, I've already forgotten the class.
+
+244
+00:30:57,051 --> 00:31:04,791
+I can't keep it in my third resource type label. Resource type label.
+
+245
+00:31:10,481 --> 00:31:13,601
+Margin. Inline.
+
+246
+00:31:16,091 --> 00:31:19,531
+Var. Uh.
+
+247
+00:31:25,631 --> 00:31:30,161
+In line margin. What is the default in line margin?
+
+248
+00:31:38,111 --> 00:31:46,061
+Label large and start play layout layer zero.
+
+249
+00:31:47,231 --> 00:32:07,031
+So. Uh, than if we then I think we should be able to set the property on all.
+
+250
+00:32:10,591 --> 00:32:13,711
+But those labels with this script.
+
+251
+00:32:16,371 --> 00:32:22,151
+What was it? Um.
+
+252
+00:32:25,471 --> 00:32:29,171
+Probably more on the shadow route, right this chateauroux.
+
+253
+00:32:31,201 --> 00:32:35,501
+Is that where he says style on the shadowy. Style.
+
+254
+00:32:39,251 --> 00:32:42,281
+Chateauroux style sheets. That's not quite right.
+
+255
+00:32:45,551 --> 00:32:49,271
+Host dot style. I'm pretty.
+
+256
+00:32:59,781 --> 00:33:05,061
+Root. Yeah. Root once root query selector will root.
+
+257
+00:33:13,041 --> 00:33:22,651
+What's it in this case? There is selector.
+
+258
+00:33:25,931 --> 00:33:37,451
+You know, um. This.
+
+259
+00:33:42,121 --> 00:33:47,400
+Like if I if I update let's update one of these rules just for now.
+
+260
+00:33:47,401 --> 00:33:56,521
+Let's say inline origin in line with our test margin in line zero.
+
+261
+00:33:57,541 --> 00:34:09,151
+Okay. So there's no variable there. And then if I set on the wizard test margin in line five, the X, there it is.
+
+262
+00:34:09,271 --> 00:34:12,541
+There it is. See, I can do that. Okay, So.
+
+263
+00:34:13,691 --> 00:34:21,101
+This dot style set property and then instead of URL bar scheme it will be like.
+
+264
+00:34:22,311 --> 00:34:26,891
+Resource. Margin.
+
+265
+00:34:30,441 --> 00:34:50,480
+In line market. This should reduce how much scripts we need to do these things and also make it
+
+266
+00:34:50,481 --> 00:34:58,761
+more apparent in our cases that customization in such customization is possible.
+
+267
+00:35:03,871 --> 00:35:07,621
+Uh, I think. Same as above. Same as above.
+
+268
+00:35:07,621 --> 00:35:20,011
+Here, uh, regarding using a CC variable and scripts to set the value of the variable on the root.
+
+269
+00:35:22,591 --> 00:35:29,131
+Okay, Now let's look at the tests. So I'm very happy.
+
+270
+00:35:30,091 --> 00:35:33,951
+I'm very happy that J. J. Prickett added tests.
+
+271
+00:35:33,991 --> 00:35:39,031
+Thanks for the tests. And I'm curious, Mark, that is done.
+
+272
+00:35:39,721 --> 00:35:47,581
+So hide title is true. Set state. Go ahead and get the page in the titles.
+
+273
+00:35:48,991 --> 00:35:52,741
+Make sure that wizard has to hide title attribute.
+
+274
+00:35:59,111 --> 00:36:03,221
+Sure. I mean, we said it here. I guess we're just making sure it wasn't removed.
+
+275
+00:36:12,891 --> 00:36:19,031
+Okay. It's not hidden. Okay. And task.
+
+276
+00:36:22,461 --> 00:36:26,721
+Hide option expand or same dealio set the attribute.
+
+277
+00:36:29,261 --> 00:36:42,001
+We'll get the subtitle. We set the state. Uh, net extra new line to make sure things had an update option expand or title.
+
+278
+00:36:43,651 --> 00:36:50,311
+Uh, okay. So query selector kind of playing fast and loose with constant lets.
+
+279
+00:36:51,541 --> 00:37:00,781
+I will note we're being a little inconsistent here with cons and the like and my.
+
+280
+00:37:01,441 --> 00:37:07,681
+Generally speaking, I prefer to use led mainly because const.
+
+281
+00:37:11,081 --> 00:37:19,961
+Often makes people think that the value being pointed at is immutable, when really it's just the.
+
+282
+00:37:22,541 --> 00:37:28,531
+Variable that's immutable. A variable that's immutable.
+
+283
+00:37:34,501 --> 00:37:45,271
+For example, my own jazz concert, my array equals that my arrayed push five perfectly legal.
+
+284
+00:37:46,081 --> 00:38:09,921
+So arrayed. It's still right. I'm on the expander string.
+
+285
+00:38:13,591 --> 00:38:20,871
+Test sets stay. That's nice.
+
+286
+00:38:21,941 --> 00:38:30,261
+I mean, he has a mutation condition. Remove the attribute.
+
+287
+00:38:34,281 --> 00:38:40,931
+That's interesting that it gets removed right away. That's interesting.
+
+288
+00:38:46,161 --> 00:38:56,891
+How does that work? I wouldn't expect that. And display selected resources.
+
+289
+00:38:57,911 --> 00:39:04,551
+I think that that is racy. It's removed right away.
+
+290
+00:39:05,271 --> 00:39:12,051
+Considering that the method that does this is a sink.
+
+291
+00:39:13,731 --> 00:39:18,121
+Title Tax cut. Oh. Oh, not wait.
+
+292
+00:39:18,661 --> 00:39:23,811
+What? Hold on, hold on.
+
+293
+00:39:23,831 --> 00:39:28,271
+This this construction is a little bizarre. Okay. Not title.
+
+294
+00:39:29,831 --> 00:39:34,531
+Tax content, not equal. Test.
+
+295
+00:39:37,671 --> 00:39:45,191
+I'm not. I'm not 100% sure what this line is meaning to assert.
+
+296
+00:39:48,701 --> 00:39:54,491
+Are you testing that the title text content?
+
+297
+00:39:55,721 --> 00:40:02,201
+Are you meaning to test that the title text content is no longer test.
+
+298
+00:40:05,201 --> 00:40:08,501
+If so, you'll want. Okay.
+
+299
+00:40:11,521 --> 00:40:14,791
+They are not equal or is not.
+
+300
+00:40:16,101 --> 00:40:23,121
+I think you can use. That is not. Yeah.
+
+301
+00:40:27,051 --> 00:40:38,531
+Title The Text Content Test. Gorgeous custom.
+
+302
+00:40:40,761 --> 00:40:54,161
+Title is Title the Right? Resource Selection expander.
+
+303
+00:40:54,551 --> 00:41:05,661
+Subtitle was reverted. Yeah, there are a couple of places that maybe it would be make more sense to use.
+
+304
+00:41:08,071 --> 00:41:13,601
+Is. It's an attribute.
+
+305
+00:41:13,611 --> 00:41:16,931
+Okay. Hidden side attribute. Okay.
+
+306
+00:41:16,941 --> 00:41:27,551
+This. So. Nitpick is.
+
+307
+00:41:34,871 --> 00:41:38,711
+Actually what I'll do instead of doing it like that.
+
+308
+00:41:43,191 --> 00:41:51,571
+It's. I'll do it. Like the suggestion is. Same thing down here.
+
+309
+00:41:52,831 --> 00:41:56,011
+Suggestion. Um.
+
+310
+00:42:02,981 --> 00:42:10,511
+Instead. Also, I don't expect it to pass after you've made that change.
+
+311
+00:42:10,511 --> 00:42:17,561
+Since the update of the string is asynchronous, you'll need to set state again.
+
+312
+00:42:20,001 --> 00:42:23,241
+And wait for the mutation condition.
+
+313
+00:42:28,221 --> 00:42:37,931
+Okay. Selections like to hide select All is true, said state selection.
+
+314
+00:42:39,881 --> 00:42:44,471
+All is not displayed. Okay. Team stream.
+
+315
+00:42:50,991 --> 00:42:56,441
+Test. This is.
+
+316
+00:42:59,391 --> 00:43:06,041
+Is. Match and.
+
+317
+00:43:08,261 --> 00:43:13,271
+The checkbox labels. Um.
+
+318
+00:43:19,651 --> 00:43:30,571
+Instead, if you go micro with the CSS s proper custom cases variable you'll want to use.
+
+319
+00:43:30,601 --> 00:43:39,421
+Get computed style instead. To get and to compute margin in line and margin block.
+
+320
+00:43:53,361 --> 00:44:01,881
+I'm going to guess this should probably not be checkbox margins and should instead be update import button class.
+
+321
+00:44:10,571 --> 00:44:15,101
+We're putting string. Margins.
+
+322
+00:44:16,451 --> 00:44:20,381
+Okay. So that's my review, I think.
+
+323
+00:44:22,331 --> 00:44:29,771
+Thanks, Jay Cricket. Kudos on adding tests for this as well.
+
+324
+00:44:32,741 --> 00:44:36,611
+I have two requests along the side of things I noted below.
+
+325
+00:44:40,701 --> 00:44:44,001
+Request training and submit.
+
+326
+00:44:45,531 --> 00:44:54,510
+Booyah. Shaka. PB zs like the bike should have it.
+
+327
+00:44:54,511 --> 00:44:58,211
+I think I wish we adopted content wherever possible. Feels much simpler to me.
+
+328
+00:44:58,231 --> 00:45:01,691
+I also think it's more common across the industry. It's true.
+
+329
+00:45:01,711 --> 00:45:06,171
+I mean, it's maybe a matter of taste.
+
+330
+00:45:06,181 --> 00:45:10,111
+I kind of wish that if something was. Konst, it actually was immutable.
+
+331
+00:45:13,341 --> 00:45:23,061
+I've seen too many places where people have assumed Konst means immutable when pointing at a non primitive, let's at least more truthful about it.
+
+332
+00:45:23,481 --> 00:45:27,291
+The disadvantage of late is that you can accidentally overwrite the variable with another value.
+
+333
+00:45:28,671 --> 00:45:29,781
+Pluses and minuses.
+
+334
+00:45:30,711 --> 00:45:42,201
+The good news is, in the event that we decided we wanted to do a blanket conversion to cost, we could probably do it using a mechanical rewrite.
+
+335
+00:45:44,271 --> 00:45:47,361
+Just rewrite the entire Firefox front end and rust should be easy.
+
+336
+00:45:47,361 --> 00:45:53,091
+Right? O sign me up. Sounds fun. Sounds fine, gang.
+
+337
+00:45:53,121 --> 00:45:58,941
+Okay, so that's the review. We did that. So hopefully our builds done.
+
+338
+00:46:00,381 --> 00:46:04,161
+Okay, now I know what you're thinking. What? Why isn't this bill done?
+
+339
+00:46:04,191 --> 00:46:06,531
+It's because I stacked two builds, one right after the other.
+
+340
+00:46:06,531 --> 00:46:14,301
+I did a debug build, and then I stacked up an opt to build on the off chance that they'd both be finished.
+
+341
+00:46:14,301 --> 00:46:17,660
+By the time I was done. The review the OPPT build is not yet done.
+
+342
+00:46:17,661 --> 00:46:21,741
+I'm going to cancel it, but the diva build is done and that's probably enough to work with.
+
+343
+00:46:22,581 --> 00:46:31,421
+So let's go ahead and cancel that build and we'll switch to like this is how I did that mock build that was on the, the debug Moore's config.
+
+344
+00:46:31,431 --> 00:46:40,251
+Then I built and then I went build with default, which is OPPT and I did mock Bill suddenly switch back to debug and let's,
+
+345
+00:46:40,551 --> 00:46:43,851
+let's take a look at the bug that I'm referring to here.
+
+346
+00:46:44,401 --> 00:46:47,661
+If I have, I can help her. Now. We talked about this a few weeks back.
+
+347
+00:46:47,661 --> 00:46:54,201
+We started to investigate this. I even seem to recall writing a comment here, but let's start from the top five.
+
+348
+00:46:54,201 --> 00:47:01,940
+I could help her obtain cached icon filed as main threat io and causes hangs not good five.
+
+349
+00:47:01,941 --> 00:47:10,371
+I can't help her obtain fast webs above showing up in batch after causing hangs due to its main threat io and so it's in the win utils file.
+
+350
+00:47:10,581 --> 00:47:15,711
+So it's like a utility and it's used in a couple of different places. Like if we take let's not search.
+
+351
+00:47:15,711 --> 00:47:23,001
+I want to search fox obtain cached icon file. We can see that it's used in jump list builder the legacy jump list item.
+
+352
+00:47:24,201 --> 00:47:29,721
+So that's the new one that we built. This is the old one. And then there's something called an s data obj that uses it.
+
+353
+00:47:36,171 --> 00:47:39,381
+Now that file exists, call in there is probably completely unnecessary.
+
+354
+00:47:39,381 --> 00:47:45,680
+I'm not sure if it's possible. Get rid of the get last modified time and I wrote.
+
+355
+00:47:45,681 --> 00:47:52,340
+I think what we can do here is introduce a new method fabric in fabric on helper fabric kind of helper obtain cached icon file async.
+
+356
+00:47:52,341 --> 00:48:00,261
+We can then transition the new jobless back end to end this usage here, which already ignores the synchronous return value to that new method.
+
+357
+00:48:00,261 --> 00:48:03,711
+The new method can then do the existence testing starting on the IO thread rather than the main thread
+
+358
+00:48:03,711 --> 00:48:08,031
+and call into a random over the path to the cache five icon or as result reporting what has gone wrong.
+
+359
+00:48:08,451 --> 00:48:13,931
+Then we can update Jumbo's builder obtain and cache fab icon to return a promise instead needs a new back.
+
+360
+00:48:13,971 --> 00:48:19,851
+So that was my plan. I don't know if we're going to get that done now, but we can start.
+
+361
+00:48:22,281 --> 00:48:29,391
+So let's think this through. I'm going to start by creating a note for myself and new note.
+
+362
+00:48:31,641 --> 00:48:39,681
+I like to copy the boat name and I put the new URL in here.
+
+363
+00:48:40,821 --> 00:48:48,001
+Okay, So here's my comment. Here's what I wrote.
+
+364
+00:48:48,021 --> 00:48:54,031
+But so. BLOCK quote.
+
+365
+00:48:54,721 --> 00:48:58,071
+BLOCK Quoting here. Yeah.
+
+366
+00:49:00,631 --> 00:49:13,771
+Okay, then turn that off. That still seems like a solid plan.
+
+367
+00:49:14,371 --> 00:49:22,560
+Let's break down how to do this. The first thing it says is that we're going to create a new method called fabric on helper obtain cached.
+
+368
+00:49:22,561 --> 00:49:27,571
+I can file async. Let's quickly understand what.
+
+369
+00:49:30,651 --> 00:49:35,031
+Uh, so let's start a new chapter or whatever.
+
+370
+00:49:35,031 --> 00:49:44,691
+Like each one. Let's quickly understand what this thing will need to do by examining the synchronous version.
+
+371
+00:49:46,221 --> 00:49:52,051
+So obtain cached icon file. Let's read the source.
+
+372
+00:49:54,781 --> 00:49:58,181
+It's not too long. 610.
+
+373
+00:49:58,361 --> 00:50:04,421
+Okay. It's like 50 lines and there's even a block quote.
+
+374
+00:50:04,631 --> 00:50:07,150
+Amazing. So it's a static method.
+
+375
+00:50:07,151 --> 00:50:16,921
+If the data is available, we'll immediately will synchronously return to the path on disk where the Vatican for a fabric on page two array is stored.
+
+376
+00:50:16,931 --> 00:50:22,840
+If the fabric does not exist or its cache is expired, the method will kick off an async request for the icons.
+
+377
+00:50:22,841 --> 00:50:28,061
+So the next time the method is called, it will be available so that it's like this half.
+
+378
+00:50:28,931 --> 00:50:33,340
+It's like this fire and forget sort of thing where it's just like, Hey, do you have here's a fab icon.
+
+379
+00:50:33,341 --> 00:50:39,971
+You are. I do you have this cache on the disk And if we do like we do synchronous disk reading to see if it's there.
+
+380
+00:50:39,971 --> 00:50:43,751
+And if so, then like, here it is, here it is, here it is on the disk.
+
+381
+00:50:43,961 --> 00:50:44,681
+Here's the path.
+
+382
+00:50:44,951 --> 00:50:52,721
+Failing that, we queue up a job in the background to go and get it and we return an error code to the caller and then the next time you call,
+
+383
+00:50:53,141 --> 00:50:58,421
+hopefully that background task has gotten the fab icon and written it to disk and then you'll get a success case.
+
+384
+00:50:58,421 --> 00:51:01,511
+So it's like this hybrid synchronous asynchronous thing.
+
+385
+00:51:01,691 --> 00:51:08,591
+Hi Shawshank. Hi. I see their Z and then she were talking about go and rust.
+
+386
+00:51:10,031 --> 00:51:16,391
+There's some some like a spicy critique of of go there with oof from Dennis.
+
+387
+00:51:16,871 --> 00:51:21,310
+I've never written go I've never written go I've written a little bit of rust I'm not very good at it never
+
+388
+00:51:21,311 --> 00:51:26,741
+written any go They both arrived at around the same time from what I can tell with the kind of hit the,
+
+389
+00:51:27,101 --> 00:51:35,650
+the sort of the 1.0 hey start using this in production at around what I thought of as like the same time.
+
+390
+00:51:35,651 --> 00:51:46,631
+But maybe I'm misremembering and but I've never had the opportunity or the rationale the reason to use go maybe some day I always go with Rust,
+
+391
+00:51:46,631 --> 00:51:52,571
+says Danny. Call and that's not my job. Was Danny Collins joke. All credit where credit's due as a great pun.
+
+392
+00:51:52,841 --> 00:51:56,501
+I'm going to play a sound for that. Oh, yeah?
+
+393
+00:51:57,641 --> 00:52:02,951
+Well, I can't do my work.
+
+394
+00:52:03,101 --> 00:52:06,111
+Why? Just be here. Be so good.
+
+395
+00:52:06,401 --> 00:52:11,681
+Okay. Let's take a look at the.
+
+396
+00:52:15,331 --> 00:52:19,711
+Let's take a look at the the signature of the original.
+
+397
+00:52:19,711 --> 00:52:27,181
+It takes a you or I for the fabric. I'm going to guess this is like an eight param, the IEC file path.
+
+398
+00:52:27,661 --> 00:52:31,201
+This is the thread that we want to do the background fetch on in the event that.
+
+399
+00:52:36,531 --> 00:52:41,091
+In the event that we're going to go get it in the background.
+
+400
+00:52:41,361 --> 00:52:45,561
+A year sought to distinguish between jump list cache and shortcut cache.
+
+401
+00:52:46,941 --> 00:52:49,791
+Oh, so we have two different places where we might store these things.
+
+402
+00:52:49,791 --> 00:52:59,361
+That's kind of awkward and executed in the IO thread when the fabric on cache is available.
+
+403
+00:53:03,511 --> 00:53:07,391
+The rumble. So there's almost like this.
+
+404
+00:53:07,601 --> 00:53:13,930
+You can pass this rideable. It's like, hey, run this whenever the the the thing finally shows up.
+
+405
+00:53:13,931 --> 00:53:18,431
+So again, it's like half synchronous, half asynchronous.
+
+406
+00:53:18,641 --> 00:53:24,491
+And the first thing to do is to get the ISO file path, get output icon path.
+
+407
+00:53:25,501 --> 00:53:31,561
+Check if the file already exists. So I guess this is like something that we would calculate.
+
+408
+00:53:33,001 --> 00:53:42,631
+Obtains the ISO path for the five icon at page that we that this URL, if successful of file path on the disk is in the format some cash,
+
+409
+00:53:42,631 --> 00:53:47,011
+some hash of the ride on ikoyi jerry the name of the cryptographically secure hash function order to
+
+410
+00:53:47,281 --> 00:53:51,331
+ensure that malicious websites can intentionally craft URLs to collide with legitimate websites.
+
+411
+00:53:51,421 --> 00:53:55,681
+Okay, that's good. So we use some hashing.
+
+412
+00:53:57,001 --> 00:54:09,331
+Um. And does this do we hash you are I don't think.
+
+413
+00:54:11,511 --> 00:54:16,221
+That does I? Oh, well, we get the local profile directory.
+
+414
+00:54:16,881 --> 00:54:24,741
+Does this Do I? Oh, we get the directory. I have a feeling this just gets.
+
+415
+00:54:25,521 --> 00:54:30,441
+I don't think that, does I? Oh, until you actually manipulated it. I think that's just a look up.
+
+416
+00:54:32,471 --> 00:54:35,620
+And then you append the thing. I don't think this does I?
+
+417
+00:54:35,621 --> 00:54:41,201
+Oh, yes. We get a directory, but we don't do any operations on it.
+
+418
+00:54:41,381 --> 00:54:46,601
+This is just a lookup, a static lookup of where a directory should be on the disk.
+
+419
+00:54:47,261 --> 00:54:50,441
+So this is IO three which is IO free, which is nice.
+
+420
+00:54:52,451 --> 00:54:57,411
+It also occurs to me like hash you are. What is this to get in crypto hash.
+
+421
+00:54:57,431 --> 00:55:05,511
+I don't know if. You could run this off of the main thread.
+
+422
+00:55:06,831 --> 00:55:17,691
+Maybe you could, but I think it's probably safe enough to not like it's probably not important to do that part off of the main thread.
+
+423
+00:55:18,141 --> 00:55:22,341
+We can probably do that in the same thread, in the main thread.
+
+424
+00:55:23,091 --> 00:55:28,611
+It's this part we check to see if it exists and if it does exist.
+
+425
+00:55:30,541 --> 00:55:35,011
+Then we return. Oh, we see whether or not it's expired.
+
+426
+00:55:36,211 --> 00:55:41,491
+And if so, we go ahead and get we will fetch it.
+
+427
+00:55:42,301 --> 00:55:45,961
+Otherwise, it doesn't exist. Go ahead and fetch it anyways.
+
+428
+00:55:47,221 --> 00:55:57,271
+And if it does exist, we'll go ahead and get the path from it. So it's really this exists that does IO and getting the last modified time.
+
+429
+00:55:57,661 --> 00:56:03,331
+I mean I don't know. I would suspect that once you've done this io this stuff is cached.
+
+430
+00:56:03,331 --> 00:56:11,461
+But I could be wrong. I could be wrong. This might do another step to get the that the modified time.
+
+431
+00:56:13,141 --> 00:56:22,261
+Okay. So I understand that. I think Dench, I believe, is reacting to Danny's joke positively.
+
+432
+00:56:24,121 --> 00:56:30,611
+Thumbs up. So let's start by creating a new function signature.
+
+433
+00:56:32,891 --> 00:56:35,891
+What will this look like? Here's.
+
+434
+00:56:36,911 --> 00:56:43,621
+Oh, come on. Code. Now, how do I.
+
+435
+00:56:45,371 --> 00:56:54,111
+Come on. How do I even. Okay.
+
+436
+00:56:54,711 --> 00:56:57,861
+Um. Oh, that's how they want me to do it.
+
+437
+00:57:00,231 --> 00:57:05,601
+Uh, as a result of having on help her obtain cash, I can file a sing.
+
+438
+00:57:08,601 --> 00:57:11,791
+Now is this exposed?
+
+439
+00:57:12,051 --> 00:57:16,761
+Who? Who? How is this exposed? Do we do anything with return value?
+
+440
+00:57:17,181 --> 00:57:21,291
+We do. In the original or in the new jump list.
+
+441
+00:57:22,041 --> 00:57:29,291
+We have this thing called Obtain and cash. Fab icon. And we write this out.
+
+442
+00:57:30,971 --> 00:57:39,711
+So this is going to need to become a sink. And return a promise.
+
+443
+00:57:42,971 --> 00:57:46,871
+What's this used for campaign cash?
+
+444
+00:57:49,661 --> 00:57:53,891
+Optane, Optane and Cache went way. It's over here.
+
+445
+00:57:54,801 --> 00:57:59,241
+For each custom URL will obtain and cache it.
+
+446
+00:58:06,161 --> 00:58:12,461
+And then look at the path back. That path will then be used to populate the list.
+
+447
+00:58:12,461 --> 00:58:33,161
+I see. So this is going to become a sink.
+
+448
+00:58:33,181 --> 00:58:37,441
+I think there's a way. It's like a sink map. And the amazing thing.
+
+449
+00:58:38,901 --> 00:58:48,041
+No map placing. Parade prototype.
+
+450
+00:58:53,971 --> 00:59:06,361
+What else you got? Okay.
+
+451
+00:59:11,431 --> 00:59:18,331
+Okay. Well, we're going to have to change. We're going to have to change this then, like we're doing this fancy map thing.
+
+452
+00:59:19,591 --> 00:59:26,161
+We're going to do something different where we can await each one of these because you can't wait inside of a map.
+
+453
+00:59:26,611 --> 00:59:31,561
+The map function, I don't think I thought for sure there was some kind of like.
+
+454
+00:59:33,601 --> 00:59:37,351
+Maybe it's a TSE 39 proposal. He's thinking now.
+
+455
+00:59:38,781 --> 00:59:47,321
+Async iterator helpers. Sync iterator from async iterator.
+
+456
+00:59:47,351 --> 00:59:51,181
+Maybe that's what I want. Um.
+
+457
+00:59:51,951 --> 00:59:57,081
+Async iterator object for this description.
+
+458
+00:59:59,331 --> 01:00:08,611
+For a weight. Async iterator prototype map.
+
+459
+01:00:13,751 --> 01:00:22,231
+From a async next. A sink or a map.
+
+460
+01:00:23,601 --> 01:00:30,680
+From a sink. That's what it's called from a sink. And it's still, I think, in stage three.
+
+461
+01:00:30,681 --> 01:00:36,531
+So we don't actually have this isn't something that but this is what I was thinking of.
+
+462
+01:00:48,281 --> 01:00:51,331
+Yeah. We, we don't get that.
+
+463
+01:00:51,881 --> 01:01:01,341
+We don't have that just yet. Pretty sure. Oh, we do since 115.
+
+464
+01:01:01,361 --> 01:01:06,521
+Oh, that's interesting. So is this was phase three again?
+
+465
+01:01:06,941 --> 01:01:11,051
+Was this accepted conditional on editor review? It was shipped in 115.
+
+466
+01:01:12,101 --> 01:01:24,211
+Interesting. Away away from async generator, but no error handling for sync iterable is.
+
+467
+01:01:27,231 --> 01:01:33,171
+I don't know if it's worth it to use the the new fancy. It might be more readable to not use the new fancy.
+
+468
+01:01:34,071 --> 01:01:38,060
+So let's not worry about this for now. I think we're getting rabbit hole.
+
+469
+01:01:38,061 --> 01:01:44,811
+So we're going to accept the. There's not going to be a path open right away.
+
+470
+01:01:45,591 --> 01:01:51,801
+I'm considering not accepting an IO thread because, like, I think there's supposed to be a dedicated background thread.
+
+471
+01:01:54,371 --> 01:01:57,531
+Background, Fred. Who?
+
+472
+01:02:00,381 --> 01:02:04,251
+Thread Manager Background Thread Pool.
+
+473
+01:02:08,841 --> 01:02:14,211
+I have a thread being io thread pool io pool.
+
+474
+01:02:15,621 --> 01:02:25,881
+Swap m io pool. Am I a fool used threat not President Turgut a dictator to try to.
+
+475
+01:02:30,171 --> 01:02:40,521
+Dispatch. Dispatch on background event target you dispatcher run a ball with flags and the flags are like it may block.
+
+476
+01:02:41,061 --> 01:02:47,481
+If it may block, then use the IO pool. Okay, So that's what we use here.
+
+477
+01:02:51,121 --> 01:02:54,431
+Background. Event target.
+
+478
+01:02:59,331 --> 01:03:06,541
+Get current serial events on target. In background.
+
+479
+01:03:06,551 --> 01:03:09,671
+You get Syria or current Syria willing to target.
+
+480
+01:03:10,451 --> 01:03:14,391
+That's what I want. FM.
+
+481
+01:03:26,921 --> 01:03:33,191
+Yeah. Same on the IO utilize uses and background event target equals.
+
+482
+01:03:36,181 --> 01:03:40,281
+Sorry. I think I missed it. It's. Get her address. Create background task.
+
+483
+01:03:40,471 --> 01:03:43,830
+Oh, no. It has its own task.
+
+484
+01:03:43,831 --> 01:03:54,481
+You. Right.
+
+485
+01:03:54,631 --> 01:03:58,291
+Just use like an IOU tells.
+
+486
+01:04:21,281 --> 01:04:28,270
+I guess it's not really used from C++. Hotels makes a background event target.
+
+487
+01:04:28,271 --> 01:04:32,471
+That is what you want to do. You make your own background event. You use the same thread under the hood.
+
+488
+01:04:32,561 --> 01:04:36,211
+Oh, okay. Okay.
+
+489
+01:04:36,721 --> 01:04:39,811
+That's what you want to do. I want to make my own background event. Okay.
+
+490
+01:04:41,001 --> 01:04:50,931
+Okay. Thank you. Thank you, Barry. Target.
+
+491
+01:04:54,571 --> 01:05:00,451
+What's the lifetime of this thing? Dispatch.
+
+492
+01:05:09,611 --> 01:05:14,471
+It's like. Yeah.
+
+493
+01:05:14,521 --> 01:05:22,451
+Okay. And when you tells let's go back to when you tell us for a second here.
+
+494
+01:05:23,861 --> 01:05:28,691
+Whereas when you tells. Yeah, we have.
+
+495
+01:05:34,201 --> 01:05:39,191
+What is the signature of this thing? Static renewables.
+
+496
+01:05:42,101 --> 01:05:48,461
+Static. So we might need, like, a static event.
+
+497
+01:05:49,531 --> 01:05:56,071
+Q. Thread.
+
+498
+01:05:56,401 --> 01:06:15,171
+Thread. I mean, here's the other thing that maybe will simplify things.
+
+499
+01:06:15,201 --> 01:06:18,681
+I mean, we're already accepting a thread in the old caller.
+
+500
+01:06:19,041 --> 01:06:24,530
+So we know that all of the existing callers pass one of these things we might just
+
+501
+01:06:24,531 --> 01:06:30,291
+like start by making it so that we still accept a threat to do this dispatch on.
+
+502
+01:06:32,911 --> 01:06:42,991
+That's one way of doing it. It does mean that we end up spawning a thread that's possibly if the past in the thread has been shut down.
+
+503
+01:06:45,241 --> 01:06:50,951
+Probably would make Chris Wright sad. Also this boolean.
+
+504
+01:06:51,551 --> 01:07:01,951
+I'm not super happy about. I kind of want this to be like a an enum for the type obtain and cache.
+
+505
+01:07:01,961 --> 01:07:05,771
+So. Cash.
+
+506
+01:07:07,331 --> 01:07:18,661
+Cash type. Cash type. And I want this to return.
+
+507
+01:07:24,861 --> 01:07:28,651
+I want this to return. The problem is that we have some consumers that are.
+
+508
+01:07:32,421 --> 01:07:36,981
+Some consumers that are in C++. And then we have one that.
+
+509
+01:07:40,411 --> 01:07:47,221
+Is being exposed to JavaScript. So if this returns a moore's promise, we're going to have to like convert it into a DOM promise,
+
+510
+01:07:49,561 --> 01:07:56,701
+or we're going to have to create a DOM promise and resolve that Dom promise on the Moore's promise resolves and I think.
+
+511
+01:07:58,281 --> 01:08:01,461
+I think I've done this before.
+
+512
+01:08:06,591 --> 01:08:11,631
+No, I thought I've. There's a way you can, like, return.
+
+513
+01:08:15,101 --> 01:08:21,991
+It's like a promise rapper. We get a mars promise from a dawn Promise.
+
+514
+01:08:26,551 --> 01:08:35,161
+The promise is promise. I can easily reduce energy rejection.
+
+515
+01:08:35,191 --> 01:08:38,581
+How is that native event handle? Air handlers can consume it.
+
+516
+01:08:39,661 --> 01:08:45,991
+So like, who does that? See if anyone's done that before.
+
+517
+01:08:47,681 --> 01:08:53,621
+Promise. Try. Errors cancel or passing in.
+
+518
+01:08:56,331 --> 01:08:59,661
+As a result value. Okay, That's nice. That's not what I wanted.
+
+519
+01:09:06,141 --> 01:09:14,121
+It'd be kind of awkward if I have to make all consumers play the the jazz context game.
+
+520
+01:09:14,131 --> 01:09:17,891
+I don't want to do that. Miles. Promise.
+
+521
+01:09:19,811 --> 01:09:25,211
+What's the way you turn these into, Don? So you've heard of Don?
+
+522
+01:09:25,211 --> 01:09:28,391
+Promise? This feels familiar. I feel like I've looked into this before.
+
+523
+01:09:33,061 --> 01:09:37,741
+Practice, practice, practice, practice, practice, practice, practice, practice, practice.
+
+524
+01:09:37,771 --> 01:09:40,891
+When do you do, Dom? Promise stuff.
+
+525
+01:09:58,261 --> 01:10:01,471
+Don promise You have the manly man.
+
+526
+01:10:01,801 --> 01:10:04,891
+I have to manually management. Are you serious?
+
+527
+01:10:05,401 --> 01:10:12,841
+Are you sure that there's no, like, utility? I feel like this is the sort of thing that there's a utility for that you can like.
+
+528
+01:10:13,621 --> 01:10:16,801
+Or like a rapper. I feel like I've seen this. Where have I seen this?
+
+529
+01:10:24,471 --> 01:10:29,641
+It's time. Where have I seen this?
+
+530
+01:10:36,551 --> 01:10:40,811
+Why do you bring this in? Yeah.
+
+531
+01:10:40,821 --> 01:10:45,791
+It's just in the headers a. Um.
+
+532
+01:11:08,721 --> 01:11:12,560
+Mars Promise Project. Oh, okay. Hold on a second. Promise.
+
+533
+01:11:12,561 --> 01:11:16,941
+Native handler. This feels familiar.
+
+534
+01:11:20,991 --> 01:11:24,141
+Allow C++ to react to a promise being rejected to resolve problems.
+
+535
+01:11:26,311 --> 01:11:31,201
+This is just to allow C++ to work properly with jazz promises just on promises.
+
+536
+01:11:33,181 --> 01:11:40,531
+I use this too. This is what I remember uses to when you subscribe to a jazz promise to settle a mars promise.
+
+537
+01:11:44,451 --> 01:11:48,451
+Wait. What? Does it work the other way?
+
+538
+01:11:53,511 --> 01:11:57,711
+Project on destruction. That's not exactly it, too. All right.
+
+539
+01:11:57,711 --> 01:12:11,091
+Well, Barrett's right, and we have to do this manually. Okay, so this is going to return a AMA's promise.
+
+540
+01:12:11,901 --> 01:12:20,051
+Let's. Let's see what that looks like. Whenever things return, Mars promises it's going to return a moore's promise.
+
+541
+01:12:21,021 --> 01:12:40,680
+And then I think. I don't like them.
+
+542
+01:12:40,681 --> 01:12:52,081
+Maybe. The promise that returns a maybe it's a kind of a rusty thing to do, but I kind of like it a maybe might have some value or not be some value.
+
+543
+01:12:52,321 --> 01:12:58,111
+I think instead of it being a maybe I want to be like, promise that returns some.
+
+544
+01:13:03,681 --> 01:13:08,051
+Because I exist. No. Okay, maybe.
+
+545
+01:13:12,831 --> 01:13:17,521
+The returns may be born and as a result.
+
+546
+01:13:19,931 --> 01:13:25,461
+If it resolves, I guess it's going to be. It's going to be the value.
+
+547
+01:13:25,461 --> 01:13:29,301
+Otherwise it's going to be was the template again.
+
+548
+01:13:29,331 --> 01:13:32,361
+It's like resolved value reject value is exclusive.
+
+549
+01:13:32,391 --> 01:13:41,091
+Remind me again what is exclusive is. When is exclusive is true the most pronounced as a release mode assertion that there is,
+
+550
+01:13:41,091 --> 01:13:48,731
+at least at most, one call to either then or chain to that seems right.
+
+551
+01:13:48,741 --> 01:13:53,601
+That seems like a nice defensive thing to do. Um.
+
+552
+01:13:55,681 --> 01:13:58,821
+Here's documentation on Mars promises.
+
+553
+01:14:05,441 --> 01:14:06,131
+Your mom's probably.
+
+554
+01:14:08,591 --> 01:14:23,561
+Okay, So we're going to return a moore's promise that returns either and as humbly painful as the signature obtained cached back on it.
+
+555
+01:14:24,371 --> 01:14:29,381
+It's an NSS string. It's either going to be it and a string reference.
+
+556
+01:14:33,131 --> 01:14:43,291
+Or if it rejects, it will be. Some kind of failure code.
+
+557
+01:14:44,311 --> 01:14:47,551
+It will never return. And is error not available if there is no.
+
+558
+01:14:50,341 --> 01:14:56,701
+If we're on the way to getting it in that case, we'll just wait until we got we've got it before we resolve with the string.
+
+559
+01:14:56,701 --> 01:15:03,961
+So and that's resolved. Any other examples of this?
+
+560
+01:15:04,331 --> 01:15:08,861
+I guess none. I promise.
+
+561
+01:15:16,151 --> 01:15:19,661
+I can see strings being returned. See? Strings.
+
+562
+01:15:20,231 --> 01:15:26,441
+Strings. So references are probably not what I want to do if I'm reading this correctly.
+
+563
+01:15:27,581 --> 01:15:34,451
+I probably then want in a string. This string.
+
+564
+01:15:36,411 --> 01:15:41,991
+Oh, yeah. This looks. This looks like the pattern. And then we declare it using session prowls.
+
+565
+01:15:42,001 --> 01:15:45,051
+This returns the rest. Okay. I like this. I like this.
+
+566
+01:15:45,501 --> 01:15:54,621
+Using session promise. I'm going to call this obtained cached icon file async promise equals minus promise.
+
+567
+01:15:55,821 --> 01:16:04,851
+And that should be obtained. And that's what this is going to return a pointer to that.
+
+568
+01:16:16,511 --> 01:16:23,830
+I am going to allow it to pass in the thread. That will be a follow up bug where we maybe have all of the stuff.
+
+569
+01:16:23,831 --> 01:16:27,401
+Use the shared thread pool like the background thread pool.
+
+570
+01:16:31,221 --> 01:16:35,381
+I just want to simplify. So that's going to be our signature.
+
+571
+01:16:42,101 --> 01:16:47,711
+Nice. How do I.
+
+572
+01:16:50,341 --> 01:16:55,451
+Need to get text under this, Mario. All right.
+
+573
+01:16:56,621 --> 01:17:01,391
+So let's start there. Let's put our definition in.
+
+574
+01:17:03,891 --> 01:17:08,151
+I should probably have had the build going in it, considering how long that took to just sort of think through that.
+
+575
+01:17:08,451 --> 01:17:11,931
+I should have had the build going in the background, but I didn't.
+
+576
+01:17:13,521 --> 01:17:20,511
+Okay, so tame and cash in.
+
+577
+01:17:20,991 --> 01:17:26,851
+What is it? Obtain cashed. Seriously.
+
+578
+01:17:26,851 --> 01:17:30,131
+That's not in when you tells that age. Okay.
+
+579
+01:17:30,271 --> 01:17:35,581
+You're just static when you tell CPB obtained cached.
+
+580
+01:17:36,741 --> 01:17:43,231
+Okay, so. We're going to do it right underneath.
+
+581
+01:17:52,981 --> 01:18:01,581
+You might need to put this in the header. Sure know Pointer.
+
+582
+01:18:04,281 --> 01:18:07,931
+For now. Turns out page.
+
+583
+01:18:18,521 --> 01:18:39,311
+Using. Is it going to like this widget?
+
+584
+01:18:42,691 --> 01:18:47,161
+Right. That's where it is. Which is when you tells, Oh, no, sorry, it's in Mars blue.
+
+585
+01:18:48,151 --> 01:19:00,141
+It's in Mars blue. Well, that's enough, though, because, yeah, it doesn't know what I'm talking about.
+
+586
+01:19:01,501 --> 01:19:10,831
+When you tell Stone Age. What I'm supposed to do.
+
+587
+01:19:11,501 --> 01:19:15,881
+And then when you tell us that cap is over here, let's move that.
+
+588
+01:19:20,811 --> 01:19:30,411
+Cash type. I'm just going to have that be a bull for now. Let's build models glue.
+
+589
+01:19:37,121 --> 01:19:43,981
+Let's build a widget. Oh, the.
+
+590
+01:19:50,541 --> 01:19:53,631
+There is no header error use of undeclared identifier.
+
+591
+01:19:59,611 --> 01:20:02,971
+Initialize return object with an r value of no pointer.
+
+592
+01:20:04,411 --> 01:20:11,001
+Ref pointer is. Not an end.
+
+593
+01:20:12,781 --> 01:20:17,921
+Nine 1052. What's happening here?
+
+594
+01:20:34,341 --> 01:20:40,341
+Declared somewhere else. I have a kind of helper of king. So they're like a declaration of mission.
+
+595
+01:20:41,241 --> 01:20:44,841
+Yeah. Right here. And win utils. Am I in?
+
+596
+01:20:45,441 --> 01:20:53,721
+Am I in the wrong when you tells I'm in the wrong when you tells gang there's two things
+
+597
+01:20:53,721 --> 01:20:59,451
+called when you tells there's one in misc mas glue misc and there's one in widget.
+
+598
+01:21:00,941 --> 01:21:06,711
+Ho. Wow. Okay. Hilarious.
+
+599
+01:21:11,321 --> 01:21:25,401
+So tame. And maybe instead of I should be like typedef ing.
+
+600
+01:21:28,671 --> 01:21:32,721
+All my life I wanted to type. There was promise.
+
+601
+01:21:36,061 --> 01:21:41,461
+Something like that. Yeah.
+
+602
+01:21:45,061 --> 01:21:51,141
+Um. High def. Obtain.
+
+603
+01:21:54,071 --> 01:22:00,621
+It's the other way round. And then.
+
+604
+01:22:08,291 --> 01:22:12,041
+I put it on your signature static.
+
+605
+01:22:12,521 --> 01:22:16,041
+Right corner. Uh.
+
+606
+01:22:19,251 --> 01:22:23,311
+A sink and take the your eye.
+
+607
+01:22:23,601 --> 01:22:26,811
+It's not going to accept string.
+
+608
+01:22:27,411 --> 01:22:31,461
+It will take that. It won't take the running.
+
+609
+01:22:36,261 --> 01:22:41,851
+Right. We get rid of all.
+
+610
+01:22:43,271 --> 01:22:50,201
+Now, what do you think about that widget? You should typedef the promise type.
+
+611
+01:22:52,181 --> 01:22:55,301
+Did we? Yes. Sorry. I'm just.
+
+612
+01:22:56,201 --> 01:23:02,291
+I'm agreeing with you, Barry. And I did. It happened to have already had that same instinct, and I dig it.
+
+613
+01:23:03,911 --> 01:23:07,031
+Okay, so unknown type. It doesn't know what I'm talking about. Oh, yeah.
+
+614
+01:23:07,031 --> 01:23:11,441
+Sorry. I've got to use Vatican helper.
+
+615
+01:23:13,061 --> 01:23:19,671
+Sure. I guess I could say using.
+
+616
+01:23:28,691 --> 01:23:33,491
+In fact, that's what I'm going to do. I'm going to say using father, I can help her at the top of this.
+
+617
+01:23:41,441 --> 01:23:45,861
+Oops. Would you?
+
+618
+01:23:51,031 --> 01:23:55,271
+Help her out here.
+
+619
+01:23:55,881 --> 01:24:10,851
+What's going. Okay.
+
+620
+01:24:14,011 --> 01:24:19,321
+So we've got it building. The next thing I wanted to do is I want to, instead of using a boolean,
+
+621
+01:24:20,101 --> 01:24:25,171
+I feel like it'd be better if there wasn't enough room for these different, like, cash types.
+
+622
+01:24:26,401 --> 01:24:30,601
+I'd feel better about that. So let me just remind myself.
+
+623
+01:24:34,141 --> 01:24:39,021
+In class capabilities in.
+
+624
+01:24:42,571 --> 01:24:48,141
+This thing. Team.
+
+625
+01:24:51,511 --> 01:24:55,571
+In. Class.
+
+626
+01:24:57,941 --> 01:25:03,171
+Okay, I'll say it's, uh, Icon Cash store.
+
+627
+01:25:05,431 --> 01:25:08,951
+UN doesn't need to be 32 bits.
+
+628
+01:25:13,341 --> 01:25:20,071
+Uh. Let's say that it's like there are two of them.
+
+629
+01:25:21,251 --> 01:25:24,481
+Where's the Jump List store?
+
+630
+01:25:26,171 --> 01:25:30,521
+I can't cash in their junk list there.
+
+631
+01:25:32,351 --> 01:25:36,281
+And short cut. You dare.
+
+632
+01:25:40,691 --> 01:25:43,871
+Good. You're too.
+
+633
+01:25:45,751 --> 01:25:57,721
+Uh, taking my car. Cash. Or Castor.
+
+634
+01:26:23,281 --> 01:26:33,601
+What do you think about that? Who using Declaration cannot refer to a class member using the Alias Declaration, which means.
+
+635
+01:26:37,031 --> 01:26:41,381
+Do I have to say I'm using the fab icon helper instead and I just get it for free.
+
+636
+01:26:43,101 --> 01:26:50,531
+Maybe that's what it means. Forgotten.
+
+637
+01:26:51,201 --> 01:27:04,661
+Forgotten how to C++. Everybody writes. Mm hmm.
+
+638
+01:27:04,701 --> 01:27:10,571
+Mm mm mm mm mm. Still not a fan unknown type name.
+
+639
+01:27:10,721 --> 01:27:47,081
+Did I mean that? Well, I'm bored of the of this particular problem, so I'm going to say that I can help her.
+
+640
+01:27:49,361 --> 01:27:52,541
+I'll deal with the other thing. The the name's facing later.
+
+641
+01:27:54,281 --> 01:28:05,911
+Just build it. Okay, the next step.
+
+642
+01:28:09,051 --> 01:28:14,151
+Is we're going to set this up to be documented.
+
+643
+01:28:20,161 --> 01:28:29,701
+Because that seems to be a good idea. And then we have to return a mars promise of the type that we just declared.
+
+644
+01:28:45,311 --> 01:28:50,321
+Create and resolve, create and reject to ever just have like a create.
+
+645
+01:28:53,471 --> 01:28:57,191
+Create and reject. Create and resolve. Create and resolve.
+
+646
+01:29:20,141 --> 01:29:23,831
+That's probably the first. Check route manifest.
+
+647
+01:29:24,901 --> 01:29:37,891
+Then return. Mm hmm.
+
+648
+01:29:42,561 --> 01:29:53,551
+Hmm. On this.
+
+649
+01:29:54,151 --> 01:29:59,761
+Where is the creation? And basically need to see you create one of these things.
+
+650
+01:30:02,411 --> 01:30:12,911
+Oops. I guess you just construct it.
+
+651
+01:30:15,911 --> 01:30:21,131
+You promise that it works? Probably news Promise.
+
+652
+01:30:21,221 --> 01:30:27,581
+New promise. Holder. Oh, know, that's from private.
+
+653
+01:30:29,791 --> 01:30:38,711
+You're a holder. The promise.
+
+654
+01:30:41,921 --> 01:30:45,281
+You get you insure it raw holder insure.
+
+655
+01:30:49,101 --> 01:30:53,111
+Just encapsulate problems for particular always in the number available for classes, method returns a promise.
+
+656
+01:30:54,921 --> 01:31:02,621
+Okay. Except that we're not a method. We're not a member variable.
+
+657
+01:31:02,631 --> 01:31:07,071
+We're not maintaining any state. So that's a problem.
+
+658
+01:31:08,451 --> 01:31:14,841
+The we're in a static method. I guess you could have a static.
+
+659
+01:31:16,641 --> 01:31:20,211
+Member, but you might get a bunch of these concurrently.
+
+660
+01:31:58,511 --> 01:32:01,911
+So here's a static. Okay. Its internal.
+
+661
+01:32:05,061 --> 01:32:10,861
+Ooh, Nice syntax. Promise holder ensure function.
+
+662
+01:32:12,231 --> 01:32:16,971
+Okay. So it seems like, Oh, that's just forwarding to a thing.
+
+663
+01:32:17,991 --> 01:32:26,241
+It's no good. It's no good.
+
+664
+01:32:39,741 --> 01:32:45,861
+Private. Does that mean private? As promised, private.
+
+665
+01:32:55,001 --> 01:32:58,211
+Those two separate the public interface upon which consumers the policy input methods
+
+666
+01:32:58,211 --> 01:33:02,260
+like than from the private face partners create a promise may invoke resolve reject
+
+667
+01:33:02,261 --> 01:33:06,701
+API should create and store mass from eighties should create and store a mass promise
+
+668
+01:33:06,701 --> 01:33:10,541
+private usually be Obama's promise holder in return of laws promised to consumers.
+
+669
+01:33:11,411 --> 01:33:18,221
+I see. Interesting.
+
+670
+01:33:30,111 --> 01:33:33,971
+Point. Which is part of his private function.
+
+671
+01:33:42,681 --> 01:33:52,971
+I must. What I want to do is I want to create a promise holder that's not a a member variable.
+
+672
+01:33:52,971 --> 01:33:55,701
+I want to I want to pass the holder.
+
+673
+01:33:56,691 --> 01:34:07,611
+So we kind of have this example and other jump listings, um, jump lists Builder, where I create a holder that gets passed to.
+
+674
+01:34:12,621 --> 01:34:17,271
+The other thread and the other thread keeps it alive.
+
+675
+01:34:19,281 --> 01:34:22,581
+Three pointer handle. Those.
+
+676
+01:34:33,451 --> 01:34:40,711
+Except no. On promise.
+
+677
+01:34:41,731 --> 01:34:47,341
+Here's a promise. Promise. Promise.
+
+678
+01:34:48,451 --> 01:35:07,451
+Promise is a promise. I think I need to learn more about Moore's problems, and I think I might have to call it soon.
+
+679
+01:35:08,201 --> 01:35:16,221
+Um. I'll ask for and whether the president of the American Army was just proud.
+
+680
+01:35:16,221 --> 01:35:21,291
+Sponsor of 297 benchmarks Resolution rejection. His normal road trip to the event loops that flies during semantics.
+
+681
+01:35:22,281 --> 01:35:25,701
+Mm hmm. Well, that promises them to me in spirit.
+
+682
+01:35:25,701 --> 01:35:31,241
+Jazz promises. That's France's threat safe and maybe the end on any thread.
+
+683
+01:35:33,061 --> 01:35:38,071
+That's good. And call accepts resolve or reject call backs during the magic after.
+
+684
+01:35:49,261 --> 01:35:53,931
+Converting. To a man's province, which is called completion province.
+
+685
+01:35:55,171 --> 01:36:00,231
+And contrary to a most promise requests, it allows a caller to cancel the delivery of the resolve or check value if it is not already occurred.
+
+686
+01:36:00,391 --> 01:36:05,711
+Disconnect. Okay.
+
+687
+01:36:08,081 --> 01:36:13,271
+Some magic powers there when comparing a mouse. Promise those promise chaining.
+
+688
+01:36:15,181 --> 01:36:18,361
+Most presidents skirt traditional become conventions by returning as ref points
+
+689
+01:36:18,361 --> 01:36:21,121
+rather than already address for various methods than to allow and chaining
+
+690
+01:36:21,121 --> 01:36:23,910
+calls that clutter in both intermediate variables without introducing separate
+
+691
+01:36:23,911 --> 01:36:28,621
+API variance for colors that want to return value from those that don't look.
+
+692
+01:37:01,621 --> 01:37:08,101
+Do you use it? To use it to test How beautiful.
+
+693
+01:37:08,131 --> 01:37:16,921
+Let's look at tests. That's a great idea. Okay, so here's a test.
+
+694
+01:37:17,701 --> 01:37:22,201
+Create a task to test a promise. You create and resolve.
+
+695
+01:37:23,771 --> 01:37:27,551
+All right. Create or inject. Create and resolve.
+
+696
+01:37:27,791 --> 01:37:33,840
+Create and reject. Here we create one that doesn't do anything necessarily.
+
+697
+01:37:33,841 --> 01:37:48,751
+So that's probably our model that we start here. Okay.
+
+698
+01:38:00,641 --> 01:38:04,211
+So we're going to return a promise.
+
+699
+01:38:07,641 --> 01:38:11,871
+So rest pointer. Promise.
+
+700
+01:38:18,951 --> 01:38:38,711
+No. I want the return value to be. Paid promise.
+
+701
+01:38:41,211 --> 01:38:44,451
+Print. Promise this.
+
+702
+01:38:46,301 --> 01:38:49,451
+Dom. What's this? Dom Moore's promised request.
+
+703
+01:38:49,481 --> 01:38:55,481
+Holder What's this? It's this request for the honor discount.
+
+704
+01:38:58,271 --> 01:39:08,021
+So if you have a power player, Don, promise. I had a promise to create a dorm as problems request of older global.
+
+705
+01:39:10,481 --> 01:39:17,431
+Oh. When Moore's promises are being consumed by binding layer code.
+
+706
+01:39:21,551 --> 01:39:31,891
+Holder. Hmm.
+
+707
+01:39:34,621 --> 01:39:39,721
+That's handy. And maybe.
+
+708
+01:39:44,261 --> 01:39:51,401
+That might be handy for the expectant part when we expose this tax become.
+
+709
+01:39:52,121 --> 01:40:02,831
+So let me. This might be handy. This might be handy when we work on the X become exposure of this method.
+
+710
+01:40:04,871 --> 01:40:16,751
+Okay, that's. That's good. I think what I want is, like I.
+
+711
+01:40:23,591 --> 01:40:40,571
+Seriously. There's I've definitely seen. Promise Holder insure private throttle promise.
+
+712
+01:40:43,111 --> 01:40:56,081
+I'm sure. I was.
+
+713
+01:40:57,401 --> 01:41:09,121
+Some models. Promise. Okay. And promise Holder and then promise Holder is a promise HOLDER This promise Holder extends his promise.
+
+714
+01:41:09,121 --> 01:41:17,310
+HOLDER based on going in circles here, gang. Well, as promised.
+
+715
+01:41:17,311 --> 01:41:23,021
+Holder. Paul.
+
+716
+01:41:23,031 --> 01:41:31,991
+Promise, Engineer. Sure. Is there like here, Holder?
+
+717
+01:41:40,201 --> 01:41:46,051
+I think this is the form that we want. Instead of doing this move, we're going to.
+
+718
+01:41:48,761 --> 01:41:51,971
+Yeah. Okay. Okay. Okay. I know what I want to do.
+
+719
+01:41:52,481 --> 01:41:56,251
+This is the form. This looks right.
+
+720
+01:41:59,361 --> 01:42:16,631
+So Moore's promise Holder. Again, you got to figure out that name spacing thing where you create a holder and then we're going to create the promise.
+
+721
+01:42:20,011 --> 01:42:29,251
+Point pointer. Promise it was colder in Sure funk.
+
+722
+01:42:29,431 --> 01:42:32,851
+Okay, We're going to ensure some funk here. Then we're going to turn.
+
+723
+01:42:32,851 --> 01:42:39,491
+Promise not forget. Does that compile?
+
+724
+01:42:43,951 --> 01:42:47,881
+Time, is it? I'm not gonna be late for a thing. Hold on a second. I think there's, like.
+
+725
+01:42:49,951 --> 01:42:53,981
+I'm okay. I'm okay again. Okay. Let's go for a little bit longer.
+
+726
+01:42:54,001 --> 01:42:57,631
+I'd like to make a little more forward progress on this. It builds.
+
+727
+01:42:57,661 --> 01:43:13,441
+That's good. And then this is where I want to, like, dispatch a runner and move the holder to the other thread.
+
+728
+01:43:13,501 --> 01:43:29,631
+The audio thread. I would put icon power.
+
+729
+01:43:33,401 --> 01:43:37,061
+If I remember correctly, we determined that this does not do IO.
+
+730
+01:43:40,621 --> 01:43:47,331
+It calculates what the file should be, but it doesn't tell.
+
+731
+01:43:47,341 --> 01:43:53,321
+If it doesn't do IO to verify that the file exists. So we're going to get the path.
+
+732
+01:43:57,011 --> 01:44:18,951
+Let's do that still. Obtain the file path of the ISO, uh, if it exists, is expected to be an ad for a fabric on page, you or I.
+
+733
+01:44:24,561 --> 01:44:25,471
+Um.
+
+734
+01:44:36,891 --> 01:45:03,901
+Uh, a URL shortcut is supposed to be true if using shortcut cache for use shortcut cache door equals a cache door equals icon helper icon cached or.
+
+735
+01:45:08,401 --> 01:45:17,551
+What was the shortcut? Castor. Okay.
+
+736
+01:45:18,701 --> 01:45:30,341
+Now, in the event that if NSA failed or we we're going to want to return and reject the promise, create and reject.
+
+737
+01:45:36,141 --> 01:45:57,831
+Create and reject. Turn.
+
+738
+01:45:58,371 --> 01:46:01,431
+Create and reject her the.
+
+739
+01:46:05,181 --> 01:46:09,711
+Does that build. Let's get funky.
+
+740
+01:46:09,971 --> 01:46:28,181
+That's right. Okay, then we're going to.
+
+741
+01:46:32,151 --> 01:46:37,671
+At that point, we're ready. Like we know that we didn't fail to calculate a path.
+
+742
+01:46:38,091 --> 01:46:43,911
+We're not going to check for existence. We're going to open up our worker or like our task now.
+
+743
+01:46:45,351 --> 01:47:00,641
+And the way we're going to do that is. I.
+
+744
+01:47:05,221 --> 01:47:14,231
+Like, maybe. Dispatch.
+
+745
+01:47:17,501 --> 01:47:22,091
+So we did this in Jobless Builder. But I think we can do better.
+
+746
+01:47:23,531 --> 01:47:28,251
+Dispatch. New round unknowable.
+
+747
+01:47:30,311 --> 01:47:44,791
+Function. Yeah. Dispatch not to main thread.
+
+748
+01:47:44,791 --> 01:47:51,481
+Dispatch to. Where was I?
+
+749
+01:47:51,511 --> 01:47:56,311
+Where was I? Run a low function.
+
+750
+01:48:03,101 --> 01:48:08,911
+Okay, fine. You were honorable folks.
+
+751
+01:48:12,711 --> 01:48:16,761
+Yeah. We use this for. So.
+
+752
+01:48:17,741 --> 01:48:20,841
+How can I help areas when you tools.
+
+753
+01:48:22,641 --> 01:48:27,811
+We'll say. Um, a I read.
+
+754
+01:48:29,411 --> 01:48:40,421
+Dispatch. Call it, and I can help her obtain cash.
+
+755
+01:48:40,541 --> 01:48:49,751
+I can finally sink. Um, I actually think that we had a nice way of doing that, but.
+
+756
+01:48:52,941 --> 01:48:57,711
+No. Okay. Never mind. Um.
+
+757
+01:48:58,081 --> 01:49:06,441
+Ba ba ba ba ba ba ba ba ba ba ba ba ba. Promise Holder's standard move holder.
+
+758
+01:49:11,061 --> 01:49:17,841
+Okay, so this is where we're going to do our magic.
+
+759
+01:49:18,021 --> 01:49:29,921
+And here. I was promised.
+
+760
+01:49:30,141 --> 01:49:33,181
+I don't want to see the usage of this again.
+
+761
+01:49:37,741 --> 01:49:42,401
+Where do we start? Yeah, here. And pending data requests.
+
+762
+01:49:43,651 --> 01:49:49,661
+And those get used. Get it.
+
+763
+01:49:49,841 --> 01:49:52,991
+We get the holder and then we resolve with the data.
+
+764
+01:49:53,101 --> 01:50:04,721
+Okay, So over here, we can do our IO now, so we can check to see if the file.
+
+765
+01:50:07,471 --> 01:50:14,371
+With the piano It's going to give me. Can I pass the ic0 file?
+
+766
+01:50:16,401 --> 01:50:20,841
+Can I pass? A.I. file.
+
+767
+01:50:22,671 --> 01:50:39,481
+I got a feeling. No. I mean, why not?
+
+768
+01:50:40,021 --> 01:50:47,281
+No one else is going to be using it. If I forget about it, if I move it, I think that should be okay.
+
+769
+01:50:50,061 --> 01:50:54,831
+So I'm going to need to move the ISO file.
+
+770
+01:51:02,341 --> 01:51:16,051
+I do that. And then I'm just going to say, Yeah, promise Holder let's resolve DOT resolve.
+
+771
+01:51:24,161 --> 01:51:27,821
+No pointer funk.
+
+772
+01:51:32,781 --> 01:51:36,561
+Can I do that? I don't know. I don't know.
+
+773
+01:51:40,981 --> 01:51:45,221
+Let's see if it builds, but you can pass column point or file across threads.
+
+774
+01:51:45,241 --> 01:51:49,411
+Okay. I don't believe you can access it concurrently from multiple threads.
+
+775
+01:51:49,681 --> 01:51:53,631
+Okay. Well, good. Because I don't want to.
+
+776
+01:51:54,091 --> 01:52:01,140
+I don't want to access it. Can currently no matching member function for call to resolve on promise holder Caveat function template.
+
+777
+01:52:01,141 --> 01:52:05,631
+No viable no known conversion from. Oh, right.
+
+778
+01:52:05,631 --> 01:52:16,671
+I need to pass it. And then as a result. Or a string rather resolve I underscore to reject.
+
+779
+01:52:18,591 --> 01:52:31,191
+As air failure. And then I'm probably going to stop there.
+
+780
+01:52:31,191 --> 01:52:35,761
+If this builds, I'm going to stop there and then we can know.
+
+781
+01:52:35,821 --> 01:52:42,821
+I don't know. Matching Functioning for Call to Reject inspiration from concern or lost promise as a result.
+
+782
+01:52:42,821 --> 01:53:04,771
+True a.k.a. Oh, promise.
+
+783
+01:53:04,771 --> 01:53:08,701
+Holder. I have a promise. Holder Reject.
+
+784
+01:53:32,941 --> 01:53:37,141
+Hmm. C++ promises.
+
+785
+01:53:44,871 --> 01:53:48,941
+Reject reject value. Method name.
+
+786
+01:53:53,741 --> 01:54:06,161
+Candidate functional viable no no conversion from and then a bunch of templating a.k.a contact mozilla mars promise folder string as result true to.
+
+787
+01:54:09,261 --> 01:54:15,981
+String as a result. True. String as true for object argument.
+
+788
+01:54:23,431 --> 01:54:33,681
+This caused me so. So what do they match Mars powers to Mars Promise Holder base.
+
+789
+01:54:40,841 --> 01:54:44,681
+Promise strong interest in tea and its result.
+
+790
+01:54:44,711 --> 01:54:54,561
+True. For.
+
+791
+01:55:03,981 --> 01:55:07,291
+This is. A concert. Concert.
+
+792
+01:55:14,631 --> 01:55:20,331
+It's a newbie contest. Promised during church.
+
+793
+01:55:20,471 --> 01:55:42,481
+1618 As a result, troops and unicorns. Page 1402.
+
+794
+01:55:48,351 --> 01:55:56,101
+Jack. KONST That's.
+
+795
+01:56:02,941 --> 01:56:27,441
+There are two terms here. I am confused.
+
+796
+01:56:33,211 --> 01:56:56,780
+Let's look at some examples of models from this folder. And grab started.
+
+797
+01:56:56,781 --> 01:57:00,831
+Promise? What is that? Or a generic promise, rather.
+
+798
+01:57:01,941 --> 01:57:06,321
+Graft started. Promise is a generic promise.
+
+799
+01:57:06,501 --> 01:57:10,191
+A generic promise is a ball. And as a result.
+
+800
+01:57:11,091 --> 01:57:21,151
+Okay. Promised to ensure the promise holder's age.
+
+801
+01:57:22,321 --> 01:57:29,431
+Standard move H. If I promise.
+
+802
+01:57:32,581 --> 01:57:37,371
+If we're an insurer, Right. Sure.
+
+803
+01:57:37,381 --> 01:57:40,741
+Yes. Folder and sure. That's the promise.
+
+804
+01:57:42,281 --> 01:57:47,161
+Then we move. And then we take the holder.
+
+805
+01:57:48,791 --> 01:57:52,241
+We stay in checked as they are not available.
+
+806
+01:57:55,321 --> 01:57:58,621
+What am I missing? What am I missing?
+
+807
+01:57:58,621 --> 01:58:10,641
+Everybody. Standard move.
+
+808
+01:58:20,621 --> 01:58:37,161
+I miss. Happens if I just do this.
+
+809
+01:58:38,691 --> 01:58:45,351
+Is that a problem? With the way that the other thread works.
+
+810
+01:58:47,401 --> 01:58:51,751
+Something with the graft promise. There is no graph promise.
+
+811
+01:58:56,221 --> 01:59:04,621
+I'm not sure. Okay. It's happy with that because as soon as I move it like new.
+
+812
+01:59:06,941 --> 01:59:16,041
+Rendezvous function. I think that's where things start falling over for me.
+
+813
+01:59:17,541 --> 01:59:23,611
+I don't know. Function that's. In a roundabout function.
+
+814
+01:59:39,921 --> 02:00:02,011
+So there. He promised reinterpret has kept the promise of promises a.
+
+815
+02:00:03,681 --> 02:00:24,331
+Chase. Promise. We do see Moore's promise being used inside one of these things.
+
+816
+02:00:26,371 --> 02:00:39,911
+She's. There.
+
+817
+02:01:12,621 --> 02:01:58,061
+Standard move. Here we go.
+
+818
+02:01:58,181 --> 02:02:02,621
+Here we go. Holder Moore's Promise. Holder make unique.
+
+819
+02:02:04,931 --> 02:02:10,141
+I was promised all that Prague info promise. I mean, sure, it.
+
+820
+02:02:13,411 --> 02:02:18,331
+We move it. Resolve or reject.
+
+821
+02:02:18,351 --> 02:02:22,311
+What does that mean? Is that what I'm supposed to be doing instead? Resolve or reject?
+
+822
+02:02:26,651 --> 02:02:34,511
+What does it mean to resolve or reject or reject value?
+
+823
+02:02:35,861 --> 02:02:51,761
+They seem opposed to one another. Does it mean to resolve or reject?
+
+824
+02:03:00,251 --> 02:03:08,791
+Or reject. Value.
+
+825
+02:03:12,161 --> 02:03:21,031
+I value staring forward. Well, let's see what happens if I call it resolve or reject.
+
+826
+02:03:21,061 --> 02:03:31,081
+I don't know what it means, but. Resolve or reject?
+
+827
+02:03:31,891 --> 02:03:36,631
+Is that does it like that better? All right.
+
+828
+02:03:36,631 --> 02:03:42,031
+I'm going to have to call it here. Hey, thank you so much, everybody, for watching Episode 355 of The Joy of Coding.
+
+829
+02:03:42,271 --> 02:03:45,541
+This has been a very interesting. I know it doesn't like it.
+
+830
+02:03:45,831 --> 02:03:53,551
+Doesn't like it. Oh. Because it's called Promise Holder now and it's in this function.
+
+831
+02:03:54,451 --> 02:04:00,181
+Thanks for watching. Next time I scream, let's try and I'm going to do a little bit of.
+
+832
+02:04:00,481 --> 02:04:07,471
+No, you know what? I'm not going to do any deep diving. I want you to see me do the deep diving and learn about how these Mars promises work.
+
+833
+02:04:07,471 --> 02:04:10,531
+Because, like, I'm no matching function call.
+
+834
+02:04:11,041 --> 02:04:19,411
+I don't know how any of this works. We're going to figure it out together. I've never I don't think I've ever worked with most promises before.
+
+835
+02:04:19,441 --> 02:04:24,451
+Or if I have, I've completely forgotten. So I'm going to we're going to figure it out next week.
+
+836
+02:04:24,541 --> 02:04:29,461
+But let's make that a goal. So first of all, I'm going to commit what I've got so far.
+
+837
+02:04:29,941 --> 02:04:45,031
+That's for this bug bug such and such web add and async version of obtain what's called obtain cached icon file.
+
+838
+02:04:47,271 --> 02:04:50,891
+I can't help her. Paid in cash.
+
+839
+02:04:51,161 --> 02:04:56,921
+I can't file. All right. And we will work on that next week.
+
+840
+02:04:57,521 --> 02:05:04,301
+Thanks, everybody. Have yourselves a great a great week and hopefully see you soon.
+
+841
+02:05:04,661 --> 02:05:08,861
+Take care, everybody. Bye bye. The joy cup.
+
+842
+02:05:09,101 --> 02:05:11,531
+Oh, dear, dear.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

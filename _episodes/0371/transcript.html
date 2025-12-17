@@ -1,0 +1,2766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 371 - July 3, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 371 - July 3, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=41329bbc-3fbb-423b-a2a9-b18d0141afc4</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=41329bbc-3fbb-423b-a2a9-b18d0141afc4">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,567 --> 00:00:09,047
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:09,407 --> 00:00:13,066
+Hello and welcome to episode 371 of the Joy of coding.
+
+3
+00:00:13,067 --> 00:00:16,817
+My name is Mike Conley. As always, it's so good to have you here.
+
+4
+00:00:16,837 --> 00:00:21,537
+We're going to be live hacking on some Firefox stuff today. I'm really stoked to do that with you.
+
+5
+00:00:21,557 --> 00:00:30,497
+So let's start. I'll start by sharing my screen. Hey, yeah, today is July 3rd, 2024, episode 371 A reminder.
+
+6
+00:00:30,557 --> 00:00:34,837
+No Plan survives breakfast. I think I know how today is going to go down, but I could be wrong.
+
+7
+00:00:34,847 --> 00:00:35,777
+I could be wrong.
+
+8
+00:00:35,787 --> 00:00:42,737
+You know, I have a sense of what I want to work on, but we might get sidelined or stuck or distracted or any all sorts of things might happen.
+
+9
+00:00:42,737 --> 00:00:49,427
+And that's okay. We're going to deal with it as it comes. And, uh, and who knows, you know, you get to watch me deal with it in real time.
+
+10
+00:00:49,817 --> 00:00:53,407
+That's the first thing. The second thing, the agenda that we're looking at is available to you.
+
+11
+00:00:53,417 --> 00:01:01,367
+So if you're watching this on, um, air Mozilla or, um, know Amazon, if you're watching this on air Mozilla, check out the details section over there.
+
+12
+00:01:01,367 --> 00:01:04,846
+If you're watching this on YouTube, it's down on the video description. I'll link to the agenda.
+
+13
+00:01:04,847 --> 00:01:11,416
+If you're watching this on Twitch, it's down in the channel details. And you know, once you see this little spinny spin, if you reload the, um,
+
+14
+00:01:11,417 --> 00:01:15,167
+the agenda, you should get the most up to date version of it as I update it,
+
+15
+00:01:15,287 --> 00:01:20,807
+because I might add some things as I'm as I'm going going on with my stream now that's okay.
+
+16
+00:01:21,527 --> 00:01:29,027
+We've got chat happening in Matrix Bridge to Twitch, so if you're in Twitch and you're chatting, I should be able to see what you're saying.
+
+17
+00:01:29,387 --> 00:01:32,506
+Um, and if you're in matrix, you'll see what people in Twitch are saying.
+
+18
+00:01:32,507 --> 00:01:38,537
+If you're on Twitch, you'll see what people in matrix are saying. And right now it's pretty quiet, except for my bridge test, which is fine.
+
+19
+00:01:38,537 --> 00:01:42,196
+It's fine. Um, we're just going to go right for it.
+
+20
+00:01:42,197 --> 00:01:49,606
+So what are we working on today? Well, the last couple of weeks, I think you are aware that I've been working on, um,
+
+21
+00:01:49,607 --> 00:01:55,097
+with a bunch of other people, this, like, profile backup mechanism for Firefox desktop.
+
+22
+00:01:55,277 --> 00:02:05,027
+Excuse me. And, uh, we're nearing the end of the first milestone where we've got most things to the point where we can back up and recover a profile.
+
+23
+00:02:05,447 --> 00:02:09,317
+Um, and, you know, we're nearing the stage where QA will be able to, like,
+
+24
+00:02:09,317 --> 00:02:15,227
+really try it out and and find where we've missed some things or find where there are issues.
+
+25
+00:02:15,617 --> 00:02:21,436
+Um, but there there's like one major component that's still not finished.
+
+26
+00:02:21,437 --> 00:02:26,447
+And I want to try and do that today. It's not a UI component, sort of like back end support component.
+
+27
+00:02:27,527 --> 00:02:32,447
+And that is that involves something called OS keystore and payment methods.
+
+28
+00:02:32,447 --> 00:02:42,467
+And so going into this, I'm going to I'm going to spend like 2 or 3 minutes describing what it is that we need to do and why, uh, and what it's for.
+
+29
+00:02:42,467 --> 00:02:47,747
+And then um, and then we'll go ahead and do it. I've actually written the solution to this already.
+
+30
+00:02:47,747 --> 00:02:52,997
+We can take a look at it. I did that earlier today. I was hoping today we could spend during the stream time writing,
+
+31
+00:02:52,997 --> 00:02:57,557
+designing and writing tests because testing this is going to be kind of interesting I think.
+
+32
+00:02:58,907 --> 00:03:09,827
+All right. I also want to mention that I have to end precisely at, uh, half hour, a half an hour past, uh, the next hour due to a meeting conflict.
+
+33
+00:03:09,827 --> 00:03:15,707
+So I'm going to be doing a hard stop in about an hour and 23 minutes.
+
+34
+00:03:16,037 --> 00:03:19,397
+Sorry about that. All right, let's get going.
+
+35
+00:03:19,427 --> 00:03:31,997
+Uh, os keystore. What's there to say? So you may or may not know this, but Firefox has the ability to store payment methods.
+
+36
+00:03:31,997 --> 00:03:38,536
+And by payment methods, I mean credit cards. I think there's, um, there are other it's called payment methods.
+
+37
+00:03:38,537 --> 00:03:47,747
+I think in the, uh, uh, in parts of the code base, mainly because in the future there might be other things that are included, um, in, in storage.
+
+38
+00:03:47,747 --> 00:03:51,346
+But for now, in, uh, like, practically speaking, it's credit cards.
+
+39
+00:03:51,347 --> 00:03:59,717
+You may have seen this feature and it's not enabled everywhere, I think, uh, but I think most of our locales credit card autofill is enabled.
+
+40
+00:03:59,717 --> 00:04:04,847
+And the way that works is, you know, Firefox will notice whenever you're filling in, um,
+
+41
+00:04:04,857 --> 00:04:10,037
+a, a form that has what appears to be a credit card, your own credit card information,
+
+42
+00:04:10,757 --> 00:04:17,447
+and if it notices that it will offer to remember those for next time so that you can do sort of like easier purchases,
+
+43
+00:04:17,447 --> 00:04:19,997
+easier checkout, without having to have a website.
+
+44
+00:04:19,997 --> 00:04:24,977
+Remember the credit card so your browser can remember your credit card information for you, which is great.
+
+45
+00:04:25,547 --> 00:04:34,847
+Now here's where things get a little interesting. We never want to store the credit cards in plain text on the file system.
+
+46
+00:04:35,777 --> 00:04:46,667
+We never like, prevent, underline, never want to store the credit cards in plain text on the file on the file system.
+
+47
+00:04:46,907 --> 00:04:50,747
+Never. So what's our solution to this?
+
+48
+00:04:50,747 --> 00:05:00,106
+Well, you have to encrypt them. You have to encrypt. So therefore we must encrypt the credit cards and only decrypt them on demand.
+
+49
+00:05:00,107 --> 00:05:04,457
+So only if the user has expressed that they want to autofill.
+
+50
+00:05:05,137 --> 00:05:08,817
+Some credit card form. They want to edit their saved credit cards or, uh.
+
+51
+00:05:08,857 --> 00:05:13,177
+Um, then we will offer to decrypt that information.
+
+52
+00:05:14,017 --> 00:05:17,377
+Now what? How does this encryption work?
+
+53
+00:05:19,777 --> 00:05:30,067
+Um, so this encryption works slightly differently from how, uh, I think login encryption works in Firefox.
+
+54
+00:05:30,187 --> 00:05:38,047
+I'm not really up to date on how logging encryption works, but I am familiar with how payment method and credit card encryption works,
+
+55
+00:05:38,047 --> 00:05:44,016
+mainly because I helped guide someone through, um, a project.
+
+56
+00:05:44,017 --> 00:05:49,717
+Last year I helped a student, uh, work on supporting credit card import from other browsers.
+
+57
+00:05:50,767 --> 00:06:02,017
+And, uh, our it's actually quite similar to how other browsers, uh, specifically Chrome based browsers.
+
+58
+00:06:04,447 --> 00:06:09,007
+Do it. So I don't know who modeled their solution on who.
+
+59
+00:06:09,037 --> 00:06:13,447
+I don't know whose idea it was first, but the idea is very similar.
+
+60
+00:06:14,107 --> 00:06:17,857
+And this is where OS Keystore comes in. OS Keystore is a module.
+
+61
+00:06:20,077 --> 00:06:35,377
+Um, is a JavaScript module, and it wraps an XRP comm component that is perhaps confusingly also called OS Keystore.
+
+62
+00:06:35,977 --> 00:06:42,277
+But within the JSS module, the XRP comm component is called native OS Keystore.
+
+63
+00:06:44,407 --> 00:06:51,216
+Uh uh Bob Bob bias two asks why would you encrypt logins and payment information differently?
+
+64
+00:06:51,217 --> 00:06:54,487
+It sounds to me like they both ideally want similar levels of security.
+
+65
+00:06:55,027 --> 00:06:58,357
+I think I can't, I can't say for certain I'm not.
+
+66
+00:06:58,927 --> 00:07:02,617
+I'm not part of like the form autofill or credential credential management team.
+
+67
+00:07:03,157 --> 00:07:13,716
+But what I do know is that Firefox has been remembering passwords a lot for luck, a lot longer than it has been remembering credit cards.
+
+68
+00:07:13,717 --> 00:07:20,887
+And so I believe the encryption mechanism we use for credit cards is more modern than what we use for passwords.
+
+69
+00:07:20,887 --> 00:07:26,616
+They're both secure, but I think the credit card one doesn't have the same sort of legacy.
+
+70
+00:07:26,617 --> 00:07:34,237
+And like, um, sort of the baggage, uh, of the existing password encryption mechanism.
+
+71
+00:07:34,867 --> 00:07:45,247
+Um, so there's for example, no reliance, I think, on NSS to do, uh, at least not for like secret maintaining secrets.
+
+72
+00:07:45,667 --> 00:07:51,427
+I think that's how it works. But again, I'm not on the credential management team, so I don't actually know the history here.
+
+73
+00:07:51,817 --> 00:07:56,317
+But from an outsider's perspective, it was just sort of consuming these interfaces.
+
+74
+00:07:56,317 --> 00:08:03,547
+That would be my guess is that, you know, credit card autofill is probably only like, I don't know how old it is, maybe 5 or 6 years old.
+
+75
+00:08:03,907 --> 00:08:11,376
+Password, uh, remembering passwords. And Firefox is much, much, much older, probably since Firefox one or Firefox two.
+
+76
+00:08:11,377 --> 00:08:12,877
+I don't I don't remember when it was introduced.
+
+77
+00:08:13,177 --> 00:08:19,837
+And so there's a lot of, uh, history and baggage and requirements, uh, with password, uh, storage in Firefox.
+
+78
+00:08:21,217 --> 00:08:24,686
+Um. Okay, so OS keystore.
+
+79
+00:08:24,687 --> 00:08:28,977
+It's a JavaScript module that wraps an NXP comm component that's also called OS Keystore.
+
+80
+00:08:29,157 --> 00:08:33,687
+But within the JS module, the XP component is called native OS Keystore.
+
+81
+00:08:34,017 --> 00:08:37,287
+And how does how does native OS keystore work?
+
+82
+00:08:37,947 --> 00:08:42,927
+Well, um, it uses the underlying operating system.
+
+83
+00:08:44,277 --> 00:08:57,537
+The underlying OS is um, uh, secret management, uh, secret storage, uh, uh, mechanism to hold on to a single secret.
+
+84
+00:08:58,317 --> 00:09:03,416
+So what happens is like on windows, we have something called dpi API on Mac OS.
+
+85
+00:09:03,417 --> 00:09:14,037
+We have something called keychain whatnot, keychain, keychain. And um, um, you know, um, Linux, we have something called lib secret.
+
+86
+00:09:14,877 --> 00:09:28,167
+It's GK website called Lib Secret. These are all operating system, operating system specific ways of holding on to secrets like these are, um,
+
+87
+00:09:28,857 --> 00:09:38,637
+libraries or mechanisms or APIs that are exposed to applications that want to have the operating system hold on to a secret.
+
+88
+00:09:38,637 --> 00:09:42,357
+You're basically delegating the operating system and saying, hold on to this securely.
+
+89
+00:09:42,447 --> 00:09:47,337
+You figure out how to do that, but just securely hold on to this.
+
+90
+00:09:47,697 --> 00:09:51,237
+And if I ask for it back, um, give it back to me.
+
+91
+00:09:51,237 --> 00:09:57,386
+But you know, I am I am trusting the operating system to securely store this.
+
+92
+00:09:57,387 --> 00:10:06,567
+So it's not going to be in plaintext or something. And oftentimes, um, you know, there are different security characteristics behind each of these.
+
+93
+00:10:06,567 --> 00:10:12,266
+Um, but oftentimes I think one of the primary things that you need to do in order to access
+
+94
+00:10:12,267 --> 00:10:19,407
+what's in the secret storage is to be logged in as the user account that stored the,
+
+95
+00:10:19,407 --> 00:10:27,596
+uh, the information, or you need to be, um, you need to re authenticate in some cases.
+
+96
+00:10:27,597 --> 00:10:35,637
+So I think, um, maybe on macOS, it will prompt you for your user, your, your, um,
+
+97
+00:10:35,637 --> 00:10:43,107
+password for your user account anytime there's like, re, uh, like gaining access again to the, uh, to the secret.
+
+98
+00:10:43,617 --> 00:10:49,346
+Now, we do not use native OS keystore to hold on to the credit cards.
+
+99
+00:10:49,347 --> 00:10:59,487
+We don't want to do that. Um, we actually have the, uh, operating system hold on to a randomly generated secret, so we.
+
+100
+00:10:59,997 --> 00:11:03,327
+But, like, say, say you're saving a credit card for the first time.
+
+101
+00:11:04,467 --> 00:11:09,087
+Say you're, uh, saving a credit card for the first time.
+
+102
+00:11:09,957 --> 00:11:20,277
+You've never done it before. Firefox will randomly generate a secret set of bytes with high entropy.
+
+103
+00:11:22,917 --> 00:11:29,067
+Um, and store it in the underlying secure storage.
+
+104
+00:11:30,477 --> 00:11:34,677
+So it'll be, um, stored in one of these three things depending on what platform you're on.
+
+105
+00:11:36,807 --> 00:11:46,527
+And then any time we want to, uh, encrypt something, say, a credit card, you use the secret as the key to encrypt things.
+
+106
+00:11:47,277 --> 00:11:50,336
+So it's a the secret is a symmetric key.
+
+107
+00:11:50,337 --> 00:11:59,967
+So the secret acts as a symmetric key or depending uh, the details, the details here are a little lost on me.
+
+108
+00:12:00,057 --> 00:12:04,706
+Either it's a symmetric key or it's used to derive a symmetric key.
+
+109
+00:12:04,707 --> 00:12:15,507
+It's one of the other I can't remember. Um, but the the secret is what is stored in the secure storage, not the encrypted credit cards.
+
+110
+00:12:15,747 --> 00:12:20,816
+So, uh, Firefox can then delegate to AWS Keystore.
+
+111
+00:12:20,817 --> 00:12:23,006
+Hey, encrypt these credit cards for me.
+
+112
+00:12:23,007 --> 00:12:31,647
+This is like list of credit card numbers, and then OS Keystore will hand back a bunch of encrypted bytes and then Firefox can store it.
+
+113
+00:12:31,647 --> 00:12:37,407
+Firefox will maintain like it will just like throw it in the profile directory. If you have, uh, credit cards saved, it's in a file.
+
+114
+00:12:37,467 --> 00:12:44,487
+Uh, credit cards are in a file called autofill profiles dot Json in your profile directory.
+
+115
+00:12:44,487 --> 00:12:49,407
+And if you've got credit cards saved, you'll see in that structure some, you know,
+
+116
+00:12:49,407 --> 00:12:55,946
+there's a credit cards property and then there will be an array, uh, and your credit card will be in there.
+
+117
+00:12:55,947 --> 00:13:03,627
+But the raw credit card number won't be in there. Instead, you'll see a base64 encoded string, which is the encrypted bytes.
+
+118
+00:13:04,407 --> 00:13:08,816
+And Firefox itself does not have enough information to decrypt those bytes.
+
+119
+00:13:08,817 --> 00:13:18,357
+I think that's that's one of the, uh, key pieces of information here is that unless the operating system releases the secret to us, Firefox cannot.
+
+120
+00:13:18,897 --> 00:13:22,347
+It will like, forget the credit card number. It will.
+
+121
+00:13:22,717 --> 00:13:26,647
+You know, it had it in memory. But then like, we we we don't hold on to it.
+
+122
+00:13:26,797 --> 00:13:29,927
+We never hold on to the plaintext credit card number except in memory.
+
+123
+00:13:29,947 --> 00:13:31,537
+And then that memory is quickly wiped.
+
+124
+00:13:31,957 --> 00:13:42,507
+So, um, whenever you do want to autofill your credit card information, we, uh, get the user's authentication to get the secret.
+
+125
+00:13:42,517 --> 00:13:48,057
+We pull the secret out, and then we decrypt the credit card, and then we forget the secret, and we forget the credit card number.
+
+126
+00:13:48,067 --> 00:13:54,306
+That's how it works. Um, I guess you don't use import secrets in Python for this.
+
+127
+00:13:54,307 --> 00:13:57,877
+I don't know what that library is. Is there a secrets library?
+
+128
+00:13:58,267 --> 00:14:04,237
+Python secrets? Pi Pi or Python secrets?
+
+129
+00:14:04,237 --> 00:14:07,567
+Simple wrapper for password configure.
+
+130
+00:14:08,197 --> 00:14:11,827
+I don't think so. We do not use this. And I don't know what this is.
+
+131
+00:14:12,697 --> 00:14:17,107
+Uh, but we do not do that. Okay, so that's how that works.
+
+132
+00:14:17,497 --> 00:14:27,277
+So now we have a very, uh, this all implies a very interesting, uh, conundrum for backups.
+
+133
+00:14:29,077 --> 00:14:35,997
+Oh, it's for high entropy randomization. We I think we use NFS actually to generate random bytes.
+
+134
+00:14:36,007 --> 00:14:49,777
+So there is there is some reliance on NFS here to both perform the cryptography with the secret as well as to generate high entropy, um, random bytes.
+
+135
+00:14:50,407 --> 00:14:54,097
+But we do not rely on NFS to store things.
+
+136
+00:14:54,667 --> 00:15:00,937
+Uh, we delegate that to the, to the operating system. So, uh, so this all implies a very interesting conundrum for backups.
+
+137
+00:15:01,207 --> 00:15:06,337
+How do you back up credit cards? How do you do it?
+
+138
+00:15:07,417 --> 00:15:18,077
+How do you backup credit cards and make it so that those backups can occur silently in the background, but also so that the, um,
+
+139
+00:15:18,097 --> 00:15:28,897
+backups are portable across, uh, devices, meaning, you know, you should be able to take a backup and move it to another computer restore.
+
+140
+00:15:28,897 --> 00:15:32,917
+And all your credit cards should be there. So how do we do that?
+
+141
+00:15:33,247 --> 00:15:37,657
+Unless we decrypt the the credit cards before creating the backup?
+
+142
+00:15:37,777 --> 00:15:48,277
+But if the if creating the backup requires us to, um, ask the user to decrypt the credit cards and we're doing it in the background,
+
+143
+00:15:48,277 --> 00:15:52,117
+won't that be highly interruptive like you'd be using the browser, and all of a sudden you'd be like,
+
+144
+00:15:52,117 --> 00:15:56,077
+hey, unlock unlock secrets for us, please, so we can create a backup.
+
+145
+00:15:56,077 --> 00:15:59,736
+Like, that'd be, uh, really unpleasant as an experience, probably be very confusing.
+
+146
+00:15:59,737 --> 00:16:06,217
+And, um, the users wouldn't necessarily understand. Like, why is the operating system asking me to unlock the security storage?
+
+147
+00:16:06,637 --> 00:16:14,587
+Um, secure storage. So, um, our solution to this, um, was to do the following.
+
+148
+00:16:15,097 --> 00:16:22,657
+When we create a backup, a user can choose to have that backup encrypted or not encrypted.
+
+149
+00:16:23,257 --> 00:16:32,647
+So that's the very first thing. Uh, if they choose to not encrypt their backup, we're done.
+
+150
+00:16:33,187 --> 00:16:40,117
+That means, uh, we're not even going to, like, we don't store a certain information inside of unencrypted backups.
+
+151
+00:16:40,117 --> 00:16:44,917
+We won't store cookies. We won't store passwords, we won't store credit card information.
+
+152
+00:16:45,877 --> 00:16:49,117
+Um, we're not going to store, uh, credit cards in it.
+
+153
+00:16:49,627 --> 00:17:04,837
+So, uh, nothing to do. If they did choose to encrypt their backup, then what we'll do is, uh, when enabling encrypted backups,
+
+154
+00:17:05,827 --> 00:17:20,497
+is this when enabling encrypted backups, then ask the user to authenticate to the native OS keystore, and we exfiltrate the secret.
+
+155
+00:17:21,157 --> 00:17:27,757
+We get the secret out that the OS has been holding on to, but we then store it in the encrypted backup.
+
+156
+00:17:31,657 --> 00:17:45,067
+Uh, encrypted using, um, the using one of the keys derived from the, uh, backup password.
+
+157
+00:17:46,027 --> 00:17:50,077
+So at that point, what you've done is you've made the secret.
+
+158
+00:17:50,347 --> 00:17:57,787
+You've, you've you've taken the secret out of the hands of the OS keystore like the underlying mechanism.
+
+159
+00:17:58,087 --> 00:18:02,907
+And we've jammed it inside of an encrypted backup, and we've made sure that the secret is backed up.
+
+160
+00:18:02,917 --> 00:18:06,967
+This is, uh, you can almost think of this as, like, key wrapping, you know, in, um.
+
+161
+00:18:08,167 --> 00:18:14,977
+Uh, I'm no, I'm no cryptographer, but this is effectively key wrapping where I don't really ever want to see the secret,
+
+162
+00:18:15,187 --> 00:18:22,207
+but I want to make the secret portable. So I wrap it first in something so that it is like an opaque.
+
+163
+00:18:22,267 --> 00:18:28,387
+Set of bytes. And then only whenever we are doing decryption would we unwrap the secret.
+
+164
+00:18:28,987 --> 00:18:32,647
+And you could only do decryption if you happen to have the user's passphrase.
+
+165
+00:18:33,097 --> 00:18:42,427
+So, you know, uh, no, this is only as, uh, secure as the user's, um, uh, backup password.
+
+166
+00:18:42,637 --> 00:18:51,697
+So we need to encourage users. To, uh, generate a to use a very strong one.
+
+167
+00:18:52,297 --> 00:18:54,336
+Um, now, we've debated this a little bit.
+
+168
+00:18:54,337 --> 00:19:02,407
+The security engineering team would really prefer that Firefox generate a strong, um, a strong key for the user.
+
+169
+00:19:02,767 --> 00:19:07,657
+But, um, we did some back and forth, and what we ended up doing is we thought we'd use the same,
+
+170
+00:19:08,377 --> 00:19:10,987
+um, password characteristics that we use for accounts,
+
+171
+00:19:10,987 --> 00:19:16,627
+because that's already sort of been vetted as, like a series, uh, like a strong set of guidelines for passwords.
+
+172
+00:19:16,867 --> 00:19:19,627
+We're just gonna use it for caps because we're trying to reduce, um,
+
+173
+00:19:19,627 --> 00:19:27,187
+how much that users need to kind of remember, um, but, I mean, you could choose to use a very long.
+
+174
+00:19:27,337 --> 00:19:32,587
+You could use, like, a, a 25 word passphrase if you want it.
+
+175
+00:19:32,887 --> 00:19:35,856
+You could use a very, very strong there's no like limit to the length.
+
+176
+00:19:35,857 --> 00:19:40,387
+You could use like a megabytes worth of of bytes as your password if you'd like.
+
+177
+00:19:40,717 --> 00:19:45,397
+And we don't use that as the key to be clear. Like we derive we we stretch the password.
+
+178
+00:19:45,397 --> 00:19:58,327
+We do, I think 600,000 rounds of df2 to stretch the what we call the recovery code into a series of bytes that we then derive various keys from.
+
+179
+00:19:59,497 --> 00:20:03,157
+And, uh, one of those keys is then used to wrap the secrets.
+
+180
+00:20:04,927 --> 00:20:10,327
+So, um, that's, that's the sort of the model that we developed with the security engineering team,
+
+181
+00:20:10,657 --> 00:20:14,407
+and that's the sort of thing that like, uh, we're going to have to be audited on,
+
+182
+00:20:14,407 --> 00:20:17,916
+like the security engineering team is going to be poking at once we're done our implementation,
+
+183
+00:20:17,917 --> 00:20:21,457
+they're going to be sort of banging the tires on to make sure, uh, it's solid.
+
+184
+00:20:22,927 --> 00:20:27,817
+Maybe you also mention of the not encrypted backup that passwords is not stored in the settings.
+
+185
+00:20:27,877 --> 00:20:39,577
+Well, we do uh, we will uh, we will mention that actually, if you take a look, um, uh, one of the builds I've got here, you can see, like,
+
+186
+00:20:40,087 --> 00:20:50,347
+if, uh, it's the UI isn't exactly it's not perfect, but like, when you're enabling, uh, uh, backup to encrypt it, you have to opt in.
+
+187
+00:20:50,737 --> 00:20:54,367
+Um, and then that will back up your passwords, payment methods and cookies.
+
+188
+00:20:54,697 --> 00:20:58,307
+So then you like opt in, choose a strong password, and then you turn on backup.
+
+189
+00:20:58,327 --> 00:21:01,687
+That's how that'll work. Um.
+
+190
+00:21:02,107 --> 00:21:06,637
+Okay. So, uh, that's a lot of talk.
+
+191
+00:21:06,937 --> 00:21:13,437
+Um, yeah. So we we exfiltrate the the secret, and we store it inside of the backup.
+
+192
+00:21:13,447 --> 00:21:26,857
+Then at recovery time, we create a secondary temporary OS keystore instance, um, and use the and unwrap the secret.
+
+193
+00:21:28,237 --> 00:21:39,277
+The secret? The original secret. And then use the temporary OS keystore to decrypt the credit cards.
+
+194
+00:21:41,497 --> 00:21:53,007
+And then we're encrypt them. Using the local OS Keystore the one that is used on the current machine.
+
+195
+00:21:53,017 --> 00:21:59,617
+Now, if you're doing, um, a recovery on the same machine, it should be the same secret.
+
+196
+00:21:59,707 --> 00:22:07,477
+So this is basically a no op. But if you've moved machines, if you've migrated using this backup mechanism,
+
+197
+00:22:07,867 --> 00:22:13,897
+this will re encrypt using whatever the local secret is on the on the new machine,
+
+198
+00:22:13,897 --> 00:22:18,277
+which there might not be one, in which case one will be created, uh, for you.
+
+199
+00:22:18,517 --> 00:22:21,727
+In fact, I should probably make sure that, uh, we cover that case.
+
+200
+00:22:21,877 --> 00:22:26,827
+Um, do I have. Let me turn this off.
+
+201
+00:22:28,207 --> 00:22:34,087
+Actually need to check out the patch that I've been working on for this so that we can take a look at how it works.
+
+202
+00:22:34,837 --> 00:22:41,377
+And I want to, like, double check that I'm going to create a secret if one doesn't already exist for the, um.
+
+203
+00:22:46,817 --> 00:22:52,186
+For when we're re encrypting. Yes.
+
+204
+00:22:52,187 --> 00:23:01,937
+So since I'm using, uh, OS keystore to encrypt OS keystore, uh, the module as opposed to native OS keystore to decrypt,
+
+205
+00:23:02,117 --> 00:23:10,127
+I'm using the module to it, encrypt the plaintext card, then you know it will take care of creating a secret for me.
+
+206
+00:23:10,547 --> 00:23:14,267
+It'll also make sure that the user is allowed to create. Um.
+
+207
+00:23:15,517 --> 00:23:24,787
+The storage, meaning that the user may be prompted to, um, unlock secure storage during recovery time.
+
+208
+00:23:24,787 --> 00:23:25,697
+But that's okay.
+
+209
+00:23:25,717 --> 00:23:33,907
+Like that's the worst case was the user is going to be, like, prompted to access secure storage when we're creating backups at runtime.
+
+210
+00:23:33,907 --> 00:23:40,267
+And we didn't want to do that. So instead we're sort of delegating it to the very end when you're doing recovery and when you're doing recovery,
+
+211
+00:23:40,447 --> 00:23:46,537
+having the OS ask you like, hey, can I access secure storage as part of this recovery effort is, I think, a lot more reasonable?
+
+212
+00:23:47,167 --> 00:23:48,487
+Um, at least that's what we're hoping.
+
+213
+00:23:49,417 --> 00:23:58,117
+And after we've re encrypted the, uh, um, the credit cards, then we, uh, rewrite, we basically overwrite the original,
+
+214
+00:23:58,477 --> 00:24:04,047
+uh, autofill profiles, dot Json file, and then we copy them into the new profile.
+
+215
+00:24:04,057 --> 00:24:10,207
+So that's how that works. And, uh, yeah, that's, that's the, the long and the short of it.
+
+216
+00:24:10,957 --> 00:24:16,657
+Um. Baa baa baa baa baa uh, then we're encrypt them, then we overwrite the original.
+
+217
+00:24:19,567 --> 00:24:27,037
+Autofill profiles, dot Json, and then move that file into the, uh, new recovery profile.
+
+218
+00:24:27,577 --> 00:24:32,017
+That's how it works. So I've got a patch that does it. Uh, let's take a look at the whole patch.
+
+219
+00:24:32,137 --> 00:24:35,227
+It's not that long. I was very surprised at how easy this was.
+
+220
+00:24:35,827 --> 00:24:41,017
+Um, it's it's very, um, gratifying because I've been, like,
+
+221
+00:24:41,167 --> 00:24:45,517
+saving this kind of thing towards the end of the project, this first milestone of the project,
+
+222
+00:24:45,847 --> 00:24:52,926
+mainly because, like, um, there was, like, bigger fish to fry, but I was pretty sure this was going to be straightforward.
+
+223
+00:24:52,927 --> 00:24:56,137
+So it's somewhat gratifying to be correct.
+
+224
+00:24:56,377 --> 00:25:01,987
+Now, uh, uh, I'm not the happiest with the OS keystore model.
+
+225
+00:25:02,947 --> 00:25:08,737
+Um, like OS Keystore is not. It has lots of nice, uh, properties.
+
+226
+00:25:09,127 --> 00:25:13,877
+Um, but the API is not amazing in that, like, it's not an object.
+
+227
+00:25:14,197 --> 00:25:16,747
+An OS Keystore is not an object that I can pass around.
+
+228
+00:25:16,747 --> 00:25:23,407
+I would much prefer that so that I could make sure to like, clean it up when it goes out of scope and stuff like I have.
+
+229
+00:25:23,617 --> 00:25:27,487
+I have to do some manual management of that. Let me explain.
+
+230
+00:25:27,487 --> 00:25:33,007
+Let me explain. I'll start by looking at the patch. We'll look at it together and I'll explain what I'm referring to.
+
+231
+00:25:33,367 --> 00:25:40,627
+So the very first thing I do is I make sure that the native OS keystore the xp com component is something that backup service can access.
+
+232
+00:25:40,927 --> 00:25:46,057
+And then I set up a, uh, a static recovery OS Keystore label.
+
+233
+00:25:46,057 --> 00:25:52,567
+So there's a thing to know, which is that, um, uh, the secure storage for, um,
+
+234
+00:25:52,567 --> 00:25:59,016
+every operating system with lib secret keychain, uh, DPC, API, and they all expect some kind of like label.
+
+235
+00:25:59,017 --> 00:26:04,747
+They're effectively glorified secure key value stores with like, maybe other properties.
+
+236
+00:26:04,777 --> 00:26:10,686
+Um, not just like some key and some value, but like there can be like other rich properties per row,
+
+237
+00:26:10,687 --> 00:26:13,507
+but like effectively it's a key value store for a secret.
+
+238
+00:26:14,317 --> 00:26:28,297
+And we want to have a, um, a key in the operating systems, um, secure storage for our temporary recovery OS keystore implementation.
+
+239
+00:26:28,327 --> 00:26:39,636
+So the one that's used in OS keystore is, um, I believe it is, uh, the app base name.
+
+240
+00:26:39,637 --> 00:26:42,876
+So in that case it'll be Firefox and then it'll be encrypted storage.
+
+241
+00:26:42,877 --> 00:26:49,057
+So if you're on macOS, for example, and you open up keychain, you'll probably find something called Firefox Encrypted Storage in there.
+
+242
+00:26:49,327 --> 00:26:57,906
+If you happen to have Opera or Chrome or Edge or something on, uh, macOS, you'll also see similar things inside of keychain.
+
+243
+00:26:57,907 --> 00:27:03,787
+I don't know exactly how you access deep API on windows, but presumably you'll if you there's a tool to do that.
+
+244
+00:27:04,027 --> 00:27:11,467
+You'll see Firefox encrypted storage on um, uh, on the on in that mechanism.
+
+245
+00:27:11,797 --> 00:27:18,007
+And that'll be the one that's used for Firefox would have been nice if there was shared secure key handling on all OS's.
+
+246
+00:27:19,027 --> 00:27:24,997
+I mean, this is what what we're seeing here is, uh, the three solitudes of the desktop operating systems.
+
+247
+00:27:24,997 --> 00:27:29,586
+And there's probably very little incentive from any of them to standardize on this exact same thing.
+
+248
+00:27:29,587 --> 00:27:34,837
+Like, they want to lock you into their operating system. They don't want you to use someone else's operating system.
+
+249
+00:27:37,027 --> 00:27:44,317
+So of course, they're going to invent their own thing. And as cross-platform app developers just kind of have to grapple grapple with it.
+
+250
+00:27:44,707 --> 00:27:48,877
+Okay. So going back to the patch here, we set up our label.
+
+251
+00:27:48,877 --> 00:27:56,077
+This is going to be the name for our temporary OS Keystore um row in secure storage.
+
+252
+00:27:57,337 --> 00:28:02,377
+Uh, I updated a comment here to describe what this, uh, method is doing.
+
+253
+00:28:02,377 --> 00:28:05,766
+Um, let's I wish there was more context here.
+
+254
+00:28:05,767 --> 00:28:11,977
+Let me take it back to the source for a second. Um, backup service.
+
+255
+00:28:13,717 --> 00:28:17,377
+So in the. Extract compressed snapshot from archive.
+
+256
+00:28:18,877 --> 00:28:28,897
+Um, what it'll do. So at the point where we're, um, potentially pulling the data out from the single file archive,
+
+257
+00:28:28,897 --> 00:28:35,797
+the back of that's created, that this is when we might, you know, decrypt the contents of the backup.
+
+258
+00:28:36,097 --> 00:28:44,197
+The actual file itself is not encrypted. It is, um, a specially crafted HTML file, but the contents of your backup are encrypted.
+
+259
+00:28:44,467 --> 00:28:49,057
+And so we have to extract those bytes from the specially crafted HTML file.
+
+260
+00:28:49,897 --> 00:28:59,886
+And then we do our decryption here. And then in the event that we were decrypting, we will then tell the native OS keystore, okay,
+
+261
+00:28:59,887 --> 00:29:07,926
+we're going to I want I want you to like right into your secure storage, uh, for this label,
+
+262
+00:29:07,927 --> 00:29:10,717
+the one that we're setting up for our temporary label, the secret,
+
+263
+00:29:11,287 --> 00:29:19,207
+like the Decrypter will give us back the secret that had been, um, uh, included inside of the backup that that was encrypted.
+
+264
+00:29:19,777 --> 00:29:23,797
+So we will do that work, and then we exit. So this is the part I don't like.
+
+265
+00:29:23,797 --> 00:29:30,007
+What I would have loved is if native OS keystore was like an object that I could pass around and then make sure was destroyed.
+
+266
+00:29:30,157 --> 00:29:36,366
+But instead it's this like service that I, uh, that is external that I like, prepare with this row.
+
+267
+00:29:36,367 --> 00:29:40,387
+It's more of like a database table effectively. And I write into it.
+
+268
+00:29:40,717 --> 00:29:48,187
+And then I have to remember to delete this row when we're done. So, um, we extract the compressed snapshot from the archive.
+
+269
+00:29:50,257 --> 00:29:54,097
+And then, uh, that, that that, uh.
+
+270
+00:29:56,257 --> 00:30:03,487
+Here's where I delete it. So after we're, like, recovering from a snapshot that's been extracted from a backup at the very end,
+
+271
+00:30:03,487 --> 00:30:06,637
+no matter what inside of this, like, finally block.
+
+272
+00:30:09,037 --> 00:30:13,506
+Uh, I delete, I delete the secret, which is like a I'm pretty sure a no op.
+
+273
+00:30:13,507 --> 00:30:14,407
+I need to verify that.
+
+274
+00:30:14,407 --> 00:30:24,277
+But I think in the event that there is no such secret inside of the, uh, the native OS keystore, this is a no op, and I should double check that.
+
+275
+00:30:24,457 --> 00:30:28,807
+Um. So OS keystore.
+
+276
+00:30:31,507 --> 00:30:40,617
+Delete secret. If there's no secret with the given label, no action is taken, so it's fine.
+
+277
+00:30:40,637 --> 00:30:43,327
+This is. And maybe I'll, um.
+
+278
+00:30:44,627 --> 00:31:01,277
+Uh, if we, uh, had decrypted a backup, uh, we would have, uh, temporary created a created the temporary recovery os keystore.
+
+279
+00:31:02,057 --> 00:31:07,857
+Um. Uh, row with the label.
+
+280
+00:31:10,847 --> 00:31:14,877
+Key store. Row with the label. Um. Backup service.
+
+281
+00:31:16,977 --> 00:31:27,567
+Um, which we will now delete no matter, uh, if we succeeded or failed to recover.
+
+282
+00:31:29,727 --> 00:31:35,367
+Note that a court, um, according to NSA, iOS keystore.
+
+283
+00:31:35,847 --> 00:31:41,937
+Uh, this is a no. Uh, in the event that no secret exists.
+
+284
+00:31:42,297 --> 00:31:47,937
+Uh, backup service, stop recovery os keystore label.
+
+285
+00:31:48,327 --> 00:31:56,607
+So we're fine to do this. Even if we were, um, recovering from an unencrypted backup.
+
+286
+00:32:00,627 --> 00:32:05,007
+Okay. Uh, remind me later.
+
+287
+00:32:05,487 --> 00:32:09,807
+Uh, okay. Next. This is the the kind of the fun part.
+
+288
+00:32:11,067 --> 00:32:14,807
+Here's where we actually do the, uh, the decryption re encryption.
+
+289
+00:32:14,817 --> 00:32:22,466
+I kind of spoiled it because I think we we looked at it before, but in the recover method for credentials and security.
+
+290
+00:32:22,467 --> 00:32:26,457
+The credentials and security resource. Well, first of all, here's the backup.
+
+291
+00:32:26,607 --> 00:32:30,787
+Um, the the backup method, which doesn't do a whole lot.
+
+292
+00:32:30,807 --> 00:32:37,167
+All it does is it just like, copies some Json files, some some static files into the staging path.
+
+293
+00:32:37,287 --> 00:32:45,627
+And for these it clones some SQLite databases to the staging path, which uses like, uh, the sort of the special SQLite cloning mechanism.
+
+294
+00:32:47,547 --> 00:32:50,727
+Recovery is, uh, more complicated here.
+
+295
+00:32:50,727 --> 00:32:54,717
+Again, uh, we're reading in the autofill profiles.
+
+296
+00:32:55,077 --> 00:33:00,297
+Uh, we read in the Json, we access each of the credit cards, we find the encrypted one.
+
+297
+00:33:01,257 --> 00:33:08,157
+If we find, uh, the encrypted number, we decrypt the bytes using the recovery OS keystore label.
+
+298
+00:33:08,667 --> 00:33:15,387
+Um, and then we what you get back when you decrypt bytes is bytes.
+
+299
+00:33:16,077 --> 00:33:24,567
+Um, so we have to, uh, turn it back into a string and that you basically recover the plaintext card as a string at that point,
+
+300
+00:33:24,957 --> 00:33:33,086
+and then we're encrypt that string back into another string, a base64 encoded string as new encrypted card.
+
+301
+00:33:33,087 --> 00:33:36,687
+And then we poke that into the credit card, uh, row.
+
+302
+00:33:37,047 --> 00:33:42,327
+And then that's what we write back out to the Json, uh, Json file.
+
+303
+00:33:42,837 --> 00:33:46,647
+So it works. And I tested this and it seems to work.
+
+304
+00:33:47,997 --> 00:33:52,137
+Um, and uh, I need to think about testing now.
+
+305
+00:33:52,317 --> 00:33:59,067
+So that was like 20 some odd minutes, maybe a little bit more and more like 25 minutes of me explaining what's going on.
+
+306
+00:33:59,427 --> 00:34:04,227
+And now we're at the point where I wanted to get to, which is we need to think about how we're going to test this.
+
+307
+00:34:05,127 --> 00:34:10,557
+Um, unit testing is like some of this already smells like it's going to be a pain to unit test,
+
+308
+00:34:10,557 --> 00:34:18,416
+mainly because, you know, I'm calling into this other service from, uh, from this method.
+
+309
+00:34:18,417 --> 00:34:21,657
+So, like, I'm going to have to, like, think about that.
+
+310
+00:34:21,657 --> 00:34:27,926
+Sort of like, do I stub this out or do I, um, do I allow it to call into lazy OS keystore?
+
+311
+00:34:27,927 --> 00:34:31,287
+I don't want to test OS keystore when I'm testing this stuff.
+
+312
+00:34:31,617 --> 00:34:35,897
+I want to make sure that, uh, like OS Keystore is tested in on its own.
+
+313
+00:34:35,937 --> 00:34:41,666
+When we're writing unit tests, we, uh, we need to make sure that, you know, we're we're testing at the smallest possible unit,
+
+314
+00:34:41,667 --> 00:34:45,267
+not like, overlapping with preexisting tests, because that's a waste of time.
+
+315
+00:34:45,687 --> 00:34:50,937
+Now, for integration tests, we are going to want to make sure that we're using the real OS keystore.
+
+316
+00:34:51,777 --> 00:34:57,807
+And we need to make sure that we don't pollute the system that we run the test on.
+
+317
+00:34:58,317 --> 00:35:07,407
+That is the thing I think I'm most concerned about is like when we're running integration tests or even when we're running real tests,
+
+318
+00:35:07,677 --> 00:35:12,897
+if we're using OS Keystore, the real OS Keystore, that means we're talking to the operating system, secure storage,
+
+319
+00:35:13,317 --> 00:35:19,976
+and that means we could accidentally overwrite like, like on a testing machine.
+
+320
+00:35:19,977 --> 00:35:23,277
+It's fine. Like, yeah, those testing machines get wiped very frequently.
+
+321
+00:35:23,397 --> 00:35:28,556
+But if I'm like a developer and I'm running this test, I want to make sure that I don't accidentally,
+
+322
+00:35:28,557 --> 00:35:36,176
+like, blow away the real secret for my production or like my, my actual user, um, Firefox instance.
+
+323
+00:35:36,177 --> 00:35:44,037
+Like, we, we want to make sure that it behaves correctly. Um, maybe also check that you never have the secret in clear text.
+
+324
+00:35:44,307 --> 00:35:53,217
+I'm not sure what you mean by that. Um, the secret is only ever if we go back to, uh, backup service.
+
+325
+00:35:55,467 --> 00:36:03,897
+We write the secret os keystore secret here, we do it here, and then we never refer to it again.
+
+326
+00:36:05,247 --> 00:36:09,236
+And then. Oh, uh, the credit card number. Uh, yeah.
+
+327
+00:36:09,237 --> 00:36:13,347
+I mean, like, we never. We we have it in memory here.
+
+328
+00:36:13,497 --> 00:36:21,326
+We're encrypt it, and we write it here, and then, um, we we forget the plaintext card.
+
+329
+00:36:21,327 --> 00:36:29,157
+It's just it's garbage. Garbage collected. But probably what we want to do is make sure that, um, at recovery time.
+
+330
+00:36:29,607 --> 00:36:34,887
+Yeah. Like that the. We haven't accidentally written a real credit card number.
+
+331
+00:36:35,937 --> 00:36:39,957
+Um, in here. I guess that's a good idea. We can start thinking about that as a test.
+
+332
+00:36:40,287 --> 00:36:45,776
+So ideas for tests. So here, I'm just gonna start splashing out some ideas.
+
+333
+00:36:45,777 --> 00:36:58,347
+That's a good one. Uh, making sure we don't accidentally store a plaintext credit card number inside of autofill profiles during.
+
+334
+00:36:58,487 --> 00:37:02,657
+Recovery. And, um.
+
+335
+00:37:03,347 --> 00:37:03,827
+This.
+
+336
+00:37:06,107 --> 00:37:20,117
+I need to, uh, update the, uh, integration test to ensure that we don't accidentally overwrite any real secrets on the machine the test is running on.
+
+337
+00:37:21,827 --> 00:37:26,867
+Overwrite any real, uh, useful, useful secrets.
+
+338
+00:37:27,137 --> 00:37:33,107
+So I think that's where I really want to start. Um, so I'm going to put that at the top.
+
+339
+00:37:36,407 --> 00:37:44,626
+Uh, I need to make sure that, I mean, the basics.
+
+340
+00:37:44,627 --> 00:37:52,937
+I need to make sure that credit credentials and security backup resource will, uh, do the decryption and encryption properly.
+
+341
+00:37:56,587 --> 00:38:04,407
+And produce encrypted. I think this is I think this is, uh, basically a version of this.
+
+342
+00:38:04,417 --> 00:38:12,697
+So, um, produce encrypted, uh, bytes for the cards, and, like, maybe this can be part of that.
+
+343
+00:38:16,087 --> 00:38:20,827
+I think that's really the, the, the test is make sure that it works like that.
+
+344
+00:38:21,187 --> 00:38:24,477
+Encrypted cards get transformed.
+
+345
+00:38:24,487 --> 00:38:28,147
+Now, this is a little tricky because, um.
+
+346
+00:38:30,157 --> 00:38:40,207
+Like, make sure this will work. If the secret is common between the, uh, bat device that was backed up.
+
+347
+00:38:42,337 --> 00:38:49,897
+And the device that was recovered on. Or if the, uh, secret is different between the two.
+
+348
+00:38:54,637 --> 00:39:01,427
+Uh, they'll be common if it's the same device like we store, even across multiple profiles.
+
+349
+00:39:01,447 --> 00:39:10,117
+I believe we use the same secret. Um, like, Firefox is just given one secret in the, uh, secure operating system storage.
+
+350
+00:39:13,627 --> 00:39:16,927
+Uh, so this is what I want to start with.
+
+351
+00:39:23,817 --> 00:39:28,887
+How do I want to do it? Well, let's take a look at the integration test.
+
+352
+00:39:33,017 --> 00:39:36,827
+By the way, base64 is not encrypted, rather encoded since you don't need a key to decode it.
+
+353
+00:39:36,857 --> 00:39:42,197
+Yeah, where did I say encrypted? I mean base64, we base64.
+
+354
+00:39:42,227 --> 00:39:49,337
+Um. Whenever we, uh, decrypt the bytes, we get back bytes.
+
+355
+00:39:49,997 --> 00:39:52,127
+We convert those bytes into a string.
+
+356
+00:39:52,907 --> 00:40:01,697
+Whenever you encrypt the plaintext card, what you get back is the base64 encoded encrypted bytes of the plaintext string.
+
+357
+00:40:02,177 --> 00:40:05,537
+So I should have been more specific. Um, yes.
+
+358
+00:40:05,747 --> 00:40:09,256
+Base64 should not be confused with encryption.
+
+359
+00:40:09,257 --> 00:40:19,937
+Base64 is a way of encoding bytes in a way that is like compatible with, you know, UTF eight encoded files or like Ascii.
+
+360
+00:40:20,837 --> 00:40:32,447
+If you need to just like hold on to like present some bytes or store some bytes somewhere in a file that is expected to hold text like readable text,
+
+361
+00:40:32,777 --> 00:40:37,067
+you probably want to use base64. That's sort of like the the de facto.
+
+362
+00:40:37,367 --> 00:40:39,977
+Um. There are disadvantages to base64 encoding.
+
+363
+00:40:39,977 --> 00:40:47,297
+The big one is it inflates the size of what it is that you're encoding, and that's something that we've had to accept as a trade off here,
+
+364
+00:40:47,657 --> 00:40:53,747
+where, you know, the backup file that we are writing is an especially crafted HTML file,
+
+365
+00:40:54,047 --> 00:41:01,427
+and you can't just store random bytes inside of an HTML file if you want it to be readable by other browsers or,
+
+366
+00:41:01,547 --> 00:41:04,157
+you know, to be interpreted as or in a HTML file.
+
+367
+00:41:04,727 --> 00:41:11,597
+So we've had to base64 encoded so that, you know, we compress the backup before we base64 encoded it.
+
+368
+00:41:12,167 --> 00:41:23,687
+The way it works is like we compress all of the the aka the the snapshot, then we encrypt it, then we base64 encoded in blocks.
+
+369
+00:41:24,587 --> 00:41:30,317
+Um, sorry, we we encrypt it in blocks and then base64 encode each block.
+
+370
+00:41:30,977 --> 00:41:43,247
+And then when we decrypt we base64 decode each block, then decrypt each block and then reassemble the compressed file, which we then decompress.
+
+371
+00:41:43,997 --> 00:41:46,737
+Um, it's very convoluted, but it allowed it get.
+
+372
+00:41:47,237 --> 00:41:53,237
+The nice thing about this is that, uh, we're able to store a humongous quantity of information inside of the HTML file.
+
+373
+00:41:54,137 --> 00:42:00,796
+We are quite confident that it is securely stored, uh, and that the HTML file is portable.
+
+374
+00:42:00,797 --> 00:42:08,717
+You can move it between systems. It can go between, uh, macOS and Windows and Linux, and you could, um, open it up in another browser,
+
+375
+00:42:08,717 --> 00:42:16,006
+even what you'd see in another browser, it's kind of neat, is like if you were to, uh, let me find a backup file.
+
+376
+00:42:16,007 --> 00:42:20,357
+Here's a backup file that I created today, uh, with some payment methods.
+
+377
+00:42:20,357 --> 00:42:26,747
+If I open it up inside of Firefox, um, it looks like this.
+
+378
+00:42:27,677 --> 00:42:31,847
+It's like, hey, here's a backup file that you can restore, and here's some instructions on how to do it.
+
+379
+00:42:32,237 --> 00:42:42,257
+And if you open it up in, say, another browser like Safari or Chrome or something, it'll give you the opportunity to download Firefox to recover from.
+
+380
+00:42:43,367 --> 00:42:46,967
+Um, so that's one of the advantages of the HTML file,
+
+381
+00:42:47,207 --> 00:42:54,977
+is that it allows us to have like a download and install experience on a new machine that doesn't necessarily have Firefox on it.
+
+382
+00:42:55,247 --> 00:42:55,906
+That's the advantage.
+
+383
+00:42:55,907 --> 00:43:04,457
+We can actually use the competing browsers as a runtime to show our our backup restoration experience, which I think is kind of clever.
+
+384
+00:43:05,507 --> 00:43:12,857
+Um, uh, okay. So let's, uh, let's figure out how to test this.
+
+385
+00:43:13,907 --> 00:43:19,907
+Yeah. I want to show the, uh, the integration test.
+
+386
+00:43:19,907 --> 00:43:29,717
+So we've got a lot of tests. This is a very I'm particularly proud, um, of the testing that we've done for, uh, backup.
+
+387
+00:43:29,987 --> 00:43:36,077
+So we have this thing called covert, uh, coverage dot master tools that, to be clear, code coverage is not a, um.
+
+388
+00:43:36,917 --> 00:43:39,557
+You shouldn't always be chasing 100%, uh, test coverage.
+
+389
+00:43:39,557 --> 00:43:48,286
+Like, that's not necessarily a useful metric to measure, but zero coverage is a small and, uh, decent coverage.
+
+390
+00:43:48,287 --> 00:43:52,336
+High coverage is generally, generally speaking, a good thing.
+
+391
+00:43:52,337 --> 00:43:54,767
+If you see 100% coverage, I'm usually a little skeptical.
+
+392
+00:43:54,767 --> 00:44:01,487
+Either what's being covered by test is either really short or someone has exhaustively tested everything in.
+
+393
+00:44:01,487 --> 00:44:11,507
+That probably means very brittle tests, but somewhere between like 80 and 95% is like, I'd say, a decent a decent amount of test coverage.
+
+394
+00:44:11,627 --> 00:44:19,817
+And if you take a look inside of components backup, you can see we've got 94% test coverage, which I'm fairly pleased about.
+
+395
+00:44:20,387 --> 00:44:30,436
+Um, you know, um, again, I don't want to say that, uh, that, you know, 100% coverage is like it means there are no bugs.
+
+396
+00:44:30,437 --> 00:44:37,157
+That's not what it means. Percent coverage just means a test ran and these lines were executed during tests.
+
+397
+00:44:37,607 --> 00:44:46,397
+Um. Backup resources. It has zero coverage, but that's just because it's, uh, it's a utility for, uh, importing all of the other, other resources.
+
+398
+00:44:46,847 --> 00:44:51,767
+Um, right. So where am I going with this?
+
+399
+00:44:51,797 --> 00:44:58,817
+The test. The integration test. Um, our integration test is under back up, uh, tests.
+
+400
+00:44:58,817 --> 00:45:05,457
+Marionette. We use this, uh, marionette system to, um, to write integration tests.
+
+401
+00:45:05,477 --> 00:45:09,556
+What's nice about. You've probably see me write tests using something called monkey test.
+
+402
+00:45:09,557 --> 00:45:14,757
+And these tests are written in JavaScript. Um, uh, they're also XP tests.
+
+403
+00:45:14,777 --> 00:45:19,487
+They're also written in JavaScript. These tests are written in Python, for better or worse.
+
+404
+00:45:19,847 --> 00:45:28,997
+Um, but what's nice about marionette tests is that it allows us to do something that monkey tests and special tests do not allow us to do,
+
+405
+00:45:29,117 --> 00:45:37,787
+which is the harness is separated from the executable that is under test, meaning that we can shut down the browser and restart it.
+
+406
+00:45:37,817 --> 00:45:43,787
+We can change profiles on it. And that's something that backup and recovery in particular does.
+
+407
+00:45:44,057 --> 00:45:48,497
+So Marinette is an obvious choice for our integration tests.
+
+408
+00:45:49,757 --> 00:45:54,167
+Um, okay. So this is not a very pretty test, to be clear.
+
+409
+00:45:54,677 --> 00:46:02,237
+Uh, but I'm going to talk through it. So we do a lot of setup and we, uh, add a bunch of, like, testing information.
+
+410
+00:46:02,507 --> 00:46:08,387
+We, we try and, like, dump enough of information inside of the profile that's going to be backed up
+
+411
+00:46:08,387 --> 00:46:12,287
+so that we can verify that the recovered profile also has that information.
+
+412
+00:46:14,387 --> 00:46:20,357
+Uh, this is, I think, a lingering left over that I have a patch somewhere that removes it so we can ignore this part.
+
+413
+00:46:21,167 --> 00:46:23,657
+This is the recovery code that the test uses.
+
+414
+00:46:24,767 --> 00:46:42,077
+And this is fairly interesting where when we, we when we create, um, the backup, we don't want to in this marionette test.
+
+415
+00:46:43,617 --> 00:46:54,776
+Actually include the user's um, real OS keystore secret inside of the backup when they're running just the marionette test.
+
+416
+00:46:54,777 --> 00:46:57,897
+Like we don't want to do that. So what we do is some hackery.
+
+417
+00:46:59,007 --> 00:47:03,657
+Oh, that would also, uh, um, show an OS authentication dialog.
+
+418
+00:47:04,137 --> 00:47:08,367
+Uh, if we were to try and access the user's real, uh, OS keystore.
+
+419
+00:47:08,577 --> 00:47:16,407
+So what we do is we remember the original label that OS Keystore uses, and then we generate a random OS Keystore.
+
+420
+00:47:17,127 --> 00:47:25,257
+We enable encryption, which is going to do the job of exfiltrating the secret for um, uh, OSC store.
+
+421
+00:47:25,797 --> 00:47:32,487
+And then, uh, we clean up and we put the store label back.
+
+422
+00:47:33,057 --> 00:47:38,367
+So, um, what we end up doing is, uh.
+
+423
+00:47:41,997 --> 00:47:48,957
+I'm just realizing now we generate a random OS store and then we clean it up.
+
+424
+00:47:53,467 --> 00:48:02,647
+And we're going to need to make sure that not only do we use this random OS keystore when enabling encryption,
+
+425
+00:48:02,647 --> 00:48:07,207
+we also want it when we insert credit cards. Um.
+
+426
+00:48:09,957 --> 00:48:20,067
+Do we do that anywhere in here? Pay rent? No, we don't currently store credit cards, mainly because the OS keystore stuff wasn't done.
+
+427
+00:48:20,457 --> 00:48:31,867
+So now we need to kind of think about this a little bit. So this sort of setup.
+
+428
+00:48:34,047 --> 00:48:41,887
+I think actually needs to occur. Earlier.
+
+429
+00:48:44,687 --> 00:48:49,847
+Or we need to run this routine.
+
+430
+00:48:49,887 --> 00:48:54,617
+I like the inserting the payment methods routine in here.
+
+431
+00:48:57,197 --> 00:49:07,467
+I'm going to opt for. Readability.
+
+432
+00:49:10,547 --> 00:49:14,207
+And so what I'll do is I'm going to add.
+
+433
+00:49:17,207 --> 00:49:21,197
+Um, a comment. We don't want to.
+
+434
+00:49:24,547 --> 00:49:38,287
+We want to make sure that any payment methods in this testing profile are properly encrypted using OS keystore.
+
+435
+00:49:40,747 --> 00:50:01,357
+And that the encrypted backup. Will, uh, properly, um, extract and, uh, recover from the original OS keystore secret.
+
+436
+00:50:05,197 --> 00:50:08,767
+What we don't want is that.
+
+437
+00:50:11,137 --> 00:50:14,707
+Uh, maybe use get random values instead of Math.random. To be clear.
+
+438
+00:50:15,397 --> 00:50:19,827
+Yeah, I'm using Math.random here. Not because I'm trying to do anything cryptographically secure.
+
+439
+00:50:19,837 --> 00:50:23,857
+I'm just trying to create. Like it doesn't matter that this is somewhat predictable.
+
+440
+00:50:24,367 --> 00:50:30,817
+Um, the the label is not a thing that we need to keep secure.
+
+441
+00:50:30,847 --> 00:50:35,587
+It's just something that we want to have a high degree of certainty that there isn't going to be a collision.
+
+442
+00:50:36,037 --> 00:50:39,037
+Um, for the label. That's all we're doing here.
+
+443
+00:50:40,117 --> 00:50:46,627
+Uh, yeah. You never want to use Math.random for, like, generating high entropy secure bytes or anything.
+
+444
+00:50:46,627 --> 00:50:49,987
+That's that's you want to use get get random values instead.
+
+445
+00:50:50,437 --> 00:50:55,057
+Good call. Smurfd0. Um.
+
+446
+00:50:56,447 --> 00:51:01,537
+Hang on. My phone is blowing up. What's happening here? Okay.
+
+447
+00:51:06,247 --> 00:51:09,647
+Looks like I have some reviews to do.
+
+448
+00:51:09,657 --> 00:51:27,607
+Uh. Okay. Uh, what we don't want is, uh, to do is, uh, encrypt or extract the OS keystore secret.
+
+449
+00:51:29,707 --> 00:51:41,977
+Used by, um, this machine's actual Firefox instance if one exists, since they're all shared.
+
+450
+00:51:44,367 --> 00:51:50,307
+Um, and we, we also definitely do not want to accidentally.
+
+451
+00:51:54,057 --> 00:51:57,297
+Overwrite that secret.
+
+452
+00:52:02,987 --> 00:52:11,497
+Um. Okay. So will we work?
+
+453
+00:52:11,677 --> 00:52:27,087
+We solve this. By tricking OS Keystore by poking some values into OS keystore.
+
+454
+00:52:28,017 --> 00:52:31,137
+Got sister uh into the OS Keystore.
+
+455
+00:52:34,347 --> 00:52:48,437
+Module. Poking, uh, new store label value into the OSK store module.
+
+456
+00:52:49,907 --> 00:52:54,287
+When we do the following. Uh, before we do the following.
+
+457
+00:52:59,717 --> 00:53:04,547
+Uh, store. Credit cards. Store payment methods.
+
+458
+00:53:07,607 --> 00:53:17,147
+Uh, enable encryption. Once those two things are done, we can put the.
+
+459
+00:53:20,837 --> 00:53:23,567
+Uh, you know, we don't even need to put the store label back.
+
+460
+00:53:23,657 --> 00:53:39,527
+Um, we don't really need to worry about putting the store label back afterwards, since the, uh, process will end shortly.
+
+461
+00:53:42,947 --> 00:53:47,237
+Uh, browser process with.
+
+462
+00:53:48,867 --> 00:53:55,407
+The temporary store label will end shortly.
+
+463
+00:53:59,697 --> 00:54:03,447
+Oh, but we do want to delete it. Um, so actually, we.
+
+464
+00:54:03,567 --> 00:54:19,077
+Yeah, we don't want to pollute. We also. Uh, once that's done, we delete the, uh, temporary os keystore row that we created.
+
+465
+00:54:25,477 --> 00:54:32,127
+I think that's what's happening here. And clean up. You know.
+
+466
+00:54:33,327 --> 00:54:49,737
+Yeah. Deletes the secret. Okay. So what I'm going to do is I'm going to say execute script.
+
+467
+00:54:52,407 --> 00:54:59,936
+This is how apparently we this is how we run like, privileged JavaScript within our test, within the browser that's running.
+
+468
+00:54:59,937 --> 00:55:04,167
+It's quite awkward. We we're going to import OS Keystore.
+
+469
+00:55:07,617 --> 00:55:19,247
+We're going to do this stuff. I take the top part?
+
+470
+00:55:38,327 --> 00:55:55,077
+Uh. This technique is similar to the one used in OS keystore test utils, which is unfortunately not a module that is available to in it tests.
+
+471
+00:55:57,527 --> 00:56:01,817
+Right. Isn't that what's called OS keystore test utils?
+
+472
+00:56:03,217 --> 00:56:16,007
+Yeah. We don't really need to remember the original store label.
+
+473
+00:56:16,097 --> 00:56:23,297
+That's the thing we don't need to do. We don't need to put the key store, store, label back so we can just do this.
+
+474
+00:56:37,127 --> 00:56:43,337
+Um, and then we need to remember to do this.
+
+475
+00:56:46,547 --> 00:56:55,057
+Right. Oh, Python.
+
+476
+00:57:00,397 --> 00:57:04,147
+Uh. Outer resolve. Execute async script.
+
+477
+00:57:07,237 --> 00:57:11,497
+And we do this sort of weird dance.
+
+478
+00:57:15,597 --> 00:57:20,277
+We don't need a recovery. We don't have a recovery code argument. We just have outer resolve.
+
+479
+00:57:23,257 --> 00:57:36,247
+And we do this dance. And so.
+
+480
+00:57:37,377 --> 00:57:41,507
+Right. Something like that.
+
+481
+00:57:46,087 --> 00:57:53,097
+Right. Um. And then in between here.
+
+482
+00:57:55,647 --> 00:58:00,777
+We need to. Actually I'm going to move this down.
+
+483
+00:58:02,307 --> 00:58:12,207
+Enable encryption. And then it creates a backup clean up here.
+
+484
+00:58:14,157 --> 00:58:19,017
+Uh, now we clean up our temporary OS keystore.
+
+485
+00:58:21,777 --> 00:58:24,897
+From the OS's, uh, secure storage.
+
+486
+00:58:26,907 --> 00:58:41,077
+We won't need it anymore. So then we're going to do self add test.
+
+487
+00:58:43,507 --> 00:58:50,527
+Credit cards. Test are all, say, payment methods.
+
+488
+00:58:54,607 --> 00:59:08,917
+Now that we've, um, got the, uh, fake os keystore set up, we can insert our testing payment methods.
+
+489
+00:59:10,477 --> 00:59:16,927
+Which will be encrypted by. Uh.
+
+490
+00:59:21,097 --> 00:59:26,417
+Okay. Then we run the encryption.
+
+491
+00:59:27,527 --> 00:59:39,047
+We clean up. And then we do this part again.
+
+492
+00:59:42,777 --> 00:59:46,467
+We generate another one and we recover from the backup archive.
+
+493
+00:59:49,097 --> 00:59:53,627
+That should still work. I don't think we actually need to do this part.
+
+494
+00:59:55,457 --> 00:59:59,447
+So now what we need to do is we need to insert credit cards.
+
+495
+01:00:01,457 --> 01:00:04,877
+Um, so add test payment methods.
+
+496
+01:00:05,177 --> 01:00:11,237
+So under where that be? Uh, test form history.
+
+497
+01:00:15,747 --> 01:00:23,457
+It's not exactly the same thing. It's, um, had test permissions.
+
+498
+01:00:25,377 --> 01:00:31,017
+I'll just add a new one here at the end. Def add test payment methods.
+
+499
+01:00:33,207 --> 01:00:37,737
+Uh, and then I'll have, uh, verify payment methods.
+
+500
+01:00:38,667 --> 01:00:45,237
+Verify recovered. Payment methods.
+
+501
+01:00:47,607 --> 01:00:54,477
+Okay. So we'll make sure we call this that.
+
+502
+01:00:54,537 --> 01:00:58,617
+It happens right here at the end of, uh.
+
+503
+01:00:59,277 --> 01:01:05,547
+This is a very long, complicated test. Um, self dot verify.
+
+504
+01:01:07,767 --> 01:01:13,737
+Recovered payment methods. All right.
+
+505
+01:01:14,187 --> 01:01:17,577
+So what we're going to do is we're going to execute an async script.
+
+506
+01:01:20,317 --> 01:01:27,017
+That will insert some credit cards. Um.
+
+507
+01:01:27,727 --> 01:01:32,087
+Was it? History exists. That's under verify.
+
+508
+01:01:32,887 --> 01:01:36,737
+Uh, this is what I want. I want something like this.
+
+509
+01:01:39,287 --> 01:01:43,907
+Um, but instead of using places, I'm going to insert some credit cards now.
+
+510
+01:01:44,237 --> 01:01:50,357
+Uh, let's look at an example of doing this from, uh, the migration of the migration Wizard.
+
+511
+01:01:50,807 --> 01:01:54,917
+Um, insert payment credit cards.
+
+512
+01:01:55,547 --> 01:01:59,327
+I guess we call it credit cards and migration utils. Oh, joy.
+
+513
+01:01:59,357 --> 01:02:04,157
+Okay, so we create an object and then we called insert credit cards wrapper,
+
+514
+01:02:04,157 --> 01:02:09,616
+which is really a thing that just makes sure that form autofill storage is initialized.
+
+515
+01:02:09,617 --> 01:02:15,947
+And then it adds credit cards to each. So here's we'll do basically the exact same thing.
+
+516
+01:02:15,957 --> 01:02:19,157
+We're going to um.
+
+517
+01:02:24,237 --> 01:02:27,357
+Consent form. Autofill. Storage.
+
+518
+01:02:32,597 --> 01:02:39,317
+And then inside of our promise here we will initialize form autofill storage, I'm pretty sure.
+
+519
+01:02:41,807 --> 01:02:45,586
+It's already initialized elsewhere for other things, but I think it's good practice.
+
+520
+01:02:45,587 --> 01:02:51,947
+Just in case we decide to disable one of those other tests for during development that like because this is a no.
+
+521
+01:02:51,947 --> 01:02:58,457
+Um, it's what's called idempotent, meaning even if you call it multiple times, it'll only ever happen once.
+
+522
+01:02:59,027 --> 01:03:01,547
+I deem potent idempotent.
+
+523
+01:03:05,327 --> 01:03:11,777
+Denoting an element of a set which is unchanged value when multiplied or otherwise operated on by itself an idempotent element.
+
+524
+01:03:13,787 --> 01:03:17,427
+Um. Yeah.
+
+525
+01:03:17,787 --> 01:03:23,097
+An operation can be applied multiple times without changing the result. It's very wordy way of saying.
+
+526
+01:03:23,607 --> 01:03:27,897
+Uh, it runs once. I demo potent, I demo potent.
+
+527
+01:03:28,737 --> 01:03:36,677
+Okay, so we initialize form autofill storage, and then we're going to say, uh await what?
+
+528
+01:03:36,837 --> 01:03:40,647
+We're going to add a credit card. And our credit card will be.
+
+529
+01:03:43,867 --> 01:03:47,737
+Something that looks like this CC name.
+
+530
+01:03:51,157 --> 01:03:57,727
+Um. The name will be. Fast and low.
+
+531
+01:03:59,497 --> 01:04:02,767
+No, I'm going to. Who will I name this? Who will?
+
+532
+01:04:03,097 --> 01:04:08,497
+What will be my name? Foxy. Foxy the fox.
+
+533
+01:04:09,577 --> 01:04:17,057
+Foxy the Firefox. Um, CC number.
+
+534
+01:04:19,967 --> 01:04:29,517
+Uh. So I need to put it in plain text here.
+
+535
+01:04:29,787 --> 01:04:34,297
+There are test credit card numbers that I know are valid.
+
+536
+01:04:34,317 --> 01:04:41,487
+These are them. So we're going to use the Mastercard one. Foxy uses Mastercard.
+
+537
+01:04:42,477 --> 01:04:47,397
+That's not an endorsement CC exp month.
+
+538
+01:04:49,227 --> 01:04:55,017
+Uh, we're going to give it a month. Uh, five.
+
+539
+01:04:55,797 --> 01:05:01,887
+Uh, cc exp year. Uh.
+
+540
+01:05:04,107 --> 01:05:10,107
+I think. It's four digits.
+
+541
+01:05:13,197 --> 01:05:30,207
+Yeah. Four digits. Thank goodness. Um, it may accept two digits, but we're going to inject four, and we'll say this thing is good until 2099.
+
+542
+01:05:31,377 --> 01:05:35,277
+Ooh. So we're going to insert that credit card.
+
+543
+01:05:37,197 --> 01:05:46,587
+And then when we verify. Uh, how will we verify?
+
+544
+01:05:47,427 --> 01:05:51,567
+We need to query credit cards.
+
+545
+01:05:51,897 --> 01:06:02,577
+Credit cards. Stolen credit cards.
+
+546
+01:06:04,827 --> 01:06:08,847
+Get all a wait for us.
+
+547
+01:06:08,887 --> 01:06:16,247
+Uh, so. But cards equals form out of fill storage.
+
+548
+01:06:16,257 --> 01:06:19,677
+Credit cards. Dot get all.
+
+549
+01:06:22,317 --> 01:06:26,097
+Um. And then.
+
+550
+01:06:33,857 --> 01:06:41,957
+Uh, if. I'm gonna do it this way.
+
+551
+01:06:42,047 --> 01:06:48,557
+Like cod. Um, if not cod.
+
+552
+01:07:00,527 --> 01:07:04,207
+Script return false.
+
+553
+01:07:06,367 --> 01:07:09,727
+Um. You know, that's.
+
+554
+01:07:09,997 --> 01:07:14,256
+I think we can do better cards. If not cards.
+
+555
+01:07:14,257 --> 01:07:20,707
+Dot length. If card slot length is not equal to one, return false.
+
+556
+01:07:21,357 --> 01:07:24,577
+Uh, card. It's card zero.
+
+557
+01:07:27,217 --> 01:07:33,307
+If card.cc name.
+
+558
+01:07:35,587 --> 01:07:41,917
+Uh is not equal to Foxy. The Firefox return false.
+
+559
+01:07:42,937 --> 01:07:49,597
+Unfortunately, we don't have the nice assertions in and marionette inside of these scripts that I'd normally use in tests.
+
+560
+01:07:50,767 --> 01:07:58,247
+Um, otherwise. Uh, I'd use those, but here I'm just going to use equalities and.
+
+561
+01:07:58,277 --> 01:08:10,567
+True or false. Uh, if card six month, uh, equal to five and false.
+
+562
+01:08:12,667 --> 01:08:15,847
+Uh, if card c c exp.
+
+563
+01:08:17,907 --> 01:08:21,207
+Yea. Uh, equal to.
+
+564
+01:08:22,167 --> 01:08:28,167
+I actually think these are supposed to be strings. Not numbers.
+
+565
+01:08:28,677 --> 01:08:34,197
+CC x here. Looks like you can.
+
+566
+01:08:34,257 --> 01:08:39,057
+It can accept both. But I'm going to use strings five.
+
+567
+01:08:41,667 --> 01:08:48,147
+2099 false and otherwise return true.
+
+568
+01:08:51,117 --> 01:08:54,927
+And then we're going to say card exists.
+
+569
+01:09:01,397 --> 01:09:05,837
+Equals that and then assert true.
+
+570
+01:09:05,867 --> 01:09:19,617
+Card exists. Okay.
+
+571
+01:09:20,127 --> 01:09:27,657
+So we'll insert the card and then when we're done recovering, will verify that the card properties all match.
+
+572
+01:09:29,637 --> 01:09:35,247
+When we pull this now let's run this again or think about this again.
+
+573
+01:09:36,117 --> 01:09:43,737
+This verification needs to occur. Oh yeah.
+
+574
+01:09:43,827 --> 01:09:50,967
+Okay. So. Oh, okay.
+
+575
+01:09:55,327 --> 01:09:59,107
+We need to make sure that these share the same OS Keystore label.
+
+576
+01:10:03,187 --> 01:10:11,787
+Because it would have been encrypted using this one. Um, so I'm just say OS Keystore label.
+
+577
+01:10:12,097 --> 01:10:18,717
+It's going to be a thing that we return. We're not going to clean up.
+
+578
+01:10:31,237 --> 01:10:39,817
+Return. Keystore store label.
+
+579
+01:10:43,897 --> 01:10:49,867
+So we get back the OS Keystore label. And then.
+
+580
+01:10:54,397 --> 01:11:04,627
+Print um persisting os keystore temporary persisting fake os keystore label.
+
+581
+01:11:08,677 --> 01:11:12,907
+Okay, so we quit. We launch.
+
+582
+01:11:28,107 --> 01:11:34,197
+Turn, the encryption is enabled. And then we need to clean up.
+
+583
+01:11:48,137 --> 01:11:57,467
+Clean up. Contemporary poets Keith Storr.
+
+584
+01:12:00,897 --> 01:12:06,867
+Uh, label. Script args.
+
+585
+01:12:14,007 --> 01:12:18,087
+This. Label.
+
+586
+01:12:25,177 --> 01:12:31,327
+And then in here. Arguments.
+
+587
+01:12:32,837 --> 01:12:36,677
+Uh, what we do is we say.
+
+588
+01:12:41,527 --> 01:13:05,157
+Import OS Keystore. And then do what we did before a test.
+
+589
+01:13:05,157 --> 01:13:11,217
+Back up that pie. That's key story that came up.
+
+590
+01:13:11,727 --> 01:13:16,757
+We'll do. OS Keystore label.
+
+591
+01:13:26,647 --> 01:13:34,557
+Who's. OS Keystore label.
+
+592
+01:13:37,527 --> 01:13:40,527
+And then we'll do an await cleanup in here.
+
+593
+01:13:54,467 --> 01:14:01,517
+That occurs after we verified these things, so we won't need to get any values there.
+
+594
+01:14:01,577 --> 01:14:07,397
+I think that's it. So let's run through it again. We start the browser.
+
+595
+01:14:09,947 --> 01:14:17,357
+We inject a bunch of stuff, including oh, we got to add test payment methods.
+
+596
+01:14:17,807 --> 01:14:21,507
+We add our payment methods. Oh no, we don't do that here.
+
+597
+01:14:21,527 --> 01:14:24,857
+We don't do that here. We do that here.
+
+598
+01:14:26,987 --> 01:14:30,317
+Um, so first of all, we set up our fake OS keystore.
+
+599
+01:14:30,527 --> 01:14:34,457
+It's fine that we forget that this is a random one.
+
+600
+01:14:35,087 --> 01:14:40,427
+We're going to act. That's okay. That's actually best. It means it's not going to share it with the other one that we create.
+
+601
+01:14:40,907 --> 01:14:45,317
+We add our payment methods. We then enable backups.
+
+602
+01:14:47,757 --> 01:14:53,667
+Or enable encryption. So our OS keystore secret from up here gets stored in the backup.
+
+603
+01:14:54,627 --> 01:15:00,717
+We create the backup. Then we clean up our first OS keystore.
+
+604
+01:15:01,527 --> 01:15:09,357
+Then upon recovery. We.
+
+605
+01:15:10,797 --> 01:15:16,047
+So we launch a new browser. And then we import OS Keystore.
+
+606
+01:15:17,307 --> 01:15:22,497
+We write a different store label in there and then recover from the backup archive.
+
+607
+01:15:31,077 --> 01:15:34,227
+We then launch that back up. That recover. Oh.
+
+608
+01:15:34,557 --> 01:15:37,677
+Um. Yeah. Then we launch the new profile.
+
+609
+01:15:41,897 --> 01:15:44,777
+And then we verify that the payment methods are still there,
+
+610
+01:15:45,737 --> 01:15:54,407
+and then we clean up the old the second temporary OS keystore the fake one that we created.
+
+611
+01:15:54,767 --> 01:15:59,747
+And then we're done. Okay, that seems to make sense.
+
+612
+01:16:01,427 --> 01:16:04,787
+I'm a little scared, but let's see what happens.
+
+613
+01:16:07,727 --> 01:16:11,596
+Mock test. Browser components. Backup test. Marionette test.
+
+614
+01:16:11,597 --> 01:16:20,417
+Backup. Here goes. Actually, before we do that, let's, uh, lint, mock lint, outgoing fix.
+
+615
+01:16:21,587 --> 01:16:29,157
+Just in case there's something wrong with our python. Wow.
+
+616
+01:16:30,707 --> 01:16:37,907
+Okay. No problems. It ran. So I'm just to double check mock lint, browse proposed backup tests.
+
+617
+01:16:37,907 --> 01:16:41,387
+Marinette, test. Backup isn't anything in there you don't like.
+
+618
+01:16:45,717 --> 01:16:54,987
+Oh. See it? Yeah. There we go. Fix it. Okay.
+
+619
+01:16:56,517 --> 01:17:05,657
+Um, now, how do you like it? How do you like me now? Okay, let's run it.
+
+620
+01:17:07,187 --> 01:17:10,577
+Mock test. Browser. Propose backup. Test. Marinette. Test.
+
+621
+01:17:10,577 --> 01:17:29,097
+Backup. Fingers crossed. Gang, here we go. So we inject all of our stuff.
+
+622
+01:17:31,407 --> 01:17:37,237
+I'm going to create a backup. Uh, that that's not a good sign if it's just sitting there.
+
+623
+01:17:37,267 --> 01:17:42,957
+OS keystore not defined on line 122. Okay, we're going to quit line one.
+
+624
+01:17:43,077 --> 01:17:53,157
+OS keystore not defined on 122. Did I use it before I imported it?
+
+625
+01:17:58,707 --> 01:18:03,747
+Oh, yeah. In here to clean up. I didn't, so I didn't clean up properly.
+
+626
+01:18:03,957 --> 01:18:08,187
+Um, so I need to bring it this down here again.
+
+627
+01:18:09,837 --> 01:18:13,887
+So I'll have to clean up my own machine. Um.
+
+628
+01:18:19,417 --> 01:18:22,777
+All right. Do I do that anywhere else?
+
+629
+01:18:23,227 --> 01:18:29,077
+Keystore. No, I think I'm okay.
+
+630
+01:18:29,287 --> 01:18:42,057
+Let's try it again. Okay.
+
+631
+01:18:44,457 --> 01:18:56,447
+Launching. Stuck again could not create recovery profile.
+
+632
+01:18:58,487 --> 01:19:11,987
+Why not? Find 190.
+
+633
+01:19:21,407 --> 01:19:25,877
+Cover from backup archive. Did I change the signature here?
+
+634
+01:19:27,857 --> 01:19:35,057
+No. Return this. It's recovered from snapshot folder.
+
+635
+01:19:35,537 --> 01:19:41,987
+Oh, yeah. Hang on. I've changed. I've changed the signature of this accidentally.
+
+636
+01:19:43,967 --> 01:19:49,157
+Um. I should return.
+
+637
+01:19:51,707 --> 01:19:57,797
+Whoops. Okay, so let's try that again. That's why you test.
+
+638
+01:20:10,027 --> 01:20:24,727
+Okay. No good syntax error. Uh, missing, uh, bracket after a condition in line 246.
+
+639
+01:20:25,327 --> 01:20:37,257
+So in some of my JavaScript. Um. So down here I'm missing.
+
+640
+01:20:39,957 --> 01:20:57,307
+A close brace. See.
+
+641
+01:21:01,467 --> 01:21:12,407
+So I have to, like, parse this manually. Close brace somewhere.
+
+642
+01:21:16,037 --> 01:21:22,327
+This is so silly. Here.
+
+643
+01:21:26,537 --> 01:21:36,397
+No. If I just like.
+
+644
+01:21:39,477 --> 01:21:46,287
+Try and paste this inside of a JavaScript terminal.
+
+645
+01:21:46,297 --> 01:21:55,767
+What would it say? Okay, it still doesn't like it. So this is, um, invalid JavaScript on line 25.
+
+646
+01:21:56,877 --> 01:22:14,877
+So 25 123. 123456789 ten 1112 1314 1516 1718 1920 2122 three 2425.
+
+647
+01:22:15,237 --> 01:22:18,357
+Ah! I see it.
+
+648
+01:22:22,777 --> 01:22:26,767
+So dumb, so dumb I wish. I wish we had better syntax.
+
+649
+01:22:27,007 --> 01:22:35,407
+Syntax highlighting in there. Uh. Or like I do wish a better experience writing marionette tests.
+
+650
+01:22:36,157 --> 01:22:40,417
+Uh, unfortunately, we don't live in a perfect world. Okay.
+
+651
+01:22:41,017 --> 01:22:48,337
+False is not true. So we, um, verified recovered payment methods.
+
+652
+01:22:53,917 --> 01:22:59,377
+Uh, here's what I'm going to do. Get all dump, uh, cards.
+
+653
+01:23:01,117 --> 01:23:06,517
+Json Stringify cards. Null. Um.
+
+654
+01:23:12,967 --> 01:23:19,307
+Us. Um.
+
+655
+01:23:21,197 --> 01:23:36,587
+To go. Log. Dash. Okay.
+
+656
+01:23:42,107 --> 01:23:59,327
+String literal contains an escapes. Let's just do that then.
+
+657
+01:24:06,557 --> 01:24:14,086
+Creating so much garbage inside of, uh, key keychain in my profiles directory.
+
+658
+01:24:14,087 --> 01:24:17,897
+Probably. Okay. Cards.
+
+659
+01:24:28,197 --> 01:24:34,077
+I think I saw it. Where can I see it? Cards.
+
+660
+01:24:34,587 --> 01:24:37,917
+The empty string or the empty object?
+
+661
+01:24:40,017 --> 01:24:45,777
+So interesting. Let us now do some more logging.
+
+662
+01:24:46,077 --> 01:24:50,447
+We're going to. Um.
+
+663
+01:24:51,167 --> 01:24:55,187
+Credentials. Resources.
+
+664
+01:24:59,037 --> 01:25:04,907
+Dump read in records from user profile.
+
+665
+01:25:07,467 --> 01:25:14,657
+Uh. Json Stringify.
+
+666
+01:25:15,407 --> 01:25:25,517
+So records. Found an encrypted card.
+
+667
+01:25:32,327 --> 01:25:40,757
+Decrypting with old secret. Uh.
+
+668
+01:25:43,127 --> 01:25:49,967
+Did decryption re encrypting? Um.
+
+669
+01:25:50,327 --> 01:25:53,357
+Final credit card object.
+
+670
+01:25:54,317 --> 01:25:57,467
+Jason Stringify credit card? No.
+
+671
+01:26:00,137 --> 01:26:05,747
+Uh. And now if we throw.
+
+672
+01:26:08,627 --> 01:26:18,377
+In a wrap. This in a try. Catch. The dump wrap ro error message.
+
+673
+01:26:20,147 --> 01:26:23,717
+Yeah. Check. Line number.
+
+674
+01:26:25,607 --> 01:26:29,447
+File name. Pos. Yeah. Line number, please.
+
+675
+01:26:31,637 --> 01:26:36,077
+All right. So printf. Debugging. Let's go. Time.
+
+676
+01:26:36,107 --> 01:26:40,427
+Oh, thank you very much. Thank you. Smoke smurf d you're the best.
+
+677
+01:26:40,457 --> 01:26:45,727
+You. You saved my butt. Thank you so much for watching episode 371.
+
+678
+01:26:45,737 --> 01:26:52,157
+I think this was of the joy of coding. Let me know what you thought. Uh, um, we're we're we're done here.
+
+679
+01:26:52,167 --> 01:26:52,727
+Um.
+
+680
+01:26:53,304 --> 01:26:57,084
+We're done here. Um, there's a there's a form at the bottom.
+
+681
+01:26:57,384 --> 01:27:01,224
+Let me know what you thought. I'll put a drop a link. Uh, rate this episode.
+
+682
+01:27:01,554 --> 01:27:05,874
+I'm putting, uh, the link in the chat. If you want to rate this episode, let me know what you thought.
+
+683
+01:27:06,114 --> 01:27:09,174
+Uh, that's a great way to ask me questions as well. If you want to ask me questions.
+
+684
+01:27:09,594 --> 01:27:14,334
+And I will hopefully see you next week with episode 372. Thanks again for watching, everybody.
+
+685
+01:27:14,364 --> 01:27:17,843
+Have yourselves a great week and I'll see you soon. Take care.
+
+686
+01:27:17,844 --> 01:27:23,244
+Bye bye. The joy of coding.
+
+687
+01:27:23,304 --> 01:27:23,694
+See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

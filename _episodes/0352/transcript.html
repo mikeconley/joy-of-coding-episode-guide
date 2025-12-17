@@ -1,0 +1,2930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 352 - January 17, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 352 - January 17, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=8da2f1e8-45b7-4210-9e55-b0b401115b9c</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=8da2f1e8-45b7-4210-9e55-b0b401115b9c">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,591 --> 00:00:09,131
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:09,521 --> 00:00:13,991
+Hello and welcome to episode 352 of The Joy of Coding.
+
+3
+00:00:14,021 --> 00:00:16,001
+My name is Mike Connelly. It's so good to have you here.
+
+4
+00:00:16,031 --> 00:00:23,501
+Going to be live hacking on some Firefox stuff, maybe reviewing some patches, maybe helping out some colleagues, doing some doing some work.
+
+5
+00:00:24,461 --> 00:00:28,031
+And I'm so glad to have you with me on the second episode of 2024.
+
+6
+00:00:28,301 --> 00:00:33,700
+Let's get started. I can start by sharing my screen. Yeah, it's January 17th, 2024.
+
+7
+00:00:33,701 --> 00:00:38,110
+Episode 352 So good to have you here. A reminder, no plan survives breakfast.
+
+8
+00:00:38,111 --> 00:00:43,301
+I don't know how the stream is going to go. I kind of have some things I'm hoping to do today, but might not even get through half of them.
+
+9
+00:00:43,301 --> 00:00:46,690
+We'll see. Might not even get through the first one. We might get stuck on.
+
+10
+00:00:46,691 --> 00:00:51,701
+It could happen. Or maybe we'll get through all of these in the first 20 minutes and we'll have to, like, figure out what to do next.
+
+11
+00:00:51,881 --> 00:00:55,961
+That could happen to just we're going to roll with the punches as they come.
+
+12
+00:00:57,581 --> 00:01:02,441
+That's that. I like to say software development in the RA also roll with the punches.
+
+13
+00:01:02,921 --> 00:01:08,801
+Uh, there you go. The second thing is that the agenda that we're looking at is something you have access to.
+
+14
+00:01:08,861 --> 00:01:11,801
+Depending on where you are watching this. It's going to be in a couple of different locations.
+
+15
+00:01:11,801 --> 00:01:17,620
+So if you're watching this on Twitch, for example, it's down in the channel details. You're watching this on Diodes OWN or YouTube.
+
+16
+00:01:17,621 --> 00:01:18,850
+It'll be down on the video description.
+
+17
+00:01:18,851 --> 00:01:25,841
+If you're watching this on air Mozilla, it's over there in like the details section and yeah let's let's dive right into it.
+
+18
+00:01:26,471 --> 00:01:34,511
+I want to start by helping out a colleague. So a colleague reached out, my colleague Nicolas reached out saying, you know,
+
+19
+00:01:34,871 --> 00:01:40,421
+I was wondering you had some time to help me out with a screenshots bug. So if you're not familiar with the screenshots feature.
+
+20
+00:01:40,661 --> 00:01:48,460
+Hang on. Let me let me close some of these other, uh, let me clear the palette, so to speak, and we can start from scratch.
+
+21
+00:01:48,461 --> 00:01:58,241
+If you're not familiar with the screen Screenshots feature. It's a feature built into Firefox that allows you to like snip a chunk of the page and
+
+22
+00:01:58,241 --> 00:02:02,951
+like either copy to the clipboard or download it as like a screenshot image or something.
+
+23
+00:02:03,431 --> 00:02:07,361
+It's very handy. You can save the full page or just what's visible or you can pick and choose.
+
+24
+00:02:07,361 --> 00:02:10,001
+And there's this handy like element picker. It's quite nice.
+
+25
+00:02:10,541 --> 00:02:17,711
+And Nicolas and another colleague Sam have been working on basically rewriting it because the original version,
+
+26
+00:02:17,921 --> 00:02:21,521
+the version that if you're on release, if you've used the,
+
+27
+00:02:21,791 --> 00:02:26,411
+the feature before, the version that you've been using actually started as an extension that got
+
+28
+00:02:26,411 --> 00:02:31,421
+dropped into Firefox as a built as a sort of like a built in shipped extension.
+
+29
+00:02:31,421 --> 00:02:35,371
+So if we go to search box, you can actually see. Um.
+
+30
+00:02:36,631 --> 00:02:43,290
+Where that happens is right here. There's a browser extension screenshots and there's the extension is like built it and it was
+
+31
+00:02:43,291 --> 00:02:52,451
+first I think shipped in I don't remember to Mozilla central that happened back in 2017.
+
+32
+00:02:52,981 --> 00:02:56,940
+Wild Well there are good things and bad things.
+
+33
+00:02:56,941 --> 00:03:05,671
+Maybe you have shipping extensions. I mean one of the great things is that you can update these extensions outside of the release cycle if need be.
+
+34
+00:03:05,671 --> 00:03:09,810
+That's one of the advantages of of shipped extensions is we have mechanisms that
+
+35
+00:03:09,811 --> 00:03:15,360
+allow us to like send an update to like the entire code base for the extension.
+
+36
+00:03:15,361 --> 00:03:21,961
+The extension unloads and reloads itself. And that's actually really handy for some of the other extensions like web compat, the web compat extension.
+
+37
+00:03:22,381 --> 00:03:29,311
+Its job is to like patch websites and make sure that and try to make them work with Firefox in the event that you know,
+
+38
+00:03:29,791 --> 00:03:33,901
+some part of them doesn't work properly and they're like a major web site and we
+
+39
+00:03:33,901 --> 00:03:37,621
+don't want to wait for like a full blown Firefox release to go at web compat.
+
+40
+00:03:37,801 --> 00:03:41,851
+Super helpful for that. The other one is picture in picture.
+
+41
+00:03:42,331 --> 00:03:46,321
+Now picture in picture. The feature is actually something that's built into the code base,
+
+42
+00:03:46,621 --> 00:03:59,371
+but we have these video wrappers for various services and rules for, you know, any overrides for particular sites like these.
+
+43
+00:03:59,371 --> 00:04:07,831
+Tell us things like, oh, use this wrapper for ABC News for any videos at this URL like this sort of like
+
+44
+00:04:07,831 --> 00:04:12,930
+template for a URL and that allows us to like make sure that PIP is working properly.
+
+45
+00:04:12,931 --> 00:04:14,731
+It can do captions, that sort of thing.
+
+46
+00:04:15,001 --> 00:04:20,100
+And we want to be able to react to those quickly in the event that one of those sites changes, like, for example,
+
+47
+00:04:20,101 --> 00:04:26,611
+suppose like YouTube ships a new version in an hour and all of picture in picture for YouTube stops working.
+
+48
+00:04:26,611 --> 00:04:34,321
+Well, we could, in theory, update the picture in picture extension and ship an update to it without having to do a dot release.
+
+49
+00:04:34,621 --> 00:04:37,921
+You know, it's very isolated to just the extension.
+
+50
+00:04:37,921 --> 00:04:42,151
+And that's something that that we can do. Now, the screenshots extension,
+
+51
+00:04:42,691 --> 00:04:52,621
+I think it wasn't the advantages aren't as as a parent and in fact there are some disadvantages primarily because like the screenshots extension was
+
+52
+00:04:52,621 --> 00:04:56,641
+written as an experiment during I think the test pilot days and then it was
+
+53
+00:04:56,641 --> 00:05:02,161
+landed more or less as is in the tree and unfortunately has kind of languished.
+
+54
+00:05:02,161 --> 00:05:06,001
+And there are a number of deficiencies with the extension version of screenshots.
+
+55
+00:05:06,001 --> 00:05:12,361
+For example. I don't think it's as accessible. There are some accessibility deficiencies as well as I think some performance deficiencies.
+
+56
+00:05:13,111 --> 00:05:16,111
+Not that it's not a great feature, but there are things that can be improved.
+
+57
+00:05:16,651 --> 00:05:23,131
+And so Nicolas and Sam have been working on rewriting this to be a built in feature, and I actually have the built in version of it on.
+
+58
+00:05:23,521 --> 00:05:30,211
+So the way you turn on the built in version of screenshots is by going to browser dot screenshots.
+
+59
+00:05:30,391 --> 00:05:36,961
+Oh, screenshots. Yeah. Screenshots dot browser, dot component dot enabled and setting that to true.
+
+60
+00:05:37,411 --> 00:05:44,041
+So I'm going to put that you can test out the new screenshots back end by setting.
+
+61
+00:05:45,421 --> 00:05:51,220
+That pressed to true. And that's what Nick's questions about.
+
+62
+00:05:51,221 --> 00:05:55,541
+So Nick asks, Hey, Mike was what if you had some time to help out with the screenshots bug I'm working on?
+
+63
+00:05:56,081 --> 00:06:01,811
+Here's the bug. Screenshots gets broken when dragging the tab to a new window.
+
+64
+00:06:02,141 --> 00:06:06,520
+Let's comment in the patch about my approach to the problem. Basically, what I'm wondering is is my approach correct?
+
+65
+00:06:06,521 --> 00:06:10,751
+And if so, how do I mitigate what seems to be a race condition? Is there a better way to do this all together?
+
+66
+00:06:10,761 --> 00:06:13,931
+So this is a bug that our team found.
+
+67
+00:06:16,241 --> 00:06:24,011
+Let's zoom in and read the text. So the bug description is you have to enable the new back end, navigate to any website, enable screenshots.
+
+68
+00:06:24,731 --> 00:06:31,421
+There's a keyboard shortcut. You can do it with the toolbar as well, presumably, and then drag the tab to create a new window.
+
+69
+00:06:32,261 --> 00:06:35,801
+And it's expected that the second window's created and screenshots to remain enabled.
+
+70
+00:06:36,101 --> 00:06:40,541
+The actual result is the screenshot, so it really follows the tab of the second window while the buttons remain in the first window.
+
+71
+00:06:40,541 --> 00:06:45,521
+Please see the screen recording for more details. So let's look at the screen recording.
+
+72
+00:06:49,171 --> 00:06:57,211
+Okay, so this person dragged. Oh, I see. So, yeah. The buttons to do the save visible whatnot stayed behind.
+
+73
+00:07:02,841 --> 00:07:06,801
+Yeah, that. That looks all broken. That that's a good call it from QE.
+
+74
+00:07:08,151 --> 00:07:16,161
+And so it has a patch here. And how does the patchwork.
+
+75
+00:07:24,931 --> 00:07:27,991
+Well, it looks like what he's doing is.
+
+76
+00:07:32,121 --> 00:07:43,341
+Adding a method to swap browsers and close other or a new condition to here say whether or not screenshots is open.
+
+77
+00:07:45,381 --> 00:07:49,491
+I didn't realize that we set an attribute for screenshots.
+
+78
+00:07:50,451 --> 00:07:57,651
+Or is that something that. Oh, that's something he started to add.
+
+79
+00:08:07,071 --> 00:08:14,270
+Busy right here. Pittsburgh Steelers. The Buckeyes video demonstrating the issue that caused the segment to dispatch tabs.
+
+80
+00:08:14,271 --> 00:08:19,221
+Watch swap Screenshots event. This seems to work for the most part by doing a browser throughout the documents.
+
+81
+00:08:19,221 --> 00:08:24,620
+Visibility state changes to hidden in that causes the screenshots to close when we don't want it to fix the visibility state issue change issue.
+
+82
+00:08:24,621 --> 00:08:27,950
+I listen to tab switched events to which to try to find the screenshots tab that
+
+83
+00:08:27,951 --> 00:08:30,981
+is not selected is in the initial state and close screenshots for my browser. This works.
+
+84
+00:08:30,981 --> 00:08:34,691
+Sometimes I think I'm running into a race condition where dragging the tab to
+
+85
+00:08:34,701 --> 00:08:37,551
+different window will trigger the tab switched event and close screenshots.
+
+86
+00:08:38,301 --> 00:08:41,690
+Even though said Tab should be selected to not cut screenshots to close tabs.
+
+87
+00:08:41,691 --> 00:08:50,811
+I'm sometimes selecting sometimes not. This use intermittent happens when the screenshots state is initial and is dragged to a new existing window.
+
+88
+00:08:55,501 --> 00:08:58,621
+Hmm. Hmm. Hmm.
+
+89
+00:08:58,831 --> 00:09:03,931
+Interesting. Oh, and Nick is in the Nick is in the chat.
+
+90
+00:09:03,961 --> 00:09:10,021
+Hey, Nick. Nick is in the chat. Nice to see you. Okay, so that's interesting.
+
+91
+00:09:12,751 --> 00:09:23,321
+So there is a let's look at the patch and how it works. So there is a visibility change event and layer that is being removed.
+
+92
+00:09:25,491 --> 00:09:28,611
+So part of the tear down system, I guess, is being removed.
+
+93
+00:09:30,191 --> 00:09:40,421
+It was interesting. There's a before unload.
+
+94
+00:09:41,801 --> 00:09:47,831
+Also being set up. I guess that's the idea is.
+
+95
+00:09:51,541 --> 00:09:59,081
+Hmm. So that means that if like that originally, if the tab went into the background, it looks like we would have put it away.
+
+96
+00:09:59,771 --> 00:10:03,861
+Um. Let's let's test that out.
+
+97
+00:10:03,911 --> 00:10:12,201
+So if I like. It screenshot and I switch and I come back.
+
+98
+00:10:12,321 --> 00:10:19,151
+No, it's there. Like maybe it's talking about.
+
+99
+00:10:19,601 --> 00:10:22,631
+Yeah, that part. Like, if I'm.
+
+100
+00:10:23,261 --> 00:10:30,621
+If I'm here and I switch, I come back. That might be.
+
+101
+00:10:31,601 --> 00:10:36,221
+But powers that we can actually test that later. Um.
+
+102
+00:10:37,611 --> 00:10:42,051
+Okay, let's keep thinking. Down here.
+
+103
+00:10:44,251 --> 00:10:54,011
+In TAB browser. We're doing the check to see whether or not the TAB has the attribute screenshots and if so, we're going to move that attribute.
+
+104
+00:10:54,151 --> 00:10:58,501
+This is part of the routine that runs when we tear tabs out, which is actually a swap.
+
+105
+00:11:00,841 --> 00:11:08,541
+Okay. Did this for picture in picture.
+
+106
+00:11:08,751 --> 00:11:19,661
+I'm trying to remember why we did it here. Because there's another there's another event that that fires.
+
+107
+00:11:20,861 --> 00:11:27,941
+I'm pretty sure there is a. Um.
+
+108
+00:11:30,591 --> 00:11:36,361
+Some of it. Select tap switch done tab browser inserted tab browser tab opened up closed.
+
+109
+00:11:37,481 --> 00:11:46,331
+Multi select tab select have search. I thought for sure there was like, a frame loader swap event.
+
+110
+00:11:47,561 --> 00:12:01,311
+Um. Expectations to have event tracker description.
+
+111
+00:12:01,321 --> 00:12:10,141
+Muted. Muted. I, I could have sworn there's like a.
+
+112
+00:12:14,991 --> 00:12:23,521
+Your browser custom element J.S. Well promoters.
+
+113
+00:13:00,501 --> 00:13:17,211
+So you can swap dock shells. Hmm.
+
+114
+00:13:31,041 --> 00:13:36,021
+It's also like page hide events fire that I think is expected.
+
+115
+00:13:36,591 --> 00:13:40,941
+We do that on purpose during the swap.
+
+116
+00:13:41,421 --> 00:13:49,481
+Yeah. I have a feeling the race that Nick is talking about is a race between getting those page hide
+
+117
+00:13:49,491 --> 00:13:54,771
+event listeners to fire and then responding to those and sending messages up to the parent.
+
+118
+00:13:57,671 --> 00:14:06,481
+And then there's the tabs. Which case? I thought for sure there was like a.
+
+119
+00:14:10,121 --> 00:14:16,041
+Swap. Dr. Charles Swan.
+
+120
+00:14:20,351 --> 00:14:28,961
+I swapped rock shells. Here, here, here, here.
+
+121
+00:14:30,741 --> 00:14:43,930
+Get this. This is what we really should be. Doing is ideally to keep things decoupled because like one of the not super happy
+
+122
+00:14:43,931 --> 00:14:47,501
+with the fact that we've got this like picture in picture specific code in here,
+
+123
+00:14:47,501 --> 00:14:56,321
+like we are letting the picture in picture code deal with things in its event handler,
+
+124
+00:14:56,531 --> 00:15:01,690
+but TAB browser needs to know to dispatch that it needs to know about picture in picture.
+
+125
+00:15:01,691 --> 00:15:07,901
+And yes, it already kind the to the tabs know about this but like I wonder if we can take
+
+126
+00:15:07,901 --> 00:15:12,671
+advantage of this other event that's already being fired swap dock shells.
+
+127
+00:15:15,011 --> 00:15:21,271
+So I'm going to start there I realize. That there's already.
+
+128
+00:15:22,631 --> 00:15:26,471
+A tab swap. Picture in picture.
+
+129
+00:15:29,031 --> 00:15:34,591
+Event here. Which is already doing this sort of thing.
+
+130
+00:15:35,471 --> 00:15:40,501
+I wonder if instead of adding. Another attribute.
+
+131
+00:15:42,091 --> 00:15:49,261
+Then we could have the screen shots component parents like is there.
+
+132
+00:15:50,341 --> 00:15:55,741
+Who's listening to tabs. Screenshots, screenshots, utils.
+
+133
+00:15:57,921 --> 00:16:03,371
+Having have the screenshots. Utils module. Listen for.
+
+134
+00:16:04,621 --> 00:16:08,981
+Excuse me. The swap dock shells Van. Instead.
+
+135
+00:16:09,251 --> 00:16:17,891
+That's this one. You know, let's let's include the entire.
+
+136
+00:16:21,381 --> 00:16:32,121
+Entire block of text. That happens a little later on.
+
+137
+00:16:34,951 --> 00:16:38,161
+But should still give you what you need.
+
+138
+00:16:40,441 --> 00:16:45,091
+The the detail instead of it being a tab is the other browser, the browser element.
+
+139
+00:16:46,261 --> 00:16:52,831
+But you can the swap dock shells event is past.
+
+140
+00:16:53,011 --> 00:16:59,731
+The other browser element has its detail fired.
+
+141
+00:17:01,411 --> 00:17:08,281
+On both browsers being swapped and each is pass the other browser element as its detail.
+
+142
+00:17:09,181 --> 00:17:20,551
+Yeah. Thank. Nick says the visibility stage change will only remove the overlay if the overlay state is crosshairs or the initial state.
+
+143
+00:17:20,581 --> 00:17:25,221
+Otherwise, we keep the screenshots you open. Okay.
+
+144
+00:17:27,571 --> 00:17:34,260
+But presumably this this removes that that overlay handling behavior.
+
+145
+00:17:34,261 --> 00:17:39,451
+So unless I'm greatly mistaken, like this is an unintentional change,
+
+146
+00:17:39,451 --> 00:17:45,751
+we'll where we will no longer remove the overlay in crosshairs state is that is that
+
+147
+00:17:45,751 --> 00:17:52,771
+makes that oh oh you're going to use tab switched instead tab switched instead.
+
+148
+00:17:54,511 --> 00:18:10,471
+Got it. Handle tab switched. Yeah, that.
+
+149
+00:18:10,511 --> 00:18:17,191
+That makes more sense. Instead of. I think this makes more sense.
+
+150
+00:18:19,361 --> 00:18:30,181
+Yes. Instead of waiting for visibility age to come up from the content, we can notice the tabs switch in the parent.
+
+151
+00:18:39,961 --> 00:18:43,711
+But happens is handled tab switched now.
+
+152
+00:18:47,201 --> 00:19:13,901
+I believe Tab switched. We don't get the old tab that we're switching from.
+
+153
+00:19:13,941 --> 00:19:18,921
+That's pain, but we'll go and see whether or not we get the deterministic.
+
+154
+00:19:18,921 --> 00:19:24,871
+We grab keys, a browser, a screenshot state will get the for each will get the browser.
+
+155
+00:19:26,481 --> 00:19:41,281
+Well, I think we can skip some of this. We can probably use the event fired here to identify the window.
+
+156
+00:19:42,771 --> 00:19:50,831
+That the taps which occurred in. And just continue for any.
+
+157
+00:19:51,761 --> 00:19:55,871
+Browser that happens to belong. A different window.
+
+158
+00:19:57,731 --> 00:20:05,260
+I realize that there probably aren't a huge number of windows within the screenshot state, but you can save some work there.
+
+159
+00:20:05,261 --> 00:20:10,881
+So we get tab get tab for browser the slot.
+
+160
+00:20:10,931 --> 00:20:12,821
+Instead of checking the selected attribute,
+
+161
+00:20:12,821 --> 00:20:24,131
+I think I recommend using g browser that selected tab equals tab rather than looking at the selected attribute.
+
+162
+00:20:27,681 --> 00:20:30,941
+It's more idiomatic. We tend to do more often.
+
+163
+00:20:36,711 --> 00:20:42,391
+Okay. Yeah.
+
+164
+00:20:42,401 --> 00:20:45,341
+And that way I don't think we need the screenshots attribute anymore.
+
+165
+00:20:45,611 --> 00:20:54,430
+If, if we listen for the, if we have the screenshots utils, listen for tabs, swap screenshots because we already have the week map.
+
+166
+00:20:54,431 --> 00:20:58,181
+That can be our like lookup I think.
+
+167
+00:21:01,971 --> 00:21:07,431
+Because it's mapped from browser. Yeah. Browser browser to screenshot state.
+
+168
+00:21:12,211 --> 00:21:16,201
+Um. So let's think about this race a little bit.
+
+169
+00:21:20,321 --> 00:21:26,641
+During a browser swap. The documents visibility state changes the hidden in that cause the screenshots close to fix visibility state issue.
+
+170
+00:21:26,651 --> 00:21:29,950
+I listen to the tab switched events during which I try find screenshot tab those
+
+171
+00:21:29,951 --> 00:21:33,521
+not selected and as in the initial state and closed screenshots of that browser.
+
+172
+00:21:34,031 --> 00:21:37,821
+This works sometimes I think running into a race nation where dragging the tab to
+
+173
+00:21:37,821 --> 00:21:43,711
+a different window will trigger the tab switched event and close screenshots,
+
+174
+00:21:44,081 --> 00:21:48,071
+even though said tab should be selected and not cause screenshots to close.
+
+175
+00:21:54,871 --> 00:21:58,171
+Dragging the tab to a different window will trigger the tab switched event.
+
+176
+00:21:59,191 --> 00:22:08,971
+So I mean, yeah, it will when you when you drag a tab to a different window, the original window will fire tab switched.
+
+177
+00:22:14,811 --> 00:22:18,381
+Because you're going to be closing after the swap.
+
+178
+00:22:18,711 --> 00:22:26,841
+It'll close. The old one will close. The other thing to remember is.
+
+179
+00:22:30,091 --> 00:22:36,061
+The browser elements. Oh, geez. Hey, now that I think about it, the browser elements don't swap.
+
+180
+00:22:38,821 --> 00:22:45,930
+So you've got these keys. Are you. Are we handling the screenshots?
+
+181
+00:22:45,931 --> 00:22:49,591
+Utils, the system images? Hmm.
+
+182
+00:22:51,191 --> 00:22:56,581
+Browser. Week back browser to screenshots.
+
+183
+00:22:59,981 --> 00:23:08,631
+State. Set. It.
+
+184
+00:23:10,471 --> 00:23:19,531
+Okay. So the thing one thing to keep in mind. The other thing we need to do.
+
+185
+00:23:20,191 --> 00:23:25,511
+Oh, yeah. It looks like he was already okay. Okay.
+
+186
+00:23:25,571 --> 00:23:34,441
+Yeah, he does. Okay.
+
+187
+00:23:55,831 --> 00:23:59,731
+If the original tab is in the initial state.
+
+188
+00:23:59,761 --> 00:24:05,491
+We're going to close the panel, create a panel for the new one, and then open the panel.
+
+189
+00:24:08,161 --> 00:24:15,301
+We hook up a new event listener to it. We get our access to the new G browser.
+
+190
+00:24:17,161 --> 00:24:24,171
+We listen for TAB switched on it. We remove tabs.
+
+191
+00:24:30,961 --> 00:24:35,411
+Uh. Hold on. Time switched.
+
+192
+00:24:37,421 --> 00:24:46,911
+Do we normally add that event Listener? Uniphase is closed.
+
+193
+00:24:54,271 --> 00:25:01,221
+If we're currently in closed phase. Then do these things.
+
+194
+00:25:01,341 --> 00:25:07,221
+We're going to add the event Listener tab switched. So one thing to remember about this two.
+
+195
+00:25:12,541 --> 00:25:15,691
+If we ever have to.
+
+196
+00:25:15,901 --> 00:25:22,201
+Two tabs where we enter the screenshots state in a window.
+
+197
+00:25:23,751 --> 00:25:26,811
+I guess. Supposed to be 1 to 1.
+
+198
+00:25:26,821 --> 00:25:38,001
+So in theory it should. We should never be able to have two at the same time unless.
+
+199
+00:25:51,591 --> 00:25:59,311
+What are the different UI phases? Overlay selection, so it might still actually be open due to overlay selection.
+
+200
+00:26:01,581 --> 00:26:07,911
+Okay, so I do have a thing to say here. So based on my understanding.
+
+201
+00:26:08,881 --> 00:26:15,511
+It is possible for multiple tabs to have some states here, some screenshots state.
+
+202
+00:26:18,861 --> 00:26:26,541
+In the same window, same browser window. If, for example, they're in the crosshair mode.
+
+203
+00:26:30,861 --> 00:26:38,961
+This means that. We kinda only want to have tabs switched.
+
+204
+00:26:39,931 --> 00:26:52,591
+That handler get added the first time. One tab enters the screenshots state and only remove that event listener.
+
+205
+00:26:54,851 --> 00:26:59,801
+After the last tab exits the screenshots state.
+
+206
+00:27:01,551 --> 00:27:04,631
+Online. What is it? Where do we remove it?
+
+207
+00:27:06,601 --> 00:27:11,041
+On line 194. We are removing the tabs which.
+
+208
+00:27:12,651 --> 00:27:18,261
+Event listener when in theory one or more tabs might still.
+
+209
+00:27:20,241 --> 00:27:25,791
+Have the screenshots you I open. In that window.
+
+210
+00:27:28,441 --> 00:27:35,271
+That's something to keep in mind. Where is this race?
+
+211
+00:27:35,451 --> 00:27:44,391
+Let's think about this race some more. Dragging the tab to a different window will trigger the tab switched event and closed screenshots.
+
+212
+00:27:46,431 --> 00:27:57,161
+I'm going to presume he means. In the newly opened window.
+
+213
+00:27:57,371 --> 00:28:00,101
+Nick, I know you're in the chat, but I presume that that's what you mean, right?
+
+214
+00:28:00,111 --> 00:28:05,801
+Like when you drag to the new window, the newly opened window will tabs,
+
+215
+00:28:05,801 --> 00:28:11,231
+which will sometimes throw the tabs, switch to vent and then close screenshots in the new window.
+
+216
+00:28:12,521 --> 00:28:19,631
+I mean, the other thing to keep in mind is you can also drag to a an existing window and that will also cause a tab switch to occur.
+
+217
+00:28:37,361 --> 00:28:50,791
+Hmm. I mean, so the easiest thing to do.
+
+218
+00:28:55,861 --> 00:28:59,311
+Is probably too close. No matter what.
+
+219
+00:28:59,731 --> 00:29:02,940
+I mean, I can I can tell that we're fighting.
+
+220
+00:29:02,941 --> 00:29:11,081
+We're fighting to get the screenshots UI to stay open and persist after a tab tear out
+
+221
+00:29:11,341 --> 00:29:17,311
+tab drag and there's a bit of work to do to probably debug that and make that work.
+
+222
+00:29:17,581 --> 00:29:24,331
+Is that something we really want to do? It's certainly simpler, I think, to just close the screenshots UI.
+
+223
+00:29:24,331 --> 00:29:28,351
+If a drag event ever occurs, like we drag the tab out.
+
+224
+00:29:29,221 --> 00:29:37,081
+I think that's simpler. And is that something we would consider as a simplification or is it a requirement that it must survive the tear it?
+
+225
+00:29:41,361 --> 00:29:50,031
+That's a question. So let's go to this tab switch event handler again, because I think that's where the super interesting part is happening.
+
+226
+00:29:55,221 --> 00:30:05,601
+Now, it's possible that the the swap event, even the swap dock Shell's event was not what I called it, the swap dock sales event.
+
+227
+00:30:06,141 --> 00:30:10,161
+It may actually I don't know if it'll always fire before the switch to the tabs,
+
+228
+00:30:10,161 --> 00:30:17,300
+which I think it might, but it might not if folks in the houses try to keep screenshots open.
+
+229
+00:30:17,301 --> 00:30:45,801
+Okay, so it is an explicit requirement. They want to keep it open. Hmm.
+
+230
+00:30:49,911 --> 00:31:01,431
+So there's another there's a thing you could try. This may or may not satisfy, but we know that tab switching, that sometimes happens very quickly.
+
+231
+00:31:02,701 --> 00:31:12,391
+Um, you know, I, uh, when opening a new window, we might do a tap switch fairly quickly, and.
+
+232
+00:31:12,391 --> 00:31:19,411
+And then we might switch back. There is an event called Tap Switch done, which only fires once.
+
+233
+00:31:20,671 --> 00:31:22,521
+The whole operation has completed.
+
+234
+00:31:22,921 --> 00:31:32,581
+And I kind of wonder if that might be more interesting to pay attention to whenever the tab switching is all completed.
+
+235
+00:31:33,521 --> 00:31:39,031
+Ah, so that'll be my next question for you, Nick. Um.
+
+236
+00:31:43,081 --> 00:31:47,951
+Hey, Nicholas. Just a few small points below.
+
+237
+00:31:49,121 --> 00:31:56,621
+One question Does the race tend to go away if instead of waiting?
+
+238
+00:31:58,341 --> 00:32:04,291
+For the tab switched event. You wait for Taps, Which does?
+
+239
+00:32:05,921 --> 00:32:10,031
+The other thing that comes to mind is when we do swap frame loaders.
+
+240
+00:32:12,801 --> 00:32:16,401
+Is there a way that we would like indicate that we were doing a swap?
+
+241
+00:32:18,841 --> 00:32:34,411
+You could use. So there's like a page hide.
+
+242
+00:32:34,421 --> 00:32:42,541
+Where do we fire those? To help with other remote coder.
+
+243
+00:32:58,161 --> 00:33:01,641
+Send, we would send a message and let them know, Hey, you've swapped.
+
+244
+00:33:02,061 --> 00:33:09,741
+So on the receiving side, we're like, Hey, turns out I swapped frame loaders.
+
+245
+00:33:15,481 --> 00:33:23,201
+Two, two, one, five. Here we go. So we receive it when we do fire.
+
+246
+00:33:23,251 --> 00:33:29,641
+Page Show event for Frame Loader Swap Page Show and Page hide.
+
+247
+00:33:37,701 --> 00:33:43,131
+And then we go show Hyde, then show again.
+
+248
+00:33:45,651 --> 00:33:56,501
+I remember this being very deliberate. Only system group fire if showing.
+
+249
+00:34:03,421 --> 00:34:18,350
+On page show. Oh, boy.
+
+250
+00:34:18,351 --> 00:34:30,471
+As a long 511, 782. Page show persisted.
+
+251
+00:34:32,721 --> 00:34:42,971
+Right. Page show. There is a persisted indicates that the document is loading from a cache.
+
+252
+00:35:11,011 --> 00:35:14,711
+Doug Ford Cash went up for the page. Me including the B of Cash.
+
+253
+00:35:24,791 --> 00:35:27,911
+The page isn't being discarded, so it can be reused later.
+
+254
+00:35:30,581 --> 00:35:34,751
+Mm hmm. Mm hmm.
+
+255
+00:35:36,431 --> 00:35:46,001
+All right. I think part of the issue here is that we've got we're trying to.
+
+256
+00:35:48,421 --> 00:35:59,601
+Organize across. Bunch of messages that may or may not play in the same order each time.
+
+257
+00:36:00,911 --> 00:36:05,601
+Like. I think you've.
+
+258
+00:36:07,261 --> 00:36:15,081
+Helped eliminate. One of those by moving the visibility moving the visibility change handler.
+
+259
+00:36:19,641 --> 00:36:23,111
+And using the tabs which. Blair instead.
+
+260
+00:36:24,761 --> 00:36:29,711
+I do think, however, that is susceptible.
+
+261
+00:36:31,171 --> 00:36:42,551
+To the tab switches that occur quickly during tab drag and out.
+
+262
+00:36:43,841 --> 00:37:01,281
+Um. This is probably interleaving with the events and messages that fire from the swap itself, which may or may not.
+
+263
+00:37:02,331 --> 00:37:10,271
+Sometimes be blocked or run out of order because a.
+
+264
+00:37:11,451 --> 00:37:16,461
+I think some wait for messages from the contact.
+
+265
+00:37:23,321 --> 00:37:26,861
+That's a bunch of supposition on my part.
+
+266
+00:37:28,391 --> 00:37:37,121
+What I'd recommend. Is to take a look at the tabs which done event to see if that occurs late and.
+
+267
+00:37:38,341 --> 00:37:45,781
+To eliminate this race. The other thing to consider is doing the simple thing.
+
+268
+00:37:47,821 --> 00:37:51,031
+Which is always closing the screenshots UI.
+
+269
+00:37:51,881 --> 00:37:55,151
+In the event of a tab drag out tab. Tear it.
+
+270
+00:37:58,741 --> 00:38:02,611
+Submit. All right.
+
+271
+00:38:02,821 --> 00:38:08,741
+There you go, Nick. Hopefully that was helpful. Give that a read.
+
+272
+00:38:08,761 --> 00:38:14,911
+Let me know. Let me know. We thought. All right.
+
+273
+00:38:14,921 --> 00:38:20,071
+What do we do next? I want to review a patch.
+
+274
+00:38:20,551 --> 00:38:28,221
+I'm going to review this patch over here. This is allow only valid IP slash hostname for proxy configs.
+
+275
+00:38:29,451 --> 00:38:33,591
+So this is a patch from a volunteer contributor. This is an old bugs.
+
+276
+00:38:33,591 --> 00:38:37,041
+A five digit are six digit bug, but it's in the 300 thousands.
+
+277
+00:38:37,431 --> 00:38:43,311
+This was filed 18 years ago. And basically there's like proxy configuration.
+
+278
+00:38:43,581 --> 00:38:47,651
+If you go to. About preferences.
+
+279
+00:38:47,681 --> 00:38:53,711
+You're welcome, Nick. If you go to settings.
+
+280
+00:38:55,571 --> 00:38:59,901
+There's. Here you can like.
+
+281
+00:39:03,251 --> 00:39:10,481
+No proxy. No proxy for. What are we doing here?
+
+282
+00:39:14,021 --> 00:39:22,031
+Click on Connected Things. Enter Proxy address. So manual proxy so you can add some things.
+
+283
+00:39:23,101 --> 00:39:30,021
+And. It's saying that try to access an internet.
+
+284
+00:39:30,201 --> 00:39:33,430
+Click on Enter your proxy IP address.
+
+285
+00:39:33,431 --> 00:39:39,881
+So if you do this. 434, five, six, seven, four, four.
+
+286
+00:39:40,871 --> 00:39:45,761
+That's not valid. It shouldn't be valid, but.
+
+287
+00:39:46,421 --> 00:39:57,651
+And then it focuses the port. So if I do.
+
+288
+00:39:57,671 --> 00:40:01,751
+One, two, three. It's like it allows it and it really shouldn't allow it.
+
+289
+00:40:02,141 --> 00:40:08,441
+That is not a valid hostname. Hey, it's my good friend Eli.
+
+290
+00:40:08,451 --> 00:40:11,601
+Difficult snow day. Pop up over here.
+
+291
+00:40:11,861 --> 00:40:14,921
+Check it out. Where's where's sound effects?
+
+292
+00:40:15,431 --> 00:40:20,971
+Snow day. That's right.
+
+293
+00:40:21,541 --> 00:40:26,521
+Oh, yeah. Okey dokey. It's me, Mario.
+
+294
+00:40:26,551 --> 00:40:29,941
+Amazing. Good to have you here. Good to have you in the chat.
+
+295
+00:40:30,871 --> 00:40:35,901
+Okay, so this shouldn't be how to fix a simple regex match for valid IP address to do the job.
+
+296
+00:40:35,911 --> 00:40:45,061
+So we had gone back and forth a little bit with J.D. does here where instead of using a regular expression, which, you know, look at that.
+
+297
+00:40:46,711 --> 00:40:53,511
+Yeah I love the soundboard to. I don't think so.
+
+298
+00:40:53,991 --> 00:40:57,951
+I wa wa wa wa wa wa wa wa. Why she's been here.
+
+299
+00:40:58,041 --> 00:41:02,091
+B So how long have we been on this rock?
+
+300
+00:41:03,471 --> 00:41:08,091
+Five weeks. Two days? Help me to recollect.
+
+301
+00:41:08,811 --> 00:41:15,741
+Sorry, I'm getting distracted. So check if the. So the original patch was using a regular expression to try and, like,
+
+302
+00:41:16,041 --> 00:41:20,901
+match and determine whether or not a thing is a valid hostname or an IP address.
+
+303
+00:41:22,251 --> 00:41:28,191
+And I spoke to someone on the networking team and there's actually a there's actually a utility that does this already,
+
+304
+00:41:29,271 --> 00:41:33,231
+and it's in our networking code, but it's just not exposed to our privileged JavaScript.
+
+305
+00:41:33,231 --> 00:41:39,831
+And so what we did is we, we guided the, the volunteer contributor and said like, hey,
+
+306
+00:41:39,831 --> 00:41:45,231
+we can expose this stuff probably and say, Hey, I going to do a bit of work and then we'll chat later.
+
+307
+00:41:45,641 --> 00:41:49,741
+Yes, yes, this is yes, hello. And let's chat soon.
+
+308
+00:41:49,761 --> 00:42:00,241
+Welcome back. So what we've got here is a patch that checks to see, like it exposes a method on IO service called is valid.
+
+309
+00:42:00,241 --> 00:42:09,351
+Hostname. This all looks great. There is an alignment issue here where I see a very small net net alignment.
+
+310
+00:42:11,031 --> 00:42:15,261
+That pick alignment. This should go. Ach.
+
+311
+00:42:15,951 --> 00:42:19,841
+Well, in space, it's just a little bit out of out of alignment.
+
+312
+00:42:20,441 --> 00:42:24,100
+Not a huge deal, but. And normally our style board would pick it up.
+
+313
+00:42:24,101 --> 00:42:28,211
+But this is an idle an idle file, and I don't think our style bots know about those.
+
+314
+00:42:28,781 --> 00:42:33,161
+He exposes it and passes it through to the utility.
+
+315
+00:42:33,161 --> 00:42:42,171
+The native utility called net is valid hostname and then he updated his code here is valid of the port and said slower than cancel submission.
+
+316
+00:42:42,191 --> 00:42:48,581
+So here's what we do for the pref name.
+
+317
+00:42:50,591 --> 00:43:06,041
+If the proxy pref value is not empty and the port is not zero and pref name equals HTP or pref name, the Sox or not share proxies pref value.
+
+318
+00:43:06,551 --> 00:43:11,321
+That's the old way of doing it. Then we would like focus the port because the port is zero.
+
+319
+00:43:11,531 --> 00:43:15,131
+We'll focus the port and will prevent the the submission.
+
+320
+00:43:15,731 --> 00:43:27,131
+There's another one here which is like okay, if the value is not empty and it's not a valid hostname, then we'll do these things now.
+
+321
+00:43:28,311 --> 00:43:34,701
+I. I think we can actually we can simplify this a little bit because there are a couple of things to note.
+
+322
+00:43:35,091 --> 00:43:41,781
+These conditions, these these two if statements, this condition is the same and these conditions are the same.
+
+323
+00:43:42,531 --> 00:43:48,581
+So we can actually combine these into a single if. I think we can.
+
+324
+00:43:48,591 --> 00:43:53,211
+So I'm going to write this and I can do this with a suggestion as well.
+
+325
+00:43:55,431 --> 00:43:59,511
+So I'm going to select the block of code. I'm going to do a suggestion here.
+
+326
+00:43:59,811 --> 00:44:13,731
+And while say is I think this can be simplified into a shared containing if block, since there are some similar conditions being matched here.
+
+327
+00:44:18,561 --> 00:44:31,011
+If proxy name proxy prep value is not blank and pref name equals HTP or pref name stocks or that, then we enter this block and then we go.
+
+328
+00:44:34,041 --> 00:44:38,571
+Oxy port value equals zero. Then.
+
+329
+00:44:41,781 --> 00:44:45,451
+That. I don't even know if we need to return immediately.
+
+330
+00:44:45,451 --> 00:44:51,681
+Or do we need to return immediately? Yes, I think we do.
+
+331
+00:44:56,821 --> 00:45:00,461
+Else if. Oh, I see.
+
+332
+00:45:00,471 --> 00:45:04,041
+We don't need. And else this is there's a return at the end of that. So if.
+
+333
+00:45:08,291 --> 00:45:14,501
+Actually, I think we could. The first one, the first check of seeing whether or not it's valid up here.
+
+334
+00:45:14,501 --> 00:45:31,741
+If not. Uh, not the port.
+
+335
+00:45:39,751 --> 00:45:43,651
+Then we can get rid of that. So what we have here is like, okay,
+
+336
+00:45:44,251 --> 00:45:53,880
+if there's a value that's been set and it's we're in one of these configurations check to see if it's not a valid hostname,
+
+337
+00:45:53,881 --> 00:45:59,361
+if so, do this or if it's not a valid port, do this.
+
+338
+00:46:05,731 --> 00:46:12,720
+Yeah, that's probably good enough. Danny Collins.
+
+339
+00:46:12,721 --> 00:46:15,731
+Like we're having fun in Neko World. Heck yeah.
+
+340
+00:46:15,751 --> 00:46:19,741
+Neko Land Procs server when specified.
+
+341
+00:46:22,621 --> 00:46:27,401
+Uh. As invalid or the poor to set to zero than cancel submission.
+
+342
+00:46:27,411 --> 00:46:33,231
+Yeah. Um. That works for me.
+
+343
+00:46:35,441 --> 00:46:41,281
+Um, I think we're going to need to add a reviewer.
+
+344
+00:46:42,091 --> 00:46:45,751
+Oh, we've already got Neco reviewers blocking this, so that's good. Don't need change that.
+
+345
+00:46:47,181 --> 00:46:56,151
+The other thing I want to suggest is a test if possible. Is there already a proxy test?
+
+346
+00:46:57,631 --> 00:47:00,931
+Preferences tests.
+
+347
+00:47:06,951 --> 00:47:14,511
+A connection. Well, some of these are pretty ancient.
+
+348
+00:47:15,081 --> 00:47:18,561
+Let's take a look at this one. This is more. This is better.
+
+349
+00:47:19,611 --> 00:47:35,561
+Open the connection. Okay.
+
+350
+00:47:36,881 --> 00:47:40,241
+So I'm going to ask that this contributor also write a test.
+
+351
+00:47:43,621 --> 00:47:48,601
+And I'll guide them on how to do that and say, this is great.
+
+352
+00:47:51,931 --> 00:47:56,911
+Good work. I have a small refactoring suggestion.
+
+353
+00:47:58,951 --> 00:48:02,731
+For the connection, J.S. Age.
+
+354
+00:48:05,761 --> 00:48:10,231
+I think the only thing we need here is an automated test.
+
+355
+00:48:11,531 --> 00:48:19,001
+Here's how I recommend writing that. Use mock ad tests and then.
+
+356
+00:48:20,081 --> 00:48:28,501
+Browser. Components, preferences, tests, browser all.
+
+357
+00:48:28,501 --> 00:48:35,801
+We call it connection. Valid.
+
+358
+00:48:36,611 --> 00:48:52,791
+Hostname. Make sure to add that to tracking.
+
+359
+00:48:54,451 --> 00:49:00,881
+You file. Two tracking via either get ad or add.
+
+360
+00:49:05,511 --> 00:49:14,031
+Depending on which one you're using. I don't know which one they're using. Pending on which one you are using.
+
+361
+00:49:14,931 --> 00:49:21,711
+You should be able to run the stubbed out test by running a test.
+
+362
+00:49:23,521 --> 00:49:32,551
+Such and such. Then edit that test to do the following.
+
+363
+00:49:35,271 --> 00:49:42,191
+Who? Then I added that test to do the follow.
+
+364
+00:49:43,541 --> 00:49:49,461
+One open about preferences. To open the connection.
+
+365
+00:49:49,941 --> 00:49:55,401
+Proxy Settings Dialog. Was it?
+
+366
+00:49:55,401 --> 00:50:00,331
+Connections? Connection data.
+
+367
+00:50:00,821 --> 00:50:13,191
+HTML. Fill in the dialog with an invalid hostname.
+
+368
+00:50:15,681 --> 00:50:19,791
+Uh, click submit.
+
+369
+00:50:21,861 --> 00:50:28,631
+Ensure. That the was the there's an event being handled right.
+
+370
+00:50:28,651 --> 00:50:35,850
+Like this is the before except she connections dialog she connections dialog
+
+371
+00:50:35,851 --> 00:50:47,431
+before except before except I see so we're going to add a an event listener.
+
+372
+00:50:53,791 --> 00:51:01,261
+For clicking submit. Add a before except event listener not submit.
+
+373
+00:51:01,301 --> 00:51:05,040
+What's what's it called for? Hitting. Okay. Clicking okay.
+
+374
+00:51:05,041 --> 00:51:19,741
+In the test add a before except event listener. Click okay and then make sure that the before except event was seen and marked as canceled.
+
+375
+00:51:19,771 --> 00:51:24,211
+I think that's what we are doing here. Prevent and has prevent default.
+
+376
+00:51:27,441 --> 00:51:34,791
+Default prevented? I think it's what it is. Default.
+
+377
+00:51:34,791 --> 00:51:38,871
+Prevented. Set. Set to true on it.
+
+378
+00:51:39,141 --> 00:51:43,011
+Let's see. Let's find some examples for this contributor to work with.
+
+379
+00:51:43,401 --> 00:51:57,921
+So here's here's an example of a test. Here's an example of a test that opens up preferences.
+
+380
+00:52:01,001 --> 00:52:06,491
+And the connections dial up. Do we have an example of a test?
+
+381
+00:52:10,441 --> 00:52:23,341
+That. That as before, except testing.
+
+382
+00:52:26,881 --> 00:52:31,431
+Tesco. Except.
+
+383
+00:52:39,551 --> 00:52:50,520
+Hmm. Fire event before.
+
+384
+00:52:50,521 --> 00:53:15,601
+Except. So we're probably going to want to use something called like browser test utils, wait for event.
+
+385
+00:53:16,961 --> 00:53:34,111
+Prince's test. So do I write this?
+
+386
+00:53:34,831 --> 00:53:40,231
+Waiting for the before accept event will look something like this.
+
+387
+00:53:43,001 --> 00:53:50,031
+Let four accept. Called equals wait for event and then.
+
+388
+00:53:56,551 --> 00:54:06,851
+Dialog. Should look something like this.
+
+389
+00:54:06,861 --> 00:54:18,571
+Whereas before. Except fired on. This fire event Fire event, new customer event target is the dialog itself.
+
+390
+00:54:18,591 --> 00:54:24,821
+Dialog Element four set.
+
+391
+00:54:28,981 --> 00:54:34,571
+And then what does wait for event? Oh, sorry.
+
+392
+00:54:34,571 --> 00:54:47,391
+I've got it over here. Wait for event. Does it resolve?
+
+393
+00:54:50,041 --> 00:54:55,371
+Was it resolve with resolve return check function of and return to return.
+
+394
+00:55:02,551 --> 00:55:06,461
+The event object. Okay, so we get the event back. Um.
+
+395
+00:55:08,121 --> 00:55:17,700
+So. And like. How do I accept on dialog?
+
+396
+00:55:17,701 --> 00:55:29,751
+Except happens on dialog except. Whereas a test.
+
+397
+00:55:33,021 --> 00:55:41,301
+Good test. Um, dialog.
+
+398
+00:55:41,301 --> 00:55:44,301
+Except dialog. Yeah.
+
+399
+00:55:51,861 --> 00:55:55,701
+Let event cause a weight before except call.
+
+400
+00:55:57,081 --> 00:56:02,091
+Um assert oc event default prevent prevented.
+
+401
+00:56:03,321 --> 00:56:14,241
+Uh, the hostname was not valid, and therefore the dialog was not accepted.
+
+402
+00:56:16,461 --> 00:56:23,251
+Or I should just say the dialog was not accepted. Up above here.
+
+403
+00:56:25,581 --> 00:56:30,561
+We put in an invalid hostname.
+
+404
+00:56:31,491 --> 00:56:39,771
+To the farm field. Before except called equals.
+
+405
+00:56:41,561 --> 00:56:51,831
+Browser test, you will do it again. Put a valid hostname into the form field.
+
+406
+00:56:54,111 --> 00:57:01,711
+Dialog. That dialog. A lot of energy bills await before except coal.
+
+407
+00:57:04,711 --> 00:57:08,911
+Cert. Okay. Not I was accepted.
+
+408
+00:57:08,911 --> 00:57:12,751
+And then I think the dialog will close. And when all.
+
+409
+00:57:16,171 --> 00:57:25,631
+Do we have to, like, wait for the. Call back called.
+
+410
+00:57:30,771 --> 00:57:41,151
+Subtitle. Hmm.
+
+411
+00:57:45,631 --> 00:57:50,191
+Close in. Call back. Um.
+
+412
+00:58:02,981 --> 00:58:06,101
+If you use this helper function, which.
+
+413
+00:58:11,511 --> 00:58:25,431
+Uh, to open the dialog. Then in the closing, a closing callback, you can verify that the prep was properly set.
+
+414
+00:58:27,551 --> 00:58:31,631
+Then we should ensure that those preferences get cleared.
+
+415
+00:58:32,691 --> 00:58:37,021
+The test finishes. I haven't.
+
+416
+00:58:38,121 --> 00:58:45,741
+It got done. Any testing to of the code above to see if it'll work.
+
+417
+00:58:47,631 --> 00:58:57,441
+So give it a shot and let me know if it doesn't result in a working test and I can help guide you on.
+
+418
+00:58:59,481 --> 00:59:03,971
+So request changes. There we go.
+
+419
+00:59:03,981 --> 00:59:09,171
+Reviewed. So that's done.
+
+420
+00:59:09,561 --> 00:59:14,751
+That's done. Some of the asks does MOC add test?
+
+421
+00:59:14,751 --> 00:59:17,761
+Also add the jazz to the INI file? Yes. No, it does.
+
+422
+00:59:17,781 --> 00:59:23,691
+It's very handy. It will find the right place and insert it in the dot tomo file because we've replaced the dot in these.
+
+423
+00:59:23,721 --> 00:59:28,101
+For the most part we've been replacing the dot. Any files with dot tomo instead?
+
+424
+00:59:30,131 --> 00:59:34,271
+And yeah, it will go ahead and insert it in the right spot in there, which is great.
+
+425
+00:59:36,391 --> 00:59:42,061
+Uh, all right. What are we doing next? Uh, let's convert places, feed to an ESF.
+
+426
+00:59:43,361 --> 00:59:46,451
+So much fun. This is kind of what we were doing last week.
+
+427
+00:59:47,141 --> 00:59:51,760
+Oh, good. They open up. Did they open up? Try again? Not yet.
+
+428
+00:59:51,761 --> 00:59:56,361
+Having to wait for this. Try build to finish. Oh, boy.
+
+429
+01:00:03,951 --> 01:00:07,401
+I'm going to follow that. That's interesting. I need this tribe to finish up.
+
+430
+01:00:09,291 --> 01:00:13,041
+I want to convert something to an ESM.
+
+431
+01:00:13,161 --> 01:00:23,251
+And in order to do that. I'm going to have to convert a test just like what we were doing last week.
+
+432
+01:00:25,411 --> 01:00:30,401
+And I'm going to base this off of the work. Did and completed last week.
+
+433
+01:00:30,421 --> 01:00:39,191
+During that same day, I completed the highlight speed conversion. So we're going to be doing kind of the same thing for the end of this episode.
+
+434
+01:00:39,551 --> 01:00:43,331
+I realize it's not like the funnest thing, but that's the last one.
+
+435
+01:00:43,331 --> 01:00:47,261
+That's the last thing that uses inject.
+
+436
+01:00:49,571 --> 01:00:54,961
+This thing. It was telemetry feed that was done.
+
+437
+01:00:54,971 --> 01:01:00,701
+Highlights feed. We did that last week. Places feeds the last one and we don't I think have to do this again.
+
+438
+01:01:01,331 --> 01:01:14,171
+So first I've checked out the tree at the point where the highlights feed stuff is done and then we're going to start by adapting the test.
+
+439
+01:01:14,561 --> 01:01:22,141
+So we actually take a look at the test rate now. Some places feed, test, trace.
+
+440
+01:01:22,591 --> 01:01:27,330
+The good news is I've saved the shortest one for the end. I knew it'd be exhausting.
+
+441
+01:01:27,331 --> 01:01:32,371
+And so I did the hardest one first. It's not always the smartest idea to do the hardest thing first.
+
+442
+01:01:32,671 --> 01:01:37,681
+Sometimes it's better to do the easier one first. But I figured it was going to be such a slog that I'd.
+
+443
+01:01:37,861 --> 01:01:39,871
+I'd. I'd just get through the first one.
+
+444
+01:01:39,911 --> 01:01:45,871
+Then each one would get easier because that way, my energy, I wouldn't feel like my energy was getting sapped each time.
+
+445
+01:01:47,491 --> 01:01:52,951
+So this is the test that we're going to be converting the test file and it's testing a bunch of stuff.
+
+446
+01:01:53,641 --> 01:01:57,481
+And who knows, maybe this one will be a real pain in the butt. We're going to find out.
+
+447
+01:01:57,901 --> 01:02:01,931
+So we have. The highlights feed.
+
+448
+01:02:04,031 --> 01:02:07,151
+Two, an ESM patch checked out.
+
+449
+01:02:07,451 --> 01:02:13,121
+The first thing we're going to do is we're going to move the test. Let me pump up the file, see what I'm doing.
+
+450
+01:02:15,641 --> 01:02:19,451
+We're in a move. The test.
+
+451
+01:02:21,701 --> 01:02:33,791
+I think its places feed. No word test unit live places feed where to move that to browser compose new tab test XP seashell.
+
+452
+01:02:34,091 --> 01:02:40,151
+We're going to call it play. Test places feed dot jars.
+
+453
+01:02:41,571 --> 01:02:45,591
+And we have to remove or there's no registry that we have to remove that from.
+
+454
+01:02:45,801 --> 01:02:49,821
+We do need to add test places, feed to the XP seashell registry.
+
+455
+01:02:50,631 --> 01:02:56,631
+So code browser compose new tab test SBC shell or SBC shell that tomo.
+
+456
+01:02:57,741 --> 01:03:07,771
+Places. Feel that'll be right here. All right.
+
+457
+01:03:08,041 --> 01:03:12,541
+Now, if we go to test places, feed dogs.
+
+458
+01:03:13,841 --> 01:03:21,531
+This is mostly incompatible with a mostly incompatible with an Xbox Health.
+
+459
+01:03:21,671 --> 01:03:24,761
+So we're basically going to be starting this from scratch, just like last time.
+
+460
+01:03:25,641 --> 01:03:29,201
+Uh, it's a good it's a good thing. It's a good thing to do.
+
+461
+01:03:29,471 --> 01:03:33,520
+Um, here's highlights.
+
+462
+01:03:33,521 --> 01:03:36,581
+Feed test highlights. It's right here. Yeah.
+
+463
+01:03:36,851 --> 01:03:40,481
+Why is it crossed out? What's wrong with you?
+
+464
+01:03:40,871 --> 01:03:48,341
+What's wrong with you vs code? Okay, We are going to start with the same preamble, I think.
+
+465
+01:03:51,841 --> 01:03:58,651
+We are going to also import action creators.
+
+466
+01:04:00,561 --> 01:04:03,851
+See. I won't need that anymore.
+
+467
+01:04:04,991 --> 01:04:10,351
+We don't need the global override or. We're just going to import places feed.
+
+468
+01:04:13,231 --> 01:04:17,431
+So places feed JSM.
+
+469
+01:04:17,491 --> 01:04:24,880
+That is this URL. Chrome.
+
+470
+01:04:24,881 --> 01:04:31,991
+Utils. Import. Lisa's feed.
+
+471
+01:04:33,371 --> 01:04:37,921
+Not in some structures that I guess are for testing.
+
+472
+01:04:37,921 --> 01:04:42,780
+We can keep those around and then we start getting into the descriptions and stuff.
+
+473
+01:04:42,781 --> 01:04:50,591
+Now this is where I comment out a big old block. Because all this stuff needs to be converted.
+
+474
+01:04:51,131 --> 01:04:58,271
+Instead, I'm going to do add task async function test places, feed construction.
+
+475
+01:04:58,781 --> 01:05:08,161
+I'll just say test construction. So I think that's how we started the Highlands feat one as well, which was just like, let's.
+
+476
+01:05:10,811 --> 01:05:16,591
+Create a sandbox. We're going to need sign and.
+
+477
+01:05:21,401 --> 01:05:27,281
+Places feet. Construction should work. Don't eat this part for now.
+
+478
+01:05:30,831 --> 01:05:36,261
+I presume that's what they start with as well. Places feature should have a places observer that dispatches on the store.
+
+479
+01:05:37,581 --> 01:05:47,931
+What is a place observer? Places Feed Places Observer OC.
+
+480
+01:05:51,191 --> 01:05:55,661
+So it doesn't actually test the the construction.
+
+481
+01:05:58,241 --> 01:06:04,091
+All right, well, I'll do that. But feed equals new places.
+
+482
+01:06:04,091 --> 01:06:08,271
+Feed. Assert. Okay, feed this.
+
+483
+01:06:08,351 --> 01:06:14,511
+This feed could be constructed. Very simple, bare bones.
+
+484
+01:06:15,271 --> 01:06:27,031
+But now a run mock build faster. And we'll run the tests.
+
+485
+01:06:27,031 --> 01:06:30,221
+Mock tests. This is.
+
+486
+01:06:32,381 --> 01:06:37,721
+Okay well marked test browser coupons New tab tab Special test places ft.
+
+487
+01:06:49,951 --> 01:06:53,281
+All right. Looks good. Let us now.
+
+488
+01:06:57,721 --> 01:07:01,561
+Uh, let's look at this first one. The first thing.
+
+489
+01:07:04,761 --> 01:07:08,481
+Um. I Yeah, I should just go ahead and remove it from down here.
+
+490
+01:07:09,591 --> 01:07:16,341
+Should have a place's observer that dispatches to the store. So add task async function test places Observer.
+
+491
+01:07:19,981 --> 01:07:29,651
+So. Places feed should have a places observer that dispatches.
+
+492
+01:07:32,471 --> 01:07:37,391
+To the store. And let's copy these things.
+
+493
+01:07:40,691 --> 01:07:44,801
+And I don't like to use concerts for objects because technically those are not constants.
+
+494
+01:07:48,851 --> 01:07:54,311
+We're going to stub out the dispatch method on the store. Okay, So we need sign on now.
+
+495
+01:07:55,031 --> 01:07:58,751
+Let's. Let's see. Sign and.
+
+496
+01:08:10,451 --> 01:08:19,171
+Um. Dine in, but sandbox sign and create sandbox.
+
+497
+01:08:22,611 --> 01:08:26,901
+Uh, that means sand box store at the end.
+
+498
+01:08:27,701 --> 01:08:33,771
+And then we're going to do. Sandbar sandbox does stub feed.
+
+499
+01:08:35,231 --> 01:08:44,541
+Store dispatch. And then we're going to dispatch the action.
+
+500
+01:08:44,841 --> 01:08:53,221
+And we're going to say assert. Okay. Thatch called once.
+
+501
+01:08:56,181 --> 01:09:03,671
+Uh, feed places. Feed. Start store dispatch call.
+
+502
+01:09:04,831 --> 01:09:09,231
+Then assert equal. Yeah.
+
+503
+01:09:09,731 --> 01:09:20,471
+Let's see if that passes. So let's try to stop property dispatch of undefined.
+
+504
+01:09:20,711 --> 01:09:24,051
+Oh, yes, yes, yes, yes, yes, yes.
+
+505
+01:09:24,071 --> 01:09:28,751
+I think we need to do this over here as well. But we need to, like, construct a store.
+
+506
+01:09:29,321 --> 01:09:32,981
+So we're going to we're going to sort of draft Oopsie Daisy.
+
+507
+01:09:34,761 --> 01:09:38,121
+Revert revert where I need to like draft off of.
+
+508
+01:09:39,821 --> 01:09:44,991
+Similar work we did for highlights feed. Create a helper function called.
+
+509
+01:09:47,311 --> 01:09:55,071
+Places feed for test. Now the store.
+
+510
+01:09:55,371 --> 01:09:58,371
+How did how did they like to do that? Places feed.
+
+511
+01:10:03,781 --> 01:10:20,671
+Store. I guess they don't need most of this stuff, so I'll just do that.
+
+512
+01:10:25,811 --> 01:10:34,930
+I don't need to stub it. Uh, I need to say, get places.
+
+513
+01:10:34,931 --> 01:10:38,021
+Feed for test. Sandbox.
+
+514
+01:10:44,821 --> 01:10:48,351
+There you go. Now, the rest of the setup that occurred is very interesting.
+
+515
+01:10:48,361 --> 01:11:00,511
+Like they what do they do? Um, on the places utils, they did a bunch of like spying on services and whatnot, which we can't really do.
+
+516
+01:11:02,281 --> 01:11:07,381
+But that's okay. We got our first one.
+
+517
+01:11:07,801 --> 01:11:10,861
+This is done. Hurray!
+
+518
+01:11:11,611 --> 01:11:15,601
+Let's next describe add two blocked top side sponsors.
+
+519
+01:11:16,111 --> 01:11:20,131
+We're going to take this entire describe let's take a couple of describes.
+
+520
+01:11:20,191 --> 01:11:24,301
+Let's take these two describes. Other.
+
+521
+01:11:26,081 --> 01:11:29,321
+Long. Oh, boy. Oh, boy.
+
+522
+01:11:29,331 --> 01:11:35,271
+That's a big describe. Okay. That's like half of it. Let's see if we can get this half done.
+
+523
+01:11:37,371 --> 01:11:40,901
+For the end of the episode. That gives me 15 minutes. That's ambitious.
+
+524
+01:11:40,911 --> 01:11:43,981
+I doubt it. I doubt it. Let's see though.
+
+525
+01:11:45,481 --> 01:11:52,440
+Add task async function test. Add two blocked topside sponsors.
+
+526
+01:11:52,441 --> 01:11:58,051
+And then what are we testing? Add to block list.
+
+527
+01:12:03,001 --> 01:12:06,991
+So we're going to say places feed dot add to block.
+
+528
+01:12:07,901 --> 01:12:11,801
+Blah blah, blah, blah, blah. Should add the block sponsors to the block list.
+
+529
+01:12:17,781 --> 01:12:24,241
+Sandbox sign on. Created sandbox. Inbox our store.
+
+530
+01:12:24,511 --> 01:12:27,811
+All right. And then we're going to create a feed.
+
+531
+01:12:29,031 --> 01:12:43,291
+For testing. If he'd blocked och cert.
+
+532
+01:12:44,361 --> 01:12:48,831
+Spy. What spy spy equals set stirring pref.
+
+533
+01:12:48,831 --> 01:12:52,281
+Well, guess what? I'm going to have to actually read set string pref.
+
+534
+01:12:53,361 --> 01:12:56,391
+Um, I'm going to have to actually read the the pref value.
+
+535
+01:12:59,601 --> 01:13:06,651
+So for these I'm going to have to. That's a pain.
+
+536
+01:13:08,001 --> 01:13:11,541
+Uh. Services.
+
+537
+01:13:11,751 --> 01:13:20,291
+Crafts. Set. String Craft. We're going to.
+
+538
+01:13:29,551 --> 01:13:35,491
+And then we're going to assert that.
+
+539
+01:13:35,971 --> 01:13:40,321
+Set the preface now different that the preface should be.
+
+540
+01:13:43,171 --> 01:13:49,561
+Sponsors. Okay, so.
+
+541
+01:13:51,141 --> 01:13:54,911
+Uh uh. Blocked sponsors.
+
+542
+01:13:54,991 --> 01:13:59,570
+Close. Jason Stringer. Jason Pass. Services.
+
+543
+01:13:59,571 --> 01:14:04,551
+Press Get String Press. Topsides BLOCK Sponsored Press.
+
+544
+01:14:09,071 --> 01:14:13,791
+30. Equal. BLOCK sponsors.
+
+545
+01:14:15,621 --> 01:14:22,861
+Does that work? Yes.
+
+546
+01:14:22,901 --> 01:14:27,441
+Okay. And then we are going to services. Clear Preface.
+
+547
+01:14:27,891 --> 01:14:31,551
+Clear. User Prep. Top Sites. BLOCK Sponsors Prep.
+
+548
+01:14:35,161 --> 01:14:40,681
+So that one's done. It should not add duplicate sponsors to the blacklist.
+
+549
+01:14:41,891 --> 01:14:46,801
+Okay. No dupes. Ironically, I will duplicate this test.
+
+550
+01:14:47,641 --> 01:14:55,051
+I'll say no dupes should not add duplicate sponsors.
+
+551
+01:15:00,451 --> 01:15:05,821
+And the way we'll do that is it will it's got foo bar and test.
+
+552
+01:15:05,851 --> 01:15:12,751
+And we've already have foo and bar in there. Okay.
+
+553
+01:15:21,011 --> 01:15:24,041
+And then it should be this.
+
+554
+01:15:34,011 --> 01:15:39,011
+He's next. Oh, and that was the first describe.
+
+555
+01:15:39,021 --> 01:15:42,561
+Great. That's that one. Next one's on action. This is the big one.
+
+556
+01:15:42,631 --> 01:15:46,071
+Okay. Um.
+
+557
+01:15:49,251 --> 01:15:57,271
+And past async function. EST en action init.
+
+558
+01:15:59,711 --> 01:16:03,401
+Should add bookmark history places and blocked observers on a net.
+
+559
+01:16:04,571 --> 01:16:08,711
+I got a bad feeling we're going to have to do a bunch of spying and stuff.
+
+560
+01:16:09,551 --> 01:16:14,621
+Oh yeah. I can't. I can't do this. Observer called with feed blocked event.
+
+561
+01:16:15,701 --> 01:16:19,001
+I can't. All right, all right, all right, all right, all right.
+
+562
+01:16:19,391 --> 01:16:24,971
+Um, so I have to. There are certain things that I can make out, and there's certain things I can't.
+
+563
+01:16:25,301 --> 01:16:30,291
+That's one of the advantage of these old tests, is that they were running in the node environment.
+
+564
+01:16:30,321 --> 01:16:35,071
+They just basically, like, reinvented all of the gecko privileged environment so they could market everything.
+
+565
+01:16:35,071 --> 01:16:37,841
+Cause it was all just jazz here in ABC show.
+
+566
+01:16:37,871 --> 01:16:43,121
+All of these services actually exist, and that's good because you're testing against the real stuff and they'll behave the same way.
+
+567
+01:16:44,141 --> 01:16:54,131
+And so you don't accidentally like have a mark that doesn't behave the way that the original does because that's fun.
+
+568
+01:16:56,621 --> 01:17:02,141
+But instead we have to like. Sometimes do a little bit of.
+
+569
+01:17:10,851 --> 01:17:16,760
+Mucking about with overrides or mucking about trying to read values out of these
+
+570
+01:17:16,761 --> 01:17:20,541
+x become components afterwards because we can't use sign on to monitor them.
+
+571
+01:17:20,931 --> 01:17:23,211
+So we calling it and then saying hey,
+
+572
+01:17:23,421 --> 01:17:34,851
+places utilized out observers Scott ad listener should have been called with these places utilized out observers.
+
+573
+01:17:36,681 --> 01:17:42,201
+Maybe that is something that we can mark out. Hello?
+
+574
+01:17:42,441 --> 01:17:50,451
+Oh. Places.
+
+575
+01:17:50,451 --> 01:18:01,131
+Observers and places observers. What's places observers precious.
+
+576
+01:18:03,261 --> 01:18:06,981
+Mm. Whereby idle can mark this out.
+
+577
+01:18:07,641 --> 01:18:17,541
+Okay. And I can't query for whether or not listeners exist.
+
+578
+01:18:19,161 --> 01:18:35,061
+What I can do, however, is fire these notifications and see whether or not these places events like the the feed gets notified about them.
+
+579
+01:18:37,491 --> 01:18:43,971
+Handle places event. Okay.
+
+580
+01:18:44,271 --> 01:18:49,741
+So what I'll do. What am I going to do?
+
+581
+01:18:55,811 --> 01:19:02,771
+Four led notification of notifications.
+
+582
+01:19:05,181 --> 01:19:08,721
+So let notifications equal these.
+
+583
+01:19:15,081 --> 01:19:22,851
+We will fire them places utilized, not notify listeners.
+
+584
+01:19:25,631 --> 01:19:29,221
+Bookmark added. Can I just do that?
+
+585
+01:19:29,241 --> 01:19:32,421
+Can I just. What happens if I just do this? Is it going to explode?
+
+586
+01:19:35,461 --> 01:19:42,201
+Um. Places utilized at.
+
+587
+01:19:43,601 --> 01:19:52,531
+Observers. I guess I have to bring in places utils now.
+
+588
+01:19:55,161 --> 01:19:58,311
+Jimbo's like. Oh, yeah.
+
+589
+01:19:59,851 --> 01:20:03,021
+Right. Could be a disaster.
+
+590
+01:20:05,131 --> 01:20:08,251
+We'll see. Let's find out. Let's just run it.
+
+591
+01:20:08,731 --> 01:20:13,641
+Let's see what happens. Yeah.
+
+592
+01:20:15,861 --> 01:20:19,671
+Notify listeners. What's the first argument supposed to be?
+
+593
+01:20:20,961 --> 01:20:25,731
+Sequence of events. Oh, um. Do I do it like this?
+
+594
+01:20:36,201 --> 01:20:41,631
+Element of argument. One is not an object to notify listeners.
+
+595
+01:20:47,431 --> 01:20:50,761
+Notifications dot push, and then you put an object.
+
+596
+01:20:54,291 --> 01:20:59,091
+So I something that implements places event, places, event.
+
+597
+01:21:02,571 --> 01:21:06,211
+What is that? These are the types.
+
+598
+01:21:07,981 --> 01:21:28,381
+Places visit as a places event. Has a type.
+
+599
+01:21:30,301 --> 01:21:36,671
+That's all we know. Let's see.
+
+600
+01:21:38,691 --> 01:21:43,551
+Black event equals type notification.
+
+601
+01:21:45,401 --> 01:21:49,391
+Notify listeners. At work.
+
+602
+01:21:55,971 --> 01:22:04,581
+Elements not implement interface places event. Um, do I have to say like new places event?
+
+603
+01:22:06,451 --> 01:22:12,271
+That doesn't make sense. How are some of these used like bookmarks visit?
+
+604
+01:22:13,421 --> 01:22:16,851
+It says bookmark. Annette.
+
+605
+01:22:19,901 --> 01:22:40,331
+He says, bookmark. How do I use these interfaces?
+
+606
+01:22:40,331 --> 01:22:43,841
+Chrome only exposed on window window type places bookmark.
+
+607
+01:22:45,731 --> 01:22:49,421
+I don't know if. Yeah. Places event is that.
+
+608
+01:22:50,751 --> 01:22:54,591
+That's just a thing. How you do new places, events.
+
+609
+01:22:55,871 --> 01:23:00,681
+Are. I legal constructor.
+
+610
+01:23:03,471 --> 01:23:08,211
+Chrome only places event. What do you want in a constructor?
+
+611
+01:23:23,651 --> 01:23:26,941
+Or is there? Um.
+
+612
+01:23:29,771 --> 01:23:32,861
+How is this? We saw an example of this being used elsewhere.
+
+613
+01:23:34,871 --> 01:23:38,531
+Places, utils servers notified.
+
+614
+01:23:50,181 --> 01:23:54,031
+Bookmark. This is observers notify listings.
+
+615
+01:23:54,101 --> 01:23:57,491
+Places observers notify. Listeners.
+
+616
+01:24:04,191 --> 01:24:11,751
+There's one called Places Ranking, and you can just create one of those places ranking.
+
+617
+01:24:17,451 --> 01:24:20,831
+Has a constructor. Oh, I see.
+
+618
+01:24:30,161 --> 01:24:45,741
+Yeah. This is going to be tricky to to make out. So what one do we want?
+
+619
+01:24:45,751 --> 01:24:51,600
+We want to bookmark added. Places.
+
+620
+01:24:51,601 --> 01:24:55,961
+Bookmark Edition. That one has a constructor.
+
+621
+01:24:56,081 --> 01:25:02,531
+Okay. What about bookmark removed? Um.
+
+622
+01:25:09,041 --> 01:25:22,031
+As a constructor. Okay, that's good. History cleared. As a constructor page removed.
+
+623
+01:25:25,711 --> 01:25:31,131
+As places visit remove. Has a constructor.
+
+624
+01:25:31,161 --> 01:25:35,261
+Okay. Okay. Okay. So I feel good about this now.
+
+625
+01:25:35,271 --> 01:25:39,261
+So bookmark added. Which one was it? It was.
+
+626
+01:25:40,101 --> 01:25:47,261
+Bookmark places. Bookmark edition. And there is this, like, big structure I have to supply.
+
+627
+01:25:48,701 --> 01:25:55,021
+That's a pain in the butt. Let's see.
+
+628
+01:25:55,231 --> 01:26:01,981
+New. Um, is there a test one?
+
+629
+01:26:02,101 --> 01:26:14,261
+Yeah, here's a test one. Uh notifications new places bookmark edition date added follows.
+
+630
+01:26:14,441 --> 01:26:20,161
+Bah bah bah bah bah bah bah. You are al. Giddy.
+
+631
+01:26:22,561 --> 01:26:27,571
+Test. One, two, three. One, two, three.
+
+632
+01:26:31,681 --> 01:26:39,861
+Let's see if I can just. Notify. Those notification.
+
+633
+01:26:52,641 --> 01:27:01,791
+Okay. That works. And now can I verify that Handle Places event was called.
+
+634
+01:27:03,471 --> 01:27:13,141
+So places feed. What I can do is I can stub this out.
+
+635
+01:27:19,881 --> 01:27:25,411
+Um. Sandboxed.
+
+636
+01:27:26,701 --> 01:27:31,491
+He'd. Uh, and all places event.
+
+637
+01:27:42,501 --> 01:28:02,091
+I don't want to do this. Notify then.
+
+638
+01:28:02,201 --> 01:28:05,411
+Assert. Okay. Feed out. Handle. Places.
+
+639
+01:28:05,411 --> 01:28:09,921
+Event. Called once.
+
+640
+01:28:11,581 --> 01:28:16,381
+This is feed, and I'll place that call.
+
+641
+01:28:26,141 --> 01:28:33,121
+And then assert. Feed handled places event called with.
+
+642
+01:28:36,021 --> 01:28:47,951
+A notification. And then I'm going to say Feed the Handle Places Event dot Reset History.
+
+643
+01:28:50,161 --> 01:28:56,001
+And does that work? No.
+
+644
+01:28:56,391 --> 01:29:02,331
+Cannot stub a non-existent own property. Handle places event.
+
+645
+01:29:09,561 --> 01:29:19,191
+Oh, that's UN Places Observer. So it's actually on the place's observer, not on right feed places Observer.
+
+646
+01:29:37,031 --> 01:29:43,961
+False is true on one sixties so handle places event was not called.
+
+647
+01:29:52,961 --> 01:29:56,381
+Okay, so let's do this.
+
+648
+01:29:57,541 --> 01:30:05,501
+Uh, let's set a debugger here. We did not get nearly as far as I expected.
+
+649
+01:30:05,531 --> 01:30:09,371
+Let's see if we can solve this mystery. And then I'm going to end the stream.
+
+650
+01:30:12,611 --> 01:30:16,721
+Okay, so we're going to run our test. Connect.
+
+651
+01:30:20,031 --> 01:30:23,181
+Okay, so where is places? Feed?
+
+652
+01:30:25,411 --> 01:30:28,621
+And handle. This is event.
+
+653
+01:30:30,811 --> 01:30:42,721
+Well, we've got let's make sure we're not entering here, but our stub, I'm hoping we enter our stub, so notify listeners.
+
+654
+01:30:47,971 --> 01:30:52,021
+Feed places observer and old places of.
+
+655
+01:30:54,011 --> 01:30:57,361
+Call. True. Called once.
+
+656
+01:30:57,721 --> 01:31:02,501
+True. Okay. Coupled with.
+
+657
+01:31:05,071 --> 01:31:09,441
+Notification. True. Oh, okay.
+
+658
+01:31:12,021 --> 01:31:18,201
+So that worked when I just sort of step through it. If I don't step through it, what happens?
+
+659
+01:31:20,901 --> 01:31:32,751
+Like, does it still fail? Was that just like a Yeah, if I don't step through it, I wonder if I have to let the vet loop breathe,
+
+660
+01:31:33,441 --> 01:31:40,521
+notify listeners might execute soon await new promise all.
+
+661
+01:31:41,801 --> 01:31:48,381
+Excuse Universal. I have to wait for the event loop to breathe before the dispatch goes through.
+
+662
+01:31:52,751 --> 01:31:55,921
+Hmm. Servers notify listeners.
+
+663
+01:31:55,931 --> 01:31:59,411
+When does that occur? Places and servers.
+
+664
+01:32:02,891 --> 01:32:13,161
+Notify listeners. Notify next.
+
+665
+01:32:20,621 --> 01:32:32,941
+Call listeners. So should be synchronous, should happen right away.
+
+666
+01:32:33,961 --> 01:32:39,001
+I don't see any like batching or thread.
+
+667
+01:32:40,241 --> 01:32:45,491
+Get listeners. Just wait to.
+
+668
+01:32:50,411 --> 01:32:53,791
+You know. I know.
+
+669
+01:32:54,501 --> 01:32:57,981
+So I don't know why it wouldn't be right away now.
+
+670
+01:32:58,191 --> 01:33:01,941
+What happens if I wait some number of seconds?
+
+671
+01:33:05,001 --> 01:33:17,461
+Now I'm going to need to bring in set time, unfortunately. Let's see.
+
+672
+01:33:25,121 --> 01:33:33,911
+Still no good. So I wonder if maybe it has less to do with waiting here.
+
+673
+01:33:36,741 --> 01:33:53,041
+I said, waiting here. Okay, let's wait a couple of different places.
+
+674
+01:34:04,751 --> 01:34:08,111
+No. So how come it worked whenever I stepped through?
+
+675
+01:34:09,961 --> 01:34:33,561
+Wasn't timing. Is this thing actually being called by accident?
+
+676
+01:34:35,451 --> 01:34:51,921
+Down? Hello there. You also make sure I built a case that's required.
+
+677
+01:35:06,781 --> 01:35:15,001
+So no, it doesn't look like the actual handled places event is being called.
+
+678
+01:35:16,491 --> 01:35:21,381
+Which I guess is good. How come our is not being.
+
+679
+01:35:23,661 --> 01:35:28,991
+What if I. Instead of stubbing it out, I spy on it.
+
+680
+01:35:30,391 --> 01:35:35,581
+Which allows a pass through. Do we see it?
+
+681
+01:35:38,291 --> 01:35:50,761
+I don't see a hello there either. It makes me wonder if during.
+
+682
+01:35:53,831 --> 01:36:01,241
+I. What's this? Briefly void learning services for observing at observers happens after a dispatch on a net.
+
+683
+01:36:02,171 --> 01:36:07,771
+That's where the timing is different. Okay, stub.
+
+684
+01:36:08,591 --> 01:36:12,331
+So we actually have to, um.
+
+685
+01:36:16,111 --> 01:36:20,941
+You promise? Resolve set, not set timer.
+
+686
+01:36:20,971 --> 01:36:26,321
+Well, it's that time out of. One second.
+
+687
+01:36:36,371 --> 01:36:40,251
+Still. No. But it does say hello there.
+
+688
+01:36:45,101 --> 01:36:49,421
+And. Oh, please. Oh, because the stub it got to stub first.
+
+689
+01:36:49,421 --> 01:37:00,430
+Gang must stub first. Okay, that worked.
+
+690
+01:37:00,431 --> 01:37:04,091
+And now instead of using that set timer, I'm going to execute soon.
+
+691
+01:37:12,811 --> 01:37:17,821
+Okay. That works. And, um, I'll comment.
+
+692
+01:37:19,451 --> 01:37:25,451
+The um places observer is added.
+
+693
+01:37:25,601 --> 01:37:28,811
+On the next tick is added.
+
+694
+01:37:29,711 --> 01:37:33,551
+Place's observer registration happens at the.
+
+695
+01:37:36,201 --> 01:37:46,161
+Next tick of the event. Okay.
+
+696
+01:37:46,681 --> 01:37:53,611
+Now, can we do what was the let's do bookmark removed as well and then we'll call the stream over.
+
+697
+01:37:55,271 --> 01:38:04,551
+Mark a removed. Places bookmark removed.
+
+698
+01:38:18,401 --> 01:38:23,141
+No tests. Come on. You got to have some tests here. No.
+
+699
+01:38:23,291 --> 01:38:32,871
+All right, fine. So what was it look like?
+
+700
+01:38:35,871 --> 01:38:41,391
+Something like that. Okay. Uh, well, let's copy that over.
+
+701
+01:38:48,031 --> 01:38:53,991
+Um. Item I.D.
+
+702
+01:38:55,651 --> 01:39:01,641
+Uh, minus one URL. Uh, sure.
+
+703
+01:39:01,881 --> 01:39:06,851
+Let's copy this. Title.
+
+704
+01:39:08,681 --> 01:39:17,751
+That's 23 times. One parent ID minus two index.
+
+705
+01:39:19,721 --> 01:39:27,521
+Zero g wide. Test 23 apparent good fake.
+
+706
+01:39:29,141 --> 01:39:32,531
+Source zero is tagging.
+
+707
+01:39:35,281 --> 01:39:40,111
+False. Is descendent removal false?
+
+708
+01:39:41,521 --> 01:39:44,711
+All right. See if that. Works.
+
+709
+01:39:47,461 --> 01:39:55,290
+Yeah. Okay, so those both work. I'm going to do the other two on my own time.
+
+710
+01:39:55,291 --> 01:40:00,291
+So I've gotten these two. Um, thankfully, I think once the.
+
+711
+01:40:00,331 --> 01:40:04,561
+These two, it's are done. I don't have to worry about these observers anymore.
+
+712
+01:40:05,521 --> 01:40:09,121
+I can maybe even combine these two the removals in.
+
+713
+01:40:13,471 --> 01:40:20,761
+I can maybe combine those in the next like in the same in the same test here,
+
+714
+01:40:21,991 --> 01:40:26,221
+because I can just like, rerun these things and then assert that it was never called.
+
+715
+01:40:27,991 --> 01:40:32,040
+And that's what we do. But I would do it on my own and that's it for the episode.
+
+716
+01:40:32,041 --> 01:40:35,760
+Thank you so much for watching. Episode 352 of The Joy of Coding.
+
+717
+01:40:35,761 --> 01:40:39,181
+Let me know what you thought. You know, I did a little bit of reviewing.
+
+718
+01:40:39,181 --> 01:40:44,491
+I did a little bit of fabricator stuff. We did a little bit of, you know, writing test and test conversion.
+
+719
+01:40:45,241 --> 01:40:49,890
+Let me know what you thought. There's a link here in the agenda to rate this episode.
+
+720
+01:40:49,891 --> 01:40:53,941
+You can write in. Let me know what you thought. It's just an easy peasy form.
+
+721
+01:40:54,661 --> 01:40:58,020
+It's also a great way. If you have questions you want me to try and answer on the stream, you can.
+
+722
+01:40:58,021 --> 01:41:01,291
+You can send me that. You can send me questions that way.
+
+723
+01:41:01,501 --> 01:41:05,190
+And just I read everything that comes in. I'd love to hear from you if What are you enjoying?
+
+724
+01:41:05,191 --> 01:41:08,341
+What do you not enjoying? What would you prefer I do? What would you prefer I didn't do?
+
+725
+01:41:09,061 --> 01:41:12,991
+This is a great way of letting me know. And with that, I'll call it a day.
+
+726
+01:41:13,111 --> 01:41:21,081
+Thanks again for watching. Episode 352 everybody. I hope your day goes really, really well and you get everything you want.
+
+727
+01:41:21,601 --> 01:41:25,591
+Take care, everybody. Bye bye. The joy.
+
+728
+01:41:26,481 --> 01:41:28,821
+Oh, didn't see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

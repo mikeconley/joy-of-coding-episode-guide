@@ -1,0 +1,2654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 390 - January 15, 2025</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 390 - January 15, 2025</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=68389d82-e4ba-4599-a1e0-b24b01279ca5</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=68389d82-e4ba-4599-a1e0-b24b01279ca5">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:02,979 --> 00:00:08,529
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy of coding.
+
+2
+00:00:09,189 --> 00:00:12,789
+Hello and welcome to episode 390 of the Joy of coding.
+
+3
+00:00:13,299 --> 00:00:19,359
+My name is Mike Conley. It's so good to have you here. We're going to be, uh, live hacking on some Firefox stuff.
+
+4
+00:00:19,629 --> 00:00:27,669
+Can be tinkering around in the source code. Continuing our journey to document the customizable toolbar stuff for Firefox desktop.
+
+5
+00:00:28,029 --> 00:00:34,418
+And maybe if we have time. I was thinking it might be neat if we could see whether or not the, uh, the linting,
+
+6
+00:00:34,419 --> 00:00:42,729
+the eslint JS doc stuff we've been adding or not ESLint the JS doc stuff we've been adding the which is valid.
+
+7
+00:00:43,149 --> 00:00:54,308
+Uh, JS doc according to ESLint. Anyways, um, will give us the ability to get some level of static typing, static type checking, um,
+
+8
+00:00:54,309 --> 00:01:02,829
+via the TypeScript uh, utility, which accepts reading normal script as opposed to, uh, just TypeScript script files.
+
+9
+00:01:02,839 --> 00:01:06,429
+So I'm hoping we can try that today. We'll see.
+
+10
+00:01:06,459 --> 00:01:10,149
+We'll see how far we get. I'll start by sharing my screen as per usual.
+
+11
+00:01:11,079 --> 00:01:16,169
+Hey, it's January 15th, 2025. A reminder no plan survives breakfast.
+
+12
+00:01:16,179 --> 00:01:22,419
+I think I know how today is going to go. I think, uh, I know, uh, what might go down, but I could be wrong.
+
+13
+00:01:22,469 --> 00:01:25,389
+Uh, in fact, I just realized that there's like a little bit of a there.
+
+14
+00:01:25,389 --> 00:01:33,099
+I gotta move my camera a little bit because there's, like a little white, uh uh um, uh, little, little lip of my green screen showing above that.
+
+15
+00:01:33,279 --> 00:01:38,139
+That stuff happens. And so no plan survives breakfast. We're just going to adapt and roll with the punches as they come.
+
+16
+00:01:38,589 --> 00:01:43,748
+Uh, and, uh, that's the first rule. That's the first, uh, rule of joy of coding.
+
+17
+00:01:43,749 --> 00:01:48,308
+The second rule is, uh, the agenda that we're looking at this handy dandy thing with all these links that,
+
+18
+00:01:48,309 --> 00:01:51,489
+you know, I'll update as the, uh, episode proceeds.
+
+19
+00:01:52,209 --> 00:01:55,988
+You have access to it. If you're watching this on air. Mozilla, check out the detail section over there.
+
+20
+00:01:55,989 --> 00:01:59,079
+If you're watching this on YouTube, check out the video description down below.
+
+21
+00:01:59,079 --> 00:02:04,119
+And if you're watching this on, uh, Twitch, check out the channel details for a link to the agenda.
+
+22
+00:02:04,509 --> 00:02:07,599
+And like as I update it, this little spinny will spin.
+
+23
+00:02:07,599 --> 00:02:17,319
+If you reload the agenda, you'll get the most up to date version. Okay, so we're continuing our journey to document the customizable UI code.
+
+24
+00:02:17,589 --> 00:02:23,949
+And last week we'd completed documenting customize mode systems as we've finished it.
+
+25
+00:02:24,309 --> 00:02:26,169
+So, uh, that was a rough one.
+
+26
+00:02:26,169 --> 00:02:34,929
+It took us, I think, three episodes or so to do if you don't include the, uh, the break we took to look at the AGS adventure game engine.
+
+27
+00:02:35,259 --> 00:02:40,779
+Um, so, uh, let's take a look at the next one, which is customizable widgets dot system Mjs.
+
+28
+00:02:41,199 --> 00:02:45,219
+So the first thing I'm actually going to do is I'm going to, uh, rebase.
+
+29
+00:02:45,219 --> 00:02:49,689
+I'm going to check out Bookmarks Central. I'm going to pull the latest.
+
+30
+00:02:52,809 --> 00:02:56,379
+Make sure we've got the latest and greatest from, um. Uh, upstream.
+
+31
+00:02:57,009 --> 00:03:04,089
+Um, and then we are going to, uh, rebase our documentation changes on top of Bookmark Central.
+
+32
+00:03:06,229 --> 00:03:10,649
+Let's go ahead and do that. Hmhm.
+
+33
+00:03:13,059 --> 00:03:18,399
+Check. Uh. Uh, now, what was the branch name? I think it was customizable UI documentation.
+
+34
+00:03:18,399 --> 00:03:27,219
+It was this. So go ahead and check that out. And we'll go ahead and rebase on Bookmarks Central.
+
+35
+00:03:27,519 --> 00:03:33,329
+Let's see what it says. Hey.
+
+36
+00:03:33,569 --> 00:03:39,809
+Easy peasy. It seemed to like it. Um, so I'll go ahead and do an artifact build.
+
+37
+00:03:40,529 --> 00:03:47,489
+Um, and let's. While we're waiting for that. Open up the right folder here.
+
+38
+00:03:47,519 --> 00:03:50,579
+Uh, not task cluster.
+
+39
+00:03:50,589 --> 00:03:55,319
+We're talking about browser browser components.
+
+40
+00:03:58,279 --> 00:04:03,559
+Uh, customizable UI. That's this stuff.
+
+41
+00:04:04,959 --> 00:04:13,899
+And we've documented this one and this one and this one and this one.
+
+42
+00:04:14,379 --> 00:04:17,439
+And last but not least, we documented this one.
+
+43
+00:04:17,799 --> 00:04:25,899
+And we have gone through and cleaned up customizable UI, uh, system JS but there might still be some things that need documentation in here.
+
+44
+00:04:26,109 --> 00:04:30,099
+So we'll look at that soon. But this is the one I was hoping we could document today.
+
+45
+00:04:30,549 --> 00:04:34,209
+Let's see how many lines we're talking about. About 695 lines.
+
+46
+00:04:35,619 --> 00:04:40,608
+Um. Smurfd0. Yes. Is it luck or skill to most of the time on stream?
+
+47
+00:04:40,609 --> 00:04:44,359
+Rarely have merge conflicts? Well, I tend to. That's a good question.
+
+48
+00:04:44,569 --> 00:04:51,739
+I tend to work in err on stream. I tend to work on areas that are quieter, that there's not a whole lot of activity going on in,
+
+49
+00:04:52,249 --> 00:04:58,129
+um, because if there's a whole lot of activity going on there, then that means that, um.
+
+50
+00:04:59,319 --> 00:05:03,369
+You know, it's it's not good. It's maybe not good fodder, uh,
+
+51
+00:05:03,369 --> 00:05:12,369
+for a project that I'm hoping to kind of see from beginning to middle and end on stream and and be something that you see the entirety of.
+
+52
+00:05:12,759 --> 00:05:17,978
+Um, otherwise, like, if I'm working on something and I might switch over to this because I've done this a few times, but like,
+
+53
+00:05:17,979 --> 00:05:24,189
+if I'm working on something that's a little more critical on the critical path, then I'll work on it even when the stream is not occurring.
+
+54
+00:05:24,189 --> 00:05:27,549
+And then, you know, a week later you'll be I'll be like, well, it's done.
+
+55
+00:05:27,549 --> 00:05:30,698
+Or, um, you know, here's where I am now. And maybe that's interesting.
+
+56
+00:05:30,699 --> 00:05:33,849
+And if that's something you want to see more of, uh, send me a message.
+
+57
+00:05:34,149 --> 00:05:39,519
+But in the same way that the jump list stuff that we did in 2023 and 2024, um,
+
+58
+00:05:39,519 --> 00:05:42,459
+kind of you got to see the beginning of the whole thing beginning, middle and end.
+
+59
+00:05:43,629 --> 00:05:48,089
+Um, uh, I'm doing this, uh, documentation stuff beginning, middle and end.
+
+60
+00:05:48,099 --> 00:05:55,209
+You can see it, the whole story on the stream. And, uh, and because of that, I'm in a quieter part of the code base.
+
+61
+00:05:55,929 --> 00:06:00,909
+Or, like, in order to do that, I chose a quieter part of the code base to do this, this exercise.
+
+62
+00:06:01,329 --> 00:06:06,279
+So let's go ahead and take a look at customizable widgets. Is there something in here like what are we talking about?
+
+63
+00:06:06,339 --> 00:06:09,549
+Um, like what is this thing? What's your game?
+
+64
+00:06:09,549 --> 00:06:14,369
+Customizable widgets. Uh, let's take a quick, uh, look at the structure of it.
+
+65
+00:06:14,379 --> 00:06:19,839
+So, uh, we import, you know, classic preamble of importing a bunch of other things.
+
+66
+00:06:20,169 --> 00:06:23,499
+We define some lazy getters. We define some lazy preference getters.
+
+67
+00:06:23,739 --> 00:06:27,999
+We have, like a utility function at the very top that doesn't appear to be exported.
+
+68
+00:06:28,179 --> 00:06:34,389
+And then we export this array, this array of customizable widgets.
+
+69
+00:06:35,589 --> 00:06:41,168
+And I think that is the that is the big sort of useful thing here.
+
+70
+00:06:41,169 --> 00:06:45,629
+And these customizable widgets are objects that describe a lot of our built in buttons.
+
+71
+00:06:45,639 --> 00:06:48,789
+So for example, um, let's pick a simple one here.
+
+72
+00:06:49,569 --> 00:06:55,299
+The the print button. What it does, is it, uh, this puts the, um.
+
+73
+00:06:57,069 --> 00:07:03,659
+There's a button inside of. The palette.
+
+74
+00:07:03,669 --> 00:07:16,959
+I don't think it is in the toolbar by default, but if we choose to customize our toolbar and we'll see in the palette, there is a print button.
+
+75
+00:07:16,959 --> 00:07:22,269
+This print button. The whole definition of it is right here.
+
+76
+00:07:22,479 --> 00:07:29,349
+And it says okay, this is its ID. This is the need for like the the tooltip print this page.
+
+77
+00:07:29,709 --> 00:07:34,749
+Um, this is the shortcut ID presumably that's the keyboard shortcut ID.
+
+78
+00:07:35,229 --> 00:07:36,819
+And then there's some attribute here.
+
+79
+00:07:36,819 --> 00:07:43,898
+And then on created we say okay the button that gets created for the window, we're going to set its command attribute to this command.
+
+80
+00:07:43,899 --> 00:07:47,349
+And that's the thing that actually does toggling of print preview.
+
+81
+00:07:47,469 --> 00:07:51,758
+So that if I go here and I hit print, uh, I get the print preview of this,
+
+82
+00:07:51,759 --> 00:07:56,139
+of this page, which, you know, it's not it's not the greatest print preview.
+
+83
+00:07:56,139 --> 00:08:01,568
+There's look, I think this is because of the like the, um, something to do with our toolbar.
+
+84
+00:08:01,569 --> 00:08:10,478
+It's not printing. Nice. There is a way, I think of, uh, using, uh, the simplified mode, basically reader mode to,
+
+85
+00:08:10,479 --> 00:08:13,659
+uh, to render the page, and that's sometimes nicer for printing.
+
+86
+00:08:14,349 --> 00:08:19,029
+Um, anyways. That's the print button.
+
+87
+00:08:21,939 --> 00:08:26,439
+So this is interesting because the object itself or the array itself.
+
+88
+00:08:28,309 --> 00:08:32,389
+Is, um, is interesting.
+
+89
+00:08:32,659 --> 00:08:35,859
+Hey, this is an array of a bunch of built in widgets.
+
+90
+00:08:35,869 --> 00:08:39,528
+It's not exhaustive. There are some that are defined in our markup.
+
+91
+00:08:39,529 --> 00:08:43,428
+We have a mixture of dynamically registered ones like this with script.
+
+92
+00:08:43,429 --> 00:08:52,829
+And there are ones that are, uh, declared in our markup. Um, and then there like that.
+
+93
+00:08:52,879 --> 00:08:57,078
+That's somewhat interesting. And the the structure of this is definitely interesting.
+
+94
+00:08:57,079 --> 00:09:11,149
+I believe, um, the structure here is ultimately what is passed to uh, register widget or register add widget or register.
+
+95
+00:09:11,959 --> 00:09:14,569
+Who uses customizable widgets and what does it do?
+
+96
+00:09:15,079 --> 00:09:24,199
+Customizable widgets consist of images imported by a number of things, but particularly customizable UI.
+
+97
+00:09:27,289 --> 00:09:34,129
+And what we do is yeah, there's something called create built in widget, and we pass in each widget definition.
+
+98
+00:09:37,279 --> 00:09:41,838
+And uh, yeah, this is the sort of thing that I would want to be documented.
+
+99
+00:09:41,839 --> 00:09:47,779
+It currently isn't inside of customizable UI. And then there's a normalization step.
+
+100
+00:09:47,779 --> 00:09:54,239
+And then we. What do we do?
+
+101
+00:09:55,109 --> 00:09:59,219
+We add it to the palette. Normalize widget.
+
+102
+00:10:03,049 --> 00:10:08,449
+That like, makes sure that all of the right properties are set up on it and then we construct it.
+
+103
+00:10:10,479 --> 00:10:16,719
+Then we add it to the palette. Um.
+
+104
+00:10:17,259 --> 00:10:24,729
+All right. Mhm.
+
+105
+00:10:26,349 --> 00:10:30,159
+Types you know in this TypeScript types.
+
+106
+00:10:32,199 --> 00:10:38,169
+Import type of customizable UI which is type of import known modules I see.
+
+107
+00:10:40,429 --> 00:10:44,599
+Namespace. Where's this from?
+
+108
+00:10:44,599 --> 00:10:47,719
+Greg Tatum in October. I see.
+
+109
+00:10:49,939 --> 00:10:55,999
+They were using starting to tinker with using TypeScript and dev tools few, uh, few years ago.
+
+110
+00:10:56,989 --> 00:11:01,099
+This is interesting. Okay. Um.
+
+111
+00:11:05,939 --> 00:11:08,939
+So what? I kind of I'm just thinking like.
+
+112
+00:11:11,609 --> 00:11:17,399
+We're calling. We're we're defining these things.
+
+113
+00:11:17,699 --> 00:11:26,339
+And I think what I ultimately want to do is point at other documentation that sort of declares what the structure is, definition is.
+
+114
+00:11:30,039 --> 00:11:33,758
+So now that I think about it, we may actually want to go back.
+
+115
+00:11:33,759 --> 00:11:39,879
+And instead of documenting customizable widgets right now, we might actually want to document customizable UI.
+
+116
+00:11:42,819 --> 00:11:52,479
+In particular the private methods, the things that are not, because like a bunch of these are documented, but, um, a bunch of them are not.
+
+117
+00:11:52,749 --> 00:12:00,219
+And the things that are documented tend to be the public methods that are exposed on the exported object.
+
+118
+00:12:01,179 --> 00:12:07,629
+Those are documented really nicely. Um, the internal stuff is not as well documented.
+
+119
+00:12:08,319 --> 00:12:21,129
+And, and maybe it should be not so that consumers can manipulate the internals, uh, or, you know, violate principle of least knowledge,
+
+120
+00:12:21,129 --> 00:12:28,389
+but so that people hacking on this stuff can, can make changes and be somewhat confident that they're not, um.
+
+121
+00:12:31,709 --> 00:12:35,499
+Breaking the world. So. Yeah, I'm.
+
+122
+00:12:35,539 --> 00:12:43,629
+I'm thinking. Think you might have to start documenting this stuff.
+
+123
+00:12:49,299 --> 00:13:14,189
+We did it with an auto class customizable UI. Now, one option we have is to not actually include it in the published documentation for the module,
+
+124
+00:13:15,119 --> 00:13:26,519
+but to have the like the JSS docs stuff exist, um, just in the code, that's an option.
+
+125
+00:13:33,419 --> 00:13:38,639
+This is just an object export for this is the publicly exposed interface.
+
+126
+00:13:41,199 --> 00:13:44,559
+Yeah. Encapsulation. Okay.
+
+127
+00:13:47,269 --> 00:13:50,299
+All right, so let's go ahead and start documenting this thing.
+
+128
+00:13:50,839 --> 00:14:09,439
+Um. This is the internal, uh, private implementation of, uh, most of customizable UI, uh, for customizable UI.
+
+129
+00:14:09,469 --> 00:14:13,959
+Um. API.
+
+130
+00:14:17,019 --> 00:14:27,549
+Um, this is intentionally not exported, but is instead called directly from within this module.
+
+131
+00:14:30,939 --> 00:14:40,389
+Via the exported customizable UI, uh, object.
+
+132
+00:14:42,789 --> 00:14:53,019
+As a way of, uh, which, uh, allows us to get a type of encapsulation.
+
+133
+00:14:56,119 --> 00:14:59,719
+Type of encapsulation. Okay.
+
+134
+00:14:59,719 --> 00:15:06,589
+So we're going to start documenting these bits and pieces. And one thing to note.
+
+135
+00:15:09,279 --> 00:15:26,669
+Initialize. Yeah. Um. Some of these methods will have analogs within the public one, because it's just like forwarding the call.
+
+136
+00:15:26,849 --> 00:15:34,919
+So for example, that's so interesting because they're like private event handlers in the publicly expo.
+
+137
+00:15:35,039 --> 00:15:39,509
+Like there's this mixture of old school and new new school JavaScript in here.
+
+138
+00:15:40,499 --> 00:15:45,059
+Um. Flow info.
+
+139
+00:15:46,139 --> 00:15:50,489
+And. Net that, oh, this is the overflow toolbar is what I'm looking at right now.
+
+140
+00:15:51,659 --> 00:16:03,029
+Okay. Uh, these things. So the customizable UI exported implementations, sometimes it's just like this is an example of something just forwarding.
+
+141
+00:16:05,069 --> 00:16:08,069
+And so what I might do.
+
+142
+00:16:10,319 --> 00:16:14,189
+Is be like, hey, um.
+
+143
+00:16:16,979 --> 00:16:20,189
+Param, this is a string. This is.
+
+144
+00:16:23,049 --> 00:16:29,839
+A document. Uh, and it returns.
+
+145
+00:16:31,369 --> 00:16:37,099
+It does have a return value. Why doesn't this thing, uh, documents return value returns?
+
+146
+00:16:38,059 --> 00:16:43,919
+Uh, what does it return? I think it returns. A Dom node.
+
+147
+00:16:50,119 --> 00:17:01,969
+Um. Uh, created spring spacer or separator node separator node.
+
+148
+00:17:02,419 --> 00:17:05,479
+And then what we can do is we can say okay, see.
+
+149
+00:17:13,519 --> 00:17:16,939
+Customizable UI. Create special widget.
+
+150
+00:17:27,559 --> 00:17:39,439
+So we don't have to, like, duplicate it. The um underlying implement ation.
+
+151
+00:17:42,439 --> 00:17:46,609
+Customizable. You can create special magic.
+
+152
+00:17:53,769 --> 00:18:01,809
+Okay. So that's an example of one that we'd want to document like that.
+
+153
+00:18:02,799 --> 00:18:04,779
+Um, so what as we go through,
+
+154
+00:18:04,809 --> 00:18:12,159
+we're going to want to see if there are existing instances of those methods that are just forwarding along so that we can just redirect.
+
+155
+00:18:12,429 --> 00:18:17,238
+I think that's what I'm planning on doing here. Okay.
+
+156
+00:18:17,239 --> 00:18:23,239
+So this initialize one is not called from customizable UI.
+
+157
+00:18:23,659 --> 00:18:27,289
+This is uh, uh, main entry point.
+
+158
+00:18:29,149 --> 00:18:37,219
+Um. To, uh, initializing the customizable UI.
+
+159
+00:18:37,409 --> 00:18:42,099
+Uh, um. Singleton.
+
+160
+00:18:42,639 --> 00:18:55,329
+Uh, this is called. At the end of this module, the very first time this module is loaded anywhere.
+
+161
+00:18:58,989 --> 00:19:04,029
+Is evaluated. Okay.
+
+162
+00:19:04,299 --> 00:19:13,279
+This is called once. The very first time.
+
+163
+00:19:15,679 --> 00:19:23,529
+I got anywhere via a call at the very end of this module file.
+
+164
+00:19:24,729 --> 00:19:27,979
+The entry point. This is called once, the very first time.
+
+165
+00:19:27,979 --> 00:19:33,289
+This module is evaluated anywhere via call at the end at this part of this module file.
+
+166
+00:19:36,489 --> 00:19:40,479
+No return value, it looks like. So we can move on.
+
+167
+00:19:42,459 --> 00:19:47,109
+But what does it do? Actually. Sorry. Um. Uh.
+
+168
+00:19:50,329 --> 00:19:54,559
+Um, this sets up, um.
+
+169
+00:19:56,789 --> 00:20:10,199
+Listeners. For very, uh, observers registers um, uh, built in widgets.
+
+170
+00:20:12,539 --> 00:20:19,409
+And loads the saved customizations state from the preferences.
+
+171
+00:20:20,459 --> 00:20:25,889
+From preferences. Uh, what else does it do?
+
+172
+00:20:31,589 --> 00:20:35,849
+Yeah, okay. I think that's it.
+
+173
+00:20:38,249 --> 00:20:43,049
+And performs any migration on that state?
+
+174
+00:20:43,559 --> 00:20:48,569
+Uh, on that loaded state. Okay.
+
+175
+00:20:48,989 --> 00:20:54,259
+On enabled. So I presume this is.
+
+176
+00:20:55,779 --> 00:21:00,699
+Uh, a an implementation of.
+
+177
+00:21:02,379 --> 00:21:08,439
+Yeah. Add on manager. Add on listener. I think we saw one of these earlier.
+
+178
+00:21:10,359 --> 00:21:21,719
+Uh, and where was it? Customizable UI I was or there's one in customize mode.
+
+179
+00:21:26,039 --> 00:21:34,589
+Seriously, I thought that was one. Did we remove this?
+
+180
+00:21:34,799 --> 00:21:38,189
+I think we did. I think we removed it for some reason. We realized that.
+
+181
+00:21:39,389 --> 00:21:47,819
+None of this was actually used. So I think we removed it, um, intentionally.
+
+182
+00:21:48,539 --> 00:21:52,399
+Is this is any of this used? Oh, yeah.
+
+183
+00:21:52,409 --> 00:21:58,239
+So that we can like. Restore the theme.
+
+184
+00:21:59,679 --> 00:22:07,239
+Okay. Um. So this is the lock picking lawyer.
+
+185
+00:22:09,369 --> 00:22:18,669
+On enabled. Let's see if there's any.
+
+186
+00:22:19,689 --> 00:22:38,059
+Yeah. This is an add on listener. Uh.
+
+187
+00:22:40,339 --> 00:22:51,829
+Implements on enabled uh the method on for the add on listener interface.
+
+188
+00:22:54,079 --> 00:23:02,299
+Um. Called when an add on is marked as enabled.
+
+189
+00:23:05,929 --> 00:23:09,469
+Um. And I believe.
+
+190
+00:23:22,069 --> 00:23:33,109
+Yeah, maybe I don't. Internal. The add on that was enabled.
+
+191
+00:23:42,689 --> 00:23:45,269
+Okay built in areas.
+
+192
+00:23:46,709 --> 00:24:00,659
+Now, why is that underscored if we are, um, if we're a private method or a private, um, if we're not exposed externally, why would that be?
+
+193
+00:24:03,269 --> 00:24:07,799
+Underscored. I don't think it's necessary, honestly. So I'm gonna.
+
+194
+00:24:10,829 --> 00:24:18,539
+Remove that. Get built in areas.
+
+195
+00:24:21,359 --> 00:24:27,569
+So this is a type that returns a set.
+
+196
+00:24:28,769 --> 00:24:35,678
+And the set. A set of strings.
+
+197
+00:24:35,679 --> 00:24:40,059
+So it returns a, uh, set.
+
+198
+00:24:40,359 --> 00:24:48,189
+A new set that contains the IDs of all built in areas.
+
+199
+00:24:48,219 --> 00:24:59,759
+Customizable areas. Toolbars.
+
+200
+00:25:06,209 --> 00:25:10,429
+Replace replace replace replace replace.
+
+201
+00:25:13,139 --> 00:25:22,709
+Okay. Um, returns a new set that contains the IDs of all built in customizable.
+
+202
+00:25:25,169 --> 00:25:30,809
+Toolbar areas. Um.
+
+203
+00:25:34,359 --> 00:25:39,219
+And that's also type set string.
+
+204
+00:25:42,909 --> 00:26:05,049
+Define built in widgets. So this doesn't actually take any methods or take any arguments rather, and has no return value.
+
+205
+00:26:05,049 --> 00:26:19,419
+But uh, goes through the list of widgets defined in customizable widgets and uh, registers them and registers them.
+
+206
+00:26:22,989 --> 00:26:27,459
+With customizable UI so that they are can be used.
+
+207
+00:26:30,459 --> 00:26:41,369
+Registers. And then next line there's this like complexity issue.
+
+208
+00:26:41,399 --> 00:26:44,699
+Yeah. Because we're doing migrations update for new version.
+
+209
+00:27:00,319 --> 00:27:08,569
+Wait a second. Test. And. There is something here that I'm just remembering that there was something exported.
+
+210
+00:27:09,049 --> 00:27:13,068
+Sometimes we export the internal thing to make testing easier.
+
+211
+00:27:13,069 --> 00:27:16,339
+It's kind of this anti-pattern, but like.
+
+212
+00:27:18,439 --> 00:27:23,629
+Customizable UI internal. There's something.
+
+213
+00:27:25,669 --> 00:27:29,629
+At the end here. Get customizable target.
+
+214
+00:27:29,629 --> 00:27:35,329
+Get test only internal property so you can actually get at customizable UI internal.
+
+215
+00:27:41,019 --> 00:27:49,199
+And who uses this? Save.
+
+216
+00:27:49,529 --> 00:27:53,729
+You know. Okay. Save state. All right.
+
+217
+00:27:54,629 --> 00:28:03,509
+Well, that's that's okay. If it was calling into one of the things that we'd changed, uh, we would need to update it as well.
+
+218
+00:28:07,799 --> 00:28:13,559
+Um. So what does this do? Does this return something?
+
+219
+00:28:14,039 --> 00:28:20,099
+Returns undefined. Returns nothing. There's no return value.
+
+220
+00:28:23,369 --> 00:28:28,769
+Um. Runs. How does this work?
+
+221
+00:28:38,419 --> 00:28:42,329
+Would you prefer? Facilities. Well, perhaps you don't try to introduce later.
+
+222
+00:28:54,899 --> 00:28:58,919
+Current version. Save state.
+
+223
+00:28:58,919 --> 00:29:11,949
+Current version. Runs, uh, any necessary migrations on the current saved state.
+
+224
+00:29:12,539 --> 00:29:25,169
+Saved customizations. State. To, uh, get us to K version to the K version state.
+
+225
+00:29:27,419 --> 00:29:44,449
+To a K version compatible state. Okay.
+
+226
+00:29:55,519 --> 00:30:04,579
+This is an interesting one. We only had this. Uh, around for when we transitioned to proton.
+
+227
+00:30:04,999 --> 00:30:08,209
+Long, long ago. I don't know how necessary this is anymore.
+
+228
+00:30:08,859 --> 00:30:20,459
+I am going to. Uh, a separate.
+
+229
+00:30:25,409 --> 00:30:31,499
+Separate, uh, state migration method for, uh.
+
+230
+00:30:33,829 --> 00:30:41,779
+When we introduced the proton three theme.
+
+231
+00:30:41,779 --> 00:30:47,169
+In what year would that have been? Oh, boy.
+
+232
+00:30:47,269 --> 00:30:53,519
+Um. 2021.
+
+233
+00:30:56,759 --> 00:31:06,329
+Because the proton grid theme was, um, toggle lable via a pref.
+
+234
+00:31:07,139 --> 00:31:18,169
+Um, so. Was important to have the migration.
+
+235
+00:31:23,739 --> 00:31:32,109
+Separated out? Yeah. Migration.
+
+236
+00:31:32,109 --> 00:31:39,669
+Separated it out. Uh, this is probably, like, most old migrations.
+
+237
+00:31:39,889 --> 00:31:44,619
+This is probably a historical artifact at this point.
+
+238
+00:31:49,919 --> 00:31:55,619
+These old migrations can probably be removed. Uh, if there are any watershed releases.
+
+239
+00:31:59,079 --> 00:32:07,449
+Where this would have to have run. For people who don't know what a watershed releases, a watershed release is when we.
+
+240
+00:32:07,659 --> 00:32:12,999
+It's a special kind of release that you must update to before you can update to any newer versions.
+
+241
+00:32:13,569 --> 00:32:22,389
+So every now and then we'll have a watershed. Um, if there's like important migration stuff that occurs in a particular release.
+
+242
+00:32:22,389 --> 00:32:26,558
+So if you're on version 131 and, uh, you know,
+
+243
+00:32:26,559 --> 00:32:32,289
+you've been you disabled updates or you haven't turn on your computer in a while and the most recent version is 150,
+
+244
+00:32:32,679 --> 00:32:40,149
+then there might be a watershed at 138. So your 131 will download 138 first run it and then go and get 150.
+
+245
+00:32:40,839 --> 00:32:48,789
+You know, it'll um, as of and it it won't like do every version like we don't want to make it so that you have to like update two 130,
+
+246
+00:32:48,789 --> 00:32:59,139
+then 131, then 132 the 133. 134 like, well, make sure that you, um, only do any necessary watershed updates and then you can, like, skip ahead.
+
+247
+00:33:00,219 --> 00:33:07,709
+Um, that's how that works. Um Mark.
+
+248
+00:33:07,719 --> 00:33:16,299
+Obsolete. Built in buttons seen. So.
+
+249
+00:33:26,379 --> 00:33:37,949
+Obsolete built in buttons. Ponds removed from built in.
+
+250
+00:33:37,969 --> 00:33:41,149
+Version by versions they removed. Version must be bumped any time.
+
+251
+00:33:41,189 --> 00:33:44,209
+New ID um.
+
+252
+00:33:52,379 --> 00:34:03,899
+Uh, when? Upgrading checks to see if any, uh, buttons were, uh, removed.
+
+253
+00:34:04,739 --> 00:34:11,219
+Button definitions were removed. Built in button.
+
+254
+00:34:11,939 --> 00:34:14,939
+Built in button. Definitions were removed. Marked.
+
+255
+00:34:14,939 --> 00:34:18,748
+Obsolete C over.
+
+256
+00:34:18,749 --> 00:34:23,279
+Obsolete. Built in buttons.
+
+257
+00:34:25,439 --> 00:34:37,239
+Um. We're upgrading update data necessary.
+
+258
+00:34:37,449 --> 00:34:40,749
+If the version equals the idea version, it's like hey, version.
+
+259
+00:34:48,619 --> 00:34:57,679
+Uh, definitions were were just removed marked obsolete for k for k version.
+
+260
+00:34:58,279 --> 00:35:03,649
+If so, marks those buttons as. Seen.
+
+261
+00:35:09,619 --> 00:35:15,019
+We're just remove Marshall for conversion. The current conversion.
+
+262
+00:35:20,399 --> 00:35:36,249
+Place new default widgets in area. Oh, man, this is complicated too.
+
+263
+00:35:40,339 --> 00:35:43,909
+So I believe the argument is.
+
+264
+00:35:44,889 --> 00:35:50,709
+A string. A name. Yeah.
+
+265
+00:35:53,019 --> 00:35:56,289
+Okay. String.
+
+266
+00:35:58,689 --> 00:36:03,699
+The ID of the area to place the default digits within.
+
+267
+00:36:06,369 --> 00:36:10,449
+So what does this do and what does it return? I don't think it returns anything.
+
+268
+00:36:21,119 --> 00:36:26,069
+Place new default widgets in area. So given an area.
+
+269
+00:36:30,999 --> 00:36:42,639
+There's some logic in here. To see if the area has any default placements.
+
+270
+00:36:50,989 --> 00:37:06,319
+Um, right. If, uh, widgets, if a new area or new default widgets were defined for an area.
+
+271
+00:37:11,059 --> 00:37:16,419
+If a new area was defined. Or.
+
+272
+00:37:18,469 --> 00:37:24,769
+Where. Default or new default widgets for any area. Are defined.
+
+273
+00:37:29,049 --> 00:37:40,359
+This, uh, reconciles replacements of those new default widgets with the existing customizations state.
+
+274
+00:37:44,079 --> 00:37:47,559
+Customization and toolbar state of the browser.
+
+275
+00:37:50,469 --> 00:37:53,588
+To play the ID of the area.
+
+276
+00:37:53,589 --> 00:37:57,519
+To reconcile the default widget.
+
+277
+00:38:00,729 --> 00:38:07,959
+State for. Get customization target.
+
+278
+00:38:08,319 --> 00:38:15,909
+Okay. That's easy. So that can be uh, Dom node or null.
+
+279
+00:38:28,039 --> 00:38:32,539
+Given a Dom node Dom node.
+
+280
+00:38:42,779 --> 00:38:46,229
+Return, it's either going to return a Dom node or no.
+
+281
+00:38:57,799 --> 00:39:02,988
+Well, uh. Attempt to resolve it.
+
+282
+00:39:02,989 --> 00:39:07,489
+To its. To the customization.
+
+283
+00:39:10,429 --> 00:39:18,669
+To. The associated customization target for that Dom node.
+
+284
+00:39:19,359 --> 00:39:32,379
+For example. A panel may uh for the Dom node via the uh.
+
+285
+00:39:33,549 --> 00:39:38,679
+Given a customizable Dom node Dom node.
+
+286
+00:39:41,679 --> 00:39:50,269
+With uh, the customizable attribute will attempt to resolve it.
+
+287
+00:39:50,289 --> 00:39:58,749
+The associated customization target for that Dom node via its customization target attribute.
+
+288
+00:40:01,899 --> 00:40:11,889
+Um, if no such attribute exists, um, the Dom node itself is returned.
+
+289
+00:40:14,839 --> 00:40:28,369
+If the Dom node is null or cannot, it is not customizable or cannot be resolved to a customization target.
+
+290
+00:40:28,899 --> 00:40:39,019
+And now it's your turn. To element the Dom node to resolve to a customization target node.
+
+291
+00:40:40,939 --> 00:40:47,629
+The customization target Dom node or NULL if one cannot be found.
+
+292
+00:40:50,569 --> 00:40:54,259
+Okay. Wrap widget.
+
+293
+00:40:59,029 --> 00:41:18,039
+Keep going. Uh, given a customizable widget ID.
+
+294
+00:41:21,549 --> 00:41:30,369
+Finds work, creates and returns a group wrapper.
+
+295
+00:41:34,999 --> 00:41:48,419
+Logic or grammar. Hey, either a widget group wrapper or a XUL group wrapper for that widget.
+
+296
+00:41:50,399 --> 00:42:01,829
+Depending on how it's defined. Depending on how it's provided, which is provided.
+
+297
+00:42:05,549 --> 00:42:11,849
+Uh. This wrapper is then cached and returned.
+
+298
+00:42:13,589 --> 00:42:17,609
+For future calls for. That same ID widget id.
+
+299
+00:42:19,799 --> 00:42:28,019
+String the ID of the customizable widget to get the widget group wrapper.
+
+300
+00:42:30,029 --> 00:42:34,379
+Slash XL group wrapper for returns.
+
+301
+00:42:35,189 --> 00:42:42,509
+Uh. Widget for wrapper forms or wrapper or null if.
+
+302
+00:42:44,789 --> 00:42:55,319
+If the customizable widget id cannot be resolved to a particular provider to.
+
+303
+00:42:59,239 --> 00:43:09,559
+Uh, null is returned. The group wrapper or the widget, or null if.
+
+304
+00:43:11,989 --> 00:43:14,989
+No such wrapper can be found.
+
+305
+00:43:19,099 --> 00:43:25,519
+Okay. Register area.
+
+306
+00:43:26,029 --> 00:43:29,879
+How big is this file? Out of curiosity. Not this file, but this object.
+
+307
+00:43:29,899 --> 00:43:37,249
+Let's let's take a quick look here where we started on line 275.
+
+308
+00:43:37,879 --> 00:43:53,848
+Let's see how long it is to 75. 222.
+
+309
+00:43:53,849 --> 00:44:02,499
+Two. Two. Two. Two. Tutu tutu tutu tutu tutu tutu tutu 75.
+
+310
+00:44:07,029 --> 00:44:10,739
+Down to 4491. Do a quick, uh, number crunch there.
+
+311
+00:44:10,749 --> 00:44:21,189
+Uh. We're talking about just over 4000 lines, and we're documenting, uh,
+
+312
+00:44:21,189 --> 00:44:26,169
+some of which might already have documentation, but, uh, we might be at this for a little while.
+
+313
+00:44:27,069 --> 00:44:30,219
+I'll tell you what. Uh, let's let's go to 2:00.
+
+314
+00:44:30,219 --> 00:44:35,979
+And then one of the things I wanted to see is whether or not we can already make use of some of the, uh, TypeScript stuff.
+
+315
+00:44:36,909 --> 00:44:42,969
+Um, I was just curious to see if what we've already added gives us some of the static,
+
+316
+00:44:43,539 --> 00:44:49,058
+like the type safety and the type checking that is kind of like the the advantage.
+
+317
+00:44:49,059 --> 00:44:53,529
+Or do we have to, like, do all of this first? All right.
+
+318
+00:44:55,659 --> 00:45:06,009
+Register area uh, Register as a customizable area with customizable UI.
+
+319
+00:45:08,499 --> 00:45:17,599
+Customizable UI system. Uh, the name will be the string.
+
+320
+00:45:17,599 --> 00:45:21,139
+This is like the ID of the area to register.
+
+321
+00:45:21,919 --> 00:45:35,029
+Must, uh. Be an alphanumeric.
+
+322
+00:45:38,029 --> 00:45:47,539
+String. With only dash or underscore separators.
+
+323
+00:45:52,219 --> 00:45:59,129
+Start. Does this mean?
+
+324
+00:46:00,849 --> 00:46:03,869
+I need. I need to quickly understand this. Rejects.
+
+325
+00:46:03,869 --> 00:46:13,379
+Rejects. Uh, pal. Uh, test.
+
+326
+00:46:13,379 --> 00:46:18,839
+String test. So no spaces.
+
+327
+00:46:20,369 --> 00:46:24,879
+That's it. It's just like. Yeah. Uh, I wish quantifier match.
+
+328
+00:46:24,899 --> 00:46:31,349
+One or more of the preceding token I see. I mean, so like this.
+
+329
+00:46:32,549 --> 00:46:39,829
+Same thing. Right? Yeah. Uh.
+
+330
+00:46:41,769 --> 00:46:48,069
+This is typically the dorm ID of the area.
+
+331
+00:46:51,549 --> 00:46:55,899
+Properties, huh? Okay, so properties is an object.
+
+332
+00:47:00,139 --> 00:47:04,899
+We may need to be a little more clear on what keys are in this project.
+
+333
+00:47:04,929 --> 00:47:08,019
+Uh, in this object.
+
+334
+00:47:08,199 --> 00:47:11,949
+Uh, and then this is boolean true.
+
+335
+00:47:11,949 --> 00:47:20,679
+If the, uh, uh, area is being registered by the browser itself.
+
+336
+00:47:22,689 --> 00:47:30,399
+Rather than, uh, an external caller, like an add on.
+
+337
+00:47:31,179 --> 00:47:37,149
+This is. External caller.
+
+338
+00:47:37,509 --> 00:47:42,909
+Um. This is a holdover.
+
+339
+00:47:44,979 --> 00:47:53,559
+From a bygone era where add ons could register their own areas.
+
+340
+00:48:01,959 --> 00:48:12,929
+So. We convert this property object into.
+
+341
+00:48:15,769 --> 00:48:19,459
+A map. And I wonder if we already have a.
+
+342
+00:48:27,369 --> 00:48:46,519
+A definition. Yeah, that we've already got this one register area, so I should really just see.
+
+343
+00:48:49,069 --> 00:49:00,229
+Um. See customizable UI dot register area.
+
+344
+00:49:03,979 --> 00:49:10,549
+See customizable UI to register area for the expected properties.
+
+345
+00:49:11,989 --> 00:49:17,329
+Supported properties. Um.
+
+346
+00:49:54,699 --> 00:50:00,189
+Do we ever call register area internal only default clubs in tweet.
+
+347
+00:50:00,219 --> 00:50:04,179
+When do we call register area. True.
+
+348
+00:50:05,019 --> 00:50:19,349
+Out here. Initialization. Okay. Uh, okay.
+
+349
+00:50:29,219 --> 00:50:35,989
+I think that's fine. Um. Unregister area.
+
+350
+00:50:35,999 --> 00:50:41,669
+This will be similar. So see.
+
+351
+00:50:42,899 --> 00:50:48,699
+Customizable UI unregister area. So how that works?
+
+352
+00:50:49,079 --> 00:50:54,599
+I feel like, um. See? Yeah.
+
+353
+00:50:58,289 --> 00:51:01,979
+Uh, and then what's the definition here?
+
+354
+00:51:02,309 --> 00:51:12,989
+The name. I'm just curious in the area to register with.
+
+355
+00:51:13,919 --> 00:51:23,129
+Register area. Register toolbar node.
+
+356
+00:51:28,599 --> 00:51:35,659
+Uh. Uh, so this is one where we need to kind of, like, flesh out the argument here.
+
+357
+00:51:35,669 --> 00:51:46,078
+Toolbar. Uh see customizable UI register.
+
+358
+00:51:46,079 --> 00:51:55,619
+Toolbar node. Toolbar is a Dom node and it returns nothing.
+
+359
+00:52:01,989 --> 00:52:10,829
+You know. Toolbar. Uh. Customizable toolbar area.
+
+360
+00:52:20,649 --> 00:52:24,789
+Param Dom node a toolbar.
+
+361
+00:52:28,389 --> 00:52:33,639
+The uh Zul toolbar node.
+
+362
+00:52:36,119 --> 00:52:54,339
+To register. Uh, or store stay in the area.
+
+363
+00:52:54,369 --> 00:52:58,809
+Localized customers in custody or otherwise deal with it until the area has been registered.
+
+364
+00:52:58,929 --> 00:53:09,609
+Register. Toolbar. Node. Um.
+
+365
+00:53:27,059 --> 00:53:32,519
+It's XUL toolbar, right? Toolbar.
+
+366
+00:53:32,519 --> 00:53:41,369
+Yeah. Update specials for built in toolbar.
+
+367
+00:53:41,759 --> 00:53:52,419
+Okay, that is not external. Update specials.
+
+368
+00:53:52,929 --> 00:53:59,379
+What does this do? We must have a built in toolbar that's in the default state.
+
+369
+00:53:59,409 --> 00:54:07,509
+We need to make sure that all the special nodes are correct. So for each placement we will we check out all of the specials.
+
+370
+00:54:07,989 --> 00:54:11,019
+Oh if there are any that have that are special.
+
+371
+00:54:13,149 --> 00:54:20,899
+Then we pass on the specials. Okay. Uh, so it'll go through the toolbars.
+
+372
+00:54:20,909 --> 00:54:24,659
+Children find any. That is special.
+
+373
+00:54:26,679 --> 00:54:33,529
+Without a skip and toolbar set. Wait, what?
+
+374
+00:54:40,779 --> 00:54:46,399
+Kid ID? Oh, well. Oh, I see, I see.
+
+375
+00:54:46,419 --> 00:54:51,679
+We're assigning. Okay.
+
+376
+00:54:55,199 --> 00:55:04,509
+Specials. For each special node in a toolbar.
+
+377
+00:55:06,189 --> 00:55:12,459
+So a special node, um, is a separator.
+
+378
+00:55:15,849 --> 00:55:29,258
+A string, a separator, a spring, a spacer, or any other customizable UI special and any IDE that starts with customizable UI.
+
+379
+00:55:29,259 --> 00:55:32,289
+Special K is special widget.
+
+380
+00:55:37,459 --> 00:55:41,779
+Uh, any spring spacer or.
+
+381
+00:55:45,789 --> 00:55:58,509
+Separator or element with a and id prefixed with k special widget prefix um.
+
+382
+00:56:02,609 --> 00:56:06,629
+Makes, uh, assigns.
+
+383
+00:56:09,389 --> 00:56:16,529
+Uh, the unique ID from the, uh, saved state.
+
+384
+00:56:21,849 --> 00:56:33,729
+To the Dom nodes. Uh, so that's going to be a Dom node toolbar.
+
+385
+00:56:34,269 --> 00:56:38,319
+The Zul toolbar. Uh.
+
+386
+00:56:40,769 --> 00:56:50,109
+Note to update the special widget children IDs for special IDs.
+
+387
+00:56:50,129 --> 00:56:58,939
+This is an array. An array of strings.
+
+388
+00:57:06,939 --> 00:57:21,619
+An array of. Um, special, uh, node IDs from the saved placements state.
+
+389
+00:57:25,569 --> 00:57:29,979
+These unique IDs are things like let's look at example.
+
+390
+00:57:30,969 --> 00:57:36,699
+Um, we look at this spacer right here.
+
+391
+00:57:40,659 --> 00:57:44,409
+It's the IDs like customizable special spring one.
+
+392
+00:57:54,019 --> 00:58:09,669
+Or, um. Six.
+
+393
+00:58:09,689 --> 00:58:14,789
+Yeah. These are things like.
+
+394
+00:58:18,239 --> 00:58:31,529
+Returns nothing. Okay.
+
+395
+00:58:32,969 --> 00:58:40,619
+Build area. All right.
+
+396
+00:58:40,829 --> 00:58:44,099
+This one is also not exposed externally.
+
+397
+00:58:44,099 --> 00:58:50,359
+And this is. Fairly important.
+
+398
+00:58:50,399 --> 00:58:54,239
+This one. All right, let's finish documenting this one.
+
+399
+00:58:54,239 --> 00:58:58,259
+And then we'll do we'll try that type script thing or.
+
+400
+00:59:00,489 --> 00:59:09,219
+Uh, you know, I was a little, uh, worried because it's like, oh, man, we got to get to 4216 from 275,
+
+401
+00:59:09,639 --> 00:59:13,779
+or like, we've got over 4000 lines, but like, we've already covered over a thousand lines.
+
+402
+00:59:14,979 --> 00:59:20,859
+If you subtract the starting line, we've covered over 1000. So, like, I think we're making decent progress.
+
+403
+00:59:21,489 --> 00:59:26,319
+Um, okay. So we're going to build the area.
+
+404
+00:59:28,359 --> 00:59:35,199
+Now. That's good. But it also means that a lot of these methods are really long, which is not so good.
+
+405
+00:59:35,469 --> 00:59:41,469
+Uh, those migration ones, though, are, I think, long on purpose because we got all the old migrations still sticking around in them.
+
+406
+00:59:41,469 --> 00:59:44,678
+Eventually we should throw those out, but, uh.
+
+407
+00:59:44,679 --> 00:59:47,979
+Okay. So what is this doing? It's going through.
+
+408
+00:59:50,109 --> 00:59:56,579
+It's getting. It's defining a bunch of things. We take our area and the placements, and we're going to.
+
+409
+01:00:01,499 --> 01:00:04,679
+Make sure that the nav bar is not collapsed.
+
+410
+01:00:07,499 --> 01:00:15,849
+And then we're going to go through. Each of these.
+
+411
+01:00:19,419 --> 01:00:30,519
+Unmanned. Build area.
+
+412
+01:00:30,519 --> 01:00:40,329
+So this if this does the work of causing a area causing the customizable.
+
+413
+01:00:42,519 --> 01:00:55,509
+Area. With the um causing a customer in this does work of causing customizable area to reflect.
+
+414
+01:00:59,109 --> 01:01:06,969
+Uh. Be placements that have been computed for that area.
+
+415
+01:01:09,219 --> 01:01:19,209
+Um, this means taking the initial initial Dom state, initial default Dom state.
+
+416
+01:01:21,429 --> 01:01:28,719
+Of the area, and then modifying it to match the saved state.
+
+417
+01:01:28,749 --> 01:01:40,539
+The computed state. Either the one that had been saved by saved within preferences from uh, from.
+
+418
+01:01:44,139 --> 01:01:56,169
+Uh, the state that have been saved in preferences or the state computed after doing runtime checks during initialization.
+
+419
+01:02:04,929 --> 01:02:11,319
+Register panel mode build area. Rebuild registered areas.
+
+420
+01:02:17,579 --> 01:02:25,589
+Area string the ID of the customizable area to build.
+
+421
+01:02:30,779 --> 01:02:41,799
+Placements. That's going to be a string array. The IDs of the widgets.
+
+422
+01:02:42,249 --> 01:02:50,589
+Customizable widgets that are expected to be in the customizable area.
+
+423
+01:02:52,929 --> 01:03:12,039
+And Dom node. The, uh, node associated with the area, as opposed to the customize patient target in that area.
+
+424
+01:03:16,509 --> 01:03:20,509
+Uh. Container.
+
+425
+01:03:20,789 --> 01:03:27,969
+Container. And then there's no return value.
+
+426
+01:03:30,099 --> 01:03:44,579
+Um. This, uh, causes, uh, doing a bill building and area causes a batch state update.
+
+427
+01:03:46,409 --> 01:03:55,859
+Begin. Batch update. And batch update.
+
+428
+01:04:18,459 --> 01:04:33,639
+Okay. I don't think this is actually worth mentioning.
+
+429
+01:04:34,359 --> 01:04:37,599
+Okay. All right, let's stop there for just a quick second.
+
+430
+01:04:38,949 --> 01:04:44,439
+Let's. Let's see. Um, more about this, like, uh, TypeScript stuff.
+
+431
+01:04:46,159 --> 01:04:52,699
+So my understanding is that there is a, um, there's some documentation around.
+
+432
+01:04:52,699 --> 01:05:01,129
+Let me see if I can find it. Hold on. Uh.
+
+433
+01:05:08,079 --> 01:05:12,219
+Details. Map background. Where is the proof of concept here?
+
+434
+01:05:14,269 --> 01:05:24,199
+Here's the proof of concept. And.
+
+435
+01:05:28,229 --> 01:05:33,599
+Here RTS config at the root of a TypeScript project configures how to find and check files.
+
+436
+01:05:33,809 --> 01:05:42,899
+Defines available globals types and various utilities. Okay, so are there any existing RTS configs in the tree?
+
+437
+01:05:44,309 --> 01:05:48,029
+Yes there's one. This is the the testing one.
+
+438
+01:05:49,499 --> 01:05:55,189
+Check JS no emit true target types. Gecko. Paths.
+
+439
+01:05:57,289 --> 01:06:03,169
+Okay. Catch all redirect for other modules. So we might have to, like, quickly build some stuff like this out.
+
+440
+01:06:04,579 --> 01:06:10,659
+Um. And then there's like this types folder.
+
+441
+01:06:13,799 --> 01:06:22,809
+Globals. Content.
+
+442
+01:06:23,209 --> 01:06:34,249
+Okay. TypeScript can be used on plain JavaScript files document object comments to check types of their build step.
+
+443
+01:06:34,269 --> 01:06:37,749
+This is a proof of concept to show viability and benefits of doing this for a typical component.
+
+444
+01:06:40,939 --> 01:06:44,029
+Uh, your use editor, which supports language server.
+
+445
+01:06:44,059 --> 01:06:50,959
+Uh, yeah. But, uh, other than connecting, you can use JS docs trying to follow guidance below and hopefully remember to run TSC occasionally.
+
+446
+01:06:50,959 --> 01:06:54,108
+For now, there's explicitly no expectation that all new code must be fully typed or passed.
+
+447
+01:06:54,109 --> 01:06:58,009
+Type check on every commit. If you're in a hurry around the confusing type problems, feel free to slap it.
+
+448
+01:06:58,249 --> 01:07:03,319
+Ignore. Guidelines to ignore.
+
+449
+01:07:05,129 --> 01:07:16,249
+Okay. Let's see what happens if we add a, uh, a TypeScript, a config file.
+
+450
+01:07:17,539 --> 01:07:22,879
+Um. So let's commit what we have.
+
+451
+01:07:26,029 --> 01:07:31,429
+Um. So we've added a bit of documentation there.
+
+452
+01:07:32,509 --> 01:07:38,359
+Uh, git add browser components, customizable UI, customizable UI, dot system JS.
+
+453
+01:07:38,359 --> 01:07:42,949
+And we're going to call this like a app.js documentation for.
+
+454
+01:07:48,259 --> 01:07:51,799
+Customize bubble UI internal.
+
+455
+01:07:52,429 --> 01:07:56,808
+Uh, yeah I'll do same.
+
+456
+01:07:56,809 --> 01:08:16,039
+Foster for now. Okay.
+
+457
+01:08:25,539 --> 01:08:31,149
+Okay, so, uh, a little upset on some of these things.
+
+458
+01:08:32,709 --> 01:08:41,239
+Uh, line 843. Right.
+
+459
+01:08:41,269 --> 01:08:44,659
+Uh, what's worried about should be. No multiple asterisks.
+
+460
+01:08:44,989 --> 01:08:48,419
+Oh, whoops. Okay. Sorry. Messenger. Scram.
+
+461
+01:08:48,469 --> 01:08:57,719
+Table one 5540. Uh, missing pram type.
+
+462
+01:09:00,209 --> 01:09:05,068
+Pramod Singh. Prime area tape on 5450.
+
+463
+01:09:05,069 --> 01:09:12,149
+Sorry, 5450. Right.
+
+464
+01:09:14,699 --> 01:09:21,749
+Forearm strain. We're going to have to for reform and all that stuff later.
+
+465
+01:09:21,989 --> 01:09:25,049
+Uh, I realize now uh.
+
+466
+01:09:25,049 --> 01:09:32,789
+Wow. Might as well do now. I return an array containing widget IDs, so that's going to be string.
+
+467
+01:09:39,209 --> 01:09:46,288
+All right. Uh, and then invalid doc tag and 55451.
+
+468
+01:09:46,289 --> 01:09:52,689
+That's right in here. Okay. Returns.
+
+469
+01:09:55,149 --> 01:10:00,459
+Expected zero trailing lines at 5452. Right.
+
+470
+01:10:00,609 --> 01:10:05,219
+So let's try that again. Okay.
+
+471
+01:10:05,229 --> 01:10:25,449
+Commit. Amend. Okay, so let's try our experiment.
+
+472
+01:10:25,779 --> 01:10:30,399
+I'm going to copy toolkit extensions.
+
+473
+01:10:31,009 --> 01:10:37,569
+All right. Components extensions TTS config to browser components customizable UI.
+
+474
+01:10:40,299 --> 01:10:43,509
+Now I'm going to open that. I didn't commit it.
+
+475
+01:10:43,539 --> 01:10:46,769
+I'm not adding it to tracking just yet because this is just a local experiment.
+
+476
+01:10:46,779 --> 01:10:52,929
+I'm just curious to see what we can do here. Um, compiler options paths.
+
+477
+01:10:53,529 --> 01:10:59,109
+I'm going to need to probably fill a bunch of this stuff out.
+
+478
+01:11:01,659 --> 01:11:23,689
+Uh, I'm going to just blank it all out right now. Um, I'm going to say like dot dot slash dot dot slash.
+
+479
+01:11:23,689 --> 01:11:28,398
+Toolkit components, extensions.
+
+480
+01:11:28,399 --> 01:11:40,959
+Types, globals. I'm going to create customizable UI types.
+
+481
+01:11:46,019 --> 01:11:55,419
+And now let's see. What can I run? MOC tsc is that or assuming TSC is command rts for executing for you TypeScript related commands.
+
+482
+01:11:55,439 --> 01:12:01,859
+Okay RTS mock RTS, check toolkit.
+
+483
+01:12:01,979 --> 01:12:16,829
+So I'll do the. Let's check the extensions one. Uh.
+
+484
+01:12:17,189 --> 01:12:21,389
+What? Market share.
+
+485
+01:12:21,569 --> 01:12:26,729
+Toolkit. Components. Extensions. Right.
+
+486
+01:12:28,169 --> 01:12:31,799
+Okay. There we go. So it looks like they've already got some violations still.
+
+487
+01:12:32,399 --> 01:12:36,029
+Um or they've they've since gotten some.
+
+488
+01:12:37,619 --> 01:12:40,769
+Yeah. There's some they haven't been running their checks.
+
+489
+01:12:41,999 --> 01:12:46,819
+But let's see what happens if I now supply browser components.
+
+490
+01:12:46,829 --> 01:12:51,029
+Customizable UI. Okay.
+
+491
+01:12:51,059 --> 01:12:54,479
+Big list of errors. Let's let's take a look here.
+
+492
+01:12:56,609 --> 01:13:00,389
+Cannot find module xp com utils.
+
+493
+01:13:00,839 --> 01:13:06,329
+All right. So what did they have in here. Um do they have x become utils.
+
+494
+01:13:06,359 --> 01:13:10,499
+Yeah they did. Let's put that back.
+
+495
+01:13:14,069 --> 01:13:20,189
+Um. And that's going to be probably that still.
+
+496
+01:13:20,729 --> 01:13:25,199
+So let's try that again. App.
+
+497
+01:13:25,199 --> 01:13:31,909
+Constance. Uh, cannot find named Dom node.
+
+498
+01:13:36,129 --> 01:13:41,049
+Soul group wrapper does not exist on type node.
+
+499
+01:13:45,049 --> 01:13:48,139
+So maybe I've been wrong about using Dom node.
+
+500
+01:13:48,829 --> 01:13:55,559
+Or is that something that is like. What do they have in here for types?
+
+501
+01:14:02,209 --> 01:14:08,219
+And Mr. Space.
+
+502
+01:14:10,799 --> 01:14:15,479
+Node element. There's Zuul element.
+
+503
+01:14:28,059 --> 01:14:34,389
+Um, and that's in something called a. So under types I'm going to look for element.
+
+504
+01:14:44,189 --> 01:14:55,369
+It seems like it already understands what an element is. So maybe I should be using element rather than node or Dom node.
+
+505
+01:14:55,379 --> 01:14:59,849
+What happens, for example, if I change? Um.
+
+506
+01:15:03,149 --> 01:15:07,769
+Oh open does not exist on type element on line 6747.
+
+507
+01:15:08,579 --> 01:15:15,419
+So fascinating. Six seven. Four seven.
+
+508
+01:15:18,119 --> 01:15:23,278
+Uh. That's true. This is an element, but we are using, uh.
+
+509
+01:15:23,279 --> 01:15:28,569
+And it. Like it's a special kind of element that we've extended.
+
+510
+01:15:29,379 --> 01:15:32,469
+So we're going to need to like come up with types to describe that.
+
+511
+01:15:32,469 --> 01:15:38,228
+There's like an an open. But this is so interesting.
+
+512
+01:15:38,229 --> 01:15:47,499
+Like it's I can see that it's checking these things cannot find name which is group rapper.
+
+513
+01:15:51,389 --> 01:15:57,029
+Right. So it's like the, um. That's not assignable.
+
+514
+01:15:57,869 --> 01:16:01,429
+Drag position manager. Weak map is not assignable.
+
+515
+01:16:01,439 --> 01:16:06,598
+Type map Dom node 09461.
+
+516
+01:16:06,599 --> 01:16:11,099
+Uh, drag position manager on line 461.
+
+517
+01:16:16,019 --> 01:16:22,169
+I'm saying that it's a weak map. It's not assignable to type.
+
+518
+01:16:22,799 --> 01:16:27,829
+Let's try. Manager starting as. A type map.
+
+519
+01:16:27,899 --> 01:16:40,199
+So this is this is a perfect example of something that if I update that can I can I do like uh drag position manager.
+
+520
+01:16:42,089 --> 01:16:55,029
+I can do it like file by file. And then like, let's put that back, that error.
+
+521
+01:16:59,429 --> 01:17:03,179
+Uh, Matt? No. Okay, so I have to run the directory.
+
+522
+01:17:05,189 --> 01:17:11,849
+So if I put weak map back and then search for track position manager.
+
+523
+01:17:14,009 --> 01:17:18,749
+Yeah. The er. Oh, wait. No type. Weak map is missing the following properties from type.
+
+524
+01:17:21,299 --> 01:17:25,919
+Map Dom node Dom rect read only clear for each size entries in three more.
+
+525
+01:17:28,049 --> 01:17:38,099
+Online 75. Uh, should also be a weak map.
+
+526
+01:17:48,379 --> 01:17:55,418
+Track position manager. See?
+
+527
+01:17:55,419 --> 01:18:01,328
+Like we've. That was interesting. I realize using this tool, it was able to show me that.
+
+528
+01:18:01,329 --> 01:18:06,879
+Hey, you've been assigning week map. Even though the documentation says it's a map.
+
+529
+01:18:08,469 --> 01:18:11,529
+That's cool. Good job.
+
+530
+01:18:11,559 --> 01:18:18,309
+TypeScript. There is no fixed up option.
+
+531
+01:18:18,819 --> 01:18:24,369
+There probably. Well, I don't know. Uh, Mark TZ check.
+
+532
+01:18:24,369 --> 01:18:29,519
+Dash. Dash. Hope. No.
+
+533
+01:18:30,299 --> 01:18:35,159
+Uh. Or is there a, uh, set up update?
+
+534
+01:18:36,539 --> 01:18:42,969
+It doesn't look like there's a a fix. Build type limbs.
+
+535
+01:18:53,349 --> 01:18:57,909
+Building services. Tableau requires a full Firefox build.
+
+536
+01:18:59,699 --> 01:19:04,589
+Info. Don't guess the gecko, Dom.
+
+537
+01:19:05,999 --> 01:19:12,988
+Dewey. Tools types do not modify this by hand.
+
+538
+01:19:12,989 --> 01:19:16,259
+So this is how we define things like. Oh that's so interesting.
+
+539
+01:19:16,349 --> 01:19:22,379
+So from the. The dome.
+
+540
+01:19:24,359 --> 01:19:27,659
+The dome code allows us to convert web IDL stuff.
+
+541
+01:19:29,629 --> 01:19:34,579
+Into these tights. That's so cool. Element. That's where elements coming from probably.
+
+542
+01:19:36,629 --> 01:19:40,319
+Right. Interface. Element.
+
+543
+01:19:41,759 --> 01:19:47,099
+Element. Yeah. This is where it's coming from. Oh, that's really cool.
+
+544
+01:19:49,469 --> 01:19:52,499
+Far out of a prototype helmet. I don't know what that means.
+
+545
+01:19:55,699 --> 01:20:00,729
+And this stuff, I guess, is being included automatically. Oh so neat.
+
+546
+01:20:02,719 --> 01:20:11,239
+That's so neat. Okay, well, um, I think one of the things I've learned is that Dom node is not correct,
+
+547
+01:20:12,259 --> 01:20:17,089
+and that we're going to have to do the work when, if we want to use TypeScript here.
+
+548
+01:20:19,479 --> 01:20:28,719
+Of making explicit the various expanders, the various bits and pieces, bibs and bobs that we assign to these, um,
+
+549
+01:20:28,719 --> 01:20:41,078
+nodes and that we're going to need to do like certain um, Dom nodes are defined as, uh, custom elements like, uh, Mars toolbar.
+
+550
+01:20:41,079 --> 01:20:47,679
+Is that a custom element toolbar button, while the elements button base is toolbar in here.
+
+551
+01:20:48,039 --> 01:20:56,989
+Toolbar. Toolbar. Toolbar. What's the definition of a toolbar?
+
+552
+01:21:01,159 --> 01:21:04,429
+Toolbar probably be in the same places.
+
+553
+01:21:04,609 --> 01:21:12,899
+Toolbar. Palette item. Hmhm.
+
+554
+01:21:19,219 --> 01:21:27,409
+Just a static item. To special zeal things.
+
+555
+01:21:40,349 --> 01:21:44,939
+Toolbar, palette item or toolbar button. Then it's one of these if it's a.
+
+556
+01:21:46,659 --> 01:21:55,209
+Too far, sir. Like what is a toolbar?
+
+557
+01:21:56,799 --> 01:22:00,569
+I'm just now I'm really curious from.
+
+558
+01:22:07,909 --> 01:22:12,169
+So if I go. Cheena of toolbox, let's get the nav.
+
+559
+01:22:12,559 --> 01:22:16,909
+Uh, the toolbar toolbars. Oh, gee.
+
+560
+01:22:17,719 --> 01:22:21,499
+Uh, toolbar. Oh, I get the tool. Uh, toolbar.
+
+561
+01:22:23,989 --> 01:22:28,009
+G u URL bar. How do I get the toolbar?
+
+562
+01:22:42,299 --> 01:22:47,369
+I just get by element by ID? Um.
+
+563
+01:22:53,479 --> 01:22:56,649
+Or just. Yeah. What?
+
+564
+01:22:56,649 --> 01:23:00,159
+Are you okay? What are you.
+
+565
+01:23:04,379 --> 01:23:09,119
+Toolbar prototype heart constructor.
+
+566
+01:23:10,619 --> 01:23:14,009
+It's a visual element. I think I knew that.
+
+567
+01:23:15,819 --> 01:23:18,869
+It has various things assigned to. It.
+
+568
+01:23:19,439 --> 01:23:31,509
+Has a collapsed state assigned to it. So is there like a, uh.
+
+569
+01:23:33,159 --> 01:23:36,779
+But I think collapsed is mainly like, it's an attribute.
+
+570
+01:23:36,789 --> 01:23:41,049
+It's like an, an expandable. And then CSS is used to show and hide.
+
+571
+01:23:41,049 --> 01:23:45,369
+I don't actually think there's anything particularly special about toolbars.
+
+572
+01:23:45,909 --> 01:23:55,509
+Like, I don't think there's anything particularly interesting exposed that is unique to toolbars like Special Logic.
+
+573
+01:23:58,839 --> 01:24:06,459
+I could be wrong. I could be very wrong. But I think it's just your run of the mill Zuul element.
+
+574
+01:24:15,139 --> 01:24:19,958
+I wonder, like, is it possible? So.
+
+575
+01:24:19,959 --> 01:24:26,729
+Toolbar. Single map type, huh?
+
+576
+01:24:30,189 --> 01:24:33,578
+Browser. Tab.
+
+577
+01:24:33,579 --> 01:24:36,839
+Toolbar. Separator. Toolbar. It's all map type.
+
+578
+01:24:36,849 --> 01:24:42,808
+This is under accessibility. And two.
+
+579
+01:24:42,809 --> 01:24:46,719
+Barnum. We can attribute toolbar name.
+
+580
+01:24:48,189 --> 01:24:55,979
+Okay. It's all via the accessibility stuff.
+
+581
+01:24:57,009 --> 01:25:07,969
+Toolbar name. I don't think.
+
+582
+01:25:09,879 --> 01:25:15,748
+Static. Got him. Adams Chicken, a static Adams tool bar.
+
+583
+01:25:15,749 --> 01:25:19,349
+Name tool bar separator. Tool bar. Spring.
+
+584
+01:25:20,249 --> 01:25:27,359
+Look where these. To find help show.
+
+585
+01:25:30,069 --> 01:25:33,249
+Get elements. What are we doing in here?
+
+586
+01:25:34,569 --> 01:25:37,869
+Uh, it's part of the, uh, skeleton UI. Okay.
+
+587
+01:25:44,809 --> 01:25:54,349
+Our spring. How does a toolbar spring.
+
+588
+01:25:54,349 --> 01:26:01,339
+Defined toolbar spring. Form control accessible.
+
+589
+01:26:05,869 --> 01:26:14,119
+Accessibility to our spring. And then via access toolbar spring.
+
+590
+01:26:15,649 --> 01:26:19,699
+It's just this thing here that has just max flex.
+
+591
+01:26:32,719 --> 01:26:37,309
+That's neat. So, like, who defined live like this stuff?
+
+592
+01:26:37,339 --> 01:26:43,459
+Where did those that tooling come from? Built.
+
+593
+01:26:43,479 --> 01:26:48,099
+Um, who came up with this zombie?
+
+594
+01:26:50,049 --> 01:27:02,169
+Make it easy update type libs when changing interfaces. You know, basic types, supports.
+
+595
+01:27:11,949 --> 01:27:15,158
+Let's just forget Calabria and let my real, you know, it's just vendor mediated.
+
+596
+01:27:15,159 --> 01:27:20,529
+Falk. It's TypeScript and, like, generator.
+
+597
+01:27:23,779 --> 01:27:40,219
+This works by. Here's the header for miso flavor web, IDL and what IDL passable.
+
+598
+01:27:40,519 --> 01:27:43,999
+Okay. Okay, so that's interesting.
+
+599
+01:27:48,139 --> 01:27:56,579
+And, uh, parse HTML elements. Interface is okay for immersion customize where whereby the element post-process DTS.
+
+600
+01:27:56,589 --> 01:28:01,819
+So then we get the generator. We merge all this stuff.
+
+601
+01:28:07,759 --> 01:28:14,959
+This is a build xp com xp home built ins built into this config.
+
+602
+01:28:14,959 --> 01:28:19,978
+Built in. But for certain that fine ideal way.
+
+603
+01:28:19,979 --> 01:28:25,819
+And. Gecko, huh? Interesting.
+
+604
+01:28:30,119 --> 01:28:35,939
+Drawings X test built in. Mock commands.
+
+605
+01:28:38,069 --> 01:28:41,429
+Bill Thomas. Results. Services XP. Calm.
+
+606
+01:28:46,169 --> 01:28:49,769
+Dom. This is so cool.
+
+607
+01:28:56,579 --> 01:29:00,568
+So I'm getting really distracted. But like, this is so neat to watch this go.
+
+608
+01:29:00,569 --> 01:29:04,859
+And then this is some interface that gets produced.
+
+609
+01:29:07,579 --> 01:29:14,639
+And then this is the test. Is there any.
+
+610
+01:29:16,799 --> 01:29:20,579
+Way of building the notion of doing it with Zuul?
+
+611
+01:29:20,609 --> 01:29:26,219
+I got a feeling. No, because like the way we define Zuul elements is a lot sloppier.
+
+612
+01:29:27,869 --> 01:29:31,649
+It's not like something that you do with something like web idol.
+
+613
+01:29:31,679 --> 01:29:36,418
+Maybe it should be. Maybe it should be like.
+
+614
+01:29:36,419 --> 01:29:43,679
+It might be nice if we could, like. Have, like, a certain Zuul elements.
+
+615
+01:29:43,739 --> 01:29:47,789
+Um. Yeah.
+
+616
+01:29:47,789 --> 01:29:51,089
+Like the Zuul tree element or menu element is all element.
+
+617
+01:29:53,939 --> 01:30:07,099
+Path utils. Data transfer. Could.
+
+618
+01:30:13,619 --> 01:30:20,509
+And then just idle. There's this whole Chrome registry of these all the underlying components.
+
+619
+01:30:20,519 --> 01:30:25,739
+None of them. They're not like the UI bits and pieces, although there's something called the little browser window.
+
+620
+01:30:29,099 --> 01:30:34,259
+But like if we can define some things that are like, like toolbars and stuff.
+
+621
+01:30:38,169 --> 01:30:44,699
+With this. Time frames crummy us.
+
+622
+01:30:47,749 --> 01:30:54,319
+A steel frame element has these things. If you could have like a XUL toolbar element.
+
+623
+01:30:58,879 --> 01:31:10,729
+Well, and I'm curious about other types like we've got like toolkit content widgets like these things, let's say like the Mars message bar.
+
+624
+01:31:17,579 --> 01:31:23,249
+Tag. Name. Property. Like this might help us do.
+
+625
+01:31:23,249 --> 01:31:37,929
+Types extends Moslem element. All right, well, I got distracted, but, uh, I think there's there's something here.
+
+626
+01:31:37,939 --> 01:31:40,699
+There's something here where we can, like, start incrementally.
+
+627
+01:31:40,699 --> 01:31:54,229
+Um, if we can get all this stuff done, we might be able to incrementally improve our types story in the customizable UI code.
+
+628
+01:31:55,669 --> 01:32:02,089
+We already have all of the gecko like, uh, web IDL types available to us.
+
+629
+01:32:02,119 --> 01:32:10,488
+It's all of the, like, custom stuff built on top of that that we would need to define and edit to get that started.
+
+630
+01:32:10,489 --> 01:32:14,239
+You just kind of have to get started. The more you define that stuff, the easier it is.
+
+631
+01:32:14,929 --> 01:32:18,139
+Um, especially if it's shared.
+
+632
+01:32:18,889 --> 01:32:26,628
+It's less people for, uh, less work for future people to do, uh, but and the more we can do automatically like that,
+
+633
+01:32:26,629 --> 01:32:32,568
+that script that converts all those web IDL files to to types TypeScript types is really cool.
+
+634
+01:32:32,569 --> 01:32:36,679
+And that's exactly the right approach. You like, define your things in one place,
+
+635
+01:32:36,679 --> 01:32:42,078
+and then you have utilities that can convert those definitions into the other forms that you
+
+636
+01:32:42,079 --> 01:32:48,379
+need for tools like the TypeScript compiler or the web IDL bindings generator or what have you.
+
+637
+01:32:48,619 --> 01:32:52,639
+That's that is awesome. All right. I think I'm going to call it there.
+
+638
+01:32:52,789 --> 01:32:56,058
+Hey, thanks so much for watching episode 390 of the Joy of coding.
+
+639
+01:32:56,059 --> 01:32:59,059
+Uh, we documented not customizable widgets.
+
+640
+01:32:59,059 --> 01:33:06,769
+We want documented customizable UI, uh, internal and customizable UI dot system Mjs.
+
+641
+01:33:07,099 --> 01:33:10,789
+And we did this. We did this a little bit neat.
+
+642
+01:33:11,389 --> 01:33:16,039
+Um, I think there's, uh, quite a bit of work here to continue to support this, but like,
+
+643
+01:33:17,179 --> 01:33:23,119
+you can I can kind of see, like maybe customizable UI is not the right place to start.
+
+644
+01:33:23,539 --> 01:33:26,598
+You start maybe something a smaller component, uh,
+
+645
+01:33:26,599 --> 01:33:33,619
+like the the extensions team did and you do you get that one like with type safety and then
+
+646
+01:33:33,619 --> 01:33:39,139
+you like spread out from the smaller ones and then eventually approach the bigger ones.
+
+647
+01:33:39,769 --> 01:33:43,549
+Um, as we build out more of the types infrastructure that we need.
+
+648
+01:33:44,059 --> 01:33:48,799
+But I think this this is, this is really cool. Uh, let me know what you thought of this episode.
+
+649
+01:33:48,799 --> 01:33:56,628
+There's a, uh, this episode link here in the agenda. Let me go ahead and, uh, drop a link there into the chat link to rate this episode.
+
+650
+01:33:56,629 --> 01:34:00,558
+This is a great way of letting me know what you thought. Do you like the, uh, series?
+
+651
+01:34:00,559 --> 01:34:03,229
+Do you like the stream? Did you not like the stream? What can I do better? What can I do?
+
+652
+01:34:03,589 --> 01:34:10,879
+Um, more of less of, etc., etc. and if you've got questions, things you want me to try and answer during the stream about Firefox,
+
+653
+01:34:10,879 --> 01:34:17,929
+Mozilla, the code base JavaScript, C plus plus Rest, open source software development, software industry in general, whatever.
+
+654
+01:34:17,959 --> 01:34:19,459
+Um, you can send me questions.
+
+655
+01:34:19,519 --> 01:34:24,619
+Questions, and I can try and answer them if I know the answers, because I don't have all the answers, but we can try and figure stuff out.
+
+656
+01:34:24,929 --> 01:34:29,299
+And with that, I think I'm going to call it there. Thanks again everybody.
+
+657
+01:34:29,299 --> 01:34:35,539
+Uh, have yourselves a great week. I shall see you next week with episode 391.
+
+658
+01:34:35,899 --> 01:34:40,769
+Until then, take care. Bye bye. The joy.
+
+659
+01:34:41,489 --> 01:34:43,949
+Oh, they see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

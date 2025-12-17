@@ -1,0 +1,2946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 409 - July 9, 2025</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 409 - July 9, 2025</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=4831151b-493f-4631-a66a-b30700fc3d65</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=4831151b-493f-4631-a66a-b30700fc3d65">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,422 --> 00:00:09,922
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:10,192 --> 00:00:13,762
+Hello and welcome to episode 409 of the Joy of coding.
+
+3
+00:00:13,772 --> 00:00:18,411
+My name is my colleague. It's so good to have you here. We're going to be live hacking on some Firefox stuff today.
+
+4
+00:00:18,412 --> 00:00:21,632
+Or at least, uh, that's the plan. That is the plan.
+
+5
+00:00:21,652 --> 00:00:28,152
+Um, let me start by sharing my screen and we can get into it. I want to apologize if people were kind of waiting for the stream to start.
+
+6
+00:00:28,162 --> 00:00:36,532
+It was showing the, like, all done state in the, uh, as the sort of, like, title card while the stream was kind of in queue.
+
+7
+00:00:36,532 --> 00:00:46,432
+So hopefully no one was like, oh no, I missed it. Um, I'm here and I just had the wrong, the wrong, um, the wrong title card up.
+
+8
+00:00:46,702 --> 00:00:51,411
+So let's start by sharing my screen. Why wait? Let's get into it. It is July 9th, 2025.
+
+9
+00:00:51,412 --> 00:00:54,772
+Episode 409 A reminder No plan survives breakfast.
+
+10
+00:00:55,162 --> 00:00:59,062
+Also, shout out if it's your birthday today. Happy birthday!
+
+11
+00:00:59,812 --> 00:01:04,732
+Just a shout out to anyone whose birthday is on July 9th. Um, yeah.
+
+12
+00:01:04,762 --> 00:01:08,061
+No plans. Surprise breakfast. I think I know how things are going to go today, but maybe I'm wrong.
+
+13
+00:01:08,062 --> 00:01:11,692
+Maybe I'm fully wrong. Uh, things might go sideways.
+
+14
+00:01:11,692 --> 00:01:16,462
+We may get sidelined, sidetracked, distracted, pulled into something else.
+
+15
+00:01:16,522 --> 00:01:21,982
+Um. That's okay. Uh, this series is all about kind of watching me do software development as I,
+
+16
+00:01:22,222 --> 00:01:26,242
+uh, in the raw as I do without, um, you know, having a whole lot prepared.
+
+17
+00:01:26,242 --> 00:01:30,682
+So that's kind of the idea. Uh, let's just jump right in.
+
+18
+00:01:30,682 --> 00:01:34,162
+Uh, I want to just go for it because I'm already five minutes over time, so let's start.
+
+19
+00:01:34,312 --> 00:01:43,402
+Well, as per last time, today's episode is brought to you by Kino Code's episode 409 and, uh, Http code 409.
+
+20
+00:01:43,402 --> 00:01:46,642
+And this, uh, I believe it is. Uh, what is this?
+
+21
+00:01:47,002 --> 00:01:48,891
+What is this, a 409 conflict,
+
+22
+00:01:48,892 --> 00:02:01,072
+which in this case is represented by John Wick blasting some figure here with I have to build some kind of handheld weapon that does not look great.
+
+23
+00:02:01,222 --> 00:02:08,782
+That does not look like a fun place to be in, but it certainly does illustrate conflict and 409 conflict.
+
+24
+00:02:09,022 --> 00:02:18,862
+What is 4 or 9 conflict before nine conflict is a status code that there is a request conflict with the current state of the target resource.
+
+25
+00:02:19,372 --> 00:02:26,661
+So if using WebDAV 409 conflict responses are errors sent to the clients that a user might be able to resolve a conflict and resubmit the request.
+
+26
+00:02:26,662 --> 00:02:35,092
+For example, conflicts occur if a request to create something is made and like maybe if you have this ancestor ABCd,
+
+27
+00:02:35,362 --> 00:02:38,752
+but ABC does not exist, the request must fail with a 409.
+
+28
+00:02:39,052 --> 00:02:44,062
+Additionally, you may get a 409 response when uploading a file that is older than the existing one on the server,
+
+29
+00:02:44,062 --> 00:02:50,242
+resulting in a version control conflict. Interesting four nine responses may be used for implementation specific verses,
+
+30
+00:02:50,242 --> 00:02:54,052
+such as to indicate that the service received multiple requests to update the same resource.
+
+31
+00:02:55,342 --> 00:02:56,212
+Fascinating.
+
+32
+00:02:56,602 --> 00:03:08,181
+So yeah, I mean rest and and you know, HTP you have these ideas of like post and put and delete and um, and not just get sometimes you're,
+
+33
+00:03:08,182 --> 00:03:16,882
+you're changing resources in the wild and you may post to some end point or attempt to update an endpoint with put,
+
+34
+00:03:17,212 --> 00:03:21,652
+and maybe someone else is doing it at the same time, or did it just before you did.
+
+35
+00:03:21,772 --> 00:03:27,202
+And so what you're trying to change is, is, you know, was slightly out of date than what's actually on the server.
+
+36
+00:03:27,352 --> 00:03:30,742
+In that case, maybe the server will return 409 conflict.
+
+37
+00:03:31,012 --> 00:03:36,532
+Well, that is fascinating. I did not know that. And now if you didn't know it, now you do.
+
+38
+00:03:36,682 --> 00:03:40,372
+That's what 409 is. Conflict. All right.
+
+39
+00:03:40,432 --> 00:03:43,642
+Uh, well, what are we working on today? Well, I was thinking we could.
+
+40
+00:03:45,802 --> 00:03:50,932
+Take some of the patches that we worked on last week out of work in progress, and try and get them posted for review.
+
+41
+00:03:50,962 --> 00:04:00,352
+We had one that was attempting to save memory on, like, really large background images, especially like large animated GIF background images.
+
+42
+00:04:00,472 --> 00:04:05,302
+Um, and I posted a work in progress patch and then I just kind of left it.
+
+43
+00:04:05,482 --> 00:04:10,971
+Let's see if we can clean that up and get that posted for real. Um, so where am I?
+
+44
+00:04:10,972 --> 00:04:15,892
+In my, uh, repository. Okay, okay. JJ, get fetch.
+
+45
+00:04:17,002 --> 00:04:27,502
+Oh, fun fact, if you're using jujitsu like I am and you use Moore's Fab to submit patches, make sure you're up to date with mom's fab.
+
+46
+00:04:27,502 --> 00:04:31,672
+Um, was it mom's fab 2.00?
+
+47
+00:04:31,822 --> 00:04:38,722
+Because that has first class jujitsu support, so I no longer have to like switch to git branches whenever I want to submit a patch.
+
+48
+00:04:38,902 --> 00:04:43,732
+It's great jujitsu. I get to not think about git, hopefully ever again.
+
+49
+00:04:44,062 --> 00:04:50,062
+So, uh, this is this is good news. Um, mom's fab 2.0 and jiu jitsu working together like they should.
+
+50
+00:04:50,062 --> 00:04:53,362
+So I just pulled down, uh, the most recent version of main.
+
+51
+00:04:53,362 --> 00:04:56,572
+So let's move to main, and let's bring in our patch.
+
+52
+00:04:56,902 --> 00:05:04,222
+Uh, what was the this bug? One nine uh, 1974818.
+
+53
+00:05:04,642 --> 00:05:10,762
+Uh, do I have that in my. Log somewhere? Yes it is. It's q w and there's another one based on top of it.
+
+54
+00:05:10,972 --> 00:05:18,502
+So let's let's re base both of these. So JJ rebase the base of NCN onto main at origin.
+
+55
+00:05:20,362 --> 00:05:25,671
+Done like like easy. That's what I love about jujitsu doing that.
+
+56
+00:05:25,672 --> 00:05:37,882
+And git would have been such a pain. Um so now let's, uh, make a change to q w now what is Q um, oh, there's.
+
+57
+00:05:38,452 --> 00:05:46,522
+Oh, sorry. JJ show Q that's what I want. Uh, what it did was we moved the responsibility of.
+
+58
+00:05:47,692 --> 00:05:52,582
+Right. Right. We moved the responsibility of creating the object URL to the parent.
+
+59
+00:05:53,242 --> 00:05:58,042
+And, um, and that was it.
+
+60
+00:05:58,042 --> 00:06:03,501
+I think the only thing I wanted to do to clean it up, actually, if I recall, uh,
+
+61
+00:06:03,502 --> 00:06:10,641
+we also have to run the tests to make sure those paths, um, is, uh, there was this line.
+
+62
+00:06:10,642 --> 00:06:13,792
+Oh, I have to actually, um, make changes to it.
+
+63
+00:06:14,602 --> 00:06:16,162
+Yeah, yeah, I'm in the right one. Okay.
+
+64
+00:06:16,552 --> 00:06:25,942
+Uh, what I wanted to do was, uh, update the function here in base where we're, uh, using the uploaded wallpaper because,
+
+65
+00:06:25,942 --> 00:06:36,442
+like, I'm aliasing the URL, and what I'm going to do is I'm just going to say uploaded wallpaper.
+
+66
+00:06:36,442 --> 00:06:40,012
+There is a way for me to reassign.
+
+67
+00:06:42,112 --> 00:06:46,042
+And I think it's like this. Am I right on that?
+
+68
+00:06:48,172 --> 00:06:53,102
+Well that work. No, it's the other way round.
+
+69
+00:06:57,272 --> 00:07:03,952
+And upload it. Wallpaper a URL. That should do it.
+
+70
+00:07:03,982 --> 00:07:08,852
+That's what I wanted to do there. And was there any other usage of uploaded wallpaper?
+
+71
+00:07:08,872 --> 00:07:14,872
+I don't think so. Let's build, uh, with an artifact build.
+
+72
+00:07:17,002 --> 00:07:22,852
+Make sure it still works as we'd expect. We'll run the tests manually test it, and then let's get it up for review.
+
+73
+00:07:24,182 --> 00:07:28,592
+Let's just get this thing out there. How's everyone doing out in the wild?
+
+74
+00:07:28,622 --> 00:07:33,872
+Someone put a bot reaction on my Danny call and put a robot face on my bridge test.
+
+75
+00:07:33,872 --> 00:07:40,852
+Please ignore message. Thank you, Danny Colon. Uh.
+
+76
+00:07:42,462 --> 00:07:48,012
+I asked a question last week, which is like, where is everybody and how far away are you?
+
+77
+00:07:48,462 --> 00:07:56,232
+Um, let's see if we can, um, let's, let's, let's let's do another one.
+
+78
+00:07:56,682 --> 00:08:00,632
+What? Generally speaking, what are people's occupations in the chat?
+
+79
+00:08:00,642 --> 00:08:03,782
+Are you a programmer? Are you a designer?
+
+80
+00:08:03,792 --> 00:08:08,082
+Are you just a programing enthusiast that does something else? Maybe you're in between jobs.
+
+81
+00:08:08,652 --> 00:08:14,232
+Are you looking for a job? Like what's what's everyone? What's everyone doing for a living in the chat right now?
+
+82
+00:08:14,622 --> 00:08:17,622
+Uh, maybe you're retired, maybe you're a teacher.
+
+83
+00:08:18,042 --> 00:08:22,692
+Maybe you're, um, a security researcher who what's out there?
+
+84
+00:08:22,782 --> 00:08:27,852
+And, like, you don't have to, but I'm just curious. I thought I'd get a sense of who my audience is today.
+
+85
+00:08:28,332 --> 00:08:34,032
+Feel free. Um, are you part of the developer community of of Firefox?
+
+86
+00:08:34,392 --> 00:08:40,362
+Um, desktop or mobile or any other projects? Are you part of the support community localization community?
+
+87
+00:08:40,362 --> 00:08:43,542
+Let's give us a sense of who you are if you want.
+
+88
+00:08:43,692 --> 00:08:48,282
+Maybe you're just you stumbled on this channel on Twitch and you're just like, what's going on?
+
+89
+00:08:48,612 --> 00:08:53,082
+Um, that's cool to let me know who kind of give me a sense of who you are and just drop it in the chat.
+
+90
+00:08:54,132 --> 00:09:02,261
+Okay, so let us, uh, run this build, and I may have clobbered the building I have to,
+
+91
+00:09:02,262 --> 00:09:07,092
+like, and, um, set it up to use the, uh, the animated background again.
+
+92
+00:09:08,402 --> 00:09:12,872
+Here it is. So custom wallpaper works.
+
+93
+00:09:15,622 --> 00:09:21,632
+Uh, and now the question is, how much memory are we consuming? So let's open up a bunch of these.
+
+94
+00:09:21,662 --> 00:09:27,902
+Papa. Papa! Papa! Papa. Papa. Papa. Papa. Papa. Papa. Papa. Papa. Papa. And about memory.
+
+95
+00:09:30,772 --> 00:09:39,561
+We'll go ahead and minimize and measure. Total resin memory.
+
+96
+00:09:39,562 --> 00:09:44,392
+Approximate is pretty good, actually. Yeah, we're in good shape here.
+
+97
+00:09:45,142 --> 00:09:51,022
+It was a lot more last time. Uh, okay. Here we go. Privileged about is using 1.2 gigs.
+
+98
+00:09:51,022 --> 00:09:56,511
+That's about that's comparable to what we were doing last time. Although this is approximate resident memory.
+
+99
+00:09:56,512 --> 00:09:59,662
+So that's the thing about memory. Explicit allocations.
+
+100
+00:10:00,232 --> 00:10:03,891
+One thing you have to remember whenever you look at about memory and when you look at, uh,
+
+101
+00:10:03,892 --> 00:10:10,072
+memory reports in general, there's a difference between reserving memory and actually using the memory.
+
+102
+00:10:10,072 --> 00:10:17,542
+And I believe I'm not a memory expert here. What we are seeing here are allocations like reserved memory,
+
+103
+00:10:17,542 --> 00:10:29,512
+like the privileged about processes reserved this much memory, and this is how much is actually being used by 721 Max.
+
+104
+00:10:30,442 --> 00:10:37,042
+Um, that is, I believe, the case that there's an attempt here to to measure what's actually being used.
+
+105
+00:10:38,212 --> 00:10:43,192
+Uh, and let's see if that scales up or down as I add more, more of these tabs that are,
+
+106
+00:10:43,732 --> 00:10:50,962
+let's open up a whole bunch and let's go back to our about memory, whereas memory.
+
+107
+00:10:57,202 --> 00:11:01,342
+I'll go ahead and minimize and measure.
+
+108
+00:11:09,622 --> 00:11:12,951
+Yeah, it's it's about the same. So that's good. I'm.
+
+109
+00:11:12,952 --> 00:11:18,202
+I'm pretty pleased with the performance here. So let's go ahead and get this posted up for review.
+
+110
+00:11:18,322 --> 00:11:23,962
+But first of all, let's run our tests. Um. Oh, one thing one thing I didn't do.
+
+111
+00:11:24,442 --> 00:11:30,712
+I have to npm run bundle effects browser extension to get that because I cheat.
+
+112
+00:11:31,072 --> 00:11:36,742
+What I just did didn't actually, um, get tested because there's like this bundling stuff that we have to do.
+
+113
+00:11:39,862 --> 00:11:44,362
+Okay. So it is working now that reassignment works properly.
+
+114
+00:11:44,512 --> 00:11:50,242
+Okay. Amazing.
+
+115
+00:11:51,232 --> 00:11:55,642
+And about memory. Oh, and I just got a delivery bill.
+
+116
+00:11:55,762 --> 00:11:58,972
+Bill, actually, I can play that sound. Uh, thank you very much for the tea delivery.
+
+117
+00:11:59,392 --> 00:12:04,972
+Airhorn. Uh, yeah. Very good.
+
+118
+00:12:04,992 --> 00:12:08,322
+Okay. Uh. Minimize and. All right. We're getting some responses.
+
+119
+00:12:08,992 --> 00:12:13,562
+Safti says that there are tech support consulting, doing things during day, hobby programing and night.
+
+120
+00:12:13,572 --> 00:12:17,322
+Been a few years since my last patch to Firefox. Craig is a software developer.
+
+121
+00:12:17,922 --> 00:12:21,432
+Hey, fantastic. You don't have to tell me who you are.
+
+122
+00:12:21,462 --> 00:12:28,272
+Yes, this is not obligatory, but I'm curious. So the memory has gone down even more about a year because most of these tabs aren't actually restored.
+
+123
+00:12:28,812 --> 00:12:31,842
+So I'll need to restore these things. Up up up up up up up up.
+
+124
+00:12:31,842 --> 00:12:35,412
+Let's go through them all. Okay. And then.
+
+125
+00:12:40,182 --> 00:12:48,241
+Uh. Minimize memory. So now I've got this classic problem.
+
+126
+00:12:48,242 --> 00:12:54,202
+I've got a Coke Zero and a and a tea going. Mhm.
+
+127
+00:12:55,162 --> 00:12:58,372
+Notably, the main process has gone up in memory quite a bit.
+
+128
+00:12:58,582 --> 00:13:08,932
+Let's minimize again and measure again. Yeah.
+
+129
+00:13:08,962 --> 00:13:12,822
+Now it's gone way down. It's gone way down. So this is good.
+
+130
+00:13:13,452 --> 00:13:17,542
+This is good. Let's go ahead. And now run our tests.
+
+131
+00:13:17,562 --> 00:13:22,542
+Mark npm run test MC unit prefix browser.
+
+132
+00:13:22,662 --> 00:13:25,712
+This is how we run our unit tests for new tab.
+
+133
+00:13:25,722 --> 00:13:30,082
+New tabs. Kind of special. New tab is this weird web pesky thing.
+
+134
+00:13:33,662 --> 00:13:37,382
+Okay, good. Let's run our other tests for new tab.
+
+135
+00:13:37,412 --> 00:13:44,012
+These ones are a little more, um. Uh, like, not unit zbc shell.
+
+136
+00:13:44,342 --> 00:13:59,922
+These ones are a little more traditional. These tests. Okay, um, let's run a test browser.
+
+137
+00:13:59,952 --> 00:14:03,731
+The browser monkey tests. Actually, let's do that. Um, headless.
+
+138
+00:14:03,732 --> 00:14:06,792
+So that we don't have to have our screen taken over.
+
+139
+00:14:06,912 --> 00:14:15,612
+I am curious, actually, one of the things that I expected to break were the tests for the wallpaper feed test,
+
+140
+00:14:15,612 --> 00:14:27,752
+construction test on action in that, uh, whereas custom wallpapers, wallpaper upload on action we get called wallpaper upload.
+
+141
+00:14:27,762 --> 00:14:37,272
+We write to the directory. Okay, so it's not actually testing to see whether or not what's coming down is a.
+
+142
+00:14:38,342 --> 00:14:48,562
+Um. Is a preexisting blob Uri, but we probably can do that.
+
+143
+00:14:48,592 --> 00:14:52,762
+We can probably write a test for that. Maybe that's what we'll do now to sort of finish the job.
+
+144
+00:14:53,212 --> 00:14:57,592
+This will make sure that what comes down from the parent is a blob uri.
+
+145
+00:14:58,042 --> 00:15:05,272
+And, uh. Uh, that would be a good way of sort of squaring off, um, this patch, and then we can post it for review.
+
+146
+00:15:08,172 --> 00:15:14,982
+Now, what is a blob you or I look like? Um, am I have to wait until these tests are done running and then we can, like, quickly inspect it?
+
+147
+00:15:15,192 --> 00:15:21,552
+What? We will. Yeah. Okay, so what we will expect here is a Uri of the form.
+
+148
+00:15:22,932 --> 00:15:28,242
+And not like we will expect to have been sent a blob Uri.
+
+149
+00:15:28,362 --> 00:15:31,271
+Not that the back to the background was always a blob, you or I,
+
+150
+00:15:31,272 --> 00:15:37,422
+but we expect to have been sent this as opposed to being sent just a full blown, uh, Dom file thing.
+
+151
+00:15:38,292 --> 00:15:44,321
+So let's, uh, let's add a task, uh, add task.
+
+152
+00:15:44,322 --> 00:15:48,402
+Test wallpaper. Uh, Uri.
+
+153
+00:15:48,432 --> 00:16:03,492
+Uh, blob. Uri. Uh, tests that, um, the parent process sends down a blob uri to new tab to render.
+
+154
+00:16:04,602 --> 00:16:14,322
+Um. Sends down a consistent blob Uri to render as the background.
+
+155
+00:16:16,082 --> 00:16:20,312
+Okay, so how do we do this? Get wallpaper feed for test.
+
+156
+00:16:20,492 --> 00:16:23,492
+And then there's like this fakeness that we do.
+
+157
+00:16:25,142 --> 00:16:28,202
+Uh, so we really just want to like fake out.
+
+158
+00:16:31,272 --> 00:16:36,632
+Our file. Do we have a test wallpaper file?
+
+159
+00:16:38,582 --> 00:16:42,362
+Not really. But that's okay.
+
+160
+00:16:42,372 --> 00:16:45,512
+We don't have to test that the image actually is is valid.
+
+161
+00:16:45,522 --> 00:16:51,122
+We just need to create a a test file. Uh, test upload contents.
+
+162
+00:16:51,162 --> 00:16:58,152
+Yeah. Okay. Um.
+
+163
+00:17:01,572 --> 00:17:09,072
+And then we create the test file, the, uh, wallpaper, upload the written file, and then what do we changing?
+
+164
+00:17:09,612 --> 00:17:14,322
+We change it so that the data that is sent down.
+
+165
+00:17:18,202 --> 00:17:23,182
+Is a URL. So.
+
+166
+00:17:28,962 --> 00:17:34,812
+Test, test, test. Feed on action.
+
+167
+00:17:37,242 --> 00:17:42,492
+What? Feed on action. Broadcast to content.
+
+168
+00:17:51,112 --> 00:17:55,612
+Uh. Uh, what I want to see is an example of.
+
+169
+00:18:04,682 --> 00:18:09,922
+On actions wallpaper and then it dispatch.
+
+170
+00:18:09,932 --> 00:18:15,632
+We presume it was okay. So this is what we'll do is we'll just make sure that the feed dispatch was called with a particular thing.
+
+171
+00:18:16,532 --> 00:18:19,652
+Okay. Data uploaded wallpaper.
+
+172
+00:18:26,162 --> 00:18:37,362
+Mhm. That's weird.
+
+173
+00:18:37,482 --> 00:18:48,462
+I would have expected this to break that. Um. We should be able to like url dot create object, URL uh, uploaded wallpaper.
+
+174
+00:18:50,572 --> 00:18:58,212
+No, it has to be one of those things. So, like when we run this test, test startup cache.
+
+175
+00:18:58,212 --> 00:19:01,722
+And, uh, how is this passing?
+
+176
+00:19:26,222 --> 00:19:31,862
+Dump dispatching data and then the URL.
+
+177
+00:19:36,272 --> 00:19:53,102
+I'm curious what that will say. Was I spring dispatching dispatching data.
+
+178
+00:19:55,322 --> 00:19:58,922
+Never actually gets dumped. Huh?
+
+179
+00:19:59,882 --> 00:20:06,032
+This is on wallpaper upload, which should be called. Paper upload?
+
+180
+00:20:06,332 --> 00:20:14,012
+Oh, not on wallpaper. Custom set one is wallpaper custom set.
+
+181
+00:20:16,292 --> 00:20:20,422
+Sent. Broadcast.
+
+182
+00:20:23,362 --> 00:20:27,192
+This is on startup. Still, I would expect.
+
+183
+00:20:30,312 --> 00:20:33,692
+Custom set to be no object IRL. So how about here?
+
+184
+00:20:34,112 --> 00:20:40,392
+No. Here. Hello. That's also built just in case.
+
+185
+00:20:41,052 --> 00:20:49,542
+Also, instead of running the whole suite of tests, let's just run, uh, the last one that, um.
+
+186
+00:20:51,522 --> 00:20:54,612
+Start, start the.
+
+187
+00:21:01,352 --> 00:21:20,792
+Okay. Run this one. Okay. On action should forward wallpaper info.
+
+188
+00:21:26,472 --> 00:21:30,372
+What the heck? So we. What's actually happening here?
+
+189
+00:21:30,552 --> 00:21:38,502
+So we get. Oh, we're. Oh I see, I see, I see, I see this is in testing the wallpaper feed.
+
+190
+00:21:38,502 --> 00:21:50,142
+Its testing something called this startup cash in nit feed or in nit dot system JS wallpaper.
+
+191
+00:21:53,822 --> 00:22:01,802
+Get state. Describes the current main reducer state for wallpapers, upload it and sends of the start cache content reducer.
+
+192
+00:22:03,032 --> 00:22:07,472
+So wallpapers. Uploaded wallpaper.
+
+193
+00:22:10,642 --> 00:22:18,452
+So that is the thing we actually have to change. Uh, uploaded wallpapers.
+
+194
+00:22:18,452 --> 00:22:25,352
+Wallpapers. This store gets state wallpapers uploaded wallpaper.
+
+195
+00:22:41,142 --> 00:22:44,972
+In our reducers. I see.
+
+196
+00:22:45,002 --> 00:22:50,602
+So that actually becomes the URL. Oh.
+
+197
+00:22:57,682 --> 00:23:02,272
+On paper. Becomes the data.
+
+198
+00:23:02,842 --> 00:23:05,932
+Oh, so that that should just work then? Okay, that works nicely.
+
+199
+00:23:07,042 --> 00:23:11,242
+So that's why that that works. Well, paper.
+
+200
+00:23:13,582 --> 00:23:17,482
+Custom wallpaper update apply. True. Okay.
+
+201
+00:23:18,292 --> 00:23:22,732
+So that should just pass through. So that's why that passes.
+
+202
+00:23:22,742 --> 00:23:27,282
+It's intentional. So we can revert the changes to this test.
+
+203
+00:23:27,292 --> 00:23:32,812
+And really we just want to test that a blob Uri comes down here.
+
+204
+00:23:33,502 --> 00:23:39,872
+Okay. So let's copy the guts of some of this.
+
+205
+00:24:00,992 --> 00:24:06,752
+And then we're going to. We don't have to actually test the uploading part.
+
+206
+00:24:06,752 --> 00:24:12,542
+We're going to write this into the profile directory under wallpapers.
+
+207
+00:24:15,422 --> 00:24:29,892
+Oh. Paper upload. Yeah.
+
+208
+00:24:31,302 --> 00:24:37,602
+We don't care about them being the same. Don't care about the Uuid.
+
+209
+00:24:41,922 --> 00:24:53,082
+What we'll do here. Is then check to see if you can get rid of our dumps in here.
+
+210
+00:24:57,342 --> 00:25:05,712
+That on calling wallpaper upload. We want to spy on the.
+
+211
+00:25:10,502 --> 00:25:21,872
+Spy on the store to ensure that where that wallpaper feed is generating a blob Uri.
+
+212
+00:25:23,012 --> 00:25:33,722
+Uh, generating an object Uri for the object URL for the file uploaded file.
+
+213
+00:25:37,472 --> 00:25:44,582
+So, um, sandbox dot spy will spy on the feed store.
+
+214
+00:25:52,142 --> 00:26:00,992
+Store to spy on dispatch. And then.
+
+215
+00:26:08,612 --> 00:26:11,932
+Sand. Uh, assert. Okay.
+
+216
+00:26:11,942 --> 00:26:27,602
+Feed. Uh, store. Dispatch. Top first call.
+
+217
+00:26:31,142 --> 00:26:38,072
+Oh, sorry. Suit called with. And then.
+
+218
+00:26:43,992 --> 00:26:52,142
+Uh. You see in this cases action creators.
+
+219
+00:26:54,212 --> 00:27:07,342
+Called with. Surge up called with action creators broadcast content.
+
+220
+00:27:11,152 --> 00:27:18,952
+Um. And we expect it to be called with wallpaper.
+
+221
+00:27:18,952 --> 00:27:23,182
+Custom set data should be.
+
+222
+00:27:25,882 --> 00:27:35,372
+Hmhm. That's interesting.
+
+223
+00:27:36,692 --> 00:27:51,602
+How do we. We just want to make sure that we won't know what the data, the object URL is deterministically that's created randomly at runtime.
+
+224
+00:27:53,902 --> 00:27:59,032
+Let's see what. Let's see what happens if we run this. I expect this to fail.
+
+225
+00:28:01,252 --> 00:28:06,242
+Uh, let's only run this one. Mark.
+
+226
+00:28:06,382 --> 00:28:09,442
+Test. Test. Wall feed.
+
+227
+00:28:09,472 --> 00:28:22,222
+I expect this to fail. Direct dispatches, which is already being spied on.
+
+228
+00:28:23,812 --> 00:28:31,462
+Do we not clean up? We didn't. We didn't sandboxed our store.
+
+229
+00:28:34,972 --> 00:28:39,202
+And prepared feed. We?
+
+230
+00:28:39,202 --> 00:28:43,402
+Yeah. Sorry. We're already spying on dispatch here, so we don't need to spy on it again.
+
+231
+00:28:52,052 --> 00:28:55,292
+False equals true. So yeah.
+
+232
+00:28:55,292 --> 00:29:01,652
+What was the what was it called with. So let's add our debugger here and we can examine it.
+
+233
+00:29:01,922 --> 00:29:07,412
+JS debugger open up again.
+
+234
+00:29:08,642 --> 00:29:12,152
+Wait for that to lunch. Doo doo doo doo doo doo doo doo doo doo.
+
+235
+00:29:12,182 --> 00:29:27,962
+Okay. Connect. Connect. Connecting. Correct. Okay, so now we can call fixed or dispatch calls or get call zero.
+
+236
+00:29:29,432 --> 00:29:32,852
+Um, and the args.
+
+237
+00:29:37,822 --> 00:29:45,142
+There we go. And then there's going to be a meta thing. So type wallpaper.
+
+238
+00:29:45,922 --> 00:29:49,912
+Custom set. Call.
+
+239
+00:29:54,622 --> 00:30:04,072
+So what I want to do here is write some kind of matcher because like I do.
+
+240
+00:30:05,662 --> 00:30:11,332
+I do want this to like what is broadcast content to again action creators.
+
+241
+00:30:14,982 --> 00:30:18,882
+Actions. I think that just.
+
+242
+00:30:26,162 --> 00:30:35,552
+It, routes it, and routing. Decorates the action by adding meta to it so it doesn't actually change it.
+
+243
+00:30:36,062 --> 00:30:41,551
+So what I can do is I can say that the data will be.
+
+244
+00:30:41,552 --> 00:30:53,792
+And then I supply a sign and matcher for a blob URL, because that will and that will be a string that looks like that.
+
+245
+00:30:58,022 --> 00:31:03,542
+Okay. So something like.
+
+246
+00:31:06,002 --> 00:31:09,512
+Wow. No. Um.
+
+247
+00:31:10,412 --> 00:31:18,972
+So. Sign on. String matcher. That triggers sign on match.
+
+248
+00:31:26,812 --> 00:31:32,952
+String. Regular expression function cries out to be a string.
+
+249
+00:31:32,962 --> 00:31:38,582
+DB equal starts with turns. An array starts with contains mapped equals.
+
+250
+00:31:39,742 --> 00:31:45,862
+Regular expression might be the easiest. Uh, okay.
+
+251
+00:31:52,792 --> 00:31:56,962
+Oh, have the expectation as a substring. Okay, maybe that's best.
+
+252
+00:31:57,652 --> 00:32:06,082
+Uh, so silent match. And then I supply, uh, blob null.
+
+253
+00:32:09,022 --> 00:32:17,362
+What will it think of that? Spy vs spy.
+
+254
+00:32:17,392 --> 00:32:21,142
+That's right. Hey. That works. Uh, okay.
+
+255
+00:32:21,142 --> 00:32:27,322
+Cool. Now ensure that the that a consistent, uh, URL.
+
+256
+00:32:29,392 --> 00:32:37,012
+Uh, object URL gets returned for each subsequent request for a wallpaper.
+
+257
+00:32:37,582 --> 00:32:41,692
+So we need to get at that.
+
+258
+00:32:42,082 --> 00:32:47,662
+Uh, let object const object url.
+
+259
+00:32:49,702 --> 00:33:07,642
+Uh object uh wallpaper url equals uh feed dot store dot dispatch dot get call zero args zero dot data.
+
+260
+00:33:14,312 --> 00:33:19,562
+We pull. This is this URL is non-deterministic.
+
+261
+00:33:21,782 --> 00:33:34,502
+But we can pull it out from what was just passed, um, to the dispatch to store dispatch function method.
+
+262
+00:33:34,802 --> 00:33:41,552
+Okay. Uh, let's make sure that we got it URL.
+
+263
+00:33:53,602 --> 00:33:58,202
+Yeah. Got it. Okay. And then, uh.
+
+264
+00:33:59,152 --> 00:34:08,392
+Um. Remove custom wallpaper broadcast content on update wallpapers.
+
+265
+00:34:10,072 --> 00:34:26,162
+We're going to call update wallpapers. And that is async await feed.
+
+266
+00:34:26,162 --> 00:34:33,592
+Dot. I'm going to go. Feed store dispatch that reset.
+
+267
+00:34:39,202 --> 00:34:43,992
+Wait for the, uh, update wallpapers.
+
+268
+00:34:50,162 --> 00:35:01,202
+Now pretend that we're opening a new tab which is requesting while the wallpaper state.
+
+269
+00:35:05,312 --> 00:35:09,542
+And then assert. That.
+
+270
+00:35:12,842 --> 00:35:19,202
+Building some Firefox extension? Nope. Testing some wallpaper stuff in nightly feeds.
+
+271
+00:35:19,232 --> 00:35:23,762
+Dispatch reset is not a function. Oh. Did, uh, reset history?
+
+272
+00:35:24,482 --> 00:35:30,022
+Is that what it is? Um.
+
+273
+00:35:32,322 --> 00:35:36,702
+All paper client can't access. Get the wall paper client as no.
+
+274
+00:35:37,932 --> 00:35:41,122
+140. Oh!
+
+275
+00:35:41,202 --> 00:35:44,862
+Paper client. Oh, boy, oh, boy.
+
+276
+00:35:46,212 --> 00:35:56,762
+We need a faker wallpaper client. Papers set up.
+
+277
+00:36:13,072 --> 00:36:21,542
+Papers set up. Wait.
+
+278
+00:36:21,552 --> 00:36:25,542
+Feed. Uh uh.
+
+279
+00:36:30,682 --> 00:36:36,942
+Uh. Well that work.
+
+280
+00:36:43,852 --> 00:36:50,372
+Hmhm wallpaper clients? Still no. And found an unexpected file.
+
+281
+00:36:52,382 --> 00:36:56,912
+Right. The written file.
+
+282
+00:37:00,212 --> 00:37:06,282
+Because we feel out of an exception here. 140.
+
+283
+00:37:08,002 --> 00:37:14,242
+Just one 235 here. Update wallpapers somehow wallpapers set up.
+
+284
+00:37:22,282 --> 00:37:29,782
+Huh? It was set up on a net.
+
+285
+00:37:38,432 --> 00:37:50,892
+The wallpapers. Okay.
+
+286
+00:37:50,902 --> 00:37:54,172
+I think what we'll do is we'll mark out instead. We'll say.
+
+287
+00:37:59,122 --> 00:38:11,392
+Stub out a fake remote client so that, uh, that so that update wall papers won't complain.
+
+288
+00:38:13,462 --> 00:38:21,561
+When we eventually call it. Uh, feed dot wallpaper client equals.
+
+289
+00:38:21,562 --> 00:38:28,392
+And then we're going to say. It's an object that returns a promise.
+
+290
+00:38:29,112 --> 00:38:33,712
+That is. Nothing. Wallpaper client equals.
+
+291
+00:38:36,112 --> 00:38:46,522
+Uh, get. Um.
+
+292
+00:38:47,062 --> 00:38:56,272
+Return nothing. I feel about that.
+
+293
+00:39:03,422 --> 00:39:09,552
+Okay, so 244 is now. Called with.
+
+294
+00:39:09,882 --> 00:39:13,422
+It's different. It's different. So what are now? What are you called with?
+
+295
+00:39:14,652 --> 00:39:18,252
+Um. Dump args.
+
+296
+00:39:18,882 --> 00:39:30,372
+Feed store dispatch that get calls zero args json to Stringify args.
+
+297
+00:39:34,722 --> 00:39:38,232
+Why are you mad? Expected string concatenation.
+
+298
+00:39:38,232 --> 00:39:49,301
+Don't worry about it. ARGs type wallpaper.
+
+299
+00:39:49,302 --> 00:39:52,302
+Custom set data is null. Why would you be null?
+
+300
+00:40:03,962 --> 00:40:13,212
+You uid. Let us step through it.
+
+301
+00:40:13,992 --> 00:40:20,202
+Debugger. Let's see what we're missing.
+
+302
+00:40:20,442 --> 00:40:28,862
+What information are we missing? Hmhm.
+
+303
+00:40:29,132 --> 00:40:33,751
+Okay update wallpapers. What's going to happen? The Uuid exists.
+
+304
+00:40:33,752 --> 00:40:38,362
+Selected wallpaper. Is empty.
+
+305
+00:40:39,892 --> 00:40:43,862
+If. Uh oh.
+
+306
+00:40:44,582 --> 00:40:49,772
+So this is wrong. I have a bug in my code because Update Wallpapers is called.
+
+307
+00:40:52,182 --> 00:40:56,232
+Every time. We don't want to do that. We have a bug in our code.
+
+308
+00:40:57,372 --> 00:41:04,922
+We have a bug in our code. Because Update wallpapers is actually called when we set up.
+
+309
+00:41:06,872 --> 00:41:15,152
+And when else is it called? It wallpapers on startup.
+
+310
+00:41:21,482 --> 00:41:24,942
+Oh, only on startup. It's only called. Oh. So maybe that's fine.
+
+311
+00:41:24,962 --> 00:41:29,462
+So then what's called whenever a site wants to hear about.
+
+312
+00:41:33,422 --> 00:41:38,522
+The wallpaper being available like wallpaper set up, is then called.
+
+313
+00:41:38,672 --> 00:41:57,592
+Any time. So my test is wrong.
+
+314
+00:42:14,042 --> 00:42:20,792
+So what we really need to check to see is whether or not the state, the wallpaper state.
+
+315
+00:42:23,972 --> 00:42:34,112
+Um. Speed.
+
+316
+00:42:36,242 --> 00:42:42,252
+Feed store. State. What is the value?
+
+317
+00:42:46,182 --> 00:42:49,692
+Dump. State. Feed. Store. State.
+
+318
+00:42:51,762 --> 00:42:56,142
+Json Stringify wallpapers.
+
+319
+00:42:56,232 --> 00:43:03,542
+I think it's this that the. Reducers.
+
+320
+00:43:05,942 --> 00:43:20,022
+Actions. Reducers. Wallpaper.
+
+321
+00:43:20,832 --> 00:43:25,332
+Wallpapers. Wallpapers.
+
+322
+00:43:28,272 --> 00:43:35,592
+So. Wallpapers. No, don't run with just the [INAUDIBLE].
+
+323
+00:43:35,652 --> 00:43:43,602
+Just run it normal. Run a normal kind. Can't access it.
+
+324
+00:43:43,602 --> 00:43:46,962
+Feed store state is undefined.
+
+325
+00:43:51,362 --> 00:43:58,082
+Uh. Uh uh.
+
+326
+00:44:16,122 --> 00:44:32,352
+Hmhm. What happens if I look at it now?
+
+327
+00:44:38,862 --> 00:44:44,032
+State is undefined. He store.
+
+328
+00:44:45,112 --> 00:44:51,732
+State. But if I just look at the state object.
+
+329
+00:44:57,882 --> 00:45:00,882
+Just the empty objects. The states not being updated.
+
+330
+00:45:02,902 --> 00:45:10,572
+Because dispatch. Uh.
+
+331
+00:45:15,742 --> 00:45:19,252
+I think it's not easy to test what I want to test here.
+
+332
+00:45:23,292 --> 00:45:33,252
+Um. Wallpapers custom set updates the data to be that.
+
+333
+00:45:34,652 --> 00:45:40,772
+Then really what I want to test is whether or not the reducers are doing the right thing.
+
+334
+00:45:40,772 --> 00:45:45,212
+Reducers dot system JS. Do we ever test that?
+
+335
+00:45:54,612 --> 00:45:59,232
+We do. Producers.
+
+336
+00:46:00,502 --> 00:46:12,212
+Pirated series. If I supply.
+
+337
+00:46:18,452 --> 00:46:30,742
+Oh, paper. Action.
+
+338
+00:46:45,872 --> 00:46:53,172
+Uh, so our paper is, uh. Function wallpapers.
+
+339
+00:47:04,412 --> 00:47:21,782
+Producers. Let's see what happens if I try and bring this in reducers.
+
+340
+00:47:25,442 --> 00:47:29,362
+Uh uh uh. Common reducers.
+
+341
+00:47:29,362 --> 00:47:53,052
+This is not mjs. Wallpapers.
+
+342
+00:47:59,892 --> 00:48:05,082
+No. And then the action. We're going to supply it.
+
+343
+00:48:07,472 --> 00:48:14,552
+Fast action. Speed. Start. Dispatch. Get call 050.
+
+344
+00:48:16,382 --> 00:48:20,162
+Uh, call paper early call to action dot data.
+
+345
+00:48:21,902 --> 00:48:27,842
+We're going to pass action. And we are going to expect a state object.
+
+346
+00:48:30,242 --> 00:48:34,652
+Const state assert equals state dot.
+
+347
+00:48:38,532 --> 00:48:49,752
+Uploaded wallpaper. The wallpaper URL should have updated the state to include the blob or the object URL.
+
+348
+00:48:53,792 --> 00:49:02,832
+Let's see if what thinks about that. Amazing.
+
+349
+00:49:03,162 --> 00:49:06,522
+Okay, I'm happy with that. Test wise.
+
+350
+00:49:07,122 --> 00:49:11,862
+Oh, um. He is a ray destructuring.
+
+351
+00:49:12,042 --> 00:49:15,252
+Okay, fine.
+
+352
+00:49:23,622 --> 00:49:29,232
+Zero. Return for yourself some request for a wallpaper by checking to see that it's, uh.
+
+353
+00:49:30,072 --> 00:49:41,592
+It exists. And the state object. Okay.
+
+354
+00:49:43,142 --> 00:49:48,782
+I update this thing called object. You are a consistent object.
+
+355
+00:49:48,782 --> 00:49:55,921
+You are an object URL. And then I don't know.
+
+356
+00:49:55,922 --> 00:50:05,342
+Do we need that anymore? Okay.
+
+357
+00:50:05,342 --> 00:50:12,872
+I'm happy with that. Let's take a look.
+
+358
+00:50:14,472 --> 00:50:21,172
+GAA squash. JJ, edit or, uh, describe wallpaper.
+
+359
+00:50:21,182 --> 00:50:25,442
+Fix and get rid of the whip use parent project.
+
+360
+00:50:26,532 --> 00:50:34,892
+I use a parent process object URL instead of a per document object URL for new tab backgrounds.
+
+361
+00:50:35,762 --> 00:50:39,302
+Amy I'm Amy. Uh, review that.
+
+362
+00:50:40,142 --> 00:50:46,272
+Pretty sure that's. Amy.
+
+363
+00:50:46,312 --> 00:50:49,682
+Amy. Amy. Amy. Amy. Amy.
+
+364
+00:50:49,882 --> 00:50:58,431
+Yeah. Okay. Uh, make sure that I don't have to re, uh, mark npm run time.
+
+365
+00:50:58,432 --> 00:51:04,102
+No prefix browser extensions. Um, I don't think I'll have to re create anything.
+
+366
+00:51:07,622 --> 00:51:13,092
+If nothing. All right, now check it out.
+
+367
+00:51:13,112 --> 00:51:18,782
+I can go mas fab. Submit single queue w no whip.
+
+368
+00:51:23,112 --> 00:51:26,232
+Submitting. I don't have to do any git manipulation.
+
+369
+00:51:26,472 --> 00:51:30,722
+Requesting review. Oh, you know what I should have done?
+
+370
+00:51:31,082 --> 00:51:35,612
+Um. I should have done Mark Lent, outgoing X.
+
+371
+00:51:47,012 --> 00:51:51,752
+Good. There was nothing to fix. So then our patch is now up for review here.
+
+372
+00:52:15,282 --> 00:52:27,992
+And then our test. Oh, I've got the spurious comments in here I can get rid of, and we'll go ahead.
+
+373
+00:52:28,002 --> 00:52:33,492
+This is lovely. I can just go. JJ Squash and MOS Fab submit again.
+
+374
+00:52:34,602 --> 00:52:37,602
+Get rid of a you don't need no f anymore.
+
+375
+00:52:40,302 --> 00:52:43,692
+Uh, meaningless comment in the patch.
+
+376
+00:52:48,342 --> 00:52:52,332
+Jiu jitsu is the greatest. I'm saying it today. I'm saying it now.
+
+377
+00:52:56,312 --> 00:53:00,722
+That got rid of that weird thing. Okay, so that's done.
+
+378
+00:53:01,922 --> 00:53:06,992
+Posted for review. Now is assigned to me. Done.
+
+379
+00:53:07,682 --> 00:53:12,372
+What do we want to do now? Uh, okay. So that's done. Uh, let's review some patches.
+
+380
+00:53:12,392 --> 00:53:16,202
+There's a bunch of patches in my queue. Let's take a look at some of them.
+
+381
+00:53:20,312 --> 00:53:24,482
+Okay. So what's this all about? Um, I have.
+
+382
+00:53:28,912 --> 00:53:37,252
+Uh, dirt. Dirt. Uh uh, sorry, I'm just getting lit up by messages.
+
+383
+00:53:37,762 --> 00:53:43,912
+Um. There is this redesign.
+
+384
+00:53:44,182 --> 00:53:47,692
+Uh, so this is, uh, what we're looking at here is like a local site.
+
+385
+00:53:47,842 --> 00:53:52,342
+Uh, uh, um, prototype for a redesign of the settings page in Firefox.
+
+386
+00:53:52,762 --> 00:53:55,342
+Believe it or not, the settings page is where a lot of people go.
+
+387
+00:53:56,002 --> 00:54:01,942
+You know, that's one of the first places they go is to configure Firefox to to sort of make it function the way they want to function,
+
+388
+00:54:02,122 --> 00:54:12,442
+want it to function. And the settings page in Firefox has not changed much since, I don't know, the 2017, the the photon release.
+
+389
+00:54:13,162 --> 00:54:17,282
+Um, and uh, we want to improve it there.
+
+390
+00:54:17,302 --> 00:54:20,572
+It's kind of gotten very cluttered over time.
+
+391
+00:54:20,572 --> 00:54:26,692
+This happens every few years where it's like, okay, this has become a dumping ground for various settings.
+
+392
+00:54:26,702 --> 00:54:31,582
+Uh, and, and we need to kind of like reorganize and, um, rethink it.
+
+393
+00:54:31,942 --> 00:54:38,272
+And so there's this, like prototype, uh, that you may have seen before that is being worked on slowly but surely.
+
+394
+00:54:40,452 --> 00:54:44,171
+And one of the things that we're trying to do in part of this is to make sure
+
+395
+00:54:44,172 --> 00:54:47,682
+that we're using our reusable components and to make it so that it's really.
+
+396
+00:54:48,652 --> 00:54:55,882
+Easy for people to add things to. Settings in a way that is like consistent with the UI.
+
+397
+00:54:57,362 --> 00:55:01,651
+Uh, and so traditionally, the way that's done these days,
+
+398
+00:55:01,652 --> 00:55:09,962
+like the way you add stuff to the settings is there's like, um, maned, uh, xHTML or is it meaning tags like,
+
+399
+00:55:09,962 --> 00:55:15,692
+there's preferences is an HTML document that's got like a you just hand roll all the markup,
+
+400
+00:55:16,232 --> 00:55:21,062
+you hand roll all the markup, and you hope you get your classes right. And it's a real pain in the butt.
+
+401
+00:55:21,902 --> 00:55:30,482
+And, uh, you know, you end up with like somewhat inconsistent stuff sometimes, like, sometimes, uh, let's see what's inconsistent.
+
+402
+00:55:30,932 --> 00:55:43,112
+What's some inconsistencies. Uh, sometimes you've got checkboxes, uh, you've got like things like this versus this.
+
+403
+00:55:43,502 --> 00:55:46,562
+You've got dropdowns that are um.
+
+404
+00:55:48,722 --> 00:55:52,622
+Uh, I'm looking for more like. The spacing is a little inconsistent.
+
+405
+00:55:54,032 --> 00:55:57,482
+Uh, you got lists that look like this, but also lists that look like this.
+
+406
+00:55:58,202 --> 00:56:04,202
+And, uh. Yeah, it's all just kind of a big, big ol mess.
+
+407
+00:56:04,592 --> 00:56:13,262
+So one of the things that, uh, the preferences team or the reusable component team has been working on is making it so there is much more,
+
+408
+00:56:13,352 --> 00:56:20,202
+uh, much easier for JavaScript. We can describe declaratively what the, um,
+
+409
+00:56:20,252 --> 00:56:32,312
+preferences are and not describe the UI so much as the behavior of the of how we expect the preference to behave and how we expect it to be.
+
+410
+00:56:33,522 --> 00:56:40,902
+Like what components it should use. But then there's sort of this intermediary layer which will then ultimately render the page that.
+
+411
+00:56:41,232 --> 00:56:48,072
+The goal being that if, uh, Firefox developer and like in the future wants to add a checkbox here,
+
+412
+00:56:48,192 --> 00:56:52,692
+they don't actually have to add a checkbox element and no to use mask checkbox and, and whatnot.
+
+413
+00:56:52,692 --> 00:56:57,042
+They just add it to a list and it will just automatically do the right thing.
+
+414
+00:56:58,512 --> 00:57:05,292
+And so this is all part of that project. And it's going to involve a rejig of a lot of like reusable components.
+
+415
+00:57:05,502 --> 00:57:11,802
+And uh, the reason I brought up this section is because I think this section is actually using the declarative model already.
+
+416
+00:57:12,012 --> 00:57:18,732
+We're starting kind of like piecemeal. Um, it's yeah, it's using something called settings control or Setting control.
+
+417
+00:57:19,692 --> 00:57:23,052
+And there is a setting group, group ID browsing.
+
+418
+00:57:23,112 --> 00:57:27,942
+So we can take a look actually at the uh, setting group and what that is.
+
+419
+00:57:32,672 --> 00:57:39,842
+This is a setting group. And what happens is.
+
+420
+00:57:42,452 --> 00:57:55,022
+You can cut. You can supply a function to it, which is going to return a description of what should be rendered inside of it,
+
+421
+00:57:55,832 --> 00:58:02,852
+with some like in a, in a very structured format, like on whether it should be visible, what the config should be.
+
+422
+00:58:03,242 --> 00:58:10,382
+Um, so let's look at an example. Um setting group.
+
+423
+00:58:11,882 --> 00:58:18,362
+Do we ever. No, we'd probably go like new setting groups.
+
+424
+00:58:18,722 --> 00:58:24,432
+Can we do that? Huh?
+
+425
+00:58:25,092 --> 00:58:28,442
+Just try to remember how this. Here we go.
+
+426
+00:58:28,452 --> 00:58:33,582
+We'll look at the patch. I remember this because I helped review it. Um, what happens here?
+
+427
+00:58:34,032 --> 00:58:37,301
+Inside of the script, we add these settings.
+
+428
+00:58:37,302 --> 00:58:47,832
+These are, these are the structures of the things. Um, and then there's all this config for like the ID and then the, the localization stuff.
+
+429
+00:58:48,702 --> 00:58:53,261
+And then what we do is we get access to the set and group.
+
+430
+00:58:53,262 --> 00:58:59,232
+And then we set the config to be the settings config for browsing.
+
+431
+00:59:01,192 --> 00:59:07,912
+And we say so I guess we declaratively put the settings group into the.
+
+432
+00:59:08,812 --> 00:59:13,152
+Yeah, we just put the declaratively, put the setting group in. We don't create it in the script.
+
+433
+00:59:13,162 --> 00:59:18,592
+That's great. And then in script you just sort of like say okay, initialize it based on this structure.
+
+434
+00:59:18,982 --> 00:59:24,742
+And there's this kind of like nested thing where there's like a setting group. And the setting group itself uses a thing called a setting.
+
+435
+00:59:25,432 --> 00:59:29,482
+Um, or can contain different settings, uh, these days.
+
+436
+00:59:32,732 --> 00:59:48,452
+Um, where is it? Mansfield set a set in control.
+
+437
+00:59:48,462 --> 00:59:56,392
+That's what it is. We'll go inside of. A mass field set.
+
+438
+00:59:56,722 --> 01:00:04,342
+So set in control is a lit directive that applies all properties of an object to a Dom.
+
+439
+01:00:04,612 --> 01:00:11,392
+Like this is really cool stuff. Saying control is a modest lit element that, um.
+
+440
+01:00:13,802 --> 01:00:15,722
+Can be a checkbox.
+
+441
+01:00:15,962 --> 01:00:24,422
+Unless it's some other, uh, like it can be defined inside of the structure on whether or not wants to be a checkbox or something else.
+
+442
+01:00:24,632 --> 01:00:27,872
+Like if we go back to that patch. Um.
+
+443
+01:00:34,912 --> 01:00:38,002
+What is it? Control. Is there like a control?
+
+444
+01:00:39,502 --> 01:00:43,282
+I think these are all just checkboxes, so they all default to last checkbox.
+
+445
+01:00:44,762 --> 01:00:52,792
+Um. Yeah, I think they all default to mask checkbox.
+
+446
+01:00:55,382 --> 01:00:58,982
+Which is fine for now, but they're going to be adding more soon.
+
+447
+01:01:00,302 --> 01:01:03,302
+And this is this patch that I'm hoping to review is all part of this.
+
+448
+01:01:03,722 --> 01:01:07,052
+So basic dialog button for opening settings dialogs.
+
+449
+01:01:07,352 --> 01:01:10,472
+So let's take a look at where two things have already landed.
+
+450
+01:01:10,952 --> 01:01:16,501
+Uh this one support headings for Mansfield set legend and design tokens for heading font size and weight.
+
+451
+01:01:16,502 --> 01:01:21,542
+So those landed yesterday. Those landed yesterday.
+
+452
+01:01:24,062 --> 01:01:27,572
+Design tokens uh, landed yesterday.
+
+453
+01:01:29,852 --> 01:01:34,892
+And now let's take a look at what's next in the queue. That is basic dialog button.
+
+454
+01:01:36,722 --> 01:01:41,282
+And that's for this bug. Let's read the bug. Add support for a modal button to config based settings.
+
+455
+01:01:41,732 --> 01:01:46,082
+Enhance the config by saying system with support for buttons that open dialogs for complex input.
+
+456
+01:01:46,082 --> 01:01:52,442
+For example font selection. The font section currently uses a modal for font previewing selection, making an ideal first adopter of this feature.
+
+457
+01:01:52,442 --> 01:01:58,952
+Many of the dialogs or modals are simple and just require the path to the modal source file as an argument or some simple features.
+
+458
+01:01:58,952 --> 01:02:02,792
+Options for g sub dialog. Ideally, we can manage these directly from the config without main.js.
+
+459
+01:02:02,792 --> 01:02:07,231
+So um, this is uh the browser languages example.
+
+460
+01:02:07,232 --> 01:02:14,162
+So this is the way you could kind of describe it. Simple options g sub dialog should also be supported.
+
+461
+01:02:14,162 --> 01:02:19,141
+Camera permissions example control config okay.
+
+462
+01:02:19,142 --> 01:02:22,202
+Advanced configuration with closing callback close callback and dynamic prints will
+
+463
+01:02:22,202 --> 01:02:25,412
+likely be through a settings get control config hook and be done in follow up task.
+
+464
+01:02:28,102 --> 01:02:34,342
+Wow, this team is doing such a good job of architecting this and thinking this through.
+
+465
+01:02:36,652 --> 01:02:39,682
+That's kind of what marks Mark in the team are really good at this.
+
+466
+01:02:39,682 --> 01:02:45,112
+They've been doing it for years. That's the band name Mark in the Record shop team.
+
+467
+01:02:46,132 --> 01:02:50,451
+Okay, so what is what is the idea? Let's take a look at the, uh, the comments here.
+
+468
+01:02:50,452 --> 01:02:54,382
+This quote feels a little overkill, but it keeps the logic of sane control. So maybe somewhat reasonable.
+
+469
+01:02:54,682 --> 01:02:58,282
+Here are the config for the contrast control section as an example.
+
+470
+01:02:59,092 --> 01:03:06,412
+So you say you're a mass radio group and the controller is Mars radio.
+
+471
+01:03:07,072 --> 01:03:11,212
+The option control is the Mars radio. And then this is the string for the group.
+
+472
+01:03:11,452 --> 01:03:16,132
+And then these are the options for it. And these are the the values in the strings.
+
+473
+01:03:16,132 --> 01:03:23,722
+And then value to is this. And then within that there are items that are like hey do you want to manage colors?
+
+474
+01:03:24,202 --> 01:03:29,932
+Here's the string. Here's a it's a control. It's a dialog button which opens up a dialog.
+
+475
+01:03:31,042 --> 01:03:38,182
+Okay. Using this composer requires it to be included in browser usage telemetry record telemetry, which I don't love.
+
+476
+01:03:39,112 --> 01:03:42,772
+Creating a mars button inside of the dialog button rather than inheriting.
+
+477
+01:03:43,192 --> 01:03:47,382
+Uh. Seems reasonable, but still didn't record telemetry.
+
+478
+01:03:47,412 --> 01:03:51,162
+Spectacles mouse button and have an idea. Fluent string, but not too closely. Another option be.
+
+479
+01:03:51,402 --> 01:03:54,582
+So there's the flag. Something in the config like control Mars button Dalek true.
+
+480
+01:03:54,582 --> 01:03:58,282
+And in that case attach click handler. From set control.
+
+481
+01:03:59,542 --> 01:04:03,952
+That's interesting. Uh, that is something we could potentially look at.
+
+482
+01:04:05,622 --> 01:04:14,352
+Um, so he's got a couple of things here. He's bringing in a dialog button widget that is defining.
+
+483
+01:04:17,022 --> 01:04:20,561
+No CSS, but here's the Mjs dialog button.
+
+484
+01:04:20,562 --> 01:04:27,142
+Extends Mars button. And.
+
+485
+01:04:29,052 --> 01:04:37,242
+onClick. We get our dialog and our features attribute and args equals features.
+
+486
+01:04:37,242 --> 01:04:45,082
+If features then bring it in. Otherwise it's undefined and then open up the dialog path.
+
+487
+01:04:45,102 --> 01:04:50,202
+Okay. And then it's like hey G sub dialog is not defined.
+
+488
+01:04:51,162 --> 01:04:57,302
+So I wonder if that should be window DG sub dialog or you know global DG sub dialog.
+
+489
+01:04:58,212 --> 01:05:04,132
+I do think that that is going to um. Yeah, it's going to make, uh.
+
+490
+01:05:05,912 --> 01:05:09,482
+Uh, Storybrooke testing. A little annoying. Um.
+
+491
+01:05:10,712 --> 01:05:14,102
+Does he attempt to? No, he doesn't attempt to implement it here.
+
+492
+01:05:17,142 --> 01:05:21,552
+Okay. So he adds, and let's let's pull this down and take a look.
+
+493
+01:05:22,332 --> 01:05:32,352
+He doesn't actually, like, use it anywhere. The dialog button, which is a pain we might need to actually bring down a couple of these patches.
+
+494
+01:05:33,902 --> 01:05:39,372
+Um. Disable Mars button if its parent is disabled.
+
+495
+01:05:43,392 --> 01:05:48,792
+This is not a thing I need to review, but if disabled or parent disabled.
+
+496
+01:05:51,532 --> 01:05:59,851
+Parents disabled is. A boolean that is exposed that is written to it.
+
+497
+01:05:59,852 --> 01:06:08,662
+And then. For zoom settings section to config based prefs.
+
+498
+01:06:10,002 --> 01:06:17,802
+So the well, this might be a logical unit where if I do zoom basic ad, um,
+
+499
+01:06:17,892 --> 01:06:23,142
+basically myself for key control config functions call task function once initial setup is
+
+500
+01:06:23,142 --> 01:06:27,522
+generally be merged with the original container and returned directly in subsequent calls.
+
+501
+01:06:29,792 --> 01:06:33,061
+Control config function corner at once.
+
+502
+01:06:33,062 --> 01:06:38,072
+Inner. That resolved, if not resolved.
+
+503
+01:06:39,042 --> 01:06:51,242
+Compute it. Otherwise return result. Isn't.
+
+504
+01:06:52,252 --> 01:07:00,502
+At once I was, I used. Get control config is at once.
+
+505
+01:07:03,342 --> 01:07:15,382
+Isn't this like the fine lazy getter? Define lazy getter.
+
+506
+01:07:29,662 --> 01:07:32,902
+Isn't this just a reimplementation to finally together?
+
+507
+01:07:44,352 --> 01:07:50,151
+I guess. To find lazy getter accepts.
+
+508
+01:07:50,152 --> 01:07:58,822
+The thing that you're calling it on is the first argument. There's also become utils that I'm lazy.
+
+509
+01:08:20,332 --> 01:08:24,742
+The given object is also returned, which enables type friendly composition.
+
+510
+01:08:36,152 --> 01:08:40,422
+Hmhm. Okay, well, let's keep reading.
+
+511
+01:08:40,632 --> 01:08:47,022
+Uh, my first thought, though, is that I'm not entirely certain. Oh, it's a result.
+
+512
+01:08:49,972 --> 01:08:53,572
+Is merged with the original config.
+
+513
+01:08:57,292 --> 01:09:05,092
+So it takes a config and you get the control. Let our turn function.
+
+514
+01:09:07,832 --> 01:09:14,382
+And it gets a config back. It is past.
+
+515
+01:09:15,222 --> 01:09:20,912
+Okay. A function that returns.
+
+516
+01:09:26,112 --> 01:09:29,832
+Oh, boy. Okay. It returns this object.
+
+517
+01:09:35,842 --> 01:09:48,651
+You take that? Oh, man.
+
+518
+01:09:48,652 --> 01:09:52,512
+My brain. So then it's returning at once.
+
+519
+01:09:52,522 --> 01:10:00,132
+Returns a function. That's what get control figure is going to be called with.
+
+520
+01:10:02,772 --> 01:10:08,972
+And get control will take a function and it will take a config and merge it with whatever has been part.
+
+521
+01:10:09,012 --> 01:10:16,092
+Okay. So this is not exactly I get it. Uh, it as a little complicated but okay.
+
+522
+01:10:19,952 --> 01:10:23,232
+Helper object. Zoom helper shows a new class.
+
+523
+01:10:23,252 --> 01:10:35,662
+Oh, this is interesting. It's like. A scoped class so you can't like you don't have access to exclusive helpers.
+
+524
+01:10:35,672 --> 01:10:40,522
+That's interesting how this is done. Some helpers.
+
+525
+01:10:42,122 --> 01:10:45,572
+It's a singleton. That's how you do a singleton. Maybe.
+
+526
+01:10:49,652 --> 01:10:55,912
+When he goes on to rant, I'll go on tell. Okay.
+
+527
+01:11:04,222 --> 01:11:12,532
+And then here's the settings. Did you pay a spousal tax?
+
+528
+01:11:16,172 --> 01:11:20,462
+Okay. That seems nice. Where are we using this?
+
+529
+01:11:20,462 --> 01:11:27,351
+Like, uh, parent disabled thing? Why that was added.
+
+530
+01:11:27,352 --> 01:11:30,622
+So like these two things. What are they blocking?
+
+531
+01:11:31,402 --> 01:11:34,552
+These are like bits and pieces that don't appear to block.
+
+532
+01:11:34,582 --> 01:11:40,972
+Convert fonts to config based prefs. Is that a later fonts?
+
+533
+01:11:45,392 --> 01:11:52,182
+That. Where are the fonts?
+
+534
+01:11:53,692 --> 01:11:58,132
+Locks this so there's no actual patch.
+
+535
+01:12:00,652 --> 01:12:06,772
+Okay. So it's all foundational.
+
+536
+01:12:07,132 --> 01:12:13,971
+Okay, that's what I'm getting from all of this. So these two first patches are foundational.
+
+537
+01:12:13,972 --> 01:12:17,332
+I think this is about as far as I'm going to be able to review today in this stream.
+
+538
+01:12:17,332 --> 01:12:22,012
+As these two I might review the rest of these outside of the stream, but I'm getting a sense now what's going on here?
+
+539
+01:12:26,362 --> 01:12:32,302
+These this command requires we include browser usage time tree. Uh, I'd love a way of testing this.
+
+540
+01:12:34,372 --> 01:12:40,552
+Um, because let's launch an instance of the browser.
+
+541
+01:12:42,862 --> 01:12:48,172
+So we use browser usage telemetry. Uh, that's going to give me a headache.
+
+542
+01:12:49,252 --> 01:12:54,382
+We use browser usage telemetry to, like, know how many people are like, I don't know.
+
+543
+01:12:55,402 --> 01:13:00,082
+Uh oh. Wow. I've got I'm logging all this stuff, uh, by logging.
+
+544
+01:13:01,102 --> 01:13:07,472
+Stop. Don't log. Stop logging.
+
+545
+01:13:12,742 --> 01:13:21,252
+Why are you logging socket? Logging preset.
+
+546
+01:13:25,652 --> 01:13:30,632
+Am I? You know what I probably said? Some kind of environment, variable services.
+
+547
+01:13:30,632 --> 01:13:35,042
+That and that get Moore's law.
+
+548
+01:13:35,702 --> 01:13:39,842
+No, I didn't get this PR log. Why are you logging?
+
+549
+01:13:45,032 --> 01:13:48,151
+Echo Moore's log. Yeah.
+
+550
+01:13:48,152 --> 01:13:53,382
+Why are you logging? There.
+
+551
+01:13:54,822 --> 01:14:00,312
+It's gone now. Anyway, um, what did I want to look at?
+
+552
+01:14:00,852 --> 01:14:09,342
+So browser usage. You know what? It's it's because of the tool box this thing's profile is is logging.
+
+553
+01:14:10,572 --> 01:14:15,852
+I have to manipulate that one. Uh, I'm going to have to figure that out another time.
+
+554
+01:14:16,722 --> 01:14:19,962
+That's a pain. Um, but.
+
+555
+01:14:19,962 --> 01:14:29,622
+Okay. Parent process. So I just want to, uh, browser usage, telemetry record.
+
+556
+01:14:31,092 --> 01:14:38,051
+So this is how we know, for example, that, like, um, users are not a particular user,
+
+557
+01:14:38,052 --> 01:14:45,362
+but that in general, users are changing their font settings or something.
+
+558
+01:14:45,372 --> 01:14:53,172
+And it's like, okay, well, maybe we should investigate why they need to do that. Um, command where whereas.
+
+559
+01:14:55,622 --> 01:15:00,122
+Here's the function that actually does the thing.
+
+560
+01:15:06,182 --> 01:15:10,172
+Up. Here.
+
+561
+01:15:10,832 --> 01:15:15,812
+Handle. Event. Click.
+
+562
+01:15:18,242 --> 01:15:21,242
+Record. Command. That's what. Record. Command. So.
+
+563
+01:15:23,372 --> 01:15:28,052
+If I click on settings that comes in.
+
+564
+01:15:29,672 --> 01:15:37,312
+So the question is. If I were to remove one of these buttons and replace it with a mass dialog button.
+
+565
+01:15:37,792 --> 01:15:41,112
+Uh, how does that work? What happens?
+
+566
+01:15:41,122 --> 01:15:46,042
+So let's bring these two patches in. Uh, JJ Newman and.
+
+567
+01:15:48,562 --> 01:15:51,562
+Uh, fat patch five two.
+
+568
+01:15:51,562 --> 01:15:57,252
+Here. Skip the dependency swap dependencies.
+
+569
+01:15:58,492 --> 01:16:01,822
+Just bring these two into this one and then this one.
+
+570
+01:16:06,532 --> 01:16:20,902
+Uh, apply to here. Okay, but you go faster.
+
+571
+01:16:22,612 --> 01:16:25,762
+And then let's say we replaced the.
+
+572
+01:16:28,832 --> 01:16:35,612
+Uh. One of the buttons with the dialog button.
+
+573
+01:16:47,782 --> 01:16:53,672
+Okay, so let's replace. Let's replace this button.
+
+574
+01:16:56,942 --> 01:17:04,922
+The dialog button. Okay.
+
+575
+01:17:05,822 --> 01:17:09,052
+So that's okay. Uh, that an exception was thrown.
+
+576
+01:17:09,062 --> 01:17:12,062
+I don't mind my hit.
+
+577
+01:17:12,062 --> 01:17:18,452
+Did I had to debug. How come we're stuck now?
+
+578
+01:17:22,432 --> 01:17:32,252
+Can't. So I have to do that again. Okay.
+
+579
+01:17:33,872 --> 01:17:39,692
+And now I'm going to set a breakpoint in browser usage telemetry under record command here.
+
+580
+01:17:41,532 --> 01:17:55,162
+So we do see it. Let's click target.
+
+581
+01:17:55,172 --> 01:18:03,192
+Is that? Source event target is the browser we ignore.
+
+582
+01:18:03,192 --> 01:18:08,142
+It is about preferences, which is now true.
+
+583
+01:18:13,092 --> 01:18:18,432
+While UI and classes create and art is about preferences and.
+
+584
+01:18:19,062 --> 01:18:23,152
+We get the parent node. So.
+
+585
+01:18:23,152 --> 01:18:29,212
+Node dot local name UI target. Elements.
+
+586
+01:18:30,622 --> 01:18:34,012
+These are the sorts of things that we listen for.
+
+587
+01:18:42,482 --> 01:18:46,292
+And we'll go up. And then we're eventually.
+
+588
+01:18:48,392 --> 01:18:54,612
+We're going to hit the top. And we return.
+
+589
+01:18:54,642 --> 01:18:59,532
+Okay, I know why. So yeah, the UI target elements needs to include our new button here.
+
+590
+01:19:00,672 --> 01:19:06,642
+Browser usage. Telemetry. Oops.
+
+591
+01:19:07,542 --> 01:19:10,602
+Sorry. Usage. Telemetry dot system JS.
+
+592
+01:19:14,902 --> 01:19:22,602
+So the dialog button. Okay.
+
+593
+01:19:27,852 --> 01:19:30,942
+How are we doing? How are we doing for time? Uh, it's 223.
+
+594
+01:19:32,892 --> 01:19:36,672
+We've already written a patch, and I think we've solved this mystery about the telemetry thing.
+
+595
+01:19:37,302 --> 01:19:42,642
+So that's a pretty good chunk of work today for our hour and a half together.
+
+596
+01:19:47,732 --> 01:19:52,742
+Uh, so let us now turn that into a dialog button.
+
+597
+01:19:56,102 --> 01:20:02,192
+Okay. And then. Here we go.
+
+598
+01:20:02,402 --> 01:20:06,512
+We'll set our breakpoint here.
+
+599
+01:20:08,912 --> 01:20:13,292
+Okay. Found it.
+
+600
+01:20:14,972 --> 01:20:19,292
+Uh, composed. When the expected target was a customer with a chatter route.
+
+601
+01:20:19,292 --> 01:20:23,762
+There may be specific part of the component. Click events correspond to changes. Ignore any other events if requested.
+
+602
+01:20:24,692 --> 01:20:28,532
+So expected event target is undefined.
+
+603
+01:20:33,442 --> 01:20:38,181
+If the source type is command, then we'll do those things.
+
+604
+01:20:38,182 --> 01:20:42,891
+Otherwise we'll get the item, the widget ID. So the item is advanced fonts.
+
+605
+01:20:42,892 --> 01:20:48,682
+The source we'll get the widget container. The source is preference pay in general and then we'll record.
+
+606
+01:20:54,972 --> 01:20:59,602
+Widget ID. Extra care.
+
+607
+01:20:59,862 --> 01:21:03,132
+Advanced fonts. Yeah, that's what we want.
+
+608
+01:21:03,162 --> 01:21:06,972
+That's what we want. So now we have an answer for Mark.
+
+609
+01:21:11,112 --> 01:21:21,852
+Uh, requires b o b, but it requires to be included to record telemetry, which I don't love creating a mars button since there is a lot to spare.
+
+610
+01:21:23,172 --> 01:21:31,782
+So I'm going to say like, hey, you know what? Um, well, hand for I accept it.
+
+611
+01:21:31,992 --> 01:21:45,912
+Uh, because I should actually read the patch more. But I agree, it's not amazing for browser usage telemetry to know the details of, um.
+
+612
+01:21:56,562 --> 01:22:01,032
+Details of the widget tree. Inside of about.
+
+613
+01:22:01,032 --> 01:22:04,602
+Preferences. However.
+
+614
+01:22:06,462 --> 01:22:19,012
+Browser usage. Telemetry. Already knows a lot of details about, uh, browser UI, and it's, um, you know, already.
+
+615
+01:22:26,562 --> 01:22:45,672
+Uh. It already has, um, constants for IDs for various bits, bits and bobs, um, in the UI.
+
+616
+01:22:48,252 --> 01:22:52,002
+Various command IDs, etc.
+
+617
+01:22:54,192 --> 01:23:00,612
+Um, it already has special casing cases for about preferences.
+
+618
+01:23:01,992 --> 01:23:07,662
+I don't think we're making things meaningfully worse by.
+
+619
+01:23:10,472 --> 01:23:18,332
+Um making browser usage telemetry also aware that uh dialog button exists.
+
+620
+01:23:22,692 --> 01:23:26,202
+Um, I personally don't think we're making things.
+
+621
+01:23:29,702 --> 01:23:38,882
+And that might be preferable over doing some wild things like nested buttons, which, uh,
+
+622
+01:23:38,882 --> 01:23:50,642
+doing some, uh, alternatives like nested buttons, which I worry may have, uh, weird side effects.
+
+623
+01:24:11,332 --> 01:24:14,622
+Oh. I'll turn.
+
+624
+01:24:14,852 --> 01:24:30,182
+Oh. Alternatively. We could have browser usage telemetry since we, uh, our dialog button inherits from this button.
+
+625
+01:24:30,512 --> 01:24:39,632
+We can browse uses telemetry, say, is this thing a mars button or does it inherit from a mars?
+
+626
+01:24:39,632 --> 01:24:48,672
+But. So that it doesn't need to know the specifics.
+
+627
+01:24:49,062 --> 01:24:55,122
+Um. Oh. So the actual name of dialog button.
+
+628
+01:24:58,062 --> 01:25:02,352
+Because I'm pretty sure, um.
+
+629
+01:25:09,262 --> 01:25:13,792
+Let's see here. If we go to settings.
+
+630
+01:25:16,182 --> 01:25:21,322
+Fond. Tame.
+
+631
+01:25:22,282 --> 01:25:28,912
+Take this and turn it into dialog. And we say, this is Mars, but I'm in here.
+
+632
+01:25:28,922 --> 01:25:32,722
+Okay. So. Is.
+
+633
+01:25:38,802 --> 01:25:42,432
+Mars button is instance.
+
+634
+01:25:44,842 --> 01:25:51,532
+False hmhm. Can you see whether or not the constructor.
+
+635
+01:25:53,302 --> 01:25:58,692
+Is the same. No, because they aren't.
+
+636
+01:25:58,712 --> 01:26:05,702
+So how do you see a thing? Do you say, like, uh, instance of mouse button?
+
+637
+01:26:06,572 --> 01:26:10,112
+False. How do you check inheritance?
+
+638
+01:26:11,552 --> 01:26:16,172
+Um, JavaScript, uh, JavaScript ES6 classes.
+
+639
+01:26:16,202 --> 01:26:21,392
+Uh. Check if inherits.
+
+640
+01:26:27,492 --> 01:26:45,532
+Prototype instance of. Oh, that's dialog button.
+
+641
+01:26:46,942 --> 01:26:55,542
+Dot prototype. It's that what's called dialog volume dialog button they.
+
+642
+01:27:02,772 --> 01:27:06,751
+Doesn't export it. Just defines it.
+
+643
+01:27:06,752 --> 01:27:13,172
+So custom element. Get dialog package okay.
+
+644
+01:27:14,552 --> 01:27:18,152
+Instance of Mars button. No.
+
+645
+01:27:18,722 --> 01:27:26,672
+But the prototype. Also not an instance of Mars, but constructor.
+
+646
+01:27:26,942 --> 01:27:34,902
+Prototype was. Class A.
+
+647
+01:27:35,922 --> 01:27:48,252
+Class B extends a speed up prototype instance okay true B instance of a false.
+
+648
+01:27:48,852 --> 01:27:59,202
+So custom elements get dialog button is a class Mars button also a class however prototype.
+
+649
+01:28:01,782 --> 01:28:11,952
+Instance of Mars button. Not true, but I wonder if that's because of the different execution scopes.
+
+650
+01:28:14,902 --> 01:28:20,142
+Is. Instance is instance.
+
+651
+01:28:20,152 --> 01:28:25,432
+Do you have that? Yeah. Is instance Mars. But what was the other way around?
+
+652
+01:28:35,282 --> 01:28:43,402
+Customer. Wait wait wait wait wait wait.
+
+653
+01:28:43,412 --> 01:28:50,072
+So you're telling me that. Dialog button.
+
+654
+01:28:51,542 --> 01:29:00,992
+It's not instance. What is is instance? Oh, is that special powers?
+
+655
+01:29:09,622 --> 01:29:13,372
+Uh, but it's not on web IDL. It is on web IDL.
+
+656
+01:29:14,902 --> 01:29:18,292
+No, it is not. It's I speak on.
+
+657
+01:29:20,392 --> 01:29:34,372
+Module object. Instance.
+
+658
+01:29:40,202 --> 01:29:43,602
+Spider monkey at work.
+
+659
+01:29:43,612 --> 01:29:47,462
+What is is this instance? Uh.
+
+660
+01:29:52,022 --> 01:29:57,852
+Binding utils. States.
+
+661
+01:30:17,662 --> 01:30:25,802
+That got introduced by Peter. Tom properties, 2014.
+
+662
+01:30:30,332 --> 01:30:37,452
+Dialog button. Constructor.
+
+663
+01:30:38,982 --> 01:30:51,322
+True. So that's the class prototype.
+
+664
+01:30:54,082 --> 01:30:57,082
+Instructor is dialog button pairing.
+
+665
+01:30:57,262 --> 01:31:02,962
+There's no way of getting the super. How do you get the parent class?
+
+666
+01:31:10,452 --> 01:31:17,782
+All right. Prado, get object. Get prototype of. You work your way up the constructor chain.
+
+667
+01:31:19,112 --> 01:31:24,152
+So beta prototype equals a no.
+
+668
+01:31:28,222 --> 01:31:32,332
+Beta prototype is prototype of A.
+
+669
+01:31:32,992 --> 01:31:37,312
+A is prototype of B. A is a prototype of B.
+
+670
+01:31:41,502 --> 01:31:47,412
+So are you constructor? Is prototype of Mars button?
+
+671
+01:31:48,252 --> 01:31:56,772
+No. Dialog box.
+
+672
+01:31:57,252 --> 01:32:00,862
+Prototype. Prototype.
+
+673
+01:32:02,112 --> 01:32:05,142
+Nothing. Prototype is just an object.
+
+674
+01:32:13,342 --> 01:32:21,312
+Huh? Oh, no.
+
+675
+01:32:28,402 --> 01:32:34,642
+Was not that at the time. Oh, no.
+
+676
+01:32:36,502 --> 01:32:39,562
+What am I doing? Okay, well.
+
+677
+01:32:42,082 --> 01:32:48,892
+Maybe I'll just finish my thought. I don't know how easy it would be to detect whether or not it's a subclass.
+
+678
+01:32:50,092 --> 01:32:53,182
+Um, you'd think it'd be pretty easy.
+
+679
+01:32:59,782 --> 01:33:07,592
+Um. Okay.
+
+680
+01:33:07,712 --> 01:33:18,002
+I just had my thought there. So in terms of the actual, uh, UI here, this seems fine.
+
+681
+01:33:19,802 --> 01:33:24,892
+Uh. Um.
+
+682
+01:33:24,912 --> 01:33:28,002
+First lit. First updated.
+
+683
+01:33:33,312 --> 01:33:40,062
+Fields from Dom attributes. It's been updated for first time, mainly before update is called.
+
+684
+01:33:42,162 --> 01:33:53,362
+Okay. So should this be?
+
+685
+01:33:56,842 --> 01:34:07,672
+Window dog sub dialog. Um, to avoid commenting issues.
+
+686
+01:34:08,452 --> 01:34:26,212
+What's, uh, the current, um, best practice for calling into globals from widgets like this when we want them to also display in storybook.
+
+687
+01:34:34,982 --> 01:34:42,842
+Because yeah, you could just like define um g sub dialog.
+
+688
+01:34:44,222 --> 01:34:48,002
+So for example you can go dialog button.
+
+689
+01:34:52,182 --> 01:34:58,812
+Not Mjs. We'll say window G sub dialog open and then stories.
+
+690
+01:34:59,232 --> 01:35:08,052
+We'll say uh or window G sub dialog equals function.
+
+691
+01:35:10,572 --> 01:35:14,082
+Um say uh path.
+
+692
+01:35:16,302 --> 01:35:30,492
+Or dialog and args args alert opens dialog at dialog with args Chiefs and Stringify.
+
+693
+01:35:32,562 --> 01:35:37,152
+ARGs. So then we could do mock Storybook.
+
+694
+01:35:48,052 --> 01:36:00,062
+Um. Um.
+
+695
+01:36:00,062 --> 01:36:05,222
+Settings dialog button. Window.
+
+696
+01:36:05,402 --> 01:36:08,432
+Sub dialog open needs to be defined.
+
+697
+01:36:10,142 --> 01:36:13,982
+Equals. Open.
+
+698
+01:36:22,722 --> 01:36:26,472
+Here you go. And then we could say, okay.
+
+699
+01:36:26,472 --> 01:36:33,512
+Uh. Label.
+
+700
+01:36:35,532 --> 01:36:41,742
+ARGs path dialog Foo.
+
+701
+01:36:42,552 --> 01:36:47,472
+Arms. Bar. Features.
+
+702
+01:36:48,402 --> 01:36:51,732
+Guest. Does that work?
+
+703
+01:36:53,382 --> 01:36:58,012
+No. What do you expect? Dialog and features.
+
+704
+01:36:58,032 --> 01:37:01,812
+They're both strings. Dialog. Features.
+
+705
+01:37:07,642 --> 01:37:18,092
+Oh. I find.
+
+706
+01:37:25,952 --> 01:37:30,812
+Uh, dialog test features.
+
+707
+01:37:31,472 --> 01:37:34,922
+Test features. Like something like that?
+
+708
+01:37:36,602 --> 01:37:44,882
+No. Um. And it's just like this.
+
+709
+01:37:45,632 --> 01:37:50,522
+Yeah. There we go. That's all I needed. Well, that's one way of doing it.
+
+710
+01:37:50,552 --> 01:38:00,932
+Uh. Would, uh, like, I suppose we could stub out window.
+
+711
+01:38:00,932 --> 01:38:07,622
+Dodge's stub out this something like this in the story.
+
+712
+01:38:23,532 --> 01:38:29,772
+Uh. Generally, this seems okay to me.
+
+713
+01:38:32,052 --> 01:38:39,882
+Good to me. Thanks. Um. I had some thoughts.
+
+714
+01:38:42,372 --> 01:38:46,752
+Uh, it's about the browser usage telemetry stuff.
+
+715
+01:38:47,232 --> 01:38:52,032
+See above. And how we can avoid the linting error in here.
+
+716
+01:38:52,542 --> 01:38:56,262
+See below. But generally, this sounds good.
+
+717
+01:38:57,162 --> 01:39:10,132
+Thank you. Uh, prove. Um.
+
+718
+01:39:18,822 --> 01:39:22,392
+Though. Hey, a dialog box is actually used. Wait.
+
+719
+01:39:25,172 --> 01:39:28,712
+Wait. I just realized this isn't used.
+
+720
+01:39:29,132 --> 01:39:34,232
+Do we still need it? Smith.
+
+721
+01:39:38,092 --> 01:39:42,452
+Okay. I think I'm going to stop there.
+
+722
+01:39:42,472 --> 01:39:48,202
+I'm over time. We're going to call it. Hey, thank you for watching episode 409 of the Joy of coding.
+
+723
+01:39:48,562 --> 01:39:52,362
+Let me know what you thought. There's a link to rate this episode here in the agenda.
+
+724
+01:39:52,372 --> 01:39:56,421
+I'll drop it in the chat as well. Link to rate this episode.
+
+725
+01:39:56,422 --> 01:40:05,001
+It's going in the chat. Bingo bango. Uh, send in your thoughts if you're if there's something you enjoyed seeing, you want to see more.
+
+726
+01:40:05,002 --> 01:40:08,842
+If you want to see less of you want to ask me a question, you can send it in using that form.
+
+727
+01:40:08,842 --> 01:40:15,232
+I read everything that comes in and I can try and answer your question next time. Uh, next week we should be, uh, good to stream the week after that.
+
+728
+01:40:15,742 --> 01:40:23,452
+The week after next. I'm taking a much needed holiday, so streaming next week.
+
+729
+01:40:26,092 --> 01:40:34,062
+And then one week off. Uh, but I should be able to see you next week, so have yourselves a great week, everybody.
+
+730
+01:40:34,072 --> 01:40:38,392
+I'll see you next week. Take care. Uh.
+
+731
+01:40:42,892 --> 01:40:46,132
+The joy of coding.
+
+732
+01:40:46,342 --> 01:40:46,732
+See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

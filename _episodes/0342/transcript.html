@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 342 - October 11, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 342 - October 11, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=52410db4-6de2-4492-a97c-b0830142be07</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=52410db4-6de2-4492-a97c-b0830142be07">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,607 --> 00:00:13,427
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Jodie Hello and welcome to episode 342 of The Joy of Coding.
+
+2
+00:00:13,437 --> 00:00:17,577
+My name is Mike Connelly. It's so good to have you here. Yeah.
+
+3
+00:00:17,667 --> 00:00:21,477
+Episode 342 Very excited. Going to be live hacking on some Firefox stuff.
+
+4
+00:00:21,807 --> 00:00:25,587
+Let's get to it. Let's get down to business to defeat the bugs.
+
+5
+00:00:26,277 --> 00:00:29,487
+Here we go. It's October 11th, 2023.
+
+6
+00:00:29,487 --> 00:00:34,766
+Episode 342. A reminder, if you've never seen this series before, no plan survives breakfast.
+
+7
+00:00:34,767 --> 00:00:38,457
+I think I know what I want to do today. I think I know how things are going to go down.
+
+8
+00:00:38,667 --> 00:00:42,537
+I think my green screen is not going to start collapsing on me, Mr. Justice.
+
+9
+00:00:44,237 --> 00:00:49,017
+But, you know, things don't always go according to plan. And so we're just going to roll with the punches as they come.
+
+10
+00:00:49,037 --> 00:00:51,797
+None of the code that I write today has been pre-written or anything.
+
+11
+00:00:52,577 --> 00:00:58,797
+You're watching software development occur in the wild, in the Roar, as I like to say, and that's the name of the game.
+
+12
+00:00:58,817 --> 00:01:05,446
+That's the first thing. The second thing is that if you are watching the stream and you are interested in clicking on some of the links in the agenda,
+
+13
+00:01:05,447 --> 00:01:08,967
+because I will be like as I work through the episode, I'll be filling out the agenda.
+
+14
+00:01:08,987 --> 00:01:14,776
+You can get a copy of the agenda. It's available to you depending on where you are watching this video.
+
+15
+00:01:14,777 --> 00:01:18,507
+It's going to be in a couple of different places if you're watching this on air Mozilla.
+
+16
+00:01:18,647 --> 00:01:23,686
+It's in the details section over there. If you're watching this on Twitch, it's down in like the channel details.
+
+17
+00:01:23,687 --> 00:01:26,627
+If you're watching this on YouTube or dial dots on, it's down the video description.
+
+18
+00:01:26,627 --> 00:01:33,857
+If you happen to be watching this on my like web page, then there should be a link up above for the for the for the agenda.
+
+19
+00:01:34,037 --> 00:01:37,607
+And you can just follow along as I, you know, update the agenda.
+
+20
+00:01:37,637 --> 00:01:41,237
+This little thing will spin and then a background thing will update the agenda in the
+
+21
+00:01:41,237 --> 00:01:44,507
+wild and you just reload the page and you should have all the latest and greatest.
+
+22
+00:01:45,497 --> 00:01:51,137
+All right. Well, what are we working on today? Well, in the background, I've got a build going because unfortunately,
+
+23
+00:01:51,437 --> 00:01:58,067
+I rebased and I didn't I didn't get I thought I kicked off the build early and
+
+24
+00:01:58,067 --> 00:02:02,327
+then I looked away and I looked back like a half hour before the stream started.
+
+25
+00:02:02,627 --> 00:02:07,877
+And and the build hadn't even started because I was missing like a new dependency.
+
+26
+00:02:07,877 --> 00:02:14,627
+I had to, like, rerun the bootstrap. So I did that and I kicked off the build and I was expecting the build to be done by now, but it is not.
+
+27
+00:02:15,017 --> 00:02:20,777
+So we have to wait for that to be completed. That will probably take another 20 minutes on this machine.
+
+28
+00:02:20,807 --> 00:02:26,867
+10 minutes because it's been a while since I pulled. So like the cash is, is probably not getting hit as much.
+
+29
+00:02:28,757 --> 00:02:33,407
+So yeah, unfortunately we have to wait for that for any of the jump loss stuff that I was hoping to get to.
+
+30
+00:02:33,587 --> 00:02:37,577
+In the meantime, there are some things that I thought we could do while we wait.
+
+31
+00:02:38,687 --> 00:02:47,297
+Actually, even before we get to the jump list stuff, I want that Windows build to try and fix an issue with a failing test.
+
+32
+00:02:47,297 --> 00:02:54,946
+There's a patch I've been trying to land for for a day and a half. It's a patch stack that doesn't affect windows, really.
+
+33
+00:02:54,947 --> 00:03:00,527
+It's it's a to make it easier for people to import from other browsers when Firefox is installed as a snap package,
+
+34
+00:03:00,767 --> 00:03:08,807
+if you're not familiar with SNAP packages, that's a way of patching packaging up applications, particularly for a boon to Linux there.
+
+35
+00:03:08,957 --> 00:03:17,387
+Canonical is really interested in the SNAP packaging format and the sandboxing and whatnot and that sandboxing makes it difficult.
+
+36
+00:03:17,837 --> 00:03:24,617
+Like it protects the the the user from having the application like interfere with other applications.
+
+37
+00:03:24,617 --> 00:03:28,727
+But you know when it comes to importing data from those other applications,
+
+38
+00:03:28,727 --> 00:03:34,787
+that sandboxing is actually quite restrictive and it doesn't allow us to read data from the other applications like other browsers.
+
+39
+00:03:35,717 --> 00:03:40,246
+But we found a workaround and these patches allow us to employ that workaround.
+
+40
+00:03:40,247 --> 00:03:46,847
+And for some reason some of the tests that I added are failing on Windows, which is bizarre and I'm really hoping to land that patch today.
+
+41
+00:03:46,847 --> 00:03:54,797
+It was actually supposed to land yesterday because Kua really wants to start testing it, but you know, it's landed and bounced a few times.
+
+42
+00:03:54,797 --> 00:03:59,897
+So it's like my highest priority to get this. This patch landed today.
+
+43
+00:04:00,557 --> 00:04:08,427
+So I want to work on that, except that I need to wait for this windows build to be done so that we can kind of investigate the test failure.
+
+44
+00:04:10,337 --> 00:04:20,627
+And so while we wait for that, I was thinking on my Mac OS machine over here, we can work on some cleanup work to remove the old migration wizard.
+
+45
+00:04:21,017 --> 00:04:26,777
+So I don't know if you remember, there used to be a migration wizard That doesn't look as cool as the current one.
+
+46
+00:04:26,777 --> 00:04:38,237
+It looks like the current one looks like this, but you can actually disable that and use the old one browser down.
+
+47
+00:04:38,237 --> 00:04:47,176
+Migrate. What is it called? Content Modal. If we disable that content modal enabled, then we get the old migration wizard which looks like this.
+
+48
+00:04:47,177 --> 00:04:51,227
+This is the old one and we're we're getting rid of it.
+
+49
+00:04:51,227 --> 00:05:00,257
+It's time to throw it away. Like the the old migration wizard has been disabled for everybody for a while now and it's time to put it out to pasture.
+
+50
+00:05:00,647 --> 00:05:06,587
+And so the first thing we like to do when we, like decommission a component like this is first of all, before you just like tear everything out.
+
+51
+00:05:07,877 --> 00:05:13,457
+It's a good idea to disable the ability to turn that thing on.
+
+52
+00:05:14,207 --> 00:05:20,357
+So you know that that's like your first step and then disable all of the tests that maybe were using it.
+
+53
+00:05:21,017 --> 00:05:25,727
+So let's start there and let me see.
+
+54
+00:05:25,727 --> 00:05:28,967
+The first thing I'm going to do is I'm going to go to Firefox tags.
+
+55
+00:05:29,267 --> 00:05:36,377
+We're going to find that content modal enabled thing. We're just going to get rid of this pref content modal enabled gon.
+
+56
+00:05:36,467 --> 00:05:41,237
+I'm also going to look for all of the places where we might use content modal to enable.
+
+57
+00:05:42,407 --> 00:05:47,927
+There are quite a few places we've got some documentation that refers to it.
+
+58
+00:05:48,677 --> 00:05:52,397
+Um. That's interesting.
+
+59
+00:05:53,027 --> 00:05:57,107
+Or perhaps they're allowed to be edited by set pref.
+
+60
+00:05:57,827 --> 00:06:01,307
+I guess we can remove that. I don't know what was using that before.
+
+61
+00:06:02,357 --> 00:06:09,697
+Uh. Targeting for.
+
+62
+00:06:13,077 --> 00:06:16,737
+Oh, interesting. Interesting. It's a prep that we used to have.
+
+63
+00:06:17,787 --> 00:06:21,087
+Or like, some some message targeting to, like. Are.
+
+64
+00:06:21,237 --> 00:06:26,907
+Are people using the new migration wizard? If so, during start up then like, here's a message.
+
+65
+00:06:28,047 --> 00:06:31,436
+Um, so yeah, there's there's some fiddly stuff here we're going to start.
+
+66
+00:06:31,437 --> 00:06:36,237
+We got rid of the pref. Let's get rid of the part that actually pays attention to that pref.
+
+67
+00:06:36,447 --> 00:06:40,947
+And chooses which which wizard to open.
+
+68
+00:06:40,947 --> 00:06:44,187
+And that's here in migration utils. So we'll go there next.
+
+69
+00:06:46,767 --> 00:06:55,497
+Uh, content modal. We can probably, uh, on my.
+
+70
+00:06:55,947 --> 00:07:11,257
+This is, this is going to start being true like this is show the migration wizard in about preferences or if there is not an existing um,
+
+71
+00:07:12,357 --> 00:07:16,317
+browser window open and a new top level window.
+
+72
+00:07:19,597 --> 00:07:23,877
+Top level dialog window. Umm.
+
+73
+00:07:23,927 --> 00:07:31,347
+Doo doo doo doo doo doo. The new content in about preferences tab here.
+
+74
+00:07:35,687 --> 00:07:39,907
+If in about new provinces, timing of this will resolve.
+
+75
+00:07:39,917 --> 00:07:46,517
+And that happens just to I suppose I'll just after opening the top level dialog window.
+
+76
+00:07:50,477 --> 00:07:54,227
+Okay, so we're going to get rid of this. This check.
+
+77
+00:07:56,597 --> 00:08:03,667
+Um. And like, yeah, legacy behavior we're going to get rid of.
+
+78
+00:08:06,827 --> 00:08:14,527
+Legacy. We're going to stop doing that. Legacy.
+
+79
+00:08:17,447 --> 00:08:22,307
+And that means that we're going to get rid of some documentation here.
+
+80
+00:08:25,377 --> 00:08:31,677
+I can see default on a closed loop standalone embedded.
+
+81
+00:08:32,577 --> 00:08:39,807
+And that also means in one of our I think it's a scale or.
+
+82
+00:08:45,727 --> 00:09:04,836
+My greeter list. I guess there is like this thing that stand alone where we using that stand alone default.
+
+83
+00:09:04,837 --> 00:09:09,007
+So we got rid of this one behavior of a browsing context.
+
+84
+00:09:09,367 --> 00:09:13,437
+That's not. No. Otto.
+
+85
+00:09:13,647 --> 00:09:20,057
+Maybe we'll look for Otto Close. That might be easier to find.
+
+86
+00:09:20,087 --> 00:09:24,076
+Migration utils feature manifest. That's what I'm looking for.
+
+87
+00:09:24,077 --> 00:09:27,977
+Feature manifest. So we get rid of this one.
+
+88
+00:09:34,067 --> 00:09:40,907
+And we'll go back to the migration. So this is no longer an option.
+
+89
+00:09:46,397 --> 00:09:53,277
+If. So this is going to be the default now.
+
+90
+00:09:53,287 --> 00:09:57,847
+So we're this other branch down here is the legacy migration dialog.
+
+91
+00:09:58,207 --> 00:10:13,377
+We are getting rid of that. So all of this gets to.
+
+92
+00:10:20,527 --> 00:10:23,887
+To do that, I guess, to come over like that.
+
+93
+00:10:25,237 --> 00:10:28,267
+Is there anything else in here that says legacy or legacy?
+
+94
+00:10:29,227 --> 00:10:33,307
+Histogram has opened Legacy Wizard.
+
+95
+00:10:34,177 --> 00:10:37,387
+What uses this? Was this used for?
+
+96
+00:10:40,437 --> 00:10:46,397
+Okay. Don't need that anymore. And.
+
+97
+00:10:50,737 --> 00:10:55,807
+What else? There are going to be tests that enable it.
+
+98
+00:10:57,337 --> 00:11:01,297
+But hey, I was getting rid of that pref content modal to enable.
+
+99
+00:11:03,067 --> 00:11:07,147
+We got rid of it there. There's some documentation that refers to it. Let's get rid of that last.
+
+100
+00:11:08,107 --> 00:11:12,337
+What about in preferences? Content on all.
+
+101
+00:11:14,737 --> 00:11:15,937
+This nail biter followed that.
+
+102
+00:11:25,467 --> 00:11:37,137
+You know, even you know, there's a reason, even though we're going to be showing a migration wizard here in about preferences,
+
+103
+00:11:37,557 --> 00:11:47,757
+will delegate the call to migration Wizard show Migration wizard or migration utils.
+
+104
+00:11:52,047 --> 00:12:05,087
+As this will. Allow us to properly measure entering the dialog from the preferences.
+
+105
+00:12:07,337 --> 00:12:20,287
+Entry point. Uh.
+
+106
+00:12:23,247 --> 00:12:28,867
+This should no longer block on any platform. So.
+
+107
+00:12:32,587 --> 00:12:39,797
+You go. And special message actions.
+
+108
+00:12:45,637 --> 00:12:53,417
+Constantinople. Gone.
+
+109
+00:13:12,547 --> 00:13:16,777
+Something somewhere was actually setting that graph, which is interesting because.
+
+110
+00:13:18,617 --> 00:13:29,437
+Hmm. All right. And then we are going to get rid of this variable feature manifest.
+
+111
+00:13:32,147 --> 00:13:45,017
+Uh, use new wizard. And.
+
+112
+00:13:45,497 --> 00:13:48,707
+And I think the last thing was this documentation here.
+
+113
+00:13:54,267 --> 00:13:58,177
+Current and. No fireworks.
+
+114
+00:13:58,737 --> 00:14:05,047
+I think we can get rid of this entirely at that documentation.
+
+115
+00:14:05,067 --> 00:14:08,887
+That's good. Thank you very much. Biscotti Delivery. Woo!
+
+116
+00:14:08,987 --> 00:14:14,907
+Thank you very much for the tea delivery. It's orange Pico. Pretty excited about that.
+
+117
+00:14:16,887 --> 00:14:19,887
+Is there anything else in here about the legacy? No. Okay, so that's good.
+
+118
+00:14:20,367 --> 00:14:27,327
+That's removed. And now we just have a bunch of tests that might be making reference to the the legacy migration wizard.
+
+119
+00:14:27,657 --> 00:14:33,477
+And good news, everyone. Our windows build is almost done, so our timing might be very fortuitous.
+
+120
+00:14:34,677 --> 00:14:39,837
+So we're going to get rid of. Enabling the content modal.
+
+121
+00:14:42,427 --> 00:14:51,097
+And then we're going to get rid of entry point telemetry.
+
+122
+00:14:53,997 --> 00:14:57,267
+Uh, enabled content.
+
+123
+00:14:57,267 --> 00:15:06,337
+Modal enabled, perhaps. 2.23.
+
+124
+00:15:12,927 --> 00:15:20,347
+We. We will not enter this. Since you been calling.
+
+125
+00:15:20,347 --> 00:15:24,367
+I assume so does Paul. Okay, so we don't need that anymore.
+
+126
+00:15:28,407 --> 00:15:36,957
+And then. We're not going to enable the legacy wizard.
+
+127
+00:15:38,907 --> 00:15:45,217
+We're not. History as well as the legacy, but only if using the old withered window.
+
+128
+00:15:48,467 --> 00:15:54,197
+But this is not like the right label for test entry points.
+
+129
+00:15:59,587 --> 00:16:12,947
+He can get rid of this loop entirely. Content modal enabled is going to be true.
+
+130
+00:16:14,537 --> 00:16:22,777
+So. Legacy histogram.
+
+131
+00:16:27,027 --> 00:16:35,007
+Is not going to be written to anymore. So we get rid of that and get rid of that.
+
+132
+00:16:39,997 --> 00:16:43,107
+Right. Uh. And. Uh.
+
+133
+00:16:44,767 --> 00:16:53,937
+And, uh. I see histogram.
+
+134
+00:16:53,947 --> 00:16:58,557
+I don't see that anymore. Twice has threatened to.
+
+135
+00:17:04,227 --> 00:17:11,097
+What else? Get legacy migration entry point to use of Instagram.
+
+136
+00:17:17,947 --> 00:17:22,117
+3.90. Okay.
+
+137
+00:17:22,357 --> 00:17:27,427
+That's probably fine. And then legacy. We should make sure that the migration title is Legacy.
+
+138
+00:17:28,237 --> 00:17:33,247
+Uh, no, we will not do that anymore, because that is no longer true.
+
+139
+00:17:34,687 --> 00:17:41,607
+Okay. And then this thing. How's our build?
+
+140
+00:17:42,057 --> 00:17:46,767
+Getting there. Going through media now. Content Modal dot enabled.
+
+141
+00:17:48,807 --> 00:17:53,127
+We're going to get rid of this condition.
+
+142
+00:18:03,057 --> 00:18:11,617
+And then in this test. Yeah.
+
+143
+00:18:11,707 --> 00:18:16,867
+We don't want to test the legacy migration wizard anymore.
+
+144
+00:18:24,307 --> 00:18:32,077
+That type of thing. We can test that import data session or to the migration wizard for.
+
+145
+00:18:34,137 --> 00:18:38,997
+Yeah. Good.
+
+146
+00:18:40,587 --> 00:18:48,447
+And then browser test utils. Content mobile.
+
+147
+00:18:52,907 --> 00:19:00,517
+We don't need that anymore. Using the immigration wizard. If.
+
+148
+00:19:02,047 --> 00:19:06,247
+And force legacy is no longer going to be possible.
+
+149
+00:19:13,607 --> 00:19:27,457
+Uh. Wait for a new migration wizard and forcing a legacy that resolves once.
+
+150
+00:19:29,987 --> 00:19:35,597
+The migration was, it appears, getting rid of forced legacy.
+
+151
+00:19:36,617 --> 00:19:42,387
+We're not going to do any of that anymore. So.
+
+152
+00:19:46,077 --> 00:19:49,617
+He about preferences tab.
+
+153
+00:19:52,977 --> 00:19:56,997
+With the lizard in it.
+
+154
+00:20:01,457 --> 00:20:04,907
+It's best to just pass whatever.
+
+155
+00:20:06,517 --> 00:20:10,557
+Resolved to. Yeah.
+
+156
+00:20:13,507 --> 00:20:19,677
+And this. Closes the Migration Wizard.
+
+157
+00:20:23,547 --> 00:20:30,837
+Wizard Tab. Closes the migration Wizard tab.
+
+158
+00:20:31,647 --> 00:20:35,877
+A very simple wrapper. This is a very simple wrapper.
+
+159
+00:20:42,337 --> 00:20:46,237
+All right. You know what? I don't even know if we need this anymore.
+
+160
+00:20:46,707 --> 00:20:54,907
+Close migration was there. Now that we know that it's going to be a tab. Yeah.
+
+161
+00:20:55,567 --> 00:21:17,107
+It's always going to be a tab. Resolves to the opened about preferences tab with a migration wizard running and loaded in it.
+
+162
+00:21:20,107 --> 00:21:26,707
+We can get rid of this and we're going to get rid of the colors of that.
+
+163
+00:21:29,887 --> 00:21:35,977
+So there are quite a few. You know what?
+
+164
+00:21:35,977 --> 00:21:38,977
+I'm going to put it back for now.
+
+165
+00:21:44,137 --> 00:21:47,237
+No, no. Let's do the right thing. Let's get rid of it altogether.
+
+166
+00:21:47,347 --> 00:21:54,697
+This is almost done, and I'm going to hop as soon as that's done. We're going to hop over and start focusing on our test failure.
+
+167
+00:21:54,727 --> 00:21:58,987
+That's very important. Close migration was a remove tab.
+
+168
+00:21:59,647 --> 00:22:03,456
+Let's say wizard. Tab. Wizard.
+
+169
+00:22:03,457 --> 00:22:08,607
+My greater. Grealish and Wizard have opened.
+
+170
+00:22:17,707 --> 00:22:22,237
+Oh, the initial tab. This means that if we're using the new Irish on the.
+
+171
+00:22:24,037 --> 00:22:32,187
+This makes it so that when. That for the migration was heard.
+
+172
+00:22:35,447 --> 00:22:40,667
+When we load the migration wizard in about preferences.
+
+173
+00:22:42,517 --> 00:22:48,057
+The about preferences page that. Well open in due time.
+
+174
+00:22:48,057 --> 00:22:54,936
+I wrote rather than over taking initial and this makes it easier to be consistent in close behaviors between two types of kinds of migration,
+
+175
+00:22:54,937 --> 00:23:01,957
+which I guess is no longer necessary because we can just be like, just navigate it.
+
+176
+00:23:03,247 --> 00:23:16,357
+We don't even have to remove the tab. Just send it back to about blank.
+
+177
+00:23:23,557 --> 00:23:39,687
+Um. Or you know what?
+
+178
+00:23:39,737 --> 00:23:48,137
+Like I think the test harness will just kind of take care of that for us. I think that's the sort of thing we'll have to test in automation.
+
+179
+00:23:49,217 --> 00:23:54,887
+No logins view. I think that a lot of this is going to be the same. Um.
+
+180
+00:24:09,167 --> 00:24:20,157
+Wave of migration was a huge. Was it?
+
+181
+00:24:20,157 --> 00:24:26,937
+Promise Wizard Tab. My greater Wizard tab opened.
+
+182
+00:24:31,547 --> 00:24:37,897
+Wizard tab. Sir.
+
+183
+00:24:39,347 --> 00:24:47,917
+Anything else? Open import over here. Uh, promise import tab.
+
+184
+00:24:53,937 --> 00:24:58,107
+Waiting for migration was wizard to.
+
+185
+00:25:01,017 --> 00:25:06,457
+Wizard tab. Promise Wizard this one.
+
+186
+00:25:10,597 --> 00:25:21,727
+Operation Wizard opened. And then we'll close it or move tab.
+
+187
+00:25:22,707 --> 00:25:27,407
+The tab. And here.
+
+188
+00:25:30,137 --> 00:25:36,887
+Oh, okay. It's done. So let us let's now completely shift focus here now.
+
+189
+00:25:36,887 --> 00:25:42,407
+Completely shifting focus. Oh, you know what? We have to kind of do a build again, but this one will hopefully be a little bit faster.
+
+190
+00:25:43,367 --> 00:25:47,957
+Um, because I had the, the jump loss patches applied.
+
+191
+00:25:48,257 --> 00:25:55,567
+I want to apply the. What was it?
+
+192
+00:25:56,107 --> 00:26:08,287
+Uh, this the patches from here? That'll be beside the Miles fab patch.
+
+193
+00:26:10,177 --> 00:26:13,327
+Such and such a plot.
+
+194
+00:26:16,157 --> 00:26:21,367
+Go ahead and get them. Meanwhile, switching back remove tab Wizard tab.
+
+195
+00:26:21,377 --> 00:26:25,367
+What was the next one? Entry point telemetry.
+
+196
+00:26:25,907 --> 00:26:29,947
+We're going to be doing a lot of context switching. I hope that's all right because.
+
+197
+00:26:30,467 --> 00:26:35,927
+Okay, that's good. That's applied. And should be checked out.
+
+198
+00:26:35,957 --> 00:26:39,017
+Let's build context. Watching back.
+
+199
+00:26:40,167 --> 00:26:45,817
+Uh, wait for migration. Wizards right here opened Promise Wizard tab.
+
+200
+00:26:46,977 --> 00:26:50,537
+Then we'll say remove tab Wizard app.
+
+201
+00:26:52,487 --> 00:26:57,007
+Good. Uh, so it's called blocks.
+
+202
+00:26:57,737 --> 00:27:12,117
+That's no longer true. So. About Welcome in port.
+
+203
+00:27:16,787 --> 00:27:20,657
+Wait for a migration wizard with Promise Force Legacy.
+
+204
+00:27:20,667 --> 00:27:24,587
+We're not doing that anymore for the legacy.
+
+205
+00:27:30,097 --> 00:27:35,017
+Was a Promise Wizard Tab.
+
+206
+00:27:35,427 --> 00:27:38,687
+Wizard. Can't force legacy anymore.
+
+207
+00:27:44,227 --> 00:27:51,257
+It's a promise. Removed have not closed have.
+
+208
+00:27:58,457 --> 00:28:01,787
+You have to go through that and make sure I haven't closed tab anywhere else.
+
+209
+00:28:03,107 --> 00:28:08,297
+Wait for migration wizard. Has her bills still go on for legacy?
+
+210
+00:28:08,387 --> 00:28:13,517
+Don't care. Get rid of it. This is no longer true.
+
+211
+00:28:14,957 --> 00:28:24,737
+Of course. Legacy. Uh.
+
+212
+00:28:25,047 --> 00:28:30,187
+Uh. If.
+
+213
+00:28:32,547 --> 00:28:35,547
+So that when loading the.
+
+214
+00:28:36,697 --> 00:28:41,717
+Wizard. My creation was a.
+
+215
+00:28:43,687 --> 00:28:50,577
+You know about preferences. Any time rather than overtaking the initial one.
+
+216
+00:28:57,677 --> 00:29:02,767
+Yeah. This makes it makes it.
+
+217
+00:29:03,737 --> 00:29:12,386
+Of that initial tab more explicit. Clean up of that open tab.
+
+218
+00:29:12,387 --> 00:29:19,637
+More explicit. Uh. Uh.
+
+219
+00:29:25,067 --> 00:29:28,196
+And this forcing legacy. Yeah.
+
+220
+00:29:28,197 --> 00:29:32,537
+This doesn't. Don't need that anymore. All right.
+
+221
+00:29:34,457 --> 00:29:43,957
+And then down here, auto complete import. Meet for a migration wizard window.
+
+222
+00:29:44,377 --> 00:29:47,747
+That's a promise. The motel.
+
+223
+00:29:47,767 --> 00:29:54,547
+This is not true. That it blocks anymore new migration as it does not block.
+
+224
+00:29:57,227 --> 00:30:04,207
+Wizard opened. Right.
+
+225
+00:30:04,697 --> 00:30:15,787
+Migrate not used as pop up. Recalls the blizzard when the tab is still open.
+
+226
+00:30:15,787 --> 00:30:23,977
+The username for you'll be focusing on Sugar's another and portable suggestion. Okay, on the tab, close the wizard tab.
+
+227
+00:30:27,877 --> 00:30:31,987
+Um. My previous.
+
+228
+00:30:31,987 --> 00:30:35,197
+Where do we declare wizard that Wizard tab?
+
+229
+00:30:47,027 --> 00:30:50,597
+Wizard tab. Wizard tab right there.
+
+230
+00:30:51,977 --> 00:30:55,737
+And the. Anything else?
+
+231
+00:31:02,197 --> 00:31:07,477
+No. Okay, good. That's done. And then this one is different.
+
+232
+00:31:08,107 --> 00:31:12,517
+Let's go back over here. Still building. Shoot. I really.
+
+233
+00:31:12,757 --> 00:31:20,017
+I really should have planned better. All right.
+
+234
+00:31:21,937 --> 00:31:25,307
+I really should have planned better. Oh, well.
+
+235
+00:31:25,387 --> 00:31:33,027
+Okay, so that's removed. And then in our the rest of our tests, do we have any of that?
+
+236
+00:31:33,037 --> 00:31:41,667
+Just test the legacy. Wizard?
+
+237
+00:31:42,837 --> 00:31:48,597
+I'm guessing no. But let's run. Let's build faster.
+
+238
+00:31:50,547 --> 00:31:53,967
+And let's run the migration wizard tests just to see what happens.
+
+239
+00:31:54,147 --> 00:31:59,837
+It'd be good to run all of the tests we just modified to make sure I didn't mean open Thunderbird.
+
+240
+00:31:59,847 --> 00:32:05,817
+You shouldn't see that move. Shouldn't have foregrounded that because it had some security bugs there.
+
+241
+00:32:06,477 --> 00:32:09,627
+I don't think he did. I don't think I had any security bugs working on it.
+
+242
+00:32:10,647 --> 00:32:13,947
+I know I didn't. I haven't had any security bugs lately.
+
+243
+00:32:16,317 --> 00:32:19,557
+Still, you definitely don't want to see my email. It's just bugs.
+
+244
+00:32:19,977 --> 00:32:30,766
+Just bugs. I'm having to do this all over again.
+
+245
+00:32:30,767 --> 00:32:39,957
+Are you serious? Why am I here?
+
+246
+00:32:40,107 --> 00:32:43,977
+Why am I missing the cash so much that first billed?
+
+247
+00:32:44,007 --> 00:32:47,747
+Are you telling me that first build was useless? Oh.
+
+248
+00:32:53,997 --> 00:33:01,047
+Kill me. All right. Bugs Bunny.
+
+249
+00:33:02,787 --> 00:33:07,677
+I like the cut of your jib smurf d bugs all the way down.
+
+250
+00:33:27,477 --> 00:33:34,947
+Come on, Don't be shy. Okay, so we've rebuilt all of Dom.
+
+251
+00:33:37,287 --> 00:33:40,797
+Maybe the rest of this will be a little more cash friendly.
+
+252
+00:33:55,897 --> 00:34:00,197
+Oh. Stuck somewhere.
+
+253
+00:34:02,437 --> 00:34:13,177
+Oh, because of focus me that I had the focus incorrectly placed my have to run that test again just to see entry point telemetry.
+
+254
+00:34:28,737 --> 00:34:40,187
+So I just focus sums up there. Entering set up wait for migration wizard to open.
+
+255
+00:34:44,267 --> 00:34:48,797
+How does this work? It does this hack.
+
+256
+00:34:52,347 --> 00:35:00,127
+Uh, when we load. Is.
+
+257
+00:35:06,597 --> 00:35:21,677
+Rather than the initial one this makes. Clean up more consistent and explicit clean up of the wizard or explicit since just close the tab.
+
+258
+00:35:23,597 --> 00:35:27,967
+Okay. Clear.
+
+259
+00:35:30,957 --> 00:35:36,536
+Showing close migration was the entry point way for Migration Wizard Show.
+
+260
+00:35:36,537 --> 00:35:46,727
+Migration Wizard. Does this BLOCK This shouldn't block test here.
+
+261
+00:35:49,047 --> 00:35:56,697
+Now test here. Shouldn't block.
+
+262
+00:36:00,907 --> 00:36:04,097
+Bugs Bunny ee ee.
+
+263
+00:36:04,537 --> 00:36:09,577
+Yeah. It's not blocking. So what's the problem? And then we wait for it to be opened.
+
+264
+00:36:12,107 --> 00:36:26,317
+Wait for migration wizard. Wait for a vent on the window.
+
+265
+00:36:35,017 --> 00:36:38,797
+Are we doing it too soon? Maybe. Is there always been a little bit of a race here?
+
+266
+00:36:41,257 --> 00:36:52,597
+No. We set it up here. Hmm.
+
+267
+00:37:06,577 --> 00:37:09,757
+Oh, the agenda formatting is currently messed up. Let's take a look.
+
+268
+00:37:09,787 --> 00:37:15,277
+Let's take a look. Not. Not to be. Oh.
+
+269
+00:37:15,307 --> 00:37:19,327
+Yep. That's what happens whenever I don't put a space there. There we go.
+
+270
+00:37:19,597 --> 00:37:26,137
+Thank you. Sorry about that. And let's close this now.
+
+271
+00:37:32,807 --> 00:37:42,997
+All right, let's step through this thing. So what's going on? Thank you, Craig.
+
+272
+00:37:44,257 --> 00:37:52,657
+Shadow to Craig. Okay.
+
+273
+00:37:53,227 --> 00:37:58,507
+Got a debugger here. Set up this thing.
+
+274
+00:37:59,377 --> 00:38:03,777
+Oh, see, like, this is. This is all out of date.
+
+275
+00:38:03,787 --> 00:38:09,187
+I need to build. That's the problem. Build, not build faster.
+
+276
+00:38:10,947 --> 00:38:20,877
+I guess. Uh. And Bill for some reason.
+
+277
+00:38:21,447 --> 00:38:26,557
+Oh, no, don't open up the debugger. You're welcome to show me out again.
+
+278
+00:38:26,577 --> 00:38:30,927
+It's my birthday, Craig. Happy birthday. Woo!
+
+279
+00:38:30,937 --> 00:38:36,957
+Craig, I'm Amy. I will.
+
+280
+00:38:38,867 --> 00:38:44,797
+Happy birthday, Craig. You all.
+
+281
+00:38:46,117 --> 00:38:49,927
+Special shout out to Craig. It's Craig's birthday, everybody. Everyone.
+
+282
+00:38:50,257 --> 00:38:54,307
+If you know Craig, even if you don't know Craig, give yourself.
+
+283
+00:38:54,927 --> 00:38:59,547
+Wish Craig a happy. I hope you have a great day, Craig.
+
+284
+00:39:03,447 --> 00:39:17,287
+Still not working. I don't know how old you turn in, Craig, but if you're super if if you're like super, super young, if you're super old,
+
+285
+00:39:17,287 --> 00:39:21,576
+if you're right in the middle of your life, I don't know how old you're wearing, but I hope your day is great.
+
+286
+00:39:21,577 --> 00:39:27,937
+And if you you're seeing, you know, friends or family or something or even just doing something low key.
+
+287
+00:39:27,937 --> 00:39:32,897
+I hope it's a good day. Um.
+
+288
+00:39:33,837 --> 00:39:37,677
+Let's see. Wait for migration to enter here. What the heck?
+
+289
+00:39:37,677 --> 00:39:42,237
+Why is this stuff still old browser test utils deny update browser test utils.
+
+290
+00:39:42,657 --> 00:39:46,017
+Did I forget? To say.
+
+291
+00:39:46,067 --> 00:39:50,587
+I forgot to say that's what happened. I forgot to save everybody.
+
+292
+00:39:51,297 --> 00:39:54,787
+Save Protip, gang. Save your files.
+
+293
+00:39:55,627 --> 00:40:01,887
+That's a protip. That's a pro tip for me, a professional software developer.
+
+294
+00:40:03,207 --> 00:40:07,527
+Save your files before compiling them or packaging them.
+
+295
+00:40:09,357 --> 00:40:14,997
+Much more effective than just having them exist in memory and not actually manifesting.
+
+296
+00:40:15,177 --> 00:40:18,357
+Yes. Many happy returns. Craig Turn a big three eight.
+
+297
+00:40:20,037 --> 00:40:23,997
+One of my contemporaries. That's. That's roughly my age ish.
+
+298
+00:40:25,707 --> 00:40:29,007
+Yeah. Congrats. Congratulations on 38.
+
+299
+00:40:33,407 --> 00:40:41,147
+Now we're talking. Okay, let's rerun the tests, because I think I think that this warrants that.
+
+300
+00:40:41,987 --> 00:40:46,467
+It's also see how our bill is doing. Oh, our bill is done. Switching focus back entirely.
+
+301
+00:40:46,487 --> 00:40:55,157
+Great. Okay. What I want to do is revisit the test failure log.
+
+302
+00:40:58,287 --> 00:41:02,187
+Here. We can we can ignore this test run. We'll do that later. That's less important.
+
+303
+00:41:06,247 --> 00:41:17,057
+So the failure was in a debug build, which I don't have, but I think I can probably do this with printf debugging and test chrome permissions.
+
+304
+00:41:17,077 --> 00:41:25,807
+There was we are crashing because we expect we're failing in this assertion where one of our paths has a forward slash rather than a backslash.
+
+305
+00:41:26,077 --> 00:41:29,737
+So I need to figure out how the test somehow stumbles into that.
+
+306
+00:41:30,127 --> 00:41:33,307
+So let's let's figure that out. Mark tests.
+
+307
+00:41:33,787 --> 00:41:39,597
+First of all, let's run the test. Let's also open the test.
+
+308
+00:41:41,787 --> 00:41:49,917
+Permissions. And if I am reading this log correctly, it occurs.
+
+309
+00:41:50,697 --> 00:41:58,047
+Where does it occur? Right after line 191.
+
+310
+00:42:00,507 --> 00:42:10,407
+So it's right towards the end of the test. I think it's right around right around here in this normalize business.
+
+311
+00:42:12,087 --> 00:42:16,527
+So what are the tests? When I ran it, what happened?
+
+312
+00:42:18,237 --> 00:42:27,457
+Okay, it's regenerating some stuff. I'm going to dump. These two values.
+
+313
+00:42:33,567 --> 00:42:42,477
+And get permissions away, migrate or get missions.
+
+314
+00:42:46,547 --> 00:42:50,267
+And then remap their.
+
+315
+00:42:53,157 --> 00:43:00,837
+I mean that there have. Okay, so this also fails.
+
+316
+00:43:01,197 --> 00:43:05,247
+It fails because the test timed out.
+
+317
+00:43:06,717 --> 00:43:11,877
+Um, maybe because I was editing the file as the test was running.
+
+318
+00:43:19,937 --> 00:43:23,357
+It failed or timed out. Okay. So there's something more going on here.
+
+319
+00:43:24,107 --> 00:43:32,077
+Test fail. Where's the failure to pass, pass, pass, pass, pass.
+
+320
+00:43:35,937 --> 00:43:50,166
+Why did it fail? Test and test fail. Is it related to these last few things?
+
+321
+00:43:50,167 --> 00:44:10,227
+Like what happens if I get rid of this? Passed.
+
+322
+00:44:10,407 --> 00:44:18,927
+So it's down. It's these things. Um, let's put these above maybe inciting those to normalize calls.
+
+323
+00:44:43,947 --> 00:44:50,346
+It doesn't even write them. So maybe we can get permissions is failing yet.
+
+324
+00:44:50,347 --> 00:44:55,027
+What have I mopped that out or something have I just can't get permissions.
+
+325
+00:44:55,027 --> 00:45:04,176
+I stub it out. The ability to do it should not be able to get permissions and then we resolve it to true should
+
+326
+00:45:04,177 --> 00:45:11,707
+be able to get the permissions path and then can resolve any attempt to take that data path.
+
+327
+00:45:13,697 --> 00:45:19,087
+Should be able to get the permissions passed. And it should be the tempter.
+
+328
+00:45:22,257 --> 00:45:33,557
+And then remapped directory. Get out of passes that she tempter or she'll get the permissions path.
+
+329
+00:45:37,357 --> 00:45:43,447
+And then we choose. Remapped directory.
+
+330
+00:45:53,607 --> 00:45:57,117
+What is the remapped directory? Let's.
+
+331
+00:45:57,117 --> 00:46:07,057
+Let's end there. What is the remapped directory?
+
+332
+00:46:07,867 --> 00:46:13,457
+Does it accidentally have a forward slash when it should be back slashes?
+
+333
+00:46:19,737 --> 00:46:28,497
+How do I find it in all this mess? Permissions the permissions path should report true equals true.
+
+334
+00:46:31,577 --> 00:46:34,727
+Remapped her back slashes.
+
+335
+00:46:35,717 --> 00:46:43,477
+That's what I expect. And if I put this back and I'm just going to comment.
+
+336
+00:46:44,617 --> 00:46:53,547
+This chunk out. If I put this back, it should fail.
+
+337
+00:46:53,697 --> 00:47:08,637
+It's the can get permissions. It's failing, right? You know, so we can start going deep on what's going on there.
+
+338
+00:47:08,637 --> 00:47:15,657
+Yeah. Can't get permissions fails. So I agree.
+
+339
+00:47:16,107 --> 00:47:20,877
+Chrome profile. My grader can get permissions.
+
+340
+00:47:23,707 --> 00:47:33,297
+I had a path get. Attempting to get data passed.
+
+341
+00:47:37,027 --> 00:47:48,647
+Data. I have a feeling our remapping.
+
+342
+00:47:50,837 --> 00:48:00,297
+It's going wrong on Windows. Permission.
+
+343
+00:48:05,227 --> 00:48:08,377
+Attempting to even attempt.
+
+344
+00:48:14,237 --> 00:48:26,097
+Industry map directories. Entered and get permissions.
+
+345
+00:48:27,537 --> 00:48:44,127
+Uh. Starting and get her emissions test now would be lovely if I could debug this XP seashell test, but there's a way I can do that.
+
+346
+00:48:44,847 --> 00:48:52,077
+I think I've seen this before that you can attach. Attach to other.
+
+347
+00:48:57,037 --> 00:49:02,167
+You didn't need to do about debugging.
+
+348
+00:49:04,827 --> 00:49:09,447
+I think I can, like, attach to a network network location.
+
+349
+00:49:13,777 --> 00:49:20,137
+Staring can't get permission test. Then it does this and we just flat out fail.
+
+350
+00:49:24,097 --> 00:49:28,807
+Okay. Is there XP seashell test?
+
+351
+00:49:31,237 --> 00:49:35,167
+Help. How do I debug developed about the mac?
+
+352
+00:49:36,647 --> 00:49:43,177
+Yeah. If I show just a bug or way for just tools debugger before starting the test.
+
+353
+00:49:44,677 --> 00:49:47,826
+Yeah. Let's do that. Jass debugger.
+
+354
+00:49:47,827 --> 00:49:55,177
+And then let's give it a port. Uh, just a [INAUDIBLE].
+
+355
+00:49:59,887 --> 00:50:03,727
+Uh, port. Let's give it a fun number.
+
+356
+00:50:03,937 --> 00:50:07,117
+Five, five, four, four, three, three. How about five?
+
+357
+00:50:07,117 --> 00:50:11,617
+Five, four, four, three. And then let's put the [INAUDIBLE] right here.
+
+358
+00:50:14,207 --> 00:50:17,957
+And we're going to try and connect to local host.
+
+359
+00:50:19,297 --> 00:50:25,897
+Five, four, four, three. Whenever the server, the debugger server, gets launched.
+
+360
+00:50:26,327 --> 00:50:29,737
+Oh. Okay. Waiting for the debugger to connect.
+
+361
+00:50:31,627 --> 00:50:36,947
+Uh. Connect. Um.
+
+362
+00:50:40,767 --> 00:50:45,117
+Inspect. Okay, here we go.
+
+363
+00:50:45,137 --> 00:50:52,627
+Here we go. Run! Let's step in.
+
+364
+00:50:52,987 --> 00:51:02,047
+Step. Can get permissions. Can get permissions on platform.
+
+365
+00:51:03,247 --> 00:51:07,027
+Uh, where are we? Some proxy.
+
+366
+00:51:08,407 --> 00:51:11,747
+Um. I think.
+
+367
+00:51:14,617 --> 00:51:18,107
+Use your path if it exists. These are all backslash.
+
+368
+00:51:18,967 --> 00:51:27,247
+If there is a chrome user data path, then we're going to see if we can get the remapped path data path three Mappings.
+
+369
+00:51:27,457 --> 00:51:36,197
+Data path mappings are the remapping has forward slashes.
+
+370
+00:51:36,217 --> 00:51:47,137
+See, that's no good. So wherever we set the forward, the remapping data path remapping is where do we set the remapping set?
+
+371
+00:51:49,327 --> 00:51:52,477
+The file path. That's no good.
+
+372
+00:51:55,087 --> 00:52:01,067
+What we want is it to be an easy search, Fast A.I. file you.
+
+373
+00:52:03,607 --> 00:52:10,997
+File URL. File picture this file URL.
+
+374
+00:52:12,547 --> 00:52:18,496
+Uh. On a file picker.
+
+375
+00:52:18,497 --> 00:52:22,397
+The file URL gets the NCAI, you or I for a file or directory.
+
+376
+00:52:23,897 --> 00:52:27,337
+And what we want is an all right file pack.
+
+377
+00:52:30,297 --> 00:52:36,567
+That's on the inside. You or I want the native native.
+
+378
+00:52:51,217 --> 00:53:02,257
+Yes, I file picture. File or directory.
+
+379
+00:53:02,267 --> 00:53:05,687
+You know what? Instead of doing that, I've got a better idea.
+
+380
+00:53:08,657 --> 00:53:19,347
+We're going to update. Chrome profile migrate or, um, data?
+
+381
+00:53:20,867 --> 00:53:27,487
+Or was it remapping? We're going to, uh, data path remapping set.
+
+382
+00:53:32,827 --> 00:53:37,437
+File Eagle FP dot. While.
+
+383
+00:53:44,567 --> 00:53:58,757
+Pick picture. Uh.
+
+384
+00:54:04,557 --> 00:54:11,157
+File this file and file dot.
+
+385
+00:54:11,277 --> 00:54:14,367
+So it's an NCAI file. I need the native path.
+
+386
+00:54:18,277 --> 00:54:21,387
+Maybe just the path is fine at this point. Targeting path.
+
+387
+00:54:23,127 --> 00:54:35,477
+I can't use that over X because I want the pad. Relative per set relative path.
+
+388
+00:54:38,417 --> 00:54:49,007
+As I file. To move to.
+
+389
+00:54:54,537 --> 00:54:58,377
+Target string path.
+
+390
+00:55:02,677 --> 00:55:11,567
+He said I experienced you live. What's the difference with Target and Path?
+
+391
+00:55:17,777 --> 00:55:20,957
+Find out what The A.V. Club points out. Find with the Simulink Point site.
+
+392
+00:55:28,137 --> 00:55:34,247
+Say file. Target, Nike or Chanel, that of power.
+
+393
+00:55:41,197 --> 00:55:45,307
+Unfortunately, this is going to require us to do some manual testing.
+
+394
+00:55:49,307 --> 00:55:56,677
+IP on Linux and that's a real pain in the butt too, because we have to make sure it still works.
+
+395
+00:55:59,437 --> 00:56:08,287
+But let's see if this. Let's see if this passes the test at least.
+
+396
+00:56:16,057 --> 00:56:29,377
+It's good, though. We found a bug. Still fails.
+
+397
+00:56:37,767 --> 00:56:55,687
+For three. Ron.
+
+398
+00:56:58,977 --> 00:57:05,607
+Oh, you know what? I might have to build that part remapping.
+
+399
+00:57:06,827 --> 00:57:10,727
+This does set. Yeah.
+
+400
+00:57:10,757 --> 00:57:15,087
+I need a build. That's why. Again.
+
+401
+00:57:15,417 --> 00:57:21,777
+I am not on Mac OS. I have to repackage similar things.
+
+402
+00:57:39,257 --> 00:57:44,207
+Passed. Okay, great. So let's take a look at the full patch.
+
+403
+00:57:44,537 --> 00:57:49,877
+We're gonna get rid of our dump statements. Don't need these anymore.
+
+404
+00:57:58,077 --> 00:58:03,207
+Uh, and don't need the change to the test anymore.
+
+405
+00:58:06,737 --> 00:58:17,167
+Let's run the whole test now. Push up for a view.
+
+406
+00:58:19,267 --> 00:58:30,307
+Boot up our Linux box and. And try and do a build.
+
+407
+00:58:33,497 --> 00:58:41,717
+Um, that we can test. Huh?
+
+408
+00:58:43,037 --> 00:58:50,277
+See you. And. Fail.
+
+409
+00:58:55,027 --> 00:59:06,237
+Remapped path. It's expecting.
+
+410
+00:59:14,347 --> 00:59:22,817
+The permission path. Should be the rim after and rim after.
+
+411
+00:59:23,387 --> 00:59:36,707
+Yeah, I would expect that to be the case too. Okay.
+
+412
+00:59:39,177 --> 00:59:43,447
+Once again. Poker time.
+
+413
+00:59:45,707 --> 00:59:49,667
+We're going to figure out what's going wrong here, though.
+
+414
+00:59:50,117 --> 00:59:55,057
+Going to figure out what's gone wrong here. I wasn't very good.
+
+415
+00:59:55,507 --> 01:00:04,837
+I like the New Zealand accent. I wish I was better at it. Taika Waititi has an amazing accent.
+
+416
+01:00:05,677 --> 01:00:09,267
+Okay. Um, I want.
+
+417
+01:00:09,277 --> 01:00:12,517
+I can get permissions.
+
+418
+01:00:17,807 --> 01:00:21,437
+Break here. Can I do that? No. I already was too late.
+
+419
+01:00:21,677 --> 01:00:24,877
+Too late? Once again.
+
+420
+01:00:48,717 --> 01:00:56,357
+Don't know. Don't print. I need a break.
+
+421
+01:00:56,507 --> 01:01:01,087
+Yeah, that's fine to break their. Oh, excellent.
+
+422
+01:01:03,607 --> 01:01:09,517
+Not quite. Not quite yet. We're going to disable that breakpoint at a breakpoint, but disable it.
+
+423
+01:01:12,957 --> 01:01:20,937
+Good. Re-enable. Okay.
+
+424
+01:01:26,237 --> 01:01:29,327
+Dad. A path to get you there. Okay, here we go.
+
+425
+01:01:30,537 --> 01:01:39,977
+Come. User data path is that we're going to see what our re mappings are that are path the mappings.
+
+426
+01:01:42,787 --> 01:01:47,587
+It got remapped to undefined. So that's no good.
+
+427
+01:01:51,907 --> 01:01:55,477
+Okay, that explains it. What we have written does not work.
+
+428
+01:01:57,007 --> 01:02:04,437
+So. Uh, let's do that again.
+
+429
+01:02:14,897 --> 01:02:24,547
+Come on. Come on, Come on. Um.
+
+430
+01:02:29,987 --> 01:02:37,327
+Oh, no, shoot. See, I didn't want to do that. I want to wait until I want to do it earlier.
+
+431
+01:02:37,337 --> 01:02:41,297
+I want to do it right around.
+
+432
+01:02:44,647 --> 01:02:50,007
+Here. Okay.
+
+433
+01:02:51,857 --> 01:03:05,747
+Start again. Five, five, four, four, three.
+
+434
+01:03:06,887 --> 01:03:28,137
+Here we go. Okay now from profile migrate or data path remapping this start set here, we're going to go here.
+
+435
+01:03:29,427 --> 01:03:35,547
+Okay. So what do we have? FP file dot part.
+
+436
+01:03:39,937 --> 01:03:43,927
+Oh, it's because it's not supposed to be FP That target is supposed to be filed on target.
+
+437
+01:03:46,117 --> 01:03:49,987
+That's why. Um.
+
+438
+01:03:56,017 --> 01:04:00,337
+That's why we write tests. That's why we do it.
+
+439
+01:04:00,817 --> 01:04:17,317
+This is why we do it. Don't just trust your eyeballs because your eyeballs will lie to you or your brain.
+
+440
+01:04:26,087 --> 01:04:33,607
+Write your tests. Your tests will help you. Yes.
+
+441
+01:04:33,607 --> 01:04:39,907
+There we go. That's what I wanted. Okay. So we're going to get rid of our debugger statement there.
+
+442
+01:04:47,317 --> 01:04:50,327
+You know, absorb the changes that I just made.
+
+443
+01:04:56,067 --> 01:05:01,787
+We're going to push them up for review. Um.
+
+444
+01:05:02,207 --> 01:05:05,417
+Fixed data path remapping on windows.
+
+445
+01:05:11,347 --> 01:05:19,897
+And then we have to make sure that it still works on Linux. And so we are going to need to boot up our VM.
+
+446
+01:05:23,637 --> 01:05:29,577
+Excuse me. Building will not take long.
+
+447
+01:05:30,147 --> 01:05:35,907
+Thankfully. But packaging creating a snap package.
+
+448
+01:05:37,197 --> 01:05:42,417
+What a pain in the butt is. It is error prone and it takes forever.
+
+449
+01:05:42,857 --> 01:05:46,317
+Forever. I hope it works nicely whenever we do it here.
+
+450
+01:05:46,317 --> 01:05:51,567
+But like. Like I get it.
+
+451
+01:05:51,577 --> 01:05:57,187
+I get why people are doing SNAP and flatpack and containerized applications.
+
+452
+01:05:57,187 --> 01:06:00,787
+I get it. But like, holy smokes, the developer experiences garbage.
+
+453
+01:06:00,967 --> 01:06:05,527
+Garbage. At least for me, on my VM.
+
+454
+01:06:09,837 --> 01:06:11,607
+Maybe it'd be easier if it wasn't a vim.
+
+455
+01:06:13,947 --> 01:06:23,067
+But it's like one of the first things you need to do is a clone of a virtual machine in my virtual machine and like it's using Q and EMU to do that.
+
+456
+01:06:23,397 --> 01:06:26,607
+And like, there's there's no way that's efficient.
+
+457
+01:06:27,717 --> 01:06:38,877
+And like, you know, that ends up taking a bunch of process, basically like boots up a computer to repackage our snap and takes forever.
+
+458
+01:06:44,987 --> 01:06:46,487
+What I should do, actually.
+
+459
+01:06:48,847 --> 01:06:56,437
+Before I even do any of this is I should just rerun all the tests on windows here, make sure that there wasn't anything I missed.
+
+460
+01:06:56,737 --> 01:07:08,517
+So, Mark tests browser component. Once immigration tests unit sequential will be for x PCR tests.
+
+461
+01:07:11,527 --> 01:07:14,617
+Our PM is worse than Deb, though, right? I don't know.
+
+462
+01:07:15,817 --> 01:07:19,357
+I've never I've never packaged for Debbie and I've never packaged for anyone.
+
+463
+01:07:19,777 --> 01:07:23,167
+So who knows, Maybe the developer experience for everyone is garbage.
+
+464
+01:07:24,097 --> 01:07:28,687
+All I know is that whenever I like a snap package is very specific.
+
+465
+01:07:28,687 --> 01:07:37,657
+It's sandbox in a particular way, and whenever I have to build one, I want to stab my eyes with golden pins.
+
+466
+01:07:39,937 --> 01:07:46,267
+Okay. So that worked, and I'm fairly confident that this will also pass.
+
+467
+01:07:47,467 --> 01:07:53,257
+But let's do it anyways. And while we're doing that, well, sign into the VM.
+
+468
+01:07:54,857 --> 01:07:58,577
+Uh. Here.
+
+469
+01:08:02,607 --> 01:08:06,467
+Hmm. So I'm SSA checking into the VM.
+
+470
+01:08:10,427 --> 01:08:15,877
+And, uh, I'm going to. Prune these two off.
+
+471
+01:08:21,527 --> 01:08:29,277
+And check out this because I have to base everything on top of it. Not mincing words.
+
+472
+01:08:29,487 --> 01:08:36,257
+Yeah, Sorry if that was graphic. That was an Oedipus Rex reference.
+
+473
+01:08:36,297 --> 01:08:41,727
+That's I studied. A lot of people know this. I studied theater and.
+
+474
+01:08:43,527 --> 01:08:52,287
+Oh, wait, no. Did I want to? Yeah, I wanted to do that. I studied theater and, like, took a lot of English classes and read a lot of Greek plays.
+
+475
+01:08:52,287 --> 01:08:55,637
+And, uh, Oedipus Rex. Known for a number of things.
+
+476
+01:08:55,647 --> 01:09:02,097
+One of those things was stabbing his eyes out with golden pins once he realized the other things he'd done.
+
+477
+01:09:02,607 --> 01:09:12,207
+If you're not sure what he'd done. If I don't want to spoil the Oedipus, I don't want to spoil the play for you if you don't know.
+
+478
+01:09:13,137 --> 01:09:20,337
+But he does some things that makes him really upset, and his reaction is to stab his eyes.
+
+479
+01:09:22,857 --> 01:09:30,537
+Spoiler alerts for Oedipus. The play from like thousands of years ago.
+
+480
+01:09:37,037 --> 01:09:42,767
+I'm actually curious now how when was the first Wrex written?
+
+481
+01:09:43,277 --> 01:09:48,217
+When was that? Was that Sophocles? Yes, Sophocles forth for 20 B.C. So I don't know.
+
+482
+01:09:48,227 --> 01:09:51,347
+Statute of limitations on spoilers is probably run out.
+
+483
+01:10:06,087 --> 01:10:13,447
+Okay. Applying. Applying. Applying. Okay, We have to.
+
+484
+01:10:13,467 --> 01:10:18,987
+What am I configured to build with? Good. And I've got the right patches checked out.
+
+485
+01:10:20,187 --> 01:10:27,327
+Good. Mark, build. And then I have to mark package and then repackages a snap.
+
+486
+01:10:29,977 --> 01:10:38,827
+Fun times. Okay. Well, while we're waiting for that bill in the background, I mean, cause this one, we can go back to what we were doing before.
+
+487
+01:10:42,827 --> 01:10:45,977
+Which I guess what I was trying to do is run these tests.
+
+488
+01:10:47,447 --> 01:10:50,657
+Uh, not all. Oh, yeah, I.
+
+489
+01:10:50,717 --> 01:10:54,407
+I basically killed the test while, uh, the migration.
+
+490
+01:10:54,827 --> 01:11:00,917
+Migration was, ah, tests because, ah, they're built, finished. So it's like, hey, what happened?
+
+491
+01:11:01,467 --> 01:11:27,267
+Oh, well, hoping now we can run them. Good.
+
+492
+01:11:27,507 --> 01:11:30,807
+All right. Now, what were the other files that we changed?
+
+493
+01:11:30,807 --> 01:11:35,427
+The other tests. There were a bunch of them. Here's one.
+
+494
+01:11:36,267 --> 01:11:43,127
+We're just going to go through them all. In fact, before I do that, let's make a list.
+
+495
+01:11:44,057 --> 01:11:47,086
+I think I could do what HIV status?
+
+496
+01:11:47,087 --> 01:11:50,387
+Change this one. Does that work?
+
+497
+01:11:51,017 --> 01:11:55,827
+Yeah. Uh. Wait.
+
+498
+01:11:56,247 --> 01:12:06,167
+She status? I think I have to create a bug.
+
+499
+01:12:08,737 --> 01:12:13,567
+Such and such. Remove the ability to switch to the old migration wizard.
+
+500
+01:12:17,397 --> 01:12:22,017
+Uh, and probably a few other people see reviewers.
+
+501
+01:12:23,907 --> 01:12:33,326
+Who else? There are probably a few others. That's our bill doing that test passed.
+
+502
+01:12:33,327 --> 01:12:36,857
+That's good. Okay, this bill is done, so we're going to package.
+
+503
+01:12:41,157 --> 01:12:46,197
+US. Oh, I saw the debugger in here.
+
+504
+01:12:47,847 --> 01:12:54,637
+Yeah, I shouldn't have that. Let's get rid of that. Yeah, get rid of that.
+
+505
+01:12:58,647 --> 01:13:01,867
+Mend. Repackaging.
+
+506
+01:13:04,987 --> 01:13:09,546
+You're going to see some of the maybe some of the hacks I do to spur SNAP package
+
+507
+01:13:09,547 --> 01:13:15,567
+development along because it's just like hitting a piece of meat with a lead pipe,
+
+508
+01:13:15,577 --> 01:13:22,117
+like just like a guy. Come on. All right.
+
+509
+01:13:22,477 --> 01:13:26,437
+Status change. We're going to get the list of the tests that we change.
+
+510
+01:13:26,707 --> 01:13:34,087
+That's all of these, for the most part. Let's, uh, create a list.
+
+511
+01:13:35,737 --> 01:13:39,627
+Oh, boy. Um, let's make that easier to.
+
+512
+01:13:40,747 --> 01:13:58,987
+To do. Um, and let's put those in slightly and we can get rid of some.
+
+513
+01:14:00,407 --> 01:14:07,006
+And let's also. Not a test.
+
+514
+01:14:07,007 --> 01:14:10,637
+Not a test done passed.
+
+515
+01:14:20,827 --> 01:14:25,387
+Okay, so now we can just get our big list of things to.
+
+516
+01:14:30,667 --> 01:14:35,297
+Let's indent these one more time. Come on.
+
+517
+01:14:35,447 --> 01:14:42,277
+Indent. Indent. How do I indent? Okay, let's test this one.
+
+518
+01:14:48,387 --> 01:14:52,107
+Packaging almost done. Packaging is done.
+
+519
+01:14:52,137 --> 01:14:57,616
+Okay. Mock repackaged. Snap gas ash install.
+
+520
+01:14:57,617 --> 01:15:01,377
+Let's see what it does. Let's see if it likes me today.
+
+521
+01:15:04,787 --> 01:15:08,997
+Okay, Well, and for our other test here, I'm glad I ran it.
+
+522
+01:15:09,077 --> 01:15:12,737
+It is not working. Let's find out what this test does.
+
+523
+01:15:14,927 --> 01:15:19,037
+It runs the command and waits for the migration wizard window.
+
+524
+01:15:21,517 --> 01:15:25,577
+To open. Which it did.
+
+525
+01:15:28,267 --> 01:15:42,637
+Tab Migration Wizard tab opened. Oh, and we also don't need this part.
+
+526
+01:15:49,227 --> 01:15:53,757
+Um. Wait for migration wizard. Do you command?
+
+527
+01:16:00,467 --> 01:16:06,617
+Uh oh.
+
+528
+01:16:06,637 --> 01:16:12,587
+Yeah. This isn't going to work, because once again, it's waiting for a new tab to open.
+
+529
+01:16:13,187 --> 01:16:18,927
+So we actually do need that. Um, shoot.
+
+530
+01:16:18,947 --> 01:16:23,987
+Right. Like, we need that change, uh, for that ad setup thing.
+
+531
+01:16:25,607 --> 01:16:28,967
+Okay, let's. Let's find another one where we do that about logins.
+
+532
+01:16:28,967 --> 01:16:32,237
+I think that it. It's kind of a pain in the butt.
+
+533
+01:16:34,147 --> 01:16:40,397
+I was at this one open in port. No.
+
+534
+01:16:46,257 --> 01:16:50,337
+Uh, here. Yeah, Copy that.
+
+535
+01:16:55,087 --> 01:17:10,327
+Well, the initial tab. I know this means that when we're using the migration that when the about preferences hosting the migration wizard opens will.
+
+536
+01:17:11,897 --> 01:17:16,687
+Load. Oh, heavens.
+
+537
+01:17:16,727 --> 01:17:20,567
+Paige Tanner. The initial one. This makes it easier.
+
+538
+01:17:21,617 --> 01:17:26,997
+Start with the opening. To be more explicit.
+
+539
+01:17:29,517 --> 01:17:35,637
+When cleaning up because we can just remove the open tap.
+
+540
+01:17:37,597 --> 01:17:56,457
+Uh, okay. What was the tab weight Wizard tab promise and then, uh, browser test tab.
+
+541
+01:17:56,817 --> 01:18:03,347
+Was it all right on the test as a repackaging?
+
+542
+01:18:03,707 --> 01:18:16,157
+Yep. Failed. So I seem to recall what I had to do in this case is that do you like multi pass or delete via a snap craft?
+
+543
+01:18:18,567 --> 01:18:25,126
+Firefox Devil. And let that think about that for a while.
+
+544
+01:18:25,127 --> 01:18:33,947
+And if it fails, I just kill it because that's a rational thing that I have to do at that pass.
+
+545
+01:18:34,457 --> 01:18:41,267
+It did not pass browser or remove tab casing leasing.
+
+546
+01:18:52,417 --> 01:18:58,927
+Like no shade to the people who obviously worked hard on getting the snap crafting snap stuff built out.
+
+547
+01:18:58,927 --> 01:19:03,657
+But like. I am still frustrated.
+
+548
+01:19:03,957 --> 01:19:07,017
+Okay. So multi pass. Recover.
+
+549
+01:19:07,377 --> 01:19:14,757
+Snap. Kraft Firefox devil. Now try it again.
+
+550
+01:19:17,357 --> 01:19:20,477
+Okay, so that one passes. Now, this one.
+
+551
+01:19:30,007 --> 01:19:33,647
+Time is at 225, man.
+
+552
+01:19:33,667 --> 01:19:37,837
+We did not get to the jump list stuff today. Too many emergencies got in the way.
+
+553
+01:19:37,867 --> 01:19:42,217
+What a pain. Okay, that one's good.
+
+554
+01:19:42,877 --> 01:19:48,877
+Open import. Shouldn't check these off until it's done.
+
+555
+01:19:49,717 --> 01:19:59,517
+And this is a tumble file, not a test. Good.
+
+556
+01:20:01,647 --> 01:20:04,676
+End Point telemetry. I'm pretty sure we already tested this one.
+
+557
+01:20:04,677 --> 01:20:15,397
+But just for giggles and ooh, that is actually a module, not a test.
+
+558
+01:20:15,397 --> 01:20:19,076
+So we actually have to see who uses that.
+
+559
+01:20:19,077 --> 01:20:23,457
+We might have to just run all of the new. Oh, I don't want to run all the new tab tests.
+
+560
+01:20:24,897 --> 01:20:29,967
+Who uses that to import rollouts?
+
+561
+01:20:36,177 --> 01:20:41,187
+There's this. This test. Okay, This is what I want to run.
+
+562
+01:20:44,017 --> 01:20:47,586
+What test? What did I just run? Entry point telemetry.
+
+563
+01:20:47,587 --> 01:20:56,417
+Great. Knock it off. Not bad off. Great past.
+
+564
+01:20:57,277 --> 01:21:07,557
+Uh, next up about welcome in port. Still repackaging.
+
+565
+01:21:14,477 --> 01:21:22,257
+Launch in some kind of VM software development in the RAS.
+
+566
+01:21:24,117 --> 01:21:32,817
+That's correct. Q emu is only using 1% of my CPU.
+
+567
+01:21:32,847 --> 01:21:37,437
+Why so slow? Use more CPU. Little VM.
+
+568
+01:21:38,247 --> 01:21:41,997
+It's just the boot. Little boot guy. Come on, let's go.
+
+569
+01:21:43,377 --> 01:21:48,117
+1%. Come on. What are you even doing?
+
+570
+01:21:49,077 --> 01:21:53,547
+There we go. 10%. 125%.
+
+571
+01:21:53,577 --> 01:21:58,287
+Now we're talking software development in the raw.
+
+572
+01:21:58,767 --> 01:22:06,117
+It sounds like a wrestling. Welcome to in the raw software development.
+
+573
+01:22:06,147 --> 01:22:13,546
+Oh, your brother. That's that is that is a throwback.
+
+574
+01:22:13,547 --> 01:22:19,547
+I never watch wrestling but I was aware of like those people was Hulk Hogan who was saying,
+
+575
+01:22:19,577 --> 01:22:25,757
+oh brother, whoever did that, maybe he was talking about software development in the raw.
+
+576
+01:22:27,407 --> 01:22:34,877
+Oh, take a bug, put it in the ring. [INAUDIBLE] never know what hit him, brother.
+
+577
+01:22:42,537 --> 01:22:50,057
+Okay, that passed and finally this passes, then I'm fairly confident that we've got a workable patch.
+
+578
+01:22:54,567 --> 01:23:01,227
+Hey, Bug, Snap grafting bug. I want to see you in the ring tomorrow.
+
+579
+01:23:02,067 --> 01:23:07,287
+Actually, no. I want to see a patch for you in the build tomorrow.
+
+580
+01:23:08,067 --> 01:23:16,537
+Because I really want you off my plate. I'm getting zero feedback on starting this VM.
+
+581
+01:23:17,917 --> 01:23:23,857
+It takes forever. It's got to clean it. Apparently, it's got to clean the environment.
+
+582
+01:23:24,097 --> 01:23:30,997
+I don't know if that means it has to go like download. I have no idea what that means.
+
+583
+01:23:32,707 --> 01:23:39,797
+But it's sure taken a lot of CPU. Uh, golden pins.
+
+584
+01:23:40,717 --> 01:23:47,217
+Golden pins. All right. Let's call it there on the on this patch.
+
+585
+01:23:48,417 --> 01:23:52,247
+Uh. We'll post this up for review.
+
+586
+01:23:58,727 --> 01:24:01,147
+I actually want to update the commit message as well.
+
+587
+01:24:04,387 --> 01:24:19,807
+This also this removes the main pref and all of the things that use to read from it pane pref the the pref for
+
+588
+01:24:19,807 --> 01:24:30,217
+the um this removes the pref to re enable the legacy wizard and all of the things that used to read from it.
+
+589
+01:24:31,387 --> 01:24:47,017
+It also disables the ability to use the legacy wizard from about welcome with the about welcome behavior feature.
+
+590
+01:24:49,357 --> 01:24:54,907
+But welcome behavior. That is why we call that feature manifest migration Wizard of elephant behavior.
+
+591
+01:24:54,907 --> 01:25:06,577
+Yeah. Um, uh, it also removes one of the old utility, the clothes migration wizard.
+
+592
+01:25:07,857 --> 01:25:19,917
+Utility firm browser test utils, since that was effectively just a theme that effectively became a theme wrapper.
+
+593
+01:25:22,967 --> 01:25:31,827
+Around remove tab. Finally, uh, I also, um.
+
+594
+01:25:32,037 --> 01:25:38,907
+This patch also removes some documentation about the legacy migration wizard.
+
+595
+01:25:40,457 --> 01:25:52,597
+Anything else that got removed. We have some documentation and.
+
+596
+01:25:55,567 --> 01:26:02,707
+And tests for tests. Tests for that open specifically.
+
+597
+01:26:05,297 --> 01:26:10,487
+Check the legacy behavior, legacy, dialog, behavior.
+
+598
+01:26:16,477 --> 01:26:23,887
+All right. Let's take a look. Amazing.
+
+599
+01:26:34,337 --> 01:26:38,387
+Yes. Yes. I'm happy with this. All right. Let's post it up for review.
+
+600
+01:26:44,597 --> 01:26:47,927
+See what people think. Meanwhile, how's our snap packaging?
+
+601
+01:26:48,227 --> 01:26:53,446
+Just happened to fail on us. Let's try again in that.
+
+602
+01:26:53,447 --> 01:26:57,647
+Cool. Isn't that a cool feature of building snaps that will just like.
+
+603
+01:26:57,647 --> 01:27:14,687
+Nope. Can't do it. Try again. Wiki said that RAW exists, WWE Raw still exists.
+
+604
+01:27:14,697 --> 01:27:22,617
+I think that's where my mind went whenever we were talking about software development in the raw WWE raw software development.
+
+605
+01:27:24,207 --> 01:27:34,587
+One wrestler, one computer entering a patch will emerge live on pay per view.
+
+606
+01:27:37,617 --> 01:27:44,817
+Spend $20 of your hard earned money to see some buffoonery.
+
+607
+01:27:46,047 --> 01:27:49,317
+All right. I'm going to call the stream there. Thanks, everyone, for watching.
+
+608
+01:27:49,737 --> 01:27:56,937
+I hope you enjoyed this episode. I know it was. We didn't get to the jump live stuff, but like I started with software development in the raw.
+
+609
+01:27:57,177 --> 01:28:01,887
+We'll get sidelined in that. This happened to be one of those cases where an emergency thing kind of landed on my lap.
+
+610
+01:28:02,177 --> 01:28:07,077
+We had to deal with it and and we had to like, do a lot of context switching.
+
+611
+01:28:08,727 --> 01:28:12,266
+So hopefully that was interesting. Thanks again for watching.
+
+612
+01:28:12,267 --> 01:28:16,977
+Let me know what you thought of the episode. There's a link inside the agenda to the episode.
+
+613
+01:28:16,977 --> 01:28:29,967
+It's right down here. In fact, I'm going to copy the link and I copy the link, copy the link and I'm going to put it in the chat.
+
+614
+01:28:33,827 --> 01:28:37,247
+So if you follow that, that's a great way. Let me know what you thought of the episode.
+
+615
+01:28:38,057 --> 01:28:39,767
+Ways I can improve the series.
+
+616
+01:28:40,337 --> 01:28:45,527
+Maybe you've got some ideas on things I could look at, maybe have some questions you'd like me to try and answer during the stream.
+
+617
+01:28:45,527 --> 01:28:49,847
+I read everything that comes in, so go ahead. That's a great way to communicate with me about the stream.
+
+618
+01:28:52,337 --> 01:28:59,657
+A wild patch appeared. Let's see if the snap is done by next week or if it takes a week.
+
+619
+01:29:00,797 --> 01:29:06,077
+I'm retiring, so the software development is broken.
+
+620
+01:29:08,187 --> 01:29:12,447
+No, it will not take a week. It better not. All right.
+
+621
+01:29:12,447 --> 01:29:16,017
+Thanks again for watching. And I will see you all next week.
+
+622
+01:29:16,707 --> 01:29:19,707
+Take care, everybody. Hold on.
+
+623
+01:29:19,887 --> 01:29:23,307
+Let me do that. Take care, everybody. Bye bye.
+
+624
+01:29:25,687 --> 01:29:29,977
+The joy of loading the.
+
+625
+01:29:31,957 --> 01:29:33,157
+Golden pens.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

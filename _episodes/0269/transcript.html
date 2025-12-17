@@ -1,0 +1,3093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 269 - November 10, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 269 - November 10, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=faca2d69-2045-4549-9b12-add50111fd60</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=faca2d69-2045-4549-9b12-add50111fd60">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,554 --> 00:00:16,614
+Well. Hello and welcome to episode 269 of The Joy of Coding, my name is Mike Connelly.
+
+2
+00:00:16,614 --> 00:00:25,524
+It's so good to see you. Hello. Welcome. We're going to be hacking on some Firefox stuff today, mainly actually doing some exploration and review.
+
+3
+00:00:25,524 --> 00:00:32,364
+I've got a code review in my queue that I want to look at. And also, I want to answer some viewer questions.
+
+4
+00:00:32,364 --> 00:00:39,654
+There was a really tricky one. I actually haven't done any prep for it, so we're going to be doing some exploration to try and answer that question.
+
+5
+00:00:39,654 --> 00:00:47,064
+It's kind of a broad question, but we'll get into that. Let me start by sharing my screen and and then we can get started.
+
+6
+00:00:47,064 --> 00:00:54,004
+So share my screen. Hey, it's November 10th, 20 and 21.
+
+7
+00:00:54,004 --> 00:00:58,914
+A reminder no plan survives breakfast. I kind of have a sense of what I want to do today and what I want to talk about today.
+
+8
+00:00:58,914 --> 00:01:03,714
+But hey, things can go horribly wrong. I might get sidetracked, distracted.
+
+9
+00:01:03,714 --> 00:01:07,494
+Someone might ping me with an emergency over Matrix and I have to deal with it.
+
+10
+00:01:07,494 --> 00:01:12,234
+My hardware might start working, stop working or my my internet might go down.
+
+11
+00:01:12,234 --> 00:01:13,434
+Who knows what'll happen.
+
+12
+00:01:13,434 --> 00:01:21,084
+It's been relatively smooth the past couple of episodes, but you know, things go wrong and that's OK, and we'll just deal with it as it comes.
+
+13
+00:01:21,084 --> 00:01:27,534
+The second thing is that the episode, the agenda story that we're looking at this document here with,
+
+14
+00:01:27,534 --> 00:01:34,674
+like all of these handy dandy links, is something that you have access to if you're watching this on YouTube.
+
+15
+00:01:34,674 --> 00:01:40,554
+There is a video link to it in the video description. If you're watching this on air, Mozilla, it's in the video details.
+
+16
+00:01:40,554 --> 00:01:45,204
+If you're watching this on Twitch, the link, I'll I'll drop.
+
+17
+00:01:45,204 --> 00:01:50,424
+Excuse me, I'll drop them right now into the Twitch chat.
+
+18
+00:01:50,424 --> 00:02:01,224
+Here we go. Agenda goes right into the Twitch chat, and there's also this new place where you can watch the stream that I want to mention right here.
+
+19
+00:02:01,224 --> 00:02:10,494
+So on my home page, if you go to Mike Connelly dot com slash C, then oh wow, we've opened up a black hole.
+
+20
+00:02:10,494 --> 00:02:15,484
+Check it out. Check out this cool black hole we've opened up.
+
+21
+00:02:15,484 --> 00:02:21,974
+Let's check of the delay due in the wave with myself.
+
+22
+00:02:21,974 --> 00:02:28,804
+Whoa, whoa, pretty wild, OK?
+
+23
+00:02:28,804 --> 00:02:32,404
+This gives you the opportunity to watch on Twitch Air, Mozilla or YouTube.
+
+24
+00:02:32,404 --> 00:02:39,424
+There's links to the agenda, the link to rate this episode and the episode guide all here on this one simple page.
+
+25
+00:02:39,424 --> 00:02:44,704
+Mike Conley dot com slash Jose and that that is where you can go.
+
+26
+00:02:44,704 --> 00:02:51,874
+And if Twitch isn't working for you, then you can just switch to air Mozilla. And if Mozilla is not working for you, then you can switch to YouTube.
+
+27
+00:02:51,874 --> 00:02:53,044
+You know, lots of choices here.
+
+28
+00:02:53,044 --> 00:03:01,144
+So if things are going wrong, hopefully you get the ability to to, you know, fix that situation by by changing the channel.
+
+29
+00:03:01,144 --> 00:03:05,914
+Just realize there's like some lighting issue here. There's like a texture behind me.
+
+30
+00:03:05,914 --> 00:03:11,074
+That's what happens whenever you don't have a pro lighting rig.
+
+31
+00:03:11,074 --> 00:03:15,634
+OK, let's oh, I think that just makes things worse.
+
+32
+00:03:15,634 --> 00:03:19,894
+Let me move that back better.
+
+33
+00:03:19,894 --> 00:03:25,324
+I think better. OK. Let us now get back to business.
+
+34
+00:03:25,324 --> 00:03:29,854
+Where was I? Oh yes, there is also an episode guide.
+
+35
+00:03:29,854 --> 00:03:37,294
+Hey, episode guide. If you are watching this in the in the future, I don't know how you'd be watching this in the past,
+
+36
+00:03:37,294 --> 00:03:41,104
+but if you're watching this in the present or you're watching this in the future,
+
+37
+00:03:41,104 --> 00:03:47,224
+then there is an episode guide that can probably be helpful to you if you're watching streams.
+
+38
+00:03:47,224 --> 00:03:51,064
+This stream or previous recording and you want to know what I talked about.
+
+39
+00:03:51,064 --> 00:03:54,874
+It's a completely viewer driven episode guide that you too can contribute to.
+
+40
+00:03:54,874 --> 00:03:59,794
+And there's a link here. And in all those different places that I mentioned before is a link to the episode guide.
+
+41
+00:03:59,794 --> 00:04:04,804
+And if you want to send pull requests to the repository because it's hosted on GitHub,
+
+42
+00:04:04,804 --> 00:04:11,704
+if you want to added your own corrections addenda, expand on something I was talking about, you know, send me a pull request.
+
+43
+00:04:11,704 --> 00:04:14,224
+And if you're not sure what I mean by a pull request,
+
+44
+00:04:14,224 --> 00:04:21,664
+there's a contributing guide and a guide for creating a pull request and how that all works that is here in the agenda.
+
+45
+00:04:21,664 --> 00:04:26,824
+Finally, I want to remind everyone that something I had mentioned last week is that I'm
+
+46
+00:04:26,824 --> 00:04:32,644
+hoping to do some naming of episodes rather than just calling them episode 269 268,
+
+47
+00:04:32,644 --> 00:04:38,794
+et cetera. If you have a good idea, while I should just not say good ideas, if you have any ideas for episode names,
+
+48
+00:04:38,794 --> 00:04:46,234
+maybe you're going through the episodes in the past or you're watching this one, and at the very end of it, you have a good idea for a name for it.
+
+49
+00:04:46,234 --> 00:04:52,594
+The way you can submit that idea is to open an issue on the episode guide GitHub repository.
+
+50
+00:04:52,594 --> 00:04:59,614
+So if you go to the repository here, let's let's follow this link.
+
+51
+00:04:59,614 --> 00:05:04,084
+We'll go there ourselves will check it out.
+
+52
+00:05:04,084 --> 00:05:14,854
+If you go here and then go to issues, you can create a new issue and say, you know, episode 269 should be called.
+
+53
+00:05:14,854 --> 00:05:19,234
+Mike had a peanut butter sandwich for lunch.
+
+54
+00:05:19,234 --> 00:05:24,394
+That's not a good name for the episode, but it is true. But you could.
+
+55
+00:05:24,394 --> 00:05:29,404
+You could submit whatever you'd like as the episode name, and we'll consider it.
+
+56
+00:05:29,404 --> 00:05:34,774
+I will consider it, and then we can name these episodes, right?
+
+57
+00:05:34,774 --> 00:05:41,134
+So I talked about this thing now. The reason I'm doing this not to get on like a soapbox or anything.
+
+58
+00:05:41,134 --> 00:05:50,914
+I traditionally would post this to a subreddit called R Watch People Code and then cross-posted to our Firefox,
+
+59
+00:05:50,914 --> 00:05:57,934
+but I'm going to stop submitting things to Reddit now, post to our Firefox.
+
+60
+00:05:57,934 --> 00:06:11,754
+But Reddit has recently expressed that they're going to compute Link Karma or Reddit Karma.
+
+61
+00:06:11,754 --> 00:06:21,954
+Using blockchain technology, I think they're going to use like the UM.
+
+62
+00:06:21,954 --> 00:06:25,974
+I don't exactly. I'm trying to remember which blockchain they're talking about.
+
+63
+00:06:25,974 --> 00:06:33,714
+It might be like the the ether, what's called the Ether blockchain?
+
+64
+00:06:33,714 --> 00:06:40,534
+I don't actually remember. All I know is that doing so is like kind of catastrophic.
+
+65
+00:06:40,534 --> 00:06:47,664
+Like, it uses a lot of energy. Think of how much carbon computing these blocks takes.
+
+66
+00:06:47,664 --> 00:06:51,984
+And I don't want to Ethereum. Thank you very much, Danny Con.
+
+67
+00:06:51,984 --> 00:06:57,444
+I don't really want to like help support that. So I'm not going to be submitting links to Reddit anymore.
+
+68
+00:06:57,444 --> 00:07:03,474
+So if you still are interested in following the stream, all you need to go do is go to this place,
+
+69
+00:07:03,474 --> 00:07:09,894
+my colleagues, Jossy, and who knows, maybe I'll do something like, fancy it up and have an RSS feed.
+
+70
+00:07:09,894 --> 00:07:15,864
+Good ol RSS feeds so that you can plug it into your feed reader if you still use one of those and you can be,
+
+71
+00:07:15,864 --> 00:07:23,274
+you know, kept up to date on when episodes are coming. All right, let's move on.
+
+72
+00:07:23,274 --> 00:07:31,524
+I wanted to do a code review today. I see someone is about to chat nerd because it is typing, and that's great.
+
+73
+00:07:31,524 --> 00:07:34,554
+I encourage people to chat. I wasn't looking.
+
+74
+00:07:34,554 --> 00:07:42,834
+If you're considering like going into like a debate on like blockchain technology and like cryptocurrency and stuff not interested,
+
+75
+00:07:42,834 --> 00:07:50,124
+I will nip that in the bud right away. I don't want to devolve into that, both in the conversation and in reality.
+
+76
+00:07:50,124 --> 00:07:55,674
+But there is it. Feel free to discuss other things.
+
+77
+00:07:55,674 --> 00:08:12,784
+OK, so I wanted to do a code review. Here, where in bug one seven three six four two nine, we have a submission from one of my colleagues, Nicholas,
+
+78
+00:08:12,784 --> 00:08:20,554
+who is working on this bug to try and make the screenshots like there's this meta bug to make the screenshots feature,
+
+79
+00:08:20,554 --> 00:08:26,794
+which you may or may not be familiar with. I don't know if you know this, but there is a screenshots feature in Firefox.
+
+80
+00:08:26,794 --> 00:08:32,374
+If you go into Customize mode, I believe there's a toolbar button here that you can add called screenshot,
+
+81
+00:08:32,374 --> 00:08:37,654
+and you can just put it here and then you can screenshot parts of the page. You know, you can just like, choose a region.
+
+82
+00:08:37,654 --> 00:08:45,064
+And here I'll choose this block right here. And then you can like, resize, crop it however you want.
+
+83
+00:08:45,064 --> 00:08:46,234
+You can copy and download it.
+
+84
+00:08:46,234 --> 00:09:02,224
+And the way that was engineered was, Oh, there's a great there's a great link from Oh Bridge from Twitch to Matrix may be down, says nerd bloke.
+
+85
+00:09:02,224 --> 00:09:08,404
+Oh, I apologize. The chat the chat bridge might be down if people are chatting on Twitch.
+
+86
+00:09:08,404 --> 00:09:14,164
+I'm sorry, I can't see what you're saying. Let me open up. The bridge is down.
+
+87
+00:09:14,164 --> 00:09:16,174
+I repeat the bridge is down,
+
+88
+00:09:16,174 --> 00:09:22,534
+but what I'll do is I'll open up the Twitch chat in a separate window so I can at least see and relay conversation that's going on.
+
+89
+00:09:22,534 --> 00:09:27,394
+Apologies. I should have checked to see if the bridge was working.
+
+90
+00:09:27,394 --> 00:09:33,974
+Uh, did it that there's a little bit of conversation going on there and notice I discovered this twitch turbid up.
+
+91
+00:09:33,974 --> 00:09:42,124
+Tapped up. OK, uh, let me open that in a separate window so that I can.
+
+92
+00:09:42,124 --> 00:09:45,514
+Where is it? Pop out chat? That's what I want puppet chat.
+
+93
+00:09:45,514 --> 00:09:49,654
+And then I can close this window and hey, there we go now. I can monitor the Twitch chat.
+
+94
+00:09:49,654 --> 00:09:55,174
+Oh, before I continue and before I review this, I want to congratulate congratulate someone.
+
+95
+00:09:55,174 --> 00:10:04,624
+Sure, Shaq fifty five. I don't know if you remember or you were watching the the people who are viewing the stream right now.
+
+96
+00:10:04,624 --> 00:10:10,954
+I'm not sure if you were watching the last stream, but in the last stream we were investigating a bug that I had been needing photon
+
+97
+00:10:10,954 --> 00:10:15,694
+around picture in picture and the full screen mode and the controls not disappearing.
+
+98
+00:10:15,694 --> 00:10:21,334
+Well, sure, Shaq, 55, decided to volunteer to step up.
+
+99
+00:10:21,334 --> 00:10:24,844
+Let me see where is it? PIP stays and full screen.
+
+100
+00:10:24,844 --> 00:10:30,164
+What was it? Invisible? Uh, picture invisible.
+
+101
+00:10:30,164 --> 00:10:35,464
+What was the bug? No picture in picture. I just reviewed this.
+
+102
+00:10:35,464 --> 00:10:40,684
+What was the bug number? Um, hang on a second.
+
+103
+00:10:40,684 --> 00:10:46,624
+It was like, Let me open up.
+
+104
+00:10:46,624 --> 00:10:52,314
+I have to find this now. Hold on a second. It just auto landed.
+
+105
+00:10:52,314 --> 00:11:01,544
+So maybe I can just check auto land. Uh, sure.
+
+106
+00:11:01,544 --> 00:11:05,624
+It auto landed this morning. Sorry, sorry for the delay.
+
+107
+00:11:05,624 --> 00:11:12,664
+Sorry for the delay. I think this is worth calling out, though, because it was really cool. Found it.
+
+108
+00:11:12,664 --> 00:11:19,174
+Here we go. It was Bug one seven zero two seven nine.
+
+109
+00:11:19,174 --> 00:11:28,804
+Let me just pull that up and we can take a look at it. The whole thing. OK, so the picture in picture controls do not always disappear now,
+
+110
+00:11:28,804 --> 00:11:35,514
+it still says open because the patch hasn't merged into Central yet, but sure, Shack, 55, wrote a patch.
+
+111
+00:11:35,514 --> 00:11:39,804
+I believe this was their very first contribution. I was so pleased to see this.
+
+112
+00:11:39,804 --> 00:11:49,704
+They did a great job, wrote a nice, clean patch. There's even an alteration to a test and and this got put into auto land today.
+
+113
+00:11:49,704 --> 00:11:56,964
+So if you're curious about like testing this, you have to wait until this merges to Central, which will be in a couple of hours.
+
+114
+00:11:56,964 --> 00:12:02,184
+And then tomorrow's nightly like this merged only three hours ago to auto land or landed in Orlando.
+
+115
+00:12:02,184 --> 00:12:10,224
+It will merge to Central in a few hours after, you know, test automation has confirmed in the sheriffs have confirmed that the tree is fine.
+
+116
+00:12:10,224 --> 00:12:13,014
+They'll merge into central and it will be in the next nightly build.
+
+117
+00:12:13,014 --> 00:12:18,174
+So either the one that gets built this evening or the one tomorrow, if you get that build,
+
+118
+00:12:18,174 --> 00:12:24,054
+then you can try a search patch and you can see that this will be closed whenever whenever it merges.
+
+119
+00:12:24,054 --> 00:12:29,484
+And and then, you know, the fix will be available in nightly and then it will ride the train.
+
+120
+00:12:29,484 --> 00:12:34,734
+So congratulations. Sure. Shack fifty five. Really, really pleased to see that contribution.
+
+121
+00:12:34,734 --> 00:12:38,304
+Great work, great work. And I'm was so glad to see it.
+
+122
+00:12:38,304 --> 00:12:42,594
+Very responsive in in fabricator too. OK.
+
+123
+00:12:42,594 --> 00:12:55,914
+Sorry, I I got distracted there. What I was working on was reviewing this patch where the screenshots feature we need it to.
+
+124
+00:12:55,914 --> 00:13:01,374
+It was originally developed as what's called a system add on in a system add on is a
+
+125
+00:13:01,374 --> 00:13:07,654
+special kind of add on in Firefox that Mozilla like we build and we package with Firefox.
+
+126
+00:13:07,654 --> 00:13:15,204
+And the reason we do that is so that we can ship updates to it that don't require dot releases.
+
+127
+00:13:15,204 --> 00:13:20,694
+There aren't too many things that we do. We create system panels for, but the ones that we do,
+
+128
+00:13:20,694 --> 00:13:27,834
+it's usually because we're trying to make it easier for ourselves to update things quickly and easily.
+
+129
+00:13:27,834 --> 00:13:31,854
+So, for example, we have a system add on called the web compat add on,
+
+130
+00:13:31,854 --> 00:13:42,084
+and part of its job is to gloss over weird issues with websites that might behave incorrectly for in Firefox.
+
+131
+00:13:42,084 --> 00:13:49,344
+Or they might use a thing that Firefox doesn't have, but we can create a Polish file for,
+
+132
+00:13:49,344 --> 00:13:55,614
+and if it doesn't have it, then like the site breaks or something. And so the web can pad out on ships built into Firefox.
+
+133
+00:13:55,614 --> 00:14:00,984
+But we have the ability to like update it for release users without doing a full blown dot release.
+
+134
+00:14:00,984 --> 00:14:03,174
+Like we can turn those around pretty quickly.
+
+135
+00:14:03,174 --> 00:14:09,654
+And that allows us to react to breakage in websites like if a website just decides to suddenly, like, I don't know,
+
+136
+00:14:09,654 --> 00:14:19,704
+let's say a major website like YouTube decides to suddenly use this feature or user thing, and it doesn't work properly in Firefox.
+
+137
+00:14:19,704 --> 00:14:24,174
+And suddenly YouTube is broken for everybody or like keyboard inputs, just don't work right or something.
+
+138
+00:14:24,174 --> 00:14:32,364
+That's actually happened before where keyboard inputs stopped working on certain sites, or they stopped behaving in a particular way.
+
+139
+00:14:32,364 --> 00:14:36,504
+We can ship an update to the system, add on out of band very,
+
+140
+00:14:36,504 --> 00:14:44,064
+very quickly and almost like inoculate the entire population of users of Firefox so that they're able to continue to use the web.
+
+141
+00:14:44,064 --> 00:14:47,934
+So the system add on is that mechanism is great.
+
+142
+00:14:47,934 --> 00:14:50,964
+But the screenshots feature was developed as a system add on.
+
+143
+00:14:50,964 --> 00:14:57,924
+And the way that system add ons kind of integrate with with the rest of the Firefox codebase is a little strange.
+
+144
+00:14:57,924 --> 00:14:59,514
+Like they're very isolated.
+
+145
+00:14:59,514 --> 00:15:06,114
+And the way that they communicate with, like the rest of Firefox is a little bizarre and like how they do localization is kind of wonky.
+
+146
+00:15:06,114 --> 00:15:15,504
+It doesn't like, by definition, it doesn't seamlessly plug in its kind of this isolated component that gets added on after the fact.
+
+147
+00:15:15,504 --> 00:15:20,064
+And so that makes things like maintenance a little tricky at times.
+
+148
+00:15:20,064 --> 00:15:25,554
+Like, there's this tradeoff that we get when we have this, when we have a system out and we can update it out of band.
+
+149
+00:15:25,554 --> 00:15:33,834
+But maintenance and localization and the like building and updating it like it gets a little bit more complicated,
+
+150
+00:15:33,834 --> 00:15:35,604
+even though we can do it more quickly.
+
+151
+00:15:35,604 --> 00:15:42,924
+And so for screenshots, one of the things we're trying to do is convert this from a system add on into a normal browser component.
+
+152
+00:15:42,924 --> 00:15:46,704
+Sure, check asks Do system add ons have extra privileges? Yes, they do.
+
+153
+00:15:46,704 --> 00:15:51,144
+Absolutely they do. They have what are called.
+
+154
+00:15:51,144 --> 00:15:54,744
+Yeah, they execute at a special level,
+
+155
+00:15:54,744 --> 00:16:03,234
+like a privilege level where they have effectively the ability to do anything that the Firefox code base can do because they're shipped by us like we.
+
+156
+00:16:03,234 --> 00:16:08,044
+We package them, we sign them. We're like, OK, this is Mozilla code. We trust it.
+
+157
+00:16:08,044 --> 00:16:12,774
+It, it gets full permissions. All right.
+
+158
+00:16:12,774 --> 00:16:19,944
+So this this patch is about converting part of the screenshots code to use just window
+
+159
+00:16:19,944 --> 00:16:23,954
+actors for communication because it needs to communicate with the underlying content.
+
+160
+00:16:23,954 --> 00:16:30,074
+I don't know if you can tell, but like this whole interface right here with the eyeballs and the like little
+
+161
+00:16:30,074 --> 00:16:35,324
+region that's going like this is actually happening inside of the content itself,
+
+162
+00:16:35,324 --> 00:16:37,874
+these buttons are in the content.
+
+163
+00:16:37,874 --> 00:16:46,034
+And I think they're working on making it so that these things are not being injected into the content, which is probably a good thing.
+
+164
+00:16:46,034 --> 00:16:52,604
+But the the feature of finding regions is something that we can't really do nicely in the parent process.
+
+165
+00:16:52,604 --> 00:16:56,564
+And so instead, we send we want to be able to send messages to the content process,
+
+166
+00:16:56,564 --> 00:17:00,674
+being able to like interrogate it for, you know, where's the mouse right now?
+
+167
+00:17:00,674 --> 00:17:05,414
+What region are we? Are we floating over and et cetera, et cetera?
+
+168
+00:17:05,414 --> 00:17:08,714
+And so that's what we're going to try and use just window actors for.
+
+169
+00:17:08,714 --> 00:17:17,714
+Because I think before it was using the web extension mechanism for using like a content, a content script and sending messages that way.
+
+170
+00:17:17,714 --> 00:17:19,994
+And because it's becoming a browser component,
+
+171
+00:17:19,994 --> 00:17:25,244
+it doesn't have to go through the web extension mechanism anymore and can just use straight up just window actors.
+
+172
+00:17:25,244 --> 00:17:29,294
+So that's what this patch is for. And if you're curious to know, like what is it?
+
+173
+00:17:29,294 --> 00:17:36,404
+Just Window actor, what am I talking about? There is source documentation for just window actors.
+
+174
+00:17:36,404 --> 00:17:45,984
+They kind of go into, you know, some of the details on how they work, the different kinds, what they're for, what they do.
+
+175
+00:17:45,984 --> 00:17:49,334
+So first of all, congratulations. Sure.
+
+176
+00:17:49,334 --> 00:18:03,134
+Shack with five on your patch going to immortalize that on your patch for and what was the was the bug this one, your patch for this bug?
+
+177
+00:18:03,134 --> 00:18:18,034
+Immortalized forever and the coterie thing, I want to link to the egis actor's documentation.
+
+178
+00:18:18,034 --> 00:18:24,214
+So there are two different kinds, there's process actors and window actors, and what we're talking about specifically are window actors.
+
+179
+00:18:24,214 --> 00:18:33,374
+And so if you're curious to know like what they are and how they work, I would recommend reading this document and that that that'll get you going.
+
+180
+00:18:33,374 --> 00:18:37,684
+Uh, all right. So let's review this patch. What does it do?
+
+181
+00:18:37,684 --> 00:18:41,704
+It adds just window actors for the screenshot component to facilitate communication between the UI,
+
+182
+00:18:41,704 --> 00:18:44,464
+which now lives in the parent and the content document.
+
+183
+00:18:44,464 --> 00:18:50,914
+And it's going to fetch content, dimensions and offsets using screenshot utils, fetch content bounds, cetera, et cetera.
+
+184
+00:18:50,914 --> 00:18:54,604
+And it looks like I had already done a review on this, like at the end of October.
+
+185
+00:18:54,604 --> 00:19:03,784
+I guess I'd kind of forgotten I did that, but it looks like I went over it a bit and I gave some suggestions.
+
+186
+00:19:03,784 --> 00:19:11,464
+Uh, let me just quickly refresh my memory. You suggested using send query rather than send async message,
+
+187
+00:19:11,464 --> 00:19:20,824
+because that send query is a method on our actors that returns a promise that the parent, whenever the other side of the actor pair returns,
+
+188
+00:19:20,824 --> 00:19:24,334
+a response that resolves the promise which is better than like sending a message,
+
+189
+00:19:24,334 --> 00:19:31,414
+then adding a message listener receiving a message and then trying to associate it with the message that you sent.
+
+190
+00:19:31,414 --> 00:19:40,864
+Because you can send clusters of messages and pairing them, like making sure that the responses for the message that you sent.
+
+191
+00:19:40,864 --> 00:19:47,014
+Usually, that works fine because messages are sent in order. But if they depend on things that happen asynchronously,
+
+192
+00:19:47,014 --> 00:19:53,704
+then you can get message responses that are not in the order that you had sent them send the request for.
+
+193
+00:19:53,704 --> 00:19:58,234
+And so using send query, it allows you. It allows us to do that.
+
+194
+00:19:58,234 --> 00:20:05,464
+Sort of. It's a nice mechanism to make sure that the response that we receive is for the request that was sent.
+
+195
+00:20:05,464 --> 00:20:14,044
+And it's a nicer interface, I think. And then I did some documentation suggestions and not to use unload and before on load because of
+
+196
+00:20:14,044 --> 00:20:22,624
+B.F. cache and using Dom Rex instead of we can we can serialize those easily over just actors.
+
+197
+00:20:22,624 --> 00:20:35,704
+We don't have to like, convert them into an object. OK. So Sam originally wrote the patch, and then Nick has agreed to carry this forward.
+
+198
+00:20:35,704 --> 00:20:40,894
+And this is really coming along with some work in here about a bunch of other stuff.
+
+199
+00:20:40,894 --> 00:20:51,604
+Now, I think mainly what my role is for reviewing this is just to make sure that the jar window actors are being used properly.
+
+200
+00:20:51,604 --> 00:20:56,314
+Like, I'm not really I'm not a screenshot spear. I don't really. It's not my job at this point.
+
+201
+00:20:56,314 --> 00:20:58,054
+Like, I don't, I don't really.
+
+202
+00:20:58,054 --> 00:21:05,584
+I'm not even really familiar with how the browser screenshots code works, but what I do know is how just window actors work for the most part.
+
+203
+00:21:05,584 --> 00:21:12,754
+And so I think part of my role and this is a tip for people who are reviewing code, is to try and understand your role in the review.
+
+204
+00:21:12,754 --> 00:21:19,084
+That's not to say that I can't, you know, make suggestions and give commentary about non just window after things in the patch.
+
+205
+00:21:19,084 --> 00:21:21,604
+But I think based on this conversation,
+
+206
+00:21:21,604 --> 00:21:32,854
+my primary role in this review is to just make sure that the just window actors are being used properly and that the here we go.
+
+207
+00:21:32,854 --> 00:21:40,564
+Let's take a look. Let's take a look. I'm going to hide all of the done in lines so that we can just look at the code.
+
+208
+00:21:40,564 --> 00:21:50,194
+And yeah, my head's kind of in the way I apologize. I'll try and read this stuff above my head and not not be referring to stuff down here.
+
+209
+00:21:50,194 --> 00:21:58,924
+That's that's what I'll try. OK. So there are four, as with most Jess window actor pairs.
+
+210
+00:21:58,924 --> 00:22:05,554
+There's like a child component and a parent or a child actor in a parent actor, and this is the child actor.
+
+211
+00:22:05,554 --> 00:22:16,514
+It has a receive message method that you know, returns promises.
+
+212
+00:22:16,514 --> 00:22:24,284
+Because it's probably responding to send query, that's how this inquiry works, the receive message has to return a promise.
+
+213
+00:22:24,284 --> 00:22:27,074
+And so we want to because this is an async message.
+
+214
+00:22:27,074 --> 00:22:38,024
+The good news is is that these things don't actually need to return promises directly because as an as this is an async method,
+
+215
+00:22:38,024 --> 00:22:46,454
+these things will naturally, the return value is what the promise generated by the async method will resolve with.
+
+216
+00:22:46,454 --> 00:22:51,204
+So let me just quickly check to see what some of these some of these methods do.
+
+217
+00:22:51,204 --> 00:22:58,364
+So we have something called start screenshots, overlay and screenshots overlay and get content bounds.
+
+218
+00:22:58,364 --> 00:23:04,784
+Oh, Sam. Sam, who is working on the patch, originally is watching live.
+
+219
+00:23:04,784 --> 00:23:08,654
+Hey. Cool. Thanks for watching Sam, and I hope this review makes sense.
+
+220
+00:23:08,654 --> 00:23:15,974
+I hope I'm not. Hope I'm not going way outside the lines here.
+
+221
+00:23:15,974 --> 00:23:21,044
+OK, so start screenshot overlay. Let's start here. Where does this? Where does this get defined?
+
+222
+00:23:21,044 --> 00:23:30,344
+So this is an async method down here. So this is going to return no matter what, because this is an async method.
+
+223
+00:23:30,344 --> 00:23:34,334
+It will also always return a promise.
+
+224
+00:23:34,334 --> 00:23:42,434
+Um, I actually wonder as a suggestion because it's fine, like it's fine to have like async methods call into async methods.
+
+225
+00:23:42,434 --> 00:23:52,034
+But no matter what I I'm pretty sure because this method is async, this will, no matter what you return from here, will be wrapped in a promise.
+
+226
+00:23:52,034 --> 00:23:56,384
+And so you can end up with like a promise wrapped inside a promise wrapped inside a promise.
+
+227
+00:23:56,384 --> 00:24:06,794
+And. And that's that's not a problem per se, but we can maybe like, um, like and that makes sense,
+
+228
+00:24:06,794 --> 00:24:12,194
+I think, for here because we want to await this with a try catch and like deal with this.
+
+229
+00:24:12,194 --> 00:24:19,364
+But like for some of these like end screenshots overlay, it's an async method that's returning a promise.
+
+230
+00:24:19,364 --> 00:24:24,344
+It was already going to be a promise, but now it's doing promise, not resolve.
+
+231
+00:24:24,344 --> 00:24:28,964
+So it's going to return a promise that returns, a promise that will return a promise.
+
+232
+00:24:28,964 --> 00:24:31,724
+So I actually think we can simplify this a little bit.
+
+233
+00:24:31,724 --> 00:24:47,984
+And I think you can just return true here because and screenshots overlay is being called by receive message, which is already an async method.
+
+234
+00:24:47,984 --> 00:24:54,364
+I think we can just return true here.
+
+235
+00:24:54,364 --> 00:25:07,394
+Um, now that doesn't actually do anything and screenshots overlay rather than wrapping in two more promises.
+
+236
+00:25:07,394 --> 00:25:20,504
+We get a promise from the method definition itself being async and from promised star resolve.
+
+237
+00:25:20,504 --> 00:25:26,534
+I realize that this looks like it's been stubbed out like this is just returning true and not doing anything.
+
+238
+00:25:26,534 --> 00:25:38,774
+So it's been stubbed out, but one to call out some room for simplification, not complication simplification.
+
+239
+00:25:38,774 --> 00:25:52,834
+By removing some of these nested promises. Same here, you could you could just return true here, could just return true here.
+
+240
+00:25:52,834 --> 00:26:02,474
+I believe. Um.
+
+241
+00:26:02,474 --> 00:26:07,684
+And this one doesn't need to be a sink at all.
+
+242
+00:26:07,684 --> 00:26:20,504
+This I don't think this needs to be a sink at all. The a sink, since it's never a weighting.
+
+243
+00:26:20,504 --> 00:26:28,664
+Um, so this can probably just synchronously return its result,
+
+244
+00:26:28,664 --> 00:26:39,744
+the receive message method should wrap the result in a promise automatically because it is a.
+
+245
+00:26:39,744 --> 00:26:47,004
+Reasonably certain. OK, now let's look at what the these methods are doing, this is the big one.
+
+246
+00:26:47,004 --> 00:26:56,624
+So we're going to look at that in a sec, but let's take a look at some of the smaller ones. So this is just stubbed out.
+
+247
+00:26:56,624 --> 00:27:09,914
+You know, when creating a new file, it's well, what what I'm trying to say here is like, we have an opportunity because we're creating a new file,
+
+248
+00:27:09,914 --> 00:27:19,694
+and that means that we get to like dictate the documentation standards of of what the file should look like so that if people modify it,
+
+249
+00:27:19,694 --> 00:27:26,174
+maybe by adding new methods or modifying methods, they'll often I find in my experience anyways,
+
+250
+00:27:26,174 --> 00:27:35,534
+look at the surrounding code to see how they should decorate it, like should they document it, should they add doc strings, et cetera.
+
+251
+00:27:35,534 --> 00:27:43,164
+So when we create when creating a new file, we have an opportunity. We can create a new file like this.
+
+252
+00:27:43,164 --> 00:27:49,094
+You have an opportunity to actually, you know, OK, this is the first one.
+
+253
+00:27:49,094 --> 00:27:54,164
+We have an opportunity to set the standard for documentation for it,
+
+254
+00:27:54,164 --> 00:28:07,694
+since future hackers of it on it will likely look at the surrounding code to determine how best to treat it.
+
+255
+00:28:07,694 --> 00:28:10,424
+Documentation wise.
+
+256
+00:28:10,424 --> 00:28:34,134
+So one way of ensuring a nicely documented file going forward is trying to add doc strings to most of the methods to most of the methods.
+
+257
+00:28:34,134 --> 00:28:46,384
+So that undocumented methods stick out and as something to probably fix.
+
+258
+00:28:46,384 --> 00:28:54,564
+So my recommendation here, and this is fine for a follow up.
+
+259
+00:28:54,564 --> 00:29:00,264
+Is to add a doc string to each of the methods in this file.
+
+260
+00:29:00,264 --> 00:29:20,384
+You might be able to skip. Steve message it like handle event is one of those overrides that I think don't necessarily require explanation.
+
+261
+00:29:20,384 --> 00:29:30,744
+Explanation. OK, so what does it do just returns true?
+
+262
+00:29:30,744 --> 00:29:33,834
+OK, moving on. So what does this one do?
+
+263
+00:29:33,834 --> 00:29:43,454
+So what it does is it gets the rest of the document element, which is the top level, usually for an HTML documents the HTML node.
+
+264
+00:29:43,454 --> 00:29:52,584
+So it's really just getting like the the bounding client rect of the HTML document and then also getting the device pixel ratio.
+
+265
+00:29:52,584 --> 00:30:01,884
+Because, man, I'm always so bad this but basically web depending on what device the the browser
+
+266
+00:30:01,884 --> 00:30:05,424
+is on the pixel ratio you might have like a really high density display,
+
+267
+00:30:05,424 --> 00:30:10,044
+you may have a lower density display and it really depends based on, you know,
+
+268
+00:30:10,044 --> 00:30:15,654
+what kind of device the browser content is displayed on and the content knows this.
+
+269
+00:30:15,654 --> 00:30:24,954
+You know it. It will change. Knows the ratio from like CSS pixels to actual device pixels, and we can get that information.
+
+270
+00:30:24,954 --> 00:30:28,914
+That's useful information, presumably, and we pass that up through these too.
+
+271
+00:30:28,914 --> 00:30:38,304
+So this seems OK. It seems fine to me, but I do think it does need some documentation and doesn't need to be async.
+
+272
+00:30:38,304 --> 00:30:44,544
+OK, let's go for the big one. So this one has documentation resolves when the document is ready to have an overlay injected into it.
+
+273
+00:30:44,544 --> 00:30:51,984
+There's a nit here and I can actually label it with a net nit pick should end with a period.
+
+274
+00:30:51,984 --> 00:30:56,454
+That's a real nit pick should end with period.
+
+275
+00:30:56,454 --> 00:31:08,454
+Returns a promise and resolves a Boolean or rejects, so resolves with a Boolean or it rejects what is the Boolean mean?
+
+276
+00:31:08,454 --> 00:31:17,434
+What does the Boolean that it resolves with mean?
+
+277
+00:31:17,434 --> 00:31:25,414
+So we are a document, we have this function ready enough that we define that's going to check to see that
+
+278
+00:31:25,414 --> 00:31:31,744
+the document ready state is not on initialized and we have a document element.
+
+279
+00:31:31,744 --> 00:31:43,504
+If the document is already ready, then we can return a.
+
+280
+00:31:43,504 --> 00:31:53,314
+Promise of resolve. True. OK, now, because this one is not async, I guess.
+
+281
+00:31:53,314 --> 00:32:02,564
+Yeah. I mean, that makes sense. If this was an async function, you could just return true here.
+
+282
+00:32:02,564 --> 00:32:07,004
+Uh, but that's fine. I don't think it matters.
+
+283
+00:32:07,004 --> 00:32:15,074
+And then after that, if we're not ready enough, then we'll return a promise that adds an event listener to wait for the ready state
+
+284
+00:32:15,074 --> 00:32:25,724
+to change and then also adds an event listener to the window for Page Hide only once.
+
+285
+00:32:25,724 --> 00:32:31,784
+And if we ever get to Page Hide, we're going to remove our event listener here and we're going to reject.
+
+286
+00:32:31,784 --> 00:32:46,604
+OK. So something jumps out at me, which is that this page hide event listener is never removed.
+
+287
+00:32:46,604 --> 00:32:51,164
+It looks like we never removed this page hide event listener.
+
+288
+00:32:51,164 --> 00:33:04,154
+So even if the ready state change occurs, so regardless of when the ready state change occurs.
+
+289
+00:33:04,154 --> 00:33:19,094
+I think we're going to fire this callback when the page navigates and then reject.
+
+290
+00:33:19,094 --> 00:33:39,374
+I suspect we should remove this event listener, uh, in the same way we remove the on change event listener.
+
+291
+00:33:39,374 --> 00:33:50,664
+In the same place, we removed the on change event listener within on change itself.
+
+292
+00:33:50,664 --> 00:33:59,464
+Yeah. Tea is ready. Correct? Sorry. Maybe you heard the the kettle go off.
+
+293
+00:33:59,464 --> 00:34:07,084
+Hello. Riley Rose, 77. Thank you for joining the stream.
+
+294
+00:34:07,084 --> 00:34:10,354
+All right. So looking pretty good. Looking pretty good.
+
+295
+00:34:10,354 --> 00:34:12,634
+That actor makes sense to me. All right.
+
+296
+00:34:12,634 --> 00:34:21,994
+Next thing that happened was that it got added the screenshots component child got added to this bug component in our Mars build.
+
+297
+00:34:21,994 --> 00:34:35,284
+And what this is for is it makes it so that if anyone ever tries to file a bug related to actually, I don't actually remember what this is for.
+
+298
+00:34:35,284 --> 00:34:42,574
+It's oh, it's a way of mapping a file to a particular component in Bugzilla.
+
+299
+00:34:42,574 --> 00:34:47,464
+And I think that's supposed to make it easier to file bugs in the right place for a particular file.
+
+300
+00:34:47,464 --> 00:34:53,914
+But I actually don't know, like in practical speak, when that happens.
+
+301
+00:34:53,914 --> 00:34:57,304
+I don't know what uses this for me right now. I'm curious.
+
+302
+00:34:57,304 --> 00:35:01,804
+Bug component? Oh, add a bug component.
+
+303
+00:35:01,804 --> 00:35:12,234
+What is this? OK, so it puts all test files into bug ponds.
+
+304
+00:35:12,234 --> 00:35:24,444
+Print test satirized by bug components. Attracting bug for bug component, this is something more set up.
+
+305
+00:35:24,444 --> 00:35:29,224
+Add components why, though, add a means for determining the owner of code.
+
+306
+00:35:29,224 --> 00:35:32,754
+Prototype mock owners, there's a command called mock owners are.
+
+307
+00:35:32,754 --> 00:35:36,384
+That's interesting. So let's see if that works.
+
+308
+00:35:36,384 --> 00:35:41,994
+Let's let's try it out. Mock owners. I'm very curious now.
+
+309
+00:35:41,994 --> 00:35:49,464
+I don't have the patch applied, so I can't try it with the screenshot thing, but we could use it like web RTC Child, for example.
+
+310
+00:35:49,464 --> 00:36:00,264
+So projects Mozilla Central, we pump up the font a little bit so you can see it.
+
+311
+00:36:00,264 --> 00:36:07,794
+If I knew this, I'd forgotten about it. Honestly, Mark owners mark create.
+
+312
+00:36:07,794 --> 00:36:12,174
+This is a recurring bug that I think our build people are tooling.
+
+313
+00:36:12,174 --> 00:36:20,414
+People are working to fix, but periodically I have to do this.
+
+314
+00:36:20,414 --> 00:36:25,114
+Sam mentions that if it's if a test starts to fail or goes intermittent, a bug can be filed in the cabin.
+
+315
+00:36:25,114 --> 00:36:29,204
+Yeah, for sure. Like, I can see that being really useful for sheriffs like who?
+
+316
+00:36:29,204 --> 00:36:36,534
+There's a problem over here. Let's make sure we file in the right place. Makes sense.
+
+317
+00:36:36,534 --> 00:36:45,644
+Wait, Mark owners doesn't exist. Mark help grab owners.
+
+318
+00:36:45,644 --> 00:37:07,364
+What? Hmm.
+
+319
+00:37:07,364 --> 00:37:15,644
+Protégé Mark Owners command, I guess, maybe this didn't get landed, or maybe it just didn't get used owners look out.
+
+320
+00:37:15,644 --> 00:37:23,524
+Let's see if we can see. It's in the tree. No.
+
+321
+00:37:23,524 --> 00:37:40,484
+See if it's username or Python context, Moore's build front end context and mock commands file info Bugzilla for.
+
+322
+00:37:40,484 --> 00:37:52,494
+File info interesting is that because that what this sorry file info.
+
+323
+00:37:52,494 --> 00:38:03,984
+Query for metadata about files, yes, so if I go mark file info and then what was it, web RTC child and where is that thing?
+
+324
+00:38:03,984 --> 00:38:14,124
+It's under browser actors, browser actors, web artsy child.
+
+325
+00:38:14,124 --> 00:38:19,464
+It does not accept the arguments. OK? What arguments does it accept?
+
+326
+00:38:19,464 --> 00:38:23,034
+Sorry, I'm getting distracted. I should be doing the review, but I'm very curious.
+
+327
+00:38:23,034 --> 00:38:35,574
+Show files minute drive from Mazda Build files, file info, show files missing Bugzilla component Faucheux Bugzilla component info for files listed.
+
+328
+00:38:35,574 --> 00:38:46,484
+OK, so if I go file info Bugzilla component.
+
+329
+00:38:46,484 --> 00:38:51,754
+Hey, cool. That spits out, you know, what bugs all components supposed to go for?
+
+330
+00:38:51,754 --> 00:38:57,724
+Go into, that's neat. Today, I learned. OK, so let's keep moving.
+
+331
+00:38:57,724 --> 00:39:02,494
+That's what that's for anyways. And the child actor is registered now.
+
+332
+00:39:02,494 --> 00:39:06,244
+Is there a parent actor? It doesn't look like there's a parent actor, and that's good.
+
+333
+00:39:06,244 --> 00:39:16,464
+I think that if I recall correctly, that may have actually been part of my part of my feedback is that we don't need the parent actor.
+
+334
+00:39:16,464 --> 00:39:20,724
+I don't remember, but you don't need a parent actor sometimes.
+
+335
+00:39:20,724 --> 00:39:27,414
+Sometimes you only need one half of the actor paired to find because the sub, the parent class is enough.
+
+336
+00:39:27,414 --> 00:39:36,414
+The base parent classes enough and you don't need to override anything. So then we register the screenshots component.
+
+337
+00:39:36,414 --> 00:39:49,774
+Um. And it's only enabled if we do this.
+
+338
+00:39:49,774 --> 00:39:55,924
+Makes sense. Excuse me.
+
+339
+00:39:55,924 --> 00:40:07,864
+And then in screenshot utils. If the browser component is not enabled, part is not true, then we just return early.
+
+340
+00:40:07,864 --> 00:40:14,614
+Add a screenshot utils initialize otherwise who async observe.
+
+341
+00:40:14,614 --> 00:40:26,924
+This is interesting. Normally, so this is an observer at.
+
+342
+00:40:26,924 --> 00:40:50,544
+I use this site to screenshot. So an observer implements A.I. observe for.
+
+343
+00:40:50,544 --> 00:41:05,204
+And is not supposed to return something. So that's probably OK.
+
+344
+00:41:05,204 --> 00:41:16,214
+I mean, any return value is likely going to get thrown away, but normally you don't return stuff from an observer.
+
+345
+00:41:16,214 --> 00:41:22,334
+See, do we have prior art here? Oh boy, howdy, do we?
+
+346
+00:41:22,334 --> 00:41:33,434
+OK. Well, it seems to not have been like a problem in the past, so let's leave it be.
+
+347
+00:41:33,434 --> 00:41:58,264
+OK, we get the Zoom level for the browser and then down here, I guess this is the code for opening up the new UI, the new dialog UI.
+
+348
+00:41:58,264 --> 00:42:07,894
+Yeah, we never do anything with this, we might since we don't use the closed promise,
+
+349
+00:42:07,894 --> 00:42:14,674
+we can just replace this with, Oh actually, no, I'm going to you suggest edit.
+
+350
+00:42:14,674 --> 00:42:23,434
+We can just do this. Uh, yeah, OK, probably enough.
+
+351
+00:42:23,434 --> 00:42:27,604
+Yes, Linda already noticed. So I can recommend that.
+
+352
+00:42:27,604 --> 00:42:30,964
+And then there's this a wait of actually doing the screenshot.
+
+353
+00:42:30,964 --> 00:42:41,374
+So I guess this actor really kind of does the job of getting all the information we need to do the screenshot.
+
+354
+00:42:41,374 --> 00:42:48,714
+And so how does that work? Hmm.
+
+355
+00:42:48,714 --> 00:43:01,904
+Leftover console.log. Over console.log shouldn't be doing that, uh.
+
+356
+00:43:01,904 --> 00:43:12,034
+Or, you know, we shouldn't leave logging statements in there.
+
+357
+00:43:12,034 --> 00:43:23,274
+Alternatively. Could create a named logger if you want to land debugging messages,
+
+358
+00:43:23,274 --> 00:43:34,594
+create a named logger that is default proofed off and there is a let's see if we can find a pattern.
+
+359
+00:43:34,594 --> 00:43:42,244
+The page data service, I think, does this log, yeah.
+
+360
+00:43:42,244 --> 00:43:53,944
+Example, here's an example. OK, so what does this do?
+
+361
+00:43:53,944 --> 00:44:02,384
+It gets the actor, this is how we get the actor when we toggle the preview.
+
+362
+00:44:02,384 --> 00:44:10,424
+We get the screenshots component actor, the parent, this is the parent, and we send the query, Hey, hide the overlay.
+
+363
+00:44:10,424 --> 00:44:30,974
+I guess that's if we're closing the panel. And then this is what we used to display the overlay and the buttons, I guess.
+
+364
+00:44:30,974 --> 00:44:39,524
+Pop up actor, get actor screenshots component. Send the query show overlay.
+
+365
+00:44:39,524 --> 00:44:43,724
+Same note as above.
+
+366
+00:44:43,724 --> 00:44:50,054
+Should either remove the logging or use a named logger that is default.
+
+367
+00:44:50,054 --> 00:45:13,294
+Craft off. Fetch content bounce, I'm noticing a recurring pattern of like this, uh.
+
+368
+00:45:13,294 --> 00:45:17,914
+You know, we might we do this a lot.
+
+369
+00:45:17,914 --> 00:45:29,014
+We might consider a helper a less verbose helper method like.
+
+370
+00:45:29,014 --> 00:45:44,214
+Oh, sorry, my head is my hand the way, OK? It's like let actor equal this time get actor browser.
+
+371
+00:45:44,214 --> 00:46:01,274
+Um. Again, I'm kind of I'm kind of going outside my lane here because I'm supposed to really be paying, I think,
+
+372
+00:46:01,274 --> 00:46:05,684
+more attention to the how the actors are being used rather than like what's going on inside this module.
+
+373
+00:46:05,684 --> 00:46:09,584
+But I can't help it. I can't help it.
+
+374
+00:46:09,584 --> 00:46:15,014
+While I am like ignoring a lot of anything that's like, like any of this stuff.
+
+375
+00:46:15,014 --> 00:46:20,414
+I'm just I'm mostly ignoring it because I trust Nicholas and Sam to like.
+
+376
+00:46:20,414 --> 00:46:24,854
+And Jared, who's going to be reviewing this term to think through that stuff.
+
+377
+00:46:24,854 --> 00:46:33,034
+I'm mostly looking at the actor stuff. We get the bounce.
+
+378
+00:46:33,034 --> 00:46:42,694
+Take the shot, we take the screenshot, um.
+
+379
+00:46:42,694 --> 00:46:50,414
+Snapshot, whereas the snapshot come from draw a snapshot, right, makes sense, correct,
+
+380
+00:46:50,414 --> 00:47:01,824
+we draw it into the canvas that we create and then we turn that canvas into a blob.
+
+381
+00:47:01,824 --> 00:47:11,874
+You know, I am aware that we have a mechanism for this already.
+
+382
+00:47:11,874 --> 00:47:19,904
+Page Thumbs JSM. Capture to canvas.
+
+383
+00:47:19,904 --> 00:47:26,354
+Wait, what do we want here, a blob or what are we trying to get here to a blob?
+
+384
+00:47:26,354 --> 00:47:36,134
+We want a blob canvas to blob, and then we turn put the blob into the Yeah, OK, makes sense.
+
+385
+00:47:36,134 --> 00:47:46,254
+Capture the blob. ARGs. Full scale image target with background.
+
+386
+00:47:46,254 --> 00:47:56,934
+So this is no good because we want to supply the region and this does not give us enough, OK?
+
+387
+00:47:56,934 --> 00:48:11,214
+Never mind, never mind seems fine.
+
+388
+00:48:11,214 --> 00:48:17,844
+Create an image element we created. I object you are a blob earl.
+
+389
+00:48:17,844 --> 00:48:32,934
+We set the Aidid placeholder image. I mean, alternatively, mirror image thought ID equals placeholder image.
+
+390
+00:48:32,934 --> 00:48:43,754
+That's the equivalent. And then we append the image.
+
+391
+00:48:43,754 --> 00:48:48,254
+OK. Yeah, that looks like can be removed.
+
+392
+00:48:48,254 --> 00:48:52,694
+This can be removed as well. OK. And that's it. I think we're done our review.
+
+393
+00:48:52,694 --> 00:49:00,944
+So I think this is in pretty good shape. You know, I think it's probably land bull.
+
+394
+00:49:00,944 --> 00:49:06,014
+Maybe with a little more documentation. Some of these, it's being addressed.
+
+395
+00:49:06,014 --> 00:49:09,614
+You know, some of it, maybe even the documentation could be done as a follow up.
+
+396
+00:49:09,614 --> 00:49:17,174
+I think that'd be fine. Did I mention that in the uh?
+
+397
+00:49:17,174 --> 00:49:25,154
+It's fine as a follow up? Yeah. So what were my total comments?
+
+398
+00:49:25,154 --> 00:49:33,854
+It was like, Yeah, we do this a lot as a helper logging with some leftover logging.
+
+399
+00:49:33,854 --> 00:49:41,864
+And then I had a suggestion there, Oh, this was probably the the the bug that I found.
+
+400
+00:49:41,864 --> 00:49:48,854
+It's not really a it is kind of a bug. This is probably the most important thing I found is that the Page Hide event listeners are being removed and
+
+401
+00:49:48,854 --> 00:49:56,684
+then the rest of it was really just nit picks and like ways we could maybe not wrap so many promises and stuff.
+
+402
+00:49:56,684 --> 00:50:04,504
+So I'm going to request changes, but always like, great job, Nicholas.
+
+403
+00:50:04,504 --> 00:50:12,644
+Uh, what? No necklace, Nick Gloss.
+
+404
+00:50:12,644 --> 00:50:21,704
+Baumgartner looking good. Uh, mostly cosmetic suggestions here.
+
+405
+00:50:21,704 --> 00:50:26,954
+But I did find an issue with that.
+
+406
+00:50:26,954 --> 00:50:37,684
+Page Hide event list. Sibila, thanks send.
+
+407
+00:50:37,684 --> 00:50:49,524
+And that is that that's how I reviewed the patch. OK, so now what are we going to do?
+
+408
+00:50:49,524 --> 00:50:53,394
+Oh, hey, Nicholas. Nick Bomb, 21, is in Twitch.
+
+409
+00:50:53,394 --> 00:50:57,534
+Hey, I didn't realize you were watching Nicholas. Thanks for watching. I hope that was OK.
+
+410
+00:50:57,534 --> 00:51:02,874
+I hope that wasn't harrowing. Mean, like reviewing your patch live on the internet?
+
+411
+00:51:02,874 --> 00:51:07,354
+Yeah, it's you know, it's it's good looking stuff in here.
+
+412
+00:51:07,354 --> 00:51:15,624
+I'm very excited to see this work happen and to have the screenshots component not being a web extension anymore.
+
+413
+00:51:15,624 --> 00:51:17,664
+Privileged web extension. It's good stuff.
+
+414
+00:51:17,664 --> 00:51:24,294
+So when asked a question of you don't submit until you set what, why does it say on submitted, I was kind of confused by that.
+
+415
+00:51:24,294 --> 00:51:41,724
+Where does it say on submitted? Oh, because yeah, the comments that if I add a comment, for example, test comments, then save this.
+
+416
+00:51:41,724 --> 00:51:47,094
+This is a comment that you know no one can see until I submit the review.
+
+417
+00:51:47,094 --> 00:51:50,394
+Like, basically there's like a draft step and a publishing step.
+
+418
+00:51:50,394 --> 00:51:57,594
+And so I have to like that gives me an opportunity to like, rethink, delete, change my comments.
+
+419
+00:51:57,594 --> 00:52:01,254
+And then when I'm ready, I hit submit and then the comment goes out.
+
+420
+00:52:01,254 --> 00:52:03,834
+So, you know, if you were to go to this URL,
+
+421
+00:52:03,834 --> 00:52:09,234
+you wouldn't see my test comment here because this is just a draft that I haven't submitted and published,
+
+422
+00:52:09,234 --> 00:52:15,984
+and I can delete that part of my draft now. All right.
+
+423
+00:52:15,984 --> 00:52:22,344
+I think that's it. Uh, next. What are we doing finally answering this question?
+
+424
+00:52:22,344 --> 00:52:26,454
+We're going to try and answer this question. Web extensions, it's kind of appropriate.
+
+425
+00:52:26,454 --> 00:52:32,244
+And I I reviewed that patch specifically because it got me the opportunity to kind of talk
+
+426
+00:52:32,244 --> 00:52:37,074
+about web extensions a little bit because there is this question that's been recurring.
+
+427
+00:52:37,074 --> 00:52:40,254
+It's been asked. It was asked a couple of weeks ago, and I keep deferring it.
+
+428
+00:52:40,254 --> 00:52:41,124
+I really want to get to it.
+
+429
+00:52:41,124 --> 00:52:48,234
+The question is, you know, web extensions, you know, browser extensions, how do they interact with doc shells and browsers and contexts?
+
+430
+00:52:48,234 --> 00:52:52,194
+I don't know, but we can find out. Let's find out.
+
+431
+00:52:52,194 --> 00:53:00,234
+Let's find out. So let's clear our palette. Let's go to search Fox.
+
+432
+00:53:00,234 --> 00:53:06,444
+Let's create some notes. So, um, I'm just going to create a new notebook.
+
+433
+00:53:06,444 --> 00:53:16,324
+I'm going to call it explorations. And this note is going to be called Web extensions.
+
+434
+00:53:16,324 --> 00:53:24,184
+How do they interact well with doc shells browsing contexts?
+
+435
+00:53:24,184 --> 00:53:37,954
+And if you're not sure what I mean by doc shows or browsing contexts? I did it an episode one once that episode, when was that episode?
+
+436
+00:53:37,954 --> 00:53:44,794
+Two hundred and sixty four on September 28th, where I talked in depth about browsing contexts and doc shells.
+
+437
+00:53:44,794 --> 00:53:52,804
+And so if you're curious about what they are, you can start there. I also have a blog series about doc shows.
+
+438
+00:53:52,804 --> 00:54:02,074
+If you go to my website and you look up the word Doc Shell, you can see that I started to like,
+
+439
+00:54:02,074 --> 00:54:06,994
+talk a little bit about Doc, the doc shell and code spelunking and whatnot.
+
+440
+00:54:06,994 --> 00:54:18,364
+And I started here. So yeah, I'll tell you what I'll do is I'll put the search query here in our notes.
+
+441
+00:54:18,364 --> 00:54:26,654
+Doc shows OK. Web extensions and how they interact with browsing docs, just browse in context.
+
+442
+00:54:26,654 --> 00:54:35,644
+So here's some reading reading up on doc shelves, and I'll also link to that episode again.
+
+443
+00:54:35,644 --> 00:54:43,594
+What was that episode? It was episode two hundred and sixty four.
+
+444
+00:54:43,594 --> 00:54:48,814
+Let's find it real quick. Uh, actually.
+
+445
+00:54:48,814 --> 00:54:51,484
+Joy of Coding Episode Guide.
+
+446
+00:54:51,484 --> 00:55:13,484
+Does it have a link to the Yeah Yeah Copy Link app on Doc shows a stream where I talk about doc shells and browsing contexts.
+
+447
+00:55:13,484 --> 00:55:18,664
+But. What NZX and Nasdaq show means, so that's a question from Shushan.
+
+448
+00:55:18,664 --> 00:55:27,724
+It's actually A. As you'll see a lot of older components in Firefox Go that starts with an S, and I actually stands for Netscape,
+
+449
+00:55:27,724 --> 00:55:36,184
+believe it or not, because we didn't back in the day, whenever you know, Firefox, the Gecko code base was being developed.
+
+450
+00:55:36,184 --> 00:55:42,094
+C++ didn't have the notion of namespaces. Namespaces didn't exist in that version of C++.
+
+451
+00:55:42,094 --> 00:55:50,344
+And so everything that needed to be namespace you did it with like you hacked together your own name spacing by just prefix ing.
+
+452
+00:55:50,344 --> 00:55:56,084
+Most of your stuff with a particular like a prefix. So an s was a prefix for Netscape.
+
+453
+00:55:56,084 --> 00:55:58,354
+And so a lot of things start with.
+
+454
+00:55:58,354 --> 00:56:10,744
+And as I for interface and s like Doc Shell and s web browser persists like A. Like all of these things that now stands for Netscape,
+
+455
+00:56:10,744 --> 00:56:17,674
+and it's actually you'll see that there have been attempts to to change that to use like Maus,
+
+456
+00:56:17,674 --> 00:56:23,454
+I like interfaces that start with Maus, ie instead of NCAI.
+
+457
+00:56:23,454 --> 00:56:35,724
+I think there are a few um, was I local service models, I IOC preferences.
+
+458
+00:56:35,724 --> 00:56:46,584
+There have been a couple of attempts, but like for the most part, like I added a new interface not that long ago called top level navigation delegate.
+
+459
+00:56:46,584 --> 00:56:48,444
+For better or worse,
+
+460
+00:56:48,444 --> 00:56:57,804
+and I call the A.I. top level navigation at this point is to kind of become a convention to prefix everything with NASA and S so for better or worse.
+
+461
+00:56:57,804 --> 00:57:05,274
+And if you're wondering why we prefix it with Netscape and as for Netscape, it's because the Gecko Firefox Code Base is a,
+
+462
+00:57:05,274 --> 00:57:13,464
+you know, descendant distant descendant of the Netscape Navigator and Netscape suite of tools.
+
+463
+00:57:13,464 --> 00:57:17,244
+OK, well, how do they interact with doc shows and browsing contacts?
+
+464
+00:57:17,244 --> 00:57:21,114
+Good question. Let's find out. So the web extension code, if I remember correctly,
+
+465
+00:57:21,114 --> 00:57:27,654
+the stuff that implements the API surface that people speak to whenever they write
+
+466
+00:57:27,654 --> 00:57:32,874
+web extensions is inside this directory called toolkit components extensions.
+
+467
+00:57:32,874 --> 00:57:40,944
+And there's a lot going on in here. Way more code than we can read ourselves in the remaining half hour of the stream.
+
+468
+00:57:40,944 --> 00:57:46,134
+But what we can do is we can go toolkit components extensions to restrict our
+
+469
+00:57:46,134 --> 00:57:51,224
+search to this particular path and then we can look up the word doc shell.
+
+470
+00:57:51,224 --> 00:58:00,464
+OK, and we get some we get some hits, so these are the places where the web extension code touches the dock, shall I answer the question, everybody?
+
+471
+00:58:00,464 --> 00:58:11,504
+No, I'm just joking. I'm just joking. So we can kind of leaf through some of these and see what's going on.
+
+472
+00:58:11,504 --> 00:58:13,064
+Let's see if there's one that's kind of interesting.
+
+473
+00:58:13,064 --> 00:58:19,964
+So this first one, it's really just using the dock shell as a means to get access to something called the message manager,
+
+474
+00:58:19,964 --> 00:58:29,024
+which is the old school mechanism for communicating with with the underlying.
+
+475
+00:58:29,024 --> 00:58:35,934
+Well, in this particular case, for communicating with the parent process.
+
+476
+00:58:35,934 --> 00:58:41,394
+We if we can get the message manager, then we can send messages to the parent process.
+
+477
+00:58:41,394 --> 00:58:45,714
+And so it's using the doc shell is like a hop skip and a jump to get to the message manager.
+
+478
+00:58:45,714 --> 00:58:49,704
+That's not super interesting. They're really using it.
+
+479
+00:58:49,704 --> 00:58:57,384
+Same thing for this stuff where the doc shell is really just being used as a because the doc shell itself,
+
+480
+00:58:57,384 --> 00:59:03,504
+the interface is has historically become this kind of dumping ground for stuff.
+
+481
+00:59:03,504 --> 00:59:10,614
+And so oftentimes the doc shell is used as a as a trampoline as like a jumping off point to get to someplace
+
+482
+00:59:10,614 --> 00:59:17,214
+else because it's kind of this nexus point where a lot of different properties are amalgamated in conglomerate.
+
+483
+00:59:17,214 --> 00:59:31,004
+If you like, look at the interface, it's humongous. It's really long as so many properties on here, and so things like browsing context.
+
+484
+00:59:31,004 --> 00:59:42,104
+Oh, wait. Where's the dog shows us in context, how come it doesn't talk, shall dog browse in context?
+
+485
+00:59:42,104 --> 00:59:57,554
+Why wouldn't it know about it across any context? Ideal?
+
+486
+00:59:57,554 --> 01:00:02,594
+Attribute. OK,
+
+487
+01:00:02,594 --> 01:00:09,614
+so the reason why we're able to get at browsing context here is because and this is kind of one of the
+
+488
+01:00:09,614 --> 01:00:16,694
+mysteries and frustrations of XP Con is that the underlying interface of this thing called Doc Shell,
+
+489
+01:00:16,694 --> 01:00:25,034
+it actually implements a number of interfaces. You can actually see the full list of what Nasdaq Shell implements.
+
+490
+01:00:25,034 --> 01:00:29,744
+We can actually look at the header and see the full list.
+
+491
+01:00:29,744 --> 01:00:42,704
+It implements all of these interfaces, including one called, Uh, does it implement what progress?
+
+492
+01:00:42,704 --> 01:00:52,674
+One of these might actually inherit from what progress stands in this iWeb progress.
+
+493
+01:00:52,674 --> 01:01:03,704
+No. Why not?
+
+494
+01:01:03,704 --> 01:01:10,754
+How does extending work, I seem? Hang on, I think I've forgotten the the.
+
+495
+01:01:10,754 --> 01:01:20,604
+Oh, it just uses this syntax, OK and progress.
+
+496
+01:01:20,604 --> 01:01:30,264
+Oh, OK, so that's not the interface. Sorry, I thought I had an explanation for why we could access the browsing context there, but I was wrong.
+
+497
+01:01:30,264 --> 01:01:47,294
+Could it be because when a Windows browser? Why can we access the browsing context?
+
+498
+01:01:47,294 --> 01:01:56,864
+It's possible that we're just like getting. We're taking advantage of some like XP magic, very frustrating XP.
+
+499
+01:01:56,864 --> 01:02:06,574
+Com Magic to browse and contest. Consumer, oh, no.
+
+500
+01:02:06,574 --> 01:02:17,794
+Oh, Doc, shall treat him, that's why. OK, so A.I. Doc Schell inherits from NCAI Doc Shall Treat item, which implements this interface,
+
+501
+01:02:17,794 --> 01:02:24,994
+and one of those things is, you know, browsing context, and that's why we're able to get at the browsing context here.
+
+502
+01:02:24,994 --> 01:02:28,084
+So the lesson here is that a thing and XP.
+
+503
+01:02:28,084 --> 01:02:33,814
+Com component like A. Doc Shell can implement multiple interfaces and that that means it's really, really flexible.
+
+504
+01:02:33,814 --> 01:02:38,854
+But it also means that it's sometimes really non obvious what the thing that you're looking at can do.
+
+505
+01:02:38,854 --> 01:02:43,714
+And in this case, it can get at the browsing context, and that's what's happening. We're leapfrogging off of it.
+
+506
+01:02:43,714 --> 01:02:52,204
+So yeah, it's like, you know, union, all of the interfaces on top of that doc shell implements and you get access to a bunch of stuff.
+
+507
+01:02:52,204 --> 01:02:58,834
+And that's why it's often used as a launchpad for things like the message manager.
+
+508
+01:02:58,834 --> 01:03:04,144
+So we're getting a the and context ID here. We get the browser and context ID here.
+
+509
+01:03:04,144 --> 01:03:09,364
+Those IDs are handy because they are common between the parent process and the content process.
+
+510
+01:03:09,364 --> 01:03:19,714
+It's a way of having a shared vocabulary for saying like, you know, this is the browser in context that I care about,
+
+511
+01:03:19,714 --> 01:03:26,554
+and we can get access to a browser in context with a particular ID like you can send an ID as as part of a message.
+
+512
+01:03:26,554 --> 01:03:33,574
+And on the other side, have the receiver of that message get access to its copy of the browser in context.
+
+513
+01:03:33,574 --> 01:03:36,544
+And if you're wondering what I mean by copy of the browsing context,
+
+514
+01:03:36,544 --> 01:03:42,004
+then go check out this talk that I did this stream because I talked about how there's this mirroring
+
+515
+01:03:42,004 --> 01:03:48,394
+of browsing contacts between processes that are involved in a particular like Tree of Frames,
+
+516
+01:03:48,394 --> 01:03:55,684
+and they will share a lot of the same properties. They mirror one another. And so if you pass an ID, if you have a browsing context in one,
+
+517
+01:03:55,684 --> 01:04:00,364
+you send the ID to the other process and get the browsing context with that ID over here.
+
+518
+01:04:00,364 --> 01:04:05,494
+What you've got is the mirror browsing context. That's what you've done.
+
+519
+01:04:05,494 --> 01:04:11,764
+So I guess that's why that's handy here we're setting is app tabbed a true so that's an interesting property
+
+520
+01:04:11,764 --> 01:04:19,024
+that exists on Doc Shell is you can set this property on whether the Doc Shell is an app tab and by an app tab.
+
+521
+01:04:19,024 --> 01:04:21,604
+I mean, it's like one of these one of these pinned tabs.
+
+522
+01:04:21,604 --> 01:04:26,314
+And the reason we set that property to true whenever you're an app tab is because one of the things that
+
+523
+01:04:26,314 --> 01:04:35,074
+we do whenever you are in this state is that any we make it so that forward navigation to cross domain.
+
+524
+01:04:35,074 --> 01:04:40,804
+I'll give you an example. Let's go to let's go to a website that has a link to another website.
+
+525
+01:04:40,804 --> 01:04:48,824
+Let's go to my blog. Just to give myself more traffic, and I've got links to other things in here like the this.
+
+526
+01:04:48,824 --> 01:04:55,164
+This is the link to Factory Theater in Toronto, a review board which is a project I I contribute to.
+
+527
+01:04:55,164 --> 01:05:02,064
+So if I pin this tab and I visit like, say, the about part of my blog, I stay within this pin.
+
+528
+01:05:02,064 --> 01:05:08,424
+But if I click on like review board, it will open a new tab.
+
+529
+01:05:08,424 --> 01:05:13,644
+And I don't know if I made it so that clicking on this always opens a new tab.
+
+530
+01:05:13,644 --> 01:05:18,594
+I didn't. It navigates the current browser, so that's the difference when it's a pinned tab.
+
+531
+01:05:18,594 --> 01:05:23,244
+Cross domain navigations result in a new tab being open, and that's what setting is.
+
+532
+01:05:23,244 --> 01:05:30,004
+App tab to true does is it like changes the behavior of the navigation so that if we do a the main navigation,
+
+533
+01:05:30,004 --> 01:05:37,194
+we would tell the parent, Hey, open up a new tab here, giving it the message manager again.
+
+534
+01:05:37,194 --> 01:05:41,754
+Again, it's just like a lot of leapfrogging here in the extension, parent jsem.
+
+535
+01:05:41,754 --> 01:05:49,314
+We're getting access to the doc shell to do something. What are we doing? So we're using query interface, which is more XP.
+
+536
+01:05:49,314 --> 01:05:57,474
+Com Magic, but basically saying, Hey, I know I'm pretty sure you implement this interface, so give me this interface.
+
+537
+01:05:57,474 --> 01:06:02,574
+So query interface in JavaScript is additive.
+
+538
+01:06:02,574 --> 01:06:12,444
+So if you have an XP com component and you call query interface on it, then and then like it will expose.
+
+539
+01:06:12,444 --> 01:06:15,624
+If it implements those that interface, it will expose the methods,
+
+540
+01:06:15,624 --> 01:06:24,144
+properties and attributes on the object like it will modify the object to expose those things.
+
+541
+01:06:24,144 --> 01:06:29,904
+So query interface. It will also return the object. It will return null if it doesn't implement the interface.
+
+542
+01:06:29,904 --> 01:06:33,864
+The other way you can do this kind of query interface stuff is with instance of.
+
+543
+01:06:33,864 --> 01:06:42,024
+So if you do like instance of PSI Dot, such and such image instance of psi as I image loading content.
+
+544
+01:06:42,024 --> 01:06:47,634
+This is the equivalent of image dot query interface side NCAI image loading content.
+
+545
+01:06:47,634 --> 01:06:58,914
+And at least this will turn true or false. Here we're just saying, Hey, basically like static cat sorry dynamic cast chrome shell into this.
+
+546
+01:06:58,914 --> 01:07:03,564
+But in JavaScript land, which is where this is running, it means like if this thing implements this interface,
+
+547
+01:07:03,564 --> 01:07:10,824
+expand its interface service to include the stuff that A.I. web navigation has.
+
+548
+01:07:10,824 --> 01:07:15,894
+And if it already has exposed it, then this is a no. And so what do we do with Chrome Shell?
+
+549
+01:07:15,894 --> 01:07:22,704
+We call set origin attributes on it. I guess that's something that A.I. Web Navigation lets us do, and we try and load.
+
+550
+01:07:22,704 --> 01:07:32,814
+Or you or I. And then we get access to the underlying document here to wait for the document to load.
+
+551
+01:07:32,814 --> 01:07:37,194
+And what is this doing where initializing a windowless browser?
+
+552
+01:07:37,194 --> 01:07:49,404
+And why would we want to do that? The hidden window, which contains the extension pages that are not visible, i.e. background pages,
+
+553
+01:07:49,404 --> 01:07:52,794
+so every web extension, most web extensions, I shouldn't say every web extension.
+
+554
+01:07:52,794 --> 01:08:04,554
+Most web extensions have a background script and those need to run somewhere and we run them inside a hidden browser element.
+
+555
+01:08:04,554 --> 01:08:12,114
+We loaded a document and we run the scripts there, and the reason for that is allows us to run those scripts in other processes.
+
+556
+01:08:12,114 --> 01:08:17,454
+We can run it in the special web extension content process.
+
+557
+01:08:17,454 --> 01:08:29,154
+Surfshark says wait, but if there are multiple implementations, it might not show something colon A.I. web progress.
+
+558
+01:08:29,154 --> 01:08:35,064
+But I think I saw some progress words in inside Doc Shelter. Yeah, sorry, I'm I'm sorry, I missed that church at 55,
+
+559
+01:08:35,064 --> 01:08:45,804
+but we found the issue was it was NCAI doctrinal tree item that actually implemented that or had that member, the browsing context member.
+
+560
+01:08:45,804 --> 01:08:49,974
+So I was on the wrong track trying to find the the web progress interface.
+
+561
+01:08:49,974 --> 01:08:59,214
+It doesn't implement web progress. So this hidden dual windows, what we used to run the the background scripts.
+
+562
+01:08:59,214 --> 01:09:09,684
+And so one of the things that we do is we initialize a hidden browser window and then we load this special dummy to our HTML document.
+
+563
+01:09:09,684 --> 01:09:20,844
+And I'm pretty sure we make sure that this dummy HTML document loads in the web extension content process.
+
+564
+01:09:20,844 --> 01:09:39,594
+Is that true? Well, first we load dummy that I say this actually first loads in the parent process this document and then uh, and then what do we do?
+
+565
+01:09:39,594 --> 01:09:52,104
+Extension utils promise document is loaded. And then if it ever becomes unloaded, we do this, we create the windowless browser.
+
+566
+01:09:52,104 --> 01:09:58,524
+We haven't yet loaded the background script into it yet.
+
+567
+01:09:58,524 --> 01:10:04,374
+So let's see if we can find when that happens. Create browser element.
+
+568
+01:10:04,374 --> 01:10:09,144
+So we wait for the document to the hidden browser to be created or the hidden window,
+
+569
+01:10:09,144 --> 01:10:14,394
+rather to load our document and then we create our browser element.
+
+570
+01:10:14,394 --> 01:10:18,744
+And that's when we put it inside of the web extension content process.
+
+571
+01:10:18,744 --> 01:10:24,564
+We decorate it with all of the right attributes to make sure it's in like the web extension content process.
+
+572
+01:10:24,564 --> 01:10:31,674
+And then we insert it into the dom of this hidden browser window right here.
+
+573
+01:10:31,674 --> 01:10:43,934
+And then we wait for the browser to load. Great browser element.
+
+574
+01:10:43,934 --> 01:10:53,104
+And that's called whenever we create like DevTools panels or whenever we create
+
+575
+01:10:53,104 --> 01:10:59,164
+the creates the browser element that will contain the web extension page. Right.
+
+576
+01:10:59,164 --> 01:11:05,464
+This is a remote type, their extension, remote type. We create this browser.
+
+577
+01:11:05,464 --> 01:11:09,754
+So that's what it's using the doc show for. Like we kind of where we're kind of going deep here.
+
+578
+01:11:09,754 --> 01:11:18,874
+But basically what's happening is the extension parent uses the doc shell in this particular case to communicate with a windowless browser to
+
+579
+01:11:18,874 --> 01:11:29,464
+navigate the top level windowless browser window to a particular document and then create a browser element inside it to load the web content.
+
+580
+01:11:29,464 --> 01:11:37,354
+The reason that we can't just like load the content at the top level is because of I can't remember,
+
+581
+01:11:37,354 --> 01:11:48,244
+but we need this is a recurring pattern is you like create a top level, a top level hidden window load, a local parent process document.
+
+582
+01:11:48,244 --> 01:12:00,004
+And inside that, you can create your browser element and load your remote content that's running out of process that now.
+
+583
+01:12:00,004 --> 01:12:06,694
+Hopefully, this is useful. I hope I'm answering the question. I'm kind of I'm just exploring here.
+
+584
+01:12:06,694 --> 01:12:15,484
+We're loading a content page into a hidden doc show. Uh oh, this is for test utils ex-special.
+
+585
+01:12:15,484 --> 01:12:21,904
+ex-BBC shows the name of our JavaScript test harness for XP.
+
+586
+01:12:21,904 --> 01:12:37,264
+Com Enable JavaScript and uh. It looks like this just kind of forwards on to.
+
+587
+01:12:37,264 --> 01:12:44,524
+A more generic load content page, which creates a content page and then navigates it somewhere.
+
+588
+01:12:44,524 --> 01:12:54,624
+OK, it's just a testing utility. Find content.
+
+589
+01:12:54,624 --> 01:13:02,524
+And it says. OK, components, extensions, find content.
+
+590
+01:13:02,524 --> 01:13:19,544
+Do we have? Do we expose find APIs to Web extensions?
+
+591
+01:13:19,544 --> 01:13:24,614
+Where are the API as find?
+
+592
+01:13:24,614 --> 01:13:34,044
+We do. That's interesting.
+
+593
+01:13:34,044 --> 01:13:40,864
+This is not something that I guess that the other browsers implement.
+
+594
+01:13:40,864 --> 01:13:49,564
+We've implemented it since 57, but this allows you to like, change our find behavior, so we've got.
+
+595
+01:13:49,564 --> 01:13:54,654
+Or like implement custom fined behavior, that's kind of neat.
+
+596
+01:13:54,654 --> 01:14:04,764
+And here what happens is we create something called a finder class, we construct a finder and that uses the dock shell.
+
+597
+01:14:04,764 --> 01:14:17,044
+And what is the Finder class to? I'm presuming it.
+
+598
+01:14:17,044 --> 01:14:28,784
+OK, so here this is interesting, the finder. Uses the Doc Shell as an argument to initialize type ahead, find,
+
+599
+01:14:28,784 --> 01:14:36,404
+which is a special mode of finding where if you're if you are typing, like if you use it,
+
+600
+01:14:36,404 --> 01:14:41,954
+if you're browsing the internet, and let's say, let's go back to my blog,
+
+601
+01:14:41,954 --> 01:14:47,144
+browse the internet and you've got a page full text and you hit the apostrophe symbol.
+
+602
+01:14:47,144 --> 01:14:50,714
+You've got tape ahead, find enabled.
+
+603
+01:14:50,714 --> 01:14:58,134
+So now, as I type, I can start like typing and it will find the first result.
+
+604
+01:14:58,134 --> 01:15:08,874
+And take me there. So if I'm trying to find like, where's that thing about like dog show or do I say something about the month of July?
+
+605
+01:15:08,874 --> 01:15:21,084
+Yes, it's right here. This is the first result. And I think it just sent me like, it's a little bit different.
+
+606
+01:15:21,084 --> 01:15:31,434
+It's a little bit different than doing the full search because it's it's like a quick search.
+
+607
+01:15:31,434 --> 01:15:39,624
+And I think that, uh, this is enabling that or it gives us the ability to do that.
+
+608
+01:15:39,624 --> 01:15:46,734
+We initialize that part. Uh, and then what else do we do with it?
+
+609
+01:15:46,734 --> 01:15:53,214
+We had a progress listener, so we this is another example of us bouncing from a dog shell to another thing.
+
+610
+01:15:53,214 --> 01:15:59,934
+So what we do is we we dynamic has the dog shell to this interface interface requester and we call method.
+
+611
+01:15:59,934 --> 01:16:03,444
+That interface requester expose is called get interface.
+
+612
+01:16:03,444 --> 01:16:10,224
+And this is kind of interesting because that interface is not the same thing as query interface, query interface,
+
+613
+01:16:10,224 --> 01:16:21,144
+dynamic cast, which is like, maybe I should write this down query interface versus get interface.
+
+614
+01:16:21,144 --> 01:16:35,334
+And this AI interface clustered, I'd get interface versus A.I. support stock query interface request store cluster.
+
+615
+01:16:35,334 --> 01:16:50,664
+Yeah, what is the difference? Query interface is roughly equivalent to dynamic cast, which is if you implement this interface,
+
+616
+01:16:50,664 --> 01:17:02,034
+then expose these methods to me, properties attributes to me.
+
+617
+01:17:02,034 --> 01:17:07,164
+So that's what like Doc Shell implements interface requester and one of the things
+
+618
+01:17:07,164 --> 01:17:12,234
+that it that that means is that it exposes this method called get interface.
+
+619
+01:17:12,234 --> 01:17:17,724
+Now, get interface is, uh, I don't know.
+
+620
+01:17:17,724 --> 01:17:26,064
+There's nothing like that. It's not like dynamic fast at all. It's more like if you know, uh,
+
+621
+01:17:26,064 --> 01:17:39,654
+get me a relevant get me something that implements a particular interface that is relevant to you, but is not necessarily you.
+
+622
+01:17:39,654 --> 01:17:46,194
+I know that sounds strange. It's very abstract, but basically it's almost like trampolining again, you know,
+
+623
+01:17:46,194 --> 01:17:55,794
+tell me like I I think you know about something that implements A.I. web progress that is relevant to you.
+
+624
+01:17:55,794 --> 01:18:05,184
+Get me that thing. And then we can find the actual implementation of that inside of A. Stock Shell,
+
+625
+01:18:05,184 --> 01:18:14,364
+Dot, CP, we can find get interface here, and there's basically this giant switch.
+
+626
+01:18:14,364 --> 01:18:19,014
+And in this particular case, we're getting it the one that implements A.I. web progress.
+
+627
+01:18:19,014 --> 01:18:31,034
+And what does that mean? Well, eventually we're going to find web progress sitting here.
+
+628
+01:18:31,034 --> 01:18:36,674
+Oh, hilarious. It's not in here, but guess what it does?
+
+629
+01:18:36,674 --> 01:18:47,864
+It defaults to. Wait, what happens if we fall through all of this?
+
+630
+01:18:47,864 --> 01:18:54,644
+We'll ask the doc loader class.
+
+631
+01:18:54,644 --> 01:18:59,684
+I. Do we implement Doc Loader talk show?
+
+632
+01:18:59,684 --> 01:19:04,254
+It's very difficult to follow the stuff Doc Show. Dot H.
+
+633
+01:19:04,254 --> 01:19:10,284
+Do we implement Doc Loader? Yes, we do.
+
+634
+01:19:10,284 --> 01:19:21,024
+And so what we do is we ask our parent class doc loader to do the get interface.
+
+635
+01:19:21,024 --> 01:19:29,304
+And we checked to see if it's Zillow Group and supports and guess what, if it isn't, then it just forwards to query interface.
+
+636
+01:19:29,304 --> 01:19:39,234
+Hilarious. So this is the equivalent of dog shell dog query interface interface requester dog query, fay query interface,
+
+637
+01:19:39,234 --> 01:19:45,924
+A.I. Web progress, which isn't super surprising cause I knew the dog show implemented A.I. web progress.
+
+638
+01:19:45,924 --> 01:19:52,134
+So this is kind of this is probably an old school method from back when web progress maybe was decoupled from Doc Shell.
+
+639
+01:19:52,134 --> 01:19:55,914
+And this is how you get at it. But now they're the same thing.
+
+640
+01:19:55,914 --> 01:19:58,414
+This is probably a holdover over anyways.
+
+641
+01:19:58,414 --> 01:20:07,884
+We use it to add a progress listener so that we know whenever a navigation, any kind of navigation that changes the location has occurred.
+
+642
+01:20:07,884 --> 01:20:25,274
+And we also add Unload event listener. Behind this on location changed up mind.
+
+643
+01:20:25,274 --> 01:20:43,534
+Location change. Is top level.
+
+644
+01:20:43,534 --> 01:20:51,104
+It's interesting. OK, what else is the doc shell used for in here?
+
+645
+01:20:51,104 --> 01:20:54,794
+Um, uh, this is for tearing down.
+
+646
+01:20:54,794 --> 01:20:59,474
+We clean up, we remove the progress listener. We set everything to null.
+
+647
+01:20:59,474 --> 01:21:08,684
+We release everything. OK, so here's an example of us casting the doc show dynamic, casting it to a load context for some reason,
+
+648
+01:21:08,684 --> 01:21:13,334
+because I guess that's how we get the clipboard search string as we have to pass the load context.
+
+649
+01:21:13,334 --> 01:21:21,254
+For some reason, there's an argument here using the browser, the doc shell to bounce to the top,
+
+650
+01:21:21,254 --> 01:21:27,014
+most browsing context because we might be in a nesting nested tree of browsing contexts.
+
+651
+01:21:27,014 --> 01:21:34,664
+And the reason we need to do that is because the top most browsing content like the Doc Shell, we might be in and out of process iframe.
+
+652
+01:21:34,664 --> 01:21:42,404
+And so the top, most browsing context at the top of the tree might not have a dog show that's in the same process as us,
+
+653
+01:21:42,404 --> 01:21:47,514
+but the browser and context we can get access to here.
+
+654
+01:21:47,514 --> 01:21:56,524
+This just returns again. We're bouncing from the doc shell to the window. He will be doing the other way around.
+
+655
+01:21:56,524 --> 01:22:03,614
+Yuk. Look at how old this bug is now, so a bunch of this code is probably really old.
+
+656
+01:22:03,614 --> 01:22:09,044
+What we're doing again is we are query interfacing to the interface requester getting the selection display.
+
+657
+01:22:09,044 --> 01:22:17,444
+OK, so let's quickly check to see what this one does like if we go to Doc Shell again to get interface.
+
+658
+01:22:17,444 --> 01:22:23,294
+Is there a selection display in here and does?
+
+659
+01:22:23,294 --> 01:22:31,334
+So that's interesting. So get interface in this particular case is not query interfacing the dock shell to selection display.
+
+660
+01:22:31,334 --> 01:22:37,094
+What it's doing instead is it is getting the press shell,
+
+661
+01:22:37,094 --> 01:22:43,004
+which is not a thing that JavaScript generally has access to and then query interfacing the
+
+662
+01:22:43,004 --> 01:22:50,174
+press shell to the NCAI selection display interface and then returning that to the JavaScript.
+
+663
+01:22:50,174 --> 01:22:57,644
+So the press shell does implement some common interfaces, and this is how our JavaScript can kind of get access to some of it.
+
+664
+01:22:57,644 --> 01:23:04,034
+It implements NCAI selection display. We can we can get at the selection controller and then return the controller.
+
+665
+01:23:04,034 --> 01:23:09,824
+And what that's for, I have no idea. I think the selection controller is what is like these.
+
+666
+01:23:09,824 --> 01:23:17,264
+These are selections, text selections and then we can control like highlighting them and stuff.
+
+667
+01:23:17,264 --> 01:23:21,764
+And presumably, we want web extensions to be able to do the same thing. OK.
+
+668
+01:23:21,764 --> 01:23:28,904
+I'm going to get out of Finder now. Let's let's look at some other things that web extensions do with dock shells.
+
+669
+01:23:28,904 --> 01:23:44,744
+See if there's anything in particular, it's kind of interesting. This might be interesting.
+
+670
+01:23:44,744 --> 01:23:51,164
+This giant Web navigation content for Web requests, so web requests, what is Web Request?
+
+671
+01:23:51,164 --> 01:24:01,844
+Web request is a web extension API that allows web extensions to intercept network requests, manipulate them, block them.
+
+672
+01:24:01,844 --> 01:24:09,354
+It's how like you block ad blockers. Ad blockers work was oftentimes like a network request is going to go out.
+
+673
+01:24:09,354 --> 01:24:13,914
+It'll check to see whether or not it matches like a known ad domain or something,
+
+674
+01:24:13,914 --> 01:24:18,284
+and it might just like block the request or manipulate the request somehow.
+
+675
+01:24:18,284 --> 01:24:22,304
+And I think this implements some parts of that because this has to do with loading.
+
+676
+01:24:22,304 --> 01:24:31,004
+It's not super surprising that we we do doc shell stuff in here now web navigation content.
+
+677
+01:24:31,004 --> 01:24:34,304
+I don't actually know what this does. Let's look at the header.
+
+678
+01:24:34,304 --> 01:24:40,964
+See if there's a description there is not. Is there a document in here?
+
+679
+01:24:40,964 --> 01:24:53,024
+No. There is not, but we can see from here that one of the things it does is it implements observer,
+
+680
+01:24:53,024 --> 01:24:59,954
+dorm event listener, progress listener and that it supports weak references.
+
+681
+01:24:59,954 --> 01:25:16,064
+There's a singleton. Interesting. So it's a singleton. This web navigation content thing is a singleton.
+
+682
+01:25:16,064 --> 01:25:22,634
+And so what it does is it when we first try and get at it, we call initialize,
+
+683
+01:25:22,634 --> 01:25:30,164
+which adds observers for creating Chrome event targets and web navigation created navigation target from jazz.
+
+684
+01:25:30,164 --> 01:25:41,604
+Wow, that is a mouthful. We will wait for those and then if we ever observe those, we attach listeners on the event target.
+
+685
+01:25:41,604 --> 01:25:53,574
+Uh, I don't know what listeners were attaching. We can check that in a second. We do a bunch of stuff here to like, get at the doc shall.
+
+686
+01:25:53,574 --> 01:26:02,754
+See if we can query interface to the route to the dock shell, otherwise we try.
+
+687
+01:26:02,754 --> 01:26:05,544
+We're trying to get into the dock shell here and if we find one,
+
+688
+01:26:05,544 --> 01:26:22,064
+we try and hook up a web progress listener to note whenever we change location and we have a handler for creating navigation targets from jazz.
+
+689
+01:26:22,064 --> 01:26:30,504
+So where was a mean to attach listeners or we attach a dom content loaded event listener?
+
+690
+01:26:30,504 --> 01:26:47,514
+Uh, if we have an event target and whatever the dorm content loaded event listener fires, then we will send our own dorm content loaded.
+
+691
+01:26:47,514 --> 01:26:53,364
+Oh, interesting, we might like proxy the dorm content loaded event for some reason.
+
+692
+01:26:53,364 --> 01:27:01,824
+I don't know why it's interesting at Dom Content Loaded Listener to web navigation content.
+
+693
+01:27:01,824 --> 01:27:06,354
+I wonder if this is like a special scope web navigation content.
+
+694
+01:27:06,354 --> 01:27:13,824
+And actually, now get browser in context.
+
+695
+01:27:13,824 --> 01:27:21,084
+OK, just casts it like gets bounces from the doc shell to the browser, and context makes sense.
+
+696
+01:27:21,084 --> 01:27:31,134
+I don't know who calls this yet. When we create navigation target from Jess, we will.
+
+697
+01:27:31,134 --> 01:27:45,984
+Try and pull out of our bag of properties here, a created tab doc shell in the Source tab Doc Shell and then try and send created navigation target.
+
+698
+01:27:45,984 --> 01:27:53,924
+OK, I don't really know what that means. Let's move on state change.
+
+699
+01:27:53,924 --> 01:28:08,244
+So this is the progress web progress listener interface. So if we notice that we've changed state.
+
+700
+01:28:08,244 --> 01:28:17,574
+We send state change, yeah, we're like proc seeing certain kinds of things up through the web extension stuff.
+
+701
+01:28:17,574 --> 01:28:30,794
+I got a feeling I got a feeling that web navigation content is a way for it in content processes.
+
+702
+01:28:30,794 --> 01:28:37,004
+This is my guess, based on my read here, I'm getting an instinct for this, I think is that.
+
+703
+01:28:37,004 --> 01:28:46,094
+Oh sorry, Smurf, this is the final class Mac specific. No, it is not. I don't believe it is.
+
+704
+01:28:46,094 --> 01:28:54,704
+My instinct here is that web navigation content does the work of noticing whether or not a web extension exists and if so,
+
+705
+01:28:54,704 --> 01:28:58,124
+attaches itself to every loading context. Like every,
+
+706
+01:28:58,124 --> 01:29:05,774
+every frame that gets created that might load a thing and then attaches event listeners
+
+707
+01:29:05,774 --> 01:29:12,644
+so that we can proxy those events to the special web extension script execution context.
+
+708
+01:29:12,644 --> 01:29:18,224
+Because web extensions execute their content, scripts run in a special scope.
+
+709
+01:29:18,224 --> 01:29:23,414
+I got a feeling it's this extensions child stuff where that scope exists.
+
+710
+01:29:23,414 --> 01:29:29,354
+So let's see here state change and staging.
+
+711
+01:29:29,354 --> 01:29:42,224
+Let's let's go in here for a second. Oh, no, I don't think it has anything to do actually with the Web extension content, script execution scope,
+
+712
+01:29:42,224 --> 01:29:50,684
+it's more about sending the message to the web extension parent like the script and the parent process that these network requests
+
+713
+01:29:50,684 --> 01:30:01,514
+have taken place so we can make decisions about those network requests because that's what the web request API allows you to do.
+
+714
+01:30:01,514 --> 01:30:11,594
+It allows you to observe network requests, cancel them, redirect them, modify them, filter them,
+
+715
+01:30:11,594 --> 01:30:23,114
+and so I think this is doing a lot of like proxy seeing of like the low level XP com stuff where we like here about browsers navigating and stuff,
+
+716
+01:30:23,114 --> 01:30:29,984
+and we end up sending them to the parent process to do stuff with that information, say, hey, a browser in context.
+
+717
+01:30:29,984 --> 01:30:35,474
+Here, it loaded this document at this you try to sit somewhere.
+
+718
+01:30:35,474 --> 01:30:41,204
+There is a received form content loaded. Probably an extension parent, yeah.
+
+719
+01:30:41,204 --> 01:31:02,164
+And what does it do? Wherever this is, it fires on don content loaded in web navigation, wherever extensions parent is running.
+
+720
+01:31:02,164 --> 01:31:13,444
+Next, I so this is an interesting example of of of the Web extensions team trying to not use unless they used T Sam Maus or an s, he was axed.
+
+721
+01:31:13,444 --> 01:31:22,384
+I now want to implement this interface. Extensions, period.
+
+722
+01:31:22,384 --> 01:31:36,974
+I think. And Web navigation.
+
+723
+01:31:36,974 --> 01:31:47,414
+Oh, I see this thing, this thing implements that interface suggestion.
+
+724
+01:31:47,414 --> 01:31:54,524
+And yeah, here we go. And so whenever it sees things like hey on state change,
+
+725
+01:31:54,524 --> 01:32:08,394
+it will get at the browser with a particular browsing context and we'll fire certain kinds of events, I guess, on before navigate.
+
+726
+01:32:08,394 --> 01:32:26,414
+Um. Because the Web navigation interface allows people to add event listeners for online before navigate.
+
+727
+01:32:26,414 --> 01:32:36,964
+So it would call the Web navigation event manager. Which is part of the Web, WebDAV.
+
+728
+01:32:36,964 --> 01:32:46,204
+Oh, it's actually part of the web navigation API. OK, so I was kind of wrong.
+
+729
+01:32:46,204 --> 01:32:55,234
+I was saying that this was all a part of the web web, but I call it Web Request API.
+
+730
+01:32:55,234 --> 01:33:01,774
+It's not. It's part of the web navigation API. And that makes a lot more sense, actually. So this is about hearing events on navigation.
+
+731
+01:33:01,774 --> 01:33:06,454
+You know, you before, before you've navigated, you've loaded content you've completed,
+
+732
+01:33:06,454 --> 01:33:13,084
+et cetera, and it looks like we've implemented some of this stuff.
+
+733
+01:33:13,084 --> 01:33:27,004
+And so all of this stuff naturally hooks into the dark shell and it does it through this kind of complicated machinery where we have the.
+
+734
+01:33:27,004 --> 01:33:37,754
+Was it WebDAV? What was it called? Web navigation content dot h.
+
+735
+01:33:37,754 --> 01:33:46,484
+This is the stuff that ultimately connects to the doc shell and hooks up event listeners and then proxies,
+
+736
+01:33:46,484 --> 01:33:55,664
+those message those events as messages to the web extension process running in, you know, elsewhere.
+
+737
+01:33:55,664 --> 01:33:58,934
+And those get handled by well.
+
+738
+01:33:58,934 --> 01:34:03,644
+I actually don't know if they're proxy to the web extension process or if they're sent to the parent process.
+
+739
+01:34:03,644 --> 01:34:10,604
+But those will eventually get sent to the web extension background script.
+
+740
+01:34:10,604 --> 01:34:15,614
+Whew. All right. Figured that out? Hey, folks, we're over time.
+
+741
+01:34:15,614 --> 01:34:27,494
+I hope that was interesting. I didn't. I didn't end up writing too many notes here, but just just in case I'll copy this and I'll put this in.
+
+742
+01:34:27,494 --> 01:34:39,454
+Where is it called? Live coding? Here we go. I'll put in here.
+
+743
+01:34:39,454 --> 01:34:45,304
+Um. And I didn't answer this question.
+
+744
+01:34:45,304 --> 01:34:51,754
+I'll answer that one next time. And I also didn't answer this question, Oh, I will answer this really quickly, someone asked.
+
+745
+01:34:51,754 --> 01:34:55,414
+Are you actively learning to draw on your new graphics tablet? Yes, I am.
+
+746
+01:34:55,414 --> 01:35:05,324
+Yes, I am. I actually drew something recently. I've been following along this like, uh, Bob Ross tutorial on.
+
+747
+01:35:05,324 --> 01:35:16,084
+I'm not sure if you're familiar with Bob Ross, but Bob Ross is a prolific or was a prolific artist on television in the United States and in Canada.
+
+748
+01:35:16,084 --> 01:35:22,444
+Did a lot of stuff in the 70s and 80s on like the joy of painting. It's actually the namesake of the series was the joy of painting.
+
+749
+01:35:22,444 --> 01:35:29,314
+This is the joy of coding, and someone did a series on how to use critter, which is the drawing software I'm using.
+
+750
+01:35:29,314 --> 01:35:39,454
+And like, Let's do a Bob Ross painting follow along with Bob Ross, but use credit to do it so I can show you where I got with that Mystic Mountains.
+
+751
+01:35:39,454 --> 01:35:46,114
+Check it out. Not bad. It's not the greatest. But, you know, considering it's my very first, it's not whoopsie, daisy.
+
+752
+01:35:46,114 --> 01:35:50,824
+It's not bad, you know, could be better, but it's pretty cool.
+
+753
+01:35:50,824 --> 01:35:54,184
+Like the brush, the brush, engine and crit is really, really neat,
+
+754
+01:35:54,184 --> 01:36:05,704
+like you can use to find a lot of different brushes, whereas the brush engine come on brush engine.
+
+755
+01:36:05,704 --> 01:36:14,614
+I used to know how to do this. Well, clearly I need to review, but basically there's like a brush engine and it's really neat, you know?
+
+756
+01:36:14,614 --> 01:36:17,974
+Here we go. Come on. Can I look at it?
+
+757
+01:36:17,974 --> 01:36:23,764
+Brush settings? Apparently, I can't edit the brush settings. Maybe I need to be like in the brush mode.
+
+758
+01:36:23,764 --> 01:36:31,654
+There we go. You do like really neat stuff like change, the intensity or the diameter of the brushes, like all sorts of neat stuff.
+
+759
+01:36:31,654 --> 01:36:38,734
+And it's pretty. It's pretty neat. I like critter, then needs more happy little trees.
+
+760
+01:36:38,734 --> 01:36:42,454
+You are correct, sir. You are correct, sir. All right.
+
+761
+01:36:42,454 --> 01:36:46,864
+I'm going to cap the stream there. Thank you so much watching episode two hundred and sixty nine of the joy of coding.
+
+762
+01:36:46,864 --> 01:36:56,284
+I hope that was interesting. Let me know what you thought. There is a link on how you can rate the stream this particular episode, you know,
+
+763
+01:36:56,284 --> 01:37:00,784
+here in the agenda and in all the various places where you can of the agenda. And I read everything that comes in.
+
+764
+01:37:00,784 --> 01:37:16,264
+That's also your place where you can ask questions. Yes. Following YouTube tutorial on using Create a with a Bob Ross painting.
+
+765
+01:37:16,264 --> 01:37:25,894
+To do, I'll put a link to that, that tutorial in here, if people are interested and I'll try and answer this one next time, next time.
+
+766
+01:37:25,894 --> 01:37:30,094
+How a patch gets into Firefox from start to finish. All right. That's it.
+
+767
+01:37:30,094 --> 01:37:36,204
+Take care, everyone. Have yourselves a great day. Bye bye.
+
+768
+01:37:36,204 --> 01:37:45,064
+Hold on. Oh, I haven't got the music lined up, but by the joy.
+
+769
+01:37:45,064 --> 01:37:51,107
+They see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

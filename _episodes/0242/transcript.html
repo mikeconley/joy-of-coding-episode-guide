@@ -1,0 +1,2389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 242 - March 3, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 242 - March 3, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=0669183e-6f08-41ab-968b-acd701573e08</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=0669183e-6f08-41ab-968b-acd701573e08">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:07,433 --> 00:00:16,723
+Choi. Welcome to episode two hundred and forty two of The Joy of Coding.
+
+2
+00:00:16,723 --> 00:00:21,163
+My name is Mike Connelly. It's so good to have you here. I'm so happy to see you.
+
+3
+00:00:21,163 --> 00:00:27,073
+Thanks for being here. Let's let's get into things. I'm going to be hacking on Firefox stuff today, as per usual.
+
+4
+00:00:27,073 --> 00:00:32,773
+Let's share my screen and we'll let's take a quick look at the agenda, shall we?
+
+5
+00:00:32,773 --> 00:00:38,023
+Yeah. Today is Episode 242. March 3rd, 2021 are a reminder.
+
+6
+00:00:38,023 --> 00:00:41,953
+No plan survives breakfast. I don't know what's going to happen during the stream.
+
+7
+00:00:41,953 --> 00:00:46,873
+I have a sense of what I want to do. I have some reviews that I need to do, so I'm hoping to go through.
+
+8
+00:00:46,873 --> 00:00:51,763
+Those are going to be testing some patches that other people have written, maybe giving some feedback.
+
+9
+00:00:51,763 --> 00:00:56,743
+I haven't looked at the patches yet. So we'll see how they go. And then if we get past that,
+
+10
+00:00:56,743 --> 00:01:05,263
+then there might be some things that we're gonna do on the the new app menu that we've been working on for Firefox desktop.
+
+11
+00:01:05,263 --> 00:01:11,623
+There's some Polish work there maybe we could take a look at. And I think that that will probably do it.
+
+12
+00:01:11,623 --> 00:01:16,333
+So that's the plan for today. But things could go horribly wrong. Like I said, no plan survives breakfast.
+
+13
+00:01:16,333 --> 00:01:21,973
+We might get sidelined on something completely different. We might get distracted by a bug or something.
+
+14
+00:01:21,973 --> 00:01:29,293
+Who knows? But that's that's all part of the name of the game. So the second thing is that the agenda that we're looking at is available to you.
+
+15
+00:01:29,293 --> 00:01:32,293
+If you were watching this on YouTube. Check out the video description.
+
+16
+00:01:32,293 --> 00:01:37,963
+If you're watching this on, if you're watching this on air Mozilla, there's another video description area.
+
+17
+00:01:37,963 --> 00:01:43,033
+I actually don't think I remember to update the video description.
+
+18
+00:01:43,033 --> 00:01:46,833
+Oh, I think I forgot to update the video description with a link to the agenda for Amazo.
+
+19
+00:01:46,833 --> 00:01:51,743
+I'll have to do that after the fact. Apologies if you're watching this on linked in.
+
+20
+00:01:51,743 --> 00:01:58,903
+What? Why are we on LinkedIn? We shouldn't be on LinkedIn. But if you're watching this on Twitch, then let me just drop a link into the twitch chat.
+
+21
+00:01:58,903 --> 00:02:09,013
+One moment. Here is the agenda in the chat.
+
+22
+00:02:09,013 --> 00:02:12,613
+Hopefully you are seeing that twitch side and. Yeah.
+
+23
+00:02:12,613 --> 00:02:17,973
+So the agenda has all these fun links that you can click on. Unfortunately, I'm still using Evernote.
+
+24
+00:02:17,973 --> 00:02:26,083
+I, I tried to switch off to Joplin, but I've got some more bugs with my synchronization script to deal with.
+
+25
+00:02:26,083 --> 00:02:34,153
+I read some kind of threshold where the API is like Padget rating and none of my scripts are are prepared to deal with the pagination.
+
+26
+00:02:34,153 --> 00:02:39,483
+So it should be relatively minor. I just need to find time to actually deal with it.
+
+27
+00:02:39,483 --> 00:02:44,143
+And so until then, I'm back to Evernote, at least for the next little while.
+
+28
+00:02:44,143 --> 00:02:47,353
+There is an episode Guide to the Joy of Coding. Maybe you know that. Maybe you don't.
+
+29
+00:02:47,353 --> 00:02:56,533
+But if you didn't, the episode guide is a very handy resource for viewers of the series who want to know more about what's going on.
+
+30
+00:02:56,533 --> 00:03:02,293
+We've got all the way up into Episode two thirty five. I actually should probably merge some episodes in because I'm way behind.
+
+31
+00:03:02,293 --> 00:03:07,423
+So let's actually do some of that today. We've got three pull requests. Blup it up, doubled up it up.
+
+32
+00:03:07,423 --> 00:03:15,813
+Don't add it up, don't add up. I've got three pull requests today and we've got episodes to thirty six all the way to two.
+
+33
+00:03:15,813 --> 00:03:22,243
+Forty one. Let's take a look at those and maybe merge those in because I think that would be a good thing to do.
+
+34
+00:03:22,243 --> 00:03:27,193
+So we'll start with two thirty six to two thirty eight. Three files were changed.
+
+35
+00:03:27,193 --> 00:03:32,323
+The way I like to review these, it's pretty straightforward. We take a look at the date, make sure that the dates match.
+
+36
+00:03:32,323 --> 00:03:38,143
+Now for these episodes. I think I was using was I using Evernote still?
+
+37
+00:03:38,143 --> 00:03:41,803
+I think I was two thirty six. Yeah. January six. Twenty twenty one.
+
+38
+00:03:41,803 --> 00:03:45,373
+It was New Year's. Let's make sure that that that link looks right.
+
+39
+00:03:45,373 --> 00:03:51,543
+Thankfully the links are all readable now. We'll make sure that the agenda link is correct.
+
+40
+00:03:51,543 --> 00:03:56,093
+WAPs. Yep, that looks right.
+
+41
+00:03:56,093 --> 00:04:02,813
+And then it was New Year, I was streaming from home. I talked about the bridge bot, which is still working, thankfully.
+
+42
+00:04:02,813 --> 00:04:09,113
+Hopefully you're receiving that on the the stuff. I'm putting it on the twitch side of things I linked to Melio.
+
+43
+00:04:09,113 --> 00:04:13,793
+I'm actually gonna be reviewing some patches from Amelio days. That's that's kind of a coincidence.
+
+44
+00:04:13,793 --> 00:04:18,443
+We talked about HCM Atlantes. This all looks right. And then there was the forum.
+
+45
+00:04:18,443 --> 00:04:22,553
+I don't think I'll check the forum link. I think that all looks fine. So good stuff.
+
+46
+00:04:22,553 --> 00:04:29,303
+EPSO 237 was on January 13th. Yes, the link looks right here.
+
+47
+00:04:29,303 --> 00:04:37,673
+We'll check the Evernote link. It's actually starting to look like I can maybe I've just never noticed this, but the title is like built into it.
+
+48
+00:04:37,673 --> 00:04:43,043
+And if I can probably just assume that this is correct. Based on episode two 37 being here.
+
+49
+00:04:43,043 --> 00:04:47,513
+So I probably don't even have to open those in a new a new tab anymore.
+
+50
+00:04:47,513 --> 00:04:51,893
+I was reviewing a patch back then for this bug.
+
+51
+00:04:51,893 --> 00:04:57,893
+Whatever this bug is, picture in picture windows, stop them from opening what I want on top of the other.
+
+52
+00:04:57,893 --> 00:05:04,163
+Yep. Because guess what? And the released version of Firefox desktop, you can now have multiple picture in picture player Windows.
+
+53
+00:05:04,163 --> 00:05:10,403
+Maybe you knew that. Maybe you didn't. But there you go. You can do that now. The rest of this looks good.
+
+54
+00:05:10,403 --> 00:05:16,043
+I should probably add Amelia's twitch stream to this list. In fact, maybe I'll do that.
+
+55
+00:05:16,043 --> 00:05:25,313
+Amelio hacks. Oh, I do have it under links here. I think maybe I just added those later on and then finally to 38.
+
+56
+00:05:25,313 --> 00:05:32,183
+That's correct. January 20th, that is. Oh, this is the one where I was using one of my the Joplin stuff.
+
+57
+00:05:32,183 --> 00:05:39,923
+Let's open up Joplin and take a look. So 238 was January 20th.
+
+58
+00:05:39,923 --> 00:05:46,523
+Yeah, that's right. And I was talking about transitioning off of Evernote, which is only guns.
+
+59
+00:05:46,523 --> 00:05:53,153
+So so so far, Enterprise Policy Engine. I did some reviews and.
+
+60
+00:05:53,153 --> 00:05:56,393
+Yeah, that that looks right. Alex. Right. So I'm going to merge this in.
+
+61
+00:05:56,393 --> 00:06:02,993
+This looks great. Thank you once again. Smurf d a great contribution to the episode guide.
+
+62
+00:06:02,993 --> 00:06:13,643
+So we'll merge that confirm. Next up, we've got a pull request for episode two thirty nine.
+
+63
+00:06:13,643 --> 00:06:17,633
+Same Delio. We're gonna make sure that applies cleanly. Yep.
+
+64
+00:06:17,633 --> 00:06:23,663
+And we're going to look at the files. It was EPSO 239 was on February 3rd.
+
+65
+00:06:23,663 --> 00:06:27,623
+Yep. Smurf says you're welcome.
+
+66
+00:06:27,623 --> 00:06:31,493
+X X Cura 07 says hi. And I say hi right back.
+
+67
+00:06:31,493 --> 00:06:35,183
+So February 3rd. That looks right. That looks right. And what do we do that day?
+
+68
+00:06:35,183 --> 00:06:43,703
+We're talking to Automated Tester. I should probably add automated tester to my list of streamers.
+
+69
+00:06:43,703 --> 00:06:52,403
+And we talked with a live codas dot darvin incremental builds. And I know some German and French in Pittsburgh bitta.
+
+70
+00:06:52,403 --> 00:06:56,183
+Very little, but that looks great.
+
+71
+00:06:56,183 --> 00:07:05,393
+Let's get that merged in. As a Canadian, we're supposed to learn French in school.
+
+72
+00:07:05,393 --> 00:07:11,063
+And so I learned a little bit. And for German, I've just picked it up here and there.
+
+73
+00:07:11,063 --> 00:07:16,133
+I picked up some I traveled to Germany in 20 early twenty, twenty.
+
+74
+00:07:16,133 --> 00:07:19,643
+And so I got to pick up some German just to be polite.
+
+75
+00:07:19,643 --> 00:07:23,123
+I learn enough to be relatively polite because that's very important.
+
+76
+00:07:23,123 --> 00:07:28,433
+Toscanini's. OK. February 10th. Was that correct?
+
+77
+00:07:28,433 --> 00:07:34,973
+Yep. 240. Yep.
+
+78
+00:07:34,973 --> 00:07:42,563
+Yep. It looks right. We were talking about fission and I was reviewing some stuff.
+
+79
+00:07:42,563 --> 00:07:51,103
+Yeah, I was. Oh no. We were working on a patch actually to put update banners on the top of the new proton app menu.
+
+80
+00:07:51,103 --> 00:07:54,743
+Right, Owen. OK.
+
+81
+00:07:54,743 --> 00:08:01,393
+And then two forty one. Yeah.
+
+82
+00:08:01,393 --> 00:08:08,943
+Alex, right, February 24th. Again, we went back to Evernote here, but I can cenotes episode 241, so I feel pretty good about that.
+
+83
+00:08:08,943 --> 00:08:14,613
+I answered a question. There were no questions this week sent on the forum.
+
+84
+00:08:14,613 --> 00:08:22,383
+So I'm just going to once again extend the invitation if you have questions that you want to ask me.
+
+85
+00:08:22,383 --> 00:08:26,613
+So we'll see. Thank you. If you have questions you want to ask me. Feel free.
+
+86
+00:08:26,613 --> 00:08:31,773
+There's the link to rate this episode in the agenda. And there's a section at the end where you can ask a question.
+
+87
+00:08:31,773 --> 00:08:39,273
+And if I know the answer, if I can figure out an answer for you, I'll try to answer it on the stream.
+
+88
+00:08:39,273 --> 00:08:44,283
+All right. You also ask questions in the live hacking channel.
+
+89
+00:08:44,283 --> 00:08:53,063
+But sometimes I won't know the answer. And then I'll just say, I don't know. Other times, if you ask ahead of time, I can, like, look into it.
+
+90
+00:08:53,063 --> 00:09:01,443
+All right. So what are we doing today? What are we doing today? I'm hoping to review some patches, revealing some patches.
+
+91
+00:09:01,443 --> 00:09:08,133
+So I've got a number of patches on my patch. Q A lot of them are from my colleague Amelio.
+
+92
+00:09:08,133 --> 00:09:14,463
+There's one from Erica and there's one from Jared. So I'm going to start with the Amelio ones because I think these are relatively straightforward.
+
+93
+00:09:14,463 --> 00:09:23,313
+We're basically we're doing a bunch of work to reorganize parts of the browser, make it a little more cohesive, inconsistent.
+
+94
+00:09:23,313 --> 00:09:29,613
+And one of the things that we're also doing is updating some of the copy in some of our permission panels.
+
+95
+00:09:29,613 --> 00:09:36,543
+And by copy, I mean like the strings that you see. And so Amelio has been tackling a lot of those just stepped up and volunteered.
+
+96
+00:09:36,543 --> 00:09:40,653
+And he's been just like just cranking out patches like, look at this.
+
+97
+00:09:40,653 --> 00:09:45,633
+Twenty five minutes. And then, like less than less than a half hour later, he's got another one.
+
+98
+00:09:45,633 --> 00:09:50,493
+And then less than a half hour later, he's got another one, then another one. Then there was he took a little break.
+
+99
+00:09:50,493 --> 00:09:54,903
+Then there was one here and then a little break. And then there's another one here. So like he's just cranking out.
+
+100
+00:09:54,903 --> 00:10:00,513
+That's great. So we're gonna be reviewing those patches to start X X Cairo sentences.
+
+101
+00:10:00,513 --> 00:10:07,683
+Hey, you are the guy who work at Firefox. That's correct. I work for Mozilla, who makes Firefox.
+
+102
+00:10:07,683 --> 00:10:11,253
+I'm one of the developers of Firefox desktop. Nice to meet you.
+
+103
+00:10:11,253 --> 00:10:15,103
+X x cure is seven oh seven. Sorry. All right.
+
+104
+00:10:15,103 --> 00:10:24,363
+Let's review one of these patches. I'm going to crank up the Danny Colon says everyone else says I can say the F word in two different languages.
+
+105
+00:10:24,363 --> 00:10:27,963
+Canadians can say I can say thank you in 50 different languages.
+
+106
+00:10:27,963 --> 00:10:36,003
+That's kind of the idea. It's like we have such a I think I don't know if I should speak on behalf of all Canadians,
+
+107
+00:10:36,003 --> 00:10:43,203
+but at least for myself, maintaining the the PR that we are so polite is very important to me.
+
+108
+00:10:43,203 --> 00:10:48,333
+Like it's all very much like Canadian public relations, like we have a brand.
+
+109
+00:10:48,333 --> 00:10:51,093
+Can't Canadians have a brand to maintain?
+
+110
+00:10:51,093 --> 00:10:57,543
+And so as a brand and whenever you are traveling outside of candidate to other countries, you are a Canadian brand ambassador.
+
+111
+00:10:57,543 --> 00:11:01,473
+So, you know, I have to maintain who Canadians are so polite.
+
+112
+00:11:01,473 --> 00:11:04,973
+So. Yeah. Learn, please. Thank you. Excuse me. All.
+
+113
+00:11:04,973 --> 00:11:14,253
+All the important. Those are the important things, the most important critical things for me to learn how to speak to.
+
+114
+00:11:14,253 --> 00:11:19,503
+Like, you know, someone at a counter like maybe who's serving food or like a waiter or a waitress.
+
+115
+00:11:19,503 --> 00:11:24,363
+Like serving staff. I want to make sure that I'm polite to them, especially since I used to work in a kitchen.
+
+116
+00:11:24,363 --> 00:11:28,353
+It's very important for me to be polite to to people working in restaurants.
+
+117
+00:11:28,353 --> 00:11:39,253
+But, you know, like you, I want to make sure that I'm doing my best to not be, like, rude whenever I'm talking to people in other countries.
+
+118
+00:11:39,253 --> 00:11:43,623
+That's important to me. All right. Let's let's review one of these patches. Where shall we start?
+
+119
+00:11:43,623 --> 00:11:48,303
+Let's start right at the very beginning of this list right here. Update string's in Medy.
+
+120
+00:11:48,303 --> 00:11:57,483
+Permission problem. Now, this is an interesting one because the Medy API, the the Web Middy API, is not actually enabled in Firefox by default.
+
+121
+00:11:57,483 --> 00:12:02,643
+But the panel, the permission panel is in there. It's not only not enabled by default, I don't even think it's complete.
+
+122
+00:12:02,643 --> 00:12:07,263
+I think it's like half done. And that's why it's not enabled. There are a bunch of things that it doesn't do yet.
+
+123
+00:12:07,263 --> 00:12:14,583
+But one of the first parts that landed was the permission panel. And are you X team and are like content designers are completionist.
+
+124
+00:12:14,583 --> 00:12:19,413
+They want make sure that if this thing eventually ships that the strings are correct. They knew that the panel existed.
+
+125
+00:12:19,413 --> 00:12:26,313
+So there they got us some new streams. And so we are going to take a quick peek at this patch.
+
+126
+00:12:26,313 --> 00:12:32,193
+Let's actually try and apply it and see what it looks like.
+
+127
+00:12:32,193 --> 00:12:40,183
+So an update to Central.
+
+128
+00:12:40,183 --> 00:12:49,933
+Today's tea is again Orange Pekoe, we want to talk about Canadian, that's a Canadian thing, I think Orange Pekoe Tea, I believe is the preferred.
+
+129
+00:12:49,933 --> 00:12:54,643
+Like if you ask for tea, black tea and candidate, you're generally going to get orange pekoe.
+
+130
+00:12:54,643 --> 00:12:58,783
+In my experience, unless you're in a Starbucks, in which case they'll give you English breakfast back.
+
+131
+00:12:58,783 --> 00:13:06,733
+I think that's because they're an American company. And yes, this is an r2 d2 mug.
+
+132
+00:13:06,733 --> 00:13:15,133
+Please don't sue me, Dizzy. All right, let's smores fab patch.
+
+133
+00:13:15,133 --> 00:13:20,623
+Actually, before we do that, let's build I can use an artifact build here.
+
+134
+00:13:20,623 --> 00:13:26,593
+So they build with artifact. We'll build. And let's take a look at the old prompt. We'll take a screenshot of it maybe.
+
+135
+00:13:26,593 --> 00:13:35,263
+Well, we'll paste it in here and we'll do a side by side comparison. Let me actually create a new note for active code reviews.
+
+136
+00:13:35,263 --> 00:13:46,973
+We're just gonna create a general one for, like, permission panels. And that might help my machine is struggling, I wonder.
+
+137
+00:13:46,973 --> 00:13:55,343
+Oh, I guess it's because we have to go download a bunch of new artifacts. OK, fair enough.
+
+138
+00:13:55,343 --> 00:14:05,243
+Maybe I pulled recently. I thought I had those artifacts. OK.
+
+139
+00:14:05,243 --> 00:14:11,603
+So I'm going to pull those down and then we have to figure out a way of turning on the Medy API.
+
+140
+00:14:11,603 --> 00:14:16,913
+Now, the Web media API, I'm pretty sure there's an about config flag for it.
+
+141
+00:14:16,913 --> 00:14:25,493
+We can probably actually get a sense of it by looking at the place that actually shows the prompt, the permission UI.
+
+142
+00:14:25,493 --> 00:14:33,143
+We'll probably get a sense of it. Is there anything in here about a preference?
+
+143
+00:14:33,143 --> 00:14:42,703
+It doesn't look like it. It doesn't look like it.
+
+144
+00:14:42,703 --> 00:14:47,323
+So we might just have to search around in about config.
+
+145
+00:14:47,323 --> 00:14:54,513
+There might. Put me Dom Web medy enabled.
+
+146
+00:14:54,513 --> 00:15:07,593
+That is what it is. So let's actually create a new section, MITTIE Web Medy panel preference.
+
+147
+00:15:07,593 --> 00:15:18,953
+That's the preference. And then let's run our build here.
+
+148
+00:15:18,953 --> 00:15:24,413
+Smurf egos. Would you happen to know if there's some bug for aligning the text in the about Firefox Pop-Up window?
+
+149
+00:15:24,413 --> 00:15:29,513
+So like this one, I don't know.
+
+150
+00:15:29,513 --> 00:15:36,683
+I know that recently there was some work done to, you know, reorganize some of the text in here.
+
+151
+00:15:36,683 --> 00:15:42,993
+I'm not aware of any preexisting bugs about the alignment of the text in here, but feel free to file one bug.
+
+152
+00:15:42,993 --> 00:15:47,803
+They're relatively cheap so long as you know they're not done.
+
+153
+00:15:47,803 --> 00:15:52,013
+If so long as they're done in good faith. All right.
+
+154
+00:15:52,013 --> 00:15:56,603
+So, yeah. What are we doing here? We are trying a Web Medy permission panel.
+
+155
+00:15:56,603 --> 00:16:02,963
+This is without Amelia's patch. So we have to turn Web medy on. And then I'm going to restart the browser.
+
+156
+00:16:02,963 --> 00:16:07,523
+There's a command alt. Our shortcut on Mac OS and his control are on Windows.
+
+157
+00:16:07,523 --> 00:16:16,343
+That does a quick restart. And then we're going to look for a Web medy example. Oh, looks like I was already doing web web mini example.
+
+158
+00:16:16,343 --> 00:16:20,393
+Yeah. Here we go. So here's the permission panel.
+
+159
+00:16:20,393 --> 00:16:24,683
+Will you allow web medy examples to access your Medy devices? Remember this decision.
+
+160
+00:16:24,683 --> 00:16:36,103
+Allow. Don't allow. This is the before shot. So before.
+
+161
+00:16:36,103 --> 00:16:56,793
+After a close to pull down Amelia's patch.
+
+162
+00:16:56,793 --> 00:17:07,883
+Danielle asks if there is if there is a plan to move about to Firefox or about dialog into a tab rather than a window.
+
+163
+00:17:07,883 --> 00:17:15,563
+Not that I'm aware of. I mean, I'm sure eventually we would like to move more things into tabs, honestly.
+
+164
+00:17:15,563 --> 00:17:27,213
+The library is more likely to move into a tab for about dialog, I would say, and moving the library and tab is not a small amount of work.
+
+165
+00:17:27,213 --> 00:17:33,083
+Huh. Let's see. Basically, I feel like there's bigger fish to fry than the about dialogs.
+
+166
+00:17:33,083 --> 00:17:43,453
+Let's go to our example, Web mini example. And we have a.
+
+167
+00:17:43,453 --> 00:17:48,223
+Failure here. Line 120 tweets. One, two, two, seven, and permission you I.
+
+168
+00:17:48,223 --> 00:17:53,443
+So that's not going well. What's grown and what's gone wrong? Medy Dot.
+
+169
+00:17:53,443 --> 00:18:01,453
+Allow me to allow access key. Did I not build. Did I forget to build.
+
+170
+00:18:01,453 --> 00:18:07,543
+Apply and then I did mock build afterwards, build faster, I did.
+
+171
+00:18:07,543 --> 00:18:12,523
+Do I need to do a mock build? I'd be bizarre. Let's do one just in case.
+
+172
+00:18:12,523 --> 00:18:15,373
+But now let's take a closer look at the patch.
+
+173
+00:18:15,373 --> 00:18:27,763
+So on line one, two, two, seven, which was here accessing some of these strings is breaking medy dot allow.
+
+174
+00:18:27,763 --> 00:18:34,693
+That's the problem. It should be medy dot allowed out label. OK.
+
+175
+00:18:34,693 --> 00:18:44,413
+So that that's the problem. This needs to be Medy Dodd allowed label.
+
+176
+00:18:44,413 --> 00:19:03,623
+So let's let's correct that, Upsidaisy. Medy allowed label.
+
+177
+00:19:03,623 --> 00:19:13,413
+Where was I? No, I was in permission you I Mittie Middy.
+
+178
+00:19:13,413 --> 00:19:19,673
+Where was it maybe not allowed out label?
+
+179
+00:19:19,673 --> 00:19:53,853
+That's, I think, what we need. So let's build again.
+
+180
+00:19:53,853 --> 00:20:00,063
+And we'll go back to our example and let's OK. Now, we do have a dialog here.
+
+181
+00:20:00,063 --> 00:20:05,313
+Allow. And now let's make sure it's correct. So what? What was it supposed to say?
+
+182
+00:20:05,313 --> 00:20:11,243
+Well, actually, look at the original bugs. If we get a sense of what it was supposed to say, so then the bug that I filed,
+
+183
+00:20:11,243 --> 00:20:17,953
+it's supposed to be allow and then the the percent sign s is how we express in these types of panels.
+
+184
+00:20:17,953 --> 00:20:27,003
+Like that's where the domain goes. So allow domain to access your mini devices, allow you up to access your mini devices.
+
+185
+00:20:27,003 --> 00:20:30,603
+That looks correct. Now, Devices is capitalized here.
+
+186
+00:20:30,603 --> 00:20:41,763
+I actually think that's not supposed to be capitalized. So let's let's update that.
+
+187
+00:20:41,763 --> 00:20:52,093
+Devices. Should not be capitalized.
+
+188
+00:20:52,093 --> 00:21:06,113
+Similarly, devices. Should not be televised here.
+
+189
+00:21:06,113 --> 00:21:14,123
+Now allowed out label allow a for the access key B is for Block.
+
+190
+00:21:14,123 --> 00:21:27,463
+Now I'm going to ask Hey floor is changing the casing of the I.D. sufficient?
+
+191
+00:21:27,463 --> 00:21:40,603
+Sufficient to rev the string. Because the way our strings work, it's for reasons that are a little obscure, but there are good reasons.
+
+192
+00:21:40,603 --> 00:21:43,983
+And when you change a string, you have to change the key as well.
+
+193
+00:21:43,983 --> 00:21:49,383
+Oftentimes actually occurs by putting a number like a version number almost afterwards.
+
+194
+00:21:49,383 --> 00:21:57,153
+But here at what Amelio is doing is he's changing the casing. In this case, he's changing actual part of the key itself.
+
+195
+00:21:57,153 --> 00:22:04,803
+I'm wondering if the casing is is OK. I suspect it will be just double checking.
+
+196
+00:22:04,803 --> 00:22:17,343
+OK. So allow and block. There are a few variations and allow this local file to access your Mittie devices.
+
+197
+00:22:17,343 --> 00:22:23,693
+Looks like devices used to be capitalized here as well. But I think it's supposed to be all lower.
+
+198
+00:22:23,693 --> 00:22:42,183
+Case should not be capitalized. I realize it was before, but we should be consistent with the string that we got from that C.
+
+199
+00:22:42,183 --> 00:22:51,513
+Allow us to access your many devices you share with sight.
+
+200
+00:22:51,513 --> 00:22:56,913
+That's right. So there's a note here. The name of the site.
+
+201
+00:22:56,913 --> 00:23:11,513
+Allow this local file to access your many devices and send receive sex messages, allow to access your May devices and send received six sex messages.
+
+202
+00:23:11,513 --> 00:23:19,403
+That looks right. And then we update the strings themselves.
+
+203
+00:23:19,403 --> 00:23:26,243
+Share with file, share CSX with file. Let's just make sure that these are all going to work.
+
+204
+00:23:26,243 --> 00:23:29,993
+I don't want to find a site that's actually using CSX with file.
+
+205
+00:23:29,993 --> 00:23:34,343
+So what we do is I'm going to see if I can. Is there a G browser bundle?
+
+206
+00:23:34,343 --> 00:23:48,293
+Yeah, I'm going to try and get these manually. Not enough arbs get format string from name.
+
+207
+00:23:48,293 --> 00:24:02,543
+It's not enough, not enough arguments for mainstream from name G browser Bundall, a different thing.
+
+208
+00:24:02,543 --> 00:24:12,013
+Supposed to be. Get string. I don't know if that ever worked.
+
+209
+00:24:12,013 --> 00:24:19,543
+Get string from name. Yeah.
+
+210
+00:24:19,543 --> 00:24:29,173
+Probably indicative of how this was never enabled and isn't really tested.
+
+211
+00:24:29,173 --> 00:24:53,083
+But. This doesn't work because there are no formatting values being passed.
+
+212
+00:24:53,083 --> 00:25:01,803
+This should be using get string from name.
+
+213
+00:25:01,803 --> 00:25:13,533
+Glad we tested that. Get string from name. Similarly, we'll do the same thing with Medy, share with file.
+
+214
+00:25:13,533 --> 00:25:22,883
+Same as above. Use get string from name.
+
+215
+00:25:22,883 --> 00:25:39,103
+Uh, and we'll get this one as well. Yeah, and Mittie share with site.
+
+216
+00:25:39,103 --> 00:25:45,493
+That's an important one. Oh.
+
+217
+00:25:45,493 --> 00:25:52,773
+Oh, no, I'm wrong, I'm I'm wrong on some of these because this one.
+
+218
+00:25:52,773 --> 00:25:59,613
+Yeah, it needs to be updated. This one needs to be updated.
+
+219
+00:25:59,613 --> 00:26:16,243
+This one doesn't. This one doesn't need to be updated because of the.
+
+220
+00:26:16,243 --> 00:26:24,433
+Being passed as an argument. What was done?
+
+221
+00:26:24,433 --> 00:26:39,343
+And then same with this one. This one also doesn't need to be updated.
+
+222
+00:26:39,343 --> 00:26:47,173
+And then Medy allow we know that that works. Medy allow access, key block and block access key that worked.
+
+223
+00:26:47,173 --> 00:26:53,533
+So we found some things here. Things that I probably wouldn't have noticed unless I tested the patch.
+
+224
+00:26:53,533 --> 00:27:01,243
+So, you know, this goes to show if one of the things that you're doing is reviewing a patch and maybe it's code you're not super familiar with.
+
+225
+00:27:01,243 --> 00:27:05,203
+You can still do a really comprehensive review, I think.
+
+226
+00:27:05,203 --> 00:27:11,683
+Or like a useful review by just testing the patch.
+
+227
+00:27:11,683 --> 00:27:16,273
+Just double check that all the comments were updated. So I found some things we need to correct here.
+
+228
+00:27:16,273 --> 00:27:23,863
+So I'm going to say request changes. Thanks, Amelio.
+
+229
+00:27:23,863 --> 00:27:34,703
+This is really close. Just a few small details.
+
+230
+00:27:34,703 --> 00:27:47,963
+And I think we also need to see, see flawed or get flawed as a reviewer as well.
+
+231
+00:27:47,963 --> 00:28:02,103
+And change reviewers, I mean, to add flawed as a blocking reviewer and myself as a blocking reviewer.
+
+232
+00:28:02,103 --> 00:28:07,943
+OK, nice. Let's move on to the next one.
+
+233
+00:28:07,943 --> 00:28:11,593
+Let's do the persistent storage one.
+
+234
+00:28:11,593 --> 00:28:25,343
+I think that one, we'll be straightforward, too. So the persistent storage permission panel, in order to see it, a site has to.
+
+235
+00:28:25,343 --> 00:28:30,173
+Yeah, I believe the site has to request it. Let me just see if that's relatively easy to spawn.
+
+236
+00:28:30,173 --> 00:28:33,863
+So if you go to like permission dot site, this is a great site.
+
+237
+00:28:33,863 --> 00:28:38,943
+Permission dot site. This is a way you can quickly test various permissions.
+
+238
+00:28:38,943 --> 00:28:42,953
+See, here's the persistent storage button and just request the permission.
+
+239
+00:28:42,953 --> 00:28:50,033
+Very handy. A one Marki asks what's going on here?
+
+240
+00:28:50,033 --> 00:28:55,403
+We are updating some strings for some permission panels. I am actually reviewing some patches to update some strings.
+
+241
+00:28:55,403 --> 00:29:01,103
+Hopefully that answers your question. A one Marki Smurf D asks What does blocking Revere mean?
+
+242
+00:29:01,103 --> 00:29:06,863
+That you have to review it for it to be able to land. Every patch needs to be reviewed in order for it to land.
+
+243
+00:29:06,863 --> 00:29:14,713
+But what a blocking reviewer means is that like this reviewer is required to make the patch be accepted if you.
+
+244
+00:29:14,713 --> 00:29:22,553
+And that's that's only useful if you have multiple reviewers. So the way fabricator works, you can have any number of reviewers listed.
+
+245
+00:29:22,553 --> 00:29:27,983
+I'm currently the only reviewer right now. So if I say I accept this patch, that's enough for it to land.
+
+246
+00:29:27,983 --> 00:29:32,423
+If there are multiple reviewers by default, if none of them are blocking,
+
+247
+00:29:32,423 --> 00:29:37,763
+that means that only one of those reviewers needs to accept the patch in order for it to land.
+
+248
+00:29:37,763 --> 00:29:45,323
+So if you have multiple reviewers and you want every person to have accepted it in that list, you have to make them blocking reviewers.
+
+249
+00:29:45,323 --> 00:29:50,363
+That's how that works. OK, so we're updating the persistent storage prompt.
+
+250
+00:29:50,363 --> 00:29:58,993
+Let's pull that patch down and try it. So I'm going to shut down.
+
+251
+00:29:58,993 --> 00:30:06,593
+Revert. Excuse me.
+
+252
+00:30:06,593 --> 00:30:14,203
+As a great questions, Murphy, because that's like one of the things that I think isn't obvious about fabricator until you use it,
+
+253
+00:30:14,203 --> 00:30:24,043
+till you actually run into it. I love the questions.
+
+254
+00:30:24,043 --> 00:30:28,343
+I think we've got the right patch checked out, though, and we just pulled down, let's just double check it.
+
+255
+00:30:28,343 --> 00:30:31,813
+Update persistent storage prompt. All right, let's build it and try it out.
+
+256
+00:30:31,813 --> 00:30:35,693
+Oh, you know what we should do, though? We should have looked at the original.
+
+257
+00:30:35,693 --> 00:30:40,903
+We're gonna do a before and after. I never did the after here.
+
+258
+00:30:40,903 --> 00:30:46,663
+WAPs forgot to take a screenshot. OK.
+
+259
+00:30:46,663 --> 00:30:50,853
+And now we're doing persistent. Storage.
+
+260
+00:30:50,853 --> 00:30:59,733
+Now, while one of the things that's kind of like I say in E persistent is an E, not an A, right.
+
+261
+00:30:59,733 --> 00:31:04,023
+Persistent. Yeah. So we've got to make sure that that's spelled right.
+
+262
+00:31:04,023 --> 00:31:08,913
+No, a e. That's the thing that's gotten me before.
+
+263
+00:31:08,913 --> 00:31:14,673
+So we'll make sure that is correct. It looks correct.
+
+264
+00:31:14,673 --> 00:31:38,723
+But let's let's see what it looks like in the before times. We'll go back to permission, not sight.
+
+265
+00:31:38,723 --> 00:31:50,243
+We're going to request permits, persistent storage area and take a screenshot. So this is what it looks like before and then after.
+
+266
+00:31:50,243 --> 00:31:54,443
+So what do we have here? We've got a will you allow permission outside to store data and persistent storage?
+
+267
+00:31:54,443 --> 00:31:57,983
+And then there's a learn more. And then you've got a split button here. Not now.
+
+268
+00:31:57,983 --> 00:32:04,073
+And then this little Chevron that, as you say, never allow and then allow.
+
+269
+00:32:04,073 --> 00:32:09,113
+Now, let's see what the bug is actually asking us to do here.
+
+270
+00:32:09,113 --> 00:32:12,863
+Low repeat law says I can't be at the stream right now, but just want to stop by and say hi.
+
+271
+00:32:12,863 --> 00:32:23,453
+Hello. Little repeat law to hear from you. Bup bup bup bup.
+
+272
+00:32:23,453 --> 00:32:27,473
+We're gonna remove the split button instead. Offer the checkbox. Remember this decision.
+
+273
+00:32:27,473 --> 00:32:31,763
+OK, so let's. That's important.
+
+274
+00:32:31,763 --> 00:32:36,023
+And we'll see if that was part of the patch. So let's let's apply this patch.
+
+275
+00:32:36,023 --> 00:33:09,223
+I've already got it locally. Let's update to it, build it and take a look.
+
+276
+00:33:09,223 --> 00:33:16,153
+OK, we've got rid of the split button we've gotten allow in a block.
+
+277
+00:33:16,153 --> 00:33:24,253
+And so let us take a screenshot here.
+
+278
+00:33:24,253 --> 00:33:33,943
+We will put that inside of our Evernote, allow permission dot site to store data and persistent storage.
+
+279
+00:33:33,943 --> 00:33:46,033
+So let's see if that is what we had asked for in the bug. Allow domain to store data in persistent storage.
+
+280
+00:33:46,033 --> 00:33:59,843
+That looks right with the choice buttons changed to allow and block respectively.
+
+281
+00:33:59,843 --> 00:34:07,373
+And then second.
+
+282
+00:34:07,373 --> 00:34:14,563
+Second, so allow and block. Now, are there supposed to be access keys on those?
+
+283
+00:34:14,563 --> 00:34:23,203
+Yes. And we've got the access key setup. Look at the red strings here.
+
+284
+00:34:23,203 --> 00:34:28,333
+Block allow with site. Now, notice, allow with site.
+
+285
+00:34:28,333 --> 00:34:33,253
+Amelio is actually adding a an increment. He's incrementing the number here.
+
+286
+00:34:33,253 --> 00:34:44,983
+So it makes sense. So to allow to store data and persistent storage.
+
+287
+00:34:44,983 --> 00:34:52,543
+Remember this decision? That is correct. And then the code itself.
+
+288
+00:34:52,543 --> 00:35:05,113
+We're using a checkbox. To show so this is interesting is a little bit of logic in here.
+
+289
+00:35:05,113 --> 00:35:15,793
+Before we would show the never allow.
+
+290
+00:35:15,793 --> 00:35:21,803
+And now we're getting rid of that. Which makes sense. But here we're only showing the checkbox.
+
+291
+00:35:21,803 --> 00:35:30,683
+If this file if it's not a file scheme, which makes sense because you don't want to remember for the file scheme.
+
+292
+00:35:30,683 --> 00:35:40,943
+And also if we're not in a private browsing window. Browser owner, global, yes.
+
+293
+00:35:40,943 --> 00:35:52,173
+OK. And then if we're showing it, then the label is persistent storage, remember?
+
+294
+00:35:52,173 --> 00:36:00,653
+Now what is the checkbox do? Does the checkbox do anything?
+
+295
+00:36:00,653 --> 00:36:09,623
+How does that work? Let me just remind myself how the checkbox works,
+
+296
+00:36:09,623 --> 00:36:20,703
+because you can check the checkbox as great a checkbox as showing up, but does the checkbox do anything?
+
+297
+00:36:20,703 --> 00:36:31,953
+So in the prompt part, if state checkbox checked and state's source, if you'd permission and permission key and prompt action,
+
+298
+00:36:31,953 --> 00:36:42,003
+scope and scope persistent, then we will permanently store the permission if it's block.
+
+299
+00:36:42,003 --> 00:36:48,403
+What were we doing before seeing action block persistent?
+
+300
+00:36:48,403 --> 00:36:53,343
+OK. What I think we should do is we should test, we should run,
+
+301
+00:36:53,343 --> 00:36:59,673
+make sure that blocking with remember this decision is working properly because the strings look great and love in the strings.
+
+302
+00:36:59,673 --> 00:37:08,733
+Let's make sure that the block. Works with and without the checkbox.
+
+303
+00:37:08,733 --> 00:37:18,113
+So we're gonna open up a new debugger here, we're gonna say permission UI.
+
+304
+00:37:18,113 --> 00:37:31,593
+Here's the prompt function that we're already in. And then.
+
+305
+00:37:31,593 --> 00:37:37,593
+How does this work prompt will determine if promptly was shown to the user and if so, we'll show it.
+
+306
+00:37:37,593 --> 00:37:50,143
+So where do we do that? The permission key.
+
+307
+00:37:50,143 --> 00:37:54,733
+We show the prompt and here's the callback. This is important.
+
+308
+00:37:54,733 --> 00:38:02,343
+So let's try the block right now because we'll enter the callback, I believe.
+
+309
+00:38:02,343 --> 00:38:07,803
+Yes, we are entering callback. There is a permission key.
+
+310
+00:38:07,803 --> 00:38:15,273
+The checkbox state. CheckBox checked is false because we didn't check the checkbox.
+
+311
+00:38:15,273 --> 00:38:20,373
+Let's see what happens if our prompt action is block.
+
+312
+00:38:20,373 --> 00:38:26,863
+Then we're saying we're temporary blocking here. OK.
+
+313
+00:38:26,863 --> 00:38:32,753
+And it's not allowed. So we're gonna go cancel. Done.
+
+314
+00:38:32,753 --> 00:38:37,853
+OK. So we did a temporary block there. Let's get rid of that.
+
+315
+00:38:37,853 --> 00:38:41,723
+Let's reload. Let's try that again. We're gonna do it.
+
+316
+00:38:41,723 --> 00:38:53,993
+Remember this decision on block? So checkbox is still checked.
+
+317
+00:38:53,993 --> 00:38:57,953
+And we're gonna set the action.
+
+318
+00:38:57,953 --> 00:39:04,203
+The action is prompt action, action is to.
+
+319
+00:39:04,203 --> 00:39:09,113
+And is that site permissions? Dot block? Yes, it is.
+
+320
+00:39:09,113 --> 00:39:12,593
+And the scope is persistent. We did the right things.
+
+321
+00:39:12,593 --> 00:39:17,293
+This is going to do a permanent block. It's blocked.
+
+322
+00:39:17,293 --> 00:39:21,673
+Great. And then we can remove that. I think we're in good shape. I'm very happy with this.
+
+323
+00:39:21,673 --> 00:39:26,613
+That appears to work. Now, let's make sure that allow works. I don't think that will have changed at all.
+
+324
+00:39:26,613 --> 00:39:32,113
+Allowed. So now it is allowed. Great.
+
+325
+00:39:32,113 --> 00:39:38,753
+I'm very pleased. This patch looks good.
+
+326
+00:39:38,753 --> 00:39:49,913
+If there's anything that needs to be adjusted here, it's like that. The lintang. But otherwise this looks good and it's just strings.
+
+327
+00:39:49,913 --> 00:39:57,323
+So we don't need to do tests. And I'm going to say, looks great.
+
+328
+00:39:57,323 --> 00:40:04,733
+Please address the lintang stuff before you land.
+
+329
+00:40:04,733 --> 00:40:11,933
+You can use mock lint path to file Dasht Ash fix to have excellent.
+
+330
+00:40:11,933 --> 00:40:23,533
+Fix it for you if you'd like. Good stuff.
+
+331
+00:40:23,533 --> 00:40:32,083
+Next. You got it, got another one.
+
+332
+00:40:32,083 --> 00:40:35,713
+So it looks like a Amelio. Oh, did I do this?
+
+333
+00:40:35,713 --> 00:40:44,693
+Did. Oh, I became a I became a blocking reviewer because I updated the review in state.
+
+334
+00:40:44,693 --> 00:40:51,623
+So, I mean, to actually say like changes requested again. So CW changes setting changes requested.
+
+335
+00:40:51,623 --> 00:41:07,833
+Per my previous review. It got reset when I set myself as blocking.
+
+336
+00:41:07,833 --> 00:41:16,383
+OK. And then I mean, a change of years here as well, I'm going to add flot as a blocking reviewer.
+
+337
+00:41:16,383 --> 00:41:24,303
+I've already are plussed it, so I don't need to add it myself as a blocking rear. OK.
+
+338
+00:41:24,303 --> 00:41:34,823
+Next. Index DBI, Stewy, index DBI one.
+
+339
+00:41:34,823 --> 00:41:36,593
+Let's you know, before we continue,
+
+340
+00:41:36,593 --> 00:41:52,713
+let's update the reviewers to add flawed has a blocking review or what's flawed blocking and I myself as a blocking reviewer.
+
+341
+00:41:52,713 --> 00:42:20,383
+Let's apply this patch. But then let's also see the old one, or indeed before and after, again, this is for Index DBE.
+
+342
+00:42:20,383 --> 00:42:29,533
+Now, this is actually going to be a tricky one to bring up correctly, because you need to I need to write an application that tries to store 50 megs.
+
+343
+00:42:29,533 --> 00:42:32,203
+I think it's like we'll only show this permission prompt.
+
+344
+00:42:32,203 --> 00:42:38,173
+If a site is attempting to store a lot of data, like, I think it's like 50 may fit 50 megs of data.
+
+345
+00:42:38,173 --> 00:42:45,743
+Sorry, data in the index database. I don't want to have to build something that does that as a test just for something like this.
+
+346
+00:42:45,743 --> 00:42:56,233
+Or what we're gonna do is we're in a hot wire, this permission prompt and we're gonna force it to show itself using the browser console.
+
+347
+00:42:56,233 --> 00:43:06,553
+So let's see how we can do that. Luckily, I think this can be done by calling a function really indexed DB prompt helper.
+
+348
+00:43:06,553 --> 00:43:11,293
+There's this observed thing. So I think we just have to fiddle with this.
+
+349
+00:43:11,293 --> 00:43:21,963
+Observe. Method, Dewey said it wants the request, man.
+
+350
+00:43:21,963 --> 00:43:30,393
+This might be harder to hotwire than I thought. How do we get it to appear?
+
+351
+00:43:30,393 --> 00:43:52,283
+Stoebe, permission prompt, observe and observe for index DB permission prompt, and then where's the.
+
+352
+00:43:52,283 --> 00:44:10,953
+Notify. T.P request storage.
+
+353
+00:44:10,953 --> 00:44:29,033
+Mm hmm. Check for permission.
+
+354
+00:44:29,033 --> 00:44:50,083
+Check. Permission. I think this is what's ultimately going to call.
+
+355
+00:44:50,083 --> 00:45:11,383
+Some kind of. The permission API, like there's some kind of thing that needs to it's open a browser down G.S. indexed Vehbi prompt helper.
+
+356
+00:45:11,383 --> 00:45:19,973
+Uh. Oh, come on.
+
+357
+00:45:19,973 --> 00:45:28,953
+How does this even work? That is unusual.
+
+358
+00:45:28,953 --> 00:45:32,703
+Also, why is my machine just, like, really spinning up right now?
+
+359
+00:45:32,703 --> 00:45:42,893
+Let me just quickly look at the activity monitor off screen for a sec.
+
+360
+00:45:42,893 --> 00:45:51,533
+Oh, camera settings, why would you be taking so much resources and OBSS taking a lot.
+
+361
+00:45:51,533 --> 00:45:58,283
+And surprisingly job? I can't be right.
+
+362
+00:45:58,283 --> 00:46:02,093
+It's mostly IBS. OK, weird. OK.
+
+363
+00:46:02,093 --> 00:46:10,883
+So how do we trick this thing into showing up? One way to do that is by looking at any of the tests.
+
+364
+00:46:10,883 --> 00:46:17,033
+So maybe there's a way we can test this or like look at some of the tests.
+
+365
+00:46:17,033 --> 00:46:23,883
+If a test exists topic we create.
+
+366
+00:46:23,883 --> 00:46:25,323
+Stevie permission prom.
+
+367
+00:46:25,323 --> 00:46:34,323
+So this is the name of the of the prompt as well as the topic that we're reusing that and it looks like there is a there are preexisting tests here.
+
+368
+00:46:34,323 --> 00:46:49,383
+So maybe we can use these and then we can make it show and then we'll just hold instead of.
+
+369
+00:46:49,383 --> 00:46:58,623
+Instead of just flashing by. So let's run this test, first of all, it's open this test.
+
+370
+00:46:58,623 --> 00:47:03,563
+And then what we'll do is we'll only run the first one only.
+
+371
+00:47:03,563 --> 00:47:14,283
+And then what we're going to do is wait for message, get permission, load you or I wait for message.
+
+372
+00:47:14,283 --> 00:47:23,303
+Once I can do. Prompted an.
+
+373
+00:47:23,303 --> 00:47:30,153
+Pop ups shown, showing, shown, hidden and then trigger main command.
+
+374
+00:47:30,153 --> 00:47:36,673
+I did not do this part. I have a feeling that's going to cause everything to wait.
+
+375
+00:47:36,673 --> 00:47:41,293
+And that's fine. I don't need this test to complete. I just need to see the permission panel.
+
+376
+00:47:41,293 --> 00:47:46,003
+So, Mark Mokey, test browser permission. Prompt.
+
+377
+00:47:46,003 --> 00:47:49,663
+Allow. So what I'm expecting to see is the old prompt to appear.
+
+378
+00:47:49,663 --> 00:48:01,963
+So I. And then just hold so I can take a screenshot of it. So originally, I was gonna try and hotwire it.
+
+379
+00:48:01,963 --> 00:48:07,483
+It didn't look like it was hot. Easy, easy to hotwire. I must not have put that name in right.
+
+380
+00:48:07,483 --> 00:48:10,843
+Browser permissions. Prompt allow. Permissions prompt.
+
+381
+00:48:10,843 --> 00:48:17,323
+Allow. Sometimes these functions are nice.
+
+382
+00:48:17,323 --> 00:48:21,973
+You can hotwire them, sometimes they're not. OK, here we go.
+
+383
+00:48:21,973 --> 00:48:34,953
+That's before they shut down indexed DBI before.
+
+384
+00:48:34,953 --> 00:48:48,873
+After so let's shelve shut down shell the change and then actually did I have.
+
+385
+00:48:48,873 --> 00:49:38,943
+Yeah, I've already got it here, so shelve updates, tip unshelled, mock build faster.
+
+386
+00:49:38,943 --> 00:49:44,163
+On shelving. And then we're gonna mock build faster. I'm gonna quickly check this message that I was just sent.
+
+387
+00:49:44,163 --> 00:49:54,643
+Pardon me. Pardon me. Canvas, paint.
+
+388
+00:49:54,643 --> 00:49:58,573
+So I've been asked for the link. The end product.
+
+389
+00:49:58,573 --> 00:50:06,633
+Sumo blankets in the canvas panel. Sure.
+
+390
+00:50:06,633 --> 00:50:22,803
+See in the canvas panel, um, permission you, uh, that canvas, whereas the canvas one copy canvas.
+
+391
+00:50:22,803 --> 00:50:37,153
+It's part here. While we're waiting for surge Fox, I didn't need to run that, I need to run the new test or run the old test,
+
+392
+00:50:37,153 --> 00:50:43,713
+but also while we're waiting for that, so canvased that Abu Dhabi, Abu Dhabi do.
+
+393
+00:50:43,713 --> 00:50:48,243
+Remember, where's the learn more link? Its base. You are al fingerprint permission.
+
+394
+00:50:48,243 --> 00:50:53,673
+So base you are al mi.
+
+395
+00:50:53,673 --> 00:50:59,973
+Sorry, I'm just gonna answer a question for somebody and then I'll get back to the stream.
+
+396
+00:50:59,973 --> 00:51:04,653
+Sometimes what I do is answer questions.
+
+397
+00:51:04,653 --> 00:51:11,433
+That's how you be helpful. That's how you unblock other people. Which is how you become the 10 times engineer.
+
+398
+00:51:11,433 --> 00:51:17,913
+The 10x engineer is not by doing 10x the work, it's to help 10 people do their work.
+
+399
+00:51:17,913 --> 00:51:30,323
+That's how you do it. And so it's fingerprint permission.
+
+400
+00:51:30,323 --> 00:51:38,003
+Which links to the second here.
+
+401
+00:51:38,003 --> 00:51:54,973
+Support so that or one. For me, which redirects.
+
+402
+00:51:54,973 --> 00:52:11,603
+OK. Done. So let us now run that test and take a screenshot.
+
+403
+00:52:11,603 --> 00:52:39,383
+OK. So we take a screenshot of that. And put a heeger.
+
+404
+00:52:39,383 --> 00:52:44,513
+OK. The, uh, monkey just saw dad in your computer.
+
+405
+00:52:44,513 --> 00:52:53,023
+OK, so let's take a look at what the original bugs said we were supposed to be doing.
+
+406
+00:52:53,023 --> 00:52:59,273
+Which one of my own this is this is index DBI.
+
+407
+00:52:59,273 --> 00:53:01,253
+Right. So where's the index DBI?
+
+408
+00:53:01,253 --> 00:53:17,453
+One updating index DB position prompt in the permission prompt is supposed to be allow law to store data on your computer.
+
+409
+00:53:17,453 --> 00:53:22,703
+And what does it say? Now allow me to store data on your computer.
+
+410
+00:53:22,703 --> 00:53:27,203
+That looks right. The choice buttons change to allow and block respectively.
+
+411
+00:53:27,203 --> 00:53:33,353
+That is correct, sir. That is correct. Let's take a quick peek at the patch now.
+
+412
+00:53:33,353 --> 00:53:39,953
+Just a double check. So getting the formatted string available three.
+
+413
+00:53:39,953 --> 00:53:45,233
+So we've removed one of the strings. Allow label.
+
+414
+00:53:45,233 --> 00:53:50,903
+Yeah. Allow access key. Yep. Oh, block.
+
+415
+00:53:50,903 --> 00:53:57,443
+Label. Block access key. That all looks good. That looks straightforward.
+
+416
+00:53:57,443 --> 00:54:02,803
+I love it. I am loving it. I am love in it.
+
+417
+00:54:02,803 --> 00:54:11,623
+So we're gonna change the testing tag to really changing strings and then we accept this patch.
+
+418
+00:54:11,623 --> 00:54:19,363
+Loving it. And let's see here.
+
+419
+00:54:19,363 --> 00:54:25,943
+Do we have time for a few more? I think we do. Let's do the.
+
+420
+00:54:25,943 --> 00:54:31,823
+The was this where permission panel strings.
+
+421
+00:54:31,823 --> 00:54:46,903
+OK. General Nat, I say as a general net, I think the commit message should be updated to reflect that the.
+
+422
+00:54:46,903 --> 00:54:57,973
+I think it's geo location and the geo location. Permission streams are being updated because it's just like update permission pennel strings LA.
+
+423
+00:54:57,973 --> 00:55:10,783
+Right. But like which permissions. So let's do again our trick before and after an update to Central and we're gonna build faster along our way.
+
+424
+00:55:10,783 --> 00:55:19,363
+For that, we'll take a quick peek at the patch. So we are revving the allow string.
+
+425
+00:55:19,363 --> 00:55:23,203
+The access key. That's nice. Block block.
+
+426
+00:55:23,203 --> 00:55:29,353
+Access key. So you can see that we're converging on this like very sort of general consistent language.
+
+427
+00:55:29,353 --> 00:55:37,233
+Allow block, allow block and being less like, will you do this and just allow it.
+
+428
+00:55:37,233 --> 00:55:38,473
+It's just more direct.
+
+429
+00:55:38,473 --> 00:55:47,803
+Like instead of will you allow this site to access geolocation, its allow the site Dijkstra locations, the little things, you know, consistency.
+
+430
+00:55:47,803 --> 00:55:49,723
+And I believe that is the.
+
+431
+00:55:49,723 --> 00:56:01,963
+Know what was asked for is allow block and then allow such and such to access your location and then allow this old file to access your location.
+
+432
+00:56:01,963 --> 00:56:13,763
+That's right. And then it's aged safe delegation to allow to give permission to access your location.
+
+433
+00:56:13,763 --> 00:56:21,283
+Yeah, there's some third party origin delegation stuff that we're also updating, but that all looks right.
+
+434
+00:56:21,283 --> 00:56:29,863
+And then the strings are all getting updated. Geolocation share with file for.
+
+435
+00:56:29,863 --> 00:56:45,723
+Format string's share with, say, unsafe delegation to. Then geo location share with site for.
+
+436
+00:56:45,723 --> 00:56:50,743
+Then allow allow access key, block block, access key.
+
+437
+00:56:50,743 --> 00:56:57,173
+And there was another one, was that the share with file for.
+
+438
+00:56:57,173 --> 00:57:07,573
+Oh yeah. It's right here. It's the top. That all looks good, but let's take a look.
+
+439
+00:57:07,573 --> 00:57:12,103
+So this is another one of those patches or another one of those permission prompts
+
+440
+00:57:12,103 --> 00:57:19,233
+that we can get a clear sense of by going to that permission down site page.
+
+441
+00:57:19,233 --> 00:57:25,313
+She's. Yes. Collins I. Permission dot site. Very handy. So we'll go location.
+
+442
+00:57:25,313 --> 00:57:46,093
+And this is the old one. Geo location old before, rather, for.
+
+443
+00:57:46,093 --> 00:57:58,343
+OK. And we are going to do after now, so Mozz panch Miles, Fab Patch is fab patch.
+
+444
+00:57:58,343 --> 00:58:09,493
+Yada, yada. Hmm.
+
+445
+00:58:09,493 --> 00:58:15,263
+It's patching, too. Was this done in a stack? Oh, yeah.
+
+446
+00:58:15,263 --> 00:58:18,793
+Looks like familiar to these as a pair. All right.
+
+447
+00:58:18,793 --> 00:58:29,563
+Well, I'm only looking at the location when they're decoupled.
+
+448
+00:58:29,563 --> 00:58:42,713
+Getting all this messaging from the add ons channel that I don't think is targeting me, so I'm going to turn off how noisy?
+
+449
+00:58:42,713 --> 00:58:49,533
+It is OK. I think after this, I might stop for the day.
+
+450
+00:58:49,533 --> 00:58:56,853
+My throat's getting a little sore and tired. It's been a it's been a rough week, so I might stop soon.
+
+451
+00:58:56,853 --> 00:59:09,303
+But I think we can finish off this location. One case. This is the after again with allow and block consistent language.
+
+452
+00:59:09,303 --> 00:59:16,863
+Let's take a quick peek at what is supposed to be allow more taxes.
+
+453
+00:59:16,863 --> 00:59:21,423
+Your location. Yeah, there's a learn more link.
+
+454
+00:59:21,423 --> 00:59:27,903
+That's fine. And allow block and no changes to remember this decision.
+
+455
+00:59:27,903 --> 00:59:36,813
+That looks right. That looks right to me. I'm going to say let's go for it now.
+
+456
+00:59:36,813 --> 00:59:45,813
+I also want to change the reviewers so that flawed as a blocking reviewer.
+
+457
+00:59:45,813 --> 00:59:54,333
+I'm going to accept this revision. This is just strings.
+
+458
+00:59:54,333 --> 01:00:05,113
+Before landing. Thanks, Amelio. OK.
+
+459
+01:00:05,113 --> 01:00:19,403
+And submit. And I think I might cap it there.
+
+460
+01:00:19,403 --> 01:00:27,803
+Actually, you know, we did a number of reviews. How many do I have left? Five, five reviews left.
+
+461
+01:00:27,803 --> 01:00:32,783
+Oh, it looks like Amelio came back with another revision here.
+
+462
+01:00:32,783 --> 01:00:39,113
+Yes, lint. Plus Lintz, Blut. Plus Nitz. And then capitalization. Maybe we can we can get this thing our plussed.
+
+463
+01:00:39,113 --> 01:00:55,463
+Let's take a quick peek. So let's re apply this Mittie patch.
+
+464
+01:00:55,463 --> 01:01:10,553
+We can prune off the old one. I have it down here.
+
+465
+01:01:10,553 --> 01:01:25,113
+This is good. This will allow me to be a completionist and put the after here is Fab Page.
+
+466
+01:01:25,113 --> 01:01:29,333
+See some chatter. Oh, yeah.
+
+467
+01:01:29,333 --> 01:01:34,713
+Hold on, there's been a bunch of chatter inside the chat room. Just check. Yeah, pressure is now a system purge to read.
+
+468
+01:01:34,713 --> 01:01:45,373
+What still Craster startup health screenshot. Is campiness treatment.
+
+469
+01:01:45,373 --> 01:01:49,093
+There's a bunch of traffic and the live hacking channel that I haven't been keeping up with.
+
+470
+01:01:49,093 --> 01:01:56,173
+Let me just check planes and says or plane san says, sorry if this is mentioned, already wasn't able to hit the beginning,
+
+471
+01:01:56,173 --> 01:02:04,753
+but is there anything weird going on with the latest Firefox version kept crashing on Linux works fine on nightly.
+
+472
+01:02:04,753 --> 01:02:08,923
+I'm not aware of such things crashing.
+
+473
+01:02:08,923 --> 01:02:13,213
+It would depend on your distribution. So if you were using it.
+
+474
+01:02:13,213 --> 01:02:18,103
+So. Mozilla publishes builds of Firefox.
+
+475
+01:02:18,103 --> 01:02:22,963
+We build them ourselves and we put them on like our Web site that you can download on Linux,
+
+476
+01:02:22,963 --> 01:02:29,923
+that'll be like Toradol, GZ files or something, or Target Tara files, compress Tar's.
+
+477
+01:02:29,923 --> 01:02:36,913
+But depending on your distribution, they might also do a build of Firefox that they themselves do.
+
+478
+01:02:36,913 --> 01:02:41,083
+And they're kind of in charge of making sure that they build properly.
+
+479
+01:02:41,083 --> 01:02:46,263
+So if you are experiencing a startup crash on your distribution's build Firefox.
+
+480
+01:02:46,263 --> 01:02:53,213
+It might be worth filing with your distribution's bug tracker because maybe they didn't build it correctly.
+
+481
+01:02:53,213 --> 01:02:59,633
+Or maybe they're doing some custom thing and it's causing it to be crash and crash.
+
+482
+01:02:59,633 --> 01:03:07,463
+So there's a question answered there. Knightley works fine, currently using it.
+
+483
+01:03:07,463 --> 01:03:10,823
+And then for some reason, OK.
+
+484
+01:03:10,823 --> 01:03:20,063
+I think Jack Newman is the same person as planes. And because there's conversations continuing inside of Matrix about the same problem.
+
+485
+01:03:20,063 --> 01:03:23,843
+Tried both ball and distribution kept immediately crashing. OK.
+
+486
+01:03:23,843 --> 01:03:27,203
+I'm fine with nightly doing much time. I figured I'd just want to see if there's any info regarding it.
+
+487
+01:03:27,203 --> 01:03:30,793
+Maybe tonight I'll give it a go. Both Tar's and distribution says Jack Newman.
+
+488
+01:03:30,793 --> 01:03:36,953
+OK, well, that's very interesting. If you are experiencing a startup crash on Linux,
+
+489
+01:03:36,953 --> 01:03:43,763
+it's actually really interesting because we thankfully have the ability to get information from you about the start of crash.
+
+490
+01:03:43,763 --> 01:03:53,623
+Well, first of all, one thing you can do is you can do it once you have your Tarbell is to.
+
+491
+01:03:53,623 --> 01:03:56,783
+Let's see. What would I do?
+
+492
+01:03:56,783 --> 01:04:04,663
+I would say, like, go to your distribution with a folder where you've downloaded the tar ball of your release version of Firefox.
+
+493
+01:04:04,663 --> 01:04:08,723
+And I do on Linux, GDP and then Firefox.
+
+494
+01:04:08,723 --> 01:04:14,483
+I don't know if you need the dot slash, you might need the dot slash and that's gonna open up a GDP prompt.
+
+495
+01:04:14,483 --> 01:04:20,903
+It might actually I don't know if it's going to ask for your your administrative credentials.
+
+496
+01:04:20,903 --> 01:04:27,323
+It might, but then it's going to dump you into GDP. Now, that might be scary if you're not used to GDP,
+
+497
+01:04:27,323 --> 01:04:38,813
+but all you need to do is once you're in GDP and it's like prompting you and it's ready to run Firefox, you just need to say run and then press enter.
+
+498
+01:04:38,813 --> 01:04:44,813
+And then hopefully Firefox will boot up and hopefully it will crash and you will hit your crash and it will say so inside of GDP.
+
+499
+01:04:44,813 --> 01:04:53,483
+It will be like, oh, I've hit some error. And now once you've hit your problem type and Beattie Press enter, BEATTIES stands for backtrace.
+
+500
+01:04:53,483 --> 01:04:57,983
+And what's going to happen is because you're debugger is attached to Firefox at the time of crashing,
+
+501
+01:04:57,983 --> 01:05:06,963
+we can get a back trace of the crash where you take a look at that and maybe that might help figure out what's going wrong.
+
+502
+01:05:06,963 --> 01:05:12,503
+You know, if you're experiencing this on release from the tar balls, that's that's.
+
+503
+01:05:12,503 --> 01:05:16,463
+That doesn't sound like it's your distribution's problem anymore. That sounds like it's our problem.
+
+504
+01:05:16,463 --> 01:05:21,443
+Or there's something strange happening with integration on your operating system.
+
+505
+01:05:21,443 --> 01:05:25,493
+But we should definitely figure it out. Let me know after that.
+
+506
+01:05:25,493 --> 01:05:29,513
+If you want additional help. Just reach out to me in. Oh, seg fault.
+
+507
+01:05:29,513 --> 01:05:33,773
+Something about Lib Zuhal. Dot Esso. Interesting.
+
+508
+01:05:33,773 --> 01:05:40,763
+Well we can get a stack by doing what I just describe where you use GDP to get a stack and
+
+509
+01:05:40,763 --> 01:05:47,663
+then it might be un symbolic gaited but we can try and symbolic hate it if it's a you know,
+
+510
+01:05:47,663 --> 01:05:53,393
+and if it is a build's that Mozilla built, then we have the symbols.
+
+511
+01:05:53,393 --> 01:05:59,483
+We can turn those machine addresses into actual like human readable frames, like stack frames.
+
+512
+01:05:59,483 --> 01:06:06,383
+And then we can maybe debug what's going on here because otherwise a liberal inside a signal inside of Lib Zul Lib Zuhal.
+
+513
+01:06:06,383 --> 01:06:16,013
+It's like saying in the city that I'm in. Of millions of people, there is a pothole that is very deep and it has.
+
+514
+01:06:16,013 --> 01:06:20,423
+When I drive over it, my, my tire is punctured.
+
+515
+01:06:20,423 --> 01:06:25,673
+OK, that is a problem. Serious problem. We have to know where the pothole is.
+
+516
+01:06:25,673 --> 01:06:31,343
+So hopefully GDP would help us identify where the pothole is.
+
+517
+01:06:31,343 --> 01:06:56,823
+All right. Let's quickly check out this medy patch that was just posted.
+
+518
+01:06:56,823 --> 01:07:01,263
+All right. So, oh, middy.
+
+519
+01:07:01,263 --> 01:07:05,593
+I don't think is it in here, can we use Mitti here? We can. I didn't even need to go that glitch thing.
+
+520
+01:07:05,593 --> 01:07:10,413
+OK, so here we go. Allow such and such. This is the after.
+
+521
+01:07:10,413 --> 01:07:18,993
+Take a quick peek inside of here. Allow such and such to access your mini devices and send slash received sex messages.
+
+522
+01:07:18,993 --> 01:07:27,213
+Interesting. So this one is doing the sex thing. Let's do the other web.
+
+523
+01:07:27,213 --> 01:07:43,293
+Mittie example. To access your many devices.
+
+524
+01:07:43,293 --> 01:07:47,413
+Woops. I think we wanted that's the same screenshot as before.
+
+525
+01:07:47,413 --> 01:07:52,973
+We want this one. Come on.
+
+526
+01:07:52,973 --> 01:07:59,553
+This one. Thank you.
+
+527
+01:07:59,553 --> 01:08:09,393
+Cool. So let's take a look at the patch. Yeah, revving the casing.
+
+528
+01:08:09,393 --> 01:08:16,203
+Share with file, access your mini devices, allow such and such to access your middy devices.
+
+529
+01:08:16,203 --> 01:08:22,623
+Allowed this look file to access your mini devices and sensors received six six text messages.
+
+530
+01:08:22,623 --> 01:08:34,953
+That looks right. And then get stream from name.
+
+531
+01:08:34,953 --> 01:08:40,143
+Yes, yes. Yeah.
+
+532
+01:08:40,143 --> 01:08:49,033
+US. I love it. Testing only strings, flawed blocking review.
+
+533
+01:08:49,033 --> 01:08:55,793
+USA. Thanks, Amelio. Submit.
+
+534
+01:08:55,793 --> 01:09:04,613
+All right. Cool. Jack Newman asks understood where it's best to check in after the stream.
+
+535
+01:09:04,613 --> 01:09:09,563
+You can you can ask in here inside of the live hacking matrix channel where you are Jack Newman.
+
+536
+01:09:09,563 --> 01:09:17,303
+If you can do that, that's fine. Or you can file a bug that would be also very useful and then C.C. me on it.
+
+537
+01:09:17,303 --> 01:09:24,653
+I can make sure the right people see it. If you file a bug on bug, Zillah B Bugs will adopt Mazola dot org.
+
+538
+01:09:24,653 --> 01:09:33,863
+You know, you can just file a new bug because ultimately, if what you found is something that, like, isn't, you know,
+
+539
+01:09:33,863 --> 01:09:41,123
+if it sounds like a real it doesn't sound like a mistake on your part or anything like it sounds like there's a real issue here,
+
+540
+01:09:41,123 --> 01:09:49,193
+then we'll probably take care of it. And Bug Zyla. So ultimately, regardless, you reach out to me over live hacking or you file a bug.
+
+541
+01:09:49,193 --> 01:09:56,363
+Ultimately, a bug is going to get filed. So if you want, you can file a bug. If you're intimidated by all the fields and stuff, then don't.
+
+542
+01:09:56,363 --> 01:10:02,603
+That's fine. Just reach out to me and live hacking and I'll file the bug for you.
+
+543
+01:10:02,603 --> 01:10:06,323
+OK, I think I'm gonna stop here. Hey. Oh.
+
+544
+01:10:06,323 --> 01:10:10,733
+Someone asks Andre Botella says, what does faster do?
+
+545
+01:10:10,733 --> 01:10:15,803
+What does faster. I presume you mean like the mock build faster part mock build faster.
+
+546
+01:10:15,803 --> 01:10:21,023
+So there's two ways you can, Bill. There are actually three ways you can build Firefox locally,
+
+547
+01:10:21,023 --> 01:10:27,713
+like three different commands for building mock build, mock build binaries, mock build faster.
+
+548
+01:10:27,713 --> 01:10:38,203
+Those are the three. Firefox is actually there's a whole bunch of binary components like stuff written in Rust and C++ and Assembly.
+
+549
+01:10:38,203 --> 01:10:43,643
+And then there's a bunch of stuff that's written inside in JavaScript, CSX and Zuhal and HDMI out.
+
+550
+01:10:43,643 --> 01:10:47,483
+The latter half of the stuff isn't compiled down into like machine language.
+
+551
+01:10:47,483 --> 01:10:53,933
+What happens is it's put inside of an asset directory or an asset file called Omnitech J.
+
+552
+01:10:53,933 --> 01:10:58,373
+And at runtime we read those assets out of Omni J.
+
+553
+01:10:58,373 --> 01:11:09,083
+And so the build step for packaged things is actually placed the file, maybe do some pre processing on it, but place it inside the omni jar file,
+
+554
+01:11:09,083 --> 01:11:11,903
+which is different from running through the C++ compiler,
+
+555
+01:11:11,903 --> 01:11:18,563
+which we would do for like some C++ chatur like binary changes or rust binary changes run through the rest compiler.
+
+556
+01:11:18,563 --> 01:11:27,443
+So if I know that I have changed only CSX or JavaScript or H.T. Amelle, which I know is the case with these panel changes,
+
+557
+01:11:27,443 --> 01:11:33,203
+that includes things like strings as well, then moch build faster just means just repackage everything.
+
+558
+01:11:33,203 --> 01:11:40,913
+Don't try and recompile all of the binary components and that saves time because if you do moch build or moch build binaries,
+
+559
+01:11:40,913 --> 01:11:45,743
+the build infrastructure is gonna check all of the binary files to see which ones need to be built.
+
+560
+01:11:45,743 --> 01:11:53,513
+And that takes time. I scan the file system looking at like the last updated stats on each of the files.
+
+561
+01:11:53,513 --> 01:12:01,253
+So if I the person typing moch build know that we've only touched JavaScript, CSX, hdmi l zul strings.
+
+562
+01:12:01,253 --> 01:12:04,043
+I can do moch build faster and save a bit of time.
+
+563
+01:12:04,043 --> 01:12:11,753
+If I've only changed binary files then I can save time by not having to do the repackaging staff, by doing mock build binaries.
+
+564
+01:12:11,753 --> 01:12:18,683
+And that will just do the C++ part of the rust part and then the linking of the object files into the library.
+
+565
+01:12:18,683 --> 01:12:25,853
+If I don't know moch bill does both moch build is the superset of both mocktail binaries and moch build faster
+
+566
+01:12:25,853 --> 01:12:31,283
+and it will just make sure that all the binary files are compiled and correct and the packaging has been done.
+
+567
+01:12:31,283 --> 01:12:34,473
+So that's how I save time is by doing mock build faster.
+
+568
+01:12:34,473 --> 01:12:42,623
+That's also you want to use mockable faster if you're doing binary r sorry artifact builds because what it will do is as part of the build step,
+
+569
+01:12:42,623 --> 01:12:47,663
+go and download the binary artifacts for your binary builds and make sure that they are
+
+570
+01:12:47,663 --> 01:12:53,393
+in sync with what revision you currently have checked out with Mercurial or get I guess.
+
+571
+01:12:53,393 --> 01:12:58,493
+So if you're using artifact builds, you want to use moch build faster. Oh moch.
+
+572
+01:12:58,493 --> 01:13:02,003
+Apparently moch build does other things too, like building the Windows installer. That's right.
+
+573
+01:13:02,003 --> 01:13:06,503
+Sorry, I forgot about windows. So we'll also build Windows installers. There's also.
+
+574
+01:13:06,503 --> 01:13:11,483
+Well there's moch package. I don't know if moch package definitely does.
+
+575
+01:13:11,483 --> 01:13:21,323
+Other things like moch package will build like a zip file of the build and it will do other things.
+
+576
+01:13:21,323 --> 01:13:25,533
+And then there's like moch build symbols which will like create the crash report
+
+577
+01:13:25,533 --> 01:13:31,733
+said crash reporter symbol's and stuff and mock packages for Andron ap cays.
+
+578
+01:13:31,733 --> 01:13:38,243
+You can use moch package on desktop, but I think I only use that whenever I'm trying to send someone a zip.
+
+579
+01:13:38,243 --> 01:13:41,513
+File of something I've just built locally.
+
+580
+01:13:41,513 --> 01:13:51,533
+So Moqbel package will like take your local build, throw it into a file in your in your observator that you can send someone over the Internet.
+
+581
+01:13:51,533 --> 01:13:55,913
+All right. I think I'm going to stop here. Hey, thank you so much for watching. Episode two hundred.
+
+582
+01:13:55,913 --> 01:14:00,533
+And what was the episode? Was this episode two hundred and forty two of the joy of coding?
+
+583
+01:14:00,533 --> 01:14:03,803
+Let me know. We thought there is a form here to fill out.
+
+584
+01:14:03,803 --> 01:14:08,183
+Let me know. You thought of the episode you could like and subscribe.
+
+585
+01:14:08,183 --> 01:14:14,003
+Tell all your family to subscribe. The more people who subscribe than the more subscribers I have.
+
+586
+01:14:14,003 --> 01:14:21,383
+And that's great for subscribers. I don't know. But feel free to subscribe and then you'll be hearing about when new episodes come out.
+
+587
+01:14:21,383 --> 01:14:26,253
+But I'm pretty regular about it. Like every week almost. But I'm particular.
+
+588
+01:14:26,253 --> 01:14:29,873
+Please fill out this form, especially if you have questions that you want answered.
+
+589
+01:14:29,873 --> 01:14:36,883
+There is a field in the form. You can ask me questions. I will try my best to answer them during the next stream.
+
+590
+01:14:36,883 --> 01:14:43,073
+And with that, I think I'm going to call it here. Thanks again for watching. Episode two hundred and forty two of the joy of Coding.
+
+591
+01:14:43,073 --> 01:14:47,663
+I appreciate you being here and we will talk soon.
+
+592
+01:14:47,663 --> 01:14:53,263
+So take care, everyone. Oberhausen. I got to queue up the OTRO music care.
+
+593
+01:14:53,263 --> 01:19:27,098
+Bye bye.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

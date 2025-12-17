@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 325 - May 17, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 325 - May 17, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=1e734d5f-6286-4a88-a1e5-aff600ef2835</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=1e734d5f-6286-4a88-a1e5-aff600ef2835">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:06,921 --> 00:00:12,681
+Oh, hello and welcome to episode four or whatever.
+
+2
+00:00:12,681 --> 00:00:16,191
+So does this three 325 of the joy of coding.
+
+3
+00:00:16,191 --> 00:00:21,380
+My name is my calling. So good to have you here. We're going to be hacking on some Firefox related things today.
+
+4
+00:00:21,381 --> 00:00:25,761
+I hope you're interested interested in that or should have done some vocal warm ups.
+
+5
+00:00:26,031 --> 00:00:29,811
+I hope you're interested in that. Welcome. Welcome to the stream.
+
+6
+00:00:30,081 --> 00:00:33,741
+Let me start by sharing my screen. We can take a look at the agenda.
+
+7
+00:00:34,011 --> 00:00:37,431
+This is the agenda. It's May 17th, 2023.
+
+8
+00:00:37,431 --> 00:00:42,621
+Episode 325 I'll start with the the preamble. I always start with no plan survives breakfast.
+
+9
+00:00:42,621 --> 00:00:47,451
+I don't know what's going to happen today. I've got a couple of things that we can work on, things that we can do but you know,
+
+10
+00:00:47,811 --> 00:00:55,431
+might get blocked, might hit some Docker issues or component Kubernetes.
+
+11
+00:00:55,521 --> 00:00:59,451
+I don't know. Like who knows what could go wrong? And that's okay.
+
+12
+00:00:59,451 --> 00:01:03,080
+Like none of this. It's not like a slide show where I've got a presentation prepared.
+
+13
+00:01:03,081 --> 00:01:06,951
+You're just going to ride along with me while I hack on some bugs, and who knows what'll happen?
+
+14
+00:01:06,951 --> 00:01:11,901
+We might get stopped, we might get sidelined, or we might get some work done. So open for open for the ladder.
+
+15
+00:01:12,351 --> 00:01:17,031
+That's the first thing. Second thing, the agenda that we're looking at is something that you have access to.
+
+16
+00:01:17,301 --> 00:01:21,501
+If you're watching this on YouTube, check out the video description down below, same diode zone.
+
+17
+00:01:21,801 --> 00:01:25,911
+If you're watching this on Mozilla, check out the details section over there for a link.
+
+18
+00:01:25,911 --> 00:01:30,591
+And if you're watching this on twitch down below in the channel details, there should be a link to today's agenda.
+
+19
+00:01:30,591 --> 00:01:37,371
+And as I update it, you'll see this little thing spin it'll do a synchronization and the the agenda will update.
+
+20
+00:01:38,901 --> 00:01:44,060
+Let's go right into some work because I've got a yearning to get some stuff done.
+
+21
+00:01:44,061 --> 00:01:47,210
+I've got a couple of simple things kind of queued up for us.
+
+22
+00:01:47,211 --> 00:01:58,431
+If you recall last week I talked a little bit about what was I working on, what did we do last week?
+
+23
+00:01:58,431 --> 00:02:01,731
+I'm like reading through some of the stuff. Did we work on the sumo thing at all?
+
+24
+00:02:02,091 --> 00:02:10,131
+I think we did. I talked a little bit about the podcast I was on and we were talking about, you know, on Sumo,
+
+25
+00:02:10,401 --> 00:02:17,001
+the the sort of switching devices wizard that we're building out that is going to be
+
+26
+00:02:17,001 --> 00:02:23,210
+available to help users sign into their Firefox account synchronize and so that they
+
+27
+00:02:23,211 --> 00:02:28,101
+know like this is this is the probably the simplest and most secure way of transferring
+
+28
+00:02:28,101 --> 00:02:32,481
+your data from one computer to another is through Firefox accounts and sync.
+
+29
+00:02:32,901 --> 00:02:36,651
+And we're trying to build out a sumo page that kind of lays that all out.
+
+30
+00:02:36,651 --> 00:02:43,970
+And I've got like the development environment set up and we've got this wizard, we don't have the copy, the copy set up just yet.
+
+31
+00:02:43,971 --> 00:02:49,371
+And there's some stuff, there's still some styling stuff that's required, but we're getting closer.
+
+32
+00:02:49,371 --> 00:02:52,911
+We're closer than we were last week, that's for sure.
+
+33
+00:02:53,811 --> 00:03:00,981
+And so we're what do I want to do here?
+
+34
+00:03:02,001 --> 00:03:12,261
+I want to start by, uh, looking at the bug that I identified, which was the what is this first one?
+
+35
+00:03:13,551 --> 00:03:18,261
+13031303 is a simple one.
+
+36
+00:03:18,261 --> 00:03:27,261
+I think we can knock this out of the park. The hardest part will probably be the hardest part will be writing tests actually.
+
+37
+00:03:27,261 --> 00:03:35,811
+And that's fine. So in the, in the, the wizard here, you can be we're actually in step two because we've already got an account.
+
+38
+00:03:36,231 --> 00:03:42,651
+The wizard knows that we're signed in to my test at test dot com account on my local FSA server.
+
+39
+00:03:43,731 --> 00:03:49,461
+And you can actually be in a state where you're signed into your account in the browser,
+
+40
+00:03:49,731 --> 00:03:55,851
+but you're not thinking you may or may not know that, but if you go to Settings Sync, you can actually turn syncing off.
+
+41
+00:03:56,391 --> 00:03:58,941
+You can disconnect it even though you're signed into the account.
+
+42
+00:03:59,211 --> 00:04:07,101
+Sinking can be turned off and that is wired up here so that the page knows, hey, sinking is off and that's good.
+
+43
+00:04:07,371 --> 00:04:14,871
+And it can tell you, Hey, here's where you need to go to turn syncing back on so you can click on that and turn the thinking back on now sinking zone.
+
+44
+00:04:15,051 --> 00:04:22,460
+But we only want the user to be able to proceed to the final step once we know that they've been sinking because that way they know, hey, your,
+
+45
+00:04:22,461 --> 00:04:28,131
+your data has actually been sync up to the network and and, you know,
+
+46
+00:04:28,131 --> 00:04:32,181
+it's ready for you on your new device whenever you install Firefox on the new device.
+
+47
+00:04:32,181 --> 00:04:43,161
+So what we want to do the TLDR here is we actually want to disable this button, this next button in the event that sinking is off.
+
+48
+00:04:43,311 --> 00:04:47,331
+And that's pretty straightforward. I think what we actually the majority of the work, like I said,
+
+49
+00:04:47,331 --> 00:04:51,831
+is writing a test for that because we don't actually have any tests for the UI part of this.
+
+50
+00:04:51,831 --> 00:04:58,341
+We have tests for the underlying glue, the sort of state management system, but we don't have a tests for the UI components.
+
+51
+00:04:58,341 --> 00:05:03,501
+And so we're going to be adding one. Let us get started.
+
+52
+00:05:04,191 --> 00:05:09,251
+So the first thing I need to do is. Is get a terminal in front of me.
+
+53
+00:05:10,361 --> 00:05:13,961
+Uh, where am I? Where am I in this work?
+
+54
+00:05:14,561 --> 00:05:23,131
+I had, like, one for tuna here. We'll do our work in here. And let me pump up the font a little bit so you can see what I'm doing.
+
+55
+00:05:24,451 --> 00:05:32,771
+That happens every time. And we're going to check out Maine.
+
+56
+00:05:34,511 --> 00:05:39,691
+And going to create a new branch.
+
+57
+00:05:39,811 --> 00:05:42,841
+I'm I'm not super used to it. I definitely used it before.
+
+58
+00:05:42,851 --> 00:05:48,851
+But if you've ever watched the stream, you'll know that we I predominantly use mercurial to do Firefox things.
+
+59
+00:05:48,851 --> 00:05:54,191
+So having to kind of like relearn my get my get muscles like rebuild my get muscles.
+
+60
+00:05:55,631 --> 00:06:03,071
+So I'm going to create a new branch for this work. Disable the next button, disable next button as well called the branch.
+
+61
+00:06:03,071 --> 00:06:07,361
+So we're now on that branch and that's where we're going to do our work.
+
+62
+00:06:08,021 --> 00:06:19,121
+And if we then pull up the source code where we want to do this is actually in device migration wizard where we defined
+
+63
+00:06:19,121 --> 00:06:29,591
+these individual steps and we're going to go to the configure step and we're going to disable the next button.
+
+64
+00:06:31,841 --> 00:06:38,081
+Uh, if sync enabled, if sync is enabled, we're going to basically do.
+
+65
+00:06:45,091 --> 00:06:50,971
+Next button. We got to get the next button. Next button.
+
+66
+00:06:51,151 --> 00:06:55,601
+Equal this dot shadow route.
+
+67
+00:06:56,641 --> 00:07:01,551
+Get along and buy it next. And we're going to say next button dot.
+
+68
+00:07:02,101 --> 00:07:12,361
+Disabled equals. This start state sync enabled and we're going to flip that that bit.
+
+69
+00:07:14,371 --> 00:07:19,121
+So now if we reload this page. Sinking is off.
+
+70
+00:07:19,991 --> 00:07:26,081
+We should see that the SO knows that the styling went away and that's because I changed branches.
+
+71
+00:07:26,081 --> 00:07:35,970
+But now it's the next button is disabled. That's good. Turning on sink works.
+
+72
+00:07:35,971 --> 00:07:40,271
+And then if I turn on sinking. Go back here.
+
+73
+00:07:40,271 --> 00:07:43,331
+The next button is enabled, and that will take us to the last page. That's great.
+
+74
+00:07:43,631 --> 00:07:48,611
+That's what we wanted. So that's easy. Now, what we want to do is actually write a test for this.
+
+75
+00:07:50,921 --> 00:07:54,971
+And what I'm thinking of doing actually, to make this easier to test.
+
+76
+00:07:55,211 --> 00:07:59,321
+What in the world? I think there's like a just like an empty string in here.
+
+77
+00:08:00,971 --> 00:08:09,051
+I'm going to get rid of that, but I'm going to extract this out into a different step.
+
+78
+00:08:24,931 --> 00:08:33,541
+What I'm gonna do is I'm going to say, like. I can't take this part here.
+
+79
+00:08:44,631 --> 00:08:51,911
+I'm going to create a new module and drop it in to it so that we don't have to bring in the rest of the stuff to test it.
+
+80
+00:08:52,841 --> 00:09:00,701
+So the way we're going to do that is all of our jazz has been going in here and switching devices.
+
+81
+00:09:00,701 --> 00:09:05,441
+Mr. Magic Device, Migration Wizard. I'm going to put it in.
+
+82
+00:09:14,481 --> 00:09:19,341
+See, there's already like a form wizard sign in step form wizard configuration steps.
+
+83
+00:09:19,341 --> 00:09:24,441
+So I think I'm going to use the same convention and call it form wizard configuration step.
+
+84
+00:09:27,041 --> 00:09:35,191
+And so under J here and to create a new file, we're going to pull this stuff out.
+
+85
+00:09:44,011 --> 00:09:53,451
+And we're going to bring that in. And we're going to call it form wizard configuration step.
+
+86
+00:09:53,981 --> 00:09:57,751
+Yes, we're going to get add.
+
+87
+00:09:59,391 --> 00:10:07,061
+Well, see if we can get the path here. Get at that to get it tracking.
+
+88
+00:10:09,231 --> 00:10:14,481
+And then we need to import it from here. Import.
+
+89
+00:10:31,221 --> 00:10:35,391
+Maybe we actually do want to pull this out.
+
+90
+00:10:38,211 --> 00:10:44,231
+And have it be here. So import configure step.
+
+91
+00:10:45,971 --> 00:10:51,671
+From Sumo Jazz form wizard configuration step.
+
+92
+00:10:55,481 --> 00:11:00,101
+And that should still kind of work.
+
+93
+00:11:00,191 --> 00:11:03,191
+So let's let's reload this page.
+
+94
+00:11:04,341 --> 00:11:08,361
+So it doesn't like it. It's freaking out because base form step is not defined.
+
+95
+00:11:08,571 --> 00:11:11,841
+Right. So we're going to pull that into here.
+
+96
+00:11:19,591 --> 00:11:22,701
+I wonder if this path is correct? Probably not.
+
+97
+00:11:23,541 --> 00:11:34,791
+But let's find out. Argument two is not an object in device migration was 116 which is.
+
+98
+00:11:37,111 --> 00:11:42,081
+Come on. Configure step.
+
+99
+00:11:44,861 --> 00:11:47,981
+Oh. I need to export it. Yeah. Or go.
+
+100
+00:11:51,061 --> 00:12:05,821
+And reload. And then we also need this other thing, which is the info image URL and the configuration step styles URL.
+
+101
+00:12:10,611 --> 00:12:17,850
+Um. Right now it's used in here configuration step styles, your URL.
+
+102
+00:12:17,851 --> 00:12:21,210
+And then there was another one. I think it's the sinking image. Yeah.
+
+103
+00:12:21,211 --> 00:12:27,291
+We're gonna need this to. Fair.
+
+104
+00:12:29,681 --> 00:12:33,131
+Okay. Let's take a look. Okay.
+
+105
+00:12:33,801 --> 00:12:42,641
+Um, this network here is expected because of a local cause.
+
+106
+00:12:42,641 --> 00:12:46,691
+That's fine. But, yeah, our configuration is that part is working, so that's good.
+
+107
+00:12:48,191 --> 00:12:57,431
+And then I want to write a test for this, so we're going to add a new test file here.
+
+108
+00:12:59,891 --> 00:13:06,341
+We're going to call it form wizard configuration step tests.
+
+109
+00:13:10,931 --> 00:13:18,670
+Uh, and we're using like Moka, I think.
+
+110
+00:13:18,671 --> 00:13:21,191
+Chai. I don't know. Some kind of stuff.
+
+111
+00:13:21,491 --> 00:13:30,251
+I'm going to just copy this sort of, like, form here format, but I'm going to, like, just pull in the configuration, configure step.
+
+112
+00:13:32,671 --> 00:13:36,001
+Oh, this is called configure step, not configuration step.
+
+113
+00:13:38,051 --> 00:13:46,231
+Oh. I'm going to rename that configuration step.
+
+114
+00:13:48,281 --> 00:13:54,291
+Right. That is annoying that.
+
+115
+00:13:57,351 --> 00:14:01,821
+Inconsistency there. Configure step.
+
+116
+00:14:02,451 --> 00:14:05,751
+Maybe we just need to rename the the CC.
+
+117
+00:14:11,831 --> 00:14:14,991
+Figure. Step.
+
+118
+00:14:18,921 --> 00:14:23,001
+And I'm going to rename this. In the.
+
+119
+00:14:26,431 --> 00:14:33,571
+Yeah says former wizard configuration step or move it to configure step.
+
+120
+00:14:43,781 --> 00:14:53,491
+Okay. And then. Figures that.
+
+121
+00:14:56,621 --> 00:15:01,631
+And then here. Figure.
+
+122
+00:15:07,421 --> 00:15:11,301
+Good. So this should still load.
+
+123
+00:15:11,611 --> 00:15:22,371
+No. No form unable to find module to adjust form wizard configure step because this needs
+
+124
+00:15:22,371 --> 00:15:31,700
+to be renamed to consume a similar static sumo transform wizard configuration step.
+
+125
+00:15:31,701 --> 00:15:36,231
+We're going to rename it to configure step for consistency.
+
+126
+00:15:40,531 --> 00:15:45,211
+Some flavor of coffee. Some flavor of coffee.
+
+127
+00:15:46,981 --> 00:15:50,970
+Mocha chai. Yeah, exactly. I know what you're talking about. Sorry, I was a little behind you.
+
+128
+00:15:50,971 --> 00:15:57,251
+Can I find module form wizard configure step styles dot s6's form.
+
+129
+00:15:57,271 --> 00:16:02,311
+Wasn't 3G or is it for wizard?
+
+130
+00:16:04,451 --> 00:16:09,241
+Configure step styles. State your step.
+
+131
+00:16:11,941 --> 00:16:16,171
+Do I have to? Oh, I need a Nazi SS access.
+
+132
+00:16:33,271 --> 00:16:36,861
+All right. Good.
+
+133
+00:16:37,071 --> 00:16:42,141
+Okay, so that's all working. And now we should be able to.
+
+134
+00:16:42,171 --> 00:16:45,500
+Now I need to rename or remove this test file down.
+
+135
+00:16:45,501 --> 00:16:53,211
+You know, if I staged it. No, we're just going to rename it so I can do this and then sublime.
+
+136
+00:16:55,981 --> 00:17:08,631
+Configure step. So we're going to pull in configure step form wizard.
+
+137
+00:17:08,641 --> 00:17:20,731
+Configure step. And we're also going to do this bootstrap thing where we, like, define it.
+
+138
+00:17:21,751 --> 00:17:33,231
+Well, actually, I don't even know if we need to do that. We just constructed dynamically with the new each time.
+
+139
+00:17:36,021 --> 00:17:41,601
+So we don't need that. Describe configure step.
+
+140
+00:17:43,561 --> 00:17:49,291
+Custom element and body amd teemo.
+
+141
+00:17:52,151 --> 00:17:55,481
+We're just seasonal, Jake. We're there. I going to say like. But.
+
+142
+00:17:56,491 --> 00:18:06,061
+Step. Yeah. Have that be the global step or say step equals configure step.
+
+143
+00:18:08,481 --> 00:18:17,551
+And then body empty. And then what's the right way to append? Pinned to the dome.
+
+144
+00:18:25,321 --> 00:18:33,791
+Pent. And then we don't need the wizard attorney slot used just appended.
+
+145
+00:18:34,871 --> 00:18:38,771
+So let's get rid of some of these and we're just going to run.
+
+146
+00:18:39,221 --> 00:18:42,281
+Should render of a configure step custom element.
+
+147
+00:18:45,341 --> 00:18:52,841
+Step expected to exist, expected to be an instance of configure standards, basic, basic stuff.
+
+148
+00:18:54,071 --> 00:18:57,181
+So let's run one packed test.
+
+149
+00:18:57,191 --> 00:19:00,731
+That's how you run the tests, apparently. See what it says.
+
+150
+00:19:06,911 --> 00:19:11,571
+Okay. Constructor is not part of the Custom Element Registry.
+
+151
+00:19:11,581 --> 00:19:15,051
+So I actually have to I do have to register it.
+
+152
+00:19:18,451 --> 00:19:23,501
+Which is fine. Describe. Before.
+
+153
+00:19:27,231 --> 00:19:34,091
+Okay. Good.
+
+154
+00:19:34,361 --> 00:19:42,130
+Okay, so that works. And now we're going to test some of its behaviors.
+
+155
+00:19:42,131 --> 00:19:49,451
+So we're going to we're going to render it into a couple of different states that we know that it can go into.
+
+156
+00:19:54,831 --> 00:20:00,291
+So this render, it's like basically sink enabled or sink not enabled.
+
+157
+00:20:00,291 --> 00:20:05,181
+And we also want to test these events. So here's what we're going to do.
+
+158
+00:20:07,581 --> 00:20:25,081
+We'll start with it should. We also need to like supply the forgot password link.
+
+159
+00:20:31,671 --> 00:20:36,941
+Uh, that's separate. But.
+
+160
+00:20:48,001 --> 00:20:51,861
+So should what do we have here?
+
+161
+00:20:51,871 --> 00:20:55,351
+We've got the sink enabled or sink disabled state.
+
+162
+00:20:55,981 --> 00:21:00,751
+And based on that, we're going to say whether or not sinking is on.
+
+163
+00:21:00,817 --> 00:21:02,737
+Attribute as opposed to the strings.
+
+164
+00:21:03,547 --> 00:21:15,997
+Then we're going to look at whether or not the buttons attribute is correctly set, and then we'll see about the next button being enabled or disabled.
+
+165
+00:21:17,567 --> 00:21:20,657
+So should properly render.
+
+166
+00:21:21,497 --> 00:21:28,127
+Properly render, then not sink the not sinking state.
+
+167
+00:21:31,097 --> 00:21:36,497
+So you can do that with step dot set state.
+
+168
+00:21:36,827 --> 00:21:52,127
+And then we're going to pass in. Just this sink enabled state is all we want.
+
+169
+00:21:53,327 --> 00:22:02,487
+Sink enabled. False. Expect step shadow root.
+
+170
+00:22:04,267 --> 00:22:07,297
+Shadow equals stepped on shadow route.
+
+171
+00:22:07,957 --> 00:22:12,727
+Expect shadow query selector.
+
+172
+00:22:19,847 --> 00:22:34,567
+Since status. Um.
+
+173
+00:22:35,587 --> 00:22:45,417
+Get attribute. Sync enabled to be.
+
+174
+00:22:48,157 --> 00:22:51,397
+False. Does that work? I think that works.
+
+175
+00:22:59,017 --> 00:23:04,417
+Doesn't like it expected know to be false. Shadow query selector missing status and get attribute.
+
+176
+00:23:15,127 --> 00:23:18,667
+No. So this is like no.
+
+177
+00:23:21,737 --> 00:23:25,007
+Really just let her sing status.
+
+178
+00:23:45,307 --> 00:23:48,487
+Yeah, that's fine. Uh, so what is.
+
+179
+00:23:48,937 --> 00:23:57,736
+What is that like? Did it find the node? Yeah.
+
+180
+00:23:57,737 --> 00:24:03,717
+We found it. So the attribute hasn't been set yet.
+
+181
+00:24:05,227 --> 00:24:08,647
+So calling set state. Is there something I have to wait for?
+
+182
+00:24:08,677 --> 00:24:13,957
+Let's see here. Uh, form wizard.
+
+183
+00:24:16,487 --> 00:24:35,397
+So it's that state that we call render. We're in a previous state if it's not equal to previous states and enabled.
+
+184
+00:24:41,037 --> 00:24:50,587
+Console.log. Previous state. Some good old print debugging.
+
+185
+00:24:53,377 --> 00:25:06,957
+State. And it's like, no, I'm not a part to that.
+
+186
+00:25:11,737 --> 00:25:16,397
+Right. What am I doing with those colons?
+
+187
+00:25:30,117 --> 00:25:36,907
+Previous state. State sync enabled is false.
+
+188
+00:25:39,337 --> 00:25:44,677
+Synchrony. So console dialog.
+
+189
+00:25:45,997 --> 00:25:59,087
+Hello. Previous state scandals false.
+
+190
+00:26:00,707 --> 00:26:04,756
+So oh it's toggle attributes.
+
+191
+00:26:04,757 --> 00:26:08,807
+So it's not that we expect it's okay. We expect it to actually not be there.
+
+192
+00:26:09,497 --> 00:26:13,337
+We expect it to be null. So that was my bad.
+
+193
+00:26:13,337 --> 00:26:21,976
+So expect it. Um, has attribute sync enabled to be false as well?
+
+194
+00:26:21,977 --> 00:26:25,697
+We expect. We can get rid of our logging here.
+
+195
+00:26:29,647 --> 00:26:39,277
+All right. So far, so good. And then we definitely expect the next button to be disabled.
+
+196
+00:26:43,447 --> 00:26:56,747
+To be true. Shadow query selector.
+
+197
+00:27:01,037 --> 00:27:11,897
+Button's idea is next. Oh, disabled.
+
+198
+00:27:17,577 --> 00:27:23,207
+Expand those. Okay, that's good. What was the other thing I wanted to test?
+
+199
+00:27:23,217 --> 00:27:29,487
+So it should be disabled. The buttons should also be without that attribute.
+
+200
+00:27:34,227 --> 00:27:47,727
+Buttons. Now can I use?
+
+201
+00:27:50,767 --> 00:27:54,217
+Well, let let me do this. I don't know if it'll let me do this, but.
+
+202
+00:27:56,997 --> 00:28:02,777
+Because it's a jazz dome environment just on climate, correct?
+
+203
+00:28:05,707 --> 00:28:08,887
+It doesn't do any rendering. It always will return zero. Right.
+
+204
+00:28:10,807 --> 00:28:21,517
+So. Yeah.
+
+205
+00:28:21,947 --> 00:28:27,897
+Doesn't expect it to. And then this person's like a.
+
+206
+00:28:35,347 --> 00:28:38,797
+All right, well, let's see whether or not it would work. Um.
+
+207
+00:28:39,757 --> 00:28:45,437
+Console. Dialog, shadow. Our next direct.
+
+208
+00:28:50,417 --> 00:28:54,467
+And in clay interact. See what it says.
+
+209
+00:28:59,957 --> 00:29:09,137
+I'm new to a lot of these tools. So, you know, if you're watching this and you're like, Oh, what a moron, it's because I'm new to this.
+
+210
+00:29:11,357 --> 00:29:21,287
+I'm not used to doing modern web development. Which is weird for someone who works on a web browser, but I work on the browser not.
+
+211
+00:29:21,827 --> 00:29:25,837
+I don't normally build websites anymore. Okay.
+
+212
+00:29:25,987 --> 00:29:30,917
+So yeah, it's. It's just. That makes sense. Like it's not actually just arms and do layout.
+
+213
+00:29:32,687 --> 00:29:39,707
+Is this modern web development? I guess I have no idea. It's using node stuff and Webpack.
+
+214
+00:29:39,707 --> 00:29:43,027
+That to me is like all the smells of modern, um.
+
+215
+00:29:44,237 --> 00:29:49,097
+So I can't actually check the layout to determine whether or not these things are enabled or disabled.
+
+216
+00:29:50,537 --> 00:30:00,917
+And presumably I can't use get computed style. Right. Um, window get computed style.
+
+217
+00:30:07,117 --> 00:30:10,297
+I presume that's going to just return to some kind of like default?
+
+218
+00:30:10,747 --> 00:30:14,497
+Like I don't expect them to have implemented a style engine.
+
+219
+00:30:15,607 --> 00:30:20,297
+Yeah. Values display in line.
+
+220
+00:30:20,297 --> 00:30:23,967
+BLOCK Ray. Ray. Ray, Ray. Ray. Okay.
+
+221
+00:30:24,007 --> 00:30:27,247
+So we can't actually check to see whether or not the buttons are visible.
+
+222
+00:30:27,727 --> 00:30:30,937
+We can just check their attributes. That's fine.
+
+223
+00:30:31,597 --> 00:30:37,117
+So now we're going to do the opposite. Case should probably render the sinking state.
+
+224
+00:30:41,377 --> 00:30:47,367
+To be true. To be false.
+
+225
+00:30:54,621 --> 00:30:58,121
+Expected events when buttons clicked.
+
+226
+00:31:00,761 --> 00:31:06,281
+Um, so let's start with, uh. Sync enabled is false.
+
+227
+00:31:08,571 --> 00:31:14,551
+Um. Is there.
+
+228
+00:31:21,401 --> 00:31:25,571
+Some kind of wait for event. Expect chai.
+
+229
+00:31:33,171 --> 00:31:36,921
+Uh. Oh, goodness.
+
+230
+00:31:38,541 --> 00:31:43,891
+Oh, boy. Could.
+
+231
+00:31:53,621 --> 00:31:58,361
+I thought there'd be a helper. Malka.
+
+232
+00:31:59,991 --> 00:32:06,071
+Wait for it. The simple fine testing framework.
+
+233
+00:32:12,071 --> 00:32:16,481
+I think I'm just going to like use in a weight I guess on me like a helper function.
+
+234
+00:32:21,301 --> 00:32:25,851
+And. Target.
+
+235
+00:32:28,121 --> 00:32:32,541
+Event name. Return.
+
+236
+00:32:32,541 --> 00:32:43,561
+New promise, resolve. Target and event listeners then name Verizon once true.
+
+237
+00:32:46,041 --> 00:32:50,741
+Okay. So.
+
+238
+00:32:56,791 --> 00:33:00,531
+Um. But clicked.
+
+239
+00:33:01,401 --> 00:33:04,851
+What's what are the different events turning on?
+
+240
+00:33:04,851 --> 00:33:08,691
+Sync So we expect this event to fire.
+
+241
+00:33:13,831 --> 00:33:20,731
+I clicked equals stepped turn on sync equal or.
+
+242
+00:33:21,851 --> 00:33:25,031
+So turn on sync event.
+
+243
+00:33:26,381 --> 00:33:30,101
+Wait for event. Step that.
+
+244
+00:33:31,211 --> 00:33:38,831
+And then we're going to click on it. Shadow Query Selector.
+
+245
+00:33:39,431 --> 00:33:46,751
+Turn on sync. Click. A weight turn on sync event.
+
+246
+00:33:51,891 --> 00:33:59,391
+Um. Expect.
+
+247
+00:34:03,641 --> 00:34:07,181
+How do we want to like. Expect. True.
+
+248
+00:34:07,181 --> 00:34:13,861
+To be true. Where they do.
+
+249
+00:34:18,671 --> 00:34:22,211
+Maybe. Uh, expect.
+
+250
+00:34:26,841 --> 00:34:32,150
+To not be. No, it's okay to not be.
+
+251
+00:34:32,151 --> 00:34:39,441
+No. To not equal no.
+
+252
+00:34:39,681 --> 00:34:46,011
+To not be no. To not be no. Okay. So we'll have this thing like resolve with.
+
+253
+00:34:48,261 --> 00:34:51,531
+Does it resolve with the event? Yes, it will. That's the callback. So.
+
+254
+00:34:56,911 --> 00:35:01,801
+That should work. Let's just run that one and see what happens.
+
+255
+00:35:06,451 --> 00:35:10,381
+Yeah. Really built a built in test runner.
+
+256
+00:35:10,651 --> 00:35:13,830
+Yeah, I agree in indigenous.
+
+257
+00:35:13,831 --> 00:35:18,091
+I agree. Turn on sync configure sync event.
+
+258
+00:35:23,201 --> 00:35:28,321
+For your step. What was the next one called Change Sync Preface?
+
+259
+00:35:34,271 --> 00:35:45,691
+It was the. So change saying perhaps.
+
+260
+00:35:45,701 --> 00:35:52,791
+And. And then the last one is next.
+
+261
+00:35:54,621 --> 00:36:00,411
+Now that one, shouldn't we expect that one actually to not fire whenever it's disabled?
+
+262
+00:36:01,881 --> 00:36:07,171
+So. How do we do that?
+
+263
+00:36:11,241 --> 00:36:25,581
+Uh. Left listener equals.
+
+264
+00:36:29,881 --> 00:36:32,931
+But then expect.
+
+265
+00:36:38,661 --> 00:36:52,371
+Falls to the. How do you say MOCA expect not to hit expect testing for expected failures like test.
+
+266
+00:36:52,671 --> 00:36:56,151
+Should fail. Should fail.
+
+267
+00:36:56,761 --> 00:37:02,811
+Oh, that's should throw a new error. Expect to throw.
+
+268
+00:37:04,531 --> 00:37:07,981
+China has. Should faleiro expect. Fail expect.
+
+269
+00:37:09,321 --> 00:37:15,631
+Fail. Expect fail.
+
+270
+00:37:22,301 --> 00:37:25,421
+Message did not expect.
+
+271
+00:37:26,611 --> 00:37:31,441
+Next button to fire event. Okay.
+
+272
+00:37:33,361 --> 00:37:40,091
+Very selector. Next click. Uh.
+
+273
+00:37:40,221 --> 00:37:54,641
+Um. Next button is shadow query selector and next.
+
+274
+00:37:55,331 --> 00:38:01,181
+Next button and event listener. Click listener.
+
+275
+00:38:01,691 --> 00:38:09,041
+Once. Uh, the next button.
+
+276
+00:38:09,041 --> 00:38:13,971
+Click. Um.
+
+277
+00:38:15,371 --> 00:38:21,921
+Then we're going to remove the event listener. Okay.
+
+278
+00:38:25,351 --> 00:38:33,960
+This is a case where we don't expect the event to fire. So it's like once is not defined once, once, once, once.
+
+279
+00:38:33,961 --> 00:38:56,251
+True, of course. Actually, we can just remove that altogether and we would expect that to fail in the event that we didn't do what we just fixed,
+
+280
+00:38:56,491 --> 00:39:03,541
+which was to disable the button. So if I were to remove that, I would expect that test to fail.
+
+281
+00:39:13,331 --> 00:39:17,081
+Do not expect next but to fire Van. Good. Okay. Good. That's what we wanted.
+
+282
+00:39:20,111 --> 00:39:23,141
+All right. So I think we're in good shape here.
+
+283
+00:39:23,771 --> 00:39:29,691
+Now, is there anything else I want to test? About the configure step.
+
+284
+00:39:30,051 --> 00:39:37,221
+It's a pretty self-contained these events that state that's all kind of taking care of.
+
+285
+00:39:37,551 --> 00:39:43,791
+I do. Eventually I realize that we need to populate the forgot password link.
+
+286
+00:39:58,701 --> 00:40:03,801
+So I'm going to do is actually fix that in here as well, but in a separate commit.
+
+287
+00:40:03,811 --> 00:40:11,811
+So let's commit what we've got right now. Get that.
+
+288
+00:40:12,251 --> 00:40:19,011
+Get that. We're staging this.
+
+289
+00:40:22,241 --> 00:40:27,671
+It says, I don't want to commit that get commit.
+
+290
+00:40:32,651 --> 00:40:36,371
+And then the sumo ticket is 1303.
+
+291
+00:40:40,811 --> 00:40:45,221
+Disable next button if sinking is not enabled.
+
+292
+00:40:45,611 --> 00:40:51,621
+One. Three. Oh three. And then, um.
+
+293
+00:40:52,251 --> 00:41:00,021
+And. This also factors out the configuration the configure step.
+
+294
+00:41:00,831 --> 00:41:19,271
+This also. Makes us consistent by referring to the step as configure step rather than a mix of configure step and configuration step in.
+
+295
+00:41:21,911 --> 00:41:30,201
+Various parts of. Various parts of the code.
+
+296
+00:41:32,661 --> 00:41:43,361
+Factors that configure step. Going and put those dashes back, actually.
+
+297
+00:41:46,721 --> 00:41:56,641
+Actors have to configure, step into its own module that can be tested separately and add some tests.
+
+298
+00:41:58,191 --> 00:42:03,741
+Okay. That's good. Next, I want to fix the the forgot password.
+
+299
+00:42:06,091 --> 00:42:09,761
+Link not working right now. It's just like an empty link.
+
+300
+00:42:09,781 --> 00:42:15,271
+And what we need is to remember, like, what is the.
+
+301
+00:42:18,941 --> 00:42:22,061
+Co-host. 3030.
+
+302
+00:42:23,321 --> 00:42:29,681
+Forgot password. So it'll be like slash reset underscore password from the same root link.
+
+303
+00:42:31,231 --> 00:42:40,211
+And what things do we pass to? This that configure step sync enabled.
+
+304
+00:42:40,221 --> 00:42:47,701
+Okay. So I need to also pass in the same route. State officials say route.
+
+305
+00:42:59,361 --> 00:43:03,111
+Maybe I'll say forgot password.
+
+306
+00:43:05,351 --> 00:43:10,011
+Link. Correct. Equals.
+
+307
+00:43:16,561 --> 00:43:30,711
+Slash. Reset password.
+
+308
+00:43:34,511 --> 00:43:39,071
+We may actually want to do. We have to kind of like supply all these parameters.
+
+309
+00:43:43,771 --> 00:43:48,381
+And to. I mean, he.
+
+310
+00:43:59,221 --> 00:44:03,481
+What does reset password take on the FSA side of things?
+
+311
+00:44:22,261 --> 00:44:31,381
+Parameters. That's the way.
+
+312
+00:44:48,861 --> 00:44:53,001
+Hmm. He said password goes to.
+
+313
+00:44:54,981 --> 00:44:58,211
+Where he said Password view. Where is that?
+
+314
+00:45:06,961 --> 00:45:10,381
+Oh, that is. And where is the thing that processes it, though?
+
+315
+00:45:17,611 --> 00:45:35,321
+Um. It's password.
+
+316
+00:45:37,801 --> 00:46:06,561
+Recovery tokens. Okay.
+
+317
+00:46:06,561 --> 00:46:12,561
+Well, in that case, I'm just going to keep things simple, actually. We're just going to return that.
+
+318
+00:46:14,331 --> 00:46:17,681
+And if we need to call some more stuff onto the end of it, that's fine.
+
+319
+00:46:17,691 --> 00:46:39,281
+But for now, this is probably fine. And so forgot password link ref is going to go to here and we're going to say.
+
+320
+00:46:47,511 --> 00:46:53,021
+If this does state dod forgot password link ref it's not equal.
+
+321
+00:46:53,031 --> 00:46:56,511
+It hasn't been updated for some reason then.
+
+322
+00:46:59,001 --> 00:47:02,871
+Uh, let link equal.
+
+323
+00:47:09,391 --> 00:47:17,311
+Eight. Forgot password. Thank.
+
+324
+00:47:18,491 --> 00:47:24,241
+So this shadow route. Query selector.
+
+325
+00:47:24,991 --> 00:47:29,821
+Forgot password link. How about press equals?
+
+326
+00:47:31,291 --> 00:47:35,211
+This starts state sort of like Paris.
+
+327
+00:47:35,641 --> 00:47:39,331
+Okay. So now if we render this.
+
+328
+00:47:41,881 --> 00:47:48,631
+Reset password. Yeah, that's right. That's what we want. Okay.
+
+329
+00:47:49,741 --> 00:47:56,581
+Now let us write a test. Should populate.
+
+330
+00:47:58,831 --> 00:48:06,441
+Should set the reset password link with a.
+
+331
+00:48:07,571 --> 00:48:12,700
+The press attribute. Sync enabled false.
+
+332
+00:48:12,701 --> 00:48:21,761
+And then what was it? Forgot password link ref.
+
+333
+00:48:27,361 --> 00:48:31,891
+We say like example, reset password.
+
+334
+00:48:33,441 --> 00:48:36,861
+URL. And we're going to set that.
+
+335
+00:48:41,611 --> 00:48:49,411
+Example dot com reset password. And we're going to expect.
+
+336
+00:48:53,991 --> 00:49:01,401
+So password for. Wrong password link.
+
+337
+00:49:06,251 --> 00:49:09,431
+It's called. Forgot password, of course.
+
+338
+00:49:15,881 --> 00:49:19,111
+Not. Password link. Expect.
+
+339
+00:49:20,421 --> 00:49:31,171
+Uh. Ref. To be equal to or just to equal, he said.
+
+340
+00:49:31,171 --> 00:49:36,821
+And that's where password era. All right, let's see.
+
+341
+00:49:50,811 --> 00:49:57,471
+Yes, it worked. I just need to update a different test to include the the changes to the state.
+
+342
+00:50:02,571 --> 00:50:10,731
+With a qualified. Fine. You should send the user to.
+
+343
+00:50:12,881 --> 00:50:21,491
+The configure step. Strive to be equal to.
+
+344
+00:50:21,511 --> 00:50:26,731
+And then forgot password. Minecraft should be equal to.
+
+345
+00:50:29,001 --> 00:50:35,031
+Fake FSA route. Reset password.
+
+346
+00:50:38,991 --> 00:50:42,041
+So. And the same one.
+
+347
+00:50:52,121 --> 00:50:55,391
+You should have the first and then the right payload if entering.
+
+348
+00:50:58,711 --> 00:51:09,141
+All right. Let's see if it likes that. Like I said, it's mostly tests that we'd be working on today, and that's good.
+
+349
+00:51:09,151 --> 00:51:18,181
+So we're going to now commit that. What I'm going to do actually.
+
+350
+00:51:18,901 --> 00:51:24,511
+Yeah, I'm just going to can I do like get commit a exclude like get commit help?
+
+351
+00:51:26,401 --> 00:51:34,751
+Exclude. And it's like, I want to commit everything except.
+
+352
+00:52:00,671 --> 00:52:03,971
+All right, well, let's let's do it this way.
+
+353
+00:52:04,001 --> 00:52:10,891
+I mean, it's just check out that so it's undone because I don't mean that.
+
+354
+00:52:10,901 --> 00:52:19,751
+And then we're going to go get, commit and populate the forgot password.
+
+355
+00:52:21,371 --> 00:52:24,821
+Like with a brief tribute.
+
+356
+00:52:26,671 --> 00:52:37,521
+The configure step. And I'm actually going to rename this branch.
+
+357
+00:52:41,881 --> 00:52:47,311
+To figuration configure step improvements.
+
+358
+00:52:49,031 --> 00:52:53,231
+All right. Check out Maine.
+
+359
+00:52:53,441 --> 00:52:57,671
+Get pull or Maine. Do we have anything else? Yeah, we got some stuff to pull in.
+
+360
+00:52:59,111 --> 00:53:02,471
+Very good. Check out configure step improvements.
+
+361
+00:53:02,471 --> 00:53:09,671
+We might actually have to do some rebasing here and get rebase maine.
+
+362
+00:53:11,091 --> 00:53:18,341
+Yeah. Conflicts. Some changes happened on emerging conflicts in device migration.
+
+363
+00:53:19,321 --> 00:53:24,311
+It's basically I'm pretty sure what happened was some of the stuff in here changed.
+
+364
+00:53:24,321 --> 00:53:29,841
+So we want to. Basically.
+
+365
+00:53:29,841 --> 00:53:41,381
+Copy this. Over. To figures step.
+
+366
+00:53:46,871 --> 00:53:49,931
+We want to export. The class again.
+
+367
+00:53:50,891 --> 00:53:55,871
+But we also want to get our fix in here.
+
+368
+00:54:04,171 --> 00:54:07,771
+Know we can get rid of this. I think that'll do it.
+
+369
+00:54:10,991 --> 00:54:23,591
+Get stat get ad. And this.
+
+370
+00:54:27,031 --> 00:54:32,681
+Rebase. Continue. All right.
+
+371
+00:54:34,291 --> 00:54:45,411
+Let's see if that still looks good. Can.
+
+372
+00:54:50,471 --> 00:54:56,441
+No, it does not. Configuration step styles you are l is not defined from as reconfigure step.
+
+373
+00:55:00,561 --> 00:55:15,781
+39. It's something change.
+
+374
+00:55:20,361 --> 00:55:29,381
+First. We can finger step.
+
+375
+00:55:30,191 --> 00:55:37,201
+I wonder if, like, the Webpack stuff is still building. No.
+
+376
+00:55:45,481 --> 00:55:50,691
+Okay. Figures. Step 39.
+
+377
+00:55:51,881 --> 00:55:59,851
+All right. Here. Oh.
+
+378
+00:56:00,371 --> 00:56:03,371
+Config. Yea. That's what it is when I tell.
+
+379
+00:56:07,701 --> 00:56:14,501
+Long. Check out this first.
+
+380
+00:56:15,931 --> 00:56:20,791
+You need to. Get check out.
+
+381
+00:56:21,151 --> 00:56:32,841
+There's probably a better way of doing this, but. I need to change this.
+
+382
+00:56:33,081 --> 00:56:37,191
+Oh, here's a way of doing this, that there's probably a better way of doing this.
+
+383
+00:56:37,551 --> 00:56:47,831
+But, um, what I think I want to do is this, um, first of all, does this work?
+
+384
+00:56:52,901 --> 00:56:56,141
+Yes, it does. The buttons are a little better styled now.
+
+385
+00:56:59,621 --> 00:57:06,641
+If I disable sinking. This button is disabled.
+
+386
+00:57:07,241 --> 00:57:11,261
+Turn on sinking. Three enabled.
+
+387
+00:57:12,491 --> 00:57:19,211
+Happy, happy, happy. Reset. Why isn't this populating now?
+
+388
+00:57:26,481 --> 00:57:34,201
+Switching devices. Oh, shoot.
+
+389
+00:57:36,221 --> 00:57:41,401
+I'm on the wrong one. Uh, get Ralph Lord.
+
+390
+00:57:41,551 --> 00:57:48,851
+Uh, what is the name? And figure step improvements.
+
+391
+00:57:48,861 --> 00:57:54,221
+That's where I want to be. Good. Check out. Kit.
+
+392
+00:57:55,061 --> 00:57:58,841
+Yes, Kit. Stash it.
+
+393
+00:57:58,841 --> 00:58:08,101
+Checked it. That. Kids Stash Pop.
+
+394
+00:58:13,321 --> 00:58:17,091
+Okay. And that gets our reset password link. Okay.
+
+395
+00:58:17,101 --> 00:58:18,721
+So we're in better shape now.
+
+396
+00:58:19,351 --> 00:58:34,111
+And then what I want to do is, um, I much prefer mercurial for this kind of mutation stuff that I'm gonna go get and such and such get commit fix,
+
+397
+00:58:34,921 --> 00:58:40,471
+variable reference, get rebase, main interactive.
+
+398
+00:58:41,311 --> 00:58:48,631
+And we're going to take that. We're going to squash that and the above.
+
+399
+00:58:57,681 --> 00:59:03,791
+Right. Uh, we're going to now run our tests.
+
+400
+00:59:10,061 --> 00:59:13,781
+Up, up, up, up, up, up, up. There we go. Could you just taste type that a bit?
+
+401
+00:59:14,501 --> 00:59:18,311
+I could type that faster instead of just going up, but. Classic me.
+
+402
+00:59:24,201 --> 00:59:29,901
+Okay. That's looking good. And then finally, one last manual test.
+
+403
+00:59:46,881 --> 00:59:50,011
+Good. Happy, happy, happy, happy.
+
+404
+00:59:50,031 --> 01:00:07,691
+All right. Let's push this up for review. Push me, configure step improvements and we are going to create a new poll request.
+
+405
+01:00:18,311 --> 01:00:24,821
+Hannah. This pull request fixes.
+
+406
+01:00:28,791 --> 01:00:32,931
+So sumo. Such and such. One, three or three.
+
+407
+01:00:32,931 --> 01:00:43,311
+And also fixes an issue where the forgot password link was and fixes the issue
+
+408
+01:00:44,031 --> 01:00:51,921
+where the forgot password wasn't being wasn't having its attributes set.
+
+409
+01:00:52,311 --> 01:01:01,391
+It's also. Splits the configure step so that it has its own test module test.
+
+410
+01:01:03,551 --> 01:01:14,231
+File. To its phone module to make it easier to test in isolation.
+
+411
+01:01:15,281 --> 01:01:36,801
+Create. Pull requests. I'm feeling pretty good about that feeling.
+
+412
+01:01:36,951 --> 01:01:46,041
+Feeling dark. Feeling dark. And when speaks German sprechen zu Deutsch villain dark.
+
+413
+01:01:46,251 --> 01:01:49,811
+I'm feeling quite dark about this. All right.
+
+414
+01:01:49,821 --> 01:01:53,270
+What's the next thing I want to work on? Why wait for a review?
+
+415
+01:01:53,271 --> 01:01:56,811
+They're kind of did this already.
+
+416
+01:02:01,821 --> 01:02:05,841
+Um. Let's do a firefox thing before instead of this.
+
+417
+01:02:05,841 --> 01:02:18,901
+Let's do a firefox thing. So let's pull the latest stuff down from Firefox.
+
+418
+01:02:18,921 --> 01:02:22,981
+This is also related to migration, but it's about migrating from other browsers.
+
+419
+01:02:23,001 --> 01:02:38,461
+Good old mercurial. Back with Mercurial. Let me pump up the font again.
+
+420
+01:02:39,061 --> 01:02:48,421
+Pump it up. Pump the jam. Pump it. I mean, a pull from Central.
+
+421
+01:02:50,901 --> 01:02:54,021
+I got a nice challenge from like one month stuck with only get cinnabar.
+
+422
+01:02:54,711 --> 01:03:00,711
+Heck no. Mercurial or bust. Uh, I mean, it's a tool I get used to get.
+
+423
+01:03:01,431 --> 01:03:10,491
+It's not my favorite, but I'll get used to it. Any projects that you get.
+
+424
+01:03:10,851 --> 01:03:20,071
+I'll figure it out. There are probably ways of doing what I want to do with like mutation, like the evolving stuff that I like from Mercurial.
+
+425
+01:03:20,211 --> 01:03:25,821
+I kind of take for granted. I'm sure there are ways of doing that with Kit.
+
+426
+01:03:26,391 --> 01:03:31,011
+It's just I might need some need to learn some new get fu.
+
+427
+01:03:33,101 --> 01:03:47,101
+Well, someone put in. Someone put in some helpful snippet on how to avoid adding stuff.
+
+428
+01:03:48,431 --> 01:03:53,631
+How to avoid staging stuff. Let's put that in here.
+
+429
+01:03:54,491 --> 01:04:04,681
+From Danny Cohen. How to stage all except a particular file.
+
+430
+01:04:08,271 --> 01:04:16,061
+With Get. Very interesting.
+
+431
+01:04:17,591 --> 01:04:28,091
+Okay. Um, what I want to do is rebase an old patch for adding the UI for importing payment methods.
+
+432
+01:04:29,261 --> 01:04:40,031
+So we've, we've just recently, just yesterday added you added the infrastructure for importing payment methods from Chrome based browsers.
+
+433
+01:04:42,281 --> 01:04:46,001
+And I want to add the UI to the new migration wizard.
+
+434
+01:04:49,611 --> 01:05:12,831
+So let's do that. And it's a bit annoying to test because the way that we currently do storage of credit card information on Mac OS,
+
+435
+01:05:15,231 --> 01:05:22,011
+we have to like re request the decryption keys for like every field which is so annoying
+
+436
+01:05:22,011 --> 01:05:28,040
+and but that's not the case for a an actual release bill but for nightly builds,
+
+437
+01:05:28,041 --> 01:05:33,351
+it's such a pain in the butt. And maybe there's a way of avoiding that, but I don't know what it is.
+
+438
+01:05:33,921 --> 01:05:38,411
+So you're going to see a lot of permission requests. Um.
+
+439
+01:05:50,151 --> 01:05:55,041
+So let's let's build this build with artifact build.
+
+440
+01:06:04,391 --> 01:06:18,821
+Wow. How's my poll request doing? Limiting past Snead to its running all the tests now.
+
+441
+01:06:31,511 --> 01:06:34,690
+Master Ways asks, Is it bad that I'm on vacation in Orlando,
+
+442
+01:06:34,691 --> 01:06:39,641
+but I'm still watching my work knowing I don't have any relapse headaches to deal with for the time being?
+
+443
+01:06:40,121 --> 01:06:43,601
+Yeah, master ways. I mean, like, if this is what you want to do on your holiday.
+
+444
+01:06:44,411 --> 01:06:53,141
+Who am I to say? Say, don't do it. But if you're in Orlando, it might be quite nice in Orlando, or it might be quite warm.
+
+445
+01:06:53,321 --> 01:06:58,781
+I would recommend, if you're going to watch me do it outside, maybe go to the I don't know if you're a beach person.
+
+446
+01:06:59,081 --> 01:07:02,501
+I don't know if you get burned easily, but maybe you can position yourself under an umbrella.
+
+447
+01:07:02,511 --> 01:07:08,131
+I presume if you went to Orlando in May, chances are you like, you know, being at the beach,
+
+448
+01:07:08,141 --> 01:07:16,271
+I guess I don't know anything about Orlando, but you're I will happily entertain you while you're on your vacation.
+
+449
+01:07:17,291 --> 01:07:20,531
+But you don't have to watch. You can always watch the recording.
+
+450
+01:07:20,801 --> 01:07:28,901
+And if you're going to do it, I recommend doing it outside, maybe, you know, finding a nice, shady area.
+
+451
+01:07:29,651 --> 01:07:38,321
+Hearing the waves roll in and listening to me ramble about how every time I use Web Park, part of me wants to die.
+
+452
+01:07:41,621 --> 01:07:45,610
+Yeah, but enjoy your time off.
+
+453
+01:07:45,611 --> 01:07:49,661
+Certainly from the Netherlands, you get burned very easily.
+
+454
+01:07:50,141 --> 01:07:55,421
+Yeah, I hear that. Oh, you're sitting on your balcony.
+
+455
+01:07:55,421 --> 01:08:02,201
+Well, that's good. I'm just glad you're relaxing. I hope you relax and hope you know, this is a message for everybody.
+
+456
+01:08:02,471 --> 01:08:11,831
+If you're watching this, you might be in the tech industry, I think. But this goes for any any any job.
+
+457
+01:08:12,161 --> 01:08:16,031
+But, you know, do take your time off. Get get some time off.
+
+458
+01:08:16,691 --> 01:08:22,691
+Go enjoy your life. There's more to life than work. If you have the means to take a few days off,
+
+459
+01:08:22,691 --> 01:08:30,911
+you've got the opportunity because like you'll come back more refreshed, you'll come back with maybe different ideas,
+
+460
+01:08:31,151 --> 01:08:39,911
+but also it's just it gives you the opportunity to enjoy your life a bit instead of like, you know, spending the majority of your days.
+
+461
+01:08:41,421 --> 01:08:47,021
+Doing some job to make some coin, like go do for something you love.
+
+462
+01:08:47,031 --> 01:08:51,021
+Now maybe this is something. Maybe writing software is something you truly love to do.
+
+463
+01:08:52,071 --> 01:08:54,770
+Like, I wonder how often time, how often?
+
+464
+01:08:54,771 --> 01:09:01,731
+Like someone who's a professional like cabinetmaker and who gets paid to do it on their day off if they're like, Now finally I get to make a cabinet.
+
+465
+01:09:01,761 --> 01:09:08,420
+Like, maybe that's that's the case for you. But if you have the opportunity to do something else for a little while,
+
+466
+01:09:08,421 --> 01:09:13,101
+just to sort of like take a break, get your head out of the machine and enjoy your life.
+
+467
+01:09:13,101 --> 01:09:22,671
+I say do it. Master ways rates watching like is the only somewhat work related thing of accepting my three week PTO or what an honor.
+
+468
+01:09:22,941 --> 01:09:29,901
+Thank you, masters for the distinct honor. Okay, so what do I want to look at here?
+
+469
+01:09:29,901 --> 01:09:33,341
+I want to show how we can, um.
+
+470
+01:09:36,601 --> 01:09:42,501
+Import credit card information now from other browsers payment methods.
+
+471
+01:09:44,161 --> 01:09:48,331
+Because we now have support for that and I want to like land the UI for it.
+
+472
+01:09:57,601 --> 01:10:07,680
+So for Chrome, yeah. Now we have payment methods that will be able to bring in and I'm pretty sure my testing chrome profile too.
+
+473
+01:10:07,681 --> 01:10:12,201
+They both have payment methods. Looks like it.
+
+474
+01:10:12,601 --> 01:10:16,981
+Chrome canary does not. Frivolity does not.
+
+475
+01:10:17,701 --> 01:10:23,461
+Edge doesn't. Opera doesn't and opera goes jacks doesn't.
+
+476
+01:10:23,461 --> 01:10:28,291
+But chrome person one and chrome awesome other user does.
+
+477
+01:10:28,891 --> 01:10:32,071
+Now what I'm going to do this. It's going to ask me for my password.
+
+478
+01:10:32,071 --> 01:10:35,551
+For my system password, I think because of encryption.
+
+479
+01:10:35,911 --> 01:10:39,991
+First of all, let's take a look at what's in my database right now for saved credit cards.
+
+480
+01:10:40,231 --> 01:10:47,521
+Nothing. It's all empty. And this is obviously testing profile.
+
+481
+01:10:47,531 --> 01:10:51,690
+So you're not going to see my for real credit card number. But here we go.
+
+482
+01:10:51,691 --> 01:11:00,031
+Let's import payment method from person one. Now, it's going to ask me for my credentials, for my system credentials.
+
+483
+01:11:01,981 --> 01:11:06,091
+First heard it and now wants them again.
+
+484
+01:11:06,091 --> 01:11:20,971
+We're up. But now normally it would only ask for this I think once, but because this is nightly and not um, uh, and for each field it wants it.
+
+485
+01:11:21,751 --> 01:11:27,360
+Yeah. One payment method because it's nightly, it doesn't persist.
+
+486
+01:11:27,361 --> 01:11:31,831
+I think the permission request and it asks every time that's like a mac OS thing.
+
+487
+01:11:32,371 --> 01:11:39,391
+But now if I go into credit card information, I should have, I've got my credit card imported, which is great.
+
+488
+01:11:40,351 --> 01:11:44,731
+So now I want to run the local tests.
+
+489
+01:11:51,121 --> 01:12:03,551
+We'll just run all the mock tests for now. See what it thinks.
+
+490
+01:12:14,881 --> 01:12:18,811
+Mass always writes. Trust me. I'm just here because I enjoy seeing it.
+
+491
+01:12:20,221 --> 01:12:26,911
+I'm enjoying having you here, Mr. Ways. And they write. Usually when I'm working, I'll have a joy of coding, recording, running in the background.
+
+492
+01:12:26,941 --> 01:12:30,031
+Oh, again. What an honor. What an honor.
+
+493
+01:12:31,261 --> 01:12:36,690
+Thank you. I'm happy to be a part of your workday, even if it's just me in the background.
+
+494
+01:12:36,691 --> 01:12:48,671
+Nattering, on and on and on and on. I don't know if those test pass will see.
+
+495
+01:12:52,341 --> 01:12:58,401
+So a test failed and it was browser do migration failed.
+
+496
+01:13:06,031 --> 01:13:10,511
+Okay. So we need to fix this up.
+
+497
+01:13:10,531 --> 01:13:15,481
+Should be showing the completed state and browser do migration.
+
+498
+01:13:17,351 --> 01:13:24,941
+Test successful migration to 44. But.
+
+499
+01:13:35,901 --> 01:13:42,481
+You should be showing completed state. All resource types.
+
+500
+01:13:44,281 --> 01:13:47,701
+Oh, so now it's choosing to import all of them. Okay.
+
+501
+01:13:50,141 --> 01:13:54,251
+I think I need to include the credit card one in here.
+
+502
+01:13:57,221 --> 01:14:12,541
+Payment methods. Usually it would be nice to do a live as an IRL episode.
+
+503
+01:14:13,831 --> 01:14:17,711
+Hmm. What? I'm not sure what that means.
+
+504
+01:14:17,731 --> 01:14:21,961
+I am I IRL right now, Danny Cohen. But I'm curious to know what you mean by that.
+
+505
+01:14:27,321 --> 01:14:47,121
+So that still failed. Um. She found the expected status during foreign ministry for.
+
+506
+01:14:48,691 --> 01:14:52,651
+Should be showing completed state. False equals true.
+
+507
+01:15:09,031 --> 01:15:14,101
+Do you migration? Should be showing completed state.
+
+508
+01:15:37,141 --> 01:15:41,641
+Which tests test do migration entering tests successful migrations.
+
+509
+01:15:46,808 --> 01:15:59,868
+Expected state can't expect to profile entourage. Certain quantities show.
+
+510
+01:16:01,548 --> 01:16:09,768
+That's from What's the stack? 245.
+
+511
+01:16:15,238 --> 01:16:24,178
+Select all resource type. My check just played resource types.
+
+512
+01:16:24,178 --> 01:16:29,148
+We're going to check them all. Don't wait for a test migration.
+
+513
+01:16:33,008 --> 01:16:49,718
+Why wouldn't they be done yet? So migration was done.
+
+514
+01:16:53,128 --> 01:16:57,088
+So then why wouldn't it be in the completed state?
+
+515
+01:17:07,008 --> 01:17:28,288
+Creation wizard parent. Update progress.
+
+516
+01:17:28,298 --> 01:17:31,658
+I'm just going to dump some stuff. Update progress.
+
+517
+01:17:35,298 --> 01:17:38,338
+Jason. The string of five progress? No.
+
+518
+01:17:43,678 --> 01:17:51,058
+Is it because of an import error for payment methods? Yeah, probably like that's almost certainly involved here because that's what I've added.
+
+519
+01:17:51,538 --> 01:17:57,087
+So but I'm not actually like using a real migrated from a real browser I'm using
+
+520
+01:17:57,088 --> 01:18:00,358
+like this test migrate or that doesn't actually access anything on the desk.
+
+521
+01:18:01,828 --> 01:18:06,748
+Update progress in progress false. Okay, that's fine.
+
+522
+01:18:08,328 --> 01:18:12,288
+Say, Okay, here we go. Update progress. Payment methods.
+
+523
+01:18:12,738 --> 01:18:19,248
+So in progress, it never. Oh, it's related to this exception.
+
+524
+01:18:20,328 --> 01:18:23,898
+Why not import data type cards pass to get imported count?
+
+525
+01:18:26,368 --> 01:18:30,288
+Migration Utils. Cards.
+
+526
+01:18:35,458 --> 01:18:41,248
+Import quantities has on property type except cards.
+
+527
+01:18:44,968 --> 01:19:04,998
+Does exist. What in the world?
+
+528
+01:19:21,268 --> 01:19:30,778
+See what's going on here with the debugger. Anyone here speak German and get my joke?
+
+529
+01:19:30,928 --> 01:19:34,018
+It's like a poem, they said. Oh, I am feeling donk.
+
+530
+01:19:35,038 --> 01:19:44,788
+I think that's a pun. I don't speak German, but I know enough about my time in Germany that I know that that is like a phrase.
+
+531
+01:19:45,088 --> 01:19:49,228
+Type cards. It's import quantities. So.
+
+532
+01:19:49,248 --> 01:19:52,467
+Oh. Oh. Oh. Right.
+
+533
+01:19:52,468 --> 01:19:55,888
+Right. Right. Right. Right. I know why. I know why.
+
+534
+01:19:58,678 --> 01:20:06,028
+I know why. Because the fake one that we write in here because of silly reasons, doesn't have cards.
+
+535
+01:20:09,868 --> 01:20:14,088
+Import quantities. That's what I'm looking for. Yeah.
+
+536
+01:20:15,078 --> 01:20:19,038
+Cards. Expected quantity. There we go.
+
+537
+01:20:19,938 --> 01:20:24,948
+Let's try that now. Dunk, I believe is.
+
+538
+01:20:24,948 --> 01:20:28,878
+Thanks. Yeah. What is villain dunk? Main villain dunk.
+
+539
+01:20:30,198 --> 01:20:38,718
+Thanks very much. I. Yeah. I think it's because I was saying thank you while I was in Berlin and someone was like, feeling down.
+
+540
+01:20:38,728 --> 01:20:43,278
+Feeling down. I'm like, yeah, I am feeling dark. I'm feeling very dark.
+
+541
+01:20:47,358 --> 01:20:57,678
+I think that's a funny joke. I don't know. If you speak German in your laughing, I crushed it.
+
+542
+01:20:59,088 --> 01:21:05,988
+If you're if you speak German and you're rolling your eyes or groaning or like you exhaled through your nose, I still count that as a win.
+
+543
+01:21:26,858 --> 01:21:33,198
+Okay. Looking good.
+
+544
+01:21:33,208 --> 01:21:37,528
+So we're going to revert that change. We figured out what with the wrong what was wrong there.
+
+545
+01:21:48,048 --> 01:22:00,258
+And let's run storybook. Long story.
+
+546
+01:22:00,528 --> 01:22:06,198
+So we can take a look at the UI master ways, smirked Danny.
+
+547
+01:22:06,198 --> 01:22:10,007
+Cool and gave me the Capitol XD face. I think these are good.
+
+548
+01:22:10,008 --> 01:22:13,428
+These are good signs. I might take that joke on the road.
+
+549
+01:22:17,118 --> 01:22:22,158
+I'm just going to go up in front of a crowd and be like, Hey everyone, how's everyone feeling?
+
+550
+01:22:22,548 --> 01:22:28,458
+And then they're going to go like, Oh, very good. I'll go, I am villain dunk, and then I'm just going to walk off stage.
+
+551
+01:22:31,738 --> 01:22:36,148
+Oh. Is storybook already running somehow. 5703.
+
+552
+01:22:38,998 --> 01:22:41,728
+We've got so many terminals open. Storybrooke is probably running.
+
+553
+01:22:49,448 --> 01:22:59,198
+I'm running like the entire yeah, I'm running the entire like FSA ecosystem in Docker in the background and Sumo.
+
+554
+01:22:59,198 --> 01:23:07,328
+So I've got all my ports are getting eaten up. Payment methods that looks right.
+
+555
+01:23:08,078 --> 01:23:12,008
+Success payment methods. You know.
+
+556
+01:23:16,808 --> 01:23:20,858
+All right, let's let's get this up for review.
+
+557
+01:23:25,798 --> 01:23:33,068
+Um. Credit card or.
+
+558
+01:23:46,848 --> 01:23:54,498
+Such and such cracker add payment method migration experience.
+
+559
+01:23:56,328 --> 01:24:03,138
+Well, that's Kathryn for review. Actually, I haven't asked Nicholas for review in a while.
+
+560
+01:24:12,262 --> 01:24:21,432
+All right. Let's get this up for review and see what happens. And I think I'm going to call the stream there.
+
+561
+01:24:21,702 --> 01:24:27,012
+Hey, thank you so much for watching. Episode 325 of The Joy of Coding.
+
+562
+01:24:28,272 --> 01:24:31,422
+I hope that was interesting. If you're on vacation, thanks for watching.
+
+563
+01:24:31,992 --> 01:24:36,642
+What should I do for episode 350?
+
+564
+01:24:36,672 --> 01:24:40,282
+That's coming up. In 25 episodes. Someone was like, Do an IRL episode.
+
+565
+01:24:40,302 --> 01:24:44,852
+I don't know what that means. In person.
+
+566
+01:24:45,722 --> 01:24:52,572
+Do it in person. I mean, I am in person, but do you mean, like, do it at an all hands with a bunch of people around?
+
+567
+01:24:52,592 --> 01:24:56,252
+Yeah, maybe. Maybe it's worth thinking about or thinking about.
+
+568
+01:24:57,592 --> 01:25:01,972
+Um. Yeah. Let me know what you thought. There's a link to rate this episode in the agenda.
+
+569
+01:25:01,982 --> 01:25:07,171
+Send in your, you know, any. Any. You know, I don't know what you might want to send in.
+
+570
+01:25:07,172 --> 01:25:09,762
+Let me know what you thought. There's, like, a form you can fill out and say, like, now.
+
+571
+01:25:09,782 --> 01:25:14,702
+I thought this episode was fine, middle of the road, or I thought was great, or it was not good at all.
+
+572
+01:25:14,702 --> 01:25:17,462
+And here's what I want you to do instead. And here are some questions.
+
+573
+01:25:17,462 --> 01:25:22,082
+If you have questions, you can send them in using this form, and I'll do my best to try and answer them on stream.
+
+574
+01:25:22,922 --> 01:25:26,882
+So go ahead, send those in. And with that, I'm going to call it here.
+
+575
+01:25:27,242 --> 01:25:31,832
+Thank you so much again for watching. Episode 325 of The Joy of Coding.
+
+576
+01:25:32,732 --> 01:25:37,862
+Take care, everybody. Bye bye. The joy.
+
+577
+01:25:38,822 --> 01:25:41,492
+Oh, they see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,2841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 307 - November 16, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 307 - November 16, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f769626e-8437-4589-859d-af4e01251f2b</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f769626e-8437-4589-859d-af4e01251f2b">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,530 --> 00:00:10,090
+Welcome. Through the joy of color coding.
+
+2
+00:00:10,510 --> 00:00:15,550
+Hello and welcome to Episode 307 of The Joy of Coding.
+
+3
+00:00:15,580 --> 00:00:21,170
+My name is Mike Conley. It's so good to have you here. We're going to be hacking on some Firefox stuff today.
+
+4
+00:00:21,220 --> 00:00:24,550
+If you've never if you've never seen the stream before.
+
+5
+00:00:24,800 --> 00:00:31,120
+If you're new, maybe it's because you are a new follower on Mastodon and you've never seen the stream before.
+
+6
+00:00:31,150 --> 00:00:34,210
+Welcome. Welcome. I hope. I hope it delivers what you're looking for.
+
+7
+00:00:34,960 --> 00:00:38,660
+Let's let's start by sharing my screen and taking a quick look at the agenda.
+
+8
+00:00:38,680 --> 00:00:42,130
+So today is November 16th, 2022.
+
+9
+00:00:42,220 --> 00:00:45,340
+It's episode 307. Wow. Words.
+
+10
+00:00:45,340 --> 00:00:50,360
+I'm having some words difficulties today, but I'm we're just going to try and push through it.
+
+11
+00:00:50,380 --> 00:00:53,740
+Episode 307 A reminder No plan survives breakfast.
+
+12
+00:00:53,740 --> 00:00:57,430
+I think I know what I want to do today. I'm going to be working on some unified extension stuff.
+
+13
+00:00:57,430 --> 00:01:02,589
+I'll explain what that is in just a second. But, you know, I haven't really done any pre-planning.
+
+14
+00:01:02,590 --> 00:01:06,490
+This is live hacking. So stuff could go wrong, could go sideways, the stream could fall over.
+
+15
+00:01:06,700 --> 00:01:10,030
+I might hit a roadblock. Who knows? None of this is pre-prepared. Really?
+
+16
+00:01:10,240 --> 00:01:14,500
+So, you know, you're just going to Sidecar with me while I work through it.
+
+17
+00:01:15,400 --> 00:01:18,789
+That's the first thing. The second thing is that the agenda that we're looking at is available for you.
+
+18
+00:01:18,790 --> 00:01:21,490
+If you're watching this on YouTube, check out the video description.
+
+19
+00:01:21,700 --> 00:01:28,180
+If you're watching this on air, Mozilla, it's in the links details section on the left side that's over there.
+
+20
+00:01:28,420 --> 00:01:32,199
+If you're watching this on dietary zone, it's in the video description.
+
+21
+00:01:32,200 --> 00:01:37,750
+If you're watching this on, where else am I? There's one more place twitch.
+
+22
+00:01:37,750 --> 00:01:46,269
+Yeah, scroll down and twitch. There's a link in the channel description to the agenda and there's also a link in the agenda to the episode guide.
+
+23
+00:01:46,270 --> 00:01:50,890
+The episode guide is a completely viewer driven, viewer guided resource for you.
+
+24
+00:01:50,890 --> 00:01:55,060
+If you wanted to know what happened in a previous episode, you can check that out.
+
+25
+00:01:55,060 --> 00:02:01,870
+And if you yourself want to add your own notes, agenda corrections, you know, expand upon something I wrote or talked about.
+
+26
+00:02:02,470 --> 00:02:07,510
+Send a pull request to the repository. And if you're not sure how to do that or what that means, just follow the links here in the agenda.
+
+27
+00:02:08,320 --> 00:02:12,729
+All right. Let's get started. First of all, I just wanted to double check.
+
+28
+00:02:12,730 --> 00:02:19,599
+Is the is the twitch chat working? I know that there was some issues a couple of weeks ago.
+
+29
+00:02:19,600 --> 00:02:24,640
+I actually should check to see whether or not the bridge is working to Matrix.
+
+30
+00:02:24,640 --> 00:02:32,260
+Let me just load up the the chat here. Can, would you would someone mind saying something, maybe says someone.
+
+31
+00:02:33,340 --> 00:02:39,099
+That's a no. The bridge is is down. So let me quickly restart the bridge so I can see the twitch chat in Matrix.
+
+32
+00:02:39,100 --> 00:02:42,640
+So just give me one second. I apologize.
+
+33
+00:02:42,640 --> 00:02:46,870
+I probably should have done that test before, but it didn't.
+
+34
+00:02:47,980 --> 00:02:53,049
+So we're going to do that real quick. Just now. This is one of those things that, you know, if it you know,
+
+35
+00:02:53,050 --> 00:02:59,740
+not planning has it's taken its toll but you're going to watch the watch me take care of business.
+
+36
+00:02:59,740 --> 00:03:10,389
+So hold on a second. Let me just restart the bridge one moment to to to to to shut off the bridge for folks who are curious about the bridge,
+
+37
+00:03:10,390 --> 00:03:15,820
+I'm using something called Matter, Bridge to Bridge, Twitch and Matrix.
+
+38
+00:03:16,510 --> 00:03:19,539
+So there we go. I've restarted the bridge.
+
+39
+00:03:19,540 --> 00:03:23,530
+And now let's try saying something in matrix tests. Test. One, two, three.
+
+40
+00:03:24,100 --> 00:03:27,370
+Let's see if that shows up in here. Hey, there we go.
+
+41
+00:03:27,370 --> 00:03:32,680
+And I see some chat from Chak 55 and Tim's then John with the bridge test.
+
+42
+00:03:32,680 --> 00:03:35,710
+Thank you so much everybody for helping me figure that out. We did it.
+
+43
+00:03:36,760 --> 00:03:43,449
+Nice try. JB's script. Forget about it. Let's get in here.
+
+44
+00:03:43,450 --> 00:03:47,470
+So, what am I working on today? Well, first of all, if you recall from last week,
+
+45
+00:03:47,470 --> 00:03:55,750
+what we were doing is like this long tale of trying to fix up a bunch of tests for a change that is occurring in our extension UI.
+
+46
+00:03:57,100 --> 00:04:05,440
+If you're not familiar with how Firefox currently, maybe maybe you're you're familiar with like the overflow panel in Firefox.
+
+47
+00:04:06,010 --> 00:04:06,249
+Well,
+
+48
+00:04:06,250 --> 00:04:15,760
+one of the things that we're trying to do in it starting in 109 is to make it so that browser extension buttons so things that are provided by Web
+
+49
+00:04:15,760 --> 00:04:24,819
+extensions can only live in toolbars like this one here or up here in the tab strip or down in the Bookmarks toolbar or in the special panel.
+
+50
+00:04:24,820 --> 00:04:30,370
+Just for add ons over here. And we're in the final stretches of that project right now.
+
+51
+00:04:30,640 --> 00:04:36,460
+Like I don't know if you notice that we have this capability where when things overflow, they go into this overflow panel.
+
+52
+00:04:37,450 --> 00:04:42,880
+And right now, we're we're it's quite bizarre, actually.
+
+53
+00:04:42,880 --> 00:04:47,050
+These should not be in here. Uh, these are in here.
+
+54
+00:04:47,050 --> 00:04:50,590
+And for some reason, some of them are showing up in here.
+
+55
+00:04:50,590 --> 00:04:54,400
+That's very interesting. That's a bug I'm going to want to look at later.
+
+56
+00:04:55,350 --> 00:05:03,130
+For some reason, these are showing up in here. And then but normally they should be showing up all over here.
+
+57
+00:05:03,880 --> 00:05:11,600
+Oh, it's because these are pinned. That's why. These are pinned. So right now, we we allow things to be moved into the overflow panel.
+
+58
+00:05:11,630 --> 00:05:18,130
+But as soon as we're done this work. Browser extension buttons will no longer be able to live here in this panel.
+
+59
+00:05:18,140 --> 00:05:21,980
+Instead, they can live in this panel or they can live in the toolbars.
+
+60
+00:05:22,010 --> 00:05:25,909
+That's the idea and the primary reason for that. There's a good reason for that.
+
+61
+00:05:25,910 --> 00:05:32,090
+We're not just applying restrictions for restrictions sake. The primary reason for that is one of the things with Manifest V3,
+
+62
+00:05:32,090 --> 00:05:36,769
+which is what we're working on support for all of this is in support of manifest V3 is the
+
+63
+00:05:36,770 --> 00:05:42,800
+fact that Web extensions do not get like carte blanche access to your the content anymore.
+
+64
+00:05:42,830 --> 00:05:47,570
+They used to they could request like permission to every to read the content of every website.
+
+65
+00:05:47,750 --> 00:05:54,560
+But as part of manifest V3, I believe they have to request permission like on a case by case basis.
+
+66
+00:05:54,740 --> 00:05:58,160
+And then we remember, if you like, granted permission for a particular site.
+
+67
+00:05:59,240 --> 00:06:07,430
+And so we need a place to anchor those permissions and we need to make it so that any time the Web extension wants to ask,
+
+68
+00:06:08,450 --> 00:06:15,680
+you know, it's it's in a place that the user can see. So it's either in a visible toolbar or worst case scenario, it's inside this panel.
+
+69
+00:06:16,190 --> 00:06:24,380
+So that's the idea. And the other thing that we're doing is we've added like these capabilities for pinning and unpin.
+
+70
+00:06:24,470 --> 00:06:28,520
+So now, you know, if, if an item here is in the toolbar,
+
+71
+00:06:28,730 --> 00:06:34,670
+you can like it's like the idea is it's pinned to the toolbar and it can be moved around to other toolbars.
+
+72
+00:06:34,670 --> 00:06:35,180
+That's fine.
+
+73
+00:06:35,630 --> 00:06:44,180
+But when you unpin it from a toolbar, then it gets moved over here into the extensions panel and then this can be pinned to the toolbar again.
+
+74
+00:06:44,540 --> 00:06:46,370
+That's something that recently got added.
+
+75
+00:06:47,030 --> 00:06:54,320
+This chunk that we're looking at right here is kind of the next step where whenever you create a web extension,
+
+76
+00:06:54,320 --> 00:07:01,940
+the browser actions default area is going to be actually this panel rather than the nav bar.
+
+77
+00:07:02,810 --> 00:07:08,570
+And we had a bunch of tests that were breaking because they all assumed that stuff was going to get inserted to the nav bar.
+
+78
+00:07:08,570 --> 00:07:09,680
+So it changed a bunch of stuff.
+
+79
+00:07:10,010 --> 00:07:17,839
+Update the test, got review, landed the patches and then to use some Mozilla terminology, I don't know if anyone else uses the term agile analogy,
+
+80
+00:07:17,840 --> 00:07:23,720
+but when I attempted to land the patches and then I got I bounced out, I got backed out because of test failures.
+
+81
+00:07:24,020 --> 00:07:27,790
+So we can actually take a look at the test failure comments in here.
+
+82
+00:07:27,800 --> 00:07:31,910
+So these parts have landed 1782203.
+
+83
+00:07:31,910 --> 00:07:39,010
+This part has landed. Let me put a link to the agenda. In the agenda to that bug in.
+
+84
+00:07:40,730 --> 00:07:46,970
+Copy summary. So that part has landed. If you refresh the agenda, you'll have the link now.
+
+85
+00:07:48,140 --> 00:07:53,699
+And. The part that hasn't landed is this part, which is the next step.
+
+86
+00:07:53,700 --> 00:08:00,930
+And then the last step in this whole process is doing the migration into the like
+
+87
+00:08:00,930 --> 00:08:04,980
+any items that were existing here are going to get migrated over into here.
+
+88
+00:08:05,160 --> 00:08:06,000
+That's the last step.
+
+89
+00:08:06,000 --> 00:08:11,820
+And then we put up the sort of the restrictions that prevent items from being moved back in here or into a customization palette.
+
+90
+00:08:13,320 --> 00:08:16,890
+Whoo! That's. That's what's going on. So this was accepted.
+
+91
+00:08:17,100 --> 00:08:22,140
+This has bounced. And I already solved some of the issues.
+
+92
+00:08:22,150 --> 00:08:30,879
+It turns out I missed a couple of tests that need to be updated. I, I missed excuse me, a test that was under toolkit component extensions.
+
+93
+00:08:30,880 --> 00:08:41,590
+So I've updated that one and I missed a test under DevTools because DevTools allows add ons to add items to the DevTools panel.
+
+94
+00:08:41,590 --> 00:08:48,549
+And as part of that, it expected to like or no expects to be able to debug Web extensions.
+
+95
+00:08:48,550 --> 00:08:53,199
+And this test was testing that and assumed that the browser action will add to the nav bar.
+
+96
+00:08:53,200 --> 00:08:57,670
+So I had to update that test. But there's one thing still remaining.
+
+97
+00:08:57,670 --> 00:09:05,079
+When I pushed to try last, there is this recurring failure inside of this test browser.
+
+98
+00:09:05,080 --> 00:09:10,030
+Unified extensions overflow a toolbar. It's saying that undefined equals true.
+
+99
+00:09:10,270 --> 00:09:16,000
+It's pretty consistent. Any time I triggered this test a couple of times and it's failing pretty consistently,
+
+100
+00:09:16,900 --> 00:09:21,279
+although the actual set of error messages is slightly different.
+
+101
+00:09:21,280 --> 00:09:25,630
+So there's something kind of flaky about this test that we need to debug.
+
+102
+00:09:25,630 --> 00:09:26,980
+And that's what I'm hoping to do today,
+
+103
+00:09:26,980 --> 00:09:34,599
+is I want to make this test a lot more rock solid so that I don't I've been burned by this test a number of times, and I'm responsible for this test.
+
+104
+00:09:34,600 --> 00:09:41,230
+I wrote this test. And so I'm sort of responsible for making sure it is a lot more solid and, you know,
+
+105
+00:09:41,230 --> 00:09:47,350
+takes people less time to have to deal with it, to update it and to have to deal with changes and stuff.
+
+106
+00:09:47,800 --> 00:09:55,180
+So that's what we're going to focus on today. Now, the first the first issue that to sort of realize is that whenever we run this test on its own,
+
+107
+00:09:55,480 --> 00:10:00,849
+on my machine anyways, I believe it just passes like I'm just going to run the test right now.
+
+108
+00:10:00,850 --> 00:10:08,740
+You can see what's going to go on. Hang on.
+
+109
+00:10:08,740 --> 00:10:12,399
+I just did a build so it's got to regenerate the testing back end.
+
+110
+00:10:12,400 --> 00:10:15,610
+So that's that will just take a second here.
+
+111
+00:10:15,760 --> 00:10:20,140
+I don't have to do that every time. Special shadow to Will Durant.
+
+112
+00:10:20,620 --> 00:10:24,460
+I don't know if I'm pronouncing that Will I see that you're in the chat special shout
+
+113
+00:10:24,460 --> 00:10:28,930
+out for all the work you've been doing and all the reviews really appreciate it.
+
+114
+00:10:28,930 --> 00:10:35,139
+Will is the one who's been, you know, one of several people have been working with me on these.
+
+115
+00:10:35,140 --> 00:10:38,529
+This is like one of the lead developers on the on the this whole project.
+
+116
+00:10:38,530 --> 00:10:39,790
+I'm just kind of helping out.
+
+117
+00:10:40,150 --> 00:10:48,430
+And he's the one who wrote this mailing list post that if you want details like more details on what's going on, you can read this mailing list post.
+
+118
+00:10:48,670 --> 00:10:55,749
+And he just sent a new message today kind of detailing, detailing what's going on and where we're going with it.
+
+119
+00:10:55,750 --> 00:10:59,380
+So check that out. That's that's you know, if you're curious.
+
+120
+00:11:00,430 --> 00:11:05,290
+So what's going on here? This test is passing locally. It's failing remotely.
+
+121
+00:11:05,590 --> 00:11:11,469
+And let's let's take a look. So what I like to do whenever I'm debugging a test like this is I'm going to
+
+122
+00:11:11,470 --> 00:11:14,680
+start by looking at the log and I'm also going to try and pull up a screenshot.
+
+123
+00:11:15,610 --> 00:11:23,050
+So whenever a test failure occurs in this type of test, a screenshot is captured and it's it's not immediately obvious,
+
+124
+00:11:23,050 --> 00:11:27,699
+but it's under the artifacts that get created by the test run and it's right here, this pkg image.
+
+125
+00:11:27,700 --> 00:11:30,310
+So let's pull that up. We take a look at what's what's happening.
+
+126
+00:11:31,720 --> 00:11:37,930
+So the first thing that I mean, this is not unusual to have because there's no keyboard plugged into the test machine.
+
+127
+00:11:37,930 --> 00:11:43,990
+So it's like this this dialog is sometimes in the way that's annoying, but it's not the thing that I think we should be worried about.
+
+128
+00:11:44,290 --> 00:11:54,040
+This is a little more interesting. I'm noticing because I know for a fact that each of these extensions that have been
+
+129
+00:11:54,040 --> 00:11:59,260
+created is supposed to have created they're supposed to have created browser actions.
+
+130
+00:11:59,650 --> 00:12:06,549
+That's this kind of button you can tell like the icon is, is, is a slightly different shade.
+
+131
+00:12:06,550 --> 00:12:11,740
+It's less transparent than these. And this is a browser action right here.
+
+132
+00:12:11,740 --> 00:12:16,029
+There's only one and there's like some redundancy here, too.
+
+133
+00:12:16,030 --> 00:12:22,630
+Like, this is not the same thing as this. This is the button, the toolbar button, having been collapsed into the panel.
+
+134
+00:12:22,930 --> 00:12:28,420
+And this is like the controls for the individual Web extensions with whether or not they have a browser action.
+
+135
+00:12:29,410 --> 00:12:31,180
+And if you heard me talking last week,
+
+136
+00:12:31,450 --> 00:12:39,160
+we're going to be reducing some of the redundancy there where if there's an item in here that belongs to a particular browser extension,
+
+137
+00:12:39,360 --> 00:12:44,140
+a Web extension, we won't show the other one. Like there will only ever be one in the panel.
+
+138
+00:12:46,060 --> 00:12:55,119
+Wait. If the if the web extension has a visible browser action somewhere, we won't show an item for it in the panel.
+
+139
+00:12:55,120 --> 00:12:58,390
+I think that's the rule, but I'm not working on that part.
+
+140
+00:12:59,200 --> 00:13:05,980
+Okay, so there's only one showing up in here. And so that's immediately suspicious because I know there's supposed to be one for each of these.
+
+141
+00:13:06,940 --> 00:13:11,950
+And let's take a look at the log. There can only be ones as Danny Cole and special shout out.
+
+142
+00:13:12,370 --> 00:13:16,570
+Let's do shout out. Special shout out to I want to say homelander.
+
+143
+00:13:16,570 --> 00:13:20,700
+That's all right. Special shout. To Highlander.
+
+144
+00:13:20,960 --> 00:13:23,970
+I think that's what it's called. That's the show Highlander, not Homelander.
+
+145
+00:13:25,360 --> 00:13:31,180
+Oh, okay. So let's go through this test.
+
+146
+00:13:31,900 --> 00:13:35,470
+So there's this test sub test within the test.
+
+147
+00:13:35,530 --> 00:13:39,040
+Let's open up test two, actually called test context menu.
+
+148
+00:13:40,330 --> 00:13:46,770
+That's the one that's failing. Test context menu.
+
+149
+00:13:49,020 --> 00:14:03,870
+And what it does is it creates a window with the unified extensions UI enabled and then it uses this helper with window overflowed and you know that
+
+150
+00:14:03,900 --> 00:14:11,340
+does a lot of the work basically this helper function which I'm going to guess is where the problem is actually this helper function does a lot.
+
+151
+00:14:11,340 --> 00:14:14,940
+One of the things it does is it creates a bunch of Web extensions by default.
+
+152
+00:14:15,420 --> 00:14:19,799
+Like it just it creates them with browser actions and then it puts them on the toolbar,
+
+153
+00:14:19,800 --> 00:14:22,920
+the nav bar, and then it shrinks the window so that they overflow.
+
+154
+00:14:23,070 --> 00:14:30,330
+And then it runs this task in here. And so it's like, Hey, you should have some items in the unified extension list.
+
+155
+00:14:31,020 --> 00:14:36,960
+Yeah, Homelander is in the boys. Yeah, that's right. Highlander is different than Homelander 100%.
+
+156
+00:14:37,470 --> 00:14:41,459
+And then after after making sure that there's some stuff in the list,
+
+157
+00:14:41,460 --> 00:14:48,390
+it opens the panel and it makes sure that like the the context menus and the cog menu work properly inside there.
+
+158
+00:14:48,630 --> 00:14:49,770
+And that all makes sense.
+
+159
+00:14:50,010 --> 00:15:00,750
+What this is falling over in is somewhere within here around line 670, right here where it's trying to get another extension widget.
+
+160
+00:15:00,990 --> 00:15:10,709
+And that's why I mean, we're failing because it's finding this and it's supposed to be finding the the browser action, not this thing.
+
+161
+00:15:10,710 --> 00:15:13,800
+The sort of the unified extension item is what we're calling them.
+
+162
+00:15:15,000 --> 00:15:22,769
+And so something inside of with window overflowed is not waiting long enough basically for
+
+163
+00:15:22,770 --> 00:15:28,440
+the items in the toolbar to either be created or to get moved over to the extensions panel.
+
+164
+00:15:29,190 --> 00:15:33,850
+That's what I think is going on. So let's take a quick look at with a window overflowed.
+
+165
+00:15:33,870 --> 00:15:37,440
+Walk through it, see what's going on. Okay.
+
+166
+00:15:37,590 --> 00:15:43,590
+It does most of the heavy lifting. It registers and enables num extensions that add browser action buttons to the nav bar resizes them.
+
+167
+00:15:43,590 --> 00:15:46,669
+And of course things after the URL bar into the overflow.
+
+168
+00:15:46,670 --> 00:15:49,410
+It calls an async test function, analyze the overflow lists,
+
+169
+00:15:49,740 --> 00:15:53,910
+restores the window with the original width, and then unloads all the test web extensions.
+
+170
+00:15:53,910 --> 00:15:59,939
+So we know that all of the test Web extensions have been created zero one, two, three and four.
+
+171
+00:15:59,940 --> 00:16:03,630
+We only create how many do we create? We create five by default here.
+
+172
+00:16:03,960 --> 00:16:10,890
+We know they've all been created because here they are. So we must have gotten past this point.
+
+173
+00:16:12,480 --> 00:16:21,530
+We also know that we did create the browser actions because we have a listener like that.
+
+174
+00:16:21,540 --> 00:16:22,650
+We created the widgets,
+
+175
+00:16:22,650 --> 00:16:31,019
+the things that that could added to the toolbar because we got the special listener that's waiting for the buttons to be added.
+
+176
+00:16:31,020 --> 00:16:34,940
+And that's because creating Web extensions is an asynchronous operation.
+
+177
+00:16:34,950 --> 00:16:40,210
+It does some stuff off of the main thread in a different process and like eventually a button gets put in.
+
+178
+00:16:40,210 --> 00:16:46,050
+And so we have to wait for that. We will. Darren is pointing out that, yeah, the first two extensions are kind of special.
+
+179
+00:16:46,050 --> 00:16:50,880
+The first one, it makes sure that it has a context menu.
+
+180
+00:16:51,540 --> 00:16:58,529
+That's part of the context menu test that we were just looking at. So it especially prepares one to have a context menu item and then the second
+
+181
+00:16:58,530 --> 00:17:04,050
+one has a context menu with a sub menu and they're specially prepared to,
+
+182
+00:17:04,080 --> 00:17:16,500
+you know, to, to do certain things whenever those menus are created and presumably when they're clicked background create send,
+
+183
+00:17:16,500 --> 00:17:21,540
+message, menu created when it's created. Okay. Okay.
+
+184
+00:17:22,590 --> 00:17:30,120
+So we get past this part. We get past waiting for the menus to be created.
+
+185
+00:17:31,650 --> 00:17:35,010
+We're done listening and then we resize the window.
+
+186
+00:17:35,700 --> 00:17:44,700
+And then I added this sort of like really hacky thing where we basically we wait, we pull the nav bar to say, Hey, are you overflowing?
+
+187
+00:17:45,150 --> 00:17:54,300
+And then I use this thing called signpost widget ID. Signpost Widget ID is the very first item in the toolbar.
+
+188
+00:17:54,420 --> 00:17:58,860
+It should be anyways, the very first item in the toolbar because I set it up that way.
+
+189
+00:18:05,040 --> 00:18:08,390
+It should be the default, which it adds.
+
+190
+00:18:08,730 --> 00:18:12,870
+So I remove everything else out of that is removable out of the nav bar.
+
+191
+00:18:13,440 --> 00:18:20,340
+And then I put in the home button, the library button, the zoom controls search container in the sidebar button in here.
+
+192
+00:18:20,340 --> 00:18:23,640
+And then I also make the home button just a little bit wider,
+
+193
+00:18:24,060 --> 00:18:30,600
+like I do this hack to like force the signpost widget to be extra wide to make sure that it overflows.
+
+194
+00:18:34,110 --> 00:18:40,200
+And my suspicion is that even though the signpost widget is overflowed.
+
+195
+00:18:47,490 --> 00:18:51,810
+And then we checked to make sure that the first extension ideas overflowed.
+
+196
+00:18:56,160 --> 00:19:04,320
+Let's take a look at the overflow toolbar code again, because there's some a synchronicity here that I think we're getting burned by.
+
+197
+00:19:06,780 --> 00:19:11,970
+So whenever the overflow occurs, what do we do?
+
+198
+00:19:12,720 --> 00:19:26,250
+We get over, so we get some overflow info and then we work our way from the rightmost part of the, of the, of the overflow toolbar.
+
+199
+00:19:31,170 --> 00:19:37,000
+We set overflowed item on it. We fire on widget overflow.
+
+200
+00:19:37,020 --> 00:19:48,150
+That might be something we might want to wait for. And then we, if it's from the web, is a Web extension child.
+
+201
+00:20:09,730 --> 00:20:15,450
+Bar. Okay.
+
+202
+00:20:17,970 --> 00:20:21,000
+Sorry. I should be thinking out loud here. I'm not thinking out loud.
+
+203
+00:20:21,810 --> 00:20:33,850
+So. It is. There is like this asynchronous action going on here on overflow where we like we get the info
+
+204
+00:20:35,080 --> 00:20:44,859
+and then we just start moving items back until we figure out when we are no longer overflowing.
+
+205
+00:20:44,860 --> 00:20:48,390
+Like we, like we check to see if we're overflowing still.
+
+206
+00:20:49,330 --> 00:21:10,180
+And if not, then we, we bail out. You know, a thing has just occurred to me.
+
+207
+00:21:15,260 --> 00:21:23,680
+Is it possible? Check overflow.
+
+208
+00:21:32,160 --> 00:21:35,850
+Just awful I don't check overflow calls that.
+
+209
+00:21:42,080 --> 00:21:45,980
+On resources on widget after time change.
+
+210
+00:21:47,890 --> 00:21:58,730
+What is the thing that handles overflow? Something just occurred to me which basically which is like, oh, do we just.
+
+211
+00:21:58,940 --> 00:22:02,120
+Do we not use the overflow event?
+
+212
+00:22:03,950 --> 00:22:22,880
+We use the resize event. And this is the only place where we do on overflow.
+
+213
+00:22:28,540 --> 00:22:32,080
+This function is often recalled, even when a prior call hasn't yet resolved that situation.
+
+214
+00:22:32,110 --> 00:22:38,590
+The older calls resolve early without doing any work and leave any data manipulation to the most recent call.
+
+215
+00:22:40,570 --> 00:22:44,320
+That's true. Check.
+
+216
+00:22:44,320 --> 00:22:58,150
+Overflow. Handle. Here's what I'm thinking.
+
+217
+00:22:59,320 --> 00:23:03,309
+So check overflow will be fired on resize events.
+
+218
+00:23:03,310 --> 00:23:07,209
+Resize events are like. Like the comment says they will be fired in bursts.
+
+219
+00:23:07,210 --> 00:23:17,800
+You get a whole bunch of them. And when you've got stuff like that and you've got a synchronicity, things can go out of order,
+
+220
+00:23:19,720 --> 00:23:26,650
+especially if you're having to deal with like layout this get overflow info thing for example involves yeah.
+
+221
+00:23:26,650 --> 00:23:31,120
+Waiting for the styles to get, waiting for the document layout basically to run.
+
+222
+00:23:34,320 --> 00:23:44,520
+And so one of the things I'm wondering is, is it possible that a burst of resize events come in because we resize the window?
+
+223
+00:23:51,580 --> 00:23:59,159
+And then. We're already doing one.
+
+224
+00:23:59,160 --> 00:24:08,470
+We're already doing one of these. Like we're already in the midst of calling on overflow.
+
+225
+00:24:11,550 --> 00:24:14,760
+Let's. Let's think this through for a second here. Where's on overflow?
+
+226
+00:24:14,790 --> 00:24:18,650
+Here, let me open up two columns.
+
+227
+00:24:22,240 --> 00:24:25,570
+Can I get, uh, clothes? Others.
+
+228
+00:24:26,860 --> 00:24:31,380
+Don't save, don't save. Get rid of all this stuff. Don't care.
+
+229
+00:24:31,390 --> 00:24:36,450
+Don't care. Don't care. Uh.
+
+230
+00:24:37,220 --> 00:24:40,400
+Um, what? What am I trying to do here?
+
+231
+00:24:40,430 --> 00:24:47,360
+Clothes unmodified? Sure. And what I want is a customizable UI.
+
+232
+00:24:48,420 --> 00:24:57,450
+Here. And then another customizable UI over here and I want to look at on overflow.
+
+233
+00:24:58,660 --> 00:25:09,650
+And check for overflow. Because part of me wonders whether or not we're dealing with reentry.
+
+234
+00:25:09,660 --> 00:25:14,210
+And see, that's this class of problem of we are reentering a function.
+
+235
+00:25:18,480 --> 00:25:23,939
+Okay. So in my brain, we're going to walk like let's walk through this.
+
+236
+00:25:23,940 --> 00:25:30,990
+Let's say a burst of resize events have come in, let's say three resize events all very quickly, one after the other.
+
+237
+00:25:31,320 --> 00:25:34,500
+The first one comes in and we run this async function.
+
+238
+00:25:34,500 --> 00:25:38,820
+We create a new overflow handle and.
+
+239
+00:25:42,700 --> 00:25:46,100
+Let's say we get past that.
+
+240
+00:25:46,180 --> 00:25:55,209
+We get past this one on the first one. Maybe because the right.
+
+241
+00:25:55,210 --> 00:26:05,010
+Because the event. Let's say the event, the second event, the second resize event hasn't been called.
+
+242
+00:26:05,040 --> 00:26:08,700
+By the time we get here yet. So we skip over this.
+
+243
+00:26:10,830 --> 00:26:28,500
+And then we await on overflow. So we enter here. And then we get the overflow info again and we're going to keep doing that.
+
+244
+00:26:28,680 --> 00:26:32,160
+Like for each child, we will keep we'll wait a couple of places.
+
+245
+00:26:33,990 --> 00:26:37,260
+And while we're doing that, what if another resize event comes in?
+
+246
+00:26:39,090 --> 00:26:44,160
+And if that happens, we would overwrite this?
+
+247
+00:26:46,590 --> 00:26:59,350
+And maybe reenter this. In which case like we might have to on overflows running at the same time.
+
+248
+00:27:06,820 --> 00:27:17,460
+That's what I'm wondering. And that I mean, I don't know why this is so fragile in automation, but if this is actually what's happening,
+
+249
+00:27:17,850 --> 00:27:23,430
+I wonder if I could like sort of like make it happen using verify headless.
+
+250
+00:27:26,910 --> 00:27:38,880
+So that verify will like try a bunch of different ways of of running the test to try and like force it to fail by stressing the test a lot.
+
+251
+00:27:39,810 --> 00:27:42,420
+And one of those is with using something called chaos mode,
+
+252
+00:27:43,050 --> 00:27:50,849
+which randomly reed prioritizes threads and like reorders the contents of memory where things are
+
+253
+00:27:50,850 --> 00:27:59,820
+supposed to be unsorted collections to try and like surface non deterministic behavior within our tests.
+
+254
+00:28:00,600 --> 00:28:05,760
+And so let's see if we can sort that out that way.
+
+255
+00:28:12,030 --> 00:28:16,200
+On overflow. So here's another.
+
+256
+00:28:18,600 --> 00:28:22,800
+If we enter here, window closed or.
+
+257
+00:28:27,820 --> 00:28:50,090
+We already kind of do that check here. I wonder if we should move this actually to within this wild loop.
+
+258
+00:28:55,020 --> 00:28:58,990
+Oh, no, we do. We do. Stop at the windows closed.
+
+259
+00:28:59,020 --> 00:29:02,600
+We. Okay.
+
+260
+00:29:03,320 --> 00:29:14,330
+Okay. So my theory seems to be, you know, it looks like this was already thought of where we will bail out here in the event that, um.
+
+261
+00:29:19,070 --> 00:29:25,820
+In the event that another overflow has occurred. Okay.
+
+262
+00:29:26,750 --> 00:29:30,800
+That that theory is now out the door.
+
+263
+00:29:36,090 --> 00:29:41,280
+So what would explain why the button?
+
+264
+00:29:44,410 --> 00:29:52,230
+But there's only one in here. Did the other ones somehow manage to get into here?
+
+265
+00:29:52,500 --> 00:29:56,790
+And why is this patch the one that does it? That's the other question.
+
+266
+00:29:57,600 --> 00:30:02,730
+Why is it that this is only becoming a problem with these two?
+
+267
+00:30:07,010 --> 00:30:15,380
+Um. Did I, for example, change?
+
+268
+00:30:17,640 --> 00:30:22,440
+This test. I did. What is the change I made?
+
+269
+00:30:22,470 --> 00:30:29,280
+Well, just the defaults. Just the defaults. And this helper.
+
+270
+00:30:38,150 --> 00:30:42,960
+And. There.
+
+271
+00:30:47,190 --> 00:30:55,740
+Um, if I had extensions or a tool or we don't use that, at least not directly.
+
+272
+00:31:20,910 --> 00:31:34,229
+Hmm. Maybe we should actually be testing that.
+
+273
+00:31:34,230 --> 00:31:38,580
+All of the items have the all of the.
+
+274
+00:31:44,550 --> 00:31:50,850
+Query selector dot ext i.d. zero float item equals true.
+
+275
+00:32:02,890 --> 00:32:05,890
+Okay. All right.
+
+276
+00:32:06,010 --> 00:32:07,930
+Equals true. Here. I'm going to change this.
+
+277
+00:32:08,140 --> 00:32:18,700
+I'm going to change this a little bit because we do get a an event fired through the customizable UI mechanism.
+
+278
+00:32:19,630 --> 00:32:25,850
+We're going to create a new kind of listener. And call an overflow listener.
+
+279
+00:32:27,110 --> 00:32:32,570
+Widget Overflow listener, but overflow listener equal.
+
+280
+00:32:34,070 --> 00:32:41,010
+And we're going to define we're going to use some of this same logic here.
+
+281
+00:32:41,030 --> 00:32:44,780
+This is a little bit of repetition, but that's all right.
+
+282
+00:32:46,220 --> 00:32:50,660
+And the thing we want to wait for is this on widget overflow.
+
+283
+00:32:54,730 --> 00:33:01,810
+Uh, on widget overflow. And what do you get past the child?
+
+284
+00:33:04,340 --> 00:33:09,950
+And the target, the target being our customization target.
+
+285
+00:33:10,700 --> 00:33:17,660
+So the actual element. Okay. So on widget overflow area node.
+
+286
+00:33:23,810 --> 00:33:27,260
+And so it's not the ID, it's the actual widget.
+
+287
+00:33:29,220 --> 00:33:42,270
+Node that overflows. So can we say if widget no dot ID ends with browser action, then we'll decrement that.
+
+288
+00:33:47,120 --> 00:33:50,150
+And then let's get rid of that.
+
+289
+00:33:53,870 --> 00:33:59,510
+We might not even need the signpost widget at that point. Oh, no, because we do want to wait until.
+
+290
+00:34:05,340 --> 00:34:15,850
+All of the default items also overflow. Wichita Falls.
+
+291
+00:34:18,530 --> 00:34:27,410
+But we know how many of those there are two, three, four, five of ten items.
+
+292
+00:34:33,910 --> 00:34:44,110
+Name extensions. So widget overflow remaining overflow of bubbles equals num extensions plus default widget.
+
+293
+00:34:45,130 --> 00:34:56,590
+IDs. Like. Then if we decrement that, we would don't even need to check that.
+
+294
+00:34:56,620 --> 00:34:59,950
+We could just do that and like that. I like that.
+
+295
+00:35:00,250 --> 00:35:12,700
+And then that will resolve. And then we don't even need the signpost widget, uh, return if we know that.
+
+296
+00:35:16,780 --> 00:35:21,360
+This is fired. Multiple times than we know.
+
+297
+00:35:22,140 --> 00:35:28,190
+We can just get rid of this weight for condition altogether. Wait.
+
+298
+00:35:28,460 --> 00:35:31,700
+Widget Overflow. Listener Promise.
+
+299
+00:35:36,110 --> 00:35:41,750
+We're going to want to do that after the resize, which happens here.
+
+300
+00:35:41,750 --> 00:35:46,260
+So we're actually going to want to set this up first. Um.
+
+301
+00:35:48,770 --> 00:36:01,390
+And add that here. Let's reorder this a little bit.
+
+302
+00:36:12,050 --> 00:36:15,860
+All right. So that all past the verify.
+
+303
+00:36:15,870 --> 00:36:18,950
+Let's try it now with our alterations. What's.
+
+304
+00:36:24,650 --> 00:36:33,890
+It's hard for me to think of why. That would have failed in the first place, though, in automation.
+
+305
+00:36:35,820 --> 00:36:38,870
+Okay, that passes. Let's run verify again.
+
+306
+00:36:43,170 --> 00:36:59,110
+And then we can push this up to try. And the last thing I want to do, like I'll commit that.
+
+307
+00:36:59,350 --> 00:37:06,070
+But also I want to add some logging just in case it turns out that we're wrong and this isn't helpful.
+
+308
+00:37:06,850 --> 00:37:12,130
+Let's add some logging. So what's the what's the logging mechanism here?
+
+309
+00:37:12,160 --> 00:37:15,549
+I'm going to add, quote, I don't think this is helpful anymore to have the second pain.
+
+310
+00:37:15,550 --> 00:37:19,810
+So we're going to remove that. We're going to go back to single log.
+
+311
+00:37:22,540 --> 00:37:27,100
+Oh, sorry. Long. Lazy log.
+
+312
+00:37:32,390 --> 00:37:43,830
+Law. Season console and lazy g debugging enabled k pref customization debug.
+
+313
+00:37:43,860 --> 00:37:53,360
+Okay. So if we set that to true. We can work with that.
+
+314
+00:37:56,360 --> 00:38:00,200
+Um, and the things I want to log.
+
+315
+00:38:04,360 --> 00:38:10,270
+Ah. Like, um, uh, an overflow.
+
+316
+00:38:12,820 --> 00:38:18,940
+Lazy toilet log dod debug on overflow.
+
+317
+00:38:30,720 --> 00:38:35,400
+Um. And then.
+
+318
+00:38:38,040 --> 00:38:41,640
+Firing on widget over flow.
+
+319
+00:38:43,970 --> 00:38:49,760
+For. I thought I'd.
+
+320
+00:38:52,480 --> 00:38:58,910
+And then. Inserting.
+
+321
+00:39:03,950 --> 00:39:07,510
+Child into Web extension overflow list.
+
+322
+00:39:15,020 --> 00:39:18,080
+Herding child into default overflow list.
+
+323
+00:39:20,080 --> 00:39:23,290
+And let's just put the ID in there again.
+
+324
+00:39:24,270 --> 00:39:30,420
+For good measure. And then.
+
+325
+00:39:37,590 --> 00:39:41,170
+Yeah. I think that'll work. How's this going?
+
+326
+00:39:41,190 --> 00:39:53,100
+Still running. Let's give this another few minutes and then we can push this up to try and then move on to something slightly different.
+
+327
+00:39:58,420 --> 00:40:10,269
+Um, which is there's another set of patches to land all related to this, which is the actually putting stuff into the, into the panels.
+
+328
+00:40:10,270 --> 00:40:13,599
+And there's like, I'm going crazy orange over here.
+
+329
+00:40:13,600 --> 00:40:18,940
+Like it's, there's lots to fix. So we'll do that next.
+
+330
+00:40:23,070 --> 00:40:27,080
+Turns out there were some tests I forgot to change, so I'll do that.
+
+331
+00:40:29,450 --> 00:40:32,870
+I just want this to complete and so I can commit and push this to try.
+
+332
+00:40:33,890 --> 00:40:40,910
+If this isn't done in the next 15 seconds, then I'll go ahead and just cancel it because it hasn't failed yet.
+
+333
+00:40:42,500 --> 00:40:58,370
+One hour count down. Ready? 15, 14, 13, 12, 11, ten, oh nine, eight, seven, six, five.
+
+334
+00:40:58,910 --> 00:41:04,870
+I'll do a shout. A quick shout out to Smurf D, who has just asked a great question.
+
+335
+00:41:04,880 --> 00:41:11,840
+Did you have it fail locally or was it only on try? It's only failed on try, which is one of the really frustrating things about this.
+
+336
+00:41:12,050 --> 00:41:16,520
+And this class of failure is it only fails in automation.
+
+337
+00:41:17,450 --> 00:41:21,200
+I can't stand those kind. All right. So this is this is not completed.
+
+338
+00:41:21,200 --> 00:41:28,230
+I'm just going to control C out of this. We can push this up. So I added some logging.
+
+339
+00:41:29,400 --> 00:41:32,460
+What I'll do is I'll create two individual commits.
+
+340
+00:41:35,010 --> 00:41:39,000
+I've got one fix here, another fix there.
+
+341
+00:41:40,140 --> 00:41:52,790
+I'm going to commit. I'm going to say amend, but only for the change to the test.
+
+342
+00:41:54,490 --> 00:42:04,810
+And then this logging, I'm going to put in a separate commit. And they should make sure that the logging works properly.
+
+343
+00:42:07,620 --> 00:42:11,220
+Oh. And then we should flip the prep so that it actually logs when we run the test.
+
+344
+00:42:13,510 --> 00:42:25,330
+Ad logging. So the pref is uh, this the debug pref debug debug this one.
+
+345
+00:42:29,330 --> 00:42:32,720
+Does that do the tests already have that running by default?
+
+346
+00:42:33,050 --> 00:42:44,250
+No. So Mark, if I do this again without the verify but instead as a set pref.
+
+347
+00:42:45,040 --> 00:42:49,840
+True. Let's see what it says. And then I don't think I can.
+
+348
+00:42:49,840 --> 00:42:54,190
+Can I do mock try and set a pref. I got a feel I can't, but maybe I can.
+
+349
+00:42:55,450 --> 00:42:59,500
+Let's actually open up a new, uh. Oh, yeah.
+
+350
+00:42:59,500 --> 00:43:13,600
+I forgot to do Headless. That's okay. Okay.
+
+351
+00:43:13,620 --> 00:43:21,180
+That's helpful. A lot of good stuff in there. Now I worry a little bit that adding logging may or may not actually impact the like.
+
+352
+00:43:21,210 --> 00:43:27,640
+Logging itself may impact the. Failure because it's a race, it seems like.
+
+353
+00:43:27,940 --> 00:43:31,810
+So what I'll do is I'm going to say mock try.
+
+354
+00:43:32,410 --> 00:43:40,030
+Fuzzy will run just the extensions test does it let me set a pref.
+
+355
+00:43:53,160 --> 00:43:56,830
+No. Okay.
+
+356
+00:43:57,190 --> 00:44:01,380
+So we're going to add a extension's test browser not.
+
+357
+00:44:03,300 --> 00:44:06,490
+Was like, oh yeah, we're going to set the preference here.
+
+358
+00:44:12,860 --> 00:44:21,060
+Um. But only do that in one of two test runs.
+
+359
+00:44:21,750 --> 00:44:30,180
+Let's do a test run right now. We'll do this as an artifact build and.
+
+360
+00:44:33,460 --> 00:44:38,980
+Let's go. And I just care about the Mac OS one.
+
+361
+00:44:38,990 --> 00:44:42,050
+We don't need to, to run it on the other ones I don't think.
+
+362
+00:44:43,920 --> 00:44:49,480
+Well, maybe you'd be good to run it on the other ones. Okay, fine.
+
+363
+00:44:56,960 --> 00:45:05,060
+Let's go. Anyone want any?
+
+364
+00:45:05,270 --> 00:45:11,300
+Anyone have any questions? While we're waiting for Mark, try to construct its job list.
+
+365
+00:45:12,230 --> 00:45:15,140
+Feel free to drop a question into the chat. I'll do my best to answer it.
+
+366
+00:45:15,680 --> 00:45:20,810
+Special shadow to anyone who's watching the stream for the first time and wondering what the heck is going on.
+
+367
+00:45:22,190 --> 00:45:34,030
+Happy to have you here. I don't see any questions from the chat, but feel free to drop one in.
+
+368
+00:45:37,000 --> 00:45:40,540
+Wow. Really taking this time, generating this task list.
+
+369
+00:45:45,800 --> 00:45:58,340
+All right. So in the meantime, maybe let's examine what other tests we're going to be needing to manipulate today.
+
+370
+00:45:59,870 --> 00:46:07,130
+The first one, I think it's a bunch of customizable, customizable UI tests we're gonna want to look at.
+
+371
+00:46:09,870 --> 00:46:24,460
+Um. It's possible I've actually broken something here, so we're going to need to check that out in particular.
+
+372
+00:46:26,830 --> 00:46:29,980
+Here's another one show toolbar dropdown and we'll do them one at a time.
+
+373
+00:46:31,000 --> 00:46:34,450
+We've got our task closed yet. Come on. Come on.
+
+374
+00:46:35,110 --> 00:46:40,060
+All right. Let's take a quick peek at the at the failure here.
+
+375
+00:46:42,460 --> 00:46:47,199
+Button should be able to reset.
+
+376
+00:46:47,200 --> 00:46:53,250
+Now, button once again has no anchor. In customized pain.
+
+377
+00:46:58,360 --> 00:46:59,560
+And customizing.
+
+378
+00:47:02,080 --> 00:47:15,060
+So are we timing out here on cot exception after customize listeners so exiting customization mode seems to fail and that's because are.
+
+379
+00:47:17,070 --> 00:47:20,250
+We have a stack of customizable UI 3655.
+
+380
+00:47:25,380 --> 00:47:29,100
+What? Customizable UI. Three six. Five five.
+
+381
+00:47:31,500 --> 00:47:34,530
+Can't access property join current placements is undefined.
+
+382
+00:47:44,390 --> 00:47:48,900
+Hmm. Okay, well, hold on. Let's push. Let's get.
+
+383
+00:47:48,900 --> 00:47:51,900
+These tests are running.
+
+384
+00:47:52,860 --> 00:47:57,360
+Let's do them all. Let's be. Let's just go for it.
+
+385
+00:47:57,930 --> 00:48:01,920
+Do I think there are too many tests? Never. Never.
+
+386
+00:48:04,930 --> 00:48:08,140
+For an application, a critical application, like a web browser.
+
+387
+00:48:09,340 --> 00:48:14,350
+Get those tests up. So what could this be talking about?
+
+388
+00:48:14,380 --> 00:48:25,330
+Oh, I've got it great in reset and update button state and get in default state can't access property join current placements is undefined.
+
+389
+00:48:26,650 --> 00:48:33,640
+I must have screwed something up somewhere. In default state.
+
+390
+00:48:39,030 --> 00:48:50,030
+Get the areas. Current placements is we get the area idea for our areas.
+
+391
+00:49:02,360 --> 00:49:07,650
+Siberia. I do. Must not have.
+
+392
+00:49:17,290 --> 00:49:28,560
+Mm. Register at the login area here.
+
+393
+00:49:31,360 --> 00:49:35,480
+Change placements. Restore state.
+
+394
+00:49:40,160 --> 00:49:43,950
+I seem to recall we did something kind of fishy there. We're going to need to look at that later.
+
+395
+00:49:44,550 --> 00:49:49,370
+Boy, howdy. That's taken a while. A. That's.
+
+396
+00:49:51,170 --> 00:49:59,140
+Just get on that gang in one of these, uh, here.
+
+397
+00:50:03,360 --> 00:50:06,720
+This is the migration. That's not the one. Um.
+
+398
+00:50:09,550 --> 00:50:14,630
+This one. In reset U.S. state.
+
+399
+00:50:17,210 --> 00:50:20,810
+We don't call restore state and then we clear the placements.
+
+400
+00:50:23,920 --> 00:50:35,140
+Uh, I think that's the bug here where we need to actually set the placements.
+
+401
+00:50:35,290 --> 00:50:45,850
+Oh, no, hold on. Add Wichita area. Oh, because if there are no widgets, there are no extension widgets, placements will be empty.
+
+402
+00:50:48,070 --> 00:50:53,230
+So we should, no matter what, initialize it with an empty array.
+
+403
+00:50:55,950 --> 00:51:00,720
+Because we didn't call rock star state for area. Got it.
+
+404
+00:51:01,270 --> 00:51:11,290
+That's what we need to do. Okay. So let's start by rebasing these other patches.
+
+405
+00:51:36,940 --> 00:51:39,940
+I can prune these now because they're built into the trees. So that's nice.
+
+406
+00:51:47,810 --> 00:51:52,580
+So this is good. Our tests actually caught a bug. That's what that's what we're seeing here.
+
+407
+00:51:52,910 --> 00:51:56,540
+There's a bug in the code that I wrote. Not a bug in the test. That's good.
+
+408
+00:51:56,570 --> 00:52:00,920
+I'm glad. That's why we. So to answer your question, Jamie, and do I think there are too many tests?
+
+409
+00:52:00,950 --> 00:52:04,760
+No. The tests work. They caught a problem.
+
+410
+00:52:04,760 --> 00:52:18,640
+They caught me not accounting for something. So we're going to go to.
+
+411
+00:52:21,980 --> 00:52:25,800
+Here? No.
+
+412
+00:52:25,820 --> 00:52:29,480
+Here. No. Here.
+
+413
+00:52:29,690 --> 00:52:33,320
+No. Here. You know, there.
+
+414
+00:52:38,070 --> 00:52:42,230
+Actually what I'll do, I'll just go to the very top.
+
+415
+00:52:42,240 --> 00:52:45,690
+I don't want to have to deal with here. Here's what the.
+
+416
+00:52:50,090 --> 00:52:57,480
+Where to build this. And then we're going to make sure that the test fails locally.
+
+417
+00:53:03,320 --> 00:53:08,570
+And this fix may actually fix a number of these things, which will be exciting.
+
+418
+00:53:20,530 --> 00:53:25,250
+So this should fail. Here is our job.
+
+419
+00:53:25,250 --> 00:53:31,140
+We just pushed. Oh, I wanted to do another one with the logging.
+
+420
+00:53:32,010 --> 00:53:41,780
+All right, I'll do that next once we get this to pass. The one with the logging will be in the event that these fail, like one of these fails.
+
+421
+00:53:41,790 --> 00:53:49,370
+Well, I want more information then. Honestly, that sometimes is like the OC.
+
+422
+00:53:49,400 --> 00:53:57,140
+There we go. Yeah, it fails. So I think the solution here is, uh.
+
+423
+00:53:57,610 --> 00:54:00,770
+Is it. State.
+
+424
+00:54:01,760 --> 00:54:07,290
+Where did I say? Race reset.
+
+425
+00:54:09,860 --> 00:54:24,730
+You set your state down here? We're going to say g placements set customizable UI area add ons.
+
+426
+00:54:27,550 --> 00:54:33,850
+We're going to have it be the empty array. How it happens.
+
+427
+00:54:36,670 --> 00:54:39,790
+So it was an initial idea. It was a non-existent array.
+
+428
+00:54:41,170 --> 00:54:47,760
+The array did not exist. And normally that gets done by this restore state for area.
+
+429
+00:54:47,770 --> 00:54:54,880
+But because we skipped that here for there's an optimization that he's asked for.
+
+430
+00:54:55,780 --> 00:55:03,970
+Then the the rating get created so we will special case the we are already special casing area add ons and we'll do it again over here.
+
+431
+00:55:05,020 --> 00:55:12,280
+That's how we'll do it. And I'll probably want to add some commentary for that.
+
+432
+00:55:27,250 --> 00:55:30,690
+Yeah. Okay, so let's add some commentary.
+
+433
+00:55:33,120 --> 00:55:49,260
+Restore state for area will have normally set an array for the placements for each area, but since we skip area add ons.
+
+434
+00:55:54,320 --> 00:55:59,330
+Intentionally that a raid doesn't get set.
+
+435
+00:55:59,330 --> 00:56:03,340
+So we do that. Manually here.
+
+436
+00:56:10,150 --> 00:56:16,750
+So that passes. Now let's see if the other ones pass, which is show toolbars dropdown.
+
+437
+00:56:30,110 --> 00:56:33,740
+Booyah. Still customizable after reset.
+
+438
+00:56:35,930 --> 00:56:47,040
+I love these descriptive test names. Oh, yeah.
+
+439
+00:56:49,010 --> 00:56:58,660
+Something bug toggle with other pop up. If this passes, I'm just going to run the whole directory because.
+
+440
+00:57:02,770 --> 00:57:06,310
+Yeah. All right, let's run the whole directory. This should not take long. Not like last week.
+
+441
+00:57:06,880 --> 00:57:11,439
+Extensions, tests. Ah, there's so many of them. It takes, like, 10 minutes for me to run.
+
+442
+00:57:11,440 --> 00:57:13,300
+All of them. I'm not going to do that this time.
+
+443
+00:57:13,780 --> 00:57:22,600
+For the the customizable UI tests only take like, I think they're less than a minute, so we'll run them.
+
+444
+00:57:32,700 --> 00:57:37,300
+Boop, boop, boop, boop, boop, boop, boop, boop, boop, boop.
+
+445
+00:57:38,220 --> 00:57:41,910
+Right. Test for your code, people. That's.
+
+446
+00:57:41,910 --> 00:57:43,530
+That's the name of the game.
+
+447
+00:57:57,770 --> 00:58:07,220
+Hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm
+
+448
+00:58:07,220 --> 00:58:20,150
+hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm.
+
+449
+00:58:20,750 --> 00:58:26,149
+Bump up, bup, bup bup bup bup bup bup. Okay, so we're just over a minute now.
+
+450
+00:58:26,150 --> 00:58:37,280
+These should be almost done. Shouldn't we check that the placement for the add ons area is missing?
+
+451
+00:58:37,290 --> 00:58:42,990
+Or is it okay to unconditionally, unconditionally initialize it to an empty array?
+
+452
+00:58:46,620 --> 00:58:49,560
+Should we check the placement for the add ons area is missing?
+
+453
+00:58:51,600 --> 00:58:59,550
+Well, we know it's missing because earlier on in that function we had cleared out the placements array or like we'd created a new map.
+
+454
+00:59:04,650 --> 00:59:08,460
+Here, I'll show you in just a second. When this test is done, these tests are done running.
+
+455
+00:59:09,540 --> 00:59:13,170
+Wow. This is taking longer than I thought. Who?
+
+456
+00:59:18,260 --> 00:59:23,269
+But so far we seem to be I haven't seen any test failures fly by, so that's good.
+
+457
+00:59:23,270 --> 00:59:27,530
+We haven't a. All right. So that took 2 minutes, 12 seconds.
+
+458
+00:59:28,010 --> 00:59:32,400
+So the reason why we can do that is because g placements got reset.
+
+459
+00:59:33,030 --> 00:59:33,950
+Where is it? Here.
+
+460
+00:59:34,340 --> 00:59:52,370
+So the the array, the the map is cleared out and then we call restore state for area except for the add ons area for reasons, optimization reasons.
+
+461
+00:59:52,760 --> 01:00:02,930
+And then uh, in the event that like this is what would normally set the array, um.
+
+462
+01:00:04,600 --> 01:00:10,720
+For us right here. Um.
+
+463
+01:00:19,570 --> 01:00:25,030
+And you know, we're saving a bunch of effort in here, like dumb an application, so we don't have to do that.
+
+464
+01:00:26,950 --> 01:00:31,180
+We're treating the. The add ons area kind of specialty.
+
+465
+01:00:31,190 --> 01:00:40,390
+I don't know if that answers your question well, but like there's nothing that's going to be in placements because the map got recreated.
+
+466
+01:00:40,510 --> 01:00:46,090
+It got skipped here. So we know that nothing will be set there so we can set it here for ourselves.
+
+467
+01:00:50,220 --> 01:00:59,750
+Uh. Okay.
+
+468
+01:01:00,200 --> 01:01:05,260
+The last thing I want to check. Oh, did I already? I think I may have actually already tested this.
+
+469
+01:01:05,270 --> 01:01:08,540
+There was a test, the reset state.
+
+470
+01:01:09,260 --> 01:01:14,870
+I wanted to make sure that that still works. And it may have just run by virtue of.
+
+471
+01:01:15,860 --> 01:01:22,870
+Yeah. Running this directory. Yep. Yeah.
+
+472
+01:01:22,880 --> 01:01:29,900
+All good. Thanks for asking the question. Well, thanks for, uh, it was a great question that still works.
+
+473
+01:01:30,230 --> 01:01:38,519
+And let's test it manually too. Do I have any add ons?
+
+474
+01:01:38,520 --> 01:01:42,180
+I don't have any. I had my profile got blown away.
+
+475
+01:01:44,060 --> 01:01:49,560
+Okay. We had a couple here relay. That's a privacy badger.
+
+476
+01:01:51,330 --> 01:01:56,760
+Um, boom, boom, boom, boom, boom, boom, boom, boom, boom.
+
+477
+01:01:58,540 --> 01:02:01,540
+Store defaults. Yeah, they are.
+
+478
+01:02:04,060 --> 01:02:09,380
+Um, and then can I move them? Again.
+
+479
+01:02:09,650 --> 01:02:13,040
+Yeah, it's, um.
+
+480
+01:02:13,520 --> 01:02:18,470
+Yeah, yeah. Yeah, they are.
+
+481
+01:02:20,210 --> 01:02:30,190
+Okay. Uh, and we got rid of, I think, the undue customized mode thing.
+
+482
+01:02:32,080 --> 01:02:35,290
+There used to be a way to like it restored. Oh, no, we do have redo here.
+
+483
+01:02:35,470 --> 01:02:41,260
+Undo. So that. That works. That's nice. Undo you.
+
+484
+01:02:43,920 --> 01:02:47,440
+Andrew. Good stuff. All right.
+
+485
+01:02:48,760 --> 01:02:58,260
+We get that for free. So I think that takes care of much of what was going wrong in here.
+
+486
+01:02:58,380 --> 01:03:05,610
+I think these were all customizable UI failures. Were there any other failures that were being reported from this stuff?
+
+487
+01:03:11,910 --> 01:03:18,480
+No. How about I presume we were seeing stuff from the the overflow toolbar?
+
+488
+01:03:18,840 --> 01:03:22,470
+No, we didn't see it in here. That's interesting.
+
+489
+01:03:22,800 --> 01:03:27,400
+Oh, maybe because. Debug.
+
+490
+01:03:31,870 --> 01:03:36,980
+Oh, no. Um.
+
+491
+01:03:40,650 --> 01:03:45,020
+It's interesting. It doesn't fail for these. Hmm.
+
+492
+01:03:46,730 --> 01:03:51,530
+I didn't see it failing. That's interesting. It's interesting.
+
+493
+01:03:53,120 --> 01:03:59,610
+Just these. All right.
+
+494
+01:03:59,640 --> 01:04:02,970
+Well, let's put this stuff up for for try as well.
+
+495
+01:04:05,710 --> 01:04:10,460
+Uh. So I'm going to fold that into here.
+
+496
+01:04:15,790 --> 01:04:20,680
+Cool. I didn't know you can pin the add ons to a tab.
+
+497
+01:04:21,850 --> 01:04:25,020
+Yeah, yeah, you can. Not to a particular tab.
+
+498
+01:04:25,030 --> 01:04:29,290
+You can drag them up into your tab, strip for sure, or your bookmarks toolbar if you want.
+
+499
+01:04:29,750 --> 01:04:34,659
+Um. Totally. Uh, HCM.
+
+500
+01:04:34,660 --> 01:04:37,980
+And. Yeah.
+
+501
+01:04:38,010 --> 01:04:43,750
+Watch the stream if you want to see weird things you can do in Firefox that maybe you didn't know.
+
+502
+01:04:44,700 --> 01:04:56,470
+All sorts of all of that information. Um.
+
+503
+01:04:56,810 --> 01:05:26,450
+We're going to replay these two. And let's run our query, our mock try again.
+
+504
+01:05:32,070 --> 01:05:36,240
+Mark try again. And I think there's a way I can list.
+
+505
+01:05:37,590 --> 01:05:41,950
+Ones I've done recently. Yeah, I want to do this one.
+
+506
+01:05:41,970 --> 01:05:47,530
+Mark, try again. Index one. Uh.
+
+507
+01:05:49,090 --> 01:05:55,890
+I. And all of these that took 98 minutes to run.
+
+508
+01:05:55,920 --> 01:05:59,520
+Gee, so I might have the information after the stream is done.
+
+509
+01:06:00,180 --> 01:06:07,050
+Unfortunately for these. And it's 60 Minutes.
+
+510
+01:06:12,660 --> 01:06:16,469
+But for these guys, we might have the information before the end of the stream.
+
+511
+01:06:16,470 --> 01:06:24,840
+This 1015 web render on Mac OS took 16 minutes.
+
+512
+01:06:24,840 --> 01:06:29,310
+This is already 2 minutes in. So I should I would expect us to have some results within the next.
+
+513
+01:06:30,240 --> 01:06:39,250
+15 or so minutes. And now what are we going to work on?
+
+514
+01:06:39,700 --> 01:06:50,260
+Oh, geez. You know, once this stuff lands, there's some unified extension stuff that still needs to get cleaned up.
+
+515
+01:06:51,580 --> 01:06:56,230
+There was some fallout from some of my earlier patches related to the Overflow Bill toolbar that we should take a look at,
+
+516
+01:06:57,150 --> 01:07:00,520
+um, and start looking into some cleanup.
+
+517
+01:07:00,880 --> 01:07:06,310
+But like the major, my contributions to this project are more or less wrapped after these land.
+
+518
+01:07:06,610 --> 01:07:11,800
+I'll probably help sand down some edges, but like, that's that's the bulk of it.
+
+519
+01:07:12,940 --> 01:07:21,820
+It's been a nice contained project. It's only been a couple of weeks and just like very well-defined requirements and boom, boom, boom.
+
+520
+01:07:22,360 --> 01:07:25,570
+So big shout out to the people running this project.
+
+521
+01:07:25,780 --> 01:07:32,050
+I know Will and Shane and Julien and like a bunch of people have been working on this stuff.
+
+522
+01:07:32,050 --> 01:07:37,449
+So I think we'll shout it at a bunch of people inside of here as well.
+
+523
+01:07:37,450 --> 01:07:40,990
+So all these people, thank you so much for your help in. And you know.
+
+524
+01:07:42,420 --> 01:07:49,290
+It's nice to work on a project that's like really well defined and it's, you know, that's always satisfying.
+
+525
+01:07:50,550 --> 01:07:54,250
+Okay. Before I continue, I want to go back down to this one.
+
+526
+01:07:54,270 --> 01:07:59,960
+I want to push this just as a precaution. I'm going to push this up to try again.
+
+527
+01:07:59,970 --> 01:08:07,320
+But with logging enabled.
+
+528
+01:08:11,230 --> 01:08:20,630
+Uh. Okay. And then Mark try again.
+
+529
+01:08:21,670 --> 01:08:26,880
+One that I wanted to do. Wanted to do. Zero.
+
+530
+01:08:30,660 --> 01:08:38,400
+And that, as they say, is that 4 minutes in.
+
+531
+01:08:39,270 --> 01:08:50,020
+See how this goes? Wait.
+
+532
+01:08:50,620 --> 01:08:53,860
+This was yesterday? Oh, yeah. Um.
+
+533
+01:09:10,690 --> 01:09:15,210
+Okay. Let's see what goes on here. What are the things that we could try cleaning up?
+
+534
+01:09:15,220 --> 01:09:19,330
+We've got, like, 20 minutes left. I'll give you some choice. I'll give you some choices, gang.
+
+535
+01:09:20,800 --> 01:09:25,210
+I can start looking at some of that clean up work, or I can also field some questions.
+
+536
+01:09:25,510 --> 01:09:30,280
+I know that people have been really excited about, you know, in the feedback that I receive,
+
+537
+01:09:30,310 --> 01:09:37,330
+they enjoy the me answering questions that I can try and answer, but no one's asked any questions.
+
+538
+01:09:37,330 --> 01:09:42,250
+They're like, Yeah, I love Q&A. And then they don't supply any clues, so I can't give any A's.
+
+539
+01:09:42,250 --> 01:09:45,549
+So if you have any queues, drop em in the chat and I'll do my best.
+
+540
+01:09:45,550 --> 01:09:49,570
+And if you're watching this in the future, I would like maybe you're watching the recording,
+
+541
+01:09:49,570 --> 01:09:52,900
+you can send questions in through the form and I'll do my best.
+
+542
+01:09:53,230 --> 01:09:59,049
+Like even if you're watching this way in the future, I still monitor all the old forms so, you know, send questions.
+
+543
+01:09:59,050 --> 01:10:02,710
+And why was the error only on Mac? Great question.
+
+544
+01:10:03,490 --> 01:10:07,150
+I don't even know why the error was in the first place.
+
+545
+01:10:09,130 --> 01:10:18,610
+There are a number of reasons. If you take a look at possible reasons, I will say if you take a look at the at the screenshot here,
+
+546
+01:10:18,940 --> 01:10:24,580
+it could have any there could be any number of reasons, to be honest.
+
+547
+01:10:25,840 --> 01:10:35,229
+It could have to do with the screen resolution and the refresh driver and how often, for example, we resize events,
+
+548
+01:10:35,230 --> 01:10:49,240
+fire on a particular platform, or how often we flush layout, you know, due to the you know, how how often does the this layout tick?
+
+549
+01:10:50,320 --> 01:10:57,520
+You know, we throttled that back a little bit on maybe we throttle it differently on different platforms depending on like the the the platform.
+
+550
+01:10:58,050 --> 01:11:01,270
+And there could be any number of reasons. This is a particularly fiddly one.
+
+551
+01:11:02,800 --> 01:11:09,520
+You'll note that like when you resize a window like resizing windows in particular,
+
+552
+01:11:09,760 --> 01:11:18,160
+I feel like it falls into the special camp of of platform me inconsistency along with focus.
+
+553
+01:11:18,340 --> 01:11:21,550
+So window focus changes, window resizing changes.
+
+554
+01:11:21,910 --> 01:11:27,400
+All of these ultimately are, you know, talking to the operating system at like the top level,
+
+555
+01:11:27,640 --> 01:11:32,800
+primitive window level, you know, like where the operating system grants us a window that we draw on to.
+
+556
+01:11:33,310 --> 01:11:40,090
+And so when we're talking about like resize events, these are things that the operating system is telling us are occurring and then
+
+557
+01:11:40,090 --> 01:11:44,470
+those get like retranslated and dispatched into the gecko like event loop.
+
+558
+01:11:45,340 --> 01:11:54,279
+And so yeah, it's possible that the way that the resize events fire on Mac OS is slightly different than the way they fire.
+
+559
+01:11:54,280 --> 01:11:57,849
+Like the native resize events are different than the way they fire on Linux and Windows.
+
+560
+01:11:57,850 --> 01:12:03,820
+I know that Linux and Windows tend to be closer when it comes to resize events, at least in my experience.
+
+561
+01:12:04,660 --> 01:12:12,879
+But Linux is also kind of a weird cat when it comes to to resize events, but it could be any number of things and I don't actually know.
+
+562
+01:12:12,880 --> 01:12:15,910
+I don't even know why the reason was in the first place.
+
+563
+01:12:16,270 --> 01:12:21,070
+So what I did was I've tried to this is a speculative fix.
+
+564
+01:12:21,070 --> 01:12:26,530
+What I landed some speculative fixes and we're just going to see if it solves the issue.
+
+565
+01:12:27,070 --> 01:12:30,369
+But I don't actually know why. And sometimes that's that's what it takes.
+
+566
+01:12:30,370 --> 01:12:36,430
+You know, sometimes I could go down to the nitty gritty and the logging that I've added in the event that this doesn't fix it,
+
+567
+01:12:36,430 --> 01:12:43,359
+the logging could help illuminate what was actually going wrong, and that might allow us to go like,
+
+568
+01:12:43,360 --> 01:12:50,200
+Oh, I understand, here's the proper fix, but I have a hypothesis.
+
+569
+01:12:50,770 --> 01:12:59,470
+And my hypothesis was that we were waiting for all of the web extension widgets to overflow.
+
+570
+01:13:00,760 --> 01:13:11,050
+And so the panel was getting opened. The task was running even before the the Web extensions had to have had a chance to be put into that panel.
+
+571
+01:13:12,790 --> 01:13:17,110
+That's my hypothesis. Um.
+
+572
+01:13:19,430 --> 01:13:24,440
+Yeah. Hopefully that's that's a helpful answer to your question.
+
+573
+01:13:24,800 --> 01:13:29,550
+I know this today is, Natalie, that the overflow menu is different from the universal add ons menu in terms of overflow.
+
+574
+01:13:29,570 --> 01:13:33,020
+Are you not debugging the overflow menu? No.
+
+575
+01:13:33,860 --> 01:13:41,420
+So you're saying that the overflow menu is different from the universal, what we call a unified extensions menu in terms of overflow?
+
+576
+01:13:41,810 --> 01:13:49,490
+Yes, it is different. It's different in that like this is one panel and this is a different panel.
+
+577
+01:13:49,610 --> 01:13:54,740
+This looks a little weird in here because these aren't supposed to be in here by the end of the week.
+
+578
+01:13:54,860 --> 01:13:59,300
+Hopefully, these won't be in here anymore. These will all have been migrated over into here.
+
+579
+01:13:59,540 --> 01:14:03,290
+And so we won't have this sort of weird appearance, mixture of appearances.
+
+580
+01:14:04,580 --> 01:14:09,210
+But yeah, these are two very distinct kinds of things.
+
+581
+01:14:09,230 --> 01:14:13,610
+This is going to be where extension buttons live, unless they're in a toolbar.
+
+582
+01:14:13,820 --> 01:14:20,280
+That's the idea. And this is going to be where built in widget tree built in buttons overflow into.
+
+583
+01:14:22,340 --> 01:14:28,550
+In the event that you know they overflow or you can like send built in items into this panel with the customize mode.
+
+584
+01:14:29,090 --> 01:14:36,730
+That's that's the other way you can do it. You can pin them like this one pin to overflow menu here goes down here at the bottom.
+
+585
+01:14:37,130 --> 01:14:42,090
+Unpin. Uh, I don't know if that answers your question.
+
+586
+01:14:42,540 --> 01:14:46,710
+Jamie and Kay. One, two, three. Uh, yo, boo boo.
+
+587
+01:14:47,070 --> 01:14:56,430
+Okay, so we've got our first greenback and green back, and these are still running.
+
+588
+01:14:56,490 --> 01:15:01,050
+Still got a couple of minutes, maybe five or so minutes on this one.
+
+589
+01:15:04,770 --> 01:15:14,310
+See how it goes. 16 minutes. Okay. So let's take a look at some of the other bugs that got filed for all of this unified extension stuff that I'm,
+
+590
+01:15:14,580 --> 01:15:19,170
+you know, I should start thinking about fixing because there's like a bunch of follow up work.
+
+591
+01:15:23,220 --> 01:15:28,949
+Some time, the telemetry stuff. Maybe we'll work on that. Uh unpin.
+
+592
+01:15:28,950 --> 01:15:32,250
+Via a context menu move.
+
+593
+01:15:33,090 --> 01:15:36,120
+Yeah. That's a clean up for after this whole thing. Ships.
+
+594
+01:15:38,190 --> 01:15:41,490
+That's the one we were just looking at. And then shut down leaks.
+
+595
+01:15:46,350 --> 01:15:52,110
+You know, it's possible that what we just fix is going to fix this as well. I guess that's that's possible.
+
+596
+01:15:59,790 --> 01:16:02,870
+Overall Defoe's fallback to using air. And so we're working on that.
+
+597
+01:16:04,610 --> 01:16:07,700
+Consider hiding some extensions in the unified extension palettes.
+
+598
+01:16:07,700 --> 01:16:20,480
+That's Will's bug refactor CC sets. Learn more change if enabled as stores identify, I'll just use native menus.
+
+599
+01:16:20,540 --> 01:16:32,450
+Okay. Contrast would flickering filter out extensions.
+
+600
+01:16:32,900 --> 01:16:40,250
+So I really I think there was a there's one in here related to the unify the overflow one which is.
+
+601
+01:16:44,980 --> 01:16:58,350
+Uh. It was like hidden items.
+
+602
+01:16:59,340 --> 01:17:03,880
+Yeah, this one. Um.
+
+603
+01:17:05,800 --> 01:17:10,150
+I hope it's all right, Will. I'm going to move that over as a blocker for this.
+
+604
+01:17:12,610 --> 01:17:15,820
+Or at least blocks for now. Which bugs?
+
+605
+01:17:16,270 --> 01:17:21,220
+There are ones you dread. Oh, in a way, I dread bugs.
+
+606
+01:17:21,220 --> 01:17:26,310
+Where it's like, hey, mysterious test failures. Oh, look, test failures.
+
+607
+01:17:26,950 --> 01:17:32,650
+But this is a known intermittent. I think we'll re we trigger that one just to double check.
+
+608
+01:17:32,650 --> 01:17:38,350
+But so far we've got one green, one orange, but maybe with a known intermittent.
+
+609
+01:17:42,860 --> 01:17:46,340
+Still waiting on this one. This is the one I want to see. Go green.
+
+610
+01:17:46,520 --> 01:18:00,950
+Go green. Okay, um, let's look at of the two of these.
+
+611
+01:18:01,370 --> 01:18:09,130
+Uh, let's start with browser usage telemetry. Because I noticed this one the other day.
+
+612
+01:18:12,470 --> 01:18:18,830
+Need to fix up browser usage telemetry to accommodate our new add ons area in order to properly record keyed scalar for UI telemetry.
+
+613
+01:18:19,760 --> 01:18:25,549
+You should do that and add tests. Indeed. Okay.
+
+614
+01:18:25,550 --> 01:18:28,640
+So I can get rid of this commit on top.
+
+615
+01:18:37,340 --> 01:18:41,090
+Now I'm here to build.
+
+616
+01:18:42,160 --> 01:18:45,699
+And, uh, browser usage telemetry.
+
+617
+01:18:45,700 --> 01:18:53,470
+So this is the thing that allows us to generate heat maps on what people are clicking on so that we know, for example, oh,
+
+618
+01:18:53,470 --> 01:18:59,859
+no one uses this button, so we should maybe remove it from the defaults or you know, this one's really, really important.
+
+619
+01:18:59,860 --> 01:19:07,180
+So let's add the defaults. So that's what this stuff's for.
+
+620
+01:19:07,180 --> 01:19:20,350
+And I think we started to not well, this is starting to fail because there's certain types of areas that aren't being accounted for.
+
+621
+01:19:20,920 --> 01:19:31,670
+Was it by. Browser UI container IDs.
+
+622
+01:19:31,820 --> 01:19:35,060
+Because of this, we need to add to the container IDs.
+
+623
+01:19:38,690 --> 01:19:41,610
+Kirsner Interactive as the Caroline that create their pretty names.
+
+624
+01:19:41,610 --> 01:19:45,890
+These should be listed in order most specific to lease specific when entering JavaScript will guarantee that ordering.
+
+625
+01:19:45,890 --> 01:19:50,060
+And so we will find the most specific area first. Um.
+
+626
+01:19:54,180 --> 01:20:00,160
+Where's the overflow? One. List.
+
+627
+01:20:02,320 --> 01:20:16,230
+So we'll add it right here. And it's the unified extensions, what is called customizable UI area add ons.
+
+628
+01:20:16,620 --> 01:20:22,900
+It's called. Unified extensions area.
+
+629
+01:20:31,800 --> 01:20:42,600
+Um. It probably seems a little redundant, but that's that's what's going on.
+
+630
+01:20:45,160 --> 01:20:58,550
+Does that work? Which is a person. No area continue to fire.
+
+631
+01:21:04,580 --> 01:21:08,030
+Okay. Let's see if that's enough to actually get the telemetry to show up.
+
+632
+01:21:11,500 --> 01:21:15,190
+Because then the vast majority of our time will be writing a test for this.
+
+633
+01:21:16,900 --> 01:21:20,440
+How we doing? We got our failure.
+
+634
+01:21:23,520 --> 01:21:31,020
+It's still happening. It's still happening. Test unexpected fail.
+
+635
+01:21:31,110 --> 01:21:34,740
+Test timed out. Now it's timing out.
+
+636
+01:21:49,030 --> 01:21:59,600
+Mm. It's almost like the widgets aren't getting at it properly.
+
+637
+01:22:12,500 --> 01:22:16,130
+The logs here are going to be very illuminating, I think.
+
+638
+01:22:17,960 --> 01:22:23,740
+So I will read those after news as Jamie and Kay.
+
+639
+01:22:24,230 --> 01:22:31,459
+Yeah. I mean, this is this is the sort of thing that I dread write like the sort of only fails in automation kind of tests.
+
+640
+01:22:31,460 --> 01:22:40,070
+I dread those because ultimately, unless it's something that I can use like per nasco or ah or something on you end up,
+
+641
+01:22:40,070 --> 01:22:41,960
+I end up having to like either use,
+
+642
+01:22:42,230 --> 01:22:48,770
+you know, inspection and speculative fixes or you just like land stuff with logging until you can sort of suss out what the problems are.
+
+643
+01:22:49,670 --> 01:22:54,990
+What are the red stripes in the search bar in the screenshot? Is a question, right?
+
+644
+01:22:55,000 --> 01:22:58,630
+This is how we indicate that the browser is being used by automation.
+
+645
+01:22:59,650 --> 01:23:05,799
+So our automated tests automate the browser and in the same way it uses the same mechanism
+
+646
+01:23:05,800 --> 01:23:11,770
+that if you were using like I think selenium or any of the web page testing tools,
+
+647
+01:23:14,020 --> 01:23:21,430
+like I think it uses some of the underlying framework. And any time the browser is being instrumented by automation, the URL looks like this,
+
+648
+01:23:21,670 --> 01:23:25,060
+the URL bar to sort of indicate, hey, this thing is being automated right now.
+
+649
+01:23:26,290 --> 01:23:30,520
+So that's why you normally wouldn't see it unless you're using like selenium or puppeteer or something.
+
+650
+01:23:33,070 --> 01:23:38,590
+So the first thing I want to do is open up telemetry and look at our kids sailors.
+
+651
+01:23:44,670 --> 01:23:48,930
+And we're going to look at click events.
+
+652
+01:23:57,470 --> 01:24:01,940
+Process. What? What's it going to be? It's probably like if I click on one.
+
+653
+01:24:05,890 --> 01:24:15,250
+I've noticed this bug lately on nightly where like we want render sometimes right away.
+
+654
+01:24:21,010 --> 01:24:25,780
+I have to file a regression for that because I think the document is there.
+
+655
+01:24:25,810 --> 01:24:30,740
+It's just. It is there.
+
+656
+01:24:30,890 --> 01:24:34,820
+See? Yeah. I have to file that later. Okay.
+
+657
+01:24:34,820 --> 01:24:38,600
+So did we end up noticing any of those clicks?
+
+658
+01:24:52,120 --> 01:25:01,090
+Um. It doesn't look like it. Browser usage telemetry.
+
+659
+01:25:02,440 --> 01:25:06,370
+Um. Record command.
+
+660
+01:25:10,340 --> 01:25:24,490
+Okay. So we go in here. It's not ignorable. If you target elements.
+
+661
+01:25:30,240 --> 01:25:36,060
+Uh, or it doesn't want telemetry. Then we skip that and get the widget id.
+
+662
+01:25:36,330 --> 01:25:40,980
+What was the widget ID? Okay, we're going get the widget container.
+
+663
+01:25:41,520 --> 01:25:45,330
+What's the widget container? NAV bar.
+
+664
+01:25:49,030 --> 01:25:52,670
+This item. Scalar.
+
+665
+01:25:52,680 --> 01:25:55,769
+So we are adding. Oh, right. Right, right. Right.
+
+666
+01:25:55,770 --> 01:25:59,100
+Right, right. Um. Browser UI. What's the scalar name?
+
+667
+01:26:00,420 --> 01:26:04,320
+Browser UI interaction nav bar. Uh.
+
+668
+01:26:11,130 --> 01:26:15,480
+Right? Yeah. We should be. Adding telemetry to the nav bar is not one that.
+
+669
+01:26:15,870 --> 01:26:19,020
+Yeah. Here we go at on zero and add on one. So we saw lots of clicks here.
+
+670
+01:26:19,320 --> 01:26:24,450
+This is actually not that interesting because this is not broken. The one that we care about is if it's in here.
+
+671
+01:26:28,570 --> 01:26:35,890
+Um. So did we record telemetry for that browser UI interaction?
+
+672
+01:26:45,680 --> 01:26:50,810
+I'll bet you we didn't. Because I'll bet you we need to define.
+
+673
+01:26:51,860 --> 01:27:04,160
+Yeah. Unknown scalar. I need to add the scalar right now.
+
+674
+01:27:04,160 --> 01:27:09,289
+Far. Menu.
+
+675
+01:27:09,290 --> 01:27:19,110
+Content Overflow menu. It's called unified extensions area.
+
+676
+01:27:20,860 --> 01:27:22,060
+And the bug number.
+
+677
+01:27:25,390 --> 01:27:39,220
+There's this one with items in the unified extensions area records account of interactions with items in the unified extensions area.
+
+678
+01:27:41,650 --> 01:27:46,780
+Now, I'm actually curious what will happen if the user clicks on like one of these cogs.
+
+679
+01:27:47,200 --> 01:27:53,410
+We'll check that next. Expires. Never. Um, notification emails.
+
+680
+01:27:54,770 --> 01:28:02,440
+Hmm. That's, uh.
+
+681
+01:28:06,240 --> 01:28:10,320
+That's AD Well, I think that's your email address.
+
+682
+01:28:11,310 --> 01:28:14,470
+I'll I'll ask Will if that's okay and review.
+
+683
+01:28:15,540 --> 01:28:21,470
+Um. To be added to the list or if there's a better person to add.
+
+684
+01:28:24,370 --> 01:28:25,950
+W Durant. Okay.
+
+685
+01:28:34,940 --> 01:28:41,390
+Every time Mike focuses on the scripture, my brain goes, Oh, Windows 98 because the yeah, the background color of that Mac OS machine for sure.
+
+686
+01:28:44,080 --> 01:28:49,330
+Okay. So I'll need to file a data review request to make sure that our data stewards are okay with that.
+
+687
+01:28:50,320 --> 01:28:53,790
+But that should do it. Yeah.
+
+688
+01:28:53,800 --> 01:28:58,090
+Pretty bummed that we didn't figure out our solution.
+
+689
+01:28:58,240 --> 01:29:03,190
+Uh, here. And these ones are now failing.
+
+690
+01:29:03,460 --> 01:29:09,140
+Leaked five windows. Oh, good. Now we're.
+
+691
+01:29:09,140 --> 01:29:20,570
+Now we're leaking. What could have caused that?
+
+692
+01:29:21,200 --> 01:29:24,950
+These leaks weren't there before. Did I remember to remove.
+
+693
+01:29:27,580 --> 01:29:33,100
+I didn't remember to remove the listener. Oh, that's why.
+
+694
+01:29:34,000 --> 01:29:41,320
+So that's why we're leaking. Um. So that is an easy fix.
+
+695
+01:29:45,790 --> 01:29:52,510
+But we're still timing out. It's weird that this didn't leak.
+
+696
+01:29:55,350 --> 01:30:05,280
+Huh? Is that a clue? All right.
+
+697
+01:30:05,280 --> 01:30:08,519
+Well, I think I'm going to call the stream there. Thank you so much for watching.
+
+698
+01:30:08,520 --> 01:30:12,120
+Episode 307 of The Joy of Coding. Let me know what you thought.
+
+699
+01:30:12,240 --> 01:30:17,100
+There is a rate this episode link in the agenda and all of the places where you found the link to the agenda.
+
+700
+01:30:17,610 --> 01:30:23,790
+I want to hear from you. So if you have questions or thoughts or comments, I read everything that comes in, so let me know what you thought.
+
+701
+01:30:25,530 --> 01:30:28,650
+If this was your first time watching the stream. Hey, thanks for being here.
+
+702
+01:30:28,680 --> 01:30:31,890
+And if it's. If you've been here for a long time, hey, thanks for being here.
+
+703
+01:30:32,310 --> 01:30:35,460
+And I'll hopefully see you next week with episode 308.
+
+704
+01:30:36,480 --> 01:30:40,920
+All right. I'm calling it there. Thanks so much, everybody. Have yourselves a great week.
+
+705
+01:30:41,100 --> 01:30:45,720
+Take care. Bye bye. The joy.
+
+706
+01:30:46,630 --> 01:30:49,000
+Loading. Yep.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

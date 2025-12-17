@@ -1,0 +1,4405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 333 - July 26, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 333 - July 26, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5161d785-ef06-4e39-887e-b036014a5eef</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5161d785-ef06-4e39-887e-b036014a5eef">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:24:55,310 --> 00:24:58,640
+Welcome. Through the joy cup.
+
+2
+00:24:59,060 --> 00:25:05,650
+Oh, dear. Hello and welcome to episode 333 of The Joy of Coding.
+
+3
+00:25:05,660 --> 00:25:07,700
+My name is Mike Connelly. It's so good to have you here.
+
+4
+00:25:07,700 --> 00:25:13,970
+We're going to be hacking on some Firefox stuff today, going to be maybe reviewing some code, going to be writing some patches,
+
+5
+00:25:14,360 --> 00:25:20,120
+going to maybe be writing tests for the windows, jumbling stuff we've been working on for like a while now.
+
+6
+00:25:20,330 --> 00:25:24,049
+Let's see what goes on. I'm very excited. I'm back from vacation.
+
+7
+00:25:24,050 --> 00:25:27,050
+I'm full of energy. I'm pumped. I'm ready to go.
+
+8
+00:25:27,050 --> 00:25:32,240
+Let's get started or I'll start by sharing my screen one second.
+
+9
+00:25:33,620 --> 00:25:37,759
+So this is today's agenda is July 26, 2023.
+
+10
+00:25:37,760 --> 00:25:41,149
+Episode 333. That's a that's a fun number.
+
+11
+00:25:41,150 --> 00:25:45,950
+I think we're one that's like you only get one of these every hundred episodes.
+
+12
+00:25:45,950 --> 00:25:49,159
+So congratulations everybody, on episode 333.
+
+13
+00:25:49,160 --> 00:25:54,890
+I'll see you at 444. And my good friend Eli Difficult.
+
+14
+00:25:55,130 --> 00:26:00,560
+My good friend Eli Difficult is in the chat. So good to see you, lad.
+
+15
+00:26:01,520 --> 00:26:06,410
+I'll be seeing you later this week. I'm really looking forward to that. I'm very excited.
+
+16
+00:26:06,590 --> 00:26:09,590
+Thanks for being here. A reminder, no plan survives breakfast.
+
+17
+00:26:09,590 --> 00:26:16,399
+I don't know how the stream's going to go. I don't know what what'll happen. I might chase my tail for an hour or we might get some stuff written.
+
+18
+00:26:16,400 --> 00:26:19,760
+Or who knows what will happen. It's a big shrug.
+
+19
+00:26:20,510 --> 00:26:27,200
+So just, you know, that's the name of the game. You know, I might get sidelined, I might get rattled, I might.
+
+20
+00:26:27,200 --> 00:26:32,899
+We might get a lot done. We might not. That's okay. We're capturing software development in the Roar as I do it at my desk.
+
+21
+00:26:32,900 --> 00:26:35,959
+And sometimes that involves getting stuck in. That's okay. That's the first thing.
+
+22
+00:26:35,960 --> 00:26:38,570
+The second thing is that the agenda that we're looking at with all this,
+
+23
+00:26:38,780 --> 00:26:43,879
+the stuff in these handy links is available to you depending on where you're, you know, watching this.
+
+24
+00:26:43,880 --> 00:26:46,670
+If you're watching this on YouTube, it's down in the video description.
+
+25
+00:26:46,670 --> 00:26:51,319
+Same with diodes on if you're watching this on Twitch, it's down in the channel description.
+
+26
+00:26:51,320 --> 00:26:57,590
+There'll be a link to the agenda. And if you're watching this on air Mozilla, it's over there in the details section on the left side of the screen.
+
+27
+00:26:57,890 --> 00:27:05,300
+And as I update it, you know, if I add stuff like an extra exclamation mark here, you'll see this little spinny guy happen on the left.
+
+28
+00:27:05,480 --> 00:27:08,930
+And if you reload the agenda, you should see an up to date copy of it.
+
+29
+00:27:10,040 --> 00:27:13,609
+All right. Let's get into it. Well, before we really get into things,
+
+30
+00:27:13,610 --> 00:27:20,419
+I wanted to briefly plug the episode guide also because we haven't updated the episode guide in a while and I think it's high time that we do.
+
+31
+00:27:20,420 --> 00:27:25,850
+I do this every couple of episodes, and I think we're overdue for an episode episode Guide Update So if you're not familiar,
+
+32
+00:27:25,940 --> 00:27:32,060
+the joy of coding episode guide is completely viewer driven. It's this resource that viewers just like you contribute to too.
+
+33
+00:27:32,330 --> 00:27:34,990
+You know, it's historically, it's been a place for people to like,
+
+34
+00:27:35,000 --> 00:27:43,040
+take the agenda and maybe add some additional notes on things that I covered and links to the videos and then keep a log and you can,
+
+35
+00:27:43,250 --> 00:27:50,460
+you know, see what I did in episode 300, for example, or see what happened in episode 308 and the sorts of things we talked about.
+
+36
+00:27:50,480 --> 00:27:54,620
+Looks like we were working on jump loss stuff in episode 308.
+
+37
+00:27:54,620 --> 00:28:02,509
+So we've been doing this for a while and it's hosted on GitHub, and if you want to contribute to the episode guide, you're more than welcome to.
+
+38
+00:28:02,510 --> 00:28:06,169
+I'm pretty, you know, pretty relaxed about the things I accept.
+
+39
+00:28:06,170 --> 00:28:10,489
+If it's useful stuff, all merge it right in so you can go ahead and send me a polar request to the repository.
+
+40
+00:28:10,490 --> 00:28:13,730
+If you want to add to the episode guide. If you're not sure what that means.
+
+41
+00:28:13,970 --> 00:28:16,580
+Polar Request Repository GitHub. What are all these things?
+
+42
+00:28:16,910 --> 00:28:23,450
+Feel free to click on links here in the agenda because it will explain how you can go ahead and contribute to the episode guide.
+
+43
+00:28:23,990 --> 00:28:27,920
+So we've got a couple of pull requests to add some episodes. Let's take a look at those.
+
+44
+00:28:27,920 --> 00:28:31,550
+Right now we've got episodes 328 all the way to 332.
+
+45
+00:28:31,730 --> 00:28:37,340
+Let's start with that 328 and 329 it looks like in here.
+
+46
+00:28:37,790 --> 00:28:41,390
+And the way I review these, generally, it's pretty high level.
+
+47
+00:28:41,570 --> 00:28:51,350
+Oh, hold on. Before I continue, uh, is it a feature or a bug that Firefox shows an empty page and not a four or six error page?
+
+48
+00:28:51,350 --> 00:28:54,469
+If you go to like GitHub dot com slash?
+
+49
+00:28:54,470 --> 00:28:58,790
+M.K. Connelly That's a good question.
+
+50
+00:29:00,970 --> 00:29:07,090
+What is this kind of page? This is a406 page, not acceptable as a URL.
+
+51
+00:29:07,480 --> 00:29:10,540
+And then we just see blank. Um.
+
+52
+00:29:11,080 --> 00:29:15,060
+That's a good question. Let's see what the other browsers do.
+
+53
+00:29:15,070 --> 00:29:20,320
+Let's open up Safari first. Do they show an error code?
+
+54
+00:29:23,690 --> 00:29:27,590
+They show blank. Let's see what Chrome does.
+
+55
+00:29:29,840 --> 00:29:36,740
+Uh, they show an error code P error four of six.
+
+56
+00:29:36,950 --> 00:29:40,690
+That's interesting. I'm. I'm not like four.
+
+57
+00:29:40,710 --> 00:29:44,820
+Six is not super, super common. I don't think for us, it's not acceptable.
+
+58
+00:29:45,500 --> 00:29:52,010
+The server cannot produce a response matching the list of acceptable values defined in the requests proactive content negotiation.
+
+59
+00:29:52,520 --> 00:29:56,090
+So we weren't able to it wasn't able to accept it.
+
+60
+00:29:56,930 --> 00:30:01,130
+And we're showing blank in safari. Showing blank. I have no idea what we're supposed to do.
+
+61
+00:30:02,210 --> 00:30:08,750
+Let's let's quickly check to see if there's anything in bugzilla 4046 error
+
+62
+00:30:09,830 --> 00:30:20,990
+anything related to 406 not really htp 406 see if there's anything in there.
+
+63
+00:30:23,480 --> 00:30:27,290
+I don't you know what? There might also be like resolved bugs.
+
+64
+00:30:27,560 --> 00:30:32,560
+Um. That we should check.
+
+65
+00:30:35,700 --> 00:30:42,839
+Doo doo doo doo. Okay. A bunch more bugs here. My eyebrows.
+
+66
+00:30:42,840 --> 00:30:46,470
+Ten throws it. And here that's throwing a four or six.
+
+67
+00:30:51,030 --> 00:30:54,400
+Uh. I don't know. I don't know.
+
+68
+00:30:54,410 --> 00:30:57,490
+This is a very good question. I don't have a good answer for you.
+
+69
+00:31:00,430 --> 00:31:09,249
+What I would recommend, if you're curious about this Smurf d is maybe this is worth filing a bug about though.
+
+70
+00:31:09,250 --> 00:31:14,320
+Place I would consider filing. This is maybe under document navigation.
+
+71
+00:31:15,370 --> 00:31:22,110
+Um. It would be under like, core. Mm.
+
+72
+00:31:24,390 --> 00:31:33,200
+The navigation core, maybe core DOM navigation or, you know, maybe NECO networking.
+
+73
+00:31:33,210 --> 00:31:41,400
+This is the one corps now working HTTP. This might be more, more appropriate.
+
+74
+00:31:42,570 --> 00:31:50,969
+Um, because, yeah, I guess this is our networking layer would handle things like our error codes, four or six error codes.
+
+75
+00:31:50,970 --> 00:31:55,700
+And so a bug here might be a good place to start. All right, let's move on.
+
+76
+00:31:55,710 --> 00:32:01,560
+There's been a lot of chatter in here. Some people talking about other things they see in the console, some privacy badge stuff.
+
+77
+00:32:01,590 --> 00:32:05,460
+Let's go ahead and look at this pull request from Smurf D.
+
+78
+00:32:05,670 --> 00:32:09,209
+It's for episode 328. I don't do a whole lot of editorializing.
+
+79
+00:32:09,210 --> 00:32:15,990
+I'll do a brief check here, make sure that the dates are right like it was on June, um, June the 14th?
+
+80
+00:32:15,990 --> 00:32:21,360
+That's correct. 328 Yeah, that's right. And then the links look good.
+
+81
+00:32:21,360 --> 00:32:25,770
+June 14th, uh, episode 328.
+
+82
+00:32:26,070 --> 00:32:29,610
+I was working on jump lists again. All of this looks fine.
+
+83
+00:32:29,760 --> 00:32:32,940
+I love it. Moving on, episode 329.
+
+84
+00:32:32,940 --> 00:32:36,240
+That was on June 21st. Yes.
+
+85
+00:32:37,020 --> 00:32:41,070
+Uh, 2023, June 21st. 329.
+
+86
+00:32:41,430 --> 00:32:48,149
+That all looks right. And then we were working on I talked about the volume controls in the new picture.
+
+87
+00:32:48,150 --> 00:32:56,160
+In picture volume controls. That was quite nice. I talked about the release model and we went back into jump lists, more jump list stuff.
+
+88
+00:32:56,610 --> 00:33:03,989
+So that's all great. I am happy with this. Let's go ahead and merge this in, Uh, and we'll go ahead and merge.
+
+89
+00:33:03,990 --> 00:33:10,960
+Episode 303 29. And I'll say thanks.
+
+90
+00:33:14,580 --> 00:33:17,760
+And what else have we got? 330 and 331.
+
+91
+00:33:18,390 --> 00:33:22,550
+Let's check these out. June 28th? Yes.
+
+92
+00:33:22,560 --> 00:33:25,560
+330. Uh oh. Here we go.
+
+93
+00:33:25,740 --> 00:33:29,640
+There's a typo there. We're going to update that. That says 339.
+
+94
+00:33:29,820 --> 00:33:38,610
+So we're going to edit this where you say this is episode 330 on June 28, 2023.
+
+95
+00:33:40,140 --> 00:33:49,350
+June 28th. Yeah. 330. We were reviewing a patch and then we did jump with stuff and I talked about Tim Schafer, one of the creators of Monkey Island.
+
+96
+00:33:49,350 --> 00:33:56,310
+We were talking about an interview that Tim was doing with somebody on Twitch, and I happened to be in the chat and I asked a question.
+
+97
+00:33:56,430 --> 00:34:03,880
+This might interest you, Elad, because you and I enjoy Point Click Adventure Games and uh,
+
+98
+00:34:04,380 --> 00:34:10,330
+Tim Schafer, who worked on Monkey Island and Dave Tentacle and a few others, um,
+
+99
+00:34:11,490 --> 00:34:15,660
+you know, did this interview and Tim was talking about like game design and stuff,
+
+100
+00:34:15,660 --> 00:34:19,860
+and I was in the chat and I asked a question and he answered, which was pretty cool.
+
+101
+00:34:20,290 --> 00:34:24,239
+Um, this link looks wrong.
+
+102
+00:34:24,240 --> 00:34:29,740
+Maybe. Yeah, this doesn't look right. Oh, it should have underscores.
+
+103
+00:34:29,760 --> 00:34:36,780
+So we're going to edit this as well. And that all looks good.
+
+104
+00:34:38,310 --> 00:34:42,870
+Uh, I'm going to commit those changes and just fix some typos.
+
+105
+00:34:45,690 --> 00:34:52,200
+Okay. And then for episode 331, July 5th.
+
+106
+00:34:54,000 --> 00:34:59,040
+Oh, it's right. 331 331 July 5th, 331 Yes, yes, yes.
+
+107
+00:34:59,370 --> 00:35:02,460
+I talked about Feria, which is an alternative to read it.
+
+108
+00:35:02,910 --> 00:35:12,690
+That's where the fire Oh, the Firefox community has kind of migrated to different places from our Firefox and gone to different places.
+
+109
+00:35:12,690 --> 00:35:13,680
+And this is one of them.
+
+110
+00:35:14,700 --> 00:35:25,679
+And uh, I talked about main thread disk access, you know, dash there and then we talked about jump lists again and I think I'm happy with that.
+
+111
+00:35:25,680 --> 00:35:33,749
+I'm going to finish that edit. We'll go ahead and commit that and we'll merge these in and we've got one more and then we can call this done.
+
+112
+00:35:33,750 --> 00:35:38,940
+So we'll go ahead and merge. Thanks.
+
+113
+00:35:40,110 --> 00:35:48,930
+And finally, episode 332 That was the week before last before I went on vacation was on July 12th.
+
+114
+00:35:49,590 --> 00:35:52,680
+And that looks right.
+
+115
+00:35:52,770 --> 00:35:54,060
+That looks right.
+
+116
+00:35:54,090 --> 00:36:01,770
+No episode next week, special shout out to the Thunderbird Gang because they did their release and it looked really cool and then jump to stuff.
+
+117
+00:36:01,770 --> 00:36:07,230
+And I we talked a lot about what was happening with like lazy idle thread That was a fun discovery there.
+
+118
+00:36:07,620 --> 00:36:13,649
+And I never got to this part. I never got to review Danny Collins patch to add tool tips, or at least I did,
+
+119
+00:36:13,650 --> 00:36:21,660
+but I asked for tests and I think that's the first thing we're actually going to do now that now that we're back before we get into jump loss stuff,
+
+120
+00:36:21,660 --> 00:36:26,549
+I'm happy with this, by the way. So let's merge this. And before we get into jobless stuff,
+
+121
+00:36:26,550 --> 00:36:34,620
+I want to review that patch from Danny Colon because there's a version of it in my queue that has tests and we should take a look at it.
+
+122
+00:36:35,460 --> 00:36:45,000
+So if you recall, if you recall, this patch came into my review queue and we reviewed it.
+
+123
+00:36:45,000 --> 00:36:49,260
+Yeah, we reviewed it last week. It works wonderfully. And what I asked for was a test.
+
+124
+00:36:50,010 --> 00:36:53,129
+And this is the test that's been written. That's great.
+
+125
+00:36:53,130 --> 00:37:00,000
+So let's review the test. The patch itself is fairly straightforward because we were able to reuse a lot
+
+126
+00:37:00,000 --> 00:37:04,410
+of the code that existed inside of the G browser object instead of there was,
+
+127
+00:37:04,650 --> 00:37:10,500
+there was a little bit of back and forth about whether or not it's okay to reach across modules and get this helper.
+
+128
+00:37:10,710 --> 00:37:14,220
+And I clarified that yes, this is a public method.
+
+129
+00:37:14,520 --> 00:37:18,059
+It is fine to go ahead and call that method rather than recreating it.
+
+130
+00:37:18,060 --> 00:37:22,410
+So this adds the tooltip that is great and this is the test.
+
+131
+00:37:22,410 --> 00:37:27,870
+So the test runs in this browser tab tooltips script.
+
+132
+00:37:28,110 --> 00:37:30,990
+That is the appropriate place for it. Let's take a look at the test now.
+
+133
+00:37:31,110 --> 00:37:37,620
+So this test verifies that the tooltip of the TAB manager panel matches the tooltip and the TAB strip makes sense.
+
+134
+00:37:37,950 --> 00:37:45,179
+So what they do is they open a new tab, we open a new foreground tab, we make the pop up of all tabs show up.
+
+135
+00:37:45,180 --> 00:37:47,280
+So this is something that you need to do.
+
+136
+00:37:47,280 --> 00:37:52,800
+You need to like make sure that you initially initialize the all Tabs panel in case it hasn't been initialized already.
+
+137
+00:37:52,980 --> 00:38:00,330
+If it has, this is a no op. And then we force the panel to open and then we look at the.
+
+138
+00:38:06,840 --> 00:38:12,810
+Let's see here. We're getting the old hands free tabs last time and child first element, child get attribute label.
+
+139
+00:38:13,620 --> 00:38:22,830
+And then comparing that with Tab B, which is she has to have some length minus one get attribute label.
+
+140
+00:38:23,610 --> 00:38:32,400
+Okay. So I have a couple of suggestions and I think we can I think we can make some minor suggestions here, but otherwise this looks great.
+
+141
+00:38:33,930 --> 00:38:40,259
+So my first suggestion is this is making the test a little bit brittle in that
+
+142
+00:38:40,260 --> 00:38:47,010
+the it's relying on the DOM structure of the items in the in the tab list.
+
+143
+00:38:47,190 --> 00:38:56,129
+And I think we can make it a little less brittle by doing a DOM query on, you know, on the album and we'll figure out what the right query is.
+
+144
+00:38:56,130 --> 00:39:00,060
+And then here Tab B is basically just this.
+
+145
+00:39:00,060 --> 00:39:08,730
+This is tab B and or like the this is this.
+
+146
+00:39:09,090 --> 00:39:13,230
+So we can we can not do this lookup, we can just get the label from tab.
+
+147
+00:39:13,650 --> 00:39:18,990
+So I will first of all suggest that I will say that this should be equivalent to this.
+
+148
+00:39:20,340 --> 00:39:25,200
+I think tab refers to this thing already.
+
+149
+00:39:29,130 --> 00:39:38,100
+And naming wise. Naming wise, we might be able to make this clear.
+
+150
+00:39:38,130 --> 00:39:48,750
+Then tab A and tab be maybe something like tab in list label and tab in tabs.
+
+151
+00:39:49,080 --> 00:39:52,710
+Label tab in tab strip label.
+
+152
+00:39:54,870 --> 00:40:03,410
+I know it's more characters. But might make it clear, uh, who what belongs.
+
+153
+00:40:04,410 --> 00:40:09,140
+To what? Uh, yeah.
+
+154
+00:40:09,170 --> 00:40:16,400
+Tim Schaffer. He does seem like a good guy and he does make fun games. I never finished psychonauts, but I enjoyed it while I was playing it.
+
+155
+00:40:16,580 --> 00:40:24,530
+Now is from Double Fine. So the last thing I wanted to suggest was an easier and maybe less brittle way of getting the label.
+
+156
+00:40:24,550 --> 00:40:30,020
+So let's launch a version, our local version of Firefox here.
+
+157
+00:40:31,330 --> 00:40:43,960
+You know, pump up the font so you can see what I'm doing. Okay, so here is a version of Firefox and let's open up some tabs.
+
+158
+00:40:44,350 --> 00:40:49,630
+We've got our tab panel here and I'm going to open up the DevTools.
+
+159
+00:40:50,680 --> 00:40:55,569
+What we're going to do is we're going to keep the panel open by disabling pop up auto hide.
+
+160
+00:40:55,570 --> 00:40:58,540
+That's an item here under the meatball menu. Disable pop up out of hide.
+
+161
+00:40:58,540 --> 00:41:05,349
+So this will keep this open and then we can examine the DOM structure of this panel and, oh, it goes away when I click it.
+
+162
+00:41:05,350 --> 00:41:14,590
+Of course. Of course. That's one of the issues with this whole thing. But we've got it showing up in the inspector so we can we can take a look at it.
+
+163
+00:41:15,370 --> 00:41:21,220
+And what it is is it's a toolbar. I see toolbar item, all tabs button.
+
+164
+00:41:24,500 --> 00:41:30,190
+Push button label new tab. Okay, something about labels.
+
+165
+00:41:30,320 --> 00:41:35,510
+So really what we are looking for is an every all tabs button.
+
+166
+00:41:38,030 --> 00:41:41,420
+We're looking for the last all tabs button in this list.
+
+167
+00:41:41,930 --> 00:41:52,040
+So, for example, we could do um, that refers to what I have dollar sign zero as a shortcut for whatever I have highlighted.
+
+168
+00:41:52,040 --> 00:42:03,469
+I could say like query selector. All tabs button, as I said, query selector all it will give me all of them.
+
+169
+00:42:03,470 --> 00:42:07,780
+And if I do at minus one, it should give me. Uh.
+
+170
+00:42:08,060 --> 00:42:13,330
+I need an array read out from. That node list.
+
+171
+00:42:13,330 --> 00:42:18,430
+That should give me the last one. If I get the label, it should be Can you solve Albert Einstein's famous house riddle?
+
+172
+00:42:19,180 --> 00:42:25,509
+Yeah, this is maybe less brittle because it doesn't presume the DOM structure.
+
+173
+00:42:25,510 --> 00:42:30,280
+It just says, Hey, find a thing with this class. Give me the last one and give me its label.
+
+174
+00:42:30,760 --> 00:42:42,200
+And I think that's maybe what I'm going to suggest here. So if we go back to the test, um, we can maybe make this less bread.
+
+175
+00:42:42,310 --> 00:42:46,160
+Oh, I also enjoyed broken age. I enjoyed broken age a lot.
+
+176
+00:42:46,930 --> 00:42:48,430
+I helped kickstart that one.
+
+177
+00:42:49,140 --> 00:43:02,170
+Um, we can maybe make this less brittle by relying less on the DOM structure of these things, and instead do a c assess query like this.
+
+178
+00:43:05,870 --> 00:43:11,179
+Um, let. And then what was the suggestion I made?
+
+179
+00:43:11,180 --> 00:43:18,739
+It was like, like tab in list label equal array from and then instead of dollar sign zero was.
+
+180
+00:43:18,740 --> 00:43:23,780
+Is this all tabs for you Tabs. Because I think that's that's equivalent.
+
+181
+00:43:23,780 --> 00:43:27,570
+Let's just make sure though. Um.
+
+182
+00:43:31,280 --> 00:43:34,519
+Mm hmm. It's not. It's not all tabs view tabs.
+
+183
+00:43:34,520 --> 00:43:38,750
+What is that? That's.
+
+184
+00:43:44,940 --> 00:43:52,070
+Dams. Dams. And let's keep it open again.
+
+185
+00:43:52,090 --> 00:43:58,380
+What is this? We're hitting an error in our.
+
+186
+00:44:00,930 --> 00:44:05,130
+In the dev tools, but that's okay. We're okay so far.
+
+187
+00:44:06,150 --> 00:44:12,860
+Uh, not quite. There we go. It was called All Tabs Menu.
+
+188
+00:44:12,870 --> 00:44:16,109
+All tabs. View tabs. All tabs.
+
+189
+00:44:16,110 --> 00:44:26,760
+Menu. I see. So shouldn't we be able to do query selector all all tabs, But.
+
+190
+00:44:31,160 --> 00:44:36,710
+Yes. So the reason it wasn't working before probably was because the panel was closed.
+
+191
+00:44:37,850 --> 00:44:43,610
+And at minus one is just a way of saying, give me the last one. It's just a fancy way of doing that.
+
+192
+00:44:45,650 --> 00:44:50,650
+Okay. It's not a fancy way of saying it.
+
+193
+00:44:50,660 --> 00:45:00,230
+I prefer to say it that way than saying like the classic way of getting the last item would be like if like axes of an array.
+
+194
+00:45:04,220 --> 00:45:11,270
+The classic way that I recall doing it is like let last equals like x x out length minus one.
+
+195
+00:45:11,630 --> 00:45:15,110
+Like that's the way of getting the last item in the fast or not.
+
+196
+00:45:15,710 --> 00:45:19,930
+Maybe the last verbose way of doing that is at minus one,
+
+197
+00:45:20,550 --> 00:45:26,660
+which just like go work your way backwards through the list and instead just give me the last item in the list.
+
+198
+00:45:28,460 --> 00:45:32,570
+All right, let's save that. Otherwise, I think this is great.
+
+199
+00:45:32,690 --> 00:45:36,800
+I think this is a great test. Now, I would like to run this test locally just to make sure that I.
+
+200
+00:45:37,790 --> 00:45:47,270
+I haven't missed anything. So let's pull this patch down. And we'll run it locally.
+
+201
+00:45:54,260 --> 00:45:59,690
+So let's build it. I think it may have been my first Kickstarter contribution too.
+
+202
+00:45:59,700 --> 00:46:09,930
+I felt so happy was like it felt like adventure games are coming back and then they kind of have they kind of have made this quiet resurgence,
+
+203
+00:46:10,320 --> 00:46:17,490
+like not least of all the return to Monkey Island, which is like, so happy that that happened.
+
+204
+00:46:17,490 --> 00:46:22,920
+I haven't actually played it yet, but I'm so happy that that's happened. I've been sort of saving up to play that game.
+
+205
+00:46:23,610 --> 00:46:36,660
+All right, let's let's get in here. Okay, so let's restore our previously close tabs.
+
+206
+00:46:39,480 --> 00:46:45,240
+Here's a bunch of tabs from before, I guess that were not the ones I had recently closed.
+
+207
+00:46:45,540 --> 00:46:50,160
+I don't know why restored those ones. Maybe because I don't know.
+
+208
+00:46:50,550 --> 00:46:54,600
+We closed the window rather than the tabs. All right. Anyways, here's some tabs.
+
+209
+00:46:55,080 --> 00:46:58,260
+Here's this list. We've got tab tips. Now are tooltips.
+
+210
+00:46:58,260 --> 00:47:03,670
+Now, that's what that's what Dabney Coleman fixed is we've got tool tips now.
+
+211
+00:47:03,690 --> 00:47:24,390
+That's good. Let's run our test. Quick shout out to Eli.
+
+212
+00:47:24,550 --> 00:47:27,990
+Oh, what's going on here? Uh, do you not know what I'm talking about?
+
+213
+00:47:31,880 --> 00:47:48,950
+Ere running the test. Why? Why? Why, Why? You need me to build faster again.
+
+214
+00:47:48,980 --> 00:47:52,910
+That doesn't make any sense. Do I not have the path correct?
+
+215
+00:47:55,850 --> 00:48:00,020
+This is an interesting conundrum. Yeah, that path is right.
+
+216
+00:48:01,040 --> 00:48:04,260
+What's your problem, Mark?
+
+217
+00:48:04,620 --> 00:48:08,090
+Mark, Does it just want me to run? Test?
+
+218
+00:48:08,180 --> 00:48:17,100
+Mark. This might be a new development.
+
+219
+00:48:17,550 --> 00:48:20,880
+I'm used to writing mock mock tests, but maybe they remove support for that.
+
+220
+00:48:20,910 --> 00:48:28,450
+That's interesting. Hmm. Okay.
+
+221
+00:48:28,510 --> 00:48:32,770
+The test passes, so I'm pretty happy here. We've got a passing test.
+
+222
+00:48:33,070 --> 00:48:37,240
+They're just some minor adjustments here. I'm going to say this is great.
+
+223
+00:48:37,540 --> 00:48:41,110
+I'm going to accept this. Thanks, SDK.
+
+224
+00:48:42,040 --> 00:48:48,400
+This looks great. Can you please take a look at my suggestions below?
+
+225
+00:48:50,710 --> 00:48:57,070
+I. I think they might help make the test less brittle and more readable.
+
+226
+00:48:58,050 --> 00:49:05,760
+And a little more readable. I really appreciate you putting in the time to write a test.
+
+227
+00:49:09,380 --> 00:49:12,950
+And then once that's done, we can land this. So.
+
+228
+00:49:13,400 --> 00:49:17,630
+Approved. Approved. All right.
+
+229
+00:49:18,780 --> 00:49:21,870
+Done. That's off the that's off the work plate.
+
+230
+00:49:22,140 --> 00:49:26,790
+We're going to get into the jump list now. So let's let's do it.
+
+231
+00:49:26,800 --> 00:49:30,560
+I wanted to. Like last time.
+
+232
+00:49:30,570 --> 00:49:36,280
+Last time on Windows Jump lists. We just got to the point where all the stuff was working and we wanted to write some tests.
+
+233
+00:49:36,300 --> 00:49:39,300
+And now I want to sort of, like, plot out the tests that we want to write.
+
+234
+00:49:40,410 --> 00:49:47,910
+And I think we can do that here. Yeah, we we solved these things already.
+
+235
+00:49:48,180 --> 00:49:51,540
+So we're at the point where we're going to write a test for the jump list builder.
+
+236
+00:49:51,720 --> 00:49:53,790
+We're going to write a front and test the register,
+
+237
+00:49:53,820 --> 00:50:00,000
+registers a fake wind taskbar and produces a fake jump list builder to make sure it gets past the right things.
+
+238
+00:50:00,520 --> 00:50:05,010
+Okay, so writing a G test. I've never written a G test before.
+
+239
+00:50:05,430 --> 00:50:08,830
+I've contributed to one. Mike, I think you hit bug.
+
+240
+00:50:08,850 --> 00:50:17,190
+Such and such. I hit a bug. Was this about the session o r test?
+
+241
+00:50:17,830 --> 00:50:22,120
+This was opened a day ago and it's been fixed relatively recently.
+
+242
+00:50:22,150 --> 00:50:30,090
+It was fixed 8 hours ago. Maybe I just need to do a more recent poll I pulled, I think yesterday.
+
+243
+00:50:30,100 --> 00:50:34,060
+I haven't pulled more recently. Okay. Good to know. So that's been fixed.
+
+244
+00:50:34,240 --> 00:50:39,430
+Thank goodness. A g test.
+
+245
+00:50:39,460 --> 00:50:42,730
+Now, I actually have some notes on the G test.
+
+246
+00:50:42,730 --> 00:50:49,300
+We want to write from like way back in the day because we started talking about G tests and I did some research into it.
+
+247
+00:50:51,010 --> 00:50:54,820
+We were talking about this stuff.
+
+248
+00:50:57,830 --> 00:51:03,440
+Wait for the damn EEG test. Wait for that. We spin the event loop to wait until the promise of the results rejects.
+
+249
+00:51:03,440 --> 00:51:09,650
+We assert the resolving of the rejecting. This was like the plan basically for writing our.
+
+250
+00:51:15,060 --> 00:51:24,030
+Our test. So let's let's see if we can start by building ourselves a very simple test that doesn't do anything.
+
+251
+00:51:24,360 --> 00:51:27,630
+Like, I don't know if mock ad test will work.
+
+252
+00:51:27,900 --> 00:51:38,250
+Let's just find out. Actually, mock ad test help Does support tests generate tests based on templates?
+
+253
+00:51:39,210 --> 00:51:43,860
+Uh, it doesn't look like G test is included.
+
+254
+00:51:46,960 --> 00:51:53,670
+I could be wrong. Let's double check. Because I think there's like a templates directory that we can look at.
+
+255
+00:51:54,240 --> 00:52:01,700
+Uh. Mark.
+
+256
+00:52:03,900 --> 00:52:10,140
+Test, Mark Command's ad test. Here we go. Almost.
+
+257
+00:52:18,740 --> 00:52:24,260
+Test ad tests supported suites.
+
+258
+00:52:25,990 --> 00:52:29,530
+So what sweets is. Okay, so these are the ones that are supported.
+
+259
+00:52:29,530 --> 00:52:33,640
+So tests are not supported. We're going to be doing this on our own gang.
+
+260
+00:52:34,900 --> 00:52:38,860
+All right. How to add a G test? Let's see if we can find some examples.
+
+261
+00:52:41,630 --> 00:52:44,720
+Also, do we have any source stocks on how to do this?
+
+262
+00:52:45,110 --> 00:52:51,020
+A test for those who are curious. This is a test that's written in C++ to test native code.
+
+263
+00:52:51,290 --> 00:52:56,719
+And the reason we need to do this is because we're basically going to be talking directly to our native
+
+264
+00:52:56,720 --> 00:53:05,120
+component and mocking out the Win32 API surface that we normally would speak to to populate the jump list.
+
+265
+00:53:05,330 --> 00:53:13,190
+But we're going to mock that out because what we're testing is the thing that talks to the Win32 API,
+
+266
+00:53:13,430 --> 00:53:16,370
+not the Win32 API itself, just the thing that talks to it.
+
+267
+00:53:16,370 --> 00:53:24,230
+So we're going to mock out the thing that it talks to and then we're going to send signals to it and make sure that our mock gets the right stuff.
+
+268
+00:53:24,260 --> 00:53:28,329
+Basically, that's the idea. G test.
+
+269
+00:53:28,330 --> 00:53:33,430
+Here we go. G test is run a standard web of running tests.
+
+270
+00:53:33,610 --> 00:53:36,270
+So running selected tests, you can do it like this.
+
+271
+00:53:36,280 --> 00:53:44,380
+Configuring G tests, debugging in G, test debugging debugging debug writing in g test May most of the g test documentation will apply here.
+
+272
+00:53:44,680 --> 00:53:48,520
+G Test primers recommended read. I think I ran these while I read these a while back.
+
+273
+00:53:48,520 --> 00:53:52,360
+I'm not going to read them right now in front of you, but we might end up having to go back there if we're stuck.
+
+274
+00:53:55,180 --> 00:53:59,280
+Here is an example of how to add a simple test. Amazing. I love this documentation.
+
+275
+00:54:03,850 --> 00:54:07,059
+This was from 2018. Let's.
+
+276
+00:54:07,060 --> 00:54:15,660
+Let's hope it's still relevant. So we add. I see.
+
+277
+00:54:15,870 --> 00:54:26,610
+Test, test, test, preview encoder. And then in the models build, we include it in unified sources.
+
+278
+00:54:30,570 --> 00:54:35,890
+To go into the zoology test. All right, Let's make sure that that's still actually the way it's done.
+
+279
+00:54:35,910 --> 00:54:42,600
+Yes, it looks like it. So all this kind of gets compiled into a separate library.
+
+280
+00:54:44,160 --> 00:54:51,720
+Okay. So the way I want to do this, then, I think is because the here, let's let's open up sublime.
+
+281
+00:54:52,980 --> 00:55:00,060
+I didn't mean to open up the finder. Really? The the jump list builder stuff that we've built is under widget windows.
+
+282
+00:55:00,780 --> 00:55:04,350
+And I think I could be wrong here. Widget.
+
+283
+00:55:06,300 --> 00:55:11,580
+Windows. There is a test directory, and there is an existing G test folder.
+
+284
+00:55:11,610 --> 00:55:15,240
+Okay, great. So we're going to add to this. So what we're going to do.
+
+285
+00:55:15,960 --> 00:55:21,090
+That's good. So let's start by creating a new file.
+
+286
+00:55:22,610 --> 00:55:26,270
+We're going to call it Widget. Windows.
+
+287
+00:55:27,600 --> 00:55:36,080
+Asks. G test will call it test jump list back end.
+
+288
+00:55:37,620 --> 00:55:42,510
+Not really Jump list builder is what we're testing. Excuse me.
+
+289
+00:55:44,610 --> 00:55:48,420
+Okay, so we've added a file here and we need to add the license header.
+
+290
+00:55:54,900 --> 00:56:00,500
+And. What goes into a test.
+
+291
+00:56:00,500 --> 00:56:04,240
+Presumably we need to bring in like the G test header.
+
+292
+00:56:04,250 --> 00:56:08,190
+That makes a lot of sense. And then what else?
+
+293
+00:56:08,570 --> 00:56:13,150
+Uh. A lot of this is probably very test specific.
+
+294
+00:56:15,960 --> 00:56:24,750
+Let's see if we can find the minimum G they brought in G test the jazz API, prio and code or all of this stuff.
+
+295
+00:56:28,410 --> 00:56:32,160
+I don't know what this means. Test prio and code or verify full.
+
+296
+00:56:38,890 --> 00:56:42,430
+Test pre or encoder. Let's just see what happens.
+
+297
+00:56:42,430 --> 00:56:49,540
+If I'm going to just copy copy this stuff, I'm going to go over here in a pasted in.
+
+298
+00:56:49,540 --> 00:56:55,040
+I'm going to get rid of these plus symbols, vertical selection.
+
+299
+00:56:55,990 --> 00:57:04,300
+I'm just going to say test. I'm going to say jump list, builder, verify file and what are there parts of the use I can reuse.
+
+300
+00:57:04,810 --> 00:57:09,370
+Let's let's assert true. Let's just assert true, True.
+
+301
+00:57:10,670 --> 00:57:14,750
+Simple. That's true. True is always true.
+
+302
+00:57:15,380 --> 00:57:18,740
+So let's just make sure that that's working.
+
+303
+00:57:18,740 --> 00:57:22,220
+Well, I'm just going to get rid of the rest of this. Actually don't need it.
+
+304
+00:57:23,240 --> 00:57:27,380
+And I think I'm missing an opening brace.
+
+305
+00:57:28,190 --> 00:57:35,130
+Yes. And do I need a semicolon?
+
+306
+00:57:35,250 --> 00:57:38,820
+No. All right. Let's just see if this works.
+
+307
+00:57:40,230 --> 00:57:43,350
+Do I need to include it? Final. I write test. Yeah. Here we go.
+
+308
+00:57:44,220 --> 00:57:49,680
+Test. Jump list builder dot CBP.
+
+309
+00:57:52,150 --> 00:57:56,570
+And it's got to be in alphabetical order. I think that's all I need to do.
+
+310
+00:57:56,590 --> 00:58:01,270
+Let's now build this. Let's build it.
+
+311
+00:58:01,870 --> 00:58:06,030
+Let's do an opt build. See what it does.
+
+312
+00:58:07,470 --> 00:58:24,950
+See if it's happy with this. Now I'm just thinking one of the things that we're going to need to do.
+
+313
+00:58:27,110 --> 00:58:36,499
+Did we expose that interface? Okay, we did. We did we expose the jump list back end because this is what we're going to have to basically implement.
+
+314
+00:58:36,500 --> 00:58:48,080
+We're going to need to implement a test version of this back end. And that's what we're going to construct our jump list builder to wrap around to.
+
+315
+00:58:48,110 --> 00:58:55,250
+We're doing what's called dependency injection here. I've never done this with native code, though, so this might be a whole lot of fun.
+
+316
+00:58:55,850 --> 00:58:59,150
+Oh, don't tell me you're doing a full build. That's crazy.
+
+317
+00:58:59,160 --> 00:59:03,890
+I know what's happening here.
+
+318
+00:59:04,760 --> 00:59:09,969
+Let's give this. 30 seconds to sort itself out.
+
+319
+00:59:09,970 --> 00:59:13,210
+If I see us doing a full blown build, I'm going to be very upset.
+
+320
+00:59:21,070 --> 00:59:29,730
+Hmm. This is bananas.
+
+321
+00:59:29,740 --> 00:59:35,430
+I swear. We had just finished a build. Okay, hold on.
+
+322
+00:59:35,440 --> 00:59:39,710
+It's wrapping up. It's wrapping up. It looks like it did.
+
+323
+00:59:39,730 --> 00:59:43,990
+Tool kit. It's complaining about some stuff.
+
+324
+00:59:45,100 --> 01:00:00,809
+Some. Some third party code. But it's actually I don't know if you saw but it like it got to tool kit library so I think we're actually close
+
+325
+01:00:00,810 --> 01:00:09,750
+to the end I don't know why changing and adding this this G test would cause us to rebuild all of these folders.
+
+326
+01:00:09,750 --> 01:00:16,350
+That doesn't make a whole lot of sense unless we're rebuilding all of the folders that have other G tests in them.
+
+327
+01:00:16,680 --> 01:00:20,130
+That would be super annoying. Um.
+
+328
+01:00:22,690 --> 01:00:26,620
+To just include them, to include it all together. That's possible.
+
+329
+01:00:27,670 --> 01:00:34,140
+Um. And now it's doing the deals.
+
+330
+01:00:34,160 --> 01:00:38,150
+Okay. Yeah. This should not take much longer. This is not a full build.
+
+331
+01:00:38,900 --> 01:00:46,400
+This is us. We're linking now. Now we're linking. So let's give that a couple of minutes.
+
+332
+01:00:46,400 --> 01:00:51,380
+And in the meantime, we can figure out how we're going to run this thing. So what's the command to run A test?
+
+333
+01:01:01,010 --> 01:01:07,089
+Uh. To include five for the class.
+
+334
+01:01:07,090 --> 01:01:12,760
+Your testing may not be needed to be a global expert, but it does need to be made available to you and test your writing.
+
+335
+01:01:13,840 --> 01:01:19,069
+That makes sense. Supposed test duration for per.
+
+336
+01:01:19,070 --> 01:01:24,410
+I'm not writing it a bench test. How do I run them?
+
+337
+01:01:25,610 --> 01:01:31,370
+Oh, here we go, Miles, run g test, debug, test.
+
+338
+01:01:31,490 --> 01:01:37,100
+Just want to run it. Mock G test. And then what does this mean?
+
+339
+01:01:37,100 --> 01:01:41,780
+Mars two D star. You know what?
+
+340
+01:01:42,140 --> 01:01:46,010
+I have a feeling this identifier has to do with what I wrote.
+
+341
+01:01:49,060 --> 01:01:55,960
+Here. I have a feeling this is us naming the test so that it can be run.
+
+342
+01:01:57,160 --> 01:02:02,690
+So I suspect that I could run. This is done.
+
+343
+01:02:02,720 --> 01:02:10,550
+This is done. Well, I did not mean go 30 and three, three C and exit and.
+
+344
+01:02:10,940 --> 01:02:17,770
+Sorry, didn't mean to launch NVDA. Hello, Magic Arrows.
+
+345
+01:02:18,380 --> 01:02:21,730
+Hello. Okay, so we're not going to run Mars today.
+
+346
+01:02:21,740 --> 01:02:25,370
+We're going to run jump list Builder and see if it's happy with that.
+
+347
+01:02:25,400 --> 01:02:29,000
+Do I need the dot star? Let's try it without first and see what happens.
+
+348
+01:02:34,070 --> 01:02:39,760
+What you doing? Richter's G test.
+
+349
+01:02:45,280 --> 01:02:49,690
+So now it's it's doing another compile. That's not amazing.
+
+350
+01:02:49,870 --> 01:02:53,890
+Maybe I didn't even need to do the first compile. It's kind of annoying.
+
+351
+01:02:56,770 --> 01:03:00,100
+Compiling a bunch of rust stuff. Okay.
+
+352
+01:03:00,460 --> 01:03:05,530
+Well, while it's figuring out whether or not it can run that test, let's plan out what we're going to do.
+
+353
+01:03:07,180 --> 01:03:12,850
+So it's episode 333. I'm actually going to. That text that we saw in here was actually useful.
+
+354
+01:03:13,480 --> 01:03:18,290
+I'm going to copy some of that over because I think we might want to refer to it.
+
+355
+01:03:18,310 --> 01:03:22,780
+Where was it? Uh.
+
+356
+01:03:24,430 --> 01:03:29,980
+Where was it? I saw it. It was nearby, just like back in the day.
+
+357
+01:03:33,430 --> 01:03:36,650
+What? What was the one? Here it is. Right.
+
+358
+01:03:36,740 --> 01:03:40,210
+Cheetos. It had, like, a chunk of code.
+
+359
+01:03:40,840 --> 01:03:46,690
+This is the one I wanted. Yes. Okay, so I'm going to copy all of this.
+
+360
+01:03:48,100 --> 01:03:53,500
+And we're going to go back to today's episode. We're going to just take a look at this and see if any of this is still relevant.
+
+361
+01:03:53,920 --> 01:03:57,010
+So we have an abstract. It's not jump loss manager anymore.
+
+362
+01:03:57,400 --> 01:04:01,900
+It's a jump list back end. It's not what it's called. Oh, it ran.
+
+363
+01:04:01,990 --> 01:04:06,310
+Jobless builder. Running zero tests.
+
+364
+01:04:07,240 --> 01:04:10,479
+Cannot find the file. Okay, so that's a problem. What if I do?
+
+365
+01:04:10,480 --> 01:04:24,090
+I need to add the dot star. Is that what you want? Okay.
+
+366
+01:04:24,090 --> 01:04:28,470
+Yes, that worked. That ran a test. So I do need the dot star.
+
+367
+01:04:29,580 --> 01:04:34,550
+And there's some metrics errors, but they are unrelated.
+
+368
+01:04:34,560 --> 01:04:37,770
+So this is the part that we care about. So we have a test working.
+
+369
+01:04:39,780 --> 01:04:47,889
+Um. Let's see if we can do something really, really simple.
+
+370
+01:04:47,890 --> 01:04:52,870
+Like let's bring in the let's construct a jump list builder.
+
+371
+01:04:53,620 --> 01:04:56,710
+Let's see if we can just construct a jump list builder.
+
+372
+01:05:01,180 --> 01:05:04,930
+So we should get the includes we're going to do include.
+
+373
+01:05:10,590 --> 01:05:14,660
+Do I need to? I don't think I need to pass it any fancy paths.
+
+374
+01:05:14,670 --> 01:05:17,970
+I think I can just do include Jumbles Builder. Let's see if it likes this.
+
+375
+01:05:20,490 --> 01:05:24,209
+And then let's see what happens if I try and construct one.
+
+376
+01:05:24,210 --> 01:05:29,100
+And if I recall correctly, it should be fine for me too.
+
+377
+01:05:30,510 --> 01:05:36,050
+What is it? And is Windows Taskbar?
+
+378
+01:05:36,220 --> 01:05:39,420
+Or what's it called?
+
+379
+01:05:39,430 --> 01:05:43,130
+Win. Taskbar.
+
+380
+01:05:44,480 --> 01:05:51,410
+So here new jump this builder and then it wants like an and a new ID.
+
+381
+01:05:52,100 --> 01:05:58,610
+So I'm just going to construct one of these things just to see I'm going to pass it.
+
+382
+01:06:01,120 --> 01:06:05,470
+And as auto string like a UMD.
+
+383
+01:06:06,070 --> 01:06:15,960
+It's just the empty string. And then let's see what what other asserts Do I have kind of like assert not null assert?
+
+384
+01:06:16,270 --> 01:06:20,460
+Do I like, coerce it into truthiness?
+
+385
+01:06:20,470 --> 01:06:27,340
+Like what? Assert. Assert equals false.
+
+386
+01:06:27,340 --> 01:06:30,669
+Greater. Equal Greater than less equals less than not equal.
+
+387
+01:06:30,670 --> 01:06:35,290
+True. Expect false expect. What's the difference between expect true and expected?
+
+388
+01:06:41,320 --> 01:06:49,750
+What are these? Certs. Sirte.
+
+389
+01:06:51,370 --> 01:06:59,540
+Assertions. Assertion. Assertions reference.
+
+390
+01:07:03,660 --> 01:07:07,049
+Majority makers until it becomes apparent and expect variant to assert variant upon failure.
+
+391
+01:07:07,050 --> 01:07:13,590
+Expect makers generally non-fatal failures of a current functioning coherent while assert fatal are fatal and abort the current function.
+
+392
+01:07:13,590 --> 01:07:19,850
+I see. Okay. See ad failure.
+
+393
+01:07:19,860 --> 01:07:28,020
+Expect that. Interesting. Expect that such and such matches as me assert that.
+
+394
+01:07:28,890 --> 01:07:35,640
+I like that. I like that. Let's just coerce.
+
+395
+01:07:36,390 --> 01:07:40,650
+Let's just coerce. Assert. True. We're going to say assert true builder.
+
+396
+01:07:45,180 --> 01:07:50,430
+Let's see if this compiles. I have some suspicion that it won't.
+
+397
+01:07:50,880 --> 01:07:54,630
+Do I need to? I might need to rebuild. Let's see what happens if I try and do this.
+
+398
+01:07:54,630 --> 01:07:58,620
+Well, attempt. Will it just run the test, or do I need to, like, do a build?
+
+399
+01:08:00,270 --> 01:08:05,140
+Like, is this step building the test? I think it is.
+
+400
+01:08:05,150 --> 01:08:10,960
+I think it's building it. That's good. Okay, good.
+
+401
+01:08:17,160 --> 01:08:23,370
+Could not build it. Y. Y. Y. Y. Y. Unknown name h result.
+
+402
+01:08:23,370 --> 01:08:31,290
+It doesn't know what h results are. I think I need to bring in like, the Win32 stuff, the basic Win32 stuff.
+
+403
+01:08:33,360 --> 01:08:45,820
+Uh. Didn't that.
+
+404
+01:08:54,220 --> 01:08:58,760
+Magic arrows is dumping in. Some. Includes include rum.
+
+405
+01:08:58,780 --> 01:09:02,500
+Include cola. Include cocktail. Make rum cola.
+
+406
+01:09:03,730 --> 01:09:07,750
+Very interesting. Interesting combination there.
+
+407
+01:09:10,630 --> 01:09:14,470
+Okay, So we've got it. Knows what results are now, but it doesn't know what I object.
+
+408
+01:09:14,470 --> 01:09:18,610
+Array is so odd. Cheese. So I have to import all this stuff.
+
+409
+01:09:20,880 --> 01:09:26,940
+This is super annoying. Okay, let's see.
+
+410
+01:09:26,970 --> 01:09:31,410
+Jump jump list Builder dot CP was it bring in?
+
+411
+01:09:31,950 --> 01:09:40,960
+It might be all of this stuff that I need to bring in. Okay.
+
+412
+01:09:46,780 --> 01:09:51,310
+Let's see. Do you know what I mean now? How about now?
+
+413
+01:10:00,040 --> 01:10:06,510
+Building. Nope.
+
+414
+01:10:06,810 --> 01:10:09,880
+Too many errors. Uh. yyyy0.
+
+415
+01:10:10,140 --> 01:10:13,500
+Okay, hold on. Hold on. Stand by.
+
+416
+01:10:16,570 --> 01:10:23,170
+Still doesn't know what I object array is and doesn't know what known dest category is.
+
+417
+01:10:23,800 --> 01:10:27,850
+So I have a feeling we need to bring in a different header. Okay. Where is I object or.
+
+418
+01:10:28,240 --> 01:10:33,220
+I have to go through the Mozilla or do the Microsoft documentation now.
+
+419
+01:10:34,150 --> 01:10:41,230
+Not emptiness. Mozilla Microsoft GS Developer documentation.
+
+420
+01:10:41,920 --> 01:10:46,050
+What's it called? Yeah, I object. Array. Object array dot h.
+
+421
+01:10:46,060 --> 01:11:06,110
+That's what I have to bring in. Okay, Um, so let's get rid of these other things that, um.
+
+422
+01:11:08,160 --> 01:11:12,870
+Let's just. Not include those for now.
+
+423
+01:11:13,470 --> 01:11:18,940
+We're going to bring an object to radar H see if that changes our error message.
+
+424
+01:11:18,960 --> 01:11:21,960
+I just want this thing to run. I just want to run.
+
+425
+01:11:23,430 --> 01:11:35,540
+Let's see if we can get there. This is probably going to be us.
+
+426
+01:11:35,540 --> 01:11:40,400
+Kind of like smashing through errors until it finally builds. Okay.
+
+427
+01:11:40,670 --> 01:11:44,090
+Slightly different error. We don't hear about I object or any more.
+
+428
+01:11:44,090 --> 01:11:47,300
+We do hear about known deaths category. It doesn't know what that is.
+
+429
+01:11:48,590 --> 01:11:58,270
+Uh, let's see if we can find out where that's defined. Uh, let's see.
+
+430
+01:11:58,360 --> 01:12:01,510
+What do you think? Microsoft. No test category.
+
+431
+01:12:01,690 --> 01:12:14,010
+Seriously? Come on Google and known category sea jump list class.
+
+432
+01:12:18,380 --> 01:12:28,820
+Jobless class. What is this? This is not quite this isn't when 32 is.
+
+433
+01:12:29,000 --> 01:12:42,380
+This is like the MFC stuff. Yeah.
+
+434
+01:12:44,030 --> 01:12:48,710
+I don't know what this is. This is not. I don't think we use Microsoft Foundation.
+
+435
+01:12:49,160 --> 01:12:52,250
+I don't think we use this library. So I'm in the wrong place.
+
+436
+01:12:52,970 --> 01:13:00,950
+Um. This thing knows about our customer list.
+
+437
+01:13:00,980 --> 01:13:07,220
+Yeah. What? Where are you? Shell 32, Doll shop.
+
+438
+01:13:07,370 --> 01:13:14,060
+Idol Corps include Shop Object Idol dot H.
+
+439
+01:13:16,650 --> 01:13:21,250
+That's what we want. I think. Okay.
+
+440
+01:13:25,620 --> 01:13:31,230
+Let's put this, uh. Let's put this in alphabetical order.
+
+441
+01:13:32,640 --> 01:13:36,410
+Just because. And let's see.
+
+442
+01:13:38,510 --> 01:13:41,600
+Danny Cohn thought I was on vacation. I was last week. I was on vacation.
+
+443
+01:13:41,600 --> 01:13:45,620
+I was away. I was at the beach as a family was good.
+
+444
+01:13:46,520 --> 01:13:50,870
+I got some sun. I got in the water.
+
+445
+01:13:51,470 --> 01:13:56,600
+I got in a boat. I survived. Okay, so different areas now.
+
+446
+01:13:57,410 --> 01:14:00,440
+Unknown type name, jobless builder. Did you mean Mozilla?
+
+447
+01:14:00,690 --> 01:14:05,510
+Okay, good. This I recognized. So using Mozilla widget.
+
+448
+01:14:05,750 --> 01:14:08,810
+John Bliss Builder. It doesn't know what we mean. We have to tell it.
+
+449
+01:14:08,820 --> 01:14:14,120
+This is. This is the fully qualified name of the class we're using like the short name.
+
+450
+01:14:14,540 --> 01:14:18,439
+And I'm saying like, okay, fine, we're going to I'm going to be very explicit.
+
+451
+01:14:18,440 --> 01:14:22,130
+This is what we're using. So I think that will make it happy.
+
+452
+01:14:31,400 --> 01:14:34,610
+Come on, let's go.
+
+453
+01:14:48,210 --> 01:14:51,290
+Okay. It it built it.
+
+454
+01:14:51,310 --> 01:14:54,790
+It's doing some deals stuff. It's linking. That's good news.
+
+455
+01:14:55,660 --> 01:15:02,890
+I hope this is not. Oh, I don't think we're going to be able to afford to do such incremental development.
+
+456
+01:15:03,280 --> 01:15:07,719
+Okay, good. It passed. It passed. Global test environment.
+
+457
+01:15:07,720 --> 01:15:12,840
+Tear down. Verify for one test run.
+
+458
+01:15:12,850 --> 01:15:16,140
+Okay. Okay.
+
+459
+01:15:17,470 --> 01:15:20,500
+This passed so we can construct it. That's good news.
+
+460
+01:15:20,920 --> 01:15:25,900
+That's very good news. And we didn't need this stuff so we can get rid of that.
+
+461
+01:15:26,200 --> 01:15:33,970
+So we've got our very basic framework here. Um, so we're going to say test.
+
+462
+01:15:35,430 --> 01:15:38,950
+What's the format for, like, naming a test? Test?
+
+463
+01:15:40,420 --> 01:15:44,080
+Uh, dot CP. What is the format?
+
+464
+01:15:44,440 --> 01:15:56,050
+Test. Naming a test. Like Mars, for example.
+
+465
+01:15:59,260 --> 01:16:02,320
+Oh, the second part. Verify full. I see.
+
+466
+01:16:02,380 --> 01:16:06,190
+So that has nothing to do with configuring the test. This is how you.
+
+467
+01:16:08,140 --> 01:16:11,680
+This is how you describe it. Test for jump plus builder. I'm testing.
+
+468
+01:16:12,070 --> 01:16:16,540
+Construction. Basic construction.
+
+469
+01:16:18,770 --> 01:16:31,340
+Um. And now what I want to do is I want to create our subclass, our testing jump list back end.
+
+470
+01:16:32,840 --> 01:16:37,730
+Okay, So we've got this is the very exciting part. I've kind of been waiting for this for a long time.
+
+471
+01:16:38,150 --> 01:16:41,930
+So here is our virtual this is our interface.
+
+472
+01:16:41,930 --> 01:16:52,270
+Basically, it's like a virtual class that we're going to implement and we already have an implementation inside of jump list Builder dot CP uh,
+
+473
+01:16:52,970 --> 01:17:03,380
+native jump list, back end. So what I'm going to do actually is I'm going to copy our native one and then we're going to get it.
+
+474
+01:17:06,970 --> 01:17:12,630
+We're going to really got it. So this is called testing jobless back end.
+
+475
+01:17:14,780 --> 01:17:25,610
+And we're going to look at to do. We're just going to see if we can, uh.
+
+476
+01:17:27,100 --> 01:17:31,610
+Because it's okay that we'll keep that part.
+
+477
+01:17:35,440 --> 01:17:41,290
+We're going to get rid of this assertion where we want this thing to be allowed to be constructed on the main thread.
+
+478
+01:17:44,720 --> 01:17:51,160
+Um, we're going to make sure that all of the calls to is available.
+
+479
+01:17:51,920 --> 01:17:57,990
+Our. Mm hmm.
+
+480
+01:17:58,870 --> 01:18:05,440
+What I'm going to do is I'm going to make this return true here. I'm just going to hardcoded some values, and I'm not going to do these assertions.
+
+481
+01:18:05,620 --> 01:18:09,880
+For now, we're just going to say return h result.
+
+482
+01:18:10,210 --> 01:18:16,720
+What is how? What's the. I think it's like zero is like the good one for h results.
+
+483
+01:18:16,810 --> 01:18:21,310
+So let's just return zero for all of these.
+
+484
+01:18:23,460 --> 01:18:26,610
+For now. Let's just see if we can construct this thing.
+
+485
+01:18:28,360 --> 01:18:31,570
+It's a really dumb class. It doesn't do anything.
+
+486
+01:18:32,800 --> 01:18:37,300
+And I'm just going to copy this is going to paste this in.
+
+487
+01:18:37,990 --> 01:18:49,630
+Doesn't do much. Then we are going to not have that private member.
+
+488
+01:18:52,210 --> 01:18:57,450
+Let's see if we can construct one of these. Uh.
+
+489
+01:19:01,720 --> 01:19:10,959
+We'll say a ref pointer testing jump back and test back end equals new testing.
+
+490
+01:19:10,960 --> 01:19:17,380
+Jump with back end. Uh, assert true test back end.
+
+491
+01:19:19,880 --> 01:19:23,150
+Uh, and then let's build that.
+
+492
+01:19:24,050 --> 01:19:29,660
+Let's see if it likes that. Meanwhile, we're going to work on constructing.
+
+493
+01:19:32,560 --> 01:19:39,900
+We're going to alter this a little bit. We're going to construct the jump list builder.
+
+494
+01:19:39,900 --> 01:19:48,030
+If you recall, our jump list builder can be constructed with a testing back end as the second argument, and that's what we want to do.
+
+495
+01:19:57,320 --> 01:20:04,980
+They're true builder. So let's make sure that that works.
+
+496
+01:20:05,430 --> 01:20:10,140
+This failed class. Did you mean.
+
+497
+01:20:11,070 --> 01:20:17,460
+Oh, yes. I need to also do using. I'm pleased.
+
+498
+01:20:25,920 --> 01:20:29,190
+This is very exciting. I've been waiting for this for a long time.
+
+499
+01:20:30,870 --> 01:20:38,799
+I'll be super happy if this works. Here, the word basic goes ten print.
+
+500
+01:20:38,800 --> 01:20:43,420
+Hello, Basic. Go to ten. I used to write in basic.
+
+501
+01:20:45,220 --> 01:20:55,880
+I used to write in basic a long time ago. Actually, Elad and myself used to make little computer games in basic just f y.
+
+502
+01:20:56,470 --> 01:21:01,990
+That's just a little piece of trivia there. If you dig deep enough, you might even find some of them on the internet.
+
+503
+01:21:05,050 --> 01:21:12,550
+Are they good games? Not really. But considering how old we were, I think it's pretty good.
+
+504
+01:21:13,150 --> 01:21:17,350
+All right, that works. This works, gang.
+
+505
+01:21:18,550 --> 01:21:23,830
+Yeah. Our little our game company is called Groovy Concepts, and I'm pretty sure.
+
+506
+01:21:23,860 --> 01:21:30,460
+Let's see if anyone else has ever registered that. Is that like, a company concept?
+
+507
+01:21:31,870 --> 01:21:37,000
+If not, we missed. Like, we should jump on this.
+
+508
+01:21:38,020 --> 01:21:45,970
+Google is being horribly slow today. That goes for him through the concepts.
+
+509
+01:21:49,610 --> 01:21:54,740
+Holy smokes. It's a full service corporate media production company in Oakville, Ontario.
+
+510
+01:21:55,760 --> 01:21:59,430
+Elad We lost our our trademark.
+
+511
+01:21:59,480 --> 01:22:02,960
+They've even got the website. They've got Groovy Concepts dossier.
+
+512
+01:22:03,110 --> 01:22:06,230
+Who's doing this? Who's doing this in Oakville?
+
+513
+01:22:08,270 --> 01:22:13,969
+Who are these people? Is this someone we went to school with? Oh, we.
+
+514
+01:22:13,970 --> 01:22:18,380
+We lost our. We lost our chance to really grab hold of that.
+
+515
+01:22:19,130 --> 01:22:24,230
+It actually exists as a company as hilarious.
+
+516
+01:22:25,220 --> 01:22:31,310
+Okay, so this works amazing. So now we have to do something kind of interesting.
+
+517
+01:22:31,310 --> 01:22:38,719
+So recall one of the things that the native jump list builder does is that it
+
+518
+01:22:38,720 --> 01:22:42,770
+asserts that it is constructed and managed completely off of the main thread.
+
+519
+01:22:44,030 --> 01:22:49,910
+You're okay with it? Okay. You're a bigger man than I. I have the deepest.
+
+520
+01:22:50,560 --> 01:22:54,380
+Just filled with rage. Like, why didn't we get a whole? I'm just joking.
+
+521
+01:22:57,410 --> 01:23:02,630
+It's the native jump was back end is designed from the ground up to always run off of the main threat.
+
+522
+01:23:02,660 --> 01:23:06,740
+That's the whole point in why we're doing all of this is we're trying to get jump list,
+
+523
+01:23:08,930 --> 01:23:16,820
+jump list processing all off of the main thread for performance reasons, because it does IO, it can do disk access and that can be slow.
+
+524
+01:23:17,840 --> 01:23:25,549
+Now that's good, but our tests will run off of the main thread and to make our test writing easier,
+
+525
+01:23:25,550 --> 01:23:32,300
+I think we want the the test back end to be able to be constructed on the main thread and then to
+
+526
+01:23:32,300 --> 01:23:40,250
+be able to hand handoff basically to the background thread and then like basically we'll well,
+
+527
+01:23:40,440 --> 01:23:45,920
+we'll use locking, we use a lock to ensure that the other thread is done with it.
+
+528
+01:23:46,970 --> 01:23:54,500
+By the time the promise resolves, we'll wait for the lock to be released and then we'll, we'll,
+
+529
+01:23:54,530 --> 01:23:59,149
+we'll be able to read values that maybe were written in here because that's what this thing is.
+
+530
+01:23:59,150 --> 01:24:04,350
+This should be like a this is like a a box that stuff can be written into.
+
+531
+01:24:04,370 --> 01:24:08,510
+So, for example, let's test let's figure out the very first test we want to write here.
+
+532
+01:24:08,840 --> 01:24:11,340
+What is the first thing that is done with the back end?
+
+533
+01:24:11,690 --> 01:24:27,350
+Whenever it's handed one, like when we construct the jump list builder, one of the first things we do is we call do setup back end.
+
+534
+01:24:33,140 --> 01:24:38,410
+All right. That just constructs the native UN if unless we're passing a testing one so that doesn't matter.
+
+535
+01:24:39,110 --> 01:24:43,940
+And then we say set app ID,
+
+536
+01:24:44,210 --> 01:24:50,360
+we call do you set app ID And that that is something that we can test right now is
+
+537
+01:24:50,360 --> 01:24:55,760
+we can make sure that set app ID is passed is called and passed the right stuff.
+
+538
+01:24:56,120 --> 01:24:59,900
+Let's see if we can get that test written up right now.
+
+539
+01:25:00,350 --> 01:25:05,570
+So let's go back to our test set app ID is right here.
+
+540
+01:25:05,990 --> 01:25:09,710
+And what we're going to want to do basically is store.
+
+541
+01:25:10,400 --> 01:25:20,060
+Well, hold on. Does G test come with some I think it comes with some mock a mocking capability is G mock.
+
+542
+01:25:21,910 --> 01:25:26,970
+Smart Cookbook. Marc method.
+
+543
+01:25:37,290 --> 01:25:41,580
+I want to, like, spy on things to see if they were called and what they were called with.
+
+544
+01:25:44,640 --> 01:25:50,820
+Like the spy walking free functions.
+
+545
+01:25:58,860 --> 01:26:02,550
+I expect call. That's interesting.
+
+546
+01:26:04,550 --> 01:26:16,620
+So we create our mark. If a mock method has no expert call spec but is called, we say it's an uninteresting call.
+
+547
+01:26:19,790 --> 01:26:24,890
+Horizontally. Ignore those I'm supposed to test uses a mock class called mock foo.
+
+548
+01:26:26,000 --> 01:26:36,389
+And then we expect. For method of mock view other than do this is called.
+
+549
+01:26:36,390 --> 01:26:43,460
+You'll get a warning. You just use nice, Mark.
+
+550
+01:26:44,720 --> 01:26:53,610
+You can suppress the warning. Huh?
+
+551
+01:26:58,120 --> 01:27:04,360
+In code. Simplifying the response method as long I use mostly uninteresting mark method.
+
+552
+01:27:09,010 --> 01:27:15,389
+So maybe this is. So how do you think about thread safety here?
+
+553
+01:27:15,390 --> 01:27:18,900
+Testing asynchronous behavior? Hard to test synchronous behavior.
+
+554
+01:27:19,110 --> 01:27:20,669
+Suppose you had an event class you want to test.
+
+555
+01:27:20,670 --> 01:27:26,010
+You want a creative and dispassionate tracing back to how everything implemented all the background threads, which makes test times difficult.
+
+556
+01:27:26,010 --> 01:27:29,160
+You couldn't just insert sleep statements for that makes your test behavior not deterministic.
+
+557
+01:27:29,850 --> 01:27:34,650
+A better way is to use mock actions. Notification options force your asynchronous test to behave synchronously.
+
+558
+01:27:40,220 --> 01:27:44,690
+In the example above, we set our normal key mark expectation. So what it does is we say.
+
+559
+01:27:48,710 --> 01:27:52,930
+Here's our mock event. DISPATCHER We're going to have a mock method.
+
+560
+01:27:54,470 --> 01:27:59,510
+We create our mock event. DISPATCHER We create our event queue.
+
+561
+01:27:59,510 --> 01:28:06,200
+Presumably this is the thing we're testing and we expect that mock event DISPATCHER.
+
+562
+01:28:09,330 --> 01:28:12,480
+We'll get a dispatch event.
+
+563
+01:28:15,440 --> 01:28:25,370
+Cave and it will be called once and when it's done, it will notify and then we use done wait for notification.
+
+564
+01:28:25,400 --> 01:28:31,470
+That's interesting. Eventually time of year will take longer to alleviate.
+
+565
+01:28:31,650 --> 01:28:34,950
+You can use wait for notification with timeout. That sounds nice.
+
+566
+01:28:35,160 --> 01:28:40,170
+This all sounds pretty good. There's probably someone we went to school with 100%.
+
+567
+01:28:40,170 --> 01:28:44,129
+Someone someone took. We came up with that name first. No one else existed.
+
+568
+01:28:44,130 --> 01:28:47,670
+Who knew about that name? We said something. They have made a whole career out of it.
+
+569
+01:28:48,450 --> 01:28:51,870
+It's amazing. Where are our residuals? I'm joking.
+
+570
+01:28:53,340 --> 01:28:56,370
+This all looks fascinating now. Do we use any of this stuff?
+
+571
+01:28:57,660 --> 01:29:02,000
+Expect a call, for example. Yes, we do.
+
+572
+01:29:02,260 --> 01:29:06,239
+Prototype of those is all third party code. Does any of our.
+
+573
+01:29:06,240 --> 01:29:10,140
+Not our graphics stuff. Okay. Yes.
+
+574
+01:29:14,270 --> 01:29:18,860
+Good. Mark, do we?
+
+575
+01:29:23,730 --> 01:29:26,940
+Marc method. Do we use that at all? Mark Method.
+
+576
+01:29:29,230 --> 01:29:32,380
+Graphics or JE effects. Yeah.
+
+577
+01:29:32,470 --> 01:29:33,340
+Marc method.
+
+578
+01:29:36,400 --> 01:29:44,350
+So maybe this is what I really want to do is I want to like instead of implementing all of these individual things, I'm going to say mock method.
+
+579
+01:29:49,310 --> 01:29:54,920
+And I think the number indicates how many arguments are supposed to be passed to it.
+
+580
+01:30:02,110 --> 01:30:12,750
+Marc method. Oh, you don't have to do it that way.
+
+581
+01:30:15,270 --> 01:30:22,610
+Flips, flips, absorbs. Old style.
+
+582
+01:30:22,610 --> 01:30:27,040
+That's old style. Okay.
+
+583
+01:30:29,230 --> 01:30:34,810
+So. So now we say.
+
+584
+01:30:39,650 --> 01:30:49,390
+Method name. Return type. ARGs instead of moc method return type.
+
+585
+01:30:52,060 --> 01:30:55,810
+Oh, it's describing what used to be.
+
+586
+01:30:55,820 --> 01:31:05,320
+So this is what we want. Mock method return type. So mock method return type is h result method name.
+
+587
+01:31:05,440 --> 01:31:08,770
+I can't even remember what the method name was. Let's back up a little bit here.
+
+588
+01:31:14,040 --> 01:31:26,230
+Set up. I'd. Okay, so we're going to say mock method and h result.
+
+589
+01:31:26,250 --> 01:31:29,460
+Wow. My already p my drop in frames like crazy.
+
+590
+01:31:29,490 --> 01:31:35,220
+No, I'm not. But this machine is. It's going on RTP.
+
+591
+01:31:38,880 --> 01:31:42,060
+Not now. I'm streaming network.
+
+592
+01:31:42,960 --> 01:31:48,740
+Okay, Mock method. We're going to pass it. The, uh, the return value, which is an H result.
+
+593
+01:31:48,750 --> 01:31:52,350
+The method name, which is, uh.
+
+594
+01:31:55,240 --> 01:32:02,520
+Wow. Come on. Come on, Come on, Come on. H result.
+
+595
+01:32:03,150 --> 01:32:06,720
+The method name is set. App ID.
+
+596
+01:32:10,190 --> 01:32:13,790
+And then the args in like a couple of some kind.
+
+597
+01:32:14,090 --> 01:32:20,130
+So. In concert.
+
+598
+01:32:21,630 --> 01:32:24,810
+Concert method. Oh, it's not. Oh, I see.
+
+599
+01:32:25,920 --> 01:32:29,580
+I see. Uh, with call time.
+
+600
+01:32:34,280 --> 01:32:38,270
+Let's just do simple and we're just going to pass it.
+
+601
+01:32:40,400 --> 01:32:44,310
+LPC w.
+
+602
+01:32:44,450 --> 01:32:51,950
+S r. And I don't think it requires, uh.
+
+603
+01:32:54,550 --> 01:32:59,640
+Oh, when we implement. Uh, okay, It does want the semicolon.
+
+604
+01:33:00,220 --> 01:33:04,270
+Right? Okay. And we're going to get rid of this.
+
+605
+01:33:05,530 --> 01:33:09,610
+Let's see what it says about that. If I build this.
+
+606
+01:33:14,730 --> 01:33:18,450
+It was my first time. First time using G tests.
+
+607
+01:33:18,470 --> 01:33:25,040
+First time using G mock. I don't know if any of this is going to work.
+
+608
+01:33:25,280 --> 01:33:28,710
+I don't even know if we're using the most up to date version of the G Test library.
+
+609
+01:33:28,730 --> 01:33:35,870
+I should really test like, check that. My Google mark?
+
+610
+01:33:35,870 --> 01:33:40,670
+Like when was the last time this was updated? Google mock read me.
+
+611
+01:33:42,770 --> 01:33:47,860
+Is there like a version? Version.
+
+612
+01:33:48,010 --> 01:33:52,820
+When was this last updated? Okay.
+
+613
+01:33:52,830 --> 01:34:00,790
+April of last year. That's not so bad. Um, I don't know when some of this stuff was introduced.
+
+614
+01:34:00,800 --> 01:34:04,690
+2018. So am I right? Hey. Okay.
+
+615
+01:34:04,700 --> 01:34:08,030
+Looking good. So it likes the mark.
+
+616
+01:34:09,710 --> 01:34:23,930
+I like the mark. That's good. So now what we're going to do is we're going to say, I want to make sure that this is past some, like, useful ID.
+
+617
+01:34:24,410 --> 01:34:30,080
+So let's see. I have to remember how you initialize a string and as auto string.
+
+618
+01:34:35,760 --> 01:34:44,210
+I think I can just pass it like a. Uh, like a literal, right?
+
+619
+01:34:46,230 --> 01:34:50,630
+Yeah. Yeah. Uh, but I have to prefix.
+
+620
+01:34:50,660 --> 01:35:00,500
+Okay, So. You test application I.D.
+
+621
+01:35:03,350 --> 01:35:13,810
+Okay. So we're going to pass that in. And because this occurs off of the main thread.
+
+622
+01:35:15,920 --> 01:35:19,490
+How do I. What was their recommendation for a synchronous.
+
+623
+01:35:24,930 --> 01:35:29,700
+Dispatch event will once done done notify on when called.
+
+624
+01:35:46,020 --> 01:35:50,700
+I don't know if that's going to work across threads. That might be a problem.
+
+625
+01:35:51,300 --> 01:35:56,640
+I don't know if done, notify Absolute notification.
+
+626
+01:35:56,730 --> 01:36:05,340
+Let's find out, though. Expect call on dispatch event.
+
+627
+01:36:12,040 --> 01:36:17,840
+Let's see if we can construct. Uh, expect call.
+
+628
+01:36:22,000 --> 01:36:30,670
+Microphone. DISPATCHER No, I expect the call on the test back end and I expect.
+
+629
+01:36:32,610 --> 01:36:39,630
+Set it to be called and I expect it to be passed.
+
+630
+01:36:39,890 --> 01:36:47,100
+Well, not this number, but.
+
+631
+01:36:50,620 --> 01:36:57,399
+A string dispatch event. Set up I.D.
+
+632
+01:36:57,400 --> 01:37:01,510
+So, uh.
+
+633
+01:37:06,510 --> 01:37:16,229
+Uh, that doesn't look right. No, I need to like. What's the string?
+
+634
+01:37:16,230 --> 01:37:21,060
+Internal string guide. I need a UTF 16 string.
+
+635
+01:37:25,140 --> 01:37:45,640
+Literals. Created through.
+
+636
+01:37:49,080 --> 01:37:53,690
+User defined literals. Okay. So set out by the.
+
+637
+01:37:56,570 --> 01:38:01,500
+Test application I.D. And.
+
+638
+01:38:01,520 --> 01:38:05,480
+Yes. See if that works. Strings in native code.
+
+639
+01:38:05,630 --> 01:38:11,330
+Hilarious. Um, and then what I want to do is say.
+
+640
+01:38:15,440 --> 01:38:24,610
+Well once. That's how they want to do it.
+
+641
+01:38:28,490 --> 01:38:32,420
+And then we're going to wait for notification.
+
+642
+01:38:35,490 --> 01:38:39,270
+Well, this bill. I've got a feeling we're going to have problems.
+
+643
+01:38:39,270 --> 01:38:45,440
+But let's see. Wow.
+
+644
+01:38:45,470 --> 01:38:55,130
+A lot of chatter. A lot of chatter back there. Have I heard about web environment, integrity, a.k.a. dream for the Web?
+
+645
+01:38:55,580 --> 01:39:01,400
+Yes, I have. I have heard about this this proposal that's been put forward.
+
+646
+01:39:02,810 --> 01:39:08,570
+I have heard about it. And the other question is test The test.
+
+647
+01:39:08,870 --> 01:39:17,000
+Are my following aware of Lady Bird browser development? Is that the Serenity Oaks browser engine from the Serenity OS people?
+
+648
+01:39:17,660 --> 01:39:21,650
+I think that's what that is. Right. They called it Lady Bird. It's very impressive.
+
+649
+01:39:21,830 --> 01:39:28,250
+You don't you don't see browser engines starting from scratch happening.
+
+650
+01:39:28,400 --> 01:39:31,070
+That's not a thing that you generally see out in the wild.
+
+651
+01:39:31,310 --> 01:39:40,700
+There are a couple of cases like Servo from Mozilla now being handled by a galley is taking care of it and I think it's owned by the Linux Foundation.
+
+652
+01:39:41,510 --> 01:39:46,380
+Servo was one. There's one called Things Flow.
+
+653
+01:39:46,730 --> 01:39:52,010
+That might be another kind of browser engine started as like an SVG engine, but they're turning into a browser engine.
+
+654
+01:39:52,970 --> 01:39:57,380
+There are a couple of like toy browser engines, but there are like web engines.
+
+655
+01:39:58,250 --> 01:40:01,570
+Lady Bird is another one and like these things are few and far between.
+
+656
+01:40:01,580 --> 01:40:04,580
+What you generally see are people building browsers,
+
+657
+01:40:04,580 --> 01:40:10,760
+but using preexisting engines like blink or web kit or gecko, which is the one that powers Firefox.
+
+658
+01:40:11,090 --> 01:40:16,520
+And so it's very interesting, I think, to see new browser engines be built.
+
+659
+01:40:16,520 --> 01:40:17,780
+It's actually good for the web.
+
+660
+01:40:17,780 --> 01:40:24,350
+The more the more engines, the diversity in engines and the different approaches that people have in consuming the web, the better.
+
+661
+01:40:24,420 --> 01:40:29,570
+That's that's what we want. We like this. So thumbs up more, more browser engines, please.
+
+662
+01:40:30,440 --> 01:40:35,770
+So it does not like this. Why does it not like this unknown type name set app ID?
+
+663
+01:40:36,800 --> 01:40:40,520
+So it didn't like what I wrote under mock method.
+
+664
+01:40:44,350 --> 01:40:48,220
+But I thought it like that before. Did it?
+
+665
+01:40:49,210 --> 01:40:53,940
+Let's. Oh, it also doesn't know what done is.
+
+666
+01:40:54,690 --> 01:40:57,870
+I need to do this.
+
+667
+01:41:01,440 --> 01:41:09,430
+And. Is that used anywhere else?
+
+668
+01:41:11,650 --> 01:41:16,520
+Only a third party code A. Should.
+
+669
+01:41:18,620 --> 01:41:21,800
+Okay, well, let's see if it's happy with that part.
+
+670
+01:41:22,120 --> 01:41:27,740
+This I'm very confused about why it wouldn't be happy with that, because I thought it was building before.
+
+671
+01:41:29,020 --> 01:41:34,160
+Remark error type specifies required for all declarations.
+
+672
+01:41:37,750 --> 01:41:44,330
+Known type names set out by DE. Well, what do you want from me?
+
+673
+01:41:50,400 --> 01:41:53,910
+I not tell you what you needed to know.
+
+674
+01:41:58,740 --> 01:42:07,060
+What method? Do you want to?
+
+675
+01:42:07,990 --> 01:42:18,780
+Do you need a name for the type? Maybe you want to name a you.
+
+676
+01:42:22,560 --> 01:42:33,330
+I somehow don't think that's it, but. Might be a cool thing to do for episode 350 exploring the Lady Bird Code base.
+
+677
+01:42:34,950 --> 01:42:40,950
+Yeah, I'd check that out. I like exploring unfamiliar and familiar code bases.
+
+678
+01:42:41,160 --> 01:42:45,720
+Wasn't servos supposed to replace Gecko? No, it was not.
+
+679
+01:42:46,590 --> 01:42:49,770
+I want to be very clear on the servo was never designed. That was not.
+
+680
+01:42:49,770 --> 01:43:00,720
+Its point was not to replace Gecko. Servo was an experimental browser engine that was built in part to help develop the rust language.
+
+681
+01:43:00,750 --> 01:43:06,780
+They were kind of developed in tandem because it's good to have an actual product use the language while
+
+682
+01:43:06,780 --> 01:43:11,010
+you're designing the language to make sure that what you're building is going to be practical and usable.
+
+683
+01:43:11,520 --> 01:43:22,310
+And also allowed us to, you know, sort of yeah, a lot of the feedback that went into the rust language came from building out Servo, you know,
+
+684
+01:43:22,320 --> 01:43:30,300
+was a very ambitious project and Servo itself had some really interesting ideas, but it was designed to be a research vehicle,
+
+685
+01:43:30,420 --> 01:43:37,500
+a research browser engine to test kind of radical ideas on how to do different things.
+
+686
+01:43:37,740 --> 01:43:48,210
+It was never meant to replace Gecko, but certain parts of Servo were basically airlifted out of Servo and put into Gecko.
+
+687
+01:43:48,540 --> 01:43:56,099
+So for example, the style engine inside of Firefox, which used to be written in C++, was back in 20 whatever.
+
+688
+01:43:56,100 --> 01:44:05,009
+Whenever we did Quantum, that's whenever we shipped the Stylo six engine and it beats the pants off of the competition like we no other engine comes
+
+689
+01:44:05,010 --> 01:44:14,580
+even close to our RCC parsing capabilities and parsing speed Web render is another one that's from the SERVO project.
+
+690
+01:44:15,420 --> 01:44:20,160
+And there may have been some other things that came from SERVO, but it was never designed to replace Gecko.
+
+691
+01:44:20,460 --> 01:44:25,940
+That was not the point. That was not the point. Okay.
+
+692
+01:44:27,620 --> 01:44:32,870
+So it really doesn't like this. Say, what's the what's wrong?
+
+693
+01:44:32,900 --> 01:44:38,750
+Unknown type name set up D are we're supposed to like do something else?
+
+694
+01:44:40,910 --> 01:44:44,690
+Mock method. Let's see some more examples of people using mark method.
+
+695
+01:44:48,170 --> 01:44:52,510
+Are there more active projects in Russ that are being actively developed in Gecko?
+
+696
+01:44:52,520 --> 01:44:56,150
+I mean, web render is still under active development. I mean, yeah.
+
+697
+01:44:56,870 --> 01:45:06,320
+How much of of gecko is in rust? I'd say a significant portion at this point with the style engine and the the web render being written in rust.
+
+698
+01:45:07,130 --> 01:45:18,170
+There are other parts that are written in rust. Some are passing like the places that you'd want to have, like memory safety guarantees.
+
+699
+01:45:19,670 --> 01:45:29,030
+I think one of the first things that we converted over to Rust was like some media parsing stuff, and that's done in Rust.
+
+700
+01:45:29,960 --> 01:45:36,590
+Some of the sync engine is written in rust to what I would me personally consider writing more rust.
+
+701
+01:45:36,860 --> 01:45:38,830
+I would if I had a reason to.
+
+702
+01:45:40,010 --> 01:45:46,520
+Like there are some real advantages, I think, to writing in Rust, but there are some like considering the problem spaces I'm in.
+
+703
+01:45:46,520 --> 01:45:52,420
+I'm not sure if rust is the right fit. Writing frontend in rust is possible, but it would.
+
+704
+01:45:52,460 --> 01:45:57,740
+And like for example, the I think I was telling you the sink engines,
+
+705
+01:45:57,740 --> 01:46:03,350
+part of the sink engines are written in rust and there's actually a tool unifying.
+
+706
+01:46:04,970 --> 01:46:12,379
+Yeah. That allows us to basically create bindings between rust and JavaScript so that you can
+
+707
+01:46:12,380 --> 01:46:17,270
+like compile something that's written in rust and then talk to it from JavaScript.
+
+708
+01:46:17,810 --> 01:46:26,210
+And there's this, this mechanism exists, and that's how our sink engine works is using this library.
+
+709
+01:46:26,600 --> 01:46:31,700
+And so it's possible. It's just I haven't had a need to the parts that I work.
+
+710
+01:46:31,700 --> 01:46:39,980
+Like what Rust is really, really good at is like memory, safety, getting rid of data traces.
+
+711
+01:46:40,190 --> 01:46:47,839
+I briefly considered writing this jump loss stuff in rust, but the problem is that I don't think the calm,
+
+712
+01:46:47,840 --> 01:46:52,669
+the msn.com support in rust is very good, or at least I haven't seen a whole lot.
+
+713
+01:46:52,670 --> 01:47:00,050
+Maybe it's gotten better, but the last I checked it's not very good. And we needed MSN.com to to talk to the Jen Bliss back end.
+
+714
+01:47:00,230 --> 01:47:09,890
+But I did consider it. Is there any way Mozilla could fight against something like web environment integrity that Google is implementing?
+
+715
+01:47:10,370 --> 01:47:13,820
+Well, first of all, we don't I'd say we don't implement it.
+
+716
+01:47:14,030 --> 01:47:21,640
+I mean, as it is it's very un like it's I would even it's barely a specify it's not a specification, it's barely a proposal.
+
+717
+01:47:21,800 --> 01:47:25,850
+It's just very, very high level hand-waving like I read the thing and I,
+
+718
+01:47:27,500 --> 01:47:35,090
+I don't even really it gives a very, very vague, a very vague description of what it is.
+
+719
+01:47:35,240 --> 01:47:38,210
+And so it begs a lot of questions, basically.
+
+720
+01:47:39,200 --> 01:47:54,950
+And, you know, is it possible that that there is that there's a a way to what am I trying to get at here?
+
+721
+01:48:02,570 --> 01:48:05,900
+This is kind of outside of my area of expertise. I'll say that.
+
+722
+01:48:06,080 --> 01:48:11,310
+I'll say that the there's a group in Mozilla whose job it is to work.
+
+723
+01:48:11,480 --> 01:48:15,170
+It's to work within standards. They work with standards groups and standards bodies.
+
+724
+01:48:15,680 --> 01:48:18,890
+And that's not ever really been my role.
+
+725
+01:48:19,850 --> 01:48:25,130
+I am watching this mainly out of an interest in because I work on a web browser and because I care about the web,
+
+726
+01:48:25,550 --> 01:48:30,590
+but like I don't have any like skin in the game in terms of like my day job.
+
+727
+01:48:30,590 --> 01:48:34,070
+I don't work on like standards groups.
+
+728
+01:48:34,460 --> 01:48:38,300
+And so I don't actually know how that's going to work out.
+
+729
+01:48:40,550 --> 01:48:47,690
+Is there something Mozilla can do? I mean, I think we will do what we can.
+
+730
+01:48:48,920 --> 01:48:52,190
+You know, we have certain levers we can pull politically.
+
+731
+01:48:52,490 --> 01:49:00,980
+I think we can point at a lot of like I think a lot of our leverage this is my personal opinion will be in pointing out security,
+
+732
+01:49:01,010 --> 01:49:08,809
+privacy and accessibility flaws in the proposal. Like there are certain parts of the proposal as written that I think have serious consequences,
+
+733
+01:49:08,810 --> 01:49:13,820
+potential serious consequences, not just for adblock blockers. I know people are worried about ad blockers and people.
+
+734
+01:49:14,000 --> 01:49:18,290
+Google's dreaming the web. I think people aren't thinking enough about accessibility.
+
+735
+01:49:18,800 --> 01:49:23,750
+That is to me, that's like typical typical web developers.
+
+736
+01:49:23,750 --> 01:49:25,370
+They're not thinking about accessibility,
+
+737
+01:49:25,730 --> 01:49:33,530
+but like people browse the web using like assistive technologies that I am not convinced that this proposal accommodates.
+
+738
+01:49:33,950 --> 01:49:42,290
+And so that is a lever because like there's there are legal ramifications, and that's a lever that we can also attempt to to push on.
+
+739
+01:49:42,290 --> 01:49:48,800
+But again, that's my personal opinion. I don't actually know how these conversations go or go about.
+
+740
+01:49:49,070 --> 01:49:52,700
+I will say that Mozilla is paying very close attention to this proposal, though.
+
+741
+01:49:56,470 --> 01:50:02,840
+Orchestrates. Uh, well, doesn't need details when the only it has to platform will be Google's one.
+
+742
+01:50:02,860 --> 01:50:06,099
+Okay. That's true.
+
+743
+01:50:06,100 --> 01:50:09,009
+That's true. I mean, this Google does have a history of doing this,
+
+744
+01:50:09,010 --> 01:50:13,750
+of publishing a standard after they've already shipped a thing and saying, Look, it's a standard.
+
+745
+01:50:15,940 --> 01:50:21,180
+So, yeah, I think we're going to have to do our best.
+
+746
+01:50:21,190 --> 01:50:29,290
+I'm not a fan of this proposal personally, I but I'm going to leave it in the hands of the people at Mozilla who are the experts at
+
+747
+01:50:29,290 --> 01:50:34,540
+dealing with standards and the the sort of politicking that occurs at a higher level,
+
+748
+01:50:35,590 --> 01:50:42,100
+and particularly in the critique and evaluation of standards that happens with people far smarter than me.
+
+749
+01:50:42,610 --> 01:50:47,139
+And I will leave it to them. Okay, so where are we?
+
+750
+01:50:47,140 --> 01:50:55,000
+We've gotten kind to gotten kind of distracted here. Um, I don't know what is going on here with this.
+
+751
+01:50:55,330 --> 01:51:01,540
+You know, we were looking at mock method. Let's look at an example of just mock method being used.
+
+752
+01:51:03,640 --> 01:51:09,280
+Do we have anything like that under like APC or not under third party?
+
+753
+01:51:09,280 --> 01:51:17,920
+Because maybe that's the problem, is that some of our gluing code isn't designed to work with mock method directly.
+
+754
+01:51:18,220 --> 01:51:22,180
+Oh no, here. Here we have one system taught.
+
+755
+01:51:25,470 --> 01:51:29,550
+So how does it know what next is? Does it?
+
+756
+01:51:35,240 --> 01:51:38,780
+So the first tech test mock file system directory.
+
+757
+01:51:39,470 --> 01:51:49,230
+Iterator Simple. I'm 33.
+
+758
+01:51:53,450 --> 01:51:57,880
+Like, do you want me to to do that or Sorry.
+
+759
+01:51:59,240 --> 01:52:13,520
+You want me to do that? You want for me? Autocracies worried about Web banking on Linux?
+
+760
+01:52:14,010 --> 01:52:21,120
+Mm hmm. I think not enough people are thinking about accessibility.
+
+761
+01:52:22,080 --> 01:52:36,680
+I think that is typical. Typical. It's expecting a type.
+
+762
+01:52:45,300 --> 01:52:49,740
+Do I have these arguments? Marc method. It's supposed to be the name.
+
+763
+01:52:51,750 --> 01:52:55,410
+What? What is your problem? Mark Method.
+
+764
+01:52:56,340 --> 01:53:00,150
+A result that's supposed to be the. The type.
+
+765
+01:53:00,420 --> 01:53:04,350
+The return type. And this is supposed to be the name.
+
+766
+01:53:05,190 --> 01:53:10,940
+There's no type named set up ID in testing. Jobless back end error.
+
+767
+01:53:10,950 --> 01:53:16,860
+A type specified required for a type specify or is required for all declarations.
+
+768
+01:53:17,610 --> 01:53:24,070
+No type. Type.
+
+769
+01:53:35,380 --> 01:53:42,160
+Well, what if we use the old Let's use the old format for a second here.
+
+770
+01:53:43,390 --> 01:53:48,990
+Mock method one, and then we'll say setup.
+
+771
+01:53:50,530 --> 01:54:01,350
+And then we'll say that you return h result. And you accept an LPC story you made.
+
+772
+01:54:16,870 --> 01:54:25,410
+Oh, better. Nope, Not better.
+
+773
+01:54:27,810 --> 01:54:36,370
+Still unknown type name. It still doesn't like the fact.
+
+774
+01:54:41,440 --> 01:54:57,180
+It doesn't write class. Do I need to be in the right namespaces?
+
+775
+01:54:57,510 --> 01:55:10,920
+Could that be it? Do I need to like namespace mozilla namespace widget?
+
+776
+01:55:14,290 --> 01:55:22,380
+Is that what you're complaining about? And then like using.
+
+777
+01:55:28,180 --> 01:55:31,330
+Missile, which it has.
+
+778
+01:55:31,420 --> 01:55:35,230
+CHAMBLISS back and I don't know if I can put that here. Maybe not.
+
+779
+01:55:35,320 --> 01:55:40,280
+Let's find out, though. I kind of feel like I can't.
+
+780
+01:55:40,340 --> 01:55:43,830
+It's going to be like, What are you talking about? Tesla's jobless back and what are you talking about?
+
+781
+01:55:43,850 --> 01:55:50,180
+And it's like, it's right here again. But maybe.
+
+782
+01:55:59,110 --> 01:56:07,490
+Yeah, he does know what I'm talking about. Okay.
+
+783
+01:56:14,030 --> 01:56:17,050
+Hmm. I'll tell you what users can do.
+
+784
+01:56:17,590 --> 01:56:22,690
+Someone was asking, like, is there something Mozilla can do? Ask not what Mozilla can do for you.
+
+785
+01:56:22,960 --> 01:56:30,130
+Ask what you can do for Mozilla. And what you can do is if you guess this is going to sound very self-serving.
+
+786
+01:56:30,400 --> 01:56:37,960
+If you can get a lot of people suddenly switching away from Chrome like en masse,
+
+787
+01:56:38,470 --> 01:56:44,470
+that will get Google's attention, that will get their attention switched to an alternative.
+
+788
+01:56:45,540 --> 01:56:51,760
+Um, if, if I had my switch to Firefox, if you can get them off of a chromium based, get them onto safari,
+
+789
+01:56:51,940 --> 01:56:58,270
+get them on a website, get them on to Lady Bird, get them out of Firefox like en masse, move people to different browsers.
+
+790
+01:56:59,200 --> 01:57:05,050
+If they start seeing like an impact on their usage numbers, that will freak them out.
+
+791
+01:57:05,260 --> 01:57:10,300
+That will get them to think twice, I think. So that would be my recommendation.
+
+792
+01:57:10,900 --> 01:57:19,570
+Start compelling the people you know, and spread the word like switch off of chrome, get out of the Google environment,
+
+793
+01:57:19,570 --> 01:57:25,300
+get out of the Google ecosystem as much as you can and let them know why you're leaving.
+
+794
+01:57:29,340 --> 01:57:33,630
+Still not happy. Still not happy.
+
+795
+01:57:34,410 --> 01:57:38,300
+It doesn't matter that I am also doesn't know what this is.
+
+796
+01:57:38,310 --> 01:57:42,350
+AB-SOUL. Use of undeclared identity.
+
+797
+01:57:43,170 --> 01:57:48,630
+This is bananas. Am I supposed to be like, doing this within?
+
+798
+01:57:52,150 --> 01:57:58,150
+Boyd. F. Well.
+
+799
+01:58:02,910 --> 01:58:09,840
+Using testing. How is this supposed to work?
+
+800
+01:58:13,020 --> 01:58:16,350
+How could he be the one? He's dead.
+
+801
+01:58:18,690 --> 01:58:23,950
+Where does this come from? AB-SOUL. Axle.
+
+802
+01:58:24,400 --> 01:58:29,710
+Boop, boop, boop, boop, boop, boop, boop, boop, boop, boop, boop, boop, boop, boop.
+
+803
+01:58:37,740 --> 01:58:48,580
+Where is absolute? Try and get off of the Google ecosystem, he says, while looking at some Google code.
+
+804
+01:58:57,430 --> 01:59:05,310
+So. Um, so, um.
+
+805
+01:59:05,830 --> 01:59:12,990
+So when are you. Perhaps.
+
+806
+01:59:20,350 --> 01:59:25,420
+Maybe we don't have AB-SOUL. What is AB-SOUL?
+
+807
+01:59:30,250 --> 01:59:38,310
+Hmm. We might not be able to do it this way, gang. Let's get rid of that for a second.
+
+808
+01:59:41,650 --> 01:59:45,879
+We might have to do something a little more hand-rolled. Damn you.
+
+809
+01:59:45,880 --> 01:59:50,530
+Safer. 100% favorite coding music.
+
+810
+01:59:51,850 --> 01:59:56,709
+I don't, Jack. So I have actually. I do listen to music while I'm programing.
+
+811
+01:59:56,710 --> 02:00:01,300
+And lately I've been listening to a band called Illuminati Hotties.
+
+812
+02:00:02,110 --> 02:00:05,860
+It's not for everybody, but I'm enjoying it.
+
+813
+02:00:06,790 --> 02:00:15,320
+Their most recent album, I can't remember what it's called. Uh. Webster spelled it wrong.
+
+814
+02:00:17,360 --> 02:00:23,390
+Luminosity, Hotties. Uh, what was the name of the album?
+
+815
+02:00:24,290 --> 02:00:27,770
+Let me do one more. And I've been listening to that.
+
+816
+02:00:27,800 --> 02:00:33,400
+It's not for everybody, but I'm enjoying it. So somebody is like, Hey, you look at something like this.
+
+817
+02:00:33,410 --> 02:00:36,560
+I sure can. But is this using mocking?
+
+818
+02:00:37,190 --> 02:00:41,749
+Nope. So. So not as helpful. Like, we we had a lot of this already.
+
+819
+02:00:41,750 --> 02:00:45,530
+This infrastructure. What we need is the mocking stuff to work.
+
+820
+02:00:46,580 --> 02:00:52,010
+And that is not working because for some reason, it is not happy with me.
+
+821
+02:00:52,370 --> 02:00:59,420
+Like attempting to mock set app ID, it doesn't know what I'm talking about and.
+
+822
+02:01:02,750 --> 02:01:06,380
+Like maybe it wants the fully qualified name.
+
+823
+02:01:10,160 --> 02:01:30,160
+Maybe that's what it wants. I might have to cap the stream shortly in a couple of minutes.
+
+824
+02:01:30,880 --> 02:01:35,770
+I'm glad you're enjoying it. Vinette can me. Yeah.
+
+825
+02:01:35,800 --> 02:01:39,340
+No. Tight named. What are you talking? No type named C++.
+
+826
+02:01:39,370 --> 02:01:45,010
+No type name. There's no type named.
+
+827
+02:01:53,530 --> 02:01:57,730
+It's very cryptic. The problem takes the first round, but you're passing it by value.
+
+828
+02:02:05,360 --> 02:02:08,810
+Do I have the signature wrong? Am I focusing on the wrong part?
+
+829
+02:02:19,790 --> 02:02:24,910
+Set out by DE. It.
+
+830
+02:02:47,180 --> 02:02:53,240
+Gone to a virtual school, these virtual things.
+
+831
+02:02:54,440 --> 02:02:58,820
+That's great. And then we mock it. A mock method.
+
+832
+02:03:01,080 --> 02:03:09,490
+Four set transport active. Which takes one bull turns void.
+
+833
+02:03:13,990 --> 02:03:19,850
+And when we define the simplest build or the interface with.
+
+834
+02:03:19,900 --> 02:03:24,770
+Yeah, yeah. Okay. Looks right.
+
+835
+02:03:25,820 --> 02:03:29,030
+It's supposed to be virtual. Yeah, virtual. H result.
+
+836
+02:03:32,640 --> 02:03:38,040
+So what's your problem, gang? Such transport.
+
+837
+02:03:41,030 --> 02:03:45,590
+I swear to you that this was working like we had it building and we were like, Hurry.
+
+838
+02:03:56,850 --> 02:03:59,880
+And none of this helped. None of this helped.
+
+839
+02:04:00,780 --> 02:04:05,430
+Didn't matter. All of this helped.
+
+840
+02:04:08,180 --> 02:04:11,690
+What happens. Okay, let's. Let's try something simpler. Let's.
+
+841
+02:04:11,900 --> 02:04:16,070
+Let's mock out a method that doesn't actually do anything.
+
+842
+02:04:18,410 --> 02:04:23,150
+Let's let's mock out a method called set app ID to.
+
+843
+02:04:24,140 --> 02:04:35,470
+Let's also let's put back our. Silly implementation here that just returns zero or whatever.
+
+844
+02:04:37,120 --> 02:04:43,509
+And then we're going to call this one setup ID too, and it doesn't take any arguments.
+
+845
+02:04:43,510 --> 02:04:47,670
+And also. Doesn't return anything, just returns void.
+
+846
+02:04:48,420 --> 02:04:54,479
+Let's see if it likes this. How about this?
+
+847
+02:04:54,480 --> 02:05:01,680
+And the dot file? Mock it using the mock helpers.
+
+848
+02:05:06,290 --> 02:05:13,680
+Community resource. Interesting.
+
+849
+02:05:13,830 --> 02:05:23,100
+It looks like it's not using the mock help like the mock library at all, the G Mock library, which we could do.
+
+850
+02:05:23,370 --> 02:05:28,440
+You know what? That if we can't get this working. That might be the solution.
+
+851
+02:05:28,770 --> 02:05:37,950
+Um. Unknown type set at C set by unknown type name.
+
+852
+02:05:41,080 --> 02:05:45,040
+Error. A type specifiers is required for all declarations.
+
+853
+02:06:03,940 --> 02:06:08,080
+Oh, hold on, Marc. Method zero. There are no arguments here.
+
+854
+02:06:31,010 --> 02:06:34,700
+Void must be the first and only parameter of specified.
+
+855
+02:06:36,380 --> 02:06:40,550
+I think it doesn't know what mock method is. I think it doesn't know what.
+
+856
+02:06:41,060 --> 02:06:45,380
+That's my suspicion. I think it doesn't know how to expand this macro.
+
+857
+02:06:46,940 --> 02:06:51,850
+That's my guess. That's my guess.
+
+858
+02:06:53,260 --> 02:06:56,910
+Let's see if we can prove that. Is there a.
+
+859
+02:06:58,080 --> 02:07:03,170
+All right. Let's look at some. Is there something we're supposed to be importing?
+
+860
+02:07:03,180 --> 02:07:06,360
+G marked H? Is that the problem?
+
+861
+02:07:06,360 --> 02:07:13,649
+That we have just been failing so hard because we doesn't know how to expand this macro?
+
+862
+02:07:13,650 --> 02:07:20,520
+And C++ is being like, Well, before I try and expand the macro, that doesn't exist, I'll complain about types.
+
+863
+02:07:20,520 --> 02:07:31,990
+You're passing it. That could be, let's see. If this is it.
+
+864
+02:07:37,660 --> 02:07:45,550
+It's totally it. That's what's going on. It's a different well, it's a different error now.
+
+865
+02:07:49,440 --> 02:07:53,009
+But that's exactly what was happening. Signature must be a function.
+
+866
+02:07:53,010 --> 02:07:57,330
+Type must. Maybe return type contains unprotected comma.
+
+867
+02:07:58,140 --> 02:08:01,800
+Oh, I think we have to say this void.
+
+868
+02:08:03,960 --> 02:08:08,550
+Um. Mark method zero.
+
+869
+02:08:09,900 --> 02:08:14,550
+Yeah. Void open closed params. And then we get rid of this.
+
+870
+02:08:17,330 --> 02:08:22,130
+Now how you do? Yeah.
+
+871
+02:08:22,160 --> 02:08:25,819
+Good call, Chris. That's exactly right. Open and close.
+
+872
+02:08:25,820 --> 02:08:29,640
+Perrins. Wow.
+
+873
+02:08:29,660 --> 02:08:34,670
+I realize this is a little torturous, but this is my first time writing g test, so I don't know what I'm doing.
+
+874
+02:08:36,380 --> 02:08:40,459
+This is what I. This is basically what I'd be doing via doing this on my own.
+
+875
+02:08:40,460 --> 02:08:48,800
+This is what I'd be running into. Although I might be like talking to another colleague being like, Hey, have you ever written a G test?
+
+876
+02:08:48,800 --> 02:08:53,640
+How do you do this? And maybe I'll be getting some some advice.
+
+877
+02:08:53,660 --> 02:08:57,110
+Look, gang, it's building the we. Okay.
+
+878
+02:08:58,100 --> 02:09:01,340
+Classic C++. Classic C++.
+
+879
+02:09:01,640 --> 02:09:11,330
+I just spent probably a half an hour dealing with the fact that I failed to import G mock dot h, And it didn't tell me.
+
+880
+02:09:11,330 --> 02:09:18,500
+It didn't tell me that the macro is missing. I'm going to flip out.
+
+881
+02:09:18,620 --> 02:09:21,800
+I will lose my mind.
+
+882
+02:09:22,040 --> 02:09:27,709
+Okay, So let's. Let's finally mock this thing and set app ID to what was it?
+
+883
+02:09:27,710 --> 02:09:34,400
+What was the old. Was the old signature.
+
+884
+02:09:34,410 --> 02:09:45,300
+It's a result. Then the name and then we tell it the types in this case.
+
+885
+02:09:48,720 --> 02:10:04,650
+Help us out here. If I see a pineapple on this table, I will lose my mind.
+
+886
+02:10:06,240 --> 02:10:11,940
+That is my impression of Al Pacino. No. That was my impression of Bill Hader's.
+
+887
+02:10:11,940 --> 02:10:18,900
+Impression of Al Pacino. Yeah.
+
+888
+02:10:19,020 --> 02:10:22,280
+Total table flip. Hondo p hondo p.
+
+889
+02:10:22,740 --> 02:10:26,760
+But this is what. This is what I'd be dealing with if you caught it live.
+
+890
+02:10:26,790 --> 02:10:31,530
+This is for real. This is real software development. This is what I'd be doing.
+
+891
+02:10:33,330 --> 02:10:37,410
+I'm glad you like the impression of them as very postmodern. My impression of an impression.
+
+892
+02:10:40,710 --> 02:10:45,870
+Past. Okay, now let's see. Can we bring in the absolute stuff?
+
+893
+02:10:45,880 --> 02:10:52,140
+Now? Does it know what AB-SOUL is now that I'm bringing in G Mock? Does it know what AB-SOUL is?
+
+894
+02:11:01,870 --> 02:11:08,710
+Very excited for this to work. It's like Mel Blanc doing bugs to Daffy.
+
+895
+02:11:11,210 --> 02:11:15,660
+Oh, exactly.
+
+896
+02:11:15,670 --> 02:11:21,370
+It's exactly. I won't even attempt that. And that is what a challenge.
+
+897
+02:11:21,610 --> 02:11:25,060
+Yeah, it has no idea what this library is. Absolute.
+
+898
+02:11:25,120 --> 02:11:36,420
+I don't think we have it included as a thing we can use. Oh.
+
+899
+02:11:39,840 --> 02:11:47,700
+But we have this. And it does use locking so you can use it across it.
+
+900
+02:11:47,950 --> 02:11:52,210
+This is what I want. I want this testing internal notification.
+
+901
+02:11:52,450 --> 02:11:58,570
+Is this a thing that. You just.
+
+902
+02:11:59,710 --> 02:12:05,380
+Can I use this outside? This is like, internal.
+
+903
+02:12:07,060 --> 02:12:19,360
+I guess I can't get at any of the. Hub class rank Google Test Multi-terrain Constance.
+
+904
+02:12:19,360 --> 02:12:23,260
+He's right. He thinks pram thread can start.
+
+905
+02:12:25,230 --> 02:12:32,620
+I could start prototyping. Tests on concerts do not use them in user tests either directly or indirectly.
+
+906
+02:12:33,220 --> 02:12:37,600
+I got a feeling I don't have access to notification. It's not going to let me have it.
+
+907
+02:12:43,240 --> 02:12:48,040
+I mean, it's really just like a lock. There's nothing super fancy about this.
+
+908
+02:12:48,970 --> 02:12:52,180
+So I could just, like, clone this.
+
+909
+02:12:57,710 --> 02:13:07,290
+It's a conditional variable from the standard. Yeah.
+
+910
+02:13:07,320 --> 02:13:11,820
+Don't use it in user tests, either directly or indirectly. Well, how about I just copy it?
+
+911
+02:13:13,050 --> 02:13:19,600
+Let's do that. Want it.
+
+912
+02:13:20,330 --> 02:13:25,690
+We take it. Notification. What is it?
+
+913
+02:13:26,920 --> 02:13:33,860
+It's a license. I think I can do this.
+
+914
+02:13:47,160 --> 02:14:08,090
+School test. I don't think I could.
+
+915
+02:14:08,530 --> 02:14:14,410
+I don't think. I mean, this is not very long, but I'm not going to just wholesale copy that.
+
+916
+02:14:14,420 --> 02:14:18,670
+I'm going to have to do something else. I have to write it from scratch.
+
+917
+02:14:21,630 --> 02:14:27,160
+Although. I'll talk to some people about that.
+
+918
+02:14:29,710 --> 02:14:35,710
+Okay, so I can't use this, but we've got to the point where we can mark this thing out.
+
+919
+02:14:36,250 --> 02:14:41,770
+So here's what I'm going to do. I'm going to just sleep.
+
+920
+02:14:42,910 --> 02:14:53,490
+Going to do something really silly for now. We're going to just run sleep for a little bit.
+
+921
+02:14:54,390 --> 02:15:00,810
+We're going to block the main thread. Can I just do a sleep?
+
+922
+02:15:01,230 --> 02:15:05,190
+Maybe I can, you know, seconds to interval.
+
+923
+02:15:05,850 --> 02:15:09,210
+Can I just do this? Pure sleep? 5000.
+
+924
+02:15:09,840 --> 02:15:13,620
+And then I'm going to assert that it was called.
+
+925
+02:15:13,770 --> 02:15:17,129
+So this is not, uh, notification.
+
+926
+02:15:17,130 --> 02:15:20,670
+Uh, we're going to expect call.
+
+927
+02:15:30,380 --> 02:15:34,850
+Why can't I have this? I want this. Where are you?
+
+928
+02:15:42,100 --> 02:15:57,810
+Where's this to find? I want this.
+
+929
+02:16:02,330 --> 02:16:05,510
+Doesn't look like it's included, though.
+
+930
+02:16:05,510 --> 02:16:09,280
+She tests. Google test.
+
+931
+02:16:12,810 --> 02:16:18,100
+Class notification. That's internal, says controller.
+
+932
+02:16:18,390 --> 02:16:21,920
+Oh, wait, no, this. No, this is just an. Okay.
+
+933
+02:16:22,310 --> 02:16:35,310
+No, no, no. Actually, there was another, um.
+
+934
+02:16:36,880 --> 02:16:39,950
+Was it wait for notification with timeout.
+
+935
+02:16:39,960 --> 02:16:43,960
+Where's that? Yeah. See, I don't think it's in here.
+
+936
+02:16:44,500 --> 02:16:49,230
+I don't think it's. Oh.
+
+937
+02:16:49,410 --> 02:16:52,690
+Third party Web RTC is third party code.
+
+938
+02:16:52,710 --> 02:16:57,380
+Has it? What is this sale?
+
+939
+02:16:58,610 --> 02:17:04,160
+Read me C++ Common Libraries Question C++ code.
+
+940
+02:17:07,610 --> 02:17:11,980
+What is AB-SOUL? Just a bunch of stuff.
+
+941
+02:17:13,910 --> 02:17:17,140
+Can I bring that in? That'd be lovely.
+
+942
+02:17:19,570 --> 02:17:24,129
+I'll need to check on that. But. So it sounds like there is some precedence.
+
+943
+02:17:24,130 --> 02:17:32,230
+Like we they they bring it in from Web RTC and you have to talk to some people about this.
+
+944
+02:17:32,740 --> 02:17:36,940
+We might also have our own constructs that we can use. Like, why don't I just use a lock?
+
+945
+02:17:38,020 --> 02:17:41,830
+How about we just use a lock, gang? Like, why do I have to.
+
+946
+02:17:42,100 --> 02:17:45,380
+Or a monitor? I don't exactly remember.
+
+947
+02:17:45,400 --> 02:17:50,710
+Yeah, I want a monitor. Uh, like there was something called a.
+
+948
+02:17:51,460 --> 02:17:55,360
+A monitor inside of. Was it? Hang, child.
+
+949
+02:17:55,900 --> 02:18:01,740
+Hang monitor. Process hang monitor And I think there was something called.
+
+950
+02:18:04,060 --> 02:18:08,140
+Monitor. Monitor. Mozilla monitor. And I think we can use this.
+
+951
+02:18:14,800 --> 02:18:22,240
+Monitor provides non re entrant monitor not a java statement of coding support re entrances reenter and monitor instead directly in seyfried's stead.
+
+952
+02:18:22,240 --> 02:18:27,490
+Use our eye wrappers, monitor auto lock and monitor auto unlock.
+
+953
+02:18:35,680 --> 02:18:49,350
+Or, uh. Get the monitor.
+
+954
+02:18:49,560 --> 02:18:56,070
+Create. Hold the lock. I see. Okay, so what we can do, actually is have this thing.
+
+955
+02:18:57,670 --> 02:19:00,910
+Uh, have a lock.
+
+956
+02:19:03,940 --> 02:19:08,560
+Or a monitor, rather. Uh, and monitor.
+
+957
+02:19:11,800 --> 02:19:17,170
+And we'll get a getter for it. Uh, monitor.
+
+958
+02:19:21,940 --> 02:19:26,230
+Yeah. So I wanted her reference.
+
+959
+02:19:28,090 --> 02:19:32,620
+I would just call it get monitor.
+
+960
+02:19:35,410 --> 02:19:40,240
+And then. Oh, this one's like static.
+
+961
+02:19:40,600 --> 02:19:43,600
+That's not exactly what I want here. Um.
+
+962
+02:19:56,170 --> 02:20:01,180
+I probably don't need to do that. Yeah, just get monitor, return and monitor.
+
+963
+02:20:02,010 --> 02:20:08,420
+Okay, so then what we could do is. Any time we enter here.
+
+964
+02:20:11,660 --> 02:20:19,809
+What are we going to do? We wait for the promise.
+
+965
+02:20:19,810 --> 02:20:27,440
+Any any promises to resolve. Oh, okay.
+
+966
+02:20:27,710 --> 02:20:45,670
+Hold on. We basically need this thing to notify us whenever it's done with the monitor.
+
+967
+02:20:45,680 --> 02:20:48,830
+And what does the monitor allow us to do that? Notify.
+
+968
+02:20:58,280 --> 02:21:04,930
+Notify. So like.
+
+969
+02:21:10,680 --> 02:21:34,120
+Let's get the monitor. Five.
+
+970
+02:21:42,680 --> 02:21:45,970
+I am going to end this stream shortly. I apologize.
+
+971
+02:21:46,010 --> 02:22:04,740
+We're going over a little bit here. Get the auto lock.
+
+972
+02:22:16,950 --> 02:22:20,219
+One of the helpers to be a monitor. Auto lock.
+
+973
+02:22:20,220 --> 02:22:32,770
+Single rider. Auto lock. Motorcycle rider.
+
+974
+02:22:36,270 --> 02:22:42,910
+I walk out to unlock. I think I need to know.
+
+975
+02:22:43,210 --> 02:22:47,680
+I think I need to wait. That's what I want.
+
+976
+02:22:47,710 --> 02:22:57,460
+Monitor Okay, So. Try Mark Wade conditional.
+
+977
+02:23:08,690 --> 02:23:26,130
+It or. Let's see her harder.
+
+978
+02:23:29,100 --> 02:23:32,380
+Mine equals. Can I. Is this the right?
+
+979
+02:23:32,400 --> 02:23:36,030
+I don't know if this is right. Let's find out. Builder, get monitor.
+
+980
+02:23:37,090 --> 02:23:41,830
+And then what I want to do is say, I expect.
+
+981
+02:23:46,700 --> 02:23:55,910
+That the test back end will be called with set app I.
+
+982
+02:23:59,590 --> 02:24:12,190
+You test the application of I.D.? And then once done, will notify.
+
+983
+02:24:12,190 --> 02:24:17,440
+And then I'm going to wait more and wait.
+
+984
+02:24:24,170 --> 02:24:38,850
+I don't know if this is going to work. Let's see if it builds and then will it build.
+
+985
+02:24:39,030 --> 02:24:46,350
+And then I'm calling it. I've wanted to write this test for so long, and we're now just kind of, Oh, come on.
+
+986
+02:24:47,250 --> 02:24:54,210
+What are you so sad about? Did you?
+
+987
+02:24:54,220 --> 02:24:58,780
+Oh, okay. Sorry. You need to know what I mean. Um.
+
+988
+02:25:03,740 --> 02:25:09,720
+My bad. All right, try again. Oh, and then it ran it according.
+
+989
+02:25:16,650 --> 02:25:21,510
+Uninteresting mock function call returned. Default value function call.
+
+990
+02:25:24,410 --> 02:25:28,459
+Yeah, it got called. That's good. That's what we wanted. But it was uninteresting.
+
+991
+02:25:28,460 --> 02:25:38,000
+Was, I mean, again, uninteresting. A mock function with no expectation is called an uninteresting call.
+
+992
+02:25:41,360 --> 02:25:50,020
+Oh, I see. Uh, okay, so I need to do this first, actually.
+
+993
+02:25:54,830 --> 02:25:59,600
+And then what else did I need? Still complaining about something.
+
+994
+02:26:03,980 --> 02:26:07,340
+Error call deleted constructor of monitor.
+
+995
+02:26:07,640 --> 02:26:10,940
+Oh no monitors been explicitly marked deleted here.
+
+996
+02:26:12,680 --> 02:26:16,850
+To to monitor. It does not like what I'm doing here.
+
+997
+02:26:17,530 --> 02:26:22,310
+Maybe you want a pointer. Maybe that's what you want.
+
+998
+02:26:24,770 --> 02:26:40,860
+I don't actually know if that's true. This. I mean, to use, right?
+
+999
+02:26:43,160 --> 02:26:50,260
+He's. Wait. Also, it doesn't know what mine is, right?
+
+1000
+02:26:50,440 --> 02:26:53,470
+Oh, this is a pain in the butt. So we've got a problem here.
+
+1001
+02:26:54,110 --> 02:26:57,760
+Uh oh. The back end.
+
+1002
+02:26:59,410 --> 02:27:02,709
+Okay. Mine equals not the builder.
+
+1003
+02:27:02,710 --> 02:27:06,580
+It's the back end that has the monitor has the back end.
+
+1004
+02:27:07,270 --> 02:27:10,870
+Gets the monitor. I don't know why it was happy with that.
+
+1005
+02:27:10,880 --> 02:27:15,490
+We want it from the test back end. Get the monitor, then.
+
+1006
+02:27:15,610 --> 02:27:24,760
+Yeah, Mine. Maybe it's just this one line copy.
+
+1007
+02:27:30,990 --> 02:27:40,630
+Maybe we just want to copy. You need to give monitor a name.
+
+1008
+02:27:42,640 --> 02:27:48,870
+It's called Man. Not sure what.
+
+1009
+02:27:49,500 --> 02:27:53,880
+Maybe I'm missing something. Not sure what you mean.
+
+1010
+02:27:55,560 --> 02:28:13,680
+Eric Carver. Tony. Court constructor wanted her name as in first argument to constructor.
+
+1011
+02:28:22,530 --> 02:28:27,390
+Oh, wait. What? Really? Monitor.
+
+1012
+02:28:30,540 --> 02:28:34,580
+Uh, that's true. So I do.
+
+1013
+02:28:34,590 --> 02:28:43,250
+So I do. You're right. You're right. Back.
+
+1014
+02:28:45,970 --> 02:28:51,660
+Um. And monitor.
+
+1015
+02:28:56,810 --> 02:29:05,060
+The right format or the. COHEN And that's it.
+
+1016
+02:29:10,800 --> 02:29:22,510
+Like that. Somehow it's still running these things.
+
+1017
+02:29:22,530 --> 02:29:28,829
+I have a feeling it's running the old version of it, but had built like the build.
+
+1018
+02:29:28,830 --> 02:29:34,320
+Failure is not causing the whole thing to sort of quit. It just goes, Wow, okay, well, run the last thing you built.
+
+1019
+02:29:39,140 --> 02:29:44,680
+Call the deleted constructor of the monitor. Yeah, I don't think I'm doing it right.
+
+1020
+02:29:44,690 --> 02:29:48,680
+I think if I'm returning a reference like this.
+
+1021
+02:29:52,370 --> 02:29:57,080
+It ends up being a pointer. So I wanted to mine.
+
+1022
+02:30:03,360 --> 02:30:08,180
+Wait. Better. Better.
+
+1023
+02:30:20,530 --> 02:30:24,280
+Special shout out to everyone in the chat today. So happy to have you here. Great questions.
+
+1024
+02:30:24,280 --> 02:30:27,910
+In the chat. We talked a lot, talked a lot about some interesting stuff.
+
+1025
+02:30:28,360 --> 02:30:37,900
+We got somewhere. We got somewhere. We're still struggling a little bit with this pattern conversion from one.
+
+1026
+02:30:40,890 --> 02:30:55,030
+Get monitor. So this is supposed to be a reference then?
+
+1027
+02:30:55,720 --> 02:31:02,130
+Did I do this wrong? But C++.
+
+1028
+02:31:02,550 --> 02:31:07,100
+I'm a JavaScript developer and one monitor my OC.
+
+1029
+02:31:07,650 --> 02:31:14,690
+Yeah, I don't normally have to deal with this now.
+
+1030
+02:31:19,740 --> 02:31:29,400
+I just want to build. I want to see it work. Now I'm going to commit it and call it a day, at least for the stream and still not liking it.
+
+1031
+02:31:30,060 --> 02:31:35,610
+I think it's because no member named GMAC's set up.
+
+1032
+02:31:36,060 --> 02:31:46,320
+This is different online. 85. Did I mean to use Arrow instead of Dot?
+
+1033
+02:31:53,710 --> 02:32:10,420
+Something about how I'm using. Mm.
+
+1034
+02:32:15,780 --> 02:32:19,490
+Okay. Yeah.
+
+1035
+02:32:19,500 --> 02:32:25,680
+Okay. I'm doing this part wrong. Uh, how do I.
+
+1036
+02:32:28,160 --> 02:32:32,740
+Expect a call back. Call.
+
+1037
+02:32:37,690 --> 02:32:51,510
+Thank you. P.S. Com.
+
+1038
+02:33:07,570 --> 02:33:13,550
+Uh. Don't.
+
+1039
+02:33:17,390 --> 02:33:21,110
+Do I need to be passing it? Instead, this expect call.
+
+1040
+02:33:23,520 --> 02:33:39,410
+This. Mike doing Mel Blanc doing bugs, doing Daffy.
+
+1041
+02:33:39,420 --> 02:33:50,180
+Oh, sorry. I read the they did reference the first argument test back and I would say they did reference the first argument.
+
+1042
+02:33:57,990 --> 02:34:01,080
+Which saying what you say across.
+
+1043
+02:34:01,990 --> 02:34:06,130
+Test you would say star test back end.
+
+1044
+02:34:11,460 --> 02:34:14,530
+Really? Oh.
+
+1045
+02:34:14,900 --> 02:34:20,540
+Oh yeah. Okay. OC expect call.
+
+1046
+02:34:23,720 --> 02:34:39,820
+All right, let's see it. Let's see it. Please.
+
+1047
+02:34:40,480 --> 02:34:47,090
+Please. Now deeply upsetting.
+
+1048
+02:34:51,380 --> 02:34:54,540
+All right. I think I'm going to have to end the stream here.
+
+1049
+02:34:54,560 --> 02:34:56,450
+We're going to have to figure this out next week.
+
+1050
+02:34:59,900 --> 02:35:08,480
+No candidate function are viable known, no known conversion from no auto string to a match or testing match or.
+
+1051
+02:35:08,660 --> 02:35:14,240
+Yeah, it's this this. I'm not doing this right and I don't know how I do this correctly.
+
+1052
+02:35:14,870 --> 02:35:21,870
+Um. Was it, uh, expect call?
+
+1053
+02:35:25,180 --> 02:35:33,960
+I need to see some more examples. Expected call start object.
+
+1054
+02:35:38,470 --> 02:35:46,680
+Expected call so that by the. And then some operation.
+
+1055
+02:35:49,190 --> 02:35:52,540
+Equals. Maybe that's what it wants. E.
+
+1056
+02:35:52,550 --> 02:36:09,470
+Q. Start off like, what is that expect call and then you pass that thing.
+
+1057
+02:36:12,130 --> 02:36:21,310
+Typed equal. We have anything about, like, a string.
+
+1058
+02:36:21,940 --> 02:36:35,570
+And it's a string. Uh. Deeply upsetting.
+
+1059
+02:36:36,260 --> 02:36:40,340
+All right. We're. I feel like we're so close. Ooh, Maybe that's what it wants.
+
+1060
+02:36:40,370 --> 02:36:46,980
+Testing, using. Testing.
+
+1061
+02:36:54,370 --> 02:36:58,580
+I really want. I know I said I was in the stream like, 5 minutes ago, but I really want this.
+
+1062
+02:36:58,600 --> 02:37:02,830
+I want you to see the victory. I want us to get there.
+
+1063
+02:37:03,070 --> 02:37:07,620
+Right. I want to.
+
+1064
+02:37:07,630 --> 02:37:16,290
+I want to break free. No, this is.
+
+1065
+02:37:19,150 --> 02:37:23,640
+This is not happening. Oh.
+
+1066
+02:37:24,250 --> 02:37:28,660
+Okay, fine. You want. Okay.
+
+1067
+02:37:31,520 --> 02:37:37,580
+I'm sure there's a way that I can say Just give me all of testing, using testing.
+
+1068
+02:37:39,960 --> 02:37:54,620
+Was it just like underscore? Mm.
+
+1069
+02:38:02,880 --> 02:38:07,000
+Well. This is a mystery.
+
+1070
+02:38:07,030 --> 02:38:14,020
+Well, no member function call, no matching member function to call to will once that's different.
+
+1071
+02:38:26,110 --> 02:38:30,790
+All right. Well, I'll have to investigate that next time.
+
+1072
+02:38:31,330 --> 02:38:35,410
+Thanks again for watching. Oh, man, I am so.
+
+1073
+02:38:36,190 --> 02:38:41,990
+I want this so bad, But I need.
+
+1074
+02:38:42,010 --> 02:38:46,330
+I'm going to save this for next time. We're going to save this for next time.
+
+1075
+02:38:47,470 --> 02:38:51,460
+Ha ha. All Chris is like, You can do it.
+
+1076
+02:38:51,490 --> 02:38:54,729
+Underscore is night. Oh, I could use underscore, okay.
+
+1077
+02:38:54,730 --> 02:39:02,170
+To bring everything in, but I don't think that's the problem. I basically I think what I need to do is more like do a better job of reading,
+
+1078
+02:39:02,290 --> 02:39:11,439
+how to say what the expectations are here and what to do whenever, like, it's not just a primitive, it's not just a number.
+
+1079
+02:39:11,440 --> 02:39:19,540
+This is a what's called an auto string. So I think I just need to read this part and we will take care of that.
+
+1080
+02:39:20,620 --> 02:39:24,700
+You might have a parentheses issue with before DOT will once do I?
+
+1081
+02:39:26,960 --> 02:39:34,860
+I don't think so. No, that looks all right.
+
+1082
+02:39:43,630 --> 02:39:46,630
+Expect that expect call will.
+
+1083
+02:39:50,640 --> 02:39:56,190
+Maybe. Maybe I don't take any arguments.
+
+1084
+02:39:57,000 --> 02:40:00,270
+What about then again, I'm getting sucked into this.
+
+1085
+02:40:00,390 --> 02:40:04,320
+I'm going to end the stream here. Thanks so much, everybody, for watching.
+
+1086
+02:40:04,320 --> 02:40:08,610
+Episode 303 three 333 of The Joy of Coding. Special shout out to Eli.
+
+1087
+02:40:08,610 --> 02:40:13,499
+Difficulty was in the chat. Anyone else who happened to stick it out from the beginning to the end of the stream?
+
+1088
+02:40:13,500 --> 02:40:17,579
+I really appreciate it. I know this was a bit of a slog, but we got somewhere.
+
+1089
+02:40:17,580 --> 02:40:26,090
+We we dealt with a bunch of bunch of garbage and we'll see what we deal with next week.
+
+1090
+02:40:26,100 --> 02:40:31,060
+I know we're going to figure this out next week, too.
+
+1091
+02:40:31,620 --> 02:40:40,060
+Once, actually. Once. No matching member function person from lambda to once.
+
+1092
+02:40:48,440 --> 02:40:52,680
+No, no, I'm getting sucked in again. We will talk about this next week.
+
+1093
+02:40:52,700 --> 02:40:56,419
+I'm going to keep this machine the way it is and have yourselves a great week.
+
+1094
+02:40:56,420 --> 02:41:00,590
+We will see you in episode 334. Take care, everybody.
+
+1095
+02:41:00,820 --> 02:41:04,130
+Hope you have an awesome week in that. You figure some stuff out.
+
+1096
+02:41:04,700 --> 02:41:07,850
+Bye bye. The Joy.
+
+1097
+02:41:08,770 --> 02:41:11,310
+Loading the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

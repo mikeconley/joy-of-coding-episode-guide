@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 284 - March 30, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 284 - March 30, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a8511080-e5ef-436f-aece-ae6f01033603</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a8511080-e5ef-436f-aece-ae6f01033603">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:04:22,250 --> 00:04:28,200
+Welcome. Through the joy of coding.
+
+2
+00:04:28,200 --> 00:04:32,670
+Hello, and welcome to episode 284 of The Joy of Coding.
+
+3
+00:04:32,670 --> 00:04:38,670
+How's it going? My name is Mike Connelly. It's so good to see you. Well, we're going to be hacking on some Firefox stuff today.
+
+4
+00:04:38,670 --> 00:04:46,020
+I'm going to be going through some neat infos, maybe going to be trying to work on a limiting thing, finishing off or pushing it forward.
+
+5
+00:04:46,020 --> 00:04:49,740
+I don't know if I'm going to finish it, but pushing forward that lynching thing we were working on last time,
+
+6
+00:04:49,740 --> 00:04:55,590
+maybe even investigating a strange failure that got brought to my attention earlier today
+
+7
+00:04:55,590 --> 00:04:59,100
+that I thought might be neat and there's some code review to do so there's plenty to do.
+
+8
+00:04:59,100 --> 00:05:05,040
+Let's get started. What are we waiting for? Let's just get in there. So let me share my screen.
+
+9
+00:05:05,040 --> 00:05:09,270
+Yeah. Today is March 30th, 2020, to episode 284.
+
+10
+00:05:09,270 --> 00:05:14,400
+And even though I sort of laid out a plan of things that we could approach are things that we could do a reminder.
+
+11
+00:05:14,400 --> 00:05:18,570
+No plan survives breakfast. We might get stuck just like at the first step here.
+
+12
+00:05:18,570 --> 00:05:25,860
+You know, we might start looking into need infos and realize that, you know, there's there's a lot more investigation to do for something.
+
+13
+00:05:25,860 --> 00:05:33,630
+Or, you know, maybe there's a story here just going to lock my camera there.
+
+14
+00:05:33,630 --> 00:05:38,370
+Maybe there's there's we can deep dove on something in the need and.
+
+15
+00:05:38,370 --> 00:05:43,890
+It could happen. You know, we might not get any of these other bullets or we might find we have no answers for the need and phones.
+
+16
+00:05:43,890 --> 00:05:48,030
+And we we move forward into one of these bugs and we might fix stuff and we might not.
+
+17
+00:05:48,030 --> 00:05:50,670
+Who knows what's going to happen? That's kind of the the fun here.
+
+18
+00:05:50,670 --> 00:05:56,160
+You're going to watch me do things that I would normally have been doing during my day job, and that's these things.
+
+19
+00:05:56,160 --> 00:05:57,090
+So that's the first thing.
+
+20
+00:05:57,090 --> 00:06:02,730
+The second thing is that the agenda that we're looking at is something that you have access to if you're watching this on YouTube.
+
+21
+00:06:02,730 --> 00:06:07,320
+Check out the video description for a link if you are watching this on air, Mozilla.
+
+22
+00:06:07,320 --> 00:06:15,960
+Check out the details section. And if you're watching this on Twitch, I'm going to drop the link to the Twitch chat Twitch chat now.
+
+23
+00:06:15,960 --> 00:06:20,970
+The agenda? There you go. And so you can follow along.
+
+24
+00:06:20,970 --> 00:06:24,780
+And as I update and, you know, add things or remove things or edit things,
+
+25
+00:06:24,780 --> 00:06:34,500
+this will automatically sort of update and you can just refresh in your browser and it will.
+
+26
+00:06:34,500 --> 00:06:38,280
+And you'll get the latest stuff. So let's get started.
+
+27
+00:06:38,280 --> 00:06:42,180
+What do I want to do? Well, the first thing is that I have a number of need and follows.
+
+28
+00:06:42,180 --> 00:06:48,660
+I thought we could go through a couple of, you know, Bugzilla bugs have been sitting in my queue waiting for information for me.
+
+29
+00:06:48,660 --> 00:06:52,740
+And I thought we could take a look at some of those, so I'm going to pull them up.
+
+30
+00:06:52,740 --> 00:06:56,850
+I'm actually going to start by pulling them up off screen because my My Bugzilla
+
+31
+00:06:56,850 --> 00:07:03,090
+dashboard sometimes refers to security bugs that I don't want to make public.
+
+32
+00:07:03,090 --> 00:07:10,200
+So let me just, uh.
+
+33
+00:07:10,200 --> 00:07:12,300
+Right? Here are a couple.
+
+34
+00:07:12,300 --> 00:07:22,140
+So let me start put by putting some links to the need and folks I'm thinking of or the bugs that I'm thinking of in particular into the agenda.
+
+35
+00:07:22,140 --> 00:07:28,890
+Um. See this one.
+
+36
+00:07:28,890 --> 00:07:38,880
+Uh, yeah, and there was another one, um.
+
+37
+00:07:38,880 --> 00:07:45,380
+This one. OK, so let's start with this one.
+
+38
+00:07:45,380 --> 00:07:49,610
+This is a bug related to the browser toolbox.
+
+39
+00:07:49,610 --> 00:08:00,500
+I actually filed this three years ago and the the need info I got was if it's still a problem, this this can happen if a bug is filed and you know,
+
+40
+00:08:00,500 --> 00:08:04,520
+the team that's responsible for working on that bug, you know,
+
+41
+00:08:04,520 --> 00:08:08,510
+they've got there's so much work to do, there's lots to do and there are lots of projects.
+
+42
+00:08:08,510 --> 00:08:16,550
+Not everything can be prioritized. And a bug like this, which is like just about the browser toolbox and it's like sort of an edge case.
+
+43
+00:08:16,550 --> 00:08:22,190
+It didn't get much attention, and that can happen if something's not like absolutely critical.
+
+44
+00:08:22,190 --> 00:08:27,650
+And so one of the first things that you do, especially with older bugs, is determine whether or not the bug is still relevant.
+
+45
+00:08:27,650 --> 00:08:33,380
+If it still matters, if it's still a factor, you know, is this bug still reproducible?
+
+46
+00:08:33,380 --> 00:08:41,210
+And I was need info because Honza, who has been paying more attention to the browser toolbox in the past couple of weeks,
+
+47
+00:08:41,210 --> 00:08:49,100
+he was like, Hey, I couldn't reproduce this on Windows 10. So let's see if we can figure out if I can reproduce this.
+
+48
+00:08:49,100 --> 00:08:56,090
+It looks like Honza tried to reproduce this on Windows 10. I think I filed this bug on Mac OS.
+
+49
+00:08:56,090 --> 00:09:03,300
+And so let's try and reproduce this on Mac OS, and we're going to step through the the steps to reproduce.
+
+50
+00:09:03,300 --> 00:09:07,970
+So let me start by pumping up my font in my console here. Here will clear all that out.
+
+51
+00:09:07,970 --> 00:09:13,640
+Where start by doing mock run and let's let's actually read through the steps.
+
+52
+00:09:13,640 --> 00:09:20,960
+So we're going to open up Firefox Nightly? Uh, sorry.
+
+53
+00:09:20,960 --> 00:09:26,210
+Hang on. We're going to open Firefox Nightly. We're going to open the toolbox. So let's open up the browser toolbox.
+
+54
+00:09:26,210 --> 00:09:31,610
+We use the keyboard shortcut and then click on the green full screen button in
+
+55
+00:09:31,610 --> 00:09:36,470
+the Mac OS title bar to fullscreen the browser toolbox and then quit nightly,
+
+56
+00:09:36,470 --> 00:09:40,280
+not the browser toolbox. OK, so that's interesting.
+
+57
+00:09:40,280 --> 00:09:48,980
+So what I'm going to do is I'm actually going to fullscreen this on my other display so that I can still access this this window.
+
+58
+00:09:48,980 --> 00:09:56,930
+So it's full screen over my other window. And now quit nightly.
+
+59
+00:09:56,930 --> 00:10:06,420
+OK. Done. So, yeah, the browser toolbox closed automatically now run nightly again.
+
+60
+00:10:06,420 --> 00:10:11,730
+And now open the browser toolbox.
+
+61
+00:10:11,730 --> 00:10:21,120
+And I've got a browser toolbox and the window controls are there, so I think this is actually OK, I think we're all right.
+
+62
+00:10:21,120 --> 00:10:26,310
+Now let me just double check. I did it on a different display. Let me try it on the same display because I actually, in theory,
+
+63
+00:10:26,310 --> 00:10:34,470
+this should be possible that I can like fullscreen this and then change to this window, even though it's full screen on the same display.
+
+64
+00:10:34,470 --> 00:10:41,650
+So let's try it this way. I'm going to quit this, and now let's run again.
+
+65
+00:10:41,650 --> 00:10:47,950
+It will open up the browser toolbox. Yeah, we have our control, so I think this is no longer reproducible.
+
+66
+00:10:47,950 --> 00:10:57,310
+So because I filed the bug and I can no longer reproduce this, I will mark this as works for me.
+
+67
+00:10:57,310 --> 00:11:09,100
+Thanks for bringing this back up. Honza, I just tried to reproduce on Mac OS and couldn't see the bad behavior anymore.
+
+68
+00:11:09,100 --> 00:11:16,150
+So I think we're good here. I think this somehow got fixed along a line and we're good here.
+
+69
+00:11:16,150 --> 00:11:22,810
+Thanks. All right. So we can close that as works for me and I get to clear my need info.
+
+70
+00:11:22,810 --> 00:11:33,550
+Boom. That's one next. Actually, you know what I'm going to do, too, is I'm going to update these links in here to refer to the actual bugs.
+
+71
+00:11:33,550 --> 00:11:40,270
+OK. Next one was this one mouse center and mostly fire differently on select in tennis mode.
+
+72
+00:11:40,270 --> 00:11:47,650
+This was filed five years ago. Now E.T.A. mode for selects.
+
+73
+00:11:47,650 --> 00:11:56,050
+This is if you're not familiar with select dropdowns. That's these things in HTML.
+
+74
+00:11:56,050 --> 00:12:01,660
+And then we've got this like select pop up this pop up that appears over top of it when you choose it.
+
+75
+00:12:01,660 --> 00:12:07,540
+And what's interesting is E-10 s mode. E.T.A. is a short form.
+
+76
+00:12:07,540 --> 00:12:11,590
+You may it might actually be in the glossary. It's in the glossary tennis.
+
+77
+00:12:11,590 --> 00:12:20,440
+Yeah, E.T.A. is short for electrolysis, which was the multiprocessor project for Firefox that shipped like way back in the day.
+
+78
+00:12:20,440 --> 00:12:30,820
+And one of the things we had to do to make Firefox work without of process content with electrolysis was make it so that select dropdowns,
+
+79
+00:12:30,820 --> 00:12:37,030
+the dropdowns open in the parent process. And this is because dropdowns popups can't be opened in a content process.
+
+80
+00:12:37,030 --> 00:12:41,710
+Content processes are restricted in that they can only draw in the content area,
+
+81
+00:12:41,710 --> 00:12:46,210
+and that's a security restriction that we we have very intentionally set up.
+
+82
+00:12:46,210 --> 00:12:59,160
+And so the the dropdown for the selects, we also like we don't want them to draw necessarily outside the UM.
+
+83
+00:12:59,160 --> 00:13:05,980
+We also kind of want to restrict them to the content area, but we do open them in the parent process.
+
+84
+00:13:05,980 --> 00:13:11,440
+That is an intentional choice. I'm trying to, um, think here.
+
+85
+00:13:11,440 --> 00:13:17,050
+If there's uh oh yeah, there's there's a reason why we don't just draw them in the content process.
+
+86
+00:13:17,050 --> 00:13:20,740
+Originally, we were going to do it. We were going to find a way of drawing them in the content process.
+
+87
+00:13:20,740 --> 00:13:29,140
+But then vision happened. And so visions an interesting case because you can have cross process frames and you can
+
+88
+00:13:29,140 --> 00:13:33,910
+have a select dropdown inside of like a really small iframe and a different process.
+
+89
+00:13:33,910 --> 00:13:40,930
+And if you open that, you don't want it to be able to draw over top of the content in the surrounding frame if
+
+90
+00:13:40,930 --> 00:13:45,640
+it's in a different process like they shouldn't be able to draw over top of one another.
+
+91
+00:13:45,640 --> 00:13:52,360
+So we make the parent process do the parent process ends up being the one responsible for it.
+
+92
+00:13:52,360 --> 00:14:00,580
+So that's what a10s mode is for select dropdowns is making the parent process open up, the open up the dropdown.
+
+93
+00:14:00,580 --> 00:14:06,940
+And you know, that's historically different from what we used to do pre E.T.A. where it would open up in the content process.
+
+94
+00:14:06,940 --> 00:14:15,850
+So that's some context there. And it sounds like we may have changed the behavior of like mouse center and mouse leave when we did that.
+
+95
+00:14:15,850 --> 00:14:18,910
+And so this was filed five years ago. There's a bunch of context here.
+
+96
+00:14:18,910 --> 00:14:23,620
+I five years ago, I'm like, I'll try and look at this and then I need info on some people.
+
+97
+00:14:23,620 --> 00:14:27,010
+And then there was some back and forth and back and forth and back and forth.
+
+98
+00:14:27,010 --> 00:14:34,900
+And then I was asked 13 days ago if I have context and why the set captcha approach doesn't work.
+
+99
+00:14:34,900 --> 00:14:44,350
+And then there's more back and forth and then this is breaking some functionality on sites is broke for some functionality on Twitch.
+
+100
+00:14:44,350 --> 00:14:56,240
+But then Twitch fixed it so. This is not good, we might actually be breaking the behavior, some expected behavior here.
+
+101
+00:14:56,240 --> 00:15:02,180
+So let's see if we can understand what the actual breakage is and then see if we can understand what's happening.
+
+102
+00:15:02,180 --> 00:15:06,830
+So we might actually. Unfortunately, I have forgotten like I commented on this thing five years ago.
+
+103
+00:15:06,830 --> 00:15:11,750
+I have no idea what's happening in this bug, and so I'm basically starting from scratch.
+
+104
+00:15:11,750 --> 00:15:18,350
+So let's let's read through this and see what's going on. So it seems like selective or dropdowns are considered separate objects in neatness
+
+105
+00:15:18,350 --> 00:15:22,370
+mode for the purposes of determining when to fire mouse enter and most leave events.
+
+106
+00:15:22,370 --> 00:15:25,250
+That's true, actually, because, you know,
+
+107
+00:15:25,250 --> 00:15:34,730
+in the when it was being opened in the content process because it was part of the Dom tree laid out by the content process or in the when
+
+108
+00:15:34,730 --> 00:15:43,040
+it was all in one process and the dropdown was being opened in the same process we could reuse like the existing structure of the DOM,
+
+109
+00:15:43,040 --> 00:15:53,570
+the existing event framework, because the the select dropdown happens to be a child of the select.
+
+110
+00:15:53,570 --> 00:15:55,730
+And so the events would, you know,
+
+111
+00:15:55,730 --> 00:16:05,540
+for mouse entering mass leave of the dropdown would behave as it would if there were any other child elements of of the select.
+
+112
+00:16:05,540 --> 00:16:07,550
+I don't know if I'm communicating that very, very well,
+
+113
+00:16:07,550 --> 00:16:17,180
+but like essentially it was behaving as expected before because the node the dropdown existed in the same process.
+
+114
+00:16:17,180 --> 00:16:23,430
+These days, the dropdown does not exist in the same process for the purposes of determining when to fire messenger,
+
+115
+00:16:23,430 --> 00:16:27,800
+mostly as an anonymous one to the site and is dropped are both counted as one object.
+
+116
+00:16:27,800 --> 00:16:30,590
+That's right, they were bound together into a single thing.
+
+117
+00:16:30,590 --> 00:16:35,870
+You see this effect in the attached test case by comparing when the events are fired between each of us and this window.
+
+118
+00:16:35,870 --> 00:16:41,870
+This is breaking the quality option and clips that Twitch dot com as per their given URL.
+
+119
+00:16:41,870 --> 00:16:58,020
+So let's unfortunately a non e 10 s mode browser like it's very difficult to actually put Firefox in that mode where it's using dropdowns.
+
+120
+00:16:58,020 --> 00:17:02,320
+To run in nightmares mode, like that's not a mode we ship in the browser.
+
+121
+00:17:02,320 --> 00:17:06,930
+Someone just asked in the chat. Why doesn't Twitch submit a patch then?
+
+122
+00:17:06,930 --> 00:17:13,260
+Well, you know, I would imagine maybe it's not that important to them.
+
+123
+00:17:13,260 --> 00:17:17,580
+It's maybe more important to us and our users than for them and who they consider their users.
+
+124
+00:17:17,580 --> 00:17:22,920
+I don't know. Maybe, maybe they would have. I mean, we collaborate sometimes with other organizations like Twitch.
+
+125
+00:17:22,920 --> 00:17:29,340
+Other sites, you know, we have our web combat team that will work with them. And in particular, Twitch looks like they fixed it on their side.
+
+126
+00:17:29,340 --> 00:17:34,590
+So they they didn't have to submit a patch to us. They fixed the behavior on their side.
+
+127
+00:17:34,590 --> 00:17:40,410
+But still, I guess we're not doing the expected thing.
+
+128
+00:17:40,410 --> 00:17:49,080
+So and it looks like I I submitted a patch, but then I didn't land it or something.
+
+129
+00:17:49,080 --> 00:17:56,220
+So that's that's interesting. Maybe we can dust that off and figure out what's going on.
+
+130
+00:17:56,220 --> 00:18:10,120
+And then there was a test case for mouse center, mostly even mouse out mouse enter.
+
+131
+00:18:10,120 --> 00:18:22,120
+Let's see what happens inside of, say, Safari. So we're going to check the web engine now, see if we can sort of detect the difference in behavior.
+
+132
+00:18:22,120 --> 00:18:27,820
+OK, those enter AHA, see no mouse leave detected.
+
+133
+00:18:27,820 --> 00:18:34,990
+And then as soon as the the we leave like, that's what it means.
+
+134
+00:18:34,990 --> 00:18:42,910
+That's what they mean by single object. Like as soon as the select closes, that's when the mouse out occurs.
+
+135
+00:18:42,910 --> 00:18:50,140
+Whereas over here, the mouse out occurs as soon as the pop up is opened.
+
+136
+00:18:50,140 --> 00:19:01,490
+So that's the breaking behavior. And then I wrote a patch back in the day.
+
+137
+00:19:01,490 --> 00:19:14,300
+Can I look at this patch? Hmm.
+
+138
+00:19:14,300 --> 00:19:23,760
+Now, normally this would redirect to a what's called a Mars review request.
+
+139
+00:19:23,760 --> 00:19:35,160
+Which is the old code review system. Let me see if we can sort of that that system appears to be broken, but maybe we can kind of like revive it.
+
+140
+00:19:35,160 --> 00:19:40,220
+Hmm. Review board is a lot of work.
+
+141
+00:19:40,220 --> 00:19:50,970
+Like, if I went, it's just redirecting the bugs. Hmm.
+
+142
+00:19:50,970 --> 00:20:05,980
+All right, well, what's in the URL that it wants me to download? That's the URL.
+
+143
+00:20:05,980 --> 00:20:12,210
+OK. And where does that take me? Here's the patch.
+
+144
+00:20:12,210 --> 00:20:30,270
+The patch was to use set capture and release capture on the element, and I can't exactly remember what set, capture and release capture do.
+
+145
+00:20:30,270 --> 00:20:36,600
+Deprecated elements capture, and it only works when this pref is enabled,
+
+146
+00:20:36,600 --> 00:20:49,080
+said this during a town event to grab an retarget almost instance element to the mouse button is released or released captures called UM.
+
+147
+00:20:49,080 --> 00:20:54,180
+And we mark that as deprecated back in April of 2021.
+
+148
+00:20:54,180 --> 00:21:01,340
+So that's interesting. Was there?
+
+149
+00:21:01,340 --> 00:21:15,780
+This was 11 months ago that occurred and was there anything else kind of like introduced to?
+
+150
+00:21:15,780 --> 00:21:26,190
+Sort of. Mhm. Ah, here we go, Chrome only version, that's what we want, we want something that's not exposed to the web site.
+
+151
+00:21:26,190 --> 00:21:32,550
+Capture always works outside of a mouse down event.
+
+152
+00:21:32,550 --> 00:21:41,580
+So who introduced this? Can I search for this in the search box?
+
+153
+00:21:41,580 --> 00:21:53,250
+Who introduced this article and said it's a capture that can ignore the allowed state meal out of that?
+
+154
+00:21:53,250 --> 00:22:04,290
+And then how is it used, is there? Part one, part two.
+
+155
+00:22:04,290 --> 00:22:17,630
+It looks like we just called release capture, so. Uh, um.
+
+156
+00:22:17,630 --> 00:22:25,400
+We might actually want to use this, and we can revive this release, captures that capture.
+
+157
+00:22:25,400 --> 00:22:33,350
+Well, first of all, let's see if this solution still works. So this file has changed quite a bit.
+
+158
+00:22:33,350 --> 00:22:42,930
+I think it's called select content. Parents now select content parent.
+
+159
+00:22:42,930 --> 00:22:57,190
+Or maybe it's just select parent show, drop down, what's the winter hated it show drop down.
+
+160
+00:22:57,190 --> 00:23:05,960
+So this has been changed quite a bit. Oh, sorry, this has to happen inside of the contents, we're actually looking for select child.
+
+161
+00:23:05,960 --> 00:23:21,070
+In show drop down here we get. So maybe we can go, hey, this start element got set capturing, let's just use up captured for now,
+
+162
+00:23:21,070 --> 00:23:28,440
+let's use the the old mechanism and we can figure out whether or not we need to.
+
+163
+00:23:28,440 --> 00:23:46,360
+Like, use the Chrome only API later. Let's just see if this still fixes.
+
+164
+00:23:46,360 --> 00:23:51,430
+I'm not a tea, I was drinking tea, and I just realized I'm all out.
+
+165
+00:23:51,430 --> 00:23:55,720
+A lot of tea. All right. So let how do you?
+
+166
+00:23:55,720 --> 00:24:03,450
+Where's the hope? There we go. And we're going to reload this one. Let's see if we get the same behavior between the two now, so.
+
+167
+00:24:03,450 --> 00:24:09,810
+Hup Hup. Not really.
+
+168
+00:24:09,810 --> 00:24:21,600
+It's still it's still behaving the same now as that pref, uh, four set capture is this PREF- still enabled?
+
+169
+00:24:21,600 --> 00:24:26,640
+Is this API still being used to capture enabled?
+
+170
+00:24:26,640 --> 00:24:38,170
+It is true. Is there anything in the.
+
+171
+00:24:38,170 --> 00:24:52,930
+Nothing in the console that suggests why it might not be working, let's open up the browser debugger, make sure we're hitting it.
+
+172
+00:24:52,930 --> 00:25:02,340
+[INAUDIBLE] child. So catch her right there.
+
+173
+00:25:02,340 --> 00:25:12,510
+OK, so we didn't get an exception thrown or anything.
+
+174
+00:25:12,510 --> 00:25:20,160
+Hmm. Now what happens if instead of doing set capture, oh, what what event is on the stack?
+
+175
+00:25:20,160 --> 00:25:26,460
+Because set capture, if we remember, if I remember correctly, it only works during a mouse down event.
+
+176
+00:25:26,460 --> 00:25:32,820
+And what event is this occurring on? Uh, let's put the breakpoint back.
+
+177
+00:25:32,820 --> 00:25:38,520
+What event is this handle event mass show dropdown? Aha, that's not going to work.
+
+178
+00:25:38,520 --> 00:25:43,680
+So what we're going to do instead is we're going to use set capture always.
+
+179
+00:25:43,680 --> 00:25:54,110
+We're going to use the. Only one which works even during non mouse down events.
+
+180
+00:25:54,110 --> 00:25:58,880
+Yeah, it's tricky this one is failing silently, I guess, because it's an older API.
+
+181
+00:25:58,880 --> 00:26:06,730
+The set capture thing is deprecated and I think we're slowly trying to remove it set capture.
+
+182
+00:26:06,730 --> 00:26:10,540
+Deprecated nonstandard, don't use it.
+
+183
+00:26:10,540 --> 00:26:20,770
+That's what this is saying, it looks like it only ever shipped in Firefox and Internet Explorer, and they're like, Don't do it, don't do it.
+
+184
+00:26:20,770 --> 00:26:26,500
+Um, but we can use maybe some of the chrome only ones because now exposed to the web.
+
+185
+00:26:26,500 --> 00:26:30,970
+So let's let's now try this again. What's what is the site?
+
+186
+00:26:30,970 --> 00:26:36,730
+This one? So he's still not working.
+
+187
+00:26:36,730 --> 00:26:46,690
+Hmm. Hmm.
+
+188
+00:26:46,690 --> 00:26:56,680
+Are we using it correctly set capture? Always retarget to element.
+
+189
+00:26:56,680 --> 00:27:03,490
+Let's quickly understand what this does said that retarget almost events to
+
+190
+00:27:03,490 --> 00:27:27,220
+this element until the mouse button is released or release captor is called.
+
+191
+00:27:27,220 --> 00:27:45,770
+Hmm. Did I have some kind of need in photo Neal, and then I cleared it, I must have had some kind of in-person conversation.
+
+192
+00:27:45,770 --> 00:28:08,000
+Context why it didn't work. So how is this supposed to work?
+
+193
+00:28:08,000 --> 00:28:20,230
+The set capture, always. So capturing content.
+
+194
+00:28:20,230 --> 00:28:23,970
+Dragster retarget the element, if that's true.
+
+195
+00:28:23,970 --> 00:28:34,720
+Capture flags. So that means that a particular node is the one that all events are going to be like routed through,
+
+196
+00:28:34,720 --> 00:28:40,300
+and so we must still be firing mostly even most out events.
+
+197
+00:28:40,300 --> 00:28:50,800
+So I guess my question then is if we can capture what what is the most leave event?
+
+198
+00:28:50,800 --> 00:29:09,100
+No sleeve he console log e capture true and do that for most leave and most out.
+
+199
+00:29:09,100 --> 00:29:15,960
+Well, so now what I'm doing here is I am logging those two events.
+
+200
+00:29:15,960 --> 00:29:26,150
+You can see that happening there. I want to see what is.
+
+201
+00:29:26,150 --> 00:29:45,260
+Mouse out is fired on the select and then mouse leave is fired on select body needs, so we mouse leave because we focus on this thing.
+
+202
+00:29:45,260 --> 00:29:54,340
+Hmm. So it's almost like we want to halt event.
+
+203
+00:29:54,340 --> 00:30:01,040
+Um. Halt some of this event stuff.
+
+204
+00:30:01,040 --> 00:30:08,760
+I wonder if there are other widgets that there might be some preexisting gunk that we could reuse here,
+
+205
+00:30:08,760 --> 00:30:16,980
+like there are other form fields like the date time picker.
+
+206
+00:30:16,980 --> 00:30:41,280
+That maybe do similar things. Do we do anything with the fence?
+
+207
+00:30:41,280 --> 00:30:52,090
+No. No, that's that's not helpful.
+
+208
+00:30:52,090 --> 00:31:08,270
+Hmm, mm hmm. OK. Is there another way we could potentially re like just basically halt events, halt event dispatch until the picker is closed again?
+
+209
+00:31:08,270 --> 00:31:17,580
+Um, we have this thing called the event state manager whose job it is to basically manage all this stuff.
+
+210
+00:31:17,580 --> 00:31:23,580
+Is there like a damn window utils? What do we have in here?
+
+211
+00:31:23,580 --> 00:31:27,960
+Synthesizing mouse events? That's not right. Send touch events.
+
+212
+00:31:27,960 --> 00:31:47,360
+These are all utilities that we can potentially use, but they're mainly used for testing, for synthesizing like native events.
+
+213
+00:31:47,360 --> 00:31:56,570
+Which class I could collect since simple gesture events?
+
+214
+00:31:56,570 --> 00:32:09,790
+Oh. This press event headline suppresses or UN suppresses user initiated event handling in the Windows document sub documents.
+
+215
+00:32:09,790 --> 00:32:13,630
+What is that all about? I don't know if that's the right choice, but we can.
+
+216
+00:32:13,630 --> 00:32:20,960
+We can look into it and disable non test mouse events, non synthetic test announcements on all windows.
+
+217
+00:32:20,960 --> 00:32:28,670
+That sounds wrong. But these sound compelling.
+
+218
+00:32:28,670 --> 00:32:59,200
+Who calls these sorts of things suppress event handling. A lot of native code calls it some of our dev tools, calls it.
+
+219
+00:32:59,200 --> 00:33:05,150
+Suppressed, suppressed some document block.
+
+220
+00:33:05,150 --> 00:33:10,250
+What happens if we do that, um, suppress event headline?
+
+221
+00:33:10,250 --> 00:33:31,010
+Just try it. That's one idea. Disable non mouse non test mouse events that.
+
+222
+00:33:31,010 --> 00:33:40,820
+What's this used for? Looks like it's used inside of our tests, mainly.
+
+223
+00:33:40,820 --> 00:33:50,090
+That's true, so that that sounds like probably not the right choice.
+
+224
+00:33:50,090 --> 00:34:03,160
+There's another sort of like, um, area of utilities that we could consider, um.
+
+225
+00:34:03,160 --> 00:34:15,150
+Just looking through some of these other methods, it's a real sort of like dumping ground of stuff.
+
+226
+00:34:15,150 --> 00:34:31,550
+Just utilities for doing privileged things.
+
+227
+00:34:31,550 --> 00:34:47,760
+So permission? Well, of course.
+
+228
+00:34:47,760 --> 00:35:06,670
+For sure, do it for you. OK, so the other place we might look, we have a candidate here suppress.
+
+229
+00:35:06,670 --> 00:35:16,410
+Vent handling our other candidate is chrome utils.
+
+230
+00:35:16,410 --> 00:35:33,390
+Um. And.
+
+231
+00:35:33,390 --> 00:35:47,930
+Mm hmm.
+
+232
+00:35:47,930 --> 00:36:04,710
+And quite again, like part of me wonders whether or not, yeah, like what you're saying, Smurf D should not be similar to other like menu items.
+
+233
+00:36:04,710 --> 00:36:16,020
+True, except that there aren't too many things where we open, like the the the source control widget is in one process and the opened panel.
+
+234
+00:36:16,020 --> 00:36:29,730
+The open menu is in another process. So I'm trying to think if there are any other form controls that kind of fall into this category,
+
+235
+00:36:29,730 --> 00:36:39,490
+um, where we're like some part of it is rendered outside of the parent process.
+
+236
+00:36:39,490 --> 00:36:46,500
+I think it's mainly just pop ups. So things like the select dropdown.
+
+237
+00:36:46,500 --> 00:36:54,090
+Uh, let's see, like form controls. Let's let's look at a gallery of form controls.
+
+238
+00:36:54,090 --> 00:37:07,500
+Um, text input fields, uh, checkboxes, radio buttons, buttons, file picker.
+
+239
+00:37:07,500 --> 00:37:16,690
+Yes, those open. Other form controls text area.
+
+240
+00:37:16,690 --> 00:37:25,450
+OK, here's a slight drop down or part of it opens up in the process the dropdown autocomplete box, you know, that's interesting.
+
+241
+00:37:25,450 --> 00:37:33,100
+The autocomplete boxes Apple. Dewey, this is an interesting question,
+
+242
+00:37:33,100 --> 00:37:46,330
+is this supposed to have similar like mouse over mouse leave the autocomplete stuff because that's kind of similar.
+
+243
+00:37:46,330 --> 00:37:54,340
+The thing is, though, like at the time where you're messing around and getting an auto complete box,
+
+244
+00:37:54,340 --> 00:37:58,810
+what's different about it is that the text field is still actually editable.
+
+245
+00:37:58,810 --> 00:38:08,400
+It's still actually manipulable like. But be like you can still type while you're mousing over this stuff.
+
+246
+00:38:08,400 --> 00:38:13,770
+So there's kind of this implied interactivity that they're both kind of alive,
+
+247
+00:38:13,770 --> 00:38:19,860
+that they're both kind of two separate things that can be like operate independently of one another.
+
+248
+00:38:19,860 --> 00:38:29,500
+But I'm curious, actually, uh, let's see if we can mess around with this.
+
+249
+00:38:29,500 --> 00:38:39,840
+Spec. Input, there's a data list.
+
+250
+00:38:39,840 --> 00:38:48,570
+All fruit. Or pick a fruit.
+
+251
+00:38:48,570 --> 00:38:56,730
+This is hidden. Oh, I guess if there's a fallback in the event that you don't support autocomplete?
+
+252
+00:38:56,730 --> 00:39:06,730
+Interesting. Um.
+
+253
+00:39:06,730 --> 00:39:14,570
+So, yeah, I had no idea that that.
+
+254
+00:39:14,570 --> 00:39:20,220
+That worked, so it's neat.
+
+255
+00:39:20,220 --> 00:39:31,170
+The catalyst is the fruit list list is fruit list, and I guess it's able to pull out from all fruit.
+
+256
+00:39:31,170 --> 00:39:36,180
+The suggestion label for suggestion like it finds this list inside of the data list.
+
+257
+00:39:36,180 --> 00:39:44,040
+That's neat. I had no idea. OK, well, I'm curious about events on this thing.
+
+258
+00:39:44,040 --> 00:39:50,520
+So let's start logging events at sea.
+
+259
+00:39:50,520 --> 00:39:59,280
+Add event listener. Mouse over.
+
+260
+00:39:59,280 --> 00:40:08,470
+Do that for mouse over mouse. Enter mouse leave.
+
+261
+00:40:08,470 --> 00:40:21,300
+And mouse out. OK, so there's mouse over.
+
+262
+00:40:21,300 --> 00:40:30,610
+And I leave, and then whenever I like I, I mouse over these things.
+
+263
+00:40:30,610 --> 00:40:40,120
+It's only whenever I actually mouse over the this part of the wrecked that these events fire, so this is like a detached sort of thing.
+
+264
+00:40:40,120 --> 00:40:50,800
+So I think the select dropdown dropdown is more special, like I presume that's how it would behave in other browsers as well.
+
+265
+00:40:50,800 --> 00:40:56,140
+OK, well, let's let's try this one thing. Let's try this suppress event handling.
+
+266
+00:40:56,140 --> 00:41:01,760
+It's a little. I'm a little unnerved.
+
+267
+00:41:01,760 --> 00:41:10,010
+I've never seen this thing before, but let's just see if it would work. Do we use window utils in here a little bit?
+
+268
+00:41:10,010 --> 00:41:18,800
+Window set handling user input? I Gotcha. OK, so this.
+
+269
+00:41:18,800 --> 00:41:25,940
+Was this that window? Just win and win is this element owner global.
+
+270
+00:41:25,940 --> 00:41:40,450
+I think you can also just use content window that when you stop content, window window details suppress event handling.
+
+271
+00:41:40,450 --> 00:41:51,970
+True. I can already tell, though, that this is probably not the right solution because we do want events.
+
+272
+00:41:51,970 --> 00:42:01,720
+We do on events, we just want them to fire. It's like we don't want to pay attention to the of.
+
+273
+00:42:01,720 --> 00:42:13,250
+We almost want to like lock the the events that are coming from the dropdown itself.
+
+274
+00:42:13,250 --> 00:42:19,800
+And proxy, the ones coming from the dropdown.
+
+275
+00:42:19,800 --> 00:42:25,380
+So that didn't work. Can't access window utils, this content windows undefined.
+
+276
+00:42:25,380 --> 00:42:30,900
+OK, my bad. Um.
+
+277
+00:42:30,900 --> 00:42:36,030
+Oh, because sites like Content Helper is not an actor.
+
+278
+00:42:36,030 --> 00:42:41,980
+Got it! So let's try it this way. And.
+
+279
+00:42:41,980 --> 00:42:53,070
+Um. And.
+
+280
+00:42:53,070 --> 00:43:04,160
+Again, like, I can probably simplify this a little bit or clean it up, but I just want to see if this is even close to a valid solution.
+
+281
+00:43:04,160 --> 00:43:08,870
+Oh, some kind of spammer in the chat.
+
+282
+00:43:08,870 --> 00:43:18,200
+Curious if anyone has Kik powers, you can get rid of them. Go ahead and knock them out.
+
+283
+00:43:18,200 --> 00:43:26,930
+So we have successfully suppressed those two events that appears to be working.
+
+284
+00:43:26,930 --> 00:43:44,930
+Believe it or not, now I don't know what the potential side effects of this are of what I just did, but it appears to be working like bup bup bup bup.
+
+285
+00:43:44,930 --> 00:43:53,160
+For these, it's bup bup bup bup.
+
+286
+00:43:53,160 --> 00:43:59,490
+So we might have a solution here. It seems to be better.
+
+287
+00:43:59,490 --> 00:44:07,140
+So is there a way we can simplify this a little bit? Um yeah, we use element owner global lot.
+
+288
+00:44:07,140 --> 00:44:16,260
+So we're going to say like, let win equals this start element that owner global or say win window utils.
+
+289
+00:44:16,260 --> 00:44:37,530
+And then when. Then over here, uh, uh, when?
+
+290
+00:44:37,530 --> 00:44:46,320
+So that might do it, I'm I'm eager to hear what our our dorm team is going to think of us.
+
+291
+00:44:46,320 --> 00:44:54,450
+Now there was also a test that I was apparently working on implement attempt at a regression test.
+
+292
+00:44:54,450 --> 00:45:19,220
+What was this pointing at? That is not a regression test, did I open the wrong one?
+
+293
+00:45:19,220 --> 00:45:24,350
+So in this, I was like, Hey, let's add a thing opens in select pop up,
+
+294
+00:45:24,350 --> 00:45:32,510
+moves the mouse over the pop up and then I get to the right mouse events occur so we might be able to salvage some of this stuff.
+
+295
+00:45:32,510 --> 00:45:41,110
+We have to find this test has changed a lot since then. So let's see if we can find this existing test.
+
+296
+00:45:41,110 --> 00:45:59,630
+Here it is. And let's let's just run what we have right now.
+
+297
+00:45:59,630 --> 00:46:08,740
+Mark Moki, test browsers, select what is it called? Select Pop Up Gorgeous.
+
+298
+00:46:08,740 --> 00:46:17,740
+Orcus asks do mouse and a mouse out events have associated data? Yes, they have the targets they have like, they have lots of stuff.
+
+299
+00:46:17,740 --> 00:46:23,620
+We and we should verify that they have the expected like target, original target.
+
+300
+00:46:23,620 --> 00:46:41,930
+All of those details. So, yeah, we can do that next.
+
+301
+00:46:41,930 --> 00:47:02,440
+Just run in this test real quick. Who we locked up.
+
+302
+00:47:02,440 --> 00:47:32,430
+So there might be a test that's relying on a certain set of events firing that might not be good.
+
+303
+00:47:32,430 --> 00:47:42,330
+Come on, come on, come on. I'm going to wait for the time out to finally hit because I want details on
+
+304
+00:47:42,330 --> 00:47:50,250
+which part of the test we failed on or what part of the test we were waiting on.
+
+305
+00:47:50,250 --> 00:47:58,350
+So while we're waiting, let me see if there are any questions from the last, I didn't actually check the the feedback form from the last episode.
+
+306
+00:47:58,350 --> 00:48:10,110
+Let me just see if there are any questions I can try and field. Hello.
+
+307
+00:48:10,110 --> 00:48:16,080
+Here we go. Unexpected mouse up event. Got zero expected.
+
+308
+00:48:16,080 --> 00:48:20,370
+True, that's weird.
+
+309
+00:48:20,370 --> 00:48:32,370
+We're like comparing a number like we're coercing. OK.
+
+310
+00:48:32,370 --> 00:48:46,470
+Well. Let's start here.
+
+311
+00:48:46,470 --> 00:48:56,000
+Five, six, five. This function test event or tests that we get the right events when a select pop up is changed.
+
+312
+00:48:56,000 --> 00:49:02,870
+So we have, according to the spec, we want to fire input change and then click events on the select in that order when it has changed.
+
+313
+00:49:02,870 --> 00:49:12,620
+Something also occurs to me about our implementation for the solution, which might indicate that we've got the wrong solution,
+
+314
+00:49:12,620 --> 00:49:22,190
+which is I'll bet you if I select the first item, oh no, it still works well.
+
+315
+00:49:22,190 --> 00:49:26,090
+I got a mouse. Enter, I got two mouse centers. That's interesting.
+
+316
+00:49:26,090 --> 00:49:36,360
+So enter then mouse reenter. What is safari do?
+
+317
+00:49:36,360 --> 00:50:00,750
+Nothing. That's interesting. I wonder if we're suppressing or unsurprising at the right times and like.
+
+318
+00:50:00,750 --> 00:50:13,590
+And it occurs when. Dispatch the click, we dispatch all of these things we dispatch.
+
+319
+00:50:13,590 --> 00:50:18,280
+You know, in the drop down, we fire mouse down, mouse up, input change and click events,
+
+320
+00:50:18,280 --> 00:50:21,880
+use the keyboard, select an element like driving only if our input and changes, the user pressed.
+
+321
+00:50:21,880 --> 00:50:33,190
+Escape for nothing is a slice option is unchanged. Closed with click on closed by clicking on something we dispatch.
+
+322
+00:50:33,190 --> 00:50:48,360
+Mouse down mouse. And after all of that's done, then we honor it.
+
+323
+00:50:48,360 --> 00:50:54,210
+Which un suppresses event handling?
+
+324
+00:50:54,210 --> 00:51:16,040
+And what happens when we unsub press event handling? Like, if we if we suppress events.
+
+325
+00:51:16,040 --> 00:51:20,420
+Then we add a an execution blocker,
+
+326
+00:51:20,420 --> 00:51:47,100
+I don't think we actually I think what ends up happening is we start queuing events that will be dispatched when the suppression ends.
+
+327
+00:51:47,100 --> 00:51:57,240
+Hmm. And we're going to do that for the entire document that seems wrong, all of this seems wrong.
+
+328
+00:51:57,240 --> 00:52:00,780
+We should not be following this. This is very ham fisted and heavy handed.
+
+329
+00:52:00,780 --> 00:52:07,800
+We should not be doing it this way. Hmm.
+
+330
+00:52:07,800 --> 00:52:18,480
+OK. I think I need I need help. So I'm going to actually need info.
+
+331
+00:52:18,480 --> 00:52:25,840
+Emilio, I don't. But when I revived the patch.
+
+332
+00:52:25,840 --> 00:52:41,350
+Drive attached as a whip. Let me let me revert this stuff, and we'll go back to what we were doing.
+
+333
+00:52:41,350 --> 00:52:52,430
+Set capture, I wanted to use that capture always.
+
+334
+00:52:52,430 --> 00:53:08,500
+Arrive the patch and updated to use set capture, always.
+
+335
+00:53:08,500 --> 00:53:24,640
+Which is here. It didn't seem to solve the issue.
+
+336
+00:53:24,640 --> 00:53:34,230
+I'm not really sure how to proceed with this.
+
+337
+00:53:34,230 --> 00:53:41,690
+Do we want to? Is there some platform?
+
+338
+00:53:41,690 --> 00:53:52,480
+Mechanism I can use to suppress event handling by the.
+
+339
+00:53:52,480 --> 00:54:06,800
+Select control. And content. Select control until the dropdown is closed.
+
+340
+00:54:06,800 --> 00:54:17,730
+Um, I looked at. Then we're going to say suppress event handling.
+
+341
+00:54:17,730 --> 00:54:40,100
+Or rather an ideal. And while that kind of works as a replacement to set, capture or capture always.
+
+342
+00:54:40,100 --> 00:55:03,420
+It also suppress it just ends up deferring events for the entire document until the suppression ends, which probably isn't what we want.
+
+343
+00:55:03,420 --> 00:55:10,820
+I mean, I guess I could add a capturing event handler in the.
+
+344
+00:55:10,820 --> 00:55:23,550
+Select child script for. A bunch of events and just prevent them from propagating.
+
+345
+00:55:23,550 --> 00:55:30,820
+Down to the. Select.
+
+346
+00:55:30,820 --> 00:55:39,060
+Is there a better way? And I'm going to request to need info from Amelio.
+
+347
+00:55:39,060 --> 00:55:52,460
+And let me just double check that that said, capture always didn't work.
+
+348
+00:55:52,460 --> 00:55:56,630
+Have you tried to revert back the patch and try the test again without it?
+
+349
+00:55:56,630 --> 00:56:06,550
+Maybe it's a test that fails. Always. Good question. We can try that.
+
+350
+00:56:06,550 --> 00:56:16,910
+OK. Uh, OK, so let's create this patch.
+
+351
+00:56:16,910 --> 00:56:23,450
+We'll call, but.
+
+352
+00:56:23,450 --> 00:56:35,930
+Such and such. Try to capture events on select when the panel is open and this is a work in progress patch,
+
+353
+00:56:35,930 --> 00:56:45,890
+so we'll commit that posted up and then market as well submitted as a wet patch,
+
+354
+00:56:45,890 --> 00:57:03,710
+then we'll revert it and then we yeah, we can go ahead and try the the test with the the patch applied and see if that behaves any differently.
+
+355
+00:57:03,710 --> 00:57:28,470
+Hmm, hmm, hmm, hmm, hmm, hmm, hmm, hmm. Mm hmm.
+
+356
+00:57:28,470 --> 00:57:39,220
+Do we do something similar comments? Event.
+
+357
+00:57:39,220 --> 00:57:48,260
+Like we we tell it. To synthesize.
+
+358
+00:57:48,260 --> 00:57:59,630
+How we we tell it to set content, state, remove content, stay active, mouse and dispatching mouse events like this.
+
+359
+00:57:59,630 --> 00:58:08,360
+Yeah. OK, so let's post that submit tip single whip.
+
+360
+00:58:08,360 --> 00:58:17,170
+And then we'll revert this patch. Submit this comment.
+
+361
+00:58:17,170 --> 00:58:23,540
+Run the run, the tests just to see and then maybe we'll move on to.
+
+362
+00:58:23,540 --> 00:58:28,520
+Something else. I was actually hoping we could maybe we'll skip this one, I'll do that on my own.
+
+363
+00:58:28,520 --> 00:58:32,270
+I'd like to look at this one because we're working on this last time.
+
+364
+00:58:32,270 --> 00:58:38,480
+I also want to look at this because this is kind of neat. Um, maybe actually, I'm going to change the order.
+
+365
+00:58:38,480 --> 00:58:46,070
+I want to look at this first and then we'll get to this. I don't think we're going to get to the code reviews, at least not during my stream.
+
+366
+00:58:46,070 --> 00:58:55,120
+I'll try and get to them later in my day. OK, so that whip patch is.
+
+367
+00:58:55,120 --> 00:59:02,230
+It's marked as changes planned on the bug.
+
+368
+00:59:02,230 --> 00:59:12,220
+And now let's remove the patch. And then we'll run the tests again just to satisfy our curiosity, to see if those tests.
+
+369
+00:59:12,220 --> 00:59:19,150
+I believe they do. I mean, this test is not disabled, so I presume that it's actually running fine in automation.
+
+370
+00:59:19,150 --> 00:59:28,860
+Let's see if it runs OK? Local.
+
+371
+00:59:28,860 --> 00:59:36,520
+OK, while we're waiting for that, I did want to see if there were any questions that had been sent in that I failed to notice.
+
+372
+00:59:36,520 --> 00:59:42,820
+So see here. Test going test running.
+
+373
+00:59:42,820 --> 00:59:55,340
+Ray. Someone did ask someone filled in the form on the 21st.
+
+374
+00:59:55,340 --> 01:00:02,150
+No, there were no questions, and yes, the test does pass. So it was my patch that was changing things.
+
+375
+01:00:02,150 --> 01:00:17,480
+I'm quite confident of that now. OK, so let's submit this question.
+
+376
+01:00:17,480 --> 01:00:34,530
+Uh. And then.
+
+377
+01:00:34,530 --> 01:00:38,010
+What's this? I don't know what this bug is, why this is open.
+
+378
+01:00:38,010 --> 01:00:42,540
+Let's skip down now. I might as well just for consistency sake.
+
+379
+01:00:42,540 --> 01:00:50,740
+Put the bug. Name here, but NASA didn't get to this.
+
+380
+01:00:50,740 --> 01:00:56,460
+All right. I want to look at this so bug one, seven six.
+
+381
+01:00:56,460 --> 01:01:10,770
+Oh, four, one seven, this is a weird one, because you can reproduce this by.
+
+382
+01:01:10,770 --> 01:01:21,540
+Passing a broken you, Earl, as the first parameter, what basically happens is you get a semi broken window, let's see if we can reproduce that like.
+
+383
+01:01:21,540 --> 01:01:30,740
+So if you if you call mark, run and pass this in as an argument.
+
+384
+01:01:30,740 --> 01:01:40,560
+You get a window and the window is apparently kind of broken like menus, bookmarks, toolbar, they don't work.
+
+385
+01:01:40,560 --> 01:01:49,970
+So yeah, like this looks pretty broken toolbars like kind of busted.
+
+386
+01:01:49,970 --> 01:01:54,660
+Can I like browse anywhere? Not really windows broken.
+
+387
+01:01:54,660 --> 01:01:58,770
+Everything's broken. So let's look at the browser console can't even do it.
+
+388
+01:01:58,770 --> 01:02:07,190
+Browser toolbox. Yeah.
+
+389
+01:02:07,190 --> 01:02:12,650
+Hmm. You know, I want the browser console.
+
+390
+01:02:12,650 --> 01:02:19,700
+OK. Lots of broken stuff. An exception was thrown and uncut.
+
+391
+01:02:19,700 --> 01:02:31,900
+Exception was thrown here and eaten as tools. And then, yeah, a bunch of stuff got broken.
+
+392
+01:02:31,900 --> 01:02:38,620
+So bet you that's where the first that first failure is important.
+
+393
+01:02:38,620 --> 01:02:46,780
+On 234. Oh, finding the preferred remote type?
+
+394
+01:02:46,780 --> 01:02:56,860
+Yeah. Um. And saying an illegal value is passed to.
+
+395
+01:02:56,860 --> 01:03:25,470
+Site origin. By attempting to access site origin.
+
+396
+01:03:25,470 --> 01:03:32,850
+Can I get access to the B browser? Can I get access to the selected browser?
+
+397
+01:03:32,850 --> 01:03:41,190
+Now, can I get access to the window arguments?
+
+398
+01:03:41,190 --> 01:03:47,880
+Uh, count. One argument.
+
+399
+01:03:47,880 --> 01:03:53,570
+Um, get element zero.
+
+400
+01:03:53,570 --> 01:04:03,090
+And what is there is probably a string, right, like the browser, when it starts up, it interprets the arguments.
+
+401
+01:04:03,090 --> 01:04:14,580
+And browser and it. Uh. Handle, you are right, a load.
+
+402
+01:04:14,580 --> 01:04:31,940
+You or I to load. Arguments.
+
+403
+01:04:31,940 --> 01:04:39,160
+They just access like window arguments. Zero.
+
+404
+01:04:39,160 --> 01:04:48,130
+It is nice I support string. Query interface.
+
+405
+01:04:48,130 --> 01:04:56,450
+Breaks string. No, is it an array and A.I. array?
+
+406
+01:04:56,450 --> 01:05:08,990
+Yes, it is. And then how do I get access to the elements of it, uh, get.
+
+407
+01:05:08,990 --> 01:05:16,630
+Oh yeah, I get element at zero. Then query interface.
+
+408
+01:05:16,630 --> 01:05:23,820
+I as I supports stream. Right.
+
+409
+01:05:23,820 --> 01:05:35,380
+So that's the problem is that this. I think there's some kind of target principle where that where it's coming from,
+
+410
+01:05:35,380 --> 01:05:44,920
+I don't know, Target Principal Target Principal comes with the origin attributes.
+
+411
+01:05:44,920 --> 01:05:49,870
+George attributes terms create with Target, you are right.
+
+412
+01:05:49,870 --> 01:05:55,740
+So if I say let target principle equal.
+
+413
+01:05:55,740 --> 01:06:04,490
+Sam, which is, I believe, the script security manager, services script security manager.
+
+414
+01:06:04,490 --> 01:06:13,290
+Dot create content principal. I say this.
+
+415
+01:06:13,290 --> 01:06:19,980
+Is that a you or I? What was that? I have to create a new you cry from it.
+
+416
+01:06:19,980 --> 01:06:28,180
+OK. So let's let's put that on pause for a second here and you say, like, let test your equal services.
+
+417
+01:06:28,180 --> 01:06:33,880
+I knew you or I that test your icepack.
+
+418
+01:06:33,880 --> 01:06:38,350
+OK, now we're going to say target principles is create content principle.
+
+419
+01:06:38,350 --> 01:06:42,980
+We're going to pass in the target you right?
+
+420
+01:06:42,980 --> 01:06:49,420
+That's a test you or I. And then origin attributes, which I think is just going to be an empty object.
+
+421
+01:06:49,420 --> 01:06:55,480
+If I say target principal dot sight origin, it throws an exception.
+
+422
+01:06:55,480 --> 01:06:59,980
+That's the problem. That's the problem.
+
+423
+01:06:59,980 --> 01:07:14,500
+So I think we have to account for the possibility here that the site origin is not valid.
+
+424
+01:07:14,500 --> 01:07:47,080
+So if so, I think try. Here's what we're going to do, we're going to say let origin try origin equals target principal site origin, uh.
+
+425
+01:07:47,080 --> 01:07:53,080
+Catch and I wonder, do we do any logging in here, throw?
+
+426
+01:07:53,080 --> 01:08:00,470
+I don't really want to throw an exception, obviously that breaks things, um.
+
+427
+01:08:00,470 --> 01:08:05,490
+Match. Yes, air illegal value.
+
+428
+01:08:05,490 --> 01:08:18,320
+So how do I? Tests equals.
+
+429
+01:08:18,320 --> 01:08:37,780
+Dodge asks. Um.
+
+430
+01:08:37,780 --> 01:08:47,080
+CAIR. Test result.
+
+431
+01:08:47,080 --> 01:09:02,830
+Um. The result equals C.R., and that's how we do it, I guess.
+
+432
+01:09:02,830 --> 01:09:21,700
+If he'd result equals C R Dot as air illegal value return, a preferred remote tight else throw.
+
+433
+01:09:21,700 --> 01:09:29,160
+He. And then we should use origin here.
+
+434
+01:09:29,160 --> 01:09:44,330
+We may well call this site origin. And then we can place these here.
+
+435
+01:09:44,330 --> 01:09:49,630
+OK. Shut down.
+
+436
+01:09:49,630 --> 01:09:57,530
+Let's try this again. Yeah.
+
+437
+01:09:57,530 --> 01:10:06,470
+Mark, run and then you pass in a broken your or I basically like it was this Twitter thing with a dot instead of like there's no WWE or anything.
+
+438
+01:10:06,470 --> 01:10:19,730
+It's just like Dot Twitter.com. See what happens now?
+
+439
+01:10:19,730 --> 01:10:33,810
+So. This is like arguably better, although it failed to attempt to navigate to that, you or I.
+
+440
+01:10:33,810 --> 01:10:43,880
+What was that your eye? It failed to attempt to navigate to this, which it probably should try to do.
+
+441
+01:10:43,880 --> 01:10:51,890
+Huh. Even whatever, as a user, if I try and go there in a normal browser tab, it fails.
+
+442
+01:10:51,890 --> 01:11:03,200
+It just like fails to load. So there's an existing issue here, but like the major issue of like fully broken browser, I think is fixed.
+
+443
+01:11:03,200 --> 01:11:09,680
+So I think we have enough information to um, I looked at this briefly.
+
+444
+01:11:09,680 --> 01:11:25,970
+The problem is that during startup, when we are computing which content process to load the first tab into, we try to parse the or site origin.
+
+445
+01:11:25,970 --> 01:11:33,570
+Out from the you or I. And an exception gets thrown.
+
+446
+01:11:33,570 --> 01:11:41,130
+In the city are that exception because it's occurring so early.
+
+447
+01:11:41,130 --> 01:12:02,430
+Then the browser startup sequence causes a whole series of things to break.
+
+448
+01:12:02,430 --> 01:12:23,900
+Let's tap into the A-10s utils dot each nurse utilizes Validate Web remote type who's that called by a web remote?
+
+449
+01:12:23,900 --> 01:12:32,930
+And just oh, it's called here by get remote type for you, are I object.
+
+450
+01:12:32,930 --> 01:12:49,130
+And who's the last person who touched you? Tennis utils, duchess.
+
+451
+01:12:49,130 --> 01:12:58,730
+Maybe I could have Nico look at this from the Dawn team.
+
+452
+01:12:58,730 --> 01:13:14,750
+These lines in particular, I'm wondering who touched them last.
+
+453
+01:13:14,750 --> 01:13:23,740
+Site origin. Valentin.
+
+454
+01:13:23,740 --> 01:13:31,300
+And Nick ever did the reviewing, I think I'm going to ask Mika to look at these.
+
+455
+01:13:31,300 --> 01:13:41,420
+But. Uh, I think I have a solution.
+
+456
+01:13:41,420 --> 01:13:50,580
+To make this more resilient. OK.
+
+457
+01:13:50,580 --> 01:13:56,280
+So I'll take that severity. I don't know.
+
+458
+01:13:56,280 --> 01:14:07,170
+I don't know what severity we want to set on that, but this is this bug such and such and such.
+
+459
+01:14:07,170 --> 01:14:23,030
+Handle the case. Make sure we handle the case of a an invalid site of origin when computing which.
+
+460
+01:14:23,030 --> 01:14:55,330
+Process type two prefer in E-10 as utils stuff GSM.
+
+461
+01:14:55,330 --> 01:15:06,670
+OK, so it's post that up for review, and um, is there a way we could write a test for this real quick?
+
+462
+01:15:06,670 --> 01:15:11,750
+Um. Yeah.
+
+463
+01:15:11,750 --> 01:15:24,430
+Maybe. Uh, let's see.
+
+464
+01:15:24,430 --> 01:15:33,930
+When this was last touched. Where did?
+
+465
+01:15:33,930 --> 01:15:46,420
+Sessions toward the policy. Tools, components.
+
+466
+01:15:46,420 --> 01:15:54,100
+Remote browser utils, is that where each of us utilizes tool kit modules?
+
+467
+01:15:54,100 --> 01:16:10,570
+Yeah, we might want a test here. What tests already exist here?
+
+468
+01:16:10,570 --> 01:16:21,860
+Rather. Document, channel process swap.
+
+469
+01:16:21,860 --> 01:16:37,250
+There's also like the modules tests subdirectory where each of us is under toolkit modules, not components modules.
+
+470
+01:16:37,250 --> 01:16:47,180
+And there is a set of tests in here, and we have that, we have the modules tests.
+
+471
+01:16:47,180 --> 01:16:57,350
+Seashell eaters utils workers remote types.
+
+472
+01:16:57,350 --> 01:17:07,500
+Um. I wonder if we could write a quick seashell test.
+
+473
+01:17:07,500 --> 01:17:19,070
+Utils, if I just call get remote type for you or I object with a busted you or I.
+
+474
+01:17:19,070 --> 01:17:29,550
+Than I would expect it to return the default remote type. OK, let's add a quick test.
+
+475
+01:17:29,550 --> 01:17:38,310
+Mark, ad test, we're going to do it under toolkit. Modules Tests XP, Seashell.
+
+476
+01:17:38,310 --> 01:17:56,430
+We're going to call it Test E 10 s utils. Get remote type for you or I object.
+
+477
+01:17:56,430 --> 01:18:04,970
+And we're going to add that to source control.
+
+478
+01:18:04,970 --> 01:18:11,690
+Folks, I don't think we're going into those other things, I apologize I was I was really hoping we were going to get to the lynching stuff.
+
+479
+01:18:11,690 --> 01:18:18,530
+Maybe that'll be next time. I apologize. OK, let's.
+
+480
+01:18:18,530 --> 01:18:28,710
+Look at this, so I want to like tests for tennis utils, get remote type for you or I object method.
+
+481
+01:18:28,710 --> 01:18:42,990
+Which? Which is used to compute preferred remote types for certain conditions.
+
+482
+01:18:42,990 --> 01:18:52,890
+Given certain, given certain conditions. For content given certain conditions.
+
+483
+01:18:52,890 --> 01:18:59,510
+Prefer remote process types. Sweet conditions add.
+
+484
+01:18:59,510 --> 01:19:06,420
+So the first thing we need to do is make sure that we can get access to Ethan as utils, so we'll import it like this.
+
+485
+01:19:06,420 --> 01:19:11,320
+Just copy paste. Right here.
+
+486
+01:19:11,320 --> 01:19:23,280
+Test. Invalid sight, origin tests, regression tests, a.
+
+487
+01:19:23,280 --> 01:19:30,510
+That we eat get remote type for you or I object.
+
+488
+01:19:30,510 --> 01:19:40,590
+Returns the preferred remote type when given a you or I with an invalid sight origin.
+
+489
+01:19:40,590 --> 01:19:46,580
+OK. This is a regression test for bug.
+
+490
+01:19:46,580 --> 01:20:05,410
+Um, here. So let's construct our method call, first of all, I think we can.
+
+491
+01:20:05,410 --> 01:20:26,180
+Use a lot of what we wrote in the. In the console earlier when it came to constructing.
+
+492
+01:20:26,180 --> 01:20:35,800
+You or I let's let's use the test case, which was.
+
+493
+01:20:35,800 --> 01:20:46,870
+I think I'll just contest. Invalid, your eyes string or invalid sight origin.
+
+494
+01:20:46,870 --> 01:20:53,260
+And then I'll put in like Vasiliy dot org slash.
+
+495
+01:20:53,260 --> 01:20:57,550
+Um, this is a test dot.
+
+496
+01:20:57,550 --> 01:21:05,740
+OK, invalid site origin. True.
+
+497
+01:21:05,740 --> 01:21:18,870
+OK, contest. Are actually all these services that I knew you or I.
+
+498
+01:21:18,870 --> 01:21:31,290
+And then, um, we're going to say, how do we call it eat utils?
+
+499
+01:21:31,290 --> 01:21:42,390
+What is the signature? Sorry your I multiprocessor? Let's look and see how this is called in the wild.
+
+500
+01:21:42,390 --> 01:22:02,450
+Type four, you or I. Uh, Multiprocessor, we're going to say true and valid site origin to our eye.
+
+501
+01:22:02,450 --> 01:22:20,820
+True. Well, format it later, remote subframe, true.
+
+502
+01:22:20,820 --> 01:22:33,000
+Preferred remote type is the default remote type. Is that something that's exposed?
+
+503
+01:22:33,000 --> 01:22:41,220
+Each of us who tells you to eat unless you tells the default remote type?
+
+504
+01:22:41,220 --> 01:22:51,890
+And then. Current, you or I will just pass on the defaults null, null.
+
+505
+01:22:51,890 --> 01:23:04,460
+Yeah, we're just going to use the defaults for the rest of it and let's assert equal results.
+
+506
+01:23:04,460 --> 01:23:08,200
+I don't know, actually, if we have a support equal in scale test.
+
+507
+01:23:08,200 --> 01:23:18,350
+So I'm just going to say is got the expected default remote type.
+
+508
+01:23:18,350 --> 01:23:27,290
+OK, I'm pretty sure that up. Let's run that test.
+
+509
+01:23:27,290 --> 01:23:36,510
+We might actually have to build faster in order to get the test registry, like solidified.
+
+510
+01:23:36,510 --> 01:23:40,130
+I'm sorry, my microphone was dipping in boom mic dipping in.
+
+511
+01:23:40,130 --> 01:23:45,920
+This is a classic gag like the boom mic dipping in, except here I can make it come in from the top.
+
+512
+01:23:45,920 --> 01:23:53,700
+What? Like, pretend like I said something funny. And then the boom dips in boom Mike dips in.
+
+513
+01:23:53,700 --> 01:24:01,380
+Class A Class Agag class, a gag, a trope.
+
+514
+01:24:01,380 --> 01:24:13,870
+All right. Let's run this test. And then I got to go.
+
+515
+01:24:13,870 --> 01:24:16,390
+Whatever happens, I got to go after this.
+
+516
+01:24:16,390 --> 01:24:27,180
+Uh, I've got other things to do, including the things that are still on my plate and I have some meetings to attend after this.
+
+517
+01:24:27,180 --> 01:24:41,700
+OK, let's go, let's go, let's go. Fail, fail is is not defined, well, what am I supposed to be using a certain equal?
+
+518
+01:24:41,700 --> 01:24:45,240
+You tell me. There we go.
+
+519
+01:24:45,240 --> 01:24:53,580
+OK, so it passed now, let's revert our change from before. Excuse me.
+
+520
+01:24:53,580 --> 01:25:06,050
+So. Instead of turning that early, we'll just continue to throw meetings, says Danny Cole, and yes, the joy of meetings.
+
+521
+01:25:06,050 --> 01:25:19,380
+Yay. It failed. OK, so we've got ourselves a regression test here.
+
+522
+01:25:19,380 --> 01:25:34,040
+So I'll amend that now posted for review, and then we're going to call it there.
+
+523
+01:25:34,040 --> 01:25:41,640
+Was fab submit to single.
+
+524
+01:25:41,640 --> 01:25:48,780
+Scooby Doo Doo Doo, Hey, thank you so much for watching episode two hundred and eighty four of the joy of coding, I hope that was interesting.
+
+525
+01:25:48,780 --> 01:25:52,920
+I hope. I hope it was good to be back. I hadn't been here for a while.
+
+526
+01:25:52,920 --> 01:26:01,140
+I mean, I wasn't here last week, so it's good to be back. I hope you had a good week and I'm looking forward to hacking with you again next week.
+
+527
+01:26:01,140 --> 01:26:08,760
+Maybe then we'll have a chance to look at that. The lint rule, presuming nothing else sort of emergency wise, has cropped up.
+
+528
+01:26:08,760 --> 01:26:16,140
+This seemed like kind of important. I don't like whenever you can very easily or another application that's trying to open Firefox with a busted URL.
+
+529
+01:26:16,140 --> 01:26:22,080
+You just like break the browser. So this this, I thought this was pretty important.
+
+530
+01:26:22,080 --> 01:26:27,840
+That's why I dove on it. All right. Thanks again for watching episode 284 of the joy of Coding.
+
+531
+01:26:27,840 --> 01:26:31,860
+Let me know what you thought. You can let me know by filling out the form here at this link.
+
+532
+01:26:31,860 --> 01:26:33,690
+In the agenda rate this episode,
+
+533
+01:26:33,690 --> 01:26:43,770
+I can put a link to that actually in the Twitch chat for the people who are in Twitch rate this episode for I'm putting in the Twitch chat.
+
+534
+01:26:43,770 --> 01:26:47,790
+There you go. And you know, let me know what you thought.
+
+535
+01:26:47,790 --> 01:26:52,410
+I read all of the comments. If you got questions, go ahead and ask them.
+
+536
+01:26:52,410 --> 01:26:58,210
+No one asked any questions last night. There were comments, but no questions, so any questions send them sentiment.
+
+537
+01:26:58,210 --> 01:27:02,100
+And with that, I'll call it there. Thanks again for watching episode 284 of The Joy of Coding.
+
+538
+01:27:02,100 --> 01:27:06,300
+My name is my colleague. How a great time. I will see you next week.
+
+539
+01:27:06,300 --> 01:27:12,660
+Take care. Bye bye. The joy of holding.
+
+540
+01:27:12,660 --> 01:28:51,789
+See a.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,2973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 262 - September 15, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 262 - September 15, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=2febe2cf-ded2-4774-a81e-ad9001479f92</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=2febe2cf-ded2-4774-a81e-ad9001479f92">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,096 --> 00:00:15,356
+Welcome. The Joy, hello and welcome to Episode two hundred and sixty two of The Joy of Coding.
+
+2
+00:00:15,356 --> 00:00:17,376
+My name is Mike Connelly. It's so good to have you here.
+
+3
+00:00:17,376 --> 00:00:23,576
+We're going to be hacking on some Firefox stuff today, going to be investigating some things, figuring some stuff out.
+
+4
+00:00:23,576 --> 00:00:29,666
+Let's get started. Let me start by sharing my screen.
+
+5
+00:00:29,666 --> 00:00:33,596
+This is the agenda. So today is September 15th.
+
+6
+00:00:33,596 --> 00:00:38,426
+Twenty twenty one, episode 262. A reminder, no plan survives breakfast.
+
+7
+00:00:38,426 --> 00:00:42,746
+I don't really know what's going to happen during the stream. I haven't prepared anything really.
+
+8
+00:00:42,746 --> 00:00:51,776
+Like I know kind of what bugs I want to look at. I know how I generally want to approach them or like I hope I know what I hope to do.
+
+9
+00:00:51,776 --> 00:00:56,876
+But whether or not those things actually occur, who knows? I might get sidelined, I, I get distracted.
+
+10
+00:00:56,876 --> 00:01:01,736
+I might get stuck on something, but we're going to figure it out together.
+
+11
+00:01:01,736 --> 00:01:03,746
+You know, you're you're watching me work live.
+
+12
+00:01:03,746 --> 00:01:10,316
+And so none of this is like me pretending to do work that I actually already know how to do or anything.
+
+13
+00:01:10,316 --> 00:01:14,906
+That's the first thing. The second thing is that the agenda that we're looking at is something that you have access to.
+
+14
+00:01:14,906 --> 00:01:22,466
+If you're watching this on air Mozilla, check out the video details to, I think, the left of the video, the left of the video.
+
+15
+00:01:22,466 --> 00:01:30,716
+If you're watching this on YouTube, check the video description. And if you're on Twitch, then the link is about to get dropped in the twitch chat.
+
+16
+00:01:30,716 --> 00:01:36,116
+Let me just drop it right now. Drop it like it's hot.
+
+17
+00:01:36,116 --> 00:01:42,806
+Here we go. Agenda Booya SHARQIYA.
+
+18
+00:01:42,806 --> 00:01:48,146
+So there's there's the agenda. And so you can just follow along, click on the links.
+
+19
+00:01:48,146 --> 00:01:56,636
+And, you know, as I update the agenda periodically, the, you know, the agenda should update.
+
+20
+00:01:56,636 --> 00:02:03,176
+We also have an episode guide. It's a completely viewer driven episode guide driven completely by viewers just like you.
+
+21
+00:02:03,176 --> 00:02:09,326
+You can add your own notes, addenda. You know, you can expand upon maybe something I mentioned during a particular episode.
+
+22
+00:02:09,326 --> 00:02:13,736
+You can correct me if I've gone wrong or, you know, times have changed on a particular thing.
+
+23
+00:02:13,736 --> 00:02:17,576
+Just send a poll request to the repository. If you're not sure how to do that.
+
+24
+00:02:17,576 --> 00:02:26,546
+There's a guide in the agenda on how you can do that with special thanks to Smurf D, who is, I would say, our most prolific episode guide contributor.
+
+25
+00:02:26,546 --> 00:02:31,766
+And I believe I have a couple of pull requests from Smurf D that I need to get to, but I won't do that right now.
+
+26
+00:02:31,766 --> 00:02:39,236
+Instead, I would like to start by looking at this bug that someone on bugs eloping me about a few days ago.
+
+27
+00:02:39,236 --> 00:02:44,066
+This is what we call an intermittent test failure and they asked me to take a look at it.
+
+28
+00:02:44,066 --> 00:02:56,276
+So let me pull up the bug and we can talk about this a little bit. Oh, before I continue, though, someone on someone had sent in a message,
+
+29
+00:02:56,276 --> 00:03:05,096
+a rating message last week after last week's episode saying that they couldn't get to the chat based on the links from YouTube,
+
+30
+00:03:05,096 --> 00:03:09,236
+like they asked me to put the link to the chat in YouTube. The video description.
+
+31
+00:03:09,236 --> 00:03:13,046
+I have done this. It's in there. It was always there.
+
+32
+00:03:13,046 --> 00:03:19,076
+But I've tried to make it clearer. And if you're having a hard time connecting to the chat, let me know.
+
+33
+00:03:19,076 --> 00:03:23,996
+Like if there's a whole bunch of people who are like, I can't get this thing to work, send me a message.
+
+34
+00:03:23,996 --> 00:03:30,596
+You can communicate to me through this raid, this episode link, you know, just send in some kind of rating by the when the questions section.
+
+35
+00:03:30,596 --> 00:03:36,386
+Just let me know if you're having problems and I'll try and make sure that's clear. So what's this bug about?
+
+36
+00:03:36,386 --> 00:03:47,006
+So this is what we call an intermittent test failure. Any sufficiently large software system with a sufficiently large test suite, in my experience,
+
+37
+00:03:47,006 --> 00:03:53,786
+will run into this particular problem where you'll have a series of tests that will fail some of the time, but not all of the time.
+
+38
+00:03:53,786 --> 00:03:58,466
+And this is due to non determinism and, you know,
+
+39
+00:03:58,466 --> 00:04:06,476
+the tests not taking certain certain things into account for or the code, not taking certain things into account.
+
+40
+00:04:06,476 --> 00:04:10,736
+Sometimes the test is doing correctly. Sometimes the code is acting in a non deterministic way.
+
+41
+00:04:10,736 --> 00:04:15,776
+And by non-deterministic way, I mean, it doesn't run the same way every time.
+
+42
+00:04:15,776 --> 00:04:21,026
+You know, there's there's not a guarantee it will run the same way every time in some very simple programs,
+
+43
+00:04:21,026 --> 00:04:22,826
+you can expect that it will run the same way.
+
+44
+00:04:22,826 --> 00:04:31,256
+Every time you you like some type in a command, you press enter and it will execute in a particular way that is very like predictable.
+
+45
+00:04:31,256 --> 00:04:37,656
+And that's what we call a deterministic sort of execution of a program.
+
+46
+00:04:37,656 --> 00:04:42,656
+That's if you are able to follow it, if you know the inputs and you can trace the exact, you know,
+
+47
+00:04:42,656 --> 00:04:48,176
+flow through the program and figure out what the outputs are that is deterministic execution.
+
+48
+00:04:48,176 --> 00:04:56,696
+If you have non determinism, it's usually due to things like, well, you've got user the user like sending in events that you can't predict.
+
+49
+00:04:56,696 --> 00:05:03,116
+You've got timers that are maybe a timers or events coming in from different threads.
+
+50
+00:05:03,116 --> 00:05:10,646
+And the operating system is changing the thread, priorities under the hood or different programs sending you messages or who knows what's going on.
+
+51
+00:05:10,646 --> 00:05:13,556
+All sorts of things that a program sort of has to contend with,
+
+52
+00:05:13,556 --> 00:05:21,716
+that those conditions might be different from test run to test run, and that can sometimes result in a test failure.
+
+53
+00:05:21,716 --> 00:05:24,386
+And in this case, we have an intermittent test failure.
+
+54
+00:05:24,386 --> 00:05:30,266
+That's what we're looking at, at least to start for a thing called browser usage telemetry interaction.
+
+55
+00:05:30,266 --> 00:05:39,746
+And the error message is we're failing an assertion in the test where we expect to see the correct value for a bookmark item in the bookmarks bar.
+
+56
+00:05:39,746 --> 00:05:46,046
+We try and match undefined, the string undefined, I'm guessing an undefined value to the number one,
+
+57
+00:05:46,046 --> 00:05:53,606
+and that obviously they don't equal to one another. And so we fail the assertion and it starts showing up five months ago.
+
+58
+00:05:53,606 --> 00:06:01,106
+And then it was marked incomplete because I guess it didn't it wasn't seen for a while.
+
+59
+00:06:01,106 --> 00:06:14,216
+And then it started showing up again. And then we start our sheriffs, the people who monitor the tree, started seeing an uptick in the frequency.
+
+60
+00:06:14,216 --> 00:06:17,666
+Heisse commented on this, he was like, I'm out for two weeks,
+
+61
+00:06:17,666 --> 00:06:21,716
+so I can't look at this myself and clear the priorities so little show up and triage it help.
+
+62
+00:06:21,716 --> 00:06:27,336
+If we had some idea of what trip this test going orange again. Orange is intermittent test failure.
+
+63
+00:06:27,336 --> 00:06:34,526
+Intermittent orange is used interchangeably in Missoula. Orange is the color that we set in our like S.I,
+
+64
+00:06:34,526 --> 00:06:40,136
+what we call tree herter are our management tool for viewing continuous
+
+65
+00:06:40,136 --> 00:06:45,296
+integration and builds and one not the orange color is used for a test failure.
+
+66
+00:06:45,296 --> 00:06:52,256
+And so intermittent test failure, a.k.a. InterMune orange that's there is synonymous with one another.
+
+67
+00:06:52,256 --> 00:06:59,186
+I guess that's redundant. They're synonymous it help. If we had some idea of what this test going orange can do, we have a regression window for it.
+
+68
+00:06:59,186 --> 00:07:08,216
+The test itself hasn't changed since May. So was there a change under the test in the window where the test orangery started?
+
+69
+00:07:08,216 --> 00:07:12,686
+There are no test related modifications on new platforms that the test running on.
+
+70
+00:07:12,686 --> 00:07:16,976
+And then I believe the disable disabling the failures job showed that it was passing a lot.
+
+71
+00:07:16,976 --> 00:07:25,016
+If it fails too much, we can disable. OK, so the test was disabled and then it was re enabled.
+
+72
+00:07:25,016 --> 00:07:30,806
+And so we're getting like one hundred and thirty two failures over the last three days, pretty, pretty frequently failing test.
+
+73
+00:07:30,806 --> 00:07:33,506
+In fact, if you expand some of these comments in here,
+
+74
+00:07:33,506 --> 00:07:39,716
+we have this thing called the intermittent intermittent failures robot that monitors each of our
+
+75
+00:07:39,716 --> 00:07:45,296
+repositories in the continuous integration system for instances of this intermittent test failure.
+
+76
+00:07:45,296 --> 00:07:50,756
+And we actually can graph that if we open up this link, we take a look at like the last thirty days,
+
+77
+00:07:50,756 --> 00:07:56,996
+you can see that there's like this sort of a failure rate per push.
+
+78
+00:07:56,996 --> 00:07:59,216
+And, you know, there's there's a spike here.
+
+79
+00:07:59,216 --> 00:08:10,536
+But I think what I'm most interested in looking at is just like what builds and what kinds of builds this failure occurs on.
+
+80
+00:08:10,536 --> 00:08:17,016
+So I see a mixture of both Windows and Mac os, so right now we're gathering clues, we're gathering clues about this test failure.
+
+81
+00:08:17,016 --> 00:08:22,476
+We don't even know what the test is testing. I haven't even looked yet, but I'm just kind of getting a sense of what the test failure is.
+
+82
+00:08:22,476 --> 00:08:26,976
+That's how I generally start on these. So it's failing on a lot of these shippable builds.
+
+83
+00:08:26,976 --> 00:08:33,666
+That's a key word here. Shippable build is a build that has gone through what's called Pergo or profile guided optimization,
+
+84
+00:08:33,666 --> 00:08:39,216
+which is a sort of post-processing step that we put some our binaries through before
+
+85
+00:08:39,216 --> 00:08:44,886
+we ship them to users to make them faster and profile a guided optimization.
+
+86
+00:08:44,886 --> 00:08:48,216
+Sounds fancy, but basically it's like we compile a program,
+
+87
+00:08:48,216 --> 00:08:56,346
+we run the program and like it's got a bunch of instrumentation and we have the program execute a set of instructions,
+
+88
+00:08:56,346 --> 00:09:03,846
+basically like common user interactions and the instrumentation that's monitoring the the build.
+
+89
+00:09:03,846 --> 00:09:11,586
+The binary goes, OK, well, I've noticed that this is how the program executes whenever the user or one of the these
+
+90
+00:09:11,586 --> 00:09:17,766
+actions are performed and then it reorganizes the binary so that those operations,
+
+91
+00:09:17,766 --> 00:09:25,746
+which we consider to be the most frequent, like using the URL bar, opening tabs, going to a website like these, are we optimize for those.
+
+92
+00:09:25,746 --> 00:09:33,876
+We optimize the binary for those. And so it's a step that occurs after the initial build that's profile guided optimization.
+
+93
+00:09:33,876 --> 00:09:39,276
+So there's a lot of shippable, shippable build failures here.
+
+94
+00:09:39,276 --> 00:09:47,436
+So that may or may not be a clue. One thing that shippable builds do is because they run faster.
+
+95
+00:09:47,436 --> 00:09:52,746
+They can reveal races that may have existed in the test,
+
+96
+00:09:52,746 --> 00:09:59,436
+but one side of a race was winning more often than another because you'll notice that it's not always a shippable build.
+
+97
+00:09:59,436 --> 00:10:04,806
+Here's an example of a test failure occurring for a non-repayable build.
+
+98
+00:10:04,806 --> 00:10:11,556
+But it's very clear that the vast majority of these are for shippable builds or profile guided optimized builds.
+
+99
+00:10:11,556 --> 00:10:21,856
+And so the you know, it's possible that the profile guided optimization has tipped the scales a little bit in one way or the other.
+
+100
+00:10:21,856 --> 00:10:28,056
+I see Danny Colon is typing in the chat. Hopefully you may have noticed I'm not using my fancy microphone today.
+
+101
+00:10:28,056 --> 00:10:32,946
+I had to restart my Mako's machine because of a very critical update that was applied.
+
+102
+00:10:32,946 --> 00:10:45,426
+Hopefully you should all update your your your Apple software because of a recent vulnerability, Danny Colon asked, Do we still support Mac OS 10 X?
+
+103
+00:10:45,426 --> 00:10:46,836
+Yes, we do. We do.
+
+104
+00:10:46,836 --> 00:10:56,796
+We start to run a lot of our our infrastructure, a lot of our testing on Mac OS eleven, but we still do run as well, I believe on Mac OS 10.
+
+105
+00:10:56,796 --> 00:10:57,966
+We can actually take a look at that.
+
+106
+00:10:57,966 --> 00:11:05,286
+If we go to Tree Herter down the Zelig, we can look at Mozilla Central and we can take a look at some of the builds here.
+
+107
+00:11:05,286 --> 00:11:12,426
+These this is a very overwhelming user interface, but this tells you some of the.
+
+108
+00:11:12,426 --> 00:11:20,346
+Yeah, these are some of the the platforms that we build on, like the this is 64 bit.
+
+109
+00:11:20,346 --> 00:11:24,666
+I guess this might be the one chip. I'm not sure if that's that's what this is,
+
+110
+00:11:24,666 --> 00:11:31,296
+but then there's Mac OS building on eleven and then here it is for ten fourteen
+
+111
+00:11:31,296 --> 00:11:36,996
+and we run a bunch of tests on on the ten branch and it's a kind of a misnomer.
+
+112
+00:11:36,996 --> 00:11:40,746
+It's like os x eleven but the X is the ten part.
+
+113
+00:11:40,746 --> 00:11:51,126
+This should really say like Mac os eleven but Selvi anyways these are a bunch of different platforms that we build on Linux 64, Linux eight four.
+
+114
+00:11:51,126 --> 00:12:01,476
+These are all like flavors of Ubuntu, flavors of Android, versions of Android, players of Windows seven ten Windows twenty twelve.
+
+115
+00:12:01,476 --> 00:12:05,136
+Still isn't that wild windows twenty twelve.
+
+116
+00:12:05,136 --> 00:12:14,016
+Still building on that because we got to make sure that we support lots of old versions of Windows.
+
+117
+00:12:14,016 --> 00:12:18,816
+Yeah. So there you go. Oh our arc is armed.
+
+118
+00:12:18,816 --> 00:12:25,866
+It's not the M1 chip I guess arc 64 is armed so I guess there are some chips out there and some of our Mac OS machines.
+
+119
+00:12:25,866 --> 00:12:33,186
+Oh anyway.
+
+120
+00:12:33,186 --> 00:12:37,086
+Lots of different failures that's worth noting. And a lot of them are shippable.
+
+121
+00:12:37,086 --> 00:12:42,786
+So let's now start looking at the test itself to try and understand what the test actually tests
+
+122
+00:12:42,786 --> 00:12:49,626
+and where the failure occurs and see if we can come up with a hypothesis of what might be racing.
+
+123
+00:12:49,626 --> 00:12:52,656
+And yes, there is pagination I'm on page one of five.
+
+124
+00:12:52,656 --> 00:13:01,476
+We can we can go view one hundred rows and see that like we're mostly failing on the Mac OS eleven built.
+
+125
+00:13:01,476 --> 00:13:08,256
+But it's possible that the test has been disabled on Mac os ten Mac os x.
+
+126
+00:13:08,256 --> 00:13:16,186
+It's possible as. Sort of migrate from one version of an offering system to another will move test frameworks over so that they
+
+127
+00:13:16,186 --> 00:13:23,656
+only run on the next one and will slowly retire test runs on the older machines until nothing's running on them.
+
+128
+00:13:23,656 --> 00:13:25,366
+And then we retire the machines.
+
+129
+00:13:25,366 --> 00:13:39,406
+So it's possible that it's not failing on Mac OS 10 because it's Mac OS 11 specific or because the test actually doesn't run on Mac OS 10 anymore.
+
+130
+00:13:39,406 --> 00:13:45,256
+OK, so this is in the past, what was the date range, 30 days.
+
+131
+00:13:45,256 --> 00:13:51,826
+OK, let's take a look and see if we can understand what this test actually tests, browser usage, telemetry interaction.
+
+132
+00:13:51,826 --> 00:14:00,806
+So if I remember correctly, browser usage telemetry is a thing that we use to measure the usage of various UI components in the browser.
+
+133
+00:14:00,806 --> 00:14:06,106
+So we basically collect counts in none. We don't do this in private browsing windows.
+
+134
+00:14:06,106 --> 00:14:11,776
+We only do it in a normal browsing windows. But we count how many times you like click on the home button or the reload
+
+135
+00:14:11,776 --> 00:14:16,606
+button or the app menu button or the new tab button and just sort of create this
+
+136
+00:14:16,606 --> 00:14:21,646
+heat map of the frequency with which things are used so that we can have confidence
+
+137
+00:14:21,646 --> 00:14:27,556
+that we aren't polluting the toolbars with things that that no one's using,
+
+138
+00:14:27,556 --> 00:14:34,036
+basically. And so let's take a look at this code. Let's open this test.
+
+139
+00:14:34,036 --> 00:14:37,306
+How does this test work? I don't think I've ever read this test before.
+
+140
+00:14:37,306 --> 00:14:46,276
+It's a longer one, but maybe we can focus in on just the particular place where the test is failing and zoom out from there.
+
+141
+00:14:46,276 --> 00:14:54,576
+So I'm going to look for this. For bookmark item in bookmarks bar, it's possible that was broken over.
+
+142
+00:14:54,576 --> 00:15:03,786
+So where is this message? Maybe there's a, uh, test unexpected fail test interaction, undefined.
+
+143
+00:15:03,786 --> 00:15:11,256
+Give me a line. No. Line forty seven.
+
+144
+00:15:11,256 --> 00:15:23,026
+Here, OK, I see, and this is a helper function and we're expecting to see a correct value inside of a certain scalar scalars.
+
+145
+00:15:23,026 --> 00:15:40,476
+Oh, this is interesting. So scalars is this thing that we get we get a snapshot for our from our telemetry back end of various scalars.
+
+146
+00:15:40,476 --> 00:15:46,866
+And we expect them to be a certain value.
+
+147
+00:15:46,866 --> 00:15:50,886
+I see sources of areas. OK,
+
+148
+00:15:50,886 --> 00:15:59,496
+so somehow we're calling it a certain interaction scalars and we're calling it with bookmark item and it might be this one actually bookmark item one.
+
+149
+00:15:59,496 --> 00:16:19,076
+Do we call it again with bookmark item? No, it doesn't look like it, so it looks like this is probably where the test is failing in toolbar buttons.
+
+150
+00:16:19,076 --> 00:16:25,676
+So let us walk through what this test does and see if we can understand what it's doing.
+
+151
+00:16:25,676 --> 00:16:30,156
+And then we can put together a hypothesis. Oh, man, my mouth is like lazy today.
+
+152
+00:16:30,156 --> 00:16:36,206
+And I let's put together a hypothesis of what might be going wrong here.
+
+153
+00:16:36,206 --> 00:16:42,116
+OK, let's give this a read.
+
+154
+00:16:42,116 --> 00:16:49,586
+So the very first thing that we do is we open a new tab at example, dotcom and our test framework that actually doesn't go to exampled outcome.
+
+155
+00:16:49,586 --> 00:16:53,426
+We redirect that to like an internal page. We don't actually hit the example dot com page.
+
+156
+00:16:53,426 --> 00:16:57,446
+Every time we run a test, we don't go into the network and load it over the network.
+
+157
+00:16:57,446 --> 00:17:01,226
+In fact, if you attempt to access the network in any of our automated tests,
+
+158
+00:17:01,226 --> 00:17:08,096
+that the process will crash because we don't actually want to accidentally just
+
+159
+00:17:08,096 --> 00:17:13,646
+spam some domain out there with a bunch of traffic whenever we're running tests.
+
+160
+00:17:13,646 --> 00:17:26,836
+So some fake page, just pretend that this is a fake page is opened in a new tab and then we create a custom widget in the two in the nav bar.
+
+161
+00:17:26,836 --> 00:17:43,386
+And we resolve once it's been created. And we give it this weird ID and then we get a snapshot for our kids scalars,
+
+162
+00:17:43,386 --> 00:17:47,496
+I don't I can't exactly remember what this means, but basically I think it means, like,
+
+163
+00:17:47,496 --> 00:17:54,756
+give me just dump all of the scalars that have been recorded and telemetry right now in this particular bucket,
+
+164
+00:17:54,756 --> 00:18:00,246
+the main bucket, which is I guess where some of this UI stuff would be captured.
+
+165
+00:18:00,246 --> 00:18:06,126
+And it doesn't look like we do anything with that snapshot, we just kind of capture it and walk away.
+
+166
+00:18:06,126 --> 00:18:12,596
+What is this true do? Let's quickly look at this API.
+
+167
+00:18:12,596 --> 00:18:22,686
+And is this work? The second argument is clear store, so weather to clear out the keys sailors' scalars in the name store after snapshot.
+
+168
+00:18:22,686 --> 00:18:30,366
+So that's probably why we're doing this. We're clearing out the scalars at the start of this test.
+
+169
+00:18:30,366 --> 00:18:45,526
+Then we open another tab. Get another tab. And we set up a promise for closing that tab and then we open up the bookmarks toolbar,
+
+170
+00:18:45,526 --> 00:18:49,936
+which has the ID personal toolbar for some reason that's like a long,
+
+171
+00:18:49,936 --> 00:18:56,506
+long in the tooth ID for a long time that that's what it's been called, the personal toolbar under the Hood.
+
+172
+00:18:56,506 --> 00:19:03,586
+And we set up this promise where we're waiting for the bookmarks toolbar to become visible.
+
+173
+00:19:03,586 --> 00:19:11,046
+We said it's toolbar visibility to be true. We wait for that to actually become true because I guess there's some kind of asynchronous thing.
+
+174
+00:19:11,046 --> 00:19:22,156
+So we basically we just pull the DOM until the collapsed attribute is removed and then we register a cleanup function to put that back.
+
+175
+00:19:22,156 --> 00:19:28,246
+So at this point, we can be reasonably confident that the bookmarks toolbar is visible.
+
+176
+00:19:28,246 --> 00:19:38,776
+Then we get at the I guess this is some kind of helper for this is probably just like get Elliman by ID.
+
+177
+00:19:38,776 --> 00:19:45,656
+This is like a helper function. So we get at the Tab's element. We make sure it doesn't have we're not overflowing.
+
+178
+00:19:45,656 --> 00:19:51,986
+Oh, we may if we check to see if we're overflowing for some reason, if so.
+
+179
+00:19:51,986 --> 00:19:57,436
+If we're not overflowing, we put ourselves into the overflow state.
+
+180
+00:19:57,436 --> 00:20:00,856
+Bizarre, I'm not sure why that would be, but we do it and we also clean up a function,
+
+181
+00:20:00,856 --> 00:20:06,796
+so we want to be in the overflow state that is intentional and we clean that up and remove that state whenever we're done.
+
+182
+00:20:06,796 --> 00:20:21,226
+And then we click on the stop reload button. So we stop.
+
+183
+00:20:21,226 --> 00:20:27,256
+So this new foreground tab, we click on stop and we click on back and then we click on back,
+
+184
+00:20:27,256 --> 00:20:36,856
+which is weird because like this new foreground tab should be at the default home page and clicking on stops shouldn't do anything
+
+185
+00:20:36,856 --> 00:20:44,836
+because usually it's already loaded and clicking Bakshian go anywhere because it's a new tab and we haven't gone anywhere yet.
+
+186
+00:20:44,836 --> 00:20:56,816
+But OK, make sure that all tabs panels in the document, OK, and then we click on the old tabs button.
+
+187
+00:20:56,816 --> 00:21:03,506
+And then we hide it, so we're basically just like poking around in parts of the UI,
+
+188
+00:21:03,506 --> 00:21:10,906
+we click on the tab, close button for the tab we had opened and we presume that that causes.
+
+189
+00:21:10,906 --> 00:21:22,636
+Yeah, and then we wait for the tab to close, OK, and then we click on a bookmark item inside the Places toolbar.
+
+190
+00:21:22,636 --> 00:21:31,946
+The first bookmark item. Uh huh.
+
+191
+00:21:31,946 --> 00:21:40,886
+You know what, I have a theory I have a theory about this.
+
+192
+00:21:40,886 --> 00:21:50,356
+What might be going wrong? So we open the bookmarks toolbar and then we execute a bunch of instructions and then we get here and we're like,
+
+193
+00:21:50,356 --> 00:21:52,996
+hey, click on the first bookmark item.
+
+194
+00:21:52,996 --> 00:22:01,606
+But I have a feeling that the bookmarks toolbar, when it becomes in, like visible, it doesn't immediately populate.
+
+195
+00:22:01,606 --> 00:22:12,656
+I have a feeling there is like a an asynchronous like places toolbar initialization step.
+
+196
+00:22:12,656 --> 00:22:18,776
+Let me see if I can prove that we're going to take a look at what happens whenever you make the Places toolbar visible.
+
+197
+00:22:18,776 --> 00:22:30,766
+So let's take a look at browser James. We're going to see if we can find where the places toolbar stuff is hooked up.
+
+198
+00:22:30,766 --> 00:22:36,586
+So here's the actual places toolbar right here, and by default, it actually doesn't have any items in it,
+
+199
+00:22:36,586 --> 00:22:41,686
+like it has a toolbar button, but it doesn't have any bookmarks items in it yet.
+
+200
+00:22:41,686 --> 00:22:46,126
+And to me, that is probably what state we're in whenever things fall over.
+
+201
+00:22:46,126 --> 00:22:49,726
+In fact, if we go to one of these failures, I just I always forget about this.
+
+202
+00:22:49,726 --> 00:23:00,646
+But if we go to a very recent failure, let's go to the first page so we get a very recent failure from today actually on Ortolan.
+
+203
+00:23:00,646 --> 00:23:04,666
+Let's open up this build, if we can, on this revision.
+
+204
+00:23:04,666 --> 00:23:09,706
+Can we get the can we get the job yet? Here's the log for the failure.
+
+205
+00:23:09,706 --> 00:23:13,246
+We can actually get a screenshot of what the browser looked like at the point
+
+206
+00:23:13,246 --> 00:23:19,486
+of failure because we collect one and it looks like there is an item here.
+
+207
+00:23:19,486 --> 00:23:31,296
+But I would bet you. I will bet you that at the time of the test, that item wasn't there and maybe we can even find an example.
+
+208
+00:23:31,296 --> 00:23:38,806
+Of a screenshot where it's not their. This just looks horribly broken.
+
+209
+00:23:38,806 --> 00:23:46,516
+I got a feeling on Mac OS we have on those machines, we haven't got our screenshot stuff working yet.
+
+210
+00:23:46,516 --> 00:23:53,506
+Oh, this is interesting here. We're actually still animating it in.
+
+211
+00:23:53,506 --> 00:23:58,456
+So clicking on it while it's still animating it. Animating in might also be a problem.
+
+212
+00:23:58,456 --> 00:24:14,636
+That's the other the other issue. Let's let's look at more, uh, I guess we have it we're stuck looking at Windows ones.
+
+213
+00:24:14,636 --> 00:24:27,726
+This one's finished. This one still animating in.
+
+214
+00:24:27,726 --> 00:24:36,756
+Because things that are still animating it, I'm pretty sure if they're they're not yet displayed, we we might not allow the click event to occur.
+
+215
+00:24:36,756 --> 00:24:41,166
+It depends on how this click event is working. How does Klick work?
+
+216
+00:24:41,166 --> 00:24:48,066
+Do we have a click is synthesized most at the center of the element?
+
+217
+00:24:48,066 --> 00:24:49,866
+And if I remember correctly,
+
+218
+00:24:49,866 --> 00:25:00,986
+event utils synthesized Mosad Center works by getting the target bound and client tracked and then synthesizing the mouse.
+
+219
+00:25:00,986 --> 00:25:07,516
+Uh, works by. Come on, come on, come on, come on.
+
+220
+00:25:07,516 --> 00:25:21,236
+Where is synthesized mass? We get the synthesizers at point and what we do is we.
+
+221
+00:25:21,236 --> 00:25:29,766
+Yeah, if the item if basically what will happen is we may have computed that the item is.
+
+222
+00:25:29,766 --> 00:25:31,986
+The center is right here,
+
+223
+00:25:31,986 --> 00:25:40,626
+and then we will synthesize a click right here where there is like nothing there's just like empty content area that could happen.
+
+224
+00:25:40,626 --> 00:25:43,836
+That's another hypothesis. So let me start writing this.
+
+225
+00:25:43,836 --> 00:25:52,446
+Some of those down, some of these hypotheses. And then we can alter the test.
+
+226
+00:25:52,446 --> 00:25:59,966
+To start to handle some of them and see what that does, let's create a new note.
+
+227
+00:25:59,966 --> 00:26:09,506
+Uh. I haven't yet completed my part of my transition off of Evernote to.
+
+228
+00:26:09,506 --> 00:26:18,926
+What she's saying, this stuff work anymore, um. My transition from Evernote to.
+
+229
+00:26:18,926 --> 00:26:23,756
+Choplin for my bag notes, but I'm hoping to do it real soon.
+
+230
+00:26:23,756 --> 00:26:29,076
+It's getting a little too busy for me.
+
+231
+00:26:29,076 --> 00:26:42,486
+Um, OK, so hypothesis one, the bookmark item doesn't yet exist in the toolbar at the time that the click event occurs,
+
+232
+00:26:42,486 --> 00:26:54,756
+hypothesis to hypothesis to the bookmark item does exist, but the toolbar is still animating in.
+
+233
+00:26:54,756 --> 00:27:05,136
+And so the click event occurs on a piece of UI that the click event actually ends up
+
+234
+00:27:05,136 --> 00:27:15,226
+occurring on the content area because the center of the bookmark item is positioned.
+
+235
+00:27:15,226 --> 00:27:26,856
+Such that it's. Obscured, how do I mention this occurring on the content area,
+
+236
+00:27:26,856 --> 00:27:42,076
+because that's technically where the center of the bookmark item is, when the toolbar is still animating in any other hypotheses.
+
+237
+00:27:42,076 --> 00:27:50,596
+Um. All right, well, let's keep let's keep looking at how this thing shows up,
+
+238
+00:27:50,596 --> 00:28:00,876
+so when the Places toolbar is opened, we populate it and I'm guessing it's here or places views.
+
+239
+00:28:00,876 --> 00:28:18,176
+What causes it to. No, that's not it.
+
+240
+00:28:18,176 --> 00:28:30,456
+Places toolbar, this might be it this. Situation.
+
+241
+00:28:30,456 --> 00:28:38,386
+So what creates a Places toolbar?
+
+242
+00:28:38,386 --> 00:28:48,656
+Inside of Browsr places, whenever we really in it, which occurs a synchronously, this will check whether we finish stripping and show toolbars.
+
+243
+00:28:48,656 --> 00:28:56,506
+Can toolbar content providers and this occurs when.
+
+244
+00:28:56,506 --> 00:29:14,406
+In delayed start up. So after we've painted so I think we can presume that that's done and then we wait for this promise to resolve this promise is.
+
+245
+00:29:14,406 --> 00:29:20,946
+Promised used by toolbar of place to determine whether we can start loading its content, which involves Zahos, so it's postponed during startup,
+
+246
+00:29:20,946 --> 00:29:25,176
+this promise promises resolution value indicates whether toolbar initialization weight on such a store when is restored,
+
+247
+00:29:25,176 --> 00:29:30,426
+and then I'll task or happen immediately as the window was opened. This is used for telemetry.
+
+248
+00:29:30,426 --> 00:29:43,666
+OK. Place like unblock toolbars equals dysfunction, and then we set up this promise.
+
+249
+00:29:43,666 --> 00:29:52,906
+Can load and then we resolve immediately in the event that the icy unblock toolbars is a callback that's occurred, that occurs.
+
+250
+00:29:52,906 --> 00:29:57,436
+This is all very, very interesting. OK, but I think I get it.
+
+251
+00:29:57,436 --> 00:30:13,426
+And then we do real in it, which actually occurs after we've realized that we've we've read the places stuff off of the desk.
+
+252
+00:30:13,426 --> 00:30:28,416
+Or the toolbars collapse, don't initialize. OK, that's, I think, the state that we initially started in, we exit here and then.
+
+253
+00:30:28,416 --> 00:30:35,746
+In the the toolbar visibility change event occurs whenever we decide to show the toolbar.
+
+254
+00:30:35,746 --> 00:30:45,416
+And then we would do reset view after we showed the toolbar and reset view.
+
+255
+00:30:45,416 --> 00:30:50,216
+It's possible the place to view might not exist, we need to fall into this camp bookmarks toolbar and remove the menu panel,
+
+256
+00:30:50,216 --> 00:30:56,886
+end of the toolbar with the added toolbar button option outside of customized mode.
+
+257
+00:30:56,886 --> 00:31:04,896
+OK, so that's, I guess, possible, but unlikely, I don't think we would enter.
+
+258
+00:31:04,896 --> 00:31:16,006
+Uh, I don't think we would have done these things yet, then we call Annette and Annette, I'm guessing is.
+
+259
+00:31:16,006 --> 00:31:28,046
+It will happen again, initialize so it does this again.
+
+260
+00:31:28,046 --> 00:31:41,456
+Interesting. So there is a toolbar initialized attribute that we could use.
+
+261
+00:31:41,456 --> 00:31:46,986
+Um. Which might be helpful, we can wait for it to be initialized,
+
+262
+00:31:46,986 --> 00:31:58,866
+and then there's also the the animating in so the animating in let's see here, personal toolbar, personal toolbar.
+
+263
+00:31:58,866 --> 00:32:18,036
+There's some success for animating. Here, transition personnel toolbar, not instant collapsed, I see there's some kind of instant class.
+
+264
+00:32:18,036 --> 00:32:27,646
+Initialize personally for visibility hidden. So when do we set instant?
+
+265
+00:32:27,646 --> 00:32:36,926
+And class constant, do we do that class list, add instant.
+
+266
+00:32:36,926 --> 00:32:43,076
+Uh. Uh, that's not the same thing.
+
+267
+00:32:43,076 --> 00:32:50,686
+This is for something completely unrelated for ABC. So when do we set the instant class?
+
+268
+00:32:50,686 --> 00:33:10,466
+Uh, places. Um.
+
+269
+00:33:10,466 --> 00:33:24,986
+OK, where did this instant rule come from? Back in twenty twenty, uh, earlier than that, I see, so it was added, it was added in this patch.
+
+270
+00:33:24,986 --> 00:33:38,146
+Let's take a look at the full def. Uh.
+
+271
+00:33:38,146 --> 00:33:44,176
+Toggle instant animated and is this still in the code base somewhere?
+
+272
+00:33:44,176 --> 00:33:49,066
+What is this? No, this is not in the code base anymore.
+
+273
+00:33:49,066 --> 00:34:03,406
+Where are we? We're in set toolbar visibility. OK.
+
+274
+00:34:03,406 --> 00:34:08,236
+Um, toggle instant, is anything like that still around?
+
+275
+00:34:08,236 --> 00:34:16,246
+Yeah, OK, here we go. And animated is set.
+
+276
+00:34:16,246 --> 00:34:26,086
+Here animator's true, so are we able to like control in this test stress said personal toolbar,
+
+277
+00:34:26,086 --> 00:34:30,586
+just wait for conditions set to bar visibility and we say make it visible.
+
+278
+00:34:30,586 --> 00:34:37,246
+Then we say persist and then say animated. So I'm going to say one way around.
+
+279
+00:34:37,246 --> 00:34:45,306
+This is to say one thing I like to do, especially when I've got a whole string of boolean values here,
+
+280
+00:34:45,306 --> 00:35:01,776
+is we'll give them names, uh, is visible and then we'll say persist while we'll use the default, which is true, persist.
+
+281
+00:35:01,776 --> 00:35:18,646
+Um, I guess we don't need to persist it, to be completely honest, persist so that a false actually, uh, and then animated false.
+
+282
+00:35:18,646 --> 00:35:29,136
+And then we'll have prettier clean this up and here where I say is visible.
+
+283
+00:35:29,136 --> 00:35:48,966
+False persist. False, animated, so that might I think that will help take care of the still animating in problem.
+
+284
+00:35:48,966 --> 00:35:56,696
+For some reason. Oh, uh, is invalid JavaScript, OK?
+
+285
+00:35:56,696 --> 00:36:00,816
+Now, prettier, you probably want to clean it up.
+
+286
+00:36:00,816 --> 00:36:18,176
+Great. Um. Query selector.
+
+287
+00:36:18,176 --> 00:36:26,856
+Is there a way we can ensure that the Places toolbar is initialized, yes, there's that attribute.
+
+288
+00:36:26,856 --> 00:36:32,996
+Await bookmarks, toolbar visible collapsed instead of waiting for it to be visible.
+
+289
+00:36:32,996 --> 00:36:40,986
+Let's wait for it to be ready. Bookmarks toolbar ready.
+
+290
+00:36:40,986 --> 00:36:55,346
+So we're going to wait for it to not be collapsed and toolbar get attribute initialized or as Ajamu.
+
+291
+00:36:55,346 --> 00:37:05,966
+There you had that 12 FUX. Says Murphy, there you had that 12 for what, 12 for, what, 12 FUX?
+
+292
+00:37:05,966 --> 00:37:13,156
+Sure. What, 12 Fux we're talking about here, but the Places toolbar,
+
+293
+00:37:13,156 --> 00:37:23,716
+they're going to set initialized on the on the toolbar, so we're essay's get attribute equals true.
+
+294
+00:37:23,716 --> 00:37:33,666
+And now that's prettier that. And let's run this test and see what happens.
+
+295
+00:37:33,666 --> 00:37:49,106
+Mark Mokey, test browser usage telemetry, underscore interaction Jass.
+
+296
+00:37:49,106 --> 00:37:52,376
+Oh, in the bottom, Smurfette, he says below 12 feet.
+
+297
+00:37:52,376 --> 00:37:57,986
+Oh, yeah, we destroy the widget and I guess we make sure that we can click on the 12 FUB widget.
+
+298
+00:37:57,986 --> 00:38:01,586
+That's what we're doing.
+
+299
+00:38:01,586 --> 00:38:11,606
+We like create a custom one, we click on it, we make sure that we register, click on it, and then Scooby Doo, Scooby Doo and done, we pass.
+
+300
+00:38:11,606 --> 00:38:20,276
+Now, that's what I like to do, is I also like to verify I'll run the the test through kind of what we call a stress test,
+
+301
+00:38:20,276 --> 00:38:29,276
+where it will run the test in a variety of modes, trying to detect any places where intermittent test failures could arise,
+
+302
+00:38:29,276 --> 00:38:36,086
+usually by our test framework, and are in geko itself has this mode that we don't use in production.
+
+303
+00:38:36,086 --> 00:38:50,276
+But for testing it's called chaos mode. In chaos mode is a special mode where the underlying infrastructure of geko will try to.
+
+304
+00:38:50,276 --> 00:38:56,516
+Oh, here we go. Hey, we got it. We actually got the test failure locally.
+
+305
+00:38:56,516 --> 00:39:01,016
+That's fun. We're able to do with verify and the reason we got it is because of chaos mode,
+
+306
+00:39:01,016 --> 00:39:10,286
+I would guess expected to see the correct value for bookmark item in bookmarks bar.
+
+307
+00:39:10,286 --> 00:39:23,496
+Undefined equals one. Um.
+
+308
+00:39:23,496 --> 00:39:31,926
+Let's make sure let's let's log some stuff, let Eitam equal document queries selecter.
+
+309
+00:39:31,926 --> 00:39:44,086
+Let's put this query selector in. And we'll have it click on that item.
+
+310
+00:39:44,086 --> 00:39:55,626
+And then we'll have it dump the item bookmark item, we'll see if anything exists there.
+
+311
+00:39:55,626 --> 00:40:06,366
+All right, let's rerun verify. So the way chaos mode works is it will randomly reprivatize threats.
+
+312
+00:40:06,366 --> 00:40:10,356
+It will take what is oh, here we go.
+
+313
+00:40:10,356 --> 00:40:27,256
+We've already got it. We got our test failure. So it does find an item, but clicking on it does nothing.
+
+314
+00:40:27,256 --> 00:40:37,896
+Interesting. So maybe it's actually not a matter of the.
+
+315
+00:40:37,896 --> 00:40:43,386
+Click event, not hitting the right thing, but the click event not being recorded correctly.
+
+316
+00:40:43,386 --> 00:40:52,276
+Interesting. So usage telemetry is this module.
+
+317
+00:40:52,276 --> 00:41:04,006
+Bookmark item. Widget ID.
+
+318
+00:41:04,006 --> 00:41:13,936
+So record command is that and usage listeners record command will record the command.
+
+319
+00:41:13,936 --> 00:41:26,686
+Um, so I think. That's Tyria.
+
+320
+00:41:26,686 --> 00:41:38,586
+Source event type equals a click. Again, a reference to a.
+
+321
+00:41:38,586 --> 00:41:50,976
+Um, so the item should obviously have a class name of bookmark item, right, like if I run this again,
+
+322
+00:41:50,976 --> 00:41:59,056
+we'll probably see a class name, a bookmark item, and it might even have an I.D. But my guess is it wouldn't.
+
+323
+00:41:59,056 --> 00:42:03,856
+But maybe. See if we can find this failure again.
+
+324
+00:42:03,856 --> 00:42:19,546
+Come on. Come on. It would be lovely, it's time travel, debugging, JavaScript.
+
+325
+00:42:19,546 --> 00:42:23,896
+So this is my opportunity to let you know that that is a technology that exists.
+
+326
+00:42:23,896 --> 00:42:37,216
+I want to plug some work from some ex colleagues of mine, people who work on Firefox dev tools and a number of platform things.
+
+327
+00:42:37,216 --> 00:42:45,226
+They sort of spun out their own company to do time travel, debugging in JavaScript, in your Web applications.
+
+328
+00:42:45,226 --> 00:42:50,326
+So if you're not sure with time travel, debugging is imagine if you could, like, use a debugger to step forward,
+
+329
+00:42:50,326 --> 00:42:55,216
+which is normal, but then also just step backward through time, through a recording of Web applications.
+
+330
+00:42:55,216 --> 00:43:01,816
+And imagine if you could share those recordings around. So like a user could, in theory,
+
+331
+00:43:01,816 --> 00:43:12,226
+reproduce a bug in your Web application record that Trece send it to a developer who could then step through in the code and see what was going wrong,
+
+332
+00:43:12,226 --> 00:43:17,656
+like step through and see how things got to be the way they were and then step backward.
+
+333
+00:43:17,656 --> 00:43:24,346
+And the way it works is you have to run a specific what's called a recording browser.
+
+334
+00:43:24,346 --> 00:43:31,396
+They I think they've got two different versions. They've got one that's built on top of chrome and one built on top of Firefox.
+
+335
+00:43:31,396 --> 00:43:38,866
+And they've also got one built on top of node. So in theory, you should be able to do this with like a standard node node application as well.
+
+336
+00:43:38,866 --> 00:43:42,676
+And this is not like this is not a novel idea.
+
+337
+00:43:42,676 --> 00:43:47,716
+Time travel, debugging, but time travel debugging has been kicked around for a while.
+
+338
+00:43:47,716 --> 00:43:59,956
+Mozilla, you know, someone at Mozilla spun out the RR project, which is like C, C++ time travel debugging on Linux, which has been very handy.
+
+339
+00:43:59,956 --> 00:44:06,526
+But this is really interesting because it's JavaScript time travel debugging, which up until now I think has been pretty tricky.
+
+340
+00:44:06,526 --> 00:44:09,946
+And there it looks like they're working on other runtime as well.
+
+341
+00:44:09,946 --> 00:44:19,606
+Python, Java, Ruby, it's really interesting. It's like they can use suddenly you can start stepping through these these these stacks,
+
+342
+00:44:19,606 --> 00:44:23,386
+these interpreted languages do backwards time like time travel, debugging.
+
+343
+00:44:23,386 --> 00:44:27,436
+It's pretty great. And I mean, just go finish my plug here.
+
+344
+00:44:27,436 --> 00:44:32,956
+Let's look at the pricing. Let's look at the pricing is free.
+
+345
+00:44:32,956 --> 00:44:36,826
+If you are an individual, it's free forever.
+
+346
+00:44:36,826 --> 00:44:40,726
+Unlimited recordings. You've got privacy controls, limited API, API, key support.
+
+347
+00:44:40,726 --> 00:44:46,786
+But like, that's pretty good. If you have a team, you call it cost you twenty bucks per month per developer.
+
+348
+00:44:46,786 --> 00:44:53,026
+But think how much time and money it would actually save you and your team to have such recordings.
+
+349
+00:44:53,026 --> 00:45:01,636
+So pretty nice. And then there's like an enterprise they have like a call us if you're interested in this package, we won't put a price on it.
+
+350
+00:45:01,636 --> 00:45:10,966
+So, I mean, there's that bucket as well. But if you are working on your own, you know, just the free the free package might be enough.
+
+351
+00:45:10,966 --> 00:45:18,826
+And what's really nice is replay will always be free for local development, open source and collaboration.
+
+352
+00:45:18,826 --> 00:45:22,966
+Pretty great. Pretty great. Check it out.
+
+353
+00:45:22,966 --> 00:45:30,886
+Go check out replayed audio. Let me let me put a link to this in here.
+
+354
+00:45:30,886 --> 00:45:46,446
+Plug for replay audio. Yeah, I know a number of people who are working on that now let's take a look at the team, lose their team.
+
+355
+00:45:46,446 --> 00:45:52,476
+Uh, team, team, team to have their team listed.
+
+356
+00:45:52,476 --> 00:45:55,956
+No, but they're hiring a bunch of people. Oh, here we go. Here's the team.
+
+357
+00:45:55,956 --> 00:46:04,686
+Yeah, I know a bunch of these people. I know a bunch of these people. Very exciting, very exciting.
+
+358
+00:46:04,686 --> 00:46:10,486
+OK. All right, let us continue. So we had this failure and then we got our class list.
+
+359
+00:46:10,486 --> 00:46:16,026
+Yes, it has the bookmark item class. That makes sense.
+
+360
+00:46:16,026 --> 00:46:22,266
+So the reason I brought up the reason I brought up replay is to be really handy to do this with replay right now.
+
+361
+00:46:22,266 --> 00:46:27,546
+Once once we had the failure. Anyways, we get our click.
+
+362
+00:46:27,546 --> 00:46:36,326
+Let's take a look and see if we can dump the click event. See, like.
+
+363
+00:46:36,326 --> 00:46:42,936
+Record command. Called.
+
+364
+00:46:42,936 --> 00:46:55,446
+Let's also put a click clicking on bookmark item.
+
+365
+00:46:55,446 --> 00:47:21,206
+Gun clicking on bookmark item. And then let's see.
+
+366
+00:47:21,206 --> 00:47:31,316
+Recorded scalar. All right.
+
+367
+00:47:31,316 --> 00:47:38,576
+And is this for engagement or it's interaction scalars, not engagement scalars, it's just interaction scalars.
+
+368
+00:47:38,576 --> 00:47:57,396
+OK, let's take a look at that now. Sorry about this white dot that's probably annoying that somehow.
+
+369
+00:47:57,396 --> 00:48:09,816
+That better, yeah, it's better. Come on, test failure.
+
+370
+00:48:09,816 --> 00:48:15,676
+Let's go, let's go. No whammies or actually I do want to wammy there it is Booya.
+
+371
+00:48:15,676 --> 00:48:18,876
+I just had to summon it.
+
+372
+00:48:18,876 --> 00:48:29,196
+OK, clicking on bookmark item record command called and then it was done clicking on the bookmark item and so we didn't actually record the scalar.
+
+373
+00:48:29,196 --> 00:48:36,946
+That's interesting because if you see one of the places where we, we do it correctly.
+
+374
+00:48:36,946 --> 00:48:44,486
+So it's probably somewhere up here where is it, did it bookmark item, so clicking on bookmark item,
+
+375
+00:48:44,486 --> 00:48:52,946
+record command and then we record the scalar and the bookmarks bar, um, which is what we expect.
+
+376
+00:48:52,946 --> 00:48:57,716
+Right. Right, right, right. Actually, yeah.
+
+377
+00:48:57,716 --> 00:49:02,076
+Bookmarks bar. And then we expect bookmark item.
+
+378
+00:49:02,076 --> 00:49:10,026
+The key to be the bookmark item, so we didn't actually do the recording, so we must bail out earlier like we I see in the failure,
+
+379
+00:49:10,026 --> 00:49:16,536
+like we do clicking on Boccanegra, we see the click event and then we somehow bail out.
+
+380
+00:49:16,536 --> 00:49:29,866
+So now the trick is to see where we bail out. So the way I tend to do is like bailing at one, bailing it to.
+
+381
+00:49:29,866 --> 00:49:38,546
+Bailing out three. Bailing out for.
+
+382
+00:49:38,546 --> 00:49:48,936
+Bailing at five. Bailing at six.
+
+383
+00:49:48,936 --> 00:49:56,256
+And then maybe we just don't enter this branch bailing at seven.
+
+384
+00:49:56,256 --> 00:50:04,686
+All right. Bill, just in case. Rerun.
+
+385
+00:50:04,686 --> 00:50:09,806
+Let's get some whammies here.
+
+386
+00:50:09,806 --> 00:50:19,936
+Print debugging can be Betances smirky, I don't know if that's true, didn't we just talk about something that could totally beat?
+
+387
+00:50:19,936 --> 00:50:24,116
+Wouldn't this like defeat printing of debugging?
+
+388
+00:50:24,116 --> 00:50:28,306
+It's it doesn't defeat it. It augments it. It augments it.
+
+389
+00:50:28,306 --> 00:50:35,206
+And that that to me is what would be really nice if we could get that for our browser tests here.
+
+390
+00:50:35,206 --> 00:50:44,916
+But I think this is tuned very much for like browser like like web applications, not the browsers themselves.
+
+391
+00:50:44,916 --> 00:50:53,646
+That's not to say it couldn't be repurposed for the browser UI. Hmm.
+
+392
+00:50:53,646 --> 00:51:00,576
+Hmm. All right, come on, give me the test failure, test failure time, let's do it.
+
+393
+00:51:00,576 --> 00:51:10,746
+Let's do it. Test failure. Where's my failure, was my failure, where's my failure?
+
+394
+00:51:10,746 --> 00:51:20,266
+See, here's the problem. This is called the. I guess the measurement problem or the Heisenberg uncertainty or Heisenberg, where, like I've added,
+
+395
+00:51:20,266 --> 00:51:27,886
+I've changed the conditions of what I've been testing by adding log statements and that changes the actual execution.
+
+396
+00:51:27,886 --> 00:51:38,216
+You know, this is very much a timing. I think one of the things we've determined for all of this is that this very timing sensitive and so.
+
+397
+00:51:38,216 --> 00:51:56,156
+By adding these log statements, I may have, actually. I may have changed the conditions such that this won't fail anymore.
+
+398
+00:51:56,156 --> 00:52:05,276
+Which is a bummer, I don't know what we do in that case, I mean, we could test some hypotheses.
+
+399
+00:52:05,276 --> 00:52:17,486
+Then we kind of start stabbing around and guessing. It doesn't look like it's going to fail, so.
+
+400
+00:52:17,486 --> 00:52:40,846
+I notice a lot of bailing out at TEUs. There's a bail out at seven there.
+
+401
+00:52:40,846 --> 00:52:56,146
+Is there something I can do? Hmm.
+
+402
+00:52:56,146 --> 00:53:04,626
+Like dumping has. Its own cost.
+
+403
+00:53:04,626 --> 00:53:13,056
+And it's possible that by doing the dumping of change, the timing of things like running the console has a cost.
+
+404
+00:53:13,056 --> 00:53:20,506
+So here's my plan, let's do this, let's determine.
+
+405
+00:53:20,506 --> 00:53:33,346
+If the. Source event.
+
+406
+00:53:33,346 --> 00:53:46,106
+Let's click target source. Let's see if the target is.
+
+407
+00:53:46,106 --> 00:53:55,316
+Target class. Name equals bookmark item.
+
+408
+00:53:55,316 --> 00:54:08,616
+Uh, let's actually do it this way, let is bookmark item, equal event, target class name, I mean, we'll obviously there will be a target, right?
+
+409
+00:54:08,616 --> 00:54:17,806
+I don't think I need that question mark. OK.
+
+410
+00:54:17,806 --> 00:54:33,896
+Uh, if is book, here is what we'll do, um, is book log if book Markit.
+
+411
+00:54:33,896 --> 00:54:40,516
+Equals if it is bookmark item.
+
+412
+00:54:40,516 --> 00:54:59,106
+Dump. Message. Log book, Mercè.
+
+413
+00:54:59,106 --> 00:55:16,766
+Let's see if that's enough to. Convinced it.
+
+414
+00:55:16,766 --> 00:55:21,116
+Because that you actually cut a lot of the logging because most of the logging
+
+415
+00:55:21,116 --> 00:55:28,416
+isn't for the bookmark item button and maybe that's enough to sort of convince it.
+
+416
+00:55:28,416 --> 00:55:33,266
+Oh, yes, exploding. I must have done something wrong.
+
+417
+00:55:33,266 --> 00:55:39,636
+Undefined. Oh. Why am I exploding?
+
+418
+00:55:39,636 --> 00:55:56,936
+I'm exploding because assignment to undeclared variable, woops, let.
+
+419
+00:55:56,936 --> 00:56:11,066
+Ba ba ba ba ba ba ba ba ba ba ba ba ba ba boom, boom, boom.
+
+420
+00:56:11,066 --> 00:56:15,566
+Here we go. We got it. We got everybody. We did it.
+
+421
+00:56:15,566 --> 00:56:25,286
+OK, so we click on the bookmark record command called.
+
+422
+00:56:25,286 --> 00:56:38,136
+Don clicking on bookmark item what? Target.
+
+423
+00:56:38,136 --> 00:56:59,676
+Quick. Click to just so I know, click is just.
+
+424
+00:56:59,676 --> 00:57:11,676
+Quelque is. Gets the element synthesizers at center synchronously.
+
+425
+00:57:11,676 --> 00:57:29,256
+And target class name. That's what we're using here, right?
+
+426
+00:57:29,256 --> 00:57:46,826
+Uh, on book, MARKEE is bookmark item.
+
+427
+00:57:46,826 --> 00:57:54,326
+Hmm hmm. Mysterious, mysterious.
+
+428
+00:57:54,326 --> 00:58:02,896
+So my initial assumptions were. We're definitely wrong about I'm pretty sure they were wrong based on what I've seen so
+
+429
+00:58:02,896 --> 00:58:09,286
+far about the toolbar has initialized ad or like we clicked on it in the collapsed,
+
+430
+00:58:09,286 --> 00:58:17,086
+collapsed state. Those are wrong. I think it's OK, though, to be wrong about these sorts of things.
+
+431
+00:58:17,086 --> 00:58:27,816
+We've eliminated possibilities and that helps. Oh, boy, haven't failed yet.
+
+432
+00:58:27,816 --> 00:58:32,116
+Come on, come on, fail for me, let's see it. Let's see the test failure.
+
+433
+00:58:32,116 --> 00:58:44,956
+Go, go, go. Do it. Please, please.
+
+434
+00:58:44,956 --> 00:58:57,856
+It didn't add any new. Printing, he just added more characters.
+
+435
+00:58:57,856 --> 00:59:04,456
+Maybe that's enough. It's so sensitive, just adding more characters, changing changes, the timing enough.
+
+436
+00:59:04,456 --> 00:59:12,196
+All right. So record command called record command.
+
+437
+00:59:12,196 --> 00:59:21,966
+I'm just going to say our see is bookmark item.
+
+438
+00:59:21,966 --> 00:59:25,986
+All right, let's try it again. You know what I'll do also, Bill, just in case.
+
+439
+00:59:25,986 --> 00:59:30,306
+Just in case you never know. You never know.
+
+440
+00:59:30,306 --> 00:59:37,496
+We're dealing with very sensitive non-deterministic. Confusion.
+
+441
+00:59:37,496 --> 00:59:52,826
+So you never know. C'mon, give me that win, let's do it fair for me, please, please.
+
+442
+00:59:52,826 --> 01:00:05,796
+Show me that test failure. Come on, come on, come on, come on, come on.
+
+443
+01:00:05,796 --> 01:00:25,636
+Bear with me or meow, meow, meow, meow, meow, meow, meow, meow, meow, meow, meow, meow, meow, meow, meow, meow.
+
+444
+01:00:25,636 --> 01:00:31,396
+All right, let's run. Let's see if it runs to completion. What do we know?
+
+445
+01:00:31,396 --> 01:00:41,956
+We know that an item exists, it is clicked, and then we somehow bail out of actually recording the the click event for it.
+
+446
+01:00:41,956 --> 01:00:46,426
+So the click event, like we receive the click event, it's in the dorm.
+
+447
+01:00:46,426 --> 01:00:51,646
+And we know that because the click event handler sees it.
+
+448
+01:00:51,646 --> 01:01:02,656
+But then somehow we decide that it's not worth our time and we bail out of record command.
+
+449
+01:01:02,656 --> 01:01:03,826
+And it's not clear why.
+
+450
+01:01:03,826 --> 01:01:13,876
+So what are the different reasons, while the first reason is maybe the event is ignorable, let's see what the ignorable events are.
+
+451
+01:01:13,876 --> 01:01:36,996
+There is an ignore events, ignore event method, could that be related, ignore event?
+
+452
+01:01:36,996 --> 01:01:50,706
+I'm going to guess no, we only, like, intentionally ignore events with browser users, browser usage telemetry.
+
+453
+01:01:50,706 --> 01:02:09,326
+Like, uh, menu child. Local name. Phil Savu, you know, this isn't a savu, this wouldn't be happening there.
+
+454
+01:02:09,326 --> 01:02:18,136
+OK, so I don't think we're ignoring the event, I think we can safely say it's not here where we're bailing out.
+
+455
+01:02:18,136 --> 01:02:32,406
+Where else can we bail out if. Ignore a command event triggered a command event triggered by a click if the last target and the source event.
+
+456
+01:02:32,406 --> 01:02:44,666
+Is it type command and source event target contains last target.
+
+457
+01:02:44,666 --> 01:03:02,326
+That seems unlikely, this is not a command event. I don't believe browser like bookmark items whenever they're created.
+
+458
+01:03:02,326 --> 01:03:11,436
+Uh. And they're created.
+
+459
+01:03:11,436 --> 01:03:20,016
+Do they how do they work? I don't think they have, like, command a command attached to them.
+
+460
+01:03:20,016 --> 01:03:39,986
+No, they don't. So it wouldn't be that. We're definitely only we're clicking with the left mouse button, I think we can discard this.
+
+461
+01:03:39,986 --> 01:03:50,856
+The documentary is definitely this. This could happen if we're clicking on the wrong thing,
+
+462
+01:03:50,856 --> 01:04:01,976
+this is what events targeted at content will look like if for some reason we clicked on the wrong thing.
+
+463
+01:04:01,976 --> 01:04:12,396
+Or if the node. Is ultimately not.
+
+464
+01:04:12,396 --> 01:04:26,196
+That like we go through the parents, if it's not included in the. UI target elements list, but we know that.
+
+465
+01:04:26,196 --> 01:04:32,546
+The node is of type, what is it?
+
+466
+01:04:32,546 --> 01:04:47,166
+It's 12 type toolbar buttons, so we know it's one of those. Or we couldn't get the widget, no widget ID or we couldn't get the widget container.
+
+467
+01:04:47,166 --> 01:04:49,956
+All right, well, this all pass, that's really frustrating.
+
+468
+01:04:49,956 --> 01:04:58,656
+What we're going to do is I'm going to get rid of these and get rid of I'm going to disable a bunch of this logging.
+
+469
+01:04:58,656 --> 01:05:03,936
+Actually, I'm just going to remove it. I don't think these are very likely.
+
+470
+01:05:03,936 --> 01:05:17,286
+These are not likely. This is not likely this is possible bailing because we clicked on the content area.
+
+471
+01:05:17,286 --> 01:05:24,406
+This is unlikely. Uh.
+
+472
+01:05:24,406 --> 01:05:29,296
+And then this is possible bailing at seven.
+
+473
+01:05:29,296 --> 01:05:42,436
+Let's run this now and see if that's enough to convince it to to actually fail.
+
+474
+01:05:42,436 --> 01:05:54,196
+This is I apologize that this is taking so long to reproduce this, but this is how it goes sometimes reproducing test failures.
+
+475
+01:05:54,196 --> 01:06:00,386
+Oh, wait, I'm seeing a lot of, like, exceptions being thrown here.
+
+476
+01:06:00,386 --> 01:06:10,836
+Seven seven two oh here. Log book Meraki, if you know what.
+
+477
+01:06:10,836 --> 01:06:20,236
+Sure are. Wait, no, no. Um.
+
+478
+01:06:20,236 --> 01:06:38,086
+Is bookmark item equal target, dot class event target, a class name equals bookmark item.
+
+479
+01:06:38,086 --> 01:06:51,316
+Scooby Doo. Fell for me.
+
+480
+01:06:51,316 --> 01:07:05,016
+Feed me, Seymour, feed me with a test failure. Now, there we go, we got it.
+
+481
+01:07:05,016 --> 01:07:22,656
+So what happened, what happened? Pfeil. Tests start entering, clicking on bookmark, item done, clicking on bookmark item.
+
+482
+01:07:22,656 --> 01:07:29,046
+This is interesting, these exceptions, I don't know if those are related.
+
+483
+01:07:29,046 --> 01:07:46,436
+If we look at I just nose those now are those. Alkalis.
+
+484
+01:07:46,436 --> 01:07:57,526
+I'm guessing those are always there, though, even when this thing passes. Yeah, even when it passes, are there, hmm?
+
+485
+01:07:57,526 --> 01:08:13,166
+Pfeil. Let's try this again.
+
+486
+01:08:13,166 --> 01:08:27,706
+Uh, actually, log book Markit.
+
+487
+01:08:27,706 --> 01:08:33,076
+I want to see whether or not we actually think we're bookmarked.
+
+488
+01:08:33,076 --> 01:08:39,896
+Oh, wow. Oh, yeah. Sorry, I can't do that before.
+
+489
+01:08:39,896 --> 01:08:46,956
+Or the functions to find.
+
+490
+01:08:46,956 --> 01:08:58,416
+Hey, if this if this is like making you think like, oh, man, debugging intermittent test failures is a real pain, you are right, you are right.
+
+491
+01:08:58,416 --> 01:09:07,206
+And if there is a better way to debug this, let me know. I would like it's a bit like catching lightning in a bottle when I.
+
+492
+01:09:07,206 --> 01:09:13,966
+Yeah, I'm. But sometimes logging is the way to go, aha, here we go, here we go.
+
+493
+01:09:13,966 --> 01:09:17,596
+OK, clicking on bookmark item done.
+
+494
+01:09:17,596 --> 01:09:26,336
+Clicking on bookmark. And so it actually does not think it's bookmarked.
+
+495
+01:09:26,336 --> 01:09:42,176
+That's interesting, so the target. The event target.
+
+496
+01:09:42,176 --> 01:09:49,626
+Is not actually the bookmark item that's the problem.
+
+497
+01:09:49,626 --> 01:10:15,016
+So what is the event target? Can we determine that?
+
+498
+01:10:15,016 --> 01:10:21,356
+Yes, we can, I think maybe.
+
+499
+01:10:21,356 --> 01:10:28,356
+So down here at the bottom, when we're all done. Let's.
+
+500
+01:10:28,356 --> 01:10:44,496
+Um. Shall we do, because this is so sensitive for timing.
+
+501
+01:10:44,496 --> 01:10:53,166
+Here's what we'll do, let's have there be and uh, um, um, Connely events array.
+
+502
+01:10:53,166 --> 01:11:01,406
+And then what we'll do is we will only events will push the event.
+
+503
+01:11:01,406 --> 01:11:17,536
+Um. Pushed event.
+
+504
+01:11:17,536 --> 01:11:30,346
+This is this more overhead before we do that, let's actually just see what happens if I if I like dump of event target dot ID or something or.
+
+505
+01:11:30,346 --> 01:11:39,466
+No, let's do a local name.
+
+506
+01:11:39,466 --> 01:11:45,366
+Yeah. We'll see if we get their.
+
+507
+01:11:45,366 --> 01:11:52,416
+I think we're getting close people where we're kind of narrowing in this might feel like we're we're just inching closer and guess what?
+
+508
+01:11:52,416 --> 01:12:02,916
+We are we are inching closer. Come on, fail for me.
+
+509
+01:12:02,916 --> 01:12:25,746
+Cosmic rays do your thing. Bup bup, bup, bup, bup, bup, bup, bup, bup, bup, bup, bup, bup, bup, bup, bup bup bup bup.
+
+510
+01:12:25,746 --> 01:12:38,096
+I don't have a good feeling about this. Let's try again, show me exactly some of these.
+
+511
+01:12:38,096 --> 01:12:59,376
+Show me failure, the. I got a feeling attempting to dump out the event.
+
+512
+01:12:59,376 --> 01:13:14,836
+We got it, we got it. OK, OK, we got it. Event toolbar, but clicking on bookmark item done clicking on bookmark item.
+
+513
+01:13:14,836 --> 01:13:24,306
+So we didn't even get down here. We didn't even get down here.
+
+514
+01:13:24,306 --> 01:13:39,856
+I'm guessing we may have bailed out here. Um.
+
+515
+01:13:39,856 --> 01:13:46,446
+Ono's event target.
+
+516
+01:13:46,446 --> 01:13:57,056
+Inner turmoil, we're going to pretend that this is where we hit it.
+
+517
+01:13:57,056 --> 01:14:05,766
+And or here's another place, oh, no, at. Browser, NYer.
+
+518
+01:14:05,766 --> 01:14:14,956
+OK, so let's do it.
+
+519
+01:14:14,956 --> 01:14:23,116
+And then while we're waiting, while we're waiting for this to fail for me, let's answer a question, let's answer a viewer question.
+
+520
+01:14:23,116 --> 01:14:27,106
+So for the folks don't know, maybe you have been watching the stream lately.
+
+521
+01:14:27,106 --> 01:14:32,716
+You can send me questions over the rate this episode forum that I put in every agenda.
+
+522
+01:14:32,716 --> 01:14:36,526
+So send in a rating. And at the end of the forum, you can ask me a question.
+
+523
+01:14:36,526 --> 01:14:45,466
+And if you know, I can, if it is a question that I know the answer to or could take a crack at, I will try and answer it on the stream.
+
+524
+01:14:45,466 --> 01:14:52,096
+But first, I'll know at Browsr, that's what's happening on our Web browser.
+
+525
+01:14:52,096 --> 01:15:01,956
+So the instant might not be working.
+
+526
+01:15:01,956 --> 01:15:23,306
+We think that we're actually clicking on the browser. Interesting, that's the problem.
+
+527
+01:15:23,306 --> 01:15:39,946
+So it's kind of like why I just what I mentioned with the instant. Even when we don't animate.
+
+528
+01:15:39,946 --> 01:15:52,616
+Wait for the toolbar to be ready. What happens if we wait?
+
+529
+01:15:52,616 --> 01:16:23,446
+Windowed, I promise, document flushed. So that the position of everything has been flushed.
+
+530
+01:16:23,446 --> 01:16:33,996
+Is that enough? Let's find out and while we wait for this to run, I'll answer a viewer question.
+
+531
+01:16:33,996 --> 01:16:38,406
+What are your thoughts on proton redesign is the first question.
+
+532
+01:16:38,406 --> 01:16:45,276
+So the proton redesign for the people who don't know ah is a sort of a reform effort for Firefox desktop that we shipped in Firefox.
+
+533
+01:16:45,276 --> 01:16:49,536
+Eighty nine. What are my thoughts? I think it's great.
+
+534
+01:16:49,536 --> 01:16:54,576
+I love it. I had worked on it, so I'm a little bit biased, but I really enjoy it.
+
+535
+01:16:54,576 --> 01:17:00,756
+One of the things I've noticed is that if I've used Eighty-Nine since it came out, this has been a number of months.
+
+536
+01:17:00,756 --> 01:17:15,186
+If I run an older build of Firefox, everything feels really cramped and like, I don't know, it feels really like crowded and and.
+
+537
+01:17:15,186 --> 01:17:24,806
+And what's the word I'm looking for? It's uncomfortable and uncomfortable, people use the old when I find myself, so those are my thoughts.
+
+538
+01:17:24,806 --> 01:17:32,696
+I mean, that's my personal opinion. But my I thought that the redesign one of the things I really liked about the redesign is that we did a lot of
+
+539
+01:17:32,696 --> 01:17:42,506
+work to try and bring a lot of affordance UI references that historically had not had a whole lot of attention,
+
+540
+01:17:42,506 --> 01:17:44,126
+bring them all forward at the same time.
+
+541
+01:17:44,126 --> 01:17:54,506
+So things like all of our permissions panels and all of our, like, menu panels all got kind of updated around the same time, all the styling at least.
+
+542
+01:17:54,506 --> 01:17:57,086
+And that was nice, you know, to finally kind of go through all that stuff,
+
+543
+01:17:57,086 --> 01:18:04,646
+audit them all and put a lot of thought behind how they look and how they function and then bring them all forward at the same time.
+
+544
+01:18:04,646 --> 01:18:11,876
+I thought that was really good. So my thoughts are I like it.
+
+545
+01:18:11,876 --> 01:18:17,946
+When I was so next question, when I was tinkering with Firefox, I found a way to zoom text only menubar.
+
+546
+01:18:17,946 --> 01:18:21,416
+Let's let's see if we can follow along your menubar view. Zoom zoom.
+
+547
+01:18:21,416 --> 01:18:25,466
+Text only menubar view. Zoom, zoom.
+
+548
+01:18:25,466 --> 01:18:33,216
+Text only. Well, I guess that puts us in a mode where if you now zoom,
+
+549
+01:18:33,216 --> 01:18:44,286
+we're actually not causing the we're actually just increasing the the font size rather than, you know, causing everything to get bigger.
+
+550
+01:18:44,286 --> 01:18:52,596
+Yeah, that's the difference. And is there a reason I find it extremely useful.
+
+551
+01:18:52,596 --> 01:18:54,786
+Oh, good. I'm glad you find it useful.
+
+552
+01:18:54,786 --> 01:19:04,506
+Is there a reason why this could not be additionally accessed using zoom controls or activated with some shortcut?
+
+553
+01:19:04,506 --> 01:19:11,136
+Well, what is the process for deciding which items to select and menu bars toolboxes?
+
+554
+01:19:11,136 --> 01:19:21,186
+So there's a there's always a balance. You know, like you the person who wrote this find it extremely useful.
+
+555
+01:19:21,186 --> 01:19:26,766
+Would everyone find it extremely useful, unsure, unsure?
+
+556
+01:19:26,766 --> 01:19:33,576
+There is a temptation to pack every single feature and bring it to like Makem toolbar buttons or make
+
+557
+01:19:33,576 --> 01:19:40,146
+the menu items so that you can see them in the right in your face if you've ever worked with music.
+
+558
+01:19:40,146 --> 01:19:43,056
+You know, that's the tendency as well as like when you're mixing music,
+
+559
+01:19:43,056 --> 01:19:47,286
+when you're mixing tracks, there's a tendency to try and make everything louder.
+
+560
+01:19:47,286 --> 01:19:51,666
+Like I like the drums, make them louder. Oh, now I need to bring up the guitars, make them louder and bring up the bass,
+
+561
+01:19:51,666 --> 01:19:57,576
+make them learn everything just gets louder and louder and louder when in fact, in order to bring more things into relief.
+
+562
+01:19:57,576 --> 01:20:07,776
+Generally, what you find that a lot of recording mixers do and and recording engineers do is the first thing is like you bring things down,
+
+563
+01:20:07,776 --> 01:20:12,696
+you know, you don't make things loud or you bring everything else down to bring something into relief.
+
+564
+01:20:12,696 --> 01:20:16,386
+And so we have to be very cautious and selective about what things we put into
+
+565
+01:20:16,386 --> 01:20:21,966
+users face because there's already so much competing for their attention.
+
+566
+01:20:21,966 --> 01:20:28,986
+You know, there's and we want to, like, make sure that they're not distracted from the Web content, that the user interface is not overwhelming,
+
+567
+01:20:28,986 --> 01:20:36,576
+confusing or intimidating, that it feels natural, friendly, fluent, you know, that it makes sense for them.
+
+568
+01:20:36,576 --> 01:20:46,206
+So your question is like, is there a reason why this could not be additionally accessed using zoom controls?
+
+569
+01:20:46,206 --> 01:20:51,726
+I think you mean like over here, the zoom control controls in the menu.
+
+570
+01:20:51,726 --> 01:20:58,476
+I just I think people whenever they think of Zoom.
+
+571
+01:20:58,476 --> 01:21:06,006
+This is my this is my opinion, so what you're asking about is a decision that happens usually at the user experience, at product level.
+
+572
+01:21:06,006 --> 01:21:10,266
+But from my opinion, when people think of Zoome, this is what they think of.
+
+573
+01:21:10,266 --> 01:21:21,126
+This is Zoom. This is Zoom. And what you're describing when we zoom zoom text only is inflate text size,
+
+574
+01:21:21,126 --> 01:21:27,966
+inflate text size, increase tax size, which is not a thing that I think is common.
+
+575
+01:21:27,966 --> 01:21:34,396
+You know, I don't think that's something that people I mean, you find it handy and Firefox allows you to do that.
+
+576
+01:21:34,396 --> 01:21:41,436
+That's great. What lots of people find a handy I'm not sure, because oftentimes whenever they want to read something,
+
+577
+01:21:41,436 --> 01:21:45,606
+maybe they they want to increase the font size. They want to actually get a closer look at something.
+
+578
+01:21:45,606 --> 01:21:47,856
+They can just, like, zoom the whole thing.
+
+579
+01:21:47,856 --> 01:21:56,526
+And the other reason is that I don't know if you noticed this, but when you zoom text only, it tends to break the layout of the page.
+
+580
+01:21:56,526 --> 01:21:59,736
+You know, like look at all this crowded text.
+
+581
+01:21:59,736 --> 01:22:08,946
+You know, it doesn't work beautifully because a lot of pages are not designed to handle the inflation of fonts without the inflation, everything else.
+
+582
+01:22:08,946 --> 01:22:13,836
+And we want to make it generally harder for you to break websites or break web experiences,
+
+583
+01:22:13,836 --> 01:22:18,936
+because usually when websites are broken or they look broken, people blame the browser.
+
+584
+01:22:18,936 --> 01:22:28,296
+If we don't want you to blame us. So what is the process for deciding deciding which items to select in menu bars or toolboxes?
+
+585
+01:22:28,296 --> 01:22:36,966
+A couple of things I think we take a look at. First of all, we look at other applications, what people are already used to.
+
+586
+01:22:36,966 --> 01:22:41,376
+We weigh that in with.
+
+587
+01:22:41,376 --> 01:22:50,526
+You know, the common acts from user research that users report that they want to be able to do, we use user research, we use, you know,
+
+588
+01:22:50,526 --> 01:22:59,016
+things like user testing, dot com, and our user research teams are always checking to see what people are doing and like running experiments.
+
+589
+01:22:59,016 --> 01:23:05,676
+And then that helps to inform what goes into our menus and where they go in our menus.
+
+590
+01:23:05,676 --> 01:23:09,186
+And if they qualify to go to our menus or whether or not they're there too specialized.
+
+591
+01:23:09,186 --> 01:23:14,406
+And they're they're more of like a they're so specialized that maybe we take them out of our menus because,
+
+592
+01:23:14,406 --> 01:23:19,176
+again, it's tempting to just put everything in the menus, but then it gets way too loud.
+
+593
+01:23:19,176 --> 01:23:23,586
+You know, there's just too much stuff. You've got the whole kitchen sink in there. It's too much.
+
+594
+01:23:23,586 --> 01:23:30,576
+So you have to be very selective about what you expose in the menus and then you have to worry about testing it as well.
+
+595
+01:23:30,576 --> 01:23:39,636
+Like, the more the more things that are in the menus, the more that you expose it, the more users think you you know,
+
+596
+01:23:39,636 --> 01:23:48,906
+there's almost a contract that is is made whenever you expose something in the UI like the the the top level UI of like this is very well tested.
+
+597
+01:23:48,906 --> 01:23:57,546
+And I, I don't want to speak for the layout team because they're great and they're but I don't know how well tested assuming is.
+
+598
+01:23:57,546 --> 01:24:05,706
+Maybe it's very well tested, maybe it's not. But like as soon as you elevate something in the UI,
+
+599
+01:24:05,706 --> 01:24:11,076
+then you have to spend a lot of time like making sure that it works in lots of different scenarios.
+
+600
+01:24:11,076 --> 01:24:20,346
+And we've already found one where, like, it can really sort of like wreck the user experience and like even just a little bit of zooming.
+
+601
+01:24:20,346 --> 01:24:24,546
+It makes things look awful. So hopefully that answers your question.
+
+602
+01:24:24,546 --> 01:24:28,986
+That's just my opinion, too. Like ultimately it's not usually my call.
+
+603
+01:24:28,986 --> 01:24:36,036
+It goes into menus. It's it's sort of a collaboration between product management, user experience and engineering.
+
+604
+01:24:36,036 --> 01:24:42,336
+Have you ever read a book on E Ink Paper? Yes, I have a kobo.
+
+605
+01:24:42,336 --> 01:24:47,976
+I have a kobo. I'm reading a book right now on it. I finished the Anthropocene reviewed.
+
+606
+01:24:47,976 --> 01:24:56,796
+I'm reading a book by Margaret Atwood called Oryx and Crake.
+
+607
+01:24:56,796 --> 01:25:00,936
+I'm reading that right now on my Kobo. Let's take a look at that test.
+
+608
+01:25:00,936 --> 01:25:04,776
+Did it ever fail? It did not. Let's run it one more time and then we'll push it up for review.
+
+609
+01:25:04,776 --> 01:25:09,186
+We'll push it up to try and we'll see if we can get automation to fail.
+
+610
+01:25:09,186 --> 01:25:17,196
+Let's answer this last question. Some companies slash teams once in a while have a time period when they focus solely on fixing bugs.
+
+611
+01:25:17,196 --> 01:25:24,126
+What do you think of this approach? Have you ever discussed this with your colleagues? Yeah, I mean, we we.
+
+612
+01:25:24,126 --> 01:25:29,466
+Yes, yes, I've discussed this with our colleagues, we've done this before where we work on clusters of bugs,
+
+613
+01:25:29,466 --> 01:25:33,876
+we'll focus on, you know, improving the experience in a particular component.
+
+614
+01:25:33,876 --> 01:25:35,256
+What do I think about this approach?
+
+615
+01:25:35,256 --> 01:25:42,726
+I think it's great and not just for fixing bugs, but for refactoring code, revisiting code, refactoring it, documenting it,
+
+616
+01:25:42,726 --> 01:25:48,216
+making it easier to understand it's not necessarily stuff that users will see or feel,
+
+617
+01:25:48,216 --> 01:25:52,896
+but it helps to make the code more manageable and makes development faster.
+
+618
+01:25:52,896 --> 01:25:56,886
+It's sort of like an upfront investment in and sort of long term development.
+
+619
+01:25:56,886 --> 01:26:06,486
+You know, we can make changes and improvements easier if you refactor and you improve the code and make it easier to work with.
+
+620
+01:26:06,486 --> 01:26:10,536
+So what do I think of this approach? I think it's a great approach. And we do it.
+
+621
+01:26:10,536 --> 01:26:15,186
+We do this approach at Mozilla. All right.
+
+622
+01:26:15,186 --> 01:26:19,746
+You know what? I'm pretty happy. Oh, no. Oh, no.
+
+623
+01:26:19,746 --> 01:26:27,726
+We didn't fix it. The test failure is still here. What happened? Hubris.
+
+624
+01:26:27,726 --> 01:26:43,386
+Clicking on the bookmark item Onoe at browser Onoe at Browsr, so some for some reason, the click event still occurred on the browser.
+
+625
+01:26:43,386 --> 01:26:53,056
+Nofollow. And then we flushed out.
+
+626
+01:26:53,056 --> 01:27:04,576
+It's not collapsed. It is initialized. Is there a way to know that is finished?
+
+627
+01:27:04,576 --> 01:27:16,346
+Um. This is toolbar once finished animating in.
+
+628
+01:27:16,346 --> 01:27:25,656
+This is toolbar, sort of like a transition and event. I mean.
+
+629
+01:27:25,656 --> 01:27:33,846
+We could listen for transition and maybe that would help. How does instant work again, remind me how instant works?
+
+630
+01:27:33,846 --> 01:27:43,566
+Um, instant in our success.
+
+631
+01:27:43,566 --> 01:27:48,916
+I don't know why sometimes search Fox brings up the only mode alert.
+
+632
+01:27:48,916 --> 01:28:08,636
+But sometimes it does. OK. So when it's not instant, when it's collapsed and instant, we just collapse it.
+
+633
+01:28:08,636 --> 01:28:16,446
+When session is restored, then we set the transition to be this.
+
+634
+01:28:16,446 --> 01:28:29,146
+Not instant, and it's collapsed. And when it's not instant, we set this transition.
+
+635
+01:28:29,146 --> 01:28:45,866
+Backside in line. Right.
+
+636
+01:28:45,866 --> 01:28:56,346
+So when you take off collapsed, then, if it's not instant, then the midnight.
+
+637
+01:28:56,346 --> 01:29:27,996
+Initialized, we know it's initialized. Um.
+
+638
+01:29:27,996 --> 01:29:45,696
+You know, it's not animating in. Click on it.
+
+639
+01:29:45,696 --> 01:30:00,576
+We know it's not animating in. And we flushed Leo.
+
+640
+01:30:00,576 --> 01:30:27,556
+What does the window look like in this position? Let's just watch it for a sec.
+
+641
+01:30:27,556 --> 01:30:38,916
+It still animates in I don't know if you saw it animated in. Or what's going on there?
+
+642
+01:30:38,916 --> 01:30:46,006
+Does it not have the killer is animated, is false, is the.
+
+643
+01:30:46,006 --> 01:30:56,536
+Oh, what's happening? What is happening, what is happening?
+
+644
+01:30:56,536 --> 01:31:17,256
+Set to permissibility. Oh, I was calling the wrong thing customizable UI only takes two arguments whether or not it is visible or not visible.
+
+645
+01:31:17,256 --> 01:31:32,836
+And. I possess the attribute the first time.
+
+646
+01:31:32,836 --> 01:31:49,866
+What if I call a window directly? What was this look like?
+
+647
+01:31:49,866 --> 01:31:54,226
+So the animate thing, I mean, I was calling a function, I thought I was calling one function,
+
+648
+01:31:54,226 --> 01:32:02,656
+I was actually calling the wrong function, one that didn't take those arguments. That.
+
+649
+01:32:02,656 --> 01:32:15,386
+Is not right, that broke horribly. I didn't actually see it open set toolbar visibility.
+
+650
+01:32:15,386 --> 01:32:24,386
+Toolbar, oh, because it doesn't take an I.D., it actually takes a toolbar.
+
+651
+01:32:24,386 --> 01:32:33,616
+Um, do we have a unique ID, do we have, like, gee bookmarks toolbar, no.
+
+652
+01:32:33,616 --> 01:32:47,076
+Uh, personal g personal. No.
+
+653
+01:32:47,076 --> 01:32:55,006
+The. What if I.
+
+654
+01:32:55,006 --> 01:33:11,636
+Let toolbar, yeah, here, we'll bring this out, that toolbar bookmarks toolbar, people that do that and.
+
+655
+01:33:11,636 --> 01:33:28,696
+And will pass this instead. How's that look?
+
+656
+01:33:28,696 --> 01:33:47,176
+Give me passing. Oh, now it really failed.
+
+657
+01:33:47,176 --> 01:33:53,186
+What did it think I clicked on it just like dumped all this garbage out Ohno's.
+
+658
+01:33:53,186 --> 01:34:02,326
+Clicking on bookmark item Ohno's, um.
+
+659
+01:34:02,326 --> 01:34:14,386
+Because the note that we clicked on. What was the note that we clicked on, it ended up being this, which is what what is this them I'm looking at?
+
+660
+01:34:14,386 --> 01:34:17,666
+It is a the V box, the title bar.
+
+661
+01:34:17,666 --> 01:34:32,436
+It thinks I clicked on the title bar. What happens if I.
+
+662
+01:34:32,436 --> 01:34:41,556
+Staff flushing it. Uh.
+
+663
+01:34:41,556 --> 01:34:49,566
+I don't get bound and client wrecked, like make sure it's flushed the leotis, flush their.
+
+664
+01:34:49,566 --> 01:35:07,376
+What happens then? Still hates it, still exploding.
+
+665
+01:35:07,376 --> 01:35:18,186
+Because the click event, this is really interesting now I've got like a perma failure, and that's actually even a better condition.
+
+666
+01:35:18,186 --> 01:35:28,216
+The click. Here, let's.
+
+667
+01:35:28,216 --> 01:35:44,586
+Um, let's click once and then click again and see what happens after five seconds.
+
+668
+01:35:44,586 --> 01:35:50,666
+Oh, it's already hidden while we're waiting, while we're waiting, it's hidden.
+
+669
+01:35:50,666 --> 01:36:01,586
+Why is it hiding? Why is it hiding?
+
+670
+01:36:01,586 --> 01:36:14,446
+Said Toolbar Visibility. What's hiding it, browser toolbar visibility.
+
+671
+01:36:14,446 --> 01:36:26,706
+Oh, OK, that's here on before officials will layout and then here and on location change.
+
+672
+01:36:26,706 --> 01:36:44,906
+If we've actually changed document update, the toolbar visibility. I see.
+
+673
+01:36:44,906 --> 01:36:53,516
+You know, what I think I want to do, actually, is I want to find the thing that controls like bookmarks toolbar always show.
+
+674
+01:36:53,516 --> 01:37:00,506
+What is that? What is that thing? Dot photo toolbar context.
+
+675
+01:37:00,506 --> 01:37:12,166
+Menu. Always show to. What happens is we set.
+
+676
+01:37:12,166 --> 01:37:21,366
+These menu items, map radio checked. We command our view toolbar command.
+
+677
+01:37:21,366 --> 01:37:35,016
+We said to an enum, which is. Map guide to an enum toolbar visibility, so it's the string.
+
+678
+01:37:35,016 --> 01:37:52,626
+And I think I want to be always. So his bookmarks toolbar, personal toolbar, bookmarks, visibility.
+
+679
+01:37:52,626 --> 01:38:21,866
+On View Toolbar Command. Change the document, update the toolbar visibility, I think that's what's happened to location change.
+
+680
+01:38:21,866 --> 01:38:41,676
+Here, let's let's, uh. Dump every time, location change or no set toolbar visibility.
+
+681
+01:38:41,676 --> 01:38:54,276
+New air stack and we'll do this if toolbar ID equals personal toolbar.
+
+682
+01:38:54,276 --> 01:39:06,196
+OK, uh, set to bar visibility and then we'll say whether or not it's true or false, followed by new line plus the stack.
+
+683
+01:39:06,196 --> 01:39:13,276
+OK. And I need to add a plus sign there.
+
+684
+01:39:13,276 --> 01:39:29,596
+Then I'm going to get rid of that huge inner HTML thing, you can say target, dot the ID, let's see it or tag name, how's that?
+
+685
+01:39:29,596 --> 01:39:44,296
+So let's run again. I'm almost I'm almost ready to wrap it up, but I feel like I'm really close to something here.
+
+686
+01:39:44,296 --> 01:39:49,666
+Set toolbar visibility is true because of all right.
+
+687
+01:39:49,666 --> 01:39:58,356
+Quick, quick, quick. OK, where's the test failure? So here's what happened.
+
+688
+01:39:58,356 --> 01:40:09,986
+We open up a 12 hour visibility, true, we call that's due to.
+
+689
+01:40:09,986 --> 01:40:16,816
+At some point, we do it because of the test where we do that via the test.
+
+690
+01:40:16,816 --> 01:40:22,106
+Here with new tab, open foreground tab.
+
+691
+01:40:22,106 --> 01:40:32,416
+We do that, then we do it again here and on location change and then again here.
+
+692
+01:40:32,416 --> 01:40:48,646
+When we switch tabs and location, change occurs and then again here directly in the test, we do it and then it happens again, said Toolbar Visibility.
+
+693
+01:40:48,646 --> 01:40:56,116
+I thought I was saying the true or false value, what happened to doing that?
+
+694
+01:40:56,116 --> 01:41:03,186
+Said two, our visibility. Oh, yeah, true.
+
+695
+01:41:03,186 --> 01:41:11,166
+Sometimes it says new tab. Is visible, is like.
+
+696
+01:41:11,166 --> 01:41:22,146
+Sometimes. It's not a boolean, interestingly enough.
+
+697
+01:41:22,146 --> 01:41:31,046
+While it looks like it takes a value that can either be a string or a boolean.
+
+698
+01:41:31,046 --> 01:41:36,936
+I see. Uh, all right.
+
+699
+01:41:36,936 --> 01:41:45,036
+And what happens is we set it to true and then we set we say we've opened a new tab and is visible when it's new tab.
+
+700
+01:41:45,036 --> 01:41:54,096
+What does that mean? Persist into a bar as personal to a bar, if the type is that and the valuably new tab.
+
+701
+01:41:54,096 --> 01:42:07,466
+And then we. If the current browser, it wouldn't be new tab, that's what's happening, that's what's happening.
+
+702
+01:42:07,466 --> 01:42:14,756
+So. OK, I think I get it.
+
+703
+01:42:14,756 --> 01:42:22,216
+I think I get it. Everybody, we show the toolbar.
+
+704
+01:42:22,216 --> 01:42:30,406
+And then down here, we like close a tab and when we close a tab, we switch tabs.
+
+705
+01:42:30,406 --> 01:42:40,086
+And because we are currently left to only show the tab to our only show, the bookmarks toolbar.
+
+706
+01:42:40,086 --> 01:42:47,326
+On new tabs, we hide the toolbar. I think that's what's happening.
+
+707
+01:42:47,326 --> 01:43:06,316
+So what I'm going to do, actually, is I'm going to move this to occur after the tab close has occurred.
+
+708
+01:43:06,316 --> 01:43:14,656
+I don't know if I need to wait for.
+
+709
+01:43:14,656 --> 01:43:41,346
+A flush anymore. But let's see if this passes.
+
+710
+01:43:41,346 --> 01:43:45,576
+OK, that passes. So now what are we going to do is I'm going to get rid of some of our logging
+
+711
+01:43:45,576 --> 01:43:55,836
+here and then we're going to run it through the run through the old verify step.
+
+712
+01:43:55,836 --> 01:44:12,256
+I think now we have a better sense of what's happening. Get rid of a bunch of logging in here.
+
+713
+01:44:12,256 --> 01:44:18,336
+Very. OK, I can get rid of this, too.
+
+714
+01:44:18,336 --> 01:44:22,116
+And then over here, I don't think I had any logging over here.
+
+715
+01:44:22,116 --> 01:44:33,816
+I didn't know any logging, got rid of the logging over here can probably get rid of this to keep this for now, but.
+
+716
+01:44:33,816 --> 01:44:38,426
+I said.
+
+717
+01:44:38,426 --> 01:44:46,346
+All right, let's run this with Verify Headless and then we'll call it a day while I am regardless of what happens, hopefully this doesn't fail.
+
+718
+01:44:46,346 --> 01:44:51,086
+If it does if it does fail, I'm going to go like I'm going to Hulk out.
+
+719
+01:44:51,086 --> 01:44:54,996
+But I've got some confidence here that I know what's happening.
+
+720
+01:44:54,996 --> 01:45:04,346
+I looking out, I can't get bounden Kleinrock target is No.
+
+721
+01:45:04,346 --> 01:45:14,916
+And where online 60 to line one thirty five item is sometimes null.
+
+722
+01:45:14,916 --> 01:45:30,486
+So the bookmark item is not available. When do the bookmark items get added, insert new item?
+
+723
+01:45:30,486 --> 01:45:45,776
+Places toolbar. Rebuild.
+
+724
+01:45:45,776 --> 01:46:05,536
+We request the animation frame, we rebuild all this stuff. So one thing we can do, obviously, is we can just wait until one exists.
+
+725
+01:46:05,536 --> 01:46:25,156
+Oh, wait, let. A wait browser test, utils wait for condition, I mean, I don't normally like polling, but this should do the trick.
+
+726
+01:46:25,156 --> 01:46:35,796
+Return item equals that.
+
+727
+01:46:35,796 --> 01:47:21,426
+Uh. Query selecter, wait for condition, uh, return document that query selector dot link greater than zero, then let Eitam equal this given that.
+
+728
+01:47:21,426 --> 01:47:35,646
+How this how this duct tape and glue and nails and hammers stick.
+
+729
+01:47:35,646 --> 01:47:46,746
+Uh, no, can't do that, it's very upset with whatever I did query selecter documenters that please bookmark oh, query selecter.
+
+730
+01:47:46,746 --> 01:48:05,516
+All we're waiting for or maybe instead of length is not equal to No.
+
+731
+01:48:05,516 --> 01:48:11,306
+Cameras and tape and glue and nails and rope twine.
+
+732
+01:48:11,306 --> 01:48:17,576
+OK, I'm going to call here, though. Hey, thank you so much for watching. Episode two hundred and sixty sixty two of the joy of coding.
+
+733
+01:48:17,576 --> 01:48:22,956
+I hope that was interesting. Yes, I like this approach.
+
+734
+01:48:22,956 --> 01:48:38,536
+We do this approach. It's a great way to pay down, to fix papercuts and also to pay down technical debt.
+
+735
+01:48:38,536 --> 01:48:44,416
+Let me know what you thought of the episode, there is a rate, this episode form that you can click here in the agenda.
+
+736
+01:48:44,416 --> 01:48:48,986
+Let me know your thoughts and whether or not there's anything you want me to answer.
+
+737
+01:48:48,986 --> 01:48:54,646
+You can send me questions and I'll do my best to answer. And I will see you next week.
+
+738
+01:48:54,646 --> 01:49:03,416
+Thanks again. Take care. Bye bye.
+
+739
+01:49:03,416 --> 01:54:41,699
+The joy to go see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

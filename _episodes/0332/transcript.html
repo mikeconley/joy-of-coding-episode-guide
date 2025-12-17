@@ -1,0 +1,3305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 332 - July 12, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 332 - July 12, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6fef753f-ef74-47c5-8ac8-aff600fb1db1</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6fef753f-ef74-47c5-8ac8-aff600fb1db1">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,831 --> 00:00:13,901
+Well, come. Jodie Hello and welcome to episode 332 of The Joy of Coding.
+
+2
+00:00:13,991 --> 00:00:18,581
+My name is Mike Connelly. It's so good to have you here. Going to be live hacking on some Firefox stuff today.
+
+3
+00:00:18,761 --> 00:00:22,271
+Going to be hopefully fixing a crash. Maybe even reviewing a patch.
+
+4
+00:00:22,751 --> 00:00:26,381
+Going to grow a stash. Lots of rhyming.
+
+5
+00:00:27,371 --> 00:00:34,191
+Yeah. It's July 11th. Let's get into it. This is the agenda for today.
+
+6
+00:00:34,211 --> 00:00:39,221
+It's July 11, 2023. Episode 332 A reminder No plan survives breakfast.
+
+7
+00:00:39,221 --> 00:00:44,050
+I think I know what I want to do today. I think I know how I'm going to try and go about doing it, but I don't know how it's going to go.
+
+8
+00:00:44,051 --> 00:00:49,721
+I'm like, okay, well, can I go horribly wrong? And that's that's part of the the the name of the game, really.
+
+9
+00:00:49,721 --> 00:00:54,880
+It's part of how this works is I'm working on stuff live and we'll see how it goes.
+
+10
+00:00:54,881 --> 00:01:02,141
+You know, I like to say it's software development in the raw in the same way that in Aladdin there's a diamond in the rough.
+
+11
+00:01:02,441 --> 00:01:05,711
+This is software development in the rough. So you're getting warts and all.
+
+12
+00:01:06,011 --> 00:01:12,491
+That's the first thing it's coding. The agenda that we're looking at is something that's available to you depending on is it July 12th?
+
+13
+00:01:12,821 --> 00:01:16,331
+Get out of here. It's July 12th, everybody. Woops, I lost today.
+
+14
+00:01:16,361 --> 00:01:19,661
+Must have been abducted by aliens. Thank you very much, Craig. It's July 12th.
+
+15
+00:01:21,461 --> 00:01:26,411
+My bad. Yeah, it's July 12th, 2023.
+
+16
+00:01:27,671 --> 00:01:32,500
+Well, the agenda that we're looking at is available to you, depending on where you're watching this.
+
+17
+00:01:32,501 --> 00:01:36,161
+If you're watching this on air Mozilla, check out the details section over there.
+
+18
+00:01:36,851 --> 00:01:40,871
+If you're watching this on YouTube or Diodes own, check out the video description.
+
+19
+00:01:40,871 --> 00:01:45,071
+And if you're watching this on air Mozilla no Dari say or Mozilla twitch.
+
+20
+00:01:45,371 --> 00:01:48,581
+I mean twitch if you're watching this on Twitch, check out the channel details down below.
+
+21
+00:01:48,791 --> 00:01:55,091
+And now I believe after I've updated the date, it should be it should be up to date.
+
+22
+00:01:55,091 --> 00:02:00,640
+Let's see here. July 12th episode Agenda July 12th.
+
+23
+00:02:00,641 --> 00:02:05,720
+Okay, good. Where it We're up to date now. All right.
+
+24
+00:02:05,721 --> 00:02:12,110
+And yeah, as I update and edit the information in here, maybe change the date again, it will synchronize.
+
+25
+00:02:12,111 --> 00:02:17,121
+You'll see this little spinning, spinning thing go. And if you reload the agenda, you'll see the updates.
+
+26
+00:02:18,921 --> 00:02:23,810
+Let's get into it. Well, first thing I want to mention is that there will be no episode next week due to vacation.
+
+27
+00:02:23,811 --> 00:02:28,731
+I'm traveling. I'm going to take a long needed vacation next week and so there will be no stream.
+
+28
+00:02:29,331 --> 00:02:34,641
+So feel free to take that opportunity to to do something else or to watch a past stream.
+
+29
+00:02:34,941 --> 00:02:40,071
+Maybe you can rewatch this one if you missed something or just want to get yourself all amped up about what it is that we're working on.
+
+30
+00:02:40,401 --> 00:02:45,140
+And what that is is Windows Jump lists. Last week, if you recall,
+
+31
+00:02:45,141 --> 00:02:50,451
+we'd gotten ourselves into this really interesting position where we were sometimes getting these shut down crashes
+
+32
+00:02:52,191 --> 00:02:59,361
+whenever we were shutting down our debug build with our our new back end that we've written for the jump list stuff.
+
+33
+00:02:59,811 --> 00:03:05,331
+And right at the tail end of the episode, we figured out why we were crashing like we had a debug build,
+
+34
+00:03:05,331 --> 00:03:12,560
+which meant we had we could attach the debugger, but the assertion we were hitting wasn't making a whole lot of sense until the very end,
+
+35
+00:03:12,561 --> 00:03:19,100
+when I realized that the reason we were failing an assertion was because the jump was back end.
+
+36
+00:03:19,101 --> 00:03:27,981
+The native jump list, back end or like instance was being destroyed on a thread that was different from the one that had instantiated it.
+
+37
+00:03:28,191 --> 00:03:33,171
+And that is one of the invariants for ref counting thread, save for ref counting.
+
+38
+00:03:33,561 --> 00:03:38,421
+And so I asked. Not thread safe rep counting just.
+
+39
+00:03:38,421 --> 00:03:46,011
+Yeah. Ref counting on a different thread. I asked some some experts, some C++ experts, colleagues what I should do.
+
+40
+00:03:46,311 --> 00:03:52,971
+This is apparently a problem that other people have had before. Here's the big explanation about what was happening that I wrote last week.
+
+41
+00:03:53,301 --> 00:04:00,381
+And Nico, my colleague, suggested that I alter things to use the ref counting on event target.
+
+42
+00:04:00,391 --> 00:04:05,391
+So this is something that got. This is a macro that got introduced for this precise problem, actually.
+
+43
+00:04:06,441 --> 00:04:13,851
+If I follow the blame on when this got introduced, this got introduced back in three years ago.
+
+44
+00:04:15,441 --> 00:04:19,161
+Right. When it runs, it stores the actual PR thread.
+
+45
+00:04:19,161 --> 00:04:23,421
+The task is running on the various places will assert that the current worker thread is the same as the actual threats around when using a thread,
+
+46
+00:04:23,421 --> 00:04:27,530
+pool or task you. You're never guaranteed that the actual thread that the code is running on will be the same.
+
+47
+00:04:27,531 --> 00:04:33,501
+So at present the event target can only ever be and is thread, which is unfortunate.
+
+48
+00:04:33,501 --> 00:04:46,100
+And so they added the this new variant where the the thing that's doing ref counting we we don't use that assertion anymore.
+
+49
+00:04:46,101 --> 00:04:55,161
+We like declare it and say like okay well you don't have to be the owning thread that's destroying you or like the originating thread.
+
+50
+00:04:56,301 --> 00:05:00,441
+That's, that's what Nico suggested. So let's try that out and see if the crash goes away.
+
+51
+00:05:01,371 --> 00:05:09,981
+And the crash itself was rather non deterministic because it it's all has to do with the lazy idle thread being destroyed and created.
+
+52
+00:05:10,401 --> 00:05:14,121
+But let's see, I restarted my computer as well, so.
+
+53
+00:05:16,821 --> 00:05:22,911
+Wow. What's going on here? This is going to be pretty rough if remote desktop is going to be this unresponsive.
+
+54
+00:05:27,001 --> 00:05:34,901
+What's going on here? Computer. It was not this unresponsive before.
+
+55
+00:05:34,931 --> 00:05:38,111
+Am I? How's my network?
+
+56
+00:05:40,931 --> 00:05:44,021
+I'm getting some sounds coming through. What's happening?
+
+57
+00:05:44,051 --> 00:05:49,861
+Okay. Finally, a thing showed up. This. I hope this isn't a description of, uh.
+
+58
+00:05:50,681 --> 00:05:55,811
+I hope this is a good impression of what's going to happen today. Otherwise, this jumble of stuff is going to be a pain in the butt.
+
+59
+00:05:56,411 --> 00:06:00,251
+We might have to skip it if this is what we're going to get for behavior.
+
+60
+00:06:00,881 --> 00:06:04,961
+You know what I'm actually going to do is I'm going to. Okay, This is better. It's a little bit better.
+
+61
+00:06:06,011 --> 00:06:12,341
+Not the greatest responsiveness. I disconnect and reconnect.
+
+62
+00:06:12,431 --> 00:06:17,741
+See if this is any better. Whenever I reconnect. The doo doo doo doo doo doo.
+
+63
+00:06:18,981 --> 00:06:31,811
+Let's go. Wow.
+
+64
+00:06:32,351 --> 00:06:39,701
+So this is what I meant by no plan survives breakfast. This might not work out this week, gang.
+
+65
+00:06:39,701 --> 00:06:44,831
+We might have to find something else to do. I don't know why my Windows machine is misbehaving.
+
+66
+00:06:45,131 --> 00:06:48,791
+I had recently restarted it. Oh, there we go.
+
+67
+00:06:49,421 --> 00:06:54,011
+It's just being slow af. Maybe there's something wrong with the.
+
+68
+00:06:54,881 --> 00:06:59,290
+The network where the machine is. Because my personal network seems to be running fine.
+
+69
+00:06:59,291 --> 00:07:03,611
+I'm not dropping any frames. My internet speed seems to be normal.
+
+70
+00:07:04,661 --> 00:07:09,841
+I'll tell you what, let's give this a couple of minutes to sort itself out while we wait for that.
+
+71
+00:07:09,851 --> 00:07:17,681
+Because who knows, Maybe. Maybe this is just like a weird network kerfuffle happening where the machine is is located.
+
+72
+00:07:18,641 --> 00:07:25,161
+Let's look at something else briefly, which is I have something in my review queue, my code review queue.
+
+73
+00:07:25,181 --> 00:07:36,261
+Let me pull that up. Danny Colon, who who added a tooltip to list all tabs.
+
+74
+00:07:36,271 --> 00:07:39,301
+So this is something that I think is is worth checking out.
+
+75
+00:07:41,011 --> 00:07:45,271
+So this is related to bug 1633946.
+
+76
+00:07:45,871 --> 00:07:53,731
+This entered my review queue two days ago and it looks like there are two questions for the patch.
+
+77
+00:07:53,761 --> 00:07:56,371
+I'll get to those questions once I understand that the what the bug is.
+
+78
+00:07:56,761 --> 00:08:02,071
+So the bug is titled slash tooltips should be shown when hovering with the mouse over an all tabs item.
+
+79
+00:08:03,961 --> 00:08:13,051
+So there's a tab context menu, but also be nice if all the tabs items would also show a tooltip like when hovering with the mouse over a tab.
+
+80
+00:08:15,591 --> 00:08:22,910
+Weight. One added support for the TAB content context menu would also be nice if the all tabs item that's this
+
+81
+00:08:22,911 --> 00:08:29,001
+one also show tooltip right now it says list of tabs like when hovering with the mouse over a tab.
+
+82
+00:08:29,271 --> 00:08:32,331
+Oh I see. So that you want a tooltip, right?
+
+83
+00:08:32,361 --> 00:08:36,221
+I remember this. We want tooltips for these things. Okay.
+
+84
+00:08:36,531 --> 00:08:41,151
+Got it. Got it. Got it. Got it. Okay, so we're going to go back to the patch.
+
+85
+00:08:41,511 --> 00:08:47,780
+So now that we understand what Disney is trying to fix, we can take a look at what he's how he's doing it,
+
+86
+00:08:47,781 --> 00:08:55,851
+and then we can try and answer the questions that he has about his approach. So Tabs list is the right module to be in.
+
+87
+00:08:59,371 --> 00:09:03,860
+He's pulling any tennis, you tells. For some reason.
+
+88
+00:09:03,861 --> 00:09:15,541
+That's interesting. SB become utils. Tooltip.
+
+89
+00:09:26,981 --> 00:09:36,801
+Include label. Then we get the tab full label or the label on the tab.
+
+90
+00:09:41,631 --> 00:09:52,931
+Could have taught. We never pass false here while one would we never do this and then we.
+
+91
+00:09:54,641 --> 00:10:02,891
+Yeah. This is the sort of re implementation of what's used to create the tooltip on the on these tab things.
+
+92
+00:10:03,131 --> 00:10:06,671
+Part of me wonders whether or not we should just pull the tooltip off of these items.
+
+93
+00:10:07,991 --> 00:10:10,181
+Maybe that's one of his questions. Two questions.
+
+94
+00:10:10,181 --> 00:10:15,911
+Would it be better for the fluid stream to be in the specific file for tabs list system just instead of using the strings from tab browser tab?
+
+95
+00:10:15,941 --> 00:10:18,281
+I'd say yes, but I want to confirm with you before moving forward.
+
+96
+00:10:18,671 --> 00:10:23,140
+Get tab tooltip comes from such and such and also called in tab browser tab and tab rose tabs.
+
+97
+00:10:23,141 --> 00:10:25,451
+Do you think there's a better place for this function? Avoid the duplicate.
+
+98
+00:10:26,981 --> 00:10:32,111
+Well, part of me wonders if we should just be pulling the text from the tab itself.
+
+99
+00:10:32,771 --> 00:10:45,261
+Like if I open up my browser toolbox. Pretty sure there is a is there a tooltip text?
+
+100
+00:10:45,741 --> 00:10:57,041
+There's the label. Where's where's the tool to text?
+
+101
+00:11:05,321 --> 00:11:11,761
+How does this all work? Ten.
+
+102
+00:11:19,861 --> 00:11:23,611
+When we create. Oh, I see. It's created dynamically.
+
+103
+00:11:28,941 --> 00:11:40,521
+I see. Mm hmm.
+
+104
+00:11:45,091 --> 00:11:48,571
+And it is public. Here's what I would suggest.
+
+105
+00:11:50,791 --> 00:11:53,971
+It's also called and I see things as a better place for the function to avoid the duplicate.
+
+106
+00:11:54,241 --> 00:12:10,611
+I'd say just use the one that's on tab browser. And do we need what's tab localization being used for?
+
+107
+00:12:12,801 --> 00:12:21,111
+Yeah, we wouldn't need that. We wouldn't need that. If so, what I would recommend because we've got the G browser right here.
+
+108
+00:12:23,601 --> 00:12:32,541
+Um, what I'd actually recommend here, let me copy this.
+
+109
+00:12:34,551 --> 00:12:47,211
+Comment what I'd actually recommend. Is calling the public method on the TAB browser that already has this function.
+
+110
+00:12:49,581 --> 00:12:57,651
+We have the TAB browser instance available on this already as this dodgy browser.
+
+111
+00:12:58,071 --> 00:13:11,441
+So I think we should be able to get the tooltip with that tooltip text, equal this dodgy browser or get tab tooltip treat or tab.
+
+112
+00:13:11,451 --> 00:13:19,881
+Sorry. That way, we don't need to re-implement.
+
+113
+00:13:20,451 --> 00:13:25,161
+And we don't need to pull in those other strings.
+
+114
+00:13:27,751 --> 00:13:33,691
+Nor nor are those other modules that work.
+
+115
+00:13:35,281 --> 00:13:41,311
+I suspect that would work. We can actually test that ourselves. Let's.
+
+116
+00:13:41,311 --> 00:13:47,881
+Let's do that. Let's test that ourselves just to see if that would work. We have a local instance of Firefox here.
+
+117
+00:13:48,511 --> 00:13:55,020
+I'm going to open Sublime tabs list system Trace.
+
+118
+00:13:55,021 --> 00:14:00,391
+And where did he make that change in set roll attributes down here?
+
+119
+00:14:05,151 --> 00:14:10,370
+What I'm going to say is let tooltip texts equal this dodgy browser.
+
+120
+00:14:10,371 --> 00:14:15,411
+Typekit tab tooltip. Then I think we can just like, do that.
+
+121
+00:14:18,411 --> 00:14:31,901
+Let's see if that's all we needed. Special shout out for Craig, who said it was July 12th and let me know that I was missing time.
+
+122
+00:14:33,281 --> 00:14:36,371
+I was not abducted by aliens. I just got the date wrong.
+
+123
+00:14:36,611 --> 00:14:41,711
+I don't know what happened there. I'll have I'll do a postmortem and figure it out.
+
+124
+00:14:47,061 --> 00:14:50,961
+All right. Wow. Sweet theme that I must have installed recently.
+
+125
+00:14:51,951 --> 00:14:55,001
+Okay, so there we go.
+
+126
+00:14:55,011 --> 00:14:59,061
+There's our tooltip. Let's. Let's open up a couple other tabs.
+
+127
+00:15:02,971 --> 00:15:15,081
+Yep. That looks right. Amazing.
+
+128
+00:15:15,321 --> 00:15:22,341
+Okay, let's let's suggest that as the O and go.
+
+129
+00:15:22,431 --> 00:15:28,861
+Hey, um. Here we go.
+
+130
+00:15:29,341 --> 00:15:32,691
+Let's suggest that as ah, I think we did suggest that as or change.
+
+131
+00:15:32,701 --> 00:15:36,031
+And so I'm going to request changes. Thanks SDK.
+
+132
+00:15:37,501 --> 00:15:50,731
+I think we can actually take advantage of the implementation in TAB browser JS directly and make this patch quite a bit simpler.
+
+133
+00:15:50,881 --> 00:15:56,651
+See below. Boom.
+
+134
+00:15:59,581 --> 00:16:05,071
+Or potentially Craigslist or potentially for finding out that this joy of coding was prerecorded if you didn't respond.
+
+135
+00:16:05,551 --> 00:16:14,491
+That's true. Craig, you were able to find out almost for certain that I am not a figment.
+
+136
+00:16:15,361 --> 00:16:20,641
+Like this was not prerecorded, that this is live that, you know, I am walking on a tightrope.
+
+137
+00:16:21,301 --> 00:16:24,991
+And and if for some reason this was prerecorded.
+
+138
+00:16:25,951 --> 00:16:35,941
+How like this would be so elaborate, I'd have to, like, create a puppet account called Craig and time the message just right to send through matrix.
+
+139
+00:16:36,331 --> 00:16:40,651
+Oh, the orchestrations. I mean, it's possible that I'm not.
+
+140
+00:16:40,981 --> 00:16:44,911
+Should I pull up a newspaper? Let me just pull up like today's newspaper.
+
+141
+00:16:44,911 --> 00:16:48,781
+That's how they used to do it to prove today's date. Here, I'll pull up.
+
+142
+00:16:49,561 --> 00:16:53,791
+I'll pull up CBC dossier. Here you go.
+
+143
+00:16:53,911 --> 00:16:59,051
+This is today's news. This is today. And I don't know if it's got today's date.
+
+144
+00:16:59,521 --> 00:17:03,461
+What is today's date? July 12th there.
+
+145
+00:17:03,481 --> 00:17:07,271
+Hopefully that's enough proof. All right, So we've done our review.
+
+146
+00:17:07,301 --> 00:17:10,811
+Let's see if this has gotten better. That's a bit better.
+
+147
+00:17:11,291 --> 00:17:14,291
+I think we're in better shape now and scrolling is better. Okay.
+
+148
+00:17:14,291 --> 00:17:18,741
+So we can get back to we can get back to what we were doing here.
+
+149
+00:17:18,761 --> 00:17:25,481
+So what Annika had suggested was to change from using this or from using where was it?
+
+150
+00:17:26,591 --> 00:17:42,461
+We have this inline declared pure virtual ref counting, and then the implementation uses, uh, declare ref counting or inline declare ref counting.
+
+151
+00:17:42,731 --> 00:17:46,041
+I think what we want to do is use on event target.
+
+152
+00:17:46,061 --> 00:17:52,901
+Now, I don't know if I can do that. Whoops. Um, I need to, like, copy that to the clipboard.
+
+153
+00:17:54,251 --> 00:17:59,200
+There we go. Now, I don't know if I have to do something else in the header.
+
+154
+00:17:59,201 --> 00:18:06,061
+Let's see how else this is used. So. That's in line declaring it.
+
+155
+00:18:06,081 --> 00:18:10,041
+What about inside of a C++ file? All right. Decoder canceled.
+
+156
+00:18:13,211 --> 00:18:20,441
+That's for a struct. Well, let's see what happens then.
+
+157
+00:18:20,471 --> 00:18:24,091
+Like, let's. Let's just build and see if it complains.
+
+158
+00:18:24,331 --> 00:18:38,801
+Mock build binaries. While we're waiting for this, I've actually got something else we can look at as well.
+
+159
+00:18:38,831 --> 00:18:45,161
+So first of all, let me update our our agenda to include this code review.
+
+160
+00:18:45,851 --> 00:18:51,581
+So we reviewed this patch from Danny Colon.
+
+161
+00:18:59,651 --> 00:19:05,681
+SDK is patched to add tooltips to the all Tabs menu panel.
+
+162
+00:19:07,721 --> 00:19:13,091
+And then the other thing I thought we could look at. Wow. You know, stuff builds or we're blocked on stuff.
+
+163
+00:19:14,201 --> 00:19:20,801
+It's linking. That's a good sign. Oh, I've got, like, this debugging thing that we can get rid of.
+
+164
+00:19:23,151 --> 00:19:26,671
+Hey, that's great. That's a great. Call it Smurf d.
+
+165
+00:19:26,711 --> 00:19:33,341
+Let me. Let me do that. Next, actually. Special shout out to Thunderbird.
+
+166
+00:19:34,361 --> 00:19:37,961
+Thunderbird gang. Hey, you use Thunderbird? I do.
+
+167
+00:19:38,351 --> 00:19:43,361
+I don't have it open because I don't want you read my email, but like, it's. I use Thunderbird and you should too.
+
+168
+00:19:43,361 --> 00:19:45,701
+If you like email and you deal with a lot of email.
+
+169
+00:19:45,941 --> 00:19:52,811
+And Thunderbird recently released and by recently I mean yesterday released version 115 and it looks awesome.
+
+170
+00:19:52,871 --> 00:20:01,901
+Thunderbird 115 is a release that they I think there was a code named supernova was that the UI refresh codename.
+
+171
+00:20:02,411 --> 00:20:10,751
+And Google has taken its sweet time to respond to me. There we go. And yeah, our fastest, most beautiful release ever, Thunderbird Supernova.
+
+172
+00:20:10,871 --> 00:20:20,141
+They're debuting the new logo. That's pretty cool looking. That logo is the it was designed by the same person who created the original.
+
+173
+00:20:20,651 --> 00:20:26,890
+So that's nice. Nice little lineage there. And you can hear about all the improvements that they've made,
+
+174
+00:20:26,891 --> 00:20:34,120
+both like surface level and like feature level, like both within the esthetics but also in the capabilities.
+
+175
+00:20:34,121 --> 00:20:38,411
+You can read all about it here. I'm going to put a link to the blog post here.
+
+176
+00:20:39,251 --> 00:20:42,550
+I'm so happy for the Thunderbird team. They've been working really, really hard on this.
+
+177
+00:20:42,551 --> 00:20:47,921
+I know how hard it is to work on Thunderbird and I think they've made it a lot easier on themselves
+
+178
+00:20:47,921 --> 00:20:53,591
+because they spent a lot of time refactoring and modernizing the underlying infrastructure,
+
+179
+00:20:53,591 --> 00:21:01,240
+which is great. So it's actually it sets them up for four more improvements more quickly over time.
+
+180
+00:21:01,241 --> 00:21:05,950
+So I'm really, really, really, really happy for them. I'm an avid Thunderbird user, a fan,
+
+181
+00:21:05,951 --> 00:21:11,051
+and I used to work on it and that's why I can sort of speak with authority and how difficult it can be to work on Thunderbird.
+
+182
+00:21:11,801 --> 00:21:13,841
+It's built using the same technologies as Firefox.
+
+183
+00:21:13,841 --> 00:21:20,621
+So if you're watching me like, like kind of tool around inside of these files and you're like, Oh, I could do that.
+
+184
+00:21:20,631 --> 00:21:24,641
+Well, you could also work on Thunderbird. Thunderbird is another open source project, and you can work on Thunderbird too.
+
+185
+00:21:24,701 --> 00:21:32,860
+I actually I believe I fixed a Thunderbird bug in a live stream a few months back.
+
+186
+00:21:32,861 --> 00:21:37,511
+I don't remember which one it was, but if you think back, there was a live stream where I decided to.
+
+187
+00:21:37,931 --> 00:21:43,991
+It was probably one of the major episodes. Like to maybe it was episode 300 where I worked on a Thunderbird bug.
+
+188
+00:21:45,011 --> 00:21:50,771
+Yeah, I worked on it for episode 300. I worked on a Thunderbird bug, so you can go watch that episode back then.
+
+189
+00:21:51,161 --> 00:21:58,661
+And you know, if you're curious to see what it's like to work on Thunderbird and what else is there to say about the Thunderbird going,
+
+190
+00:21:58,661 --> 00:22:05,521
+Oh, I was on a podcast. If you want to hear me talking about old times working on Thunderbird and you know,
+
+191
+00:22:05,531 --> 00:22:11,110
+Thunderbird itself, I was on a podcast blog, Thunder Cast called The Thunder Cast.
+
+192
+00:22:11,111 --> 00:22:15,081
+I was the second guest. And you could hear me talk.
+
+193
+00:22:15,411 --> 00:22:22,521
+If you want to hear more about me talking, you can hear me talk about the Thunder cast or on on the Thunder cast about Thunderbird.
+
+194
+00:22:23,121 --> 00:22:30,951
+So, yeah, check it out. If you use email a lot and if you want an email client Thunderbirds your best bet.
+
+195
+00:22:30,971 --> 00:22:33,981
+And none of the others compare. Honestly, it's the best one.
+
+196
+00:22:34,611 --> 00:22:38,481
+So don't even. Don't even. Don't even think about it. Get yourself Thunderbird.
+
+197
+00:22:39,111 --> 00:22:42,411
+Do it. Okay, So we've got ourselves our build.
+
+198
+00:22:42,621 --> 00:22:48,741
+Looks like the build was successful. So let's see if we can create our crash.
+
+199
+00:22:49,131 --> 00:22:51,561
+And if I recall correctly, the crash was.
+
+200
+00:22:52,881 --> 00:23:02,211
+I think we just have to, like, let it sit idle for a while so that the lazy, idle thread has enough time to be shut down.
+
+201
+00:23:04,491 --> 00:23:10,431
+So what I'm going to do is I'm going to launch this slow as slow a F debug build.
+
+202
+00:23:14,421 --> 00:23:18,801
+I'm going to run the code that does the updating of the jump list.
+
+203
+00:23:24,081 --> 00:23:28,941
+So let's add ourselves some some history here.
+
+204
+00:23:40,181 --> 00:23:45,551
+And then. Not the console.
+
+205
+00:23:48,681 --> 00:23:51,691
+Jonathan Lindsey asks, Is Thunderbird 115 a beta or something?
+
+206
+00:23:51,711 --> 00:23:55,341
+Mine is updated and still at one or two. Interesting.
+
+207
+00:23:55,521 --> 00:23:58,871
+Uh.
+
+208
+00:23:58,961 --> 00:24:03,021
+Up. I thought it was released.
+
+209
+00:24:03,571 --> 00:24:09,280
+It says it's released. It's here.
+
+210
+00:24:09,281 --> 00:24:14,501
+Yesterday is when they posted it and you went to the about about window and it didn't.
+
+211
+00:24:14,501 --> 00:24:22,931
+Huh? Didn't open near as they made you release you sometimes become aware of corner cases they
+
+212
+00:24:22,931 --> 00:24:26,350
+will wait to enable automatic updates until are confident that no such issues exist.
+
+213
+00:24:26,351 --> 00:24:31,481
+We'll keep you post right here and on social media platforms. Existing Thunderbird want to use this security update during this time.
+
+214
+00:24:32,081 --> 00:24:35,801
+So maybe they're slow rolling it unless you download directly.
+
+215
+00:24:36,791 --> 00:24:43,151
+Maybe you the they're like slow rolling it out.
+
+216
+00:24:44,991 --> 00:24:48,701
+We do that with Firefox as well. Actually, we will throttle updates.
+
+217
+00:24:48,711 --> 00:24:53,030
+That's why sometimes you'll see a release go out and then you won't update right away.
+
+218
+00:24:53,031 --> 00:24:59,751
+You might not update for days because they're throttling the releases and we sometimes
+
+219
+00:24:59,751 --> 00:25:03,770
+find issues like we'll do like 2% of the release population and then we'll see like,
+
+220
+00:25:03,771 --> 00:25:10,161
+oh, there's been an uptick of crashes because there's some third party deals from some security company that's causing Firefox to crash.
+
+221
+00:25:10,161 --> 00:25:10,970
+Oh, geez. All right.
+
+222
+00:25:10,971 --> 00:25:18,231
+So we have to investigate that and then we'll do a quick fix and a dot release and then we'll put that out and then widen the throttle even more.
+
+223
+00:25:18,231 --> 00:25:27,561
+So for that happened actually really recently. That's why Firefox one 1542 came out really recently is because we were dealing with.
+
+224
+00:25:31,951 --> 00:25:37,471
+See, we we're dealing with some crashers caused by third party deals.
+
+225
+00:25:39,661 --> 00:25:43,081
+Yeah. Militia. Oh, a malicious injected deal.
+
+226
+00:25:43,111 --> 00:25:47,101
+I thought it was from a security company, but it was a maliciously injected deal.
+
+227
+00:25:47,671 --> 00:25:51,181
+Ha, ha. So, yeah, we slow roll the roll.
+
+228
+00:25:51,331 --> 00:25:57,450
+And I would imagine for a Thunderbird, it's. They might. Thunderbird development and deployment.
+
+229
+00:25:57,451 --> 00:26:00,270
+And the userbase is generally more conservative, too,
+
+230
+00:26:00,271 --> 00:26:05,551
+because it's like if you want to talk about investment of data, Thunderbird is a huge investment of user data.
+
+231
+00:26:05,551 --> 00:26:14,491
+It's got all your email in it and like all of your customizations and messages and stuff, you know, in the same way that people are,
+
+232
+00:26:14,851 --> 00:26:22,831
+you know, they curate and they craft and they hone and they, they invest in their browser with bookmarks and history and stuff like that.
+
+233
+00:26:23,071 --> 00:26:27,120
+People invest in Thunderbird with their their messages and whatnot. And so they need to keep those safe.
+
+234
+00:26:27,121 --> 00:26:32,301
+They want to keep those safe. And it's incumbent upon Thunderbird to keep those safe.
+
+235
+00:26:32,311 --> 00:26:38,251
+It would not be a good email client if periodically it would update and just throw away all your emails.
+
+236
+00:26:38,251 --> 00:26:44,970
+So that I think from my perspective, it makes a lot of sense for Thunderbird to be really careful with these roll outs,
+
+237
+00:26:44,971 --> 00:26:52,171
+these major version bumps to make sure people aren't being like, my emails are gone or something, you know?
+
+238
+00:26:54,301 --> 00:27:04,441
+So I mean, and to be clear, Thunderbird is tested very rigorously, but so is Firefox, maybe even more rigorously.
+
+239
+00:27:04,621 --> 00:27:13,471
+And we still will get surprised by this sort of stuff, you know, because you can't you can't test all the cases.
+
+240
+00:27:13,471 --> 00:27:17,370
+People have got lots of different computers. Okay, so what was I doing?
+
+241
+00:27:17,371 --> 00:27:20,761
+What was I just talking about? Oh, so talk about Thunderbird.
+
+242
+00:27:21,151 --> 00:27:26,700
+People were asking about updating and then Danny Coleman, you're asking about TAB browser.
+
+243
+00:27:26,701 --> 00:27:30,541
+So Danny Coleman writes this related to the review that I gave.
+
+244
+00:27:30,751 --> 00:27:35,101
+He's like, Today I learned it's okay to directly call from another file in this case tab browser.
+
+245
+00:27:35,341 --> 00:27:40,981
+I thought it wouldn't be considered good practice. So I'll tell you something, Danny Coleman, because this might be interesting to you.
+
+246
+00:27:41,431 --> 00:27:50,880
+There's a convention there is a convention in JavaScript, especially older JavaScript, that I shouldn't say JavaScript in general.
+
+247
+00:27:50,881 --> 00:27:58,591
+There's an older convention in Mozilla, e, JavaScript, Firefox, JavaScript, where if something starts with a an underscore,
+
+248
+00:27:58,861 --> 00:28:05,701
+it is what's called pseudo private or like it is decorated as a private method.
+
+249
+00:28:05,701 --> 00:28:10,951
+And that is not a thing that you probably want to call into from another class or another object or another file,
+
+250
+00:28:11,341 --> 00:28:17,011
+because the person who wrote the function is saying technically this is an internal function.
+
+251
+00:28:17,431 --> 00:28:24,451
+Now, these days with script six, you can actually create private methods and members and stuff, and that's we use those all the time.
+
+252
+00:28:24,571 --> 00:28:28,050
+TAB browser is from way back in the day.
+
+253
+00:28:28,051 --> 00:28:32,821
+It's an old, old older piece of JavaScript, so it's not written as an Essex class.
+
+254
+00:28:32,821 --> 00:28:41,071
+Maybe someday it will be, but it's got a mixture of both underscore functions like here.
+
+255
+00:28:41,301 --> 00:28:46,611
+Do we? Let's see some functions in here.
+
+256
+00:28:48,021 --> 00:28:51,381
+Let's find some functions. Here's one.
+
+257
+00:28:52,431 --> 00:28:56,480
+Adjust focus before TAPS, which I just got a delivery. It is boiling hot.
+
+258
+00:28:56,481 --> 00:29:00,051
+And it is tea. Amazing. Thank you very much for the tea delivery.
+
+259
+00:29:01,311 --> 00:29:04,551
+So this is a pseudo private function in tab browser.
+
+260
+00:29:04,761 --> 00:29:12,410
+It starts with an underscore. And this I would be very reluctant to suggest calling from another method or
+
+261
+00:29:12,411 --> 00:29:16,130
+affirming another mechanism or another file or another object or something,
+
+262
+00:29:16,131 --> 00:29:23,631
+because it's like, well, you're kind of saying signing yourself up for for trouble because the person who wrote this is like,
+
+263
+00:29:23,631 --> 00:29:28,401
+this is internal and you shouldn't actually know about this. Like, this is called the principle of least knowledge.
+
+264
+00:29:28,611 --> 00:29:36,501
+You are coupling yourself to the what is technically an implementation detail of of something.
+
+265
+00:29:36,801 --> 00:29:40,041
+And so while it might solve your problem in the short term,
+
+266
+00:29:40,431 --> 00:29:48,860
+you are it's almost like a bad cabling practice because you might trip over this cable whenever someone
+
+267
+00:29:48,861 --> 00:29:54,141
+decides to change this internal method or remove it because it's supposed to be internal only.
+
+268
+00:29:54,831 --> 00:29:59,691
+Now, the one you were calling, what was called was it get tab tooltip.
+
+269
+00:30:02,101 --> 00:30:11,761
+Has no underscore. So it's kind of implied by the fact that this is not prefix with an underscore, that it is public,
+
+270
+00:30:12,211 --> 00:30:19,761
+that it is okay to call this externally, and that if I were to go in and be like I want to refactor get tabbed tooltip, it is important.
+
+271
+00:30:19,771 --> 00:30:25,921
+I mean, it would be important in general for me to like if I'm refactoring use search forks to find all the usages of a function that I'm changing.
+
+272
+00:30:27,001 --> 00:30:33,501
+But this one, it's like code baked into the name of the function that this is expected to be used externally or it's okay to do it.
+
+273
+00:30:33,511 --> 00:30:40,621
+It is a public method, so it's okay to call this from another function or another another module or something.
+
+274
+00:30:40,861 --> 00:30:46,621
+So there you go. There's a clarification. No problem. All right.
+
+275
+00:30:47,311 --> 00:30:50,701
+What's going on? Okay, so we got our build here. We got this thing running.
+
+276
+00:30:56,551 --> 00:31:05,491
+We removed some URLs. That's interesting. Good.
+
+277
+00:31:06,811 --> 00:31:11,341
+Removing URLs from places. Okay, good.
+
+278
+00:31:11,671 --> 00:31:15,961
+And then that means that we've actually done the right thing.
+
+279
+00:31:15,971 --> 00:31:23,371
+We've had this thing sitting around for a while. We've got our we've got our frequent list here.
+
+280
+00:31:24,091 --> 00:31:28,231
+If we were to run update again, we'd probably see that it gets the.
+
+281
+00:31:29,511 --> 00:31:33,921
+The fab icons also have finally been written to the desk.
+
+282
+00:31:34,521 --> 00:31:40,281
+Boo yah, Chaka. There they are. Some of them anyways.
+
+283
+00:31:40,581 --> 00:31:47,481
+This one for some reason didn't show up. And so now I'm going to shut down and see if we get our shutdown crash.
+
+284
+00:32:00,331 --> 00:32:03,721
+You know it. I. Well, we'll see.
+
+285
+00:32:05,341 --> 00:32:22,091
+Here we go. Here we go. Amazing.
+
+286
+00:32:22,391 --> 00:32:27,630
+Amazing. So I'm going to. And to add some documentation,
+
+287
+00:32:27,631 --> 00:32:42,781
+we use an inline declare ref counting on event target because this class might be destroyed on a different thread than the one it.
+
+288
+00:32:45,091 --> 00:32:51,691
+Was created on a different. Rather than the one that was created on.
+
+289
+00:32:52,961 --> 00:32:58,331
+Since it's maintained by a lazy idle thread.
+
+290
+00:33:01,211 --> 00:33:05,351
+Is there a bug reference? Um.
+
+291
+00:33:07,211 --> 00:33:10,721
+Yeah. This is a workaround for this.
+
+292
+00:33:12,521 --> 00:33:16,181
+This is a workaround for bugs such and such.
+
+293
+00:33:19,171 --> 00:33:32,181
+That's good. Good, good, good, good, good. And I didn't see the the error and error or failure that we were seeing before.
+
+294
+00:33:33,141 --> 00:33:37,071
+But let's run this again and let's see if we can see the error if we remove a thing.
+
+295
+00:33:39,591 --> 00:33:48,841
+Excuse me. Let's, like, step through.
+
+296
+00:33:51,431 --> 00:33:56,111
+The whole removal process of an item from the from the jump list.
+
+297
+00:33:56,501 --> 00:34:06,041
+And I mean, to do this in two ways. I'm actually going to attach Visual Studio Debugger and I'm going to use the browser Toolbox debugger.
+
+298
+00:34:09,361 --> 00:34:21,721
+We're going to attach what is the process? I.D. parent is 1399 to get attached to that one.
+
+299
+00:34:24,071 --> 00:34:33,191
+Get her browser toolbox going here. What we're going to do now that we're attached, we're going to set a breakpoint on.
+
+300
+00:34:41,271 --> 00:34:48,151
+Do populate jump list I think populate jump list and do populate jump list.
+
+301
+00:34:48,481 --> 00:34:52,941
+No, just do populate jump list. And so a widget.
+
+302
+00:34:54,081 --> 00:34:59,171
+Jump list. Still there do feel a.
+
+303
+00:35:03,761 --> 00:35:09,410
+Jump with. Got a breakpoint there.
+
+304
+00:35:09,411 --> 00:35:12,561
+And then over here, I'm going to want to set a similar break point.
+
+305
+00:35:25,081 --> 00:35:31,651
+And Windows jumpers. It's already got it open. Thank you. Despite the fact that it's so slow, it's been pretty smart.
+
+306
+00:35:33,451 --> 00:35:40,801
+It's been all slow because the debug bill, we're going to find the populate jump list.
+
+307
+00:35:41,971 --> 00:35:46,411
+Call. And we're going to.
+
+308
+00:35:49,701 --> 00:35:55,101
+So some break points there. There's one.
+
+309
+00:36:00,021 --> 00:36:03,171
+Is the other. Oh, and we've hit our first break point.
+
+310
+00:36:04,401 --> 00:36:09,681
+So we're going to let this let this go. Here we go. Now, this isn't actually going to remove anything.
+
+311
+00:36:10,821 --> 00:36:15,591
+I think are we going to source different from the.
+
+312
+00:36:20,781 --> 00:36:26,291
+Why would this sauce be different? Oh, because I added the comment.
+
+313
+00:36:28,001 --> 00:36:32,541
+Hmm. Hmm.
+
+314
+00:36:33,021 --> 00:36:38,061
+Yeah. This could be a pain I didn't build after out of the comment.
+
+315
+00:36:41,141 --> 00:36:48,741
+So this might be a little bit of a pain, but we can step in all that sort of stuff.
+
+316
+00:36:48,761 --> 00:36:50,321
+That's fine. I'm going to continue.
+
+317
+00:36:50,591 --> 00:36:58,941
+We're going to let that thing finish off and then we'll see in the toolbox here that the removed URLs should be an empty array.
+
+318
+00:36:58,961 --> 00:37:09,621
+I think. Uh huh.
+
+319
+00:37:10,821 --> 00:37:14,091
+Uh, let's pull in. All. Yeah. There we go. Length zero it flash there.
+
+320
+00:37:14,301 --> 00:37:19,551
+Okay, so I'm going to hit play, and now I'm going to remove an item.
+
+321
+00:37:19,941 --> 00:37:22,981
+Let's remove 32 free things to do.
+
+322
+00:37:23,031 --> 00:37:26,091
+Free 3 to 3 things to do to make the most of your summer travel.
+
+323
+00:37:26,181 --> 00:37:31,211
+Let's remove that. Remove from the list. Okay.
+
+324
+00:37:32,771 --> 00:37:50,221
+Now, let us update. Now we got to import the module to let us update it manually.
+
+325
+00:37:51,601 --> 00:37:54,871
+Oh, man. All right. I'm going to open up the console.
+
+326
+00:37:55,261 --> 00:37:59,641
+Let's see if the the timer beats us. Well, who gets there first?
+
+327
+00:37:59,911 --> 00:38:04,681
+The timer or the browser console? We'll see.
+
+328
+00:38:05,731 --> 00:38:08,881
+Here comes the browser console coming to get you timer.
+
+329
+00:38:15,511 --> 00:38:22,471
+I hit the up cursor, but nothing happened. Is it?
+
+330
+00:38:23,191 --> 00:38:28,641
+Could we? What's going on? Have her a break point yet?
+
+331
+00:38:33,101 --> 00:38:47,531
+It's just completely unresponsive. Have we hit a break point?
+
+332
+00:38:53,521 --> 00:38:56,991
+Patience training 101 for serious. Right. We have.
+
+333
+00:38:57,011 --> 00:39:01,471
+Okay. We hit our break point. That's what happened. Okay, let's hit play.
+
+334
+00:39:03,031 --> 00:39:07,191
+Here we are Now we are on the wrong line.
+
+335
+00:39:07,201 --> 00:39:13,021
+Just so we're clear, we have to offset everything that we're seeing by quite a bit.
+
+336
+00:39:16,061 --> 00:39:22,661
+So the fact that we hit return and kept skipping over is because the source codes are poorly aligned.
+
+337
+00:39:25,571 --> 00:39:32,251
+Where? Somewhere down here, I think. Okay.
+
+338
+00:39:32,351 --> 00:39:40,211
+So what I want to do is do we have the list of.
+
+339
+00:39:41,351 --> 00:39:52,411
+Oh, yeah, we will have the obituary. We should have the obituary of things to remove Rob Pointer Obituary.
+
+340
+00:39:56,061 --> 00:40:06,831
+In your eyes to remove size of one. Okay, so I'm going to hit play and then we should hit our break point here.
+
+341
+00:40:08,741 --> 00:40:14,521
+We hit our. Popular journalist.
+
+342
+00:40:16,311 --> 00:40:27,591
+Is that the problem? Um, I just realized we're going to hit an issue here because.
+
+343
+00:40:33,341 --> 00:40:37,921
+Two. Did we. Did we do it? And this error unexpected, right.
+
+344
+00:40:38,161 --> 00:40:46,021
+So the reason we hit the answer error unexpected, is because we were in our break point when the timer came around again.
+
+345
+00:40:47,191 --> 00:40:52,161
+We should have not entered here. Because we were still building.
+
+346
+00:40:55,471 --> 00:41:11,541
+Um. But we have a flag.
+
+347
+00:41:23,631 --> 00:41:40,131
+Show frequent. Hmm.
+
+348
+00:41:40,671 --> 00:41:45,801
+So I'm quiet for a second here because I am not sure.
+
+349
+00:41:47,841 --> 00:41:53,481
+I'm not sure. If we're in a really bad state now.
+
+350
+00:41:55,551 --> 00:41:59,841
+Yeah. Do populate jump list. It's going to air. It's going to throw us in there, isn't it?
+
+351
+00:42:01,821 --> 00:42:05,960
+Runs it once. No air runs it again.
+
+352
+00:42:05,961 --> 00:42:15,181
+And who's it for? Who's it running for? Who is our.
+
+353
+00:42:17,961 --> 00:42:27,231
+Jump list builder jump plus back and with the owning thread the dest list.
+
+354
+00:42:33,741 --> 00:42:36,801
+What is our app user model ID?
+
+355
+00:42:37,971 --> 00:42:45,111
+So this is for the non private browsing window and that's the one I think we return the error for.
+
+356
+00:42:49,911 --> 00:42:54,291
+Except it didn't air this time because the removal occurred.
+
+357
+00:43:00,111 --> 00:43:10,131
+Okay, here's what I'm going to do now. I'm going to right click How to Deal with Brown Spots Removed from this List Now Update.
+
+358
+00:43:13,731 --> 00:43:23,211
+Play. Okay.
+
+359
+00:43:26,501 --> 00:43:36,131
+And like, that's removing it from history, right? It was like how to remove something.
+
+360
+00:43:37,301 --> 00:43:40,771
+Oh, see, it's still in history. See, that's the problem. What's going on here?
+
+361
+00:43:40,781 --> 00:43:51,031
+Why aren't we removing these things? Okay.
+
+362
+00:43:51,061 --> 00:43:55,611
+So that we need to figure out. Clear.
+
+363
+00:43:58,251 --> 00:44:02,301
+History. Okay.
+
+364
+00:44:02,311 --> 00:44:05,341
+Hit the timer. That's made.
+
+365
+00:44:05,971 --> 00:44:12,141
+Revert. Continue. Okay.
+
+366
+00:44:13,761 --> 00:44:24,391
+Clear history. Evaluating spec.
+
+367
+00:44:27,391 --> 00:44:37,021
+Removing your your eyes to remove. Okay, so let's do that.
+
+368
+00:44:37,981 --> 00:44:42,091
+Breaking down the tick tock vernacular. Remove. Okay.
+
+369
+00:44:43,921 --> 00:44:58,821
+Now from the console. To hit our break point.
+
+370
+00:45:08,651 --> 00:45:20,861
+What's going on here? I think we just hit Nasser unexpected as what we had.
+
+371
+00:45:22,481 --> 00:45:29,311
+I think we hit our break point at all. Like, if I. Do you update again?
+
+372
+00:45:32,051 --> 00:45:38,471
+Yeah. Okay.
+
+373
+00:45:50,611 --> 00:45:54,781
+Begin list will fail. What was the rule?
+
+374
+00:45:56,071 --> 00:46:21,391
+Begin lists. After a called committee list is made with no foul call to a pen category due.
+
+375
+00:46:21,411 --> 00:46:25,091
+An attempt to react to removed items made since begin lists removed destinations list is
+
+376
+00:46:25,091 --> 00:46:29,081
+cleared after that time previously removed item can return destinations left these cases term.
+
+377
+00:46:30,251 --> 00:46:45,970
+When can it fail? Like.
+
+378
+00:46:45,971 --> 00:46:49,421
+I wonder if that's the issue is that we need to commit.
+
+379
+00:46:49,601 --> 00:46:54,371
+We need a and a branch of our code that will commit the list.
+
+380
+00:46:55,151 --> 00:47:03,701
+What is the old code do? Commit build.
+
+381
+00:47:12,181 --> 00:47:30,021
+I mean, our results build the list. Maybe we always need to ensure that we have.
+
+382
+00:47:34,011 --> 00:47:37,071
+Like, what are ways that we could have bailed out early?
+
+383
+00:47:42,611 --> 00:47:48,471
+We create the instance. Begin the list.
+
+384
+00:47:53,311 --> 00:48:06,671
+We could. There's so many different places where we could bail out. Do we?
+
+385
+00:48:07,031 --> 00:48:21,771
+Are we ever in a situation where we, like, begin the list? Uh, John, over time, idea began.
+
+386
+00:48:27,841 --> 00:48:33,391
+Net list build. Start build.
+
+387
+00:48:45,141 --> 00:48:50,441
+No matter what. We committed after we.
+
+388
+00:48:51,941 --> 00:48:56,051
+Started. I wonder if that's the situation.
+
+389
+00:48:57,891 --> 00:49:11,431
+No matter what. If we start, we better commit. Commit list happens here right at the very end.
+
+390
+00:49:13,871 --> 00:49:23,271
+And. I wonder if we need a slightly different air handler.
+
+391
+00:49:29,511 --> 00:49:39,731
+Like. There's begin list, is there like cancel this list.
+
+392
+00:49:41,251 --> 00:50:05,571
+Custom templates for a specific application. Maybe that's what we should do.
+
+393
+00:50:10,881 --> 00:50:15,441
+Oh, it should not be called when an application is updating is only used to completely clear the list.
+
+394
+00:50:21,261 --> 00:50:25,321
+A board list. Here we go. A board list.
+
+395
+00:50:27,601 --> 00:50:30,841
+That's what we want. A board.
+
+396
+00:50:30,841 --> 00:50:38,641
+And when we. A board must build.
+
+397
+00:50:40,861 --> 00:50:44,251
+You always start by a boring build list.
+
+398
+00:50:45,361 --> 00:50:49,091
+If we have pending statements. We have bought.
+
+399
+00:50:50,161 --> 00:50:58,791
+Desperate rappers start. Go start build here then we always bought.
+
+400
+00:51:01,621 --> 00:51:07,271
+That's what I've bought it already. So maybe that's the first thing is you always abort any ongoing list.
+
+401
+00:51:08,501 --> 00:51:12,041
+Okay. Okay. That we can do.
+
+402
+00:51:20,761 --> 00:51:24,751
+A on a bought any ongoing list building.
+
+403
+00:51:27,691 --> 00:51:39,561
+That might have been. That might not have been completed otherwise.
+
+404
+00:51:41,441 --> 00:51:45,381
+Begin list. Will give us.
+
+405
+00:51:46,451 --> 00:51:51,621
+Problems. I shouldn't say completed, committed.
+
+406
+00:51:53,691 --> 00:51:59,161
+So we'll say h result. An abort list.
+
+407
+00:51:59,281 --> 00:52:02,491
+Is that like, when could that fail?
+
+408
+00:52:06,891 --> 00:52:10,691
+Four major new tires during the previously stored list.
+
+409
+00:52:10,701 --> 00:52:23,901
+Okay. Wow. Pickles and jump list back end.
+
+410
+00:52:24,351 --> 00:52:31,121
+Do we have a short list? We have a board list.
+
+411
+00:52:34,391 --> 00:52:41,801
+We do have a board list. Okay. Burtless takes an argument, though.
+
+412
+00:52:42,961 --> 00:52:46,131
+It does not take an argument. Okay.
+
+413
+00:52:47,211 --> 00:52:50,721
+Okay. So just call a board list.
+
+414
+00:52:53,301 --> 00:53:05,121
+Uh. Um.
+
+415
+00:53:17,021 --> 00:53:25,001
+Okay. Let's try that shutter down.
+
+416
+00:53:32,101 --> 00:53:35,221
+Oh, we can also get rid of some of our debugging stuff.
+
+417
+00:53:45,461 --> 00:53:49,601
+Um. Uh.
+
+418
+00:53:54,201 --> 00:53:58,611
+I think we had some debugging stuff in here as well, like console.log and.
+
+419
+00:53:59,491 --> 00:54:05,271
+I'm going to keep that console.log for now. As we still need to figure out why we're not removing certain things.
+
+420
+00:54:11,291 --> 00:54:26,031
+Let's build. Patience, precious.
+
+421
+00:54:39,301 --> 00:54:47,961
+And then after this. I think it's testing time.
+
+422
+00:54:49,631 --> 00:54:52,661
+I think it's time to write some tests.
+
+423
+00:54:55,981 --> 00:54:59,701
+Well, at least. Yeah.
+
+424
+00:54:59,731 --> 00:55:03,901
+Plan out our testing more thoroughly now that we have.
+
+425
+00:55:03,901 --> 00:55:08,911
+We had, like, done this a couple of weeks back, which caused us to do the big refactor and rewrite.
+
+426
+00:55:09,871 --> 00:55:15,901
+And now that we have a refactor rewrite, we can start thinking about what our tests will actually look like.
+
+427
+00:55:17,671 --> 00:55:19,140
+You know, we're going to have to do some locking.
+
+428
+00:55:19,141 --> 00:55:28,681
+We're basically going to be creating a backend that can be instantiated on the main thread of the test handed over to the jobless builder.
+
+429
+00:55:31,961 --> 00:55:36,311
+Off of the main thread on its lazy idle thread and then handed back.
+
+430
+00:55:36,971 --> 00:56:07,831
+So we're gonna need like locking basically. Come on.
+
+431
+00:56:07,831 --> 00:56:12,211
+Debug bells. Let's go debug build.
+
+432
+00:56:17,061 --> 00:56:25,341
+I think it will help if I get rid of some of the things if I get rid of some of these things,
+
+433
+00:56:26,721 --> 00:56:30,021
+let's get rid of those things so that they don't show up initially.
+
+434
+00:56:31,101 --> 00:56:38,181
+Let's create some more traffic. Let's go to Mozilla Talk and my blog.
+
+435
+00:56:38,751 --> 00:56:43,231
+Shout out to my blog. She hasn't seen any new posts in a while.
+
+436
+00:56:44,341 --> 00:56:51,161
+Facebook. Um, all the cool places that people are going.
+
+437
+00:56:53,231 --> 00:56:57,701
+And now let us open the.
+
+438
+00:57:00,991 --> 00:57:06,581
+Console. Oh, remember this?
+
+439
+00:57:06,591 --> 00:57:11,811
+Remember the about home startup Cash? It rolled out its on by default in Firefox 115.
+
+440
+00:57:12,081 --> 00:57:18,381
+Really happy about that. Congratulations. You may have seen me working on that a couple of times in like a couple of years ago.
+
+441
+00:57:18,711 --> 00:57:21,921
+And finally we we got to the point where we could roll it out. So it's done.
+
+442
+00:57:21,921 --> 00:57:26,391
+We did it. It's done. Some quick update.
+
+443
+00:57:26,691 --> 00:57:30,891
+Let's go. NSA unexpected.
+
+444
+00:57:32,001 --> 00:57:35,341
+Amazing. Now, why is that?
+
+445
+00:57:37,781 --> 00:57:44,031
+Um, where are we failing now? Jobless bill.
+
+446
+00:57:44,031 --> 00:57:59,881
+There are 215. To obtain and cache the fab icon.
+
+447
+00:57:59,881 --> 00:58:05,421
+We're failing to do that. Oh.
+
+448
+00:58:08,181 --> 00:58:11,481
+Interesting. But.
+
+449
+00:58:14,191 --> 00:58:19,201
+Does that mean? Like none of this population of stuff has to reload it?
+
+450
+00:58:19,291 --> 00:58:24,401
+Yes. As attach.
+
+451
+00:58:26,641 --> 00:58:38,711
+215168. Break point.
+
+452
+00:58:53,371 --> 00:59:02,761
+Okay. Now the source code maps because we rebuilt.
+
+453
+00:59:06,071 --> 00:59:21,141
+Did it fail? It failed. Maybe a boarding list is and having it fail is okay.
+
+454
+00:59:23,341 --> 00:59:28,111
+That makes sense to me that aborting a list.
+
+455
+00:59:33,631 --> 00:59:37,441
+Failing is okay. Look, I don't think we ever paid much attention to it before.
+
+456
+00:59:44,611 --> 00:59:48,271
+Um, legacy jumpers. Build a port.
+
+457
+00:59:50,681 --> 01:00:00,971
+Yeah, we just always ignored it. So I think we should be okay to just be, like, unused.
+
+458
+01:00:02,171 --> 01:00:10,831
+Short list. All right, let's try that instead.
+
+459
+01:00:22,731 --> 01:00:25,991
+You feel old, Danny Colon? I feel old.
+
+460
+01:00:26,001 --> 01:00:32,391
+Everyone's getting old. I think we just do build binaries here.
+
+461
+01:00:34,701 --> 01:00:47,201
+We all float down here. Yeah the about home startup cash if you curious about what that is.
+
+462
+01:00:47,441 --> 01:00:56,141
+Check out my blog. It's basically TLDR it's an optimization to make starting up Firefox faster or appear faster.
+
+463
+01:00:56,141 --> 01:00:59,631
+Like look in this video that I've got here on my blog.
+
+464
+01:00:59,651 --> 01:01:04,011
+On the left is without the cache and on the right is with the cache.
+
+465
+01:01:04,031 --> 01:01:09,011
+Now if you'll notice, the theme is like pre photon or whatever it was.
+
+466
+01:01:09,191 --> 01:01:12,611
+So like it's the old look of the browser on a Windows ten machine.
+
+467
+01:01:13,391 --> 01:01:17,501
+That's how long ago this blog post is from the like. Look how much faster that showed up.
+
+468
+01:01:18,621 --> 01:01:23,391
+And that's now enabled by default. So really happy about that.
+
+469
+01:01:24,771 --> 01:01:28,731
+You can read up on the details on my blog at my colleagues here slash blog.
+
+470
+01:01:28,761 --> 01:01:32,331
+You can read about how it got developed and how it works basically.
+
+471
+01:01:33,171 --> 01:01:41,901
+TLDR Takes advantage of reacts because the new tab page is written in React, which I'm not.
+
+472
+01:01:42,801 --> 01:01:44,601
+I'm not the biggest fan react personally,
+
+473
+01:01:46,941 --> 01:01:54,771
+but one of the things that it allows you to do is to have a highly mutable UI surface which the about home and about new tab pages.
+
+474
+01:01:56,301 --> 01:02:08,120
+And it also can allow you to generate the markup for that page while also then reattaching to it after that markup is parsed.
+
+475
+01:02:08,121 --> 01:02:10,251
+And so that's what we we do is we,
+
+476
+01:02:10,971 --> 01:02:19,701
+we dynamically generate the home page and then generate the markup for it and then stash that in a cache and then someone.
+
+477
+01:02:20,001 --> 01:02:23,361
+Danny Collins like time to rewrite it and svelte you going to walk into the ocean.
+
+478
+01:02:24,021 --> 01:02:28,981
+All right, so let's vanilla Jesus or bust, baby.
+
+479
+01:02:30,771 --> 01:02:34,371
+I'm a I'm a fan of vanilla juice. I also don't mind the lit library.
+
+480
+01:02:34,371 --> 01:02:42,801
+If you're not familiar with Lit, it's not really a framework, but it is a like syntactic sugar around web components.
+
+481
+01:02:44,091 --> 01:02:47,631
+We're starting to use it in some parts of the Firefox frontend and I like it
+
+482
+01:02:49,701 --> 01:02:56,121
+and it has some like cleared of reactive properties which are kind of nice.
+
+483
+01:02:57,201 --> 01:03:00,411
+Oh yeah. It's still a toggle nightly experiment, so I should probably remove that.
+
+484
+01:03:00,411 --> 01:03:03,021
+Now that it's shipped by default, I can remove that.
+
+485
+01:03:04,401 --> 01:03:13,941
+But one of the nice things about Lit is that it's really just a thin, thin layer over web components and just nice syntactic sugar mainly.
+
+486
+01:03:14,091 --> 01:03:20,121
+The thing that's nice about lit is the templating that it gives you declarative templating.
+
+487
+01:03:23,331 --> 01:03:29,521
+It's not for everyone, but I like it. Okay, no errors there.
+
+488
+01:03:31,231 --> 01:03:35,431
+Removing your URLs via places. Remove those.
+
+489
+01:03:36,301 --> 01:03:40,141
+Did it really? That's what I'm curious about. Now it shows.
+
+490
+01:03:40,171 --> 01:03:44,551
+These things showed up. My blog. My blog.
+
+491
+01:03:45,481 --> 01:03:53,541
+And now. Hang on. Mean. Your eyes to remove.
+
+492
+01:03:54,351 --> 01:03:59,991
+How does it. Give me that toolbox.
+
+493
+01:04:10,491 --> 01:04:14,581
+Oh, it's already open. It's over here.
+
+494
+01:04:20,421 --> 01:04:29,101
+Good call. Crushed optimists. Let's file a bug. New tab.
+
+495
+01:04:33,361 --> 01:04:38,141
+Remove about home start up cash. Toggle from about preferences.
+
+496
+01:04:38,161 --> 01:04:42,921
+Experiments. Uh, about home.
+
+497
+01:04:51,791 --> 01:05:03,071
+Uh, blocks this. Now that this is on by default, I think we can remove it from the preferences experimental section.
+
+498
+01:05:06,331 --> 01:05:13,891
+Task. Okay, so what do I want to test here?
+
+499
+01:05:13,901 --> 01:05:17,521
+I want to open up the. I've got the wrong source open.
+
+500
+01:05:23,191 --> 01:05:42,931
+Come on. No removals, apparently.
+
+501
+01:05:43,081 --> 01:05:50,271
+Right. Okay. So after those first couple of removals, we didn't do any.
+
+502
+01:05:54,481 --> 01:05:57,791
+See, this kills me. I'm attached to the wrong thing.
+
+503
+01:05:57,811 --> 01:06:02,401
+I want to be attached to the main thread.
+
+504
+01:06:02,641 --> 01:06:08,311
+How come I'm not attached to the main thread? Sometimes I have to go to a website.
+
+505
+01:06:11,701 --> 01:06:18,331
+How much should a sandwich cost? It's a great question. It's the question of the ages.
+
+506
+01:06:19,201 --> 01:06:24,891
+Five bucks. That's how much a sandwich should cost.
+
+507
+01:06:29,421 --> 01:06:33,201
+I don't know. Maybe that's an unrealistic sandwich perspective.
+
+508
+01:06:34,941 --> 01:06:45,521
+Is it still working? What's happening here? I'm not attached to it.
+
+509
+01:06:45,541 --> 01:06:50,101
+So what's going on? Something super slow in this debug build.
+
+510
+01:06:51,601 --> 01:06:54,781
+It's repainting. Okay. It's just taking a while. There.
+
+511
+01:06:54,811 --> 01:06:59,131
+Tooltips. Here we go. Simon is typing, which got Simon.
+
+512
+01:07:04,291 --> 01:07:13,151
+It's like, Come on, give me. It's not even.
+
+513
+01:07:13,301 --> 01:07:21,251
+It's not responding to my mouse clicks. All right.
+
+514
+01:07:21,731 --> 01:07:29,441
+We're going to do this old school by shutting down and restarting.
+
+515
+01:07:33,351 --> 01:07:40,731
+Is this still working? What's happening here? Yes, these are these are perennial questions.
+
+516
+01:07:42,711 --> 01:07:48,661
+Perennial questions. Shutting down workers.
+
+517
+01:07:50,941 --> 01:08:03,311
+All right. Run! Let's go to a simple Web site.
+
+518
+01:08:03,731 --> 01:08:17,401
+Let's go to example dot com. And then let's open up our browser toolbox.
+
+519
+01:08:18,661 --> 01:08:24,871
+Go into my happy place. Dan Cohen writes, I have mixed feelings about jazz frameworks.
+
+520
+01:08:24,901 --> 01:08:29,101
+They are useful, but they also add time dependencies. It's scary when you see how fast the ecosystem is evolving.
+
+521
+01:08:29,581 --> 01:08:33,571
+I agree. I am not. And this is I don't mean to throw shade.
+
+522
+01:08:33,661 --> 01:08:40,051
+People use whatever tools help you get your job done. The end user does not care.
+
+523
+01:08:40,381 --> 01:08:45,780
+You know, the end user doesn't care what framework you use and the end user wants capabilities.
+
+524
+01:08:45,781 --> 01:08:53,671
+They want a tool that lets them do their thing and they don't care if it's happy or svelte or or Python or whatever.
+
+525
+01:08:55,021 --> 01:09:00,731
+For the most part. They just want their Web site, their Web application to work.
+
+526
+01:09:01,121 --> 01:09:05,931
+Now, whatever helps you do your job faster, fastest, more efficiently.
+
+527
+01:09:06,371 --> 01:09:12,531
+Test to be reliably. Maintain a maintain ably.
+
+528
+01:09:12,881 --> 01:09:19,251
+That's what you should use. But the tools serve the problem rather than the problem serving the tool.
+
+529
+01:09:19,271 --> 01:09:24,111
+Don't just roll out whatever you're used to use, whatever suits the problem.
+
+530
+01:09:24,131 --> 01:09:25,780
+Sometimes that'll be the same thing every time.
+
+531
+01:09:25,781 --> 01:09:34,331
+But other times, you know, think about the problem that you're trying to solve and then let the tool suit the problem.
+
+532
+01:09:34,511 --> 01:09:40,370
+That's my recommendation. And yeah,
+
+533
+01:09:40,371 --> 01:09:42,981
+I'm not the hugest fan of like using Webpack and then all of a sudden you're like
+
+534
+01:09:42,981 --> 01:09:48,981
+pulling down half the internet so you can like make a make a react thing work.
+
+535
+01:09:49,411 --> 01:09:54,561
+That's always really scary. It's like, why? Why did this take 300 megabytes worth of JavaScript?
+
+536
+01:10:05,441 --> 01:10:11,771
+We failed. We never. Should we hit our break point?
+
+537
+01:10:24,921 --> 01:10:30,951
+Oh, I think we did hit our break point. It's just like our toolbox hasn't caught up yet to the fact that we've hit our break point.
+
+538
+01:10:32,601 --> 01:10:38,661
+That's what's been going wrong. That's why that other we stopped responding before is that the debugger is being super slow.
+
+539
+01:10:48,541 --> 01:10:52,201
+Okay, here's what I'm going to do. You know, close the debugger.
+
+540
+01:10:53,231 --> 01:11:01,661
+Now will cause this thing to start responding again. I am going to remove how much a sandwich cost from here.
+
+541
+01:11:04,201 --> 01:11:15,701
+That I'm going to do this again. No logging, Nothing.
+
+542
+01:11:15,701 --> 01:11:28,791
+Seriously. Hmm.
+
+543
+01:11:29,711 --> 01:11:58,861
+Now I'm worried. Now we're getting nothing. You know, what we might actually want now at this point is an opt build.
+
+544
+01:12:01,051 --> 01:12:07,891
+These debug builds are so slow. I wonder how quickly we can get an opt to build.
+
+545
+01:12:07,891 --> 01:12:13,791
+I think I built one relatively recently. Privacy notice.
+
+546
+01:12:24,071 --> 01:12:30,091
+Is that console? Here's our console.
+
+547
+01:12:38,471 --> 01:12:41,530
+Stuff shows up. Great example. Dot coms.
+
+548
+01:12:41,531 --> 01:12:52,911
+Not their cool. Oh, I didn't mean to shut down.
+
+549
+01:12:54,381 --> 01:12:58,241
+Shoot. Okay, hold on. All right.
+
+550
+01:12:58,251 --> 01:13:09,850
+I'm getting sick and tired of this. This slow IV up to here that the time to do to respond to actions from user input is too darn high.
+
+551
+01:13:09,851 --> 01:13:11,621
+So we're going to go build with default.
+
+552
+01:13:12,641 --> 01:13:20,381
+Let's see how long this takes because I did a OPPT build relatively recently, so it might just have to make some stuff under widget.
+
+553
+01:13:22,691 --> 01:13:26,831
+If we start seeing it like constructing the DOM directory, we're toast.
+
+554
+01:13:27,341 --> 01:13:31,000
+But if we see it, just try and go.
+
+555
+01:13:31,001 --> 01:13:34,841
+Yeah. Okay. Okay. Skipped right to widget. We're in good shape. We're in good shape.
+
+556
+01:13:36,881 --> 01:13:40,661
+Daily column. Right. Danny Cole writes No, Simon writes, I feel you.
+
+557
+01:13:40,661 --> 01:13:42,850
+Whenever I want to build something, I have to get lost in the swamp.
+
+558
+01:13:42,851 --> 01:13:48,881
+Of which X do I use or in the quicksand of, Oh, you want to do non-trivial things in X which aren't covered by the tutorial quicksand?
+
+559
+01:13:49,571 --> 01:14:01,450
+Yeah. Yeah. Sometimes trying to hammer a framework into doing the special thing you needed to do is more trouble than it's worth.
+
+560
+01:14:01,451 --> 01:14:05,741
+That's why I like micro frameworks, you know, frameworks that are.
+
+561
+01:14:06,691 --> 01:14:14,001
+You know, you can pick and choose the parts that you need. So for because when you fight a framework, that's when things go sideways.
+
+562
+01:14:14,011 --> 01:14:18,561
+If you don't do the things that the framework expects you to do. I find that that's when you go sideways.
+
+563
+01:14:18,571 --> 01:14:23,251
+And so being able to pick and choose the parts that you're like, okay, this is what I'm going to do,
+
+564
+01:14:23,251 --> 01:14:29,460
+what the framework does for these things by me to do my special thing over here, that is usually your best bet.
+
+565
+01:14:29,461 --> 01:14:36,271
+And that's why I like micro frameworks or frameworks that are composed of parts that you can sort of shop around and choose.
+
+566
+01:14:37,471 --> 01:14:40,831
+And I really like it because it's really small.
+
+567
+01:14:40,831 --> 01:14:47,431
+It's just the view layer, like it's not trying to solve server side components or anything like that.
+
+568
+01:14:49,291 --> 01:14:54,951
+Okay, we've got ourselves in OPPT built. We got ourselves a race.
+
+569
+01:14:55,581 --> 01:15:03,351
+All right, here we go. Let's get some history. Let's open up the toolbox.
+
+570
+01:15:09,541 --> 01:15:15,201
+That's windows jumped last time. Much faster.
+
+571
+01:15:15,211 --> 01:15:32,341
+Clear history. We're going to set a breakpoint here and here, and I'm going to say, let's remove this Dostoyevsky thing removed from list.
+
+572
+01:15:33,911 --> 01:15:48,381
+Now. Uh, windows.
+
+573
+01:15:49,101 --> 01:16:01,641
+Task. Uh, was it. In taskbar jump lists, but when taskbar jump listed equal chrome utils import.
+
+574
+01:16:01,651 --> 01:16:12,771
+Yes. Module. That's nice.
+
+575
+01:16:14,021 --> 01:16:20,801
+Yes. Taskbar. Update.
+
+576
+01:16:21,741 --> 01:16:24,831
+All right, here we go. So do we have some specs to remove?
+
+577
+01:16:27,601 --> 01:16:32,551
+Yes. That one.
+
+578
+01:16:34,271 --> 01:16:38,821
+Um, so we're going to do a mapping. Do we have our eyes to remove?
+
+579
+01:16:43,911 --> 01:16:48,021
+Yes, we have. NCAI you are I. We're going to go in here.
+
+580
+01:16:54,481 --> 01:17:06,831
+Okay. Remove.
+
+581
+01:17:06,851 --> 01:17:18,151
+This is the part that I care about. Removes pages from the database.
+
+582
+01:17:24,751 --> 01:17:33,191
+Uh, well, quids. This is it looks like this is the part where it actually happens.
+
+583
+01:17:36,771 --> 01:17:51,801
+I'll count. To remove.
+
+584
+01:17:59,221 --> 01:18:06,961
+I'd like a break point there, please. Fine result.
+
+585
+01:18:11,771 --> 01:18:17,811
+False. Remove pages.
+
+586
+01:18:23,401 --> 01:18:31,561
+Didn't actually do it. And the pages.
+
+587
+01:18:36,071 --> 01:18:41,891
+There is one URL, and this is what we tried to remove and we failed to do it.
+
+588
+01:18:45,761 --> 01:18:50,291
+Why? Why did we fail? That's the interesting part.
+
+589
+01:18:50,411 --> 01:18:59,501
+That's what I want to know. Should have. So this is something that we can actually tinker with ourselves by.
+
+590
+01:19:03,971 --> 01:19:07,301
+Calling clear history directly. Okay.
+
+591
+01:19:10,121 --> 01:19:16,661
+So I'm going to hit play and I'm going to say, Let's get this URL.
+
+592
+01:19:18,101 --> 01:19:26,241
+Copy. You URL should be the whole thing.
+
+593
+01:19:26,391 --> 01:19:30,201
+Yeah. We're going to say when taskbar jump lists.
+
+594
+01:19:33,061 --> 01:19:37,431
+Is it on the. No, it's on the Builders Builder.
+
+595
+01:19:40,281 --> 01:19:45,111
+Clear history. And I'm going to pass this string.
+
+596
+01:19:47,741 --> 01:19:58,401
+Okay. Yep. Enter here into the part we actually care about.
+
+597
+01:19:58,971 --> 01:20:01,971
+And it's this remove function. Remove.
+
+598
+01:20:13,531 --> 01:20:19,731
+Where is from? Just from. Fetch.
+
+599
+01:20:22,081 --> 01:20:26,271
+So confirm or remove. Here we go.
+
+600
+01:20:35,561 --> 01:20:39,941
+Oh, not quite. It's a different kind of remove.
+
+601
+01:20:50,941 --> 01:20:56,241
+Okay, step into that. Here we go.
+
+602
+01:21:11,751 --> 01:21:17,861
+Jim Gray Very well. In a query.
+
+603
+01:21:22,541 --> 01:21:36,331
+In history for this thing. It's not in history, it claims.
+
+604
+01:21:37,621 --> 01:21:43,501
+So the URL that we're trying to remove is not in history, it says.
+
+605
+01:21:45,391 --> 01:21:52,411
+This thing. And if we look at history.
+
+606
+01:21:55,581 --> 01:21:58,701
+Today. Something about Dostoyevsky.
+
+607
+01:22:09,701 --> 01:22:13,571
+Just after his death. Oh, it isn't okay.
+
+608
+01:22:13,691 --> 01:22:17,591
+It is gone. Okay, so it's working.
+
+609
+01:22:19,781 --> 01:22:23,921
+Hold up. All right. Something that's in history.
+
+610
+01:22:23,921 --> 01:22:27,791
+Let's. Car ownership is expensive. Let's do that one.
+
+611
+01:22:29,231 --> 01:22:34,741
+Let's do the car. Ownership is expensive. One. Remove.
+
+612
+01:22:40,881 --> 01:22:52,301
+Um. And we're going to remove.
+
+613
+01:22:56,471 --> 01:23:17,051
+At this thing. So it is working because it got rid of one of them.
+
+614
+01:23:18,251 --> 01:23:21,971
+Okay. Remove.
+
+615
+01:23:22,001 --> 01:23:26,631
+Disable all breakpoints. Let's try this again.
+
+616
+01:23:26,751 --> 01:23:33,041
+We're going to remove. Now, there's nothing in our jump list.
+
+617
+01:23:39,681 --> 01:23:43,251
+Okay. Cut. Cover. Keke Palmer.
+
+618
+01:23:43,401 --> 01:23:46,821
+Is that in library? Yes.
+
+619
+01:23:48,861 --> 01:23:53,311
+Remove. Update.
+
+620
+01:23:57,651 --> 01:24:01,851
+It's gone. Update.
+
+621
+01:24:03,631 --> 01:24:08,011
+And then it tries to remove it again. And then it works.
+
+622
+01:24:15,671 --> 01:24:25,991
+So that's an interesting issue. We're like, it'll tell us how much should a sandwich cost remove from list tells us to remove it.
+
+623
+01:24:32,611 --> 01:24:39,541
+And then all of our tasks are gone. And then we call up date again, and now they're back.
+
+624
+01:24:41,251 --> 01:24:48,421
+And then also tells us to remove it again and then everything's fine.
+
+625
+01:24:49,051 --> 01:24:53,131
+So not quite. We don't have exactly the behavior that we want.
+
+626
+01:25:19,971 --> 01:25:28,391
+I think I know why. I think I know why when you remove an item from the list.
+
+627
+01:25:31,841 --> 01:25:35,411
+Here. I mean, when you remove an item from the jump list.
+
+628
+01:25:36,101 --> 01:25:44,451
+The. Oh, boy.
+
+629
+01:26:04,021 --> 01:26:08,731
+Okay. When you remove an item from the the the way that we've currently structured things.
+
+630
+01:26:12,771 --> 01:26:20,001
+The list of removals happens right here or like that's when we get is when we begin the jump lists the jobless back and goes,
+
+631
+01:26:20,001 --> 01:26:22,671
+Oh, by the way, here are the things that had been removed in the meantime.
+
+632
+01:26:24,111 --> 01:26:31,401
+If one of the things that was passed to populate the jump list is one of the things that was removed.
+
+633
+01:26:33,801 --> 01:26:40,791
+We're going to have a bad time. I have a feeling it's going to error out inside of here and we will abort.
+
+634
+01:26:47,621 --> 01:26:51,851
+That's probably what's happening. And then the subsequent time.
+
+635
+01:26:51,931 --> 01:26:57,421
+Then like what's returned is hang on your eyes to.
+
+636
+01:27:00,271 --> 01:27:06,021
+How is resolving? Shoot?
+
+637
+01:27:06,021 --> 01:27:10,131
+No, I don't know what's happening. I don't know what's happening.
+
+638
+01:27:12,841 --> 01:27:20,521
+Here's what I'm going to do to sort of verify this. We are going to have our breakpoints here.
+
+639
+01:27:21,541 --> 01:27:25,111
+Uh, I'm just going to have this one that I'm going to re-enable.
+
+640
+01:27:25,741 --> 01:27:38,011
+And then the other one is in populate jump list. The custom descriptions we're going to.
+
+641
+01:27:41,631 --> 01:27:45,591
+We're going to set a break point here. Okay. So let's remove one.
+
+642
+01:27:45,591 --> 01:27:49,251
+Let's remove the workers at the front lines, blah, blah, blah.
+
+643
+01:27:49,521 --> 01:27:53,811
+Okay. Now, update. So.
+
+644
+01:27:56,481 --> 01:27:59,871
+How did we get here? In start build.
+
+645
+01:28:03,621 --> 01:28:13,241
+Because somehow we're in build list legacy. I'm dying.
+
+646
+01:28:13,481 --> 01:28:17,301
+We forgot to turn on the new back end. Oh.
+
+647
+01:28:18,681 --> 01:28:25,401
+I'm going to have a heart attack. Okay, so we forgot to turn on the new back and everybody in this OPPT build.
+
+648
+01:28:32,241 --> 01:28:40,791
+So let's restart. Let us restart.
+
+649
+01:28:44,861 --> 01:28:48,071
+Coding is the best. The joy of coding.
+
+650
+01:28:49,021 --> 01:28:53,581
+It wasn't supposed to be sarcastic. Okay.
+
+651
+01:28:53,581 --> 01:28:57,521
+Used our new back end. That's.
+
+652
+01:29:00,951 --> 01:29:10,021
+Let's run our thing. Well. We want to import the module and then update.
+
+653
+01:29:11,851 --> 01:29:23,581
+All right. Let's go. And it removed air revolution, outsourced workers.
+
+654
+01:29:25,611 --> 01:29:31,371
+Okay. Cool.
+
+655
+01:29:32,991 --> 01:29:40,581
+So now let's get rid of our break points here. Let's get rid of six signs.
+
+656
+01:29:40,591 --> 01:29:45,651
+You're in a toxic relationship. Remove and let's open up.
+
+657
+01:29:47,361 --> 01:29:51,051
+Here. So we're expecting that to go away after I call.
+
+658
+01:29:51,051 --> 01:29:55,341
+Update. Unexpected.
+
+659
+01:30:00,381 --> 01:30:07,901
+Unexpected. Um.
+
+660
+01:30:12,371 --> 01:30:32,501
+And is this because. Six key signs are not exactly custom descriptions.
+
+661
+01:30:34,761 --> 01:30:37,911
+Does it have the one that we try to remove six key signs?
+
+662
+01:30:37,941 --> 01:30:55,761
+Yes, it does. Okay.
+
+663
+01:30:56,691 --> 01:31:01,251
+So I think we need to make an adjustment to our strategy here. Okay.
+
+664
+01:31:02,751 --> 01:31:06,141
+I know what's going on. I know what we need to do. And I think we have to do it next time.
+
+665
+01:31:07,371 --> 01:31:10,941
+So it's the problem that I was describing, which I'm going to reiterate here.
+
+666
+01:31:11,571 --> 01:31:15,140
+Whenever you remove an item from the jump list, Windows remembers that.
+
+667
+01:31:15,141 --> 01:31:18,801
+And the next time you call begin list, it returns to you.
+
+668
+01:31:19,431 --> 01:31:22,760
+That collection of things that was removed.
+
+669
+01:31:22,761 --> 01:31:25,821
+In our case, it's a list of URLs, pages of web pages.
+
+670
+01:31:26,421 --> 01:31:34,251
+And the way we've structured populate jump list. We hand those back as part of the resolution of populating the jump list.
+
+671
+01:31:36,441 --> 01:31:39,981
+But here's the problem. If you're ever in a situation,
+
+672
+01:31:39,981 --> 01:31:45,290
+and this might be actually a very common situation where you just removed an item
+
+673
+01:31:45,291 --> 01:31:50,331
+from the jump list and the set of things that you're asking to populate it with,
+
+674
+01:31:51,001 --> 01:31:57,380
+they there's an intersection like you're you're attempting to add to the jump list, something that was removed.
+
+675
+01:31:57,381 --> 01:31:58,671
+Windows is going to complain.
+
+676
+01:32:00,261 --> 01:32:07,851
+So what I what I think we're going to do actually is we're going to augment our builder with another function, which is like,
+
+677
+01:32:09,271 --> 01:32:17,181
+uh, like check for removed or something which will resolve with the list of any pages that should be removed.
+
+678
+01:32:18,111 --> 01:32:27,441
+Then we can clear them from history on update. And then once that's done, then we do our query and then we populate the jump list.
+
+679
+01:32:27,831 --> 01:32:35,001
+That's what I think we should do. Wow.
+
+680
+01:32:35,661 --> 01:32:44,411
+Okay, well, let me write that down. So Nico's idea, this shut down leak that stopped being an issue.
+
+681
+01:32:44,421 --> 01:32:48,741
+We figured that out. I think this is all related to this.
+
+682
+01:32:52,121 --> 01:33:05,201
+We need to sample. We need to ask Windows for the set of URLs to remove before we populate with the new list.
+
+683
+01:33:05,981 --> 01:33:11,711
+Before we. Query places and populate with the new list.
+
+684
+01:33:11,741 --> 01:33:22,471
+That means adding a new function. We'll like begin list and then a short list is probably what we'll do.
+
+685
+01:33:24,151 --> 01:33:37,251
+I'm pretty sure begin list. It contains the array of the objects that represent the removed items.
+
+686
+01:33:48,951 --> 01:33:56,421
+So if we can do that, clear out the items from places and then populate, we should be in good shape.
+
+687
+01:33:57,321 --> 01:34:00,621
+It's 240. Could I do that quickly?
+
+688
+01:34:01,611 --> 01:34:05,331
+Maybe we can do it super, super quickly. Let's see if we can do it.
+
+689
+01:34:05,331 --> 01:34:09,441
+Really, really, really, really quickly. Let's see if I can get it done in the next 5 minutes.
+
+690
+01:34:10,161 --> 01:34:18,681
+And if not, well, shucks. So, jump list builder, populate jump list.
+
+691
+01:34:19,521 --> 01:34:25,361
+We're going to call this thing promise. Check for removals.
+
+692
+01:34:32,551 --> 01:34:41,341
+And then we'll say like this to do mention that this needs to happen first before populating.
+
+693
+01:34:43,691 --> 01:34:47,351
+Um, so we've got our new check for removals method.
+
+694
+01:34:47,831 --> 01:34:52,871
+We're going to add our implementation to jump list Builder dot CBP.
+
+695
+01:34:54,191 --> 01:35:06,211
+Um. Check for removals.
+
+696
+01:35:07,941 --> 01:35:19,571
+Uh, we're just going to, uh. And then, uh, we do these things.
+
+697
+01:35:24,871 --> 01:35:39,271
+And. We're just going to do what we normally do, which is to construct the promise that we will then resolve.
+
+698
+01:35:41,171 --> 01:35:47,411
+Here. This is the kind of a boilerplate.
+
+699
+01:35:53,571 --> 01:36:00,711
+Go on to create a promise new run method where we don't need to pass anything.
+
+700
+01:36:05,531 --> 01:36:12,481
+We actually need is. We just need to pass the promise.
+
+701
+01:36:14,361 --> 01:36:25,811
+Do check for removals. Then.
+
+702
+01:36:31,411 --> 01:36:34,801
+We need to also. I just realized.
+
+703
+01:36:36,861 --> 01:36:40,791
+To help us build our populate jump list is going to resolve.
+
+704
+01:36:41,841 --> 01:36:45,651
+It's not going to resolve with the list anymore.
+
+705
+01:36:46,911 --> 01:36:51,561
+So we're going to need to update to populate jump list as well.
+
+706
+01:36:53,841 --> 01:37:02,271
+Um, whereas before it was like returning this you or I's to remove.
+
+707
+01:37:03,991 --> 01:37:07,731
+It's just going to. Well here.
+
+708
+01:37:08,121 --> 01:37:13,211
+Before I remove that, let's let's implement do check for removals.
+
+709
+01:37:19,181 --> 01:37:30,071
+And it just takes the promise. And we presume we're not on the main thread.
+
+710
+01:37:32,661 --> 01:37:39,981
+And we're going to, uh, make sure we have a jump list back end.
+
+711
+01:37:50,931 --> 01:37:57,701
+And then we are going to. Um.
+
+712
+01:37:59,391 --> 01:38:11,901
+Do the support list Begin List Dance. Um.
+
+713
+01:38:20,241 --> 01:38:31,101
+Jerry. Okay.
+
+714
+01:38:31,911 --> 01:38:37,011
+And then. We're in a board list again.
+
+715
+01:38:42,181 --> 01:38:47,601
+Because we were halfway through beginning one. And then you arise to remove.
+
+716
+01:38:55,991 --> 01:39:13,581
+We just do this right? This part. Right.
+
+717
+01:39:16,611 --> 01:39:22,751
+To check for removals. Do that.
+
+718
+01:39:25,181 --> 01:39:37,121
+And then over here. We will need to ensure that you are eyes to remove is actually empty.
+
+719
+01:39:43,471 --> 01:39:47,131
+If your eyes too removed. Lank.
+
+720
+01:39:49,651 --> 01:39:54,151
+Vehicles and spare unexpected. Turn.
+
+721
+01:39:57,621 --> 01:40:04,791
+To do. Add useful logging about check for removals.
+
+722
+01:40:08,111 --> 01:40:11,141
+Then those your eyes to remove are never used again.
+
+723
+01:40:13,121 --> 01:40:25,691
+So we don't need to do this. Maybe resolve with undefined.
+
+724
+01:40:27,831 --> 01:40:33,761
+And up here. Maybe resolve.
+
+725
+01:40:33,911 --> 01:40:39,851
+Yeah, that looks right. Okay, so then the other thing we need to do is declare this function.
+
+726
+01:40:43,111 --> 01:40:50,611
+Two clear jumpers do populate jump lists. It's basically do check for removals.
+
+727
+01:40:58,871 --> 01:41:04,770
+Then over in this land build list.
+
+728
+01:41:04,771 --> 01:41:12,451
+Legacy. No, no, no. Not in build this legacy. What we're going to do.
+
+729
+01:41:12,451 --> 01:41:16,921
+Anything to build the lead actor jump list.
+
+730
+01:41:18,091 --> 01:41:28,861
+Return is building. Let your eyes to remove, what do we call them?
+
+731
+01:41:29,851 --> 01:41:35,291
+Removed URLs. People.
+
+732
+01:41:36,911 --> 01:41:42,461
+Uh, this dot. Builder.
+
+733
+01:41:46,441 --> 01:41:55,681
+Check for removals. Check for removals.
+
+734
+01:42:01,431 --> 01:42:10,311
+Oops. And then we're going to move this logic up here and do this over here.
+
+735
+01:42:21,781 --> 01:42:28,941
+If removed. URLs dot length. LS.
+
+736
+01:42:34,841 --> 01:42:39,281
+All right. Let's see what that does. Let's see if this even builds.
+
+737
+01:42:42,971 --> 01:42:46,381
+Build. And that.
+
+738
+01:42:46,831 --> 01:42:50,611
+Did that take me 5 minutes? I think it took me I think it took me 10 minutes.
+
+739
+01:42:52,201 --> 01:42:58,651
+So, yeah, I'm way over. I'm way over, gang. But hey, we're we're an o t we're an o t.
+
+740
+01:43:00,751 --> 01:43:03,961
+That's okay. It's all right.
+
+741
+01:43:09,451 --> 01:43:19,161
+Let's see how bad this rebuild is going to be. Mm.
+
+742
+01:43:21,021 --> 01:43:28,181
+Do not match any declaration. Check for removals. Check for.
+
+743
+01:43:42,061 --> 01:43:46,921
+What's the closest? It's complaining that it's not it doesn't recognize it.
+
+744
+01:43:50,581 --> 01:43:56,961
+Out of line. Definition of check for removals does not match any declaration in Mozilla widget jump list builder.
+
+745
+01:44:00,411 --> 01:44:06,581
+Okay, Well, what does it think it's supposed to be?
+
+746
+01:44:19,301 --> 01:44:28,751
+Uh, jump with Bill There died H And as I jump this bill, where are you?
+
+747
+01:44:31,431 --> 01:44:46,011
+I'm being like one of the includes. There are check for removals.
+
+748
+01:44:49,751 --> 01:44:53,711
+That's A.I. method. Yeah, Come on. That's what I've gotten here.
+
+749
+01:44:55,631 --> 01:44:58,871
+And that's I method and check for removals.
+
+750
+01:44:59,711 --> 01:45:02,891
+Oh, I forgot. I forgot.
+
+751
+01:45:04,451 --> 01:45:09,011
+We need some decoration. Implicit jazz context.
+
+752
+01:45:12,591 --> 01:45:17,731
+That's why. All right, build. Longest 5 minutes ever.
+
+753
+01:45:17,751 --> 01:45:21,981
+I'm glad you enjoy it. Thanks, Greg. That's a blistering review from Craig, everybody.
+
+754
+01:45:22,941 --> 01:45:25,971
+Longest 5 minutes ever. I know. I'm just.
+
+755
+01:45:26,061 --> 01:45:32,111
+I'm just messing with you. I know, I know you mean well. But, yes, time.
+
+756
+01:45:32,151 --> 01:45:35,421
+Time is fluid. I said 5 minutes. It's taking ten.
+
+757
+01:45:35,871 --> 01:45:39,171
+It's taking 15. I'm like 20 minutes into these. 5 minutes?
+
+758
+01:45:41,511 --> 01:45:47,931
+Yeah. Oh, now what? Warning functions now return value in our control paths and jump this builder to 85.
+
+759
+01:45:54,301 --> 01:46:08,211
+Oh, yeah. This needs to return it, and it's okay. Wish I could run on Mike time when coding.
+
+760
+01:46:08,931 --> 01:46:13,161
+Yeah, I have a pocket dimension.
+
+761
+01:46:14,841 --> 01:46:18,021
+That's where pivoting Mozilla's pocket product.
+
+762
+01:46:18,501 --> 01:46:26,841
+It's no longer really or service. It's a pocket dimension where you can change how time works.
+
+763
+01:46:28,691 --> 01:46:37,961
+Still in R&D phase. Shout out to the pocket team to love pocket.
+
+764
+01:46:41,751 --> 01:46:47,451
+Excuse me. All right. I'm not going to debug this if.
+
+765
+01:46:47,781 --> 01:46:50,991
+If there's something wrong here. I just want to run it once.
+
+766
+01:46:52,011 --> 01:46:55,771
+See what happens, and then we can pick it up next time.
+
+767
+01:46:55,821 --> 01:47:00,771
+Smurf. He wants to know where he can. Where? Where he wants to know where he can sign up for the pocket dimension.
+
+768
+01:47:02,121 --> 01:47:13,571
+Fox voting. I will let you know whenever a sign ups have been, uh, when we're ready for community involvement with our time travel initiative.
+
+769
+01:47:21,661 --> 01:47:27,841
+Imagine. Imagine that pivot. Wow.
+
+770
+01:47:30,841 --> 01:47:35,461
+It's like to to to fulfill the mission.
+
+771
+01:47:37,291 --> 01:47:44,611
+Mozilla has invented time travel. We need to go back in time and tell Windows to change their jump list API.
+
+772
+01:47:48,851 --> 01:47:52,211
+No, it's a mistake. You shouldn't have designed it that way here.
+
+773
+01:47:52,481 --> 01:47:57,341
+It's a better dimension. It's a better idea.
+
+774
+01:48:01,511 --> 01:48:14,861
+So I just noticed, by the way, the the Thunderbird the Thunderbird team has that new logo and they've got a variant for it for like their nightly,
+
+775
+01:48:15,551 --> 01:48:19,791
+um, their development channel. And it's pretty cool looking.
+
+776
+01:48:19,811 --> 01:48:23,201
+I'm just going to pull this over, check that out. And that's pretty cool.
+
+777
+01:48:24,941 --> 01:48:34,511
+It's pretty cool. All right, build, Build O Baggins.
+
+778
+01:48:34,511 --> 01:48:37,531
+That's what I should call my bill machine. Bill, though.
+
+779
+01:48:37,541 --> 01:48:41,891
+Baggins. Let's go here.
+
+780
+01:48:46,781 --> 01:48:51,071
+While we're waiting on this, if you have any questions.
+
+781
+01:48:51,071 --> 01:48:58,811
+Yeah, this is a good opportunity, actually, to ask the crowd if they have any questions, you can send me them.
+
+782
+01:48:59,081 --> 01:49:03,661
+So in the agenda down here, there is a rate this episode form.
+
+783
+01:49:03,671 --> 01:49:06,911
+I'm going to put that a link to that in the chat right now.
+
+784
+01:49:08,951 --> 01:49:12,701
+And one of the last things you can do in that form is you can ask me a question.
+
+785
+01:49:12,911 --> 01:49:19,011
+If there's something you want to know, maybe you want to know about. JavaScript.
+
+786
+01:49:20,121 --> 01:49:24,711
+Maybe you want to know about Gecko or Firefox or C++ or Zulu Dog.
+
+787
+01:49:27,351 --> 01:49:34,461
+You know what hardware I'm using or what? What my favorite brand of socks are.
+
+788
+01:49:34,551 --> 01:49:40,071
+Just let me know. Just send. Send your send your questions.
+
+789
+01:49:40,071 --> 01:49:44,631
+And my favorite brand of socks is darn tough socks.
+
+790
+01:49:46,321 --> 01:49:50,191
+I'm not sponsored by darn tough socks, but holy smokes, they're the best socks.
+
+791
+01:49:52,801 --> 01:49:57,121
+All right, let's get ourselves going here. Um.
+
+792
+01:50:07,541 --> 01:50:11,471
+Update removed URLs OC.
+
+793
+01:50:16,621 --> 01:50:19,681
+Are we working? So how Barbados became a leader.
+
+794
+01:50:19,831 --> 01:50:28,601
+Remove. Yeah, it works.
+
+795
+01:50:28,871 --> 01:50:33,191
+I'm pretty sure. Let's. Let's look at our the history here.
+
+796
+01:50:33,941 --> 01:50:39,521
+What we'll do is we'll have history kind of exist on the side here.
+
+797
+01:50:39,791 --> 01:50:43,571
+Let's go over here. I'll have this exists over here.
+
+798
+01:50:43,991 --> 01:50:47,050
+Let's. Let's add some things to history. Like the lonely.
+
+799
+01:50:47,051 --> 01:50:50,950
+Can cognitive behavior change our lives?
+
+800
+01:50:50,951 --> 01:50:55,211
+And Kate Palmer and Keke Palmer.
+
+801
+01:50:56,261 --> 01:51:01,781
+Okay. And so let's update again. Okay.
+
+802
+01:51:01,991 --> 01:51:07,931
+Cut, cover. Keke Palmer. Let's. Let's remove the Keke Palmer one.
+
+803
+01:51:08,111 --> 01:51:15,771
+Let's get those five icons. There we go. And he eventually those will update.
+
+804
+01:51:17,301 --> 01:51:22,781
+Eventually we'll get that fabric on. But for now, Keke Palmer, let's remove the Keke Palmer one.
+
+805
+01:51:23,661 --> 01:51:36,591
+We have the that thing there, you know, right click, right click remove from this list and now pull up this.
+
+806
+01:51:39,951 --> 01:51:43,521
+Update. It's gone.
+
+807
+01:51:43,821 --> 01:51:46,911
+It's gone. Gang removed. Keke Palmer.
+
+808
+01:51:47,541 --> 01:51:53,181
+And then this is perfect. We did a car.
+
+809
+01:51:53,181 --> 01:52:01,241
+Ownership is expensive. Removed from the list. Yay!
+
+810
+01:52:04,731 --> 01:52:12,571
+Let's play some sounds to celebrate. That's right.
+
+811
+01:52:16,141 --> 01:52:19,501
+Oh, yeah. Oh, yeah.
+
+812
+01:52:20,341 --> 01:52:25,441
+Oh, yeah. So that's a strong way to end the episode.
+
+813
+01:52:25,881 --> 01:52:32,251
+Oh, wow. When Craig did the the party popper and Matrix, suddenly confetti was all over my screen.
+
+814
+01:52:32,251 --> 01:52:35,391
+That was pretty cool. This is great.
+
+815
+01:52:35,401 --> 01:52:42,091
+This is a great foundation for us to finally, finally, finally. The week after next when I'm back from vacation, start with our tests.
+
+816
+01:52:42,721 --> 01:52:48,241
+Finally, we're getting to the tests. We've we've got this more or less debugged and we can start working on our tests.
+
+817
+01:52:48,241 --> 01:52:54,030
+So I'm really happy about that. Thanks for being with me on this wild, wild journey through Windows Jump live stuff.
+
+818
+01:52:54,031 --> 01:53:00,001
+We're going to get there. I'm going to commit this and we can we can pick it up the week after next because I'm gone next week.
+
+819
+01:53:00,361 --> 01:53:05,581
+Reminder no episode next week I'm on vacation. Every cell is a great week next week and I'll see the week after.
+
+820
+01:53:05,611 --> 01:53:09,781
+Thanks, everybody, for watching. Take care. I will talk to you soon.
+
+821
+01:53:10,591 --> 01:53:16,831
+Let me just play a set with a tune. The joy.
+
+822
+01:53:17,671 --> 01:53:20,431
+Oh, Dee Dee.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

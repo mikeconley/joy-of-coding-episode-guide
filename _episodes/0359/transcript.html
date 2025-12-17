@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 359 - March 13, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 359 - March 13, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=98c3800d-a02a-4834-81e8-b12b00f9740a</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=98c3800d-a02a-4834-81e8-b12b00f9740a">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,240 --> 00:00:09,720
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:10,020 --> 00:00:13,979
+Hello and welcome to episode 359 of The Joy of Coding.
+
+3
+00:00:13,980 --> 00:00:20,820
+My name is Mike Conley. It's so good to have you here. We're going to be hacking on some Firefox and Thunderbird stuff today.
+
+4
+00:00:21,000 --> 00:00:24,840
+I hope you're ready for that. Come on in.
+
+5
+00:00:24,870 --> 00:00:28,110
+Gather round. The water's fine. Let me start by sharing my screen.
+
+6
+00:00:30,000 --> 00:00:33,390
+Yeah, It's March 13th, 2024, Episode 359.
+
+7
+00:00:33,720 --> 00:00:37,200
+A reminder I say this before every stream.
+
+8
+00:00:37,200 --> 00:00:39,629
+No plan survives breakfast. I think I know what I want to do today.
+
+9
+00:00:39,630 --> 00:00:47,040
+In fact, last week I'm more or less laid out the plan of what I wanted to do, but I don't know how things are going to go might go horribly wrong.
+
+10
+00:00:47,280 --> 00:00:52,049
+What might get stuck may have problems with building a Thunderbird or getting Thunderbird to respond,
+
+11
+00:00:52,050 --> 00:00:55,650
+or building Firefox, getting Firefox to do stuff. Who knows?
+
+12
+00:00:56,760 --> 00:01:02,940
+But that's okay. You know, like where you're going to watch me just kind of deal for it as deal with it as we go.
+
+13
+00:01:03,270 --> 00:01:08,460
+And and that's the idea behind this thing. It's it's warts and all software development.
+
+14
+00:01:08,520 --> 00:01:09,270
+That's the first thing.
+
+15
+00:01:10,050 --> 00:01:17,550
+The second thing is that the agenda that you're looking at is something that you can follow along with and have access to and click on the links in.
+
+16
+00:01:17,550 --> 00:01:22,350
+If you're so interested, if you're watching this on Mozilla, check out the link to the agenda over there.
+
+17
+00:01:22,680 --> 00:01:26,219
+If you're watching this on YouTube or God's own, it's down to the video description.
+
+18
+00:01:26,220 --> 00:01:33,900
+And on Twitch, it's down in the channel description. I realize today actually when I was setting up the stream that I haven't been updating
+
+19
+00:01:33,900 --> 00:01:39,750
+the link for Twitch for the agenda or the rate this episode form for like the past,
+
+20
+00:01:39,750 --> 00:01:46,110
+I don't know, five episodes. That's my bad. I really wish I had like a script.
+
+21
+00:01:46,800 --> 00:01:48,030
+You know, if I spent time.
+
+22
+00:01:48,030 --> 00:01:56,549
+I like setting up an episode of this streaming series takes maybe like 20 to 30 minutes to sort of like create the things and update the events,
+
+23
+00:01:56,550 --> 00:01:59,760
+like do the do the business, make the pipes all talk to one another.
+
+24
+00:01:59,760 --> 00:02:05,310
+I should probably write a script to automate it. But you know, there's so many services to talk to.
+
+25
+00:02:06,300 --> 00:02:12,330
+Who knows? Maybe it's possible I haven't looked into it, but it's manual right now and that one just fell through the cracks.
+
+26
+00:02:14,040 --> 00:02:15,330
+What are we working on today?
+
+27
+00:02:15,330 --> 00:02:23,910
+Well, last episode, we kind of ended it on a cliffhanger where we finally got our fav icon fetching utility that we'd written for.
+
+28
+00:02:25,080 --> 00:02:31,559
+It's in win utils, it's for the jump list, but a couple of other utilities use it or a couple of other components.
+
+29
+00:02:31,560 --> 00:02:35,700
+Use this fabric on fetching and caching utility. We gotten it to build.
+
+30
+00:02:35,790 --> 00:02:40,140
+So we've been struggling with using Mars promise and getting it to build properly.
+
+31
+00:02:40,140 --> 00:02:46,709
+And finally it built and I don't know if it's correct, don't know if it's stable, don't know if it does anything really.
+
+32
+00:02:46,710 --> 00:02:54,150
+But the easiest way to actually check beyond writing a test in this case, which I don't necessarily want to do right now,
+
+33
+00:02:54,390 --> 00:03:00,840
+is to wire it up to the front end and then invoke it via JavaScript and then see if it does what we expect it to do.
+
+34
+00:03:01,740 --> 00:03:03,210
+That's what I'm hoping to do today.
+
+35
+00:03:03,510 --> 00:03:13,200
+But also I'm hoping to do this other thing, which is to update Thunderbird desktop because you know that the Thunderbird team has adopted canine mail.
+
+36
+00:03:13,200 --> 00:03:22,110
+I don't know if you knew that, but like for since I was working on Thunderbird like ten, 15 years ago, 13, 15, 2011, what years at 13 years ago,
+
+37
+00:03:23,130 --> 00:03:26,400
+people have been asking for an Android client, a Thunderbird, Android client,
+
+38
+00:03:26,610 --> 00:03:30,450
+and we've kind of batted around and it was like, it's too hard, too expensive, couldn't figure it out.
+
+39
+00:03:31,020 --> 00:03:40,230
+And then the current Thunderbird team did the did a really smart thing, which is that they reached out to the developers of K9 mail,
+
+40
+00:03:41,460 --> 00:03:45,780
+you know, which is a great, a great email client for Android if you've never used it.
+
+41
+00:03:45,960 --> 00:03:48,840
+And they were like, Hey, you want to join the family,
+
+42
+00:03:48,840 --> 00:03:55,079
+You want to become the Thunderbird email client on Android and the canine mail, people were like, Let's do it.
+
+43
+00:03:55,080 --> 00:04:02,909
+And so there's this partnership going on now where the the Thunderbird, the L.A. organization, is taking over development.
+
+44
+00:04:02,910 --> 00:04:08,580
+They hired the people who had been working on canine mail and they were working there, working, I should say.
+
+45
+00:04:08,580 --> 00:04:16,710
+They're working right now on turning K9 mail into the Android client, the Thunderbird Android client, which is great.
+
+46
+00:04:16,830 --> 00:04:23,430
+I'm really excited for that. I'm excited to finally use Thunderbird on my phone at some point.
+
+47
+00:04:23,640 --> 00:04:32,760
+Okay. Well, the thing I wanted to hopefully do today was to said found the community and yeah, as me,
+
+48
+00:04:33,450 --> 00:04:40,049
+I wanted to start by updating Thunderbird to use the off main thread jump list stuff that we wrote back in 2223.
+
+49
+00:04:40,050 --> 00:04:49,020
+And the reason I figure I think I can do that right now is I actually have an opt build building for the for Firefox for our fab icon thing.
+
+50
+00:04:49,020 --> 00:04:52,110
+And that's probably going to take a little while because I kicked it off too late.
+
+51
+00:04:52,290 --> 00:04:59,850
+But I have a parallel, like a finished artifact build of Thunderbird over here that I think we can use.
+
+52
+00:05:00,510 --> 00:05:05,220
+Now. This is very risky because I use something called Moore's.
+
+53
+00:05:05,830 --> 00:05:08,080
+Config wrapper to set up my mom's config.
+
+54
+00:05:08,380 --> 00:05:16,150
+And I'm pretty sure that when you choose a mars config and start the build, the mom's config is right at the beginning and held in memory.
+
+55
+00:05:16,150 --> 00:05:25,270
+And so this build should continue. Fine. But I'm going to change my chosen mods config to use tbe artifact, which is the artifact build mods config.
+
+56
+00:05:25,270 --> 00:05:33,370
+I set up to build Thunderbird and and hopefully this build won't suddenly get very confused and start making Thunderbird stuff happen.
+
+57
+00:05:34,900 --> 00:05:40,030
+We'll see. We'll see. But I've got to build here. I built it earlier today.
+
+58
+00:05:40,660 --> 00:05:42,250
+Let's fire it up and take a look.
+
+59
+00:05:46,350 --> 00:05:56,850
+So I've got like a test email account, I've got a test email contact there in the address book, and I've got this in my jump place now.
+
+60
+00:05:56,940 --> 00:06:02,069
+One thing I noticed right off the bat is that there is a slight difference between what's in
+
+61
+00:06:02,070 --> 00:06:08,399
+the jump list on Thunderbird Daily and my instance of Thunderbird where there are these tasks.
+
+62
+00:06:08,400 --> 00:06:10,200
+Write a new message, an open address book.
+
+63
+00:06:10,200 --> 00:06:16,320
+So that's the first thing I want to answer is how come my build, my local build doesn't have those items here?
+
+64
+00:06:18,680 --> 00:06:22,290
+Leftmost cat asks, Is build with an alias or is it part of Moore's build?
+
+65
+00:06:22,530 --> 00:06:27,330
+It's part of Moore's config wrapper. So that's how I manage multiple Moore's configs.
+
+66
+00:06:28,650 --> 00:06:36,270
+This is a tool that Al wrote and I recommend you check it out if you use Moore's configs because it allows you to
+
+67
+00:06:36,270 --> 00:06:40,649
+switch back and forth between different Moore's configs fairly easily and then it gives you these different commands.
+
+68
+00:06:40,650 --> 00:06:44,850
+Build with Mac Moore's config, remove Moore's config editor, Moore's config,
+
+69
+00:06:44,850 --> 00:06:50,760
+etc. works on Windows, works on Linux, works on Mac was written in Python, I think.
+
+70
+00:06:52,530 --> 00:07:01,290
+All right. So how come that's the first question? How come those two items write an ad, write an email and open the address book Art in here.
+
+71
+00:07:01,800 --> 00:07:02,610
+So let's figure that out.
+
+72
+00:07:03,450 --> 00:07:10,170
+So the way I tend to do this, like I don't know the answer to this question, So you're going to watch me try and figure this out?
+
+73
+00:07:10,770 --> 00:07:17,099
+We're going to the way I'm going to do this is I'm going to start digging into see how Thunderbird talks to the jump list already.
+
+74
+00:07:17,100 --> 00:07:26,380
+I think I recall it having. A similar kind of setup using something called the Jump List Builder.
+
+75
+00:07:27,810 --> 00:07:34,080
+Bail modules, windows, jump lists. I think this is it. And there are some preps.
+
+76
+00:07:34,080 --> 00:07:43,800
+There's like tasks enabled, taskbar enabled, and I wonder if that's the first thing is like are the tasks enabled?
+
+77
+00:07:44,280 --> 00:07:51,990
+Let's find out if I go into I believe I have to go and do some special stuff to get to a boat config inside of.
+
+78
+00:07:53,950 --> 00:08:02,370
+Inside of Thunderbird. Let me just see if I remember how to do this, uh, cache config editor.
+
+79
+00:08:02,380 --> 00:08:07,630
+Here it is. Um, and what's the mail taskbar?
+
+80
+00:08:07,720 --> 00:08:14,660
+That's the branch. Lis enabled true tasks Enabled is true.
+
+81
+00:08:15,050 --> 00:08:21,700
+So these things are on. And these are the tasks that I'm expecting.
+
+82
+00:08:21,710 --> 00:08:25,580
+This is the one to create an email, this one to open the address book.
+
+83
+00:08:26,330 --> 00:08:34,070
+And I guess we must not have invoked some of this stuff.
+
+84
+00:08:34,370 --> 00:08:42,890
+When is this stuff invoked? I guess that's my my other question is like when is when taskbar jump plus startup called.
+
+85
+00:08:44,090 --> 00:08:48,800
+It's called in and a sweet glue, but that's for the sweet.
+
+86
+00:08:55,140 --> 00:08:58,770
+Who calls it for male.
+
+87
+00:09:02,680 --> 00:09:05,980
+Male, male, male glue. Male glue. Here it is.
+
+88
+00:09:07,970 --> 00:09:12,150
+If. The services available.
+
+89
+00:09:12,150 --> 00:09:15,630
+Then we do these things on first window loaded. Okay.
+
+90
+00:09:18,180 --> 00:09:21,930
+And let's go inside of startup. Let's presume it's it's run.
+
+91
+00:09:22,140 --> 00:09:28,860
+And so startup would see whether or not init taskbar works it should because I'm running Windows ten.
+
+92
+00:09:30,330 --> 00:09:34,889
+So one thing we can do is we can check to see if underscore tasks exists on when
+
+93
+00:09:34,890 --> 00:09:39,420
+taskbar jump list because that would tell us whether or not startup had run.
+
+94
+00:09:39,430 --> 00:09:47,069
+That's just like a cheap and easy way of of of of sort of testing after that you know
+
+95
+00:09:47,070 --> 00:09:52,680
+Thunderbird had already started up so I'm going to open up the developer toolbox.
+
+96
+00:09:57,680 --> 00:10:08,120
+And we're going to go to the console here, and I'm going to say that's when taskbar jumps and we're going to see if the tasks have been populated.
+
+97
+00:10:10,810 --> 00:10:15,730
+I don't think they have. Hang on, hang on.
+
+98
+00:10:16,120 --> 00:10:22,630
+Let me just double check. You got that right. Tasks should have been set and they weren't.
+
+99
+00:10:27,370 --> 00:10:30,190
+Let's see what happens if I run a startup.
+
+100
+00:10:32,450 --> 00:10:38,720
+I'm going to launch the debugger or I'm going to go into the debugger for a sec here and let's see if we can sort of follow it along.
+
+101
+00:10:39,480 --> 00:10:42,980
+Somedays. Sabatini.
+
+102
+00:10:43,370 --> 00:10:48,920
+Good to see you. Oh, it's so good to have you in the chat.
+
+103
+00:10:49,430 --> 00:10:53,030
+It's. Oh, I'm so happy. So happy right now. I'm getting.
+
+104
+00:10:53,330 --> 00:10:56,540
+I'm getting a lot of vibes, working on Thunderbird, talking with.
+
+105
+00:10:57,710 --> 00:11:01,940
+I think the last time I talked to you, Melanie, I was working. Still working on Thunderbird for a living.
+
+106
+00:11:05,150 --> 00:11:09,140
+What am I doing when Taskbar? What is this file called?
+
+107
+00:11:09,350 --> 00:11:13,070
+Junk list? Yeah. What am I working on?
+
+108
+00:11:13,910 --> 00:11:22,820
+I am working on trying to get Thunderbird to use the new jump list back end that I wrote for Firefox because I want to tear the old one and.
+
+109
+00:11:23,300 --> 00:11:28,130
+And the new one's better because it works completely off of the main threat or mostly off of the main threat.
+
+110
+00:11:28,790 --> 00:11:40,650
+So that's my goal. I it's a little. It's a little selfish because by doing this, I mean it makes Thunderbirds performance better.
+
+111
+00:11:40,770 --> 00:11:49,510
+It won't do so much mean threat IO on Windows, but also I can then get rid of the old Macs now hot and it taskbar fail.
+
+112
+00:11:49,530 --> 00:11:53,860
+That's what's going on. Let's see if we can figure out why. That's.
+
+113
+00:11:53,970 --> 00:11:59,550
+That's. Let's. Let's go in here. Uh, create jump list builder.
+
+114
+00:12:00,240 --> 00:12:12,440
+False. Bill, there is this thing, if not builder or builder.
+
+115
+00:12:13,050 --> 00:12:16,310
+I, I know why it doesn't work.
+
+116
+00:12:17,030 --> 00:12:23,330
+It doesn't work because it's actually using. So I.
+
+117
+00:12:23,680 --> 00:12:30,970
+I think I broke jump lists in Thunderbird. Jump list builder enable.
+
+118
+00:12:34,820 --> 00:12:37,820
+Enabled by default held to nightly.
+
+119
+00:12:41,200 --> 00:12:45,640
+Uh. Where is it?
+
+120
+00:12:46,240 --> 00:12:58,440
+We move. I move the existing windows jump plus composing interfaces to be legacy jump list and create a new off main thread back end implementation.
+
+121
+00:12:58,440 --> 00:13:00,269
+And we need to do either of these things.
+
+122
+00:13:00,270 --> 00:13:10,020
+And and since this happened four months ago, the jump list back end hasn't been like, like Thunderbird hasn't been using the right one.
+
+123
+00:13:10,020 --> 00:13:13,800
+It's been trying to use the new one, but trying to use it in the old way.
+
+124
+00:13:14,760 --> 00:13:19,650
+So I'm going to fix this. That's that's the problem.
+
+125
+00:13:20,400 --> 00:13:24,150
+So let's fix this right now. So that's good.
+
+126
+00:13:24,150 --> 00:13:28,110
+We're actually going to fix a bug. Now. There's a bunch of stuff in here.
+
+127
+00:13:28,110 --> 00:13:33,120
+I think I'm going to close a bunch of stuff.
+
+128
+00:13:33,840 --> 00:13:37,469
+Let's open up a new a new let's get a new window.
+
+129
+00:13:37,470 --> 00:13:42,270
+Actually, I think about it. This is going to be my Thunderbird window open folder.
+
+130
+00:13:43,360 --> 00:13:52,180
+Let's look inside of my Thunderbird source, and then we're going to open up.
+
+131
+00:13:53,140 --> 00:13:59,590
+Com. Where is that file, actually?
+
+132
+00:14:02,070 --> 00:14:10,370
+CHAMBLISS Such as? Oh, did they already?
+
+133
+00:14:10,400 --> 00:14:13,549
+Yes. My good. Good work.
+
+134
+00:14:13,550 --> 00:14:17,660
+Gang mail modules, window jumpers. That's what I want. And they already is, I'm afraid.
+
+135
+00:14:18,740 --> 00:14:24,350
+Good stuff. Good stuff. Thunderbird team. Windows jobless.
+
+136
+00:14:24,380 --> 00:14:32,030
+Here we go. Okay. So I think a lot of this we can actually we can we can keep it.
+
+137
+00:14:34,460 --> 00:14:38,420
+The whole like, task description thing, I think we can keep it.
+
+138
+00:14:39,900 --> 00:14:47,090
+Um, what we're going to do instead and the really nice thing about this is that Thunderbird doesn't do anything like,
+
+139
+00:14:47,480 --> 00:14:57,330
+wildly sophisticated with the jump list, like Firefox shows your history and stuff inside of the, the the jump list and Thunderbird does not.
+
+140
+00:14:57,350 --> 00:15:04,550
+And so we get to skip a lot of the sort of weird nit not weirdness, a lot of the complexity.
+
+141
+00:15:05,960 --> 00:15:13,670
+So here's what we're going to do. We're going to start with a knit taskbar.
+
+142
+00:15:16,180 --> 00:15:20,930
+I have to remind myself what the jump list. Bill there.
+
+143
+00:15:22,150 --> 00:15:25,410
+API is. Is available.
+
+144
+00:15:26,440 --> 00:15:29,910
+So I think.
+
+145
+00:15:32,790 --> 00:15:40,200
+The. We do here is we on a net?
+
+146
+00:15:41,100 --> 00:15:44,700
+I see a net Taskbar is a sink.
+
+147
+00:15:46,190 --> 00:15:50,210
+And startup is a sink.
+
+148
+00:15:52,730 --> 00:15:59,360
+Okay. I think that's what we want to do. Async start up exit.
+
+149
+00:16:01,030 --> 00:16:04,640
+If not a wait. This.
+
+150
+00:16:05,680 --> 00:16:09,190
+Then those are tasks. Right.
+
+151
+00:16:09,310 --> 00:16:12,340
+We're going to rewrite a bunch of this stuff soon. Don't worry about it. Don't worry about it.
+
+152
+00:16:12,340 --> 00:16:20,989
+Don't worry about it. And Nic, Taskbar is going to be a sink. And what we'll do is we'll create a jump list builder.
+
+153
+00:16:20,990 --> 00:16:26,210
+That's still correct. And then which we have to check to see.
+
+154
+00:16:27,820 --> 00:16:35,510
+Is available. Wise return True.
+
+155
+00:16:39,860 --> 00:16:44,030
+And then we'll enter here, we'll refresh preps.
+
+156
+00:16:44,030 --> 00:16:52,999
+Was that mean we'll just like cache the prep values okeydokey and then we'll initial and initialize the observer for preferences,
+
+157
+00:16:53,000 --> 00:16:56,750
+changing a key doc and a shut down observer.
+
+158
+00:16:56,750 --> 00:17:01,790
+And then we'll call update, see if we're enabled. And if we are enabled, we'll build the list.
+
+159
+00:17:01,830 --> 00:17:07,039
+Now this is where things get. Don't leave the last list hanging on the taskbar.
+
+160
+00:17:07,040 --> 00:17:11,630
+So if we're not showing any tasks, let's go ahead and destroy the jump list.
+
+161
+00:17:11,930 --> 00:17:16,010
+And we can do that. We have a clear jump list.
+
+162
+00:17:17,400 --> 00:17:22,260
+So we're going to make build list async as well.
+
+163
+00:17:25,590 --> 00:17:30,220
+Bill list. Is that what I do over here? Filled with.
+
+164
+00:17:33,990 --> 00:17:39,860
+Yeah, it's a async. We're going to wait.
+
+165
+00:17:40,740 --> 00:17:48,690
+And instead of saying well, was delayed, active, jobless, due builder, I guess we can have that in direction.
+
+166
+00:17:51,000 --> 00:17:54,840
+Promise. Clear jump list is what I'd say. But.
+
+167
+00:17:54,870 --> 00:18:01,190
+All right. This builder clear jump list.
+
+168
+00:18:05,010 --> 00:18:10,780
+Clear jump list. And then where's the other caller here?
+
+169
+00:18:10,830 --> 00:18:14,250
+This this one is happening on the preference changing.
+
+170
+00:18:16,050 --> 00:18:19,560
+Uh, and I guess we don't need to have this one.
+
+171
+00:18:19,560 --> 00:18:23,680
+Oh, wait, that's fine. It's fine.
+
+172
+00:18:23,730 --> 00:18:34,680
+It doesn't have to wait. Build list also doesn't have to be a weighted way.
+
+173
+00:18:35,100 --> 00:18:39,600
+Deleting the job list then will return check to see if start build.
+
+174
+00:18:39,870 --> 00:18:44,160
+See this. We can get rid of all this now. We don't need this.
+
+175
+00:18:47,350 --> 00:18:53,700
+I don't need this either. Mostly don't need this.
+
+176
+00:18:56,400 --> 00:19:00,840
+Here's what we're going to do instead. So we don't need start build.
+
+177
+00:19:01,590 --> 00:19:06,630
+We just need to wait. Though their populate jump list.
+
+178
+00:19:10,860 --> 00:19:18,300
+They start build their populate jump list, and then we have to pass it a series of task descriptions.
+
+179
+00:19:18,900 --> 00:19:23,520
+And we're not passing anything for custom, no custom sections.
+
+180
+00:19:23,520 --> 00:19:26,820
+So tasks nothing.
+
+181
+00:19:27,210 --> 00:19:32,160
+And then empty. Empty for this other one.
+
+182
+00:19:32,790 --> 00:19:38,390
+So tasks. This show tasks.
+
+183
+00:19:43,010 --> 00:19:50,870
+We don't need to commit. Populate jump list tasks.
+
+184
+00:19:58,210 --> 00:20:02,920
+What we need to create effectively is stuff that looks like this.
+
+185
+00:20:03,700 --> 00:20:17,030
+These task descriptions. As descriptions equals that that's we're going to pass forward.
+
+186
+00:20:19,640 --> 00:20:29,150
+And then we'll just do this fancy map thing where we map our tasks to the path.
+
+187
+00:20:29,180 --> 00:20:34,610
+Now, here's where we need to get our map.
+
+188
+00:20:35,270 --> 00:20:41,380
+Create handler app item for a task. See, this goes all out.
+
+189
+00:20:41,650 --> 00:20:46,420
+It goes. It gets pretty intense. What do we do over here?
+
+190
+00:20:47,560 --> 00:20:55,390
+I just get the self path. I don't have to do any of that intense stuff around like creating a local handler app.
+
+191
+00:20:58,550 --> 00:21:01,670
+I think we only use this, for example, in the legacy case.
+
+192
+00:21:03,480 --> 00:21:08,840
+Build tasks. And that's was this legacy build.
+
+193
+00:21:08,840 --> 00:21:12,310
+This legacy. Yeah. I don't need that anymore.
+
+194
+00:21:14,240 --> 00:21:21,580
+So. So we'll get the self path.
+
+195
+00:21:29,040 --> 00:21:33,300
+Probably cash that could probably stand to cash that. I don't know why we didn't catch that here.
+
+196
+00:21:34,170 --> 00:21:41,520
+And then we'll for each one of these will pass and a title description.
+
+197
+00:21:42,430 --> 00:21:45,730
+I think that's what we have in these task descriptions up here.
+
+198
+00:21:45,750 --> 00:21:50,010
+Title Description args icon index.
+
+199
+00:21:51,780 --> 00:21:56,519
+So title Description.
+
+200
+00:21:56,520 --> 00:21:59,970
+ARGs icon index. Amazing. That should be it.
+
+201
+00:22:06,690 --> 00:22:14,739
+That should do it. And then I think we can just get rid of a bunch of this stuff.
+
+202
+00:22:14,740 --> 00:22:22,920
+We can get rid of that. Can get rid of this and this.
+
+203
+00:22:28,860 --> 00:22:32,590
+I think this should work. Let's find out.
+
+204
+00:22:33,800 --> 00:22:47,020
+Let's build it and find out. All right.
+
+205
+00:22:50,150 --> 00:22:54,560
+And colleagues, too. I think I can do this with Thunderbird as well.
+
+206
+00:22:54,590 --> 00:22:59,150
+Build faster by M does.
+
+207
+00:23:09,890 --> 00:23:13,640
+I really don't know if Mark built faster works with with Thunderbird.
+
+208
+00:23:13,670 --> 00:23:17,150
+Let's find out. Her bird Mark.
+
+209
+00:23:17,180 --> 00:23:24,660
+Bill counts. Mm hmm.
+
+210
+00:23:25,060 --> 00:23:28,920
+Mm hmm. Well, binaries.
+
+211
+00:23:30,420 --> 00:23:44,180
+Hmm. Might not work. Let's find out. It doesn't look like it worked.
+
+212
+00:23:44,270 --> 00:23:50,810
+Oh, there it is. There it is. Gang. Let's open that address book.
+
+213
+00:23:54,060 --> 00:24:02,590
+Did it work? Yes. Address book, although it looks like it launched.
+
+214
+00:24:05,720 --> 00:24:10,130
+Launched a new window. Different profile.
+
+215
+00:24:11,700 --> 00:24:20,190
+I think that is expected because I'm using a development profile over here.
+
+216
+00:24:22,560 --> 00:24:31,770
+So I think we've got a working jump list now. Nice.
+
+217
+00:24:37,270 --> 00:24:41,760
+Yeah. All right.
+
+218
+00:24:42,360 --> 00:24:47,780
+I'm pretty happy with that. Let's see if there's anything else we can clean up in there.
+
+219
+00:24:47,820 --> 00:24:51,530
+Woops. I didn't mean to open my own Thunderbird. No, no.
+
+220
+00:24:51,540 --> 00:24:54,840
+Close, close, close, close, close, close, close, close, close, close, close.
+
+221
+00:24:55,290 --> 00:24:59,300
+Look away, Look away, Look, look away.
+
+222
+00:24:59,760 --> 00:25:05,040
+Don't look at it. Thank you very much. Don't want you looking at my email, gang.
+
+223
+00:25:06,450 --> 00:25:12,230
+Let me just briefly go back here for a sec and make sure Thunderbird is closed.
+
+224
+00:25:12,330 --> 00:25:22,240
+Yes, it is. Okay. Can't have you be looking at my email because there might be security bugs in there and stuff.
+
+225
+00:25:23,860 --> 00:25:31,000
+All right. So I think we did it. I just like I said, I wanted to double check and see if there's anything we can clean up additionally.
+
+226
+00:25:33,070 --> 00:25:41,170
+So I like the idea of caching this value self path.
+
+227
+00:25:42,970 --> 00:25:48,440
+So let's do that because that's never going to change. So.
+
+228
+00:25:53,040 --> 00:25:57,510
+Utils. Fine. Lazy getter. Lazy.
+
+229
+00:25:58,360 --> 00:26:06,870
+South path. Or maybe just to go with convention here.
+
+230
+00:26:07,230 --> 00:26:18,890
+Self power. Okay.
+
+231
+00:26:23,630 --> 00:26:44,760
+Lazy self path. The other thing that we should check and make sure works is we should make sure that when we disable.
+
+232
+00:26:48,060 --> 00:26:52,600
+I don't know if you have Twitch store VODs, but may want to make sure it doesn't save that bit.
+
+233
+00:26:52,620 --> 00:27:00,640
+I don't know if that means I don't if people are if people are sending me money or like twitch money.
+
+234
+00:27:00,660 --> 00:27:08,730
+You don't have to do that. I appreciate it, but I don't understand twitch culture or money, and I don't know where the money goes.
+
+235
+00:27:09,270 --> 00:27:12,600
+I don't think it's coming to me. Like, just don't. You don't have to worry about that.
+
+236
+00:27:14,550 --> 00:27:20,060
+You don't have to send me money. I appreciate. Just just be nice to each other in the in the in the chat.
+
+237
+00:27:20,070 --> 00:27:26,370
+That's all I need. Oh, I don't know if you have Twitch Star video on demand.
+
+238
+00:27:26,400 --> 00:27:34,550
+Oh, I see. You know, for a while I used to upload copies of my videos to twitch, and then I just stopped doing that.
+
+239
+00:27:34,560 --> 00:27:41,549
+For some reason. I can't remember why I have them all mirrored on YouTube and they're all on air.
+
+240
+00:27:41,550 --> 00:27:45,410
+Mozilla. Um.
+
+241
+00:27:49,100 --> 00:27:53,990
+Okay. So the one thing I wanted to check is if I disable the taskbar.
+
+242
+00:27:57,870 --> 00:28:04,530
+Should. The list should go away. Yeah. And then if I re-enable, it should come back.
+
+243
+00:28:04,860 --> 00:28:09,300
+Yes. Yes! Whoo!
+
+244
+00:28:12,900 --> 00:28:15,960
+That's good stuff. That's good stuff.
+
+245
+00:28:16,800 --> 00:28:22,830
+All right. I'm going to go ahead and take a look at this patch and post it for review.
+
+246
+00:28:24,900 --> 00:28:28,440
+Let's take a quick peek, though, and make sure we didn't put anything embarrassing in it.
+
+247
+00:28:30,960 --> 00:28:36,050
+That was a lot faster than I thought it would be. I thought we might.
+
+248
+00:28:36,240 --> 00:28:40,160
+Oh, right, right, right, right.
+
+249
+00:28:40,440 --> 00:28:50,160
+That's how this works. I thought we'd be spending at least, I don't know, at least an hour on that.
+
+250
+00:28:50,490 --> 00:29:03,840
+But it seemed to go by pretty quick. I guess I should do the same thing for the suite for.
+
+251
+00:29:03,890 --> 00:29:07,020
+For Sea Monkey. I mean.
+
+252
+00:29:09,820 --> 00:29:13,520
+Oh. Guess what?
+
+253
+00:29:13,790 --> 00:29:24,340
+What do they have? What do they have over in sea Monkey land? Sweet.
+
+254
+00:29:26,090 --> 00:29:36,800
+Uh. Sweet clue.
+
+255
+00:29:40,530 --> 00:29:44,610
+I see they actually have a version like the really old version for.
+
+256
+00:29:46,250 --> 00:29:49,370
+For Firefox. Like a copy of that in here. Oops.
+
+257
+00:29:54,100 --> 00:29:57,220
+Yeah. Yeah.
+
+258
+00:29:57,240 --> 00:30:05,380
+Okay. And who? Who touched this stuff last through services Consumers.
+
+259
+00:30:07,740 --> 00:30:13,050
+Ian. Neil. Frank. Phil.
+
+260
+00:30:16,030 --> 00:30:26,500
+But that was back in 2018. Someone might from this from the Sea Monkey team want to update this, but I don't think I'm going to do it.
+
+261
+00:30:27,520 --> 00:30:31,240
+Yeah, leftmost cars, leftmost cat says don't bother with sweet.
+
+262
+00:30:31,840 --> 00:30:34,950
+I think the sea monkey game will sort it out as need be.
+
+263
+00:30:34,960 --> 00:30:41,410
+I don't even think they're going to be. They probably haven't inherited the modern, the modern.
+
+264
+00:30:44,050 --> 00:30:49,890
+They're probably building on an older version of Gecko, meaning that they don't have the newer backlist or Jumbo's back end.
+
+265
+00:30:49,900 --> 00:30:53,320
+So I don't think we have to really super worry about it.
+
+266
+00:30:58,440 --> 00:31:02,310
+Okay, Well, I'm pretty happy with this, actually. So let's go ahead and commit.
+
+267
+00:31:03,540 --> 00:31:09,880
+What is the bug number? Such and such.
+
+268
+00:31:09,890 --> 00:31:18,310
+Update. Mail to use the new jump list builder.
+
+269
+00:31:20,560 --> 00:31:23,620
+API is the new off main thread.
+
+270
+00:31:29,600 --> 00:31:33,020
+And who can review this? Who's a good reviewer for this?
+
+271
+00:31:34,790 --> 00:31:39,470
+So the way I would figure that out is by looking to see who's reviewed it in the past.
+
+272
+00:31:41,750 --> 00:31:48,350
+Well, it was ESM ified and before that, Magnus Allocca.
+
+273
+00:31:52,730 --> 00:31:57,980
+Should I bother Magnus now with this? Why not?
+
+274
+00:31:59,060 --> 00:32:03,650
+Why not? Let's bother Magnus. Okay.
+
+275
+00:32:10,910 --> 00:32:15,710
+Thunderbird reviewers would be my recommendation. Big font.
+
+276
+00:32:16,880 --> 00:32:18,800
+I don't know if you knew that. That's how that came in.
+
+277
+00:32:18,800 --> 00:32:25,820
+Leftmost cab, but I think Element and Matrix, I think by default Element will take a hash and presume you're doing a header.
+
+278
+00:32:26,150 --> 00:32:32,840
+And so what you've. I'm just going to bring the chat up into the foreground for a second so you can see what that looked like.
+
+279
+00:32:35,510 --> 00:32:38,510
+Thunderbird reviewers would be by recommendation.
+
+280
+00:32:42,020 --> 00:32:49,010
+Okay, sounds good. Sounds good. Let's do that. Uh, Thunderbird or yours?
+
+281
+00:32:58,130 --> 00:33:06,590
+Okay. Let's see what happens.
+
+282
+00:33:09,280 --> 00:33:13,540
+Hey, Thunderbird. Y'all are getting a performance improvement for free.
+
+283
+00:33:15,320 --> 00:33:19,580
+The bird team. You just want to be emphatic.
+
+284
+00:33:19,700 --> 00:33:23,330
+Mission accomplished. Mission accomplished.
+
+285
+00:33:25,130 --> 00:33:34,340
+I feel like that's it's an interesting choice on on elements part to just treat the hash as a instow header.
+
+286
+00:33:35,750 --> 00:33:45,559
+Or maybe it's not so much the a matrix and element choice so much as it might be a the bridge, the way that the bridge is communicating.
+
+287
+00:33:45,560 --> 00:33:51,500
+Because I noticed you you wrote that from let me see what happens when I type Thunderbird reviewers into the chat.
+
+288
+00:33:52,280 --> 00:33:57,160
+See, that doesn't go all big for me. Oh, I'll bet.
+
+289
+00:33:57,170 --> 00:34:02,030
+I wonder if it's if I do Leftmost cat Thunderbird.
+
+290
+00:34:03,880 --> 00:34:07,690
+For viewers would be my recommendation.
+
+291
+00:34:08,260 --> 00:34:12,700
+Now, see, I don't know why I think it's the bridge. This is not a matrix or element thing.
+
+292
+00:34:12,700 --> 00:34:16,620
+I'm going to presume it's a bridge. Can't explain it.
+
+293
+00:34:17,070 --> 00:34:21,660
+Can't explain that. All right. Let's take a look at the patch in fabricator.
+
+294
+00:34:27,420 --> 00:34:43,570
+Um. You know, in a way, we can make this better by not having to create this structure each time.
+
+295
+00:34:45,070 --> 00:35:01,120
+It's a static structure. So, I mean, I guess because these are lazy, you get the strings at the last minute.
+
+296
+00:35:06,860 --> 00:35:12,760
+Okay. A.
+
+297
+00:35:13,820 --> 00:35:19,790
+I'll let my reviewers worry about that. Yeah, we got rid of all this complexity, which is nice.
+
+298
+00:35:22,670 --> 00:35:29,410
+All right, let's see what happens. It sends it as plaintext to matrix and matrix supports markdown.
+
+299
+00:35:29,430 --> 00:35:34,080
+Yeah, exactly. I think that's what's going on. I think that's what's going on.
+
+300
+00:35:34,110 --> 00:35:38,789
+Danny Colon. Ba ba ba Bull's-Eye. All right.
+
+301
+00:35:38,790 --> 00:35:42,360
+Well, that's it for the Thunderbird portion of the episode.
+
+302
+00:35:42,660 --> 00:35:47,730
+The the Firefox portion is still building.
+
+303
+00:35:48,240 --> 00:35:51,360
+It's been building for 50 minutes and we're still getting through dawn.
+
+304
+00:35:51,360 --> 00:35:57,030
+So this might take a while, but I think we can probably start writing a little bit.
+
+305
+00:35:57,030 --> 00:36:14,160
+Even though we can't build it, we can start writing a little bit. What I wanted was to expose the helper through XP com so that we can test.
+
+306
+00:36:16,130 --> 00:36:30,980
+When you tells I don't think we already have any like interface here that's being exposed because it's like a static method.
+
+307
+00:36:32,450 --> 00:36:42,100
+When you tells. I can't stuff.
+
+308
+00:36:46,400 --> 00:36:55,600
+Yeah. Fab. I can help her. So how do I expose this?
+
+309
+00:36:55,600 --> 00:37:05,850
+What's the right way of exposing this? Well, one way of exposing it is finding a different Windows specific widget idle.
+
+310
+00:37:06,610 --> 00:37:10,320
+Let's see. Widget. Those.
+
+311
+00:37:14,910 --> 00:37:17,960
+Sir. Anything in here that I could tack it on to?
+
+312
+00:37:17,970 --> 00:37:26,360
+That makes sense. Okay.
+
+313
+00:37:26,600 --> 00:37:30,080
+Uh, George.
+
+314
+00:37:39,510 --> 00:37:44,190
+Settings when. When.
+
+315
+00:37:48,680 --> 00:37:57,290
+Ask bar progress Pass Bar Window Preview system build bar system Status bar.
+
+316
+00:37:59,170 --> 00:38:02,760
+I widget windows UI utils. Here you go.
+
+317
+00:38:03,270 --> 00:38:08,370
+Here you go. Windows UI utils.
+
+318
+00:38:10,680 --> 00:38:17,750
+This is what I'm going to put it on. Okay.
+
+319
+00:38:26,630 --> 00:38:32,570
+And this is going to be it's going to return a promise or it'll have an implicit.
+
+320
+00:38:33,740 --> 00:38:38,820
+If we look at our jobless bill, they're not ideal. It's the same as.
+
+321
+00:38:40,170 --> 00:38:45,090
+Oh, I already. Oh, yeah, yeah.
+
+322
+00:38:45,090 --> 00:38:48,120
+I'm already going to use it here. Never mind.
+
+323
+00:38:48,150 --> 00:38:52,020
+Never mind. Never mind. Never mind. I'm already putting it on the jump list Builder.
+
+324
+00:38:53,400 --> 00:39:00,660
+Obtain and cache five icon async. And where hospitals are.
+
+325
+00:39:08,000 --> 00:39:11,150
+Oh, I'd already done it.
+
+326
+00:39:12,730 --> 00:39:19,460
+Did just Bill there? Did I forget that I blacked out?
+
+327
+00:39:19,490 --> 00:39:25,459
+When did I do this? Did I do this on the stream? Make sure we're on the main thread.
+
+328
+00:39:25,460 --> 00:39:29,390
+We have a promise. We have an eye through IO thread. We create a DOM promise.
+
+329
+00:39:30,050 --> 00:39:34,730
+We create a promise holder. We get the more's promise.
+
+330
+00:39:34,730 --> 00:39:41,030
+And then we either resolve with the ICO path or we reject with the result.
+
+331
+00:39:41,690 --> 00:39:45,620
+That's correct. I think that's correct. Wow.
+
+332
+00:39:46,130 --> 00:39:51,440
+I don't remember doing that, but we've already wired it up, so now we have to test it.
+
+333
+00:39:52,310 --> 00:39:59,360
+We have to test it. So I guess we have to wait for our build to finish.
+
+334
+00:40:00,110 --> 00:40:04,909
+Well, shoot. We've reached a point in the episode where possibly you did it on the stream.
+
+335
+00:40:04,910 --> 00:40:12,889
+I mean, I met I mean, to only work on this stuff on stream, so I guess I'll work on something else.
+
+336
+00:40:12,890 --> 00:40:16,250
+While we're waiting for this, let's review a patch.
+
+337
+00:40:17,120 --> 00:40:20,930
+Let me let me pull up my review list here.
+
+338
+00:40:27,470 --> 00:40:37,530
+What's worth reviewing, Right. Okay, so a couple.
+
+339
+00:40:37,710 --> 00:40:41,520
+There's a project I've been working on with a few other people.
+
+340
+00:40:41,520 --> 00:40:45,780
+It's in the very early stages, so don't get excited. It's like really, really early on.
+
+341
+00:40:45,780 --> 00:40:56,540
+But the idea behind it is we're hoping to make it possible to create full or like 98% of your user profile, your local user profile.
+
+342
+00:40:56,550 --> 00:41:04,500
+We want to be able to create backups, local file system backups of your user profile.
+
+343
+00:41:04,860 --> 00:41:07,860
+And we're starting really small. Like we're going to just create one backup.
+
+344
+00:41:07,860 --> 00:41:12,990
+Maybe we'll do it like once a day. We'll do it silently in the background.
+
+345
+00:41:13,140 --> 00:41:16,020
+You like the user opt ins as like, Yes, I want backups,
+
+346
+00:41:16,410 --> 00:41:25,260
+maybe create one a day and you can like recover from that backup by creating a new profile and like decompressing it in there or something.
+
+347
+00:41:25,260 --> 00:41:27,570
+Like we're still kind of working out a lot of the details.
+
+348
+00:41:27,870 --> 00:41:37,260
+But one of the things that we're starting to do is look into doing some measurements on how big these backups are likely to be like.
+
+349
+00:41:38,230 --> 00:41:46,320
+We don't want to. We want to get a sense of whether or not we're going to be pack in people's hard drives full.
+
+350
+00:41:46,860 --> 00:41:52,020
+We really don't want to because like a backup is effectively a copy of the user profile directory.
+
+351
+00:41:52,320 --> 00:41:57,000
+We're not going to take the whole thing. There are obviously things that we're not going to back up like caches and,
+
+352
+00:41:57,450 --> 00:42:01,860
+you know, certain things that only make sense within the instance of a profile.
+
+353
+00:42:02,400 --> 00:42:08,520
+But you know of the things that we do want to archive, how big are they going to be?
+
+354
+00:42:08,790 --> 00:42:12,220
+How big are they going to be? And we don't know.
+
+355
+00:42:12,690 --> 00:42:17,850
+It's possible that when we archive them, they'll be even smaller because we'll compress them.
+
+356
+00:42:18,270 --> 00:42:22,530
+You know, we'll run some compression on them. Maybe we'll vacuum the databases and whatnot.
+
+357
+00:42:24,420 --> 00:42:29,610
+You know, think of it as like dehydration or like vacuum sealing stuff.
+
+358
+00:42:29,610 --> 00:42:31,560
+So we'll be able to suck out a lot of the air.
+
+359
+00:42:31,800 --> 00:42:38,460
+But if we measure the size of the things that we're trying to backup inside of the user profile directory right now,
+
+360
+00:42:38,490 --> 00:42:43,979
+that will give us like an upper bound on how big in general these things might be for people.
+
+361
+00:42:43,980 --> 00:42:53,550
+Like we can start creating distributions of like, oh, it's going to be like tens of megabytes or maybe it's going to be hundreds of kilobytes.
+
+362
+00:42:53,760 --> 00:42:57,360
+I'm going to guess is that my personal guess is it's going to be in the tens of
+
+363
+00:42:57,360 --> 00:43:02,429
+megabytes because it's not just things like your bookmarks or your history,
+
+364
+00:43:02,430 --> 00:43:05,640
+but it's like your fab icons database, which could be huge.
+
+365
+00:43:06,000 --> 00:43:09,149
+Or you're you're places that if you've got a ton of history,
+
+366
+00:43:09,150 --> 00:43:13,560
+if you've been using your browser every day for the past six months, your database might be gigantic.
+
+367
+00:43:15,030 --> 00:43:20,490
+And then there are other things like the cookie database, and it really depends on what's been stored in there.
+
+368
+00:43:22,560 --> 00:43:25,020
+So, you know, we don't know. And so we need to measure.
+
+369
+00:43:25,080 --> 00:43:31,020
+And that's what we're starting with is measurement, because that's where you generally should start is measure.
+
+370
+00:43:31,740 --> 00:43:37,830
+So we've got a a base class and it's called backup resource.
+
+371
+00:43:37,830 --> 00:43:48,630
+And my colleague Catherine has written a patch that attempts to measure the size of fav icons and places.
+
+372
+00:43:49,830 --> 00:43:57,550
+I see. I see.
+
+373
+00:43:58,090 --> 00:44:01,510
+So let me just. I'm just thinking about this a little bit.
+
+374
+00:44:04,060 --> 00:44:07,630
+We might actually want to combine fav icons and places because they're effective.
+
+375
+00:44:08,050 --> 00:44:11,310
+One The fat icons don't make sense without places.
+
+376
+00:44:11,320 --> 00:44:14,500
+It's a separate database, but there are attached databases.
+
+377
+00:44:14,920 --> 00:44:21,430
+So we might actually want to have them. The measurement exist within one resource.
+
+378
+00:44:22,480 --> 00:44:30,880
+So I'll start there. We might actually only want one resource backup resource here.
+
+379
+00:44:34,390 --> 00:44:43,660
+A place's backup resource that measures both places as Q light and fab icons to escalate.
+
+380
+00:44:43,750 --> 00:45:03,010
+The reason for this is that places as a concept encompasses multiple things, including both places, the places that both of these databases.
+
+381
+00:45:09,830 --> 00:45:13,310
+Places as a concept encompasses both of these things.
+
+382
+00:45:17,120 --> 00:45:21,380
+Places, for example. Places. The places component.
+
+383
+00:45:24,230 --> 00:45:28,070
+For example, owns both of these databases.
+
+384
+00:45:28,880 --> 00:45:32,870
+In fact, the five icons database.
+
+385
+00:45:34,430 --> 00:45:41,420
+It's often attached to a place's one SKU database attach.
+
+386
+00:45:47,680 --> 00:45:52,650
+Is. The Falcons database, despite being distinct.
+
+387
+00:45:57,270 --> 00:46:04,580
+Is attached to the places one. Okay, so that's my first piece of feedback.
+
+388
+00:46:05,820 --> 00:46:11,760
+So we're measuring in kilobytes the size of the places database, total size of the places schools database.
+
+389
+00:46:11,760 --> 00:46:21,510
+Okay. In the current profile directory in kilobytes. So bug right 36423642 expires.
+
+390
+00:46:21,510 --> 00:46:26,080
+Never. Yeah.
+
+391
+00:46:26,180 --> 00:46:32,040
+Oh, right. Okay.
+
+392
+00:46:32,250 --> 00:46:37,440
+And then we import the base class. We export our class.
+
+393
+00:46:38,640 --> 00:46:44,190
+So again. Yeah, like, I think I think we should. We should combine this.
+
+394
+00:46:45,810 --> 00:46:53,250
+But as I mentioned earlier, I think we should combine this with the places back up resource.
+
+395
+00:46:58,130 --> 00:47:06,680
+But the idea is sound. We get the path to the five icons database and then we await the there's a utility to get the file
+
+396
+00:47:06,680 --> 00:47:11,870
+size in kilobytes and add like a fuzz factor so that we don't have to reduce fingerprint ability.
+
+397
+00:47:12,320 --> 00:47:16,910
+And then we, we get the resources in kilobytes and then we set it.
+
+398
+00:47:16,910 --> 00:47:20,030
+That looks right, That looks right.
+
+399
+00:47:20,030 --> 00:47:25,100
+And then she added a couple of test databases and then she wrote some tests.
+
+400
+00:47:28,610 --> 00:47:32,329
+Would this be related to bug 179498 90?
+
+401
+00:47:32,330 --> 00:47:35,810
+If you try to move a profile from username John to username John Smith.
+
+402
+00:47:38,640 --> 00:47:43,590
+It will fail due to hard coding of the paths.
+
+403
+00:47:45,270 --> 00:47:51,720
+Uh, this I filed this one, and I filed this a year ago.
+
+404
+00:47:57,090 --> 00:48:01,200
+Update the migrate or code in the Firefox profile. Migrate doesn't remember the full price.
+
+405
+00:48:01,770 --> 00:48:09,510
+Yeah, this would this would be an alternative instead of using like the Firefox migrate or this is like you can,
+
+406
+00:48:09,750 --> 00:48:12,660
+you can use the backup system to migrate.
+
+407
+00:48:12,990 --> 00:48:20,100
+But its main user value, the main prop value proposition, if you want to use that terminology, is that we're creating backups for you.
+
+408
+00:48:20,370 --> 00:48:25,530
+But there happens to be a byproduct that those backups should be portable between devices.
+
+409
+00:48:26,220 --> 00:48:32,130
+That's that's the byproduct. So, yeah, this is somewhat related.
+
+410
+00:48:32,610 --> 00:48:36,240
+I think we might want to just close this one now that I think about it.
+
+411
+00:48:37,710 --> 00:48:41,640
+Thank you for reminding me of this. Let me go ahead and pin that for later.
+
+412
+00:48:44,550 --> 00:48:49,230
+And yeah, part of part of the work is like checking to see where heart paths are hardcoded.
+
+413
+00:48:49,680 --> 00:48:54,330
+And then during backup creation or restoration, you know, remapping them.
+
+414
+00:48:54,810 --> 00:48:59,190
+Remapping them. Okay, let's look at Kathryn's tests.
+
+415
+00:48:59,400 --> 00:49:03,330
+Test tests that we can measure the file size of places like the profile directory.
+
+416
+00:49:03,330 --> 00:49:09,209
+We get the places file, we copy, we say, Hey, get.
+
+417
+00:49:09,210 --> 00:49:17,140
+Take the measurements. Uh.
+
+418
+00:49:31,140 --> 00:49:49,920
+Mm mm mm mm mm mm. In this case what I, what I'd recommend is that we test the smaller unit and create an instance of.
+
+419
+00:49:50,740 --> 00:49:54,490
+Place is backup resource and call measure.
+
+420
+00:49:55,630 --> 00:50:02,020
+On it rather than calling take measurements on the service class.
+
+421
+00:50:04,360 --> 00:50:15,820
+That way. Later on, we we can write a test for the backup service that is prepared with multiple
+
+422
+00:50:18,580 --> 00:50:29,770
+fake backup resources and ensure that their measure methods are being called.
+
+423
+00:50:31,590 --> 00:50:40,110
+Uh, yeah. Yeah. Same with this one.
+
+424
+00:50:40,860 --> 00:50:56,670
+Yeah. Okay. And instead of four for this, instead of ensuring that the size is just greater than zero.
+
+425
+00:50:58,870 --> 00:51:06,760
+Since we know the size of test was a test places that skew light.
+
+426
+00:51:09,870 --> 00:51:16,360
+File path. We're going to copy into the temp file there. The size of test places skew light.
+
+427
+00:51:43,530 --> 00:51:53,730
+Since we know the size of test places as q light instead of we can take that measurement and statically take that measurement at side of the test.
+
+428
+00:51:55,950 --> 00:52:15,810
+Ourselves. And then write that in a static, constant in this method, in this attack ad task, and compare that against the value written to test,
+
+429
+00:52:17,130 --> 00:52:26,760
+to glean note that will want to use the same rounding and fuzzing logic to produce our static value.
+
+430
+00:52:31,030 --> 00:52:36,200
+Uh, okay. Is that?
+
+431
+00:52:36,560 --> 00:52:41,630
+I think that's the right formatting. Okay.
+
+432
+00:52:43,090 --> 00:52:47,020
+I'm going to go ahead and request changes. Looking good.
+
+433
+00:52:48,340 --> 00:52:54,890
+Just a few small suggestions. See below.
+
+434
+00:52:56,390 --> 00:53:07,140
+Thanks. Looking good. As our building builds only at extensions.
+
+435
+00:53:07,500 --> 00:53:13,850
+We might we might not actually get to the interesting part.
+
+436
+00:53:13,860 --> 00:53:24,360
+I did not expect this build to take this long. It's an opt build and I wonder if my I've been doing debug builds for so long.
+
+437
+00:53:24,360 --> 00:53:29,350
+I wonder if my SC cache is. Not saturated.
+
+438
+00:53:29,410 --> 00:53:34,750
+Yeah. Doing had a lot of cash misses, very few cash hits.
+
+439
+00:53:37,090 --> 00:53:46,350
+Yeah. Actually, I'm surprised these numbers are not going up.
+
+440
+00:53:46,350 --> 00:53:57,320
+Six, nine. There we go. Seven, five, eight. Errors on casual calls.
+
+441
+00:53:57,920 --> 00:54:00,920
+On casual calls are really going up.
+
+442
+00:54:01,580 --> 00:54:05,150
+Stuff's not cash bail gang anyway.
+
+443
+00:54:09,170 --> 00:54:13,610
+So what are we going to do? Let's do something else. Let's find something else to do.
+
+444
+00:54:13,640 --> 00:54:37,010
+Do I have anything else to review? Let's look at this one.
+
+445
+00:54:43,520 --> 00:54:55,490
+Um. Okay, translations dynamically populate the dropdown menu selector in the secondary translations settings.
+
+446
+00:54:56,320 --> 00:55:05,320
+So what I like to do whenever I'm taking on a review like this, I can just see what else has been who's who else has been interacting in here.
+
+447
+00:55:06,160 --> 00:55:13,460
+Looks like heis got in here at some point. Um.
+
+448
+00:55:18,290 --> 00:55:21,740
+Or until, uh oh.
+
+449
+00:55:21,740 --> 00:55:24,740
+Looks like HI-SEAS is kind of, like, dedicated to reviewing this.
+
+450
+00:55:24,740 --> 00:55:27,990
+So maybe I'll. I'll back off. All right. I'll let him finish the job.
+
+451
+00:55:29,210 --> 00:55:36,600
+Um. What's another good thing I can review?
+
+452
+00:55:43,830 --> 00:55:48,820
+Uh, operations. Okay, I'll take this one.
+
+453
+00:55:51,780 --> 00:55:59,970
+This is authored by Mark Banner, who also used to work on Thunderbird Code Application Files Search Engine Icons from Remote Settings.
+
+454
+00:56:02,250 --> 00:56:09,569
+And I am going to take this off of my settings for viewers list and I'll put it
+
+455
+00:56:09,570 --> 00:56:13,950
+on my list so that the other settings for viewers don't have to worry about it.
+
+456
+00:56:15,780 --> 00:56:25,200
+Let's take a look and see what is trying to fix. Create new search engine icon schema and use it as part of the new search engine configuration work.
+
+457
+00:56:25,200 --> 00:56:29,390
+We have decided to implement a separate remote settings collection for handling search engine icons.
+
+458
+00:56:29,400 --> 00:56:34,950
+This allows for better flexibility in the handling of icons, especially a cross-platform.
+
+459
+00:56:36,490 --> 00:56:40,390
+Um. Great. Um.
+
+460
+00:56:44,000 --> 00:56:47,590
+Uh, let's see here.
+
+461
+00:56:52,190 --> 00:56:59,969
+What what other details are there? So there's a bunch of like tendencies, simple fire moving engines,
+
+462
+00:56:59,970 --> 00:57:05,870
+steering reload engines with search config vee to add dump and attachments for search icons to the tree.
+
+463
+00:57:06,380 --> 00:57:12,200
+A single function for obtaining icons, URLs from search engines, and then create new search engine icon schema.
+
+464
+00:57:12,200 --> 00:57:17,930
+So a lot of like a lot of infrastructure work has already happened here.
+
+465
+00:57:29,960 --> 00:57:33,580
+And I think I've already reviewed some of that infrastructure work. I kind of remember this stuff.
+
+466
+00:57:33,590 --> 00:57:37,820
+So let's see what he's actually doing in this patch. Where do I start?
+
+467
+00:57:39,380 --> 00:57:44,930
+Well, one way to start is. Get engine.
+
+468
+00:57:44,950 --> 00:57:57,460
+What? What is being modified here? Get engine icon Earl converts the engine's icon into an appropriate URL for display at an unrelated net.
+
+469
+00:57:59,630 --> 00:58:08,280
+Splayed. At. I.
+
+470
+00:58:10,330 --> 00:58:13,690
+Play out. What? What a cliffhanger.
+
+471
+00:58:21,060 --> 00:58:24,380
+Uh, the you or I receipts here can be one of several types.
+
+472
+00:58:24,390 --> 00:58:32,730
+So the URL we get the icon URL, and if we don't have one, then we'll get a placeholder URL.
+
+473
+00:58:32,880 --> 00:58:37,170
+Okay, so it's a a chrome, you or I maybe. Or it might be a dart.
+
+474
+00:58:37,230 --> 00:58:44,730
+It might be one of several types. My is extension your ie a data you or I or a blob from blob areas.
+
+475
+00:58:44,730 --> 00:58:48,240
+We do want to create a copy of the data for the controversies, so we handle that here.
+
+476
+00:58:48,240 --> 00:58:57,180
+Otherwise the UI is not a you or I. There's no point converting to an array buffer which is used to optimize passing the data across to x processes.
+
+477
+00:58:57,180 --> 00:59:04,560
+We can just pass the virtual you or I, which is cheaper. That URI is not a data or yeah, it's not converted to a.
+
+478
+00:59:07,760 --> 00:59:17,110
+Her for. If it doesn't start with data and it doesn't start with Blob, then it's just the URL otherwise will go ahead.
+
+479
+00:59:18,980 --> 00:59:25,940
+And get the URL as an array buffer so we can move it more efficiently between processes.
+
+480
+00:59:26,210 --> 00:59:32,390
+Okay. So far so good. So it sounds like we're adding support for blobs.
+
+481
+00:59:35,030 --> 00:59:41,569
+Um, over here in preferences land, we're allowing okay, we're adding to the CSP.
+
+482
+00:59:41,570 --> 00:59:45,890
+So that blob blob your eyes are allowed.
+
+483
+00:59:46,550 --> 00:59:50,900
+That's fine. And then we're going to update some tests.
+
+484
+00:59:50,900 --> 00:59:59,510
+Now, I'm not going to look at the test just yet. Uh, it sounds like we're going to kind of get this for free.
+
+485
+00:59:59,510 --> 01:00:08,480
+Like the we're just making it so that we can show blob URLs in preferences.
+
+486
+01:00:09,050 --> 01:00:19,370
+And over here in tool kit search, this looks like it's like the the bulk of the the meat of the patch is right here.
+
+487
+01:00:20,320 --> 01:00:27,150
+And there's some search server stuff. Now, I don't actually I'm not really qualified to review toolkit component search.
+
+488
+01:00:27,160 --> 01:00:32,680
+Like, I can kind of I can live through it. But like the search team has already been tasked with reviewing this stuff.
+
+489
+01:00:33,040 --> 01:00:38,260
+Really what I was asked to review whenever I was tagged on this was to review the stuff under preferences.
+
+490
+01:00:38,800 --> 01:00:46,900
+So I'll look at this, but you know, I'll leave it to the the search team to do kind of like a deep review of the big bulk change here.
+
+491
+01:00:47,230 --> 01:00:56,559
+But I do want to understand what to what it's doing. So he's got a remote settings lazy getter here and then he creates this icon handler class.
+
+492
+01:00:56,560 --> 01:01:00,310
+Really nice documentation here. We're using stock looking good.
+
+493
+01:01:00,310 --> 01:01:06,010
+We've got some type deaths which may or may not be some object or some object array.
+
+494
+01:01:06,010 --> 01:01:11,380
+The list of icon records from the Remote Settings collection wrote Sales client for the search engine icons.
+
+495
+01:01:14,910 --> 01:01:26,129
+If I listen to Icon Records from the Remote Settings Collection throughout Settings client, also the Client Icon collection.
+
+496
+01:01:26,130 --> 01:01:30,990
+Is that is that right? The list of icon records.
+
+497
+01:01:31,500 --> 01:01:40,180
+Okay. The collection. Whereas I don't collection attachments.
+
+498
+01:01:42,370 --> 01:01:45,760
+Yes. The remote settings client for the search engine icons. All right.
+
+499
+01:01:45,850 --> 01:01:49,660
+Maybe the remote saying calls them a collection. Seems a little confusing.
+
+500
+01:01:51,700 --> 01:01:57,940
+Um, get icon, return the icon for the record that matches the engine identifier and the preferred width.
+
+501
+01:02:00,550 --> 01:02:03,610
+If there's no icon list, we'll go ahead and get the icon list.
+
+502
+01:02:04,730 --> 01:02:17,340
+What's that mean? We get remote settings we assigned to Icon collection and then we try and get the collection.
+
+503
+01:02:18,880 --> 01:02:24,130
+Okay. Over here. We're going to go through the icon list.
+
+504
+01:02:24,130 --> 01:02:33,820
+We're going to filter out and only have ones for which the engine identifiers ends with Star.
+
+505
+01:02:35,770 --> 01:02:53,320
+And if it does, then we'll return. Oh, so this is wild card support, basically, because I guess we might have some wild card engine icon records.
+
+506
+01:02:53,980 --> 01:02:57,280
+Otherwise, we'll just make sure that the identifier matches the one we care about.
+
+507
+01:03:00,250 --> 01:03:07,090
+Identifier. Matches this one, so we might have one or more.
+
+508
+01:03:10,150 --> 01:03:15,690
+And then if there are no icon records, then we'll warn and then we'll return null.
+
+509
+01:03:15,700 --> 01:03:31,059
+Otherwise we'll get the first one. And if the for each record, we'll see if any of them has the preferred width.
+
+510
+01:03:31,060 --> 01:03:34,720
+And if so, that's what the icon record will be.
+
+511
+01:03:37,400 --> 01:03:47,560
+And then so we might so we'll default to the first one if we don't find one with the preferred with.
+
+512
+01:03:47,570 --> 01:03:54,800
+Okay. And then we try and get the icon record for the URL.
+
+513
+01:03:57,530 --> 01:04:02,440
+And if there's no icon URL, then we error out.
+
+514
+01:04:02,450 --> 01:04:16,190
+Otherwise we'll create a blob or create a blob from the buffer and we'll pass that back as an object URL, which is a blob or I.
+
+515
+01:04:18,230 --> 01:04:21,980
+Okay, that makes sense. And then this stuff.
+
+516
+01:04:23,580 --> 01:04:33,200
+I provided a search engine. We create our icon handler promise for the blobby reality icon.
+
+517
+01:04:33,210 --> 01:04:37,020
+We see the promise to avoid franchisee issues. Okay. And the identifier for the configuration.
+
+518
+01:04:37,020 --> 01:04:44,220
+So config identifier.
+
+519
+01:04:47,990 --> 01:04:52,930
+Okay. Clean up if there's a blob IRL.
+
+520
+01:04:55,250 --> 01:04:59,570
+Promise. Then we will revoke the object your URL.
+
+521
+01:05:01,610 --> 01:05:07,610
+That's good. When we are free of a memory. We destroy the promise.
+
+522
+01:05:10,910 --> 01:05:14,660
+Returns the icon URL for the search engine closest to the preferred width.
+
+523
+01:05:14,750 --> 01:05:19,549
+So this is actually using the thing that we care about. I love this jazzy dock stuff.
+
+524
+01:05:19,550 --> 01:05:28,100
+It reads so well. Good job. So get the preferred with or return the promise in case one is already underway.
+
+525
+01:05:29,480 --> 01:05:36,950
+Otherwise we'll create a new one. Get the icon with the configuration I.D for the preferred width and we return that promise.
+
+526
+01:05:37,610 --> 01:05:40,819
+That all makes sense. Punch dead code gets removed also.
+
+527
+01:05:40,820 --> 01:05:50,840
+Good. And then in the search service, when are we doing this cleanup and maybe remove engines after reload, we might clean up here.
+
+528
+01:05:51,830 --> 01:06:00,440
+Okay, I'll again, I'll leave it to the the search team to make sure that the cleanup load, because I'm not familiar with any of these modules,
+
+529
+01:06:00,440 --> 01:06:06,829
+I'm just trying to understand what they do so I can better understand what's what is going on for the part.
+
+530
+01:06:06,830 --> 01:06:12,560
+I'm reviewing the icons to use for the web extension.
+
+531
+01:06:12,860 --> 01:06:17,239
+Yeah. Okay. Um, this is an yeah.
+
+532
+01:06:17,240 --> 01:06:22,850
+Test utils. So that's so we can sort of like create a fake search engine I guess.
+
+533
+01:06:23,270 --> 01:06:28,490
+And here we go test to ensure that icons replication pride engines are correctly loaded from remote settings.
+
+534
+01:06:29,600 --> 01:06:32,630
+Um, okay,
+
+535
+01:06:32,780 --> 01:06:49,750
+here's some fake engines and then mock record with attachment file data buffer
+
+536
+01:06:49,760 --> 01:06:55,129
+some file name create an array buffer input stream and then set the buffer.
+
+537
+01:06:55,130 --> 01:07:04,420
+Okay, Generate a hash. Well, so we're hashing.
+
+538
+01:07:04,440 --> 01:07:10,320
+Okay. I see. That's how we have to hash some data.
+
+539
+01:07:11,610 --> 01:07:19,560
+And then we create a UUA ID and an attachment with the hash and the bang in the bong.
+
+540
+01:07:19,860 --> 01:07:24,240
+Create the record at the attachment. So the fake record.
+
+541
+01:07:25,110 --> 01:07:31,320
+Insert record into collection TV, Create record cache, impulse set.
+
+542
+01:07:31,560 --> 01:07:35,730
+Okay. Wow. This is how you fake it.
+
+543
+01:07:35,730 --> 01:07:44,400
+Remote settings stuff, I guess. TV equals DV will clear of the DB and then test of tests.
+
+544
+01:07:45,900 --> 01:07:52,910
+Push into something called config. This isn't set up.
+
+545
+01:07:52,910 --> 01:07:57,110
+We'll create an engine for each one.
+
+546
+01:08:00,210 --> 01:08:12,500
+For if icon's in the test, then we will go through each icon and insert the record into the collection.
+
+547
+01:08:12,500 --> 01:08:19,190
+And then we will say, Hey, we're using test engines and we'll init the search service.
+
+548
+01:08:19,190 --> 01:08:23,180
+And then for each test we'll create a task.
+
+549
+01:08:23,360 --> 01:08:27,980
+Oh, that's interesting. I've never seen this form before, but it works fine.
+
+550
+01:08:29,300 --> 01:08:33,830
+Testing a particular engine. We get the engine.
+
+551
+01:08:36,650 --> 01:08:46,070
+If there's an expected icon in the test, I'll get the icon u URL at 16 pixels and we should be able to do that.
+
+552
+01:08:46,490 --> 01:08:56,240
+Then we'll fetch the engine icon. We'll turn into an array buffer or make sure that the buffers match.
+
+553
+01:08:59,860 --> 01:09:04,569
+Wow. Comprehensive. Good test. Good job.
+
+554
+01:09:04,570 --> 01:09:07,630
+Standard eight. Okay. What about these other tests?
+
+555
+01:09:09,380 --> 01:09:17,840
+Test that we can have the correct icon displayed. Uh, open private browsing.
+
+556
+01:09:17,840 --> 01:09:25,200
+And then in the private browsing tab, we'll get the computed style of the body and we'll wait for the new tab search icon.
+
+557
+01:09:25,220 --> 01:09:27,920
+So the search input basically to not be null.
+
+558
+01:09:28,610 --> 01:09:44,870
+And then if it starts with blob, make sure that the should have a blob URL for the logo of the icon URL for the expected icon.
+
+559
+01:09:44,900 --> 01:09:52,890
+Your URL. Uh, what is that?
+
+560
+01:09:55,360 --> 01:10:00,730
+Respected icon Earle. Where did that come from?
+
+561
+01:10:03,570 --> 01:10:10,720
+What's expected? Icon. Oh. Oh, okay.
+
+562
+01:10:10,740 --> 01:10:13,560
+So it's a global that we poke values into. Okay.
+
+563
+01:10:15,000 --> 01:10:27,120
+Um, if the icon URL that we expect is blob, then we presume that the new tab search icon starts with the URL blobs, so we've properly set it up.
+
+564
+01:10:27,780 --> 01:10:35,610
+Otherwise make sure it's this form. Okay, that seems okay.
+
+565
+01:10:37,740 --> 01:10:45,510
+Star Search and wow Ascension. Based on a lot of testing, passing a plain URL is a content process for icons.
+
+566
+01:10:46,980 --> 01:11:01,850
+Oh. Okey dokey. So we don't register an about page.
+
+567
+01:11:01,860 --> 01:11:09,820
+Okay. And instead we do that in here in that setup instead and we clean it up here.
+
+568
+01:11:09,840 --> 01:11:13,400
+That's nice. Um.
+
+569
+01:11:23,830 --> 01:11:30,039
+He's 24 that just moved up here. So now we have that happening inside of this clean up function.
+
+570
+01:11:30,040 --> 01:11:33,280
+That's very nice. And then.
+
+571
+01:11:35,290 --> 01:11:38,950
+Okay. Okay. Well, you know what?
+
+572
+01:11:39,310 --> 01:11:48,570
+My I think I understand what's happening now. And really all we're doing is we're adding some support for blob URLs inside of about preferences.
+
+573
+01:11:48,580 --> 01:11:52,030
+That's the part that I need to care about. And that seems okay to me.
+
+574
+01:11:53,590 --> 01:12:00,219
+And that really just is this part. I just need to make sure that the CSP allows it otherwise.
+
+575
+01:12:00,220 --> 01:12:03,790
+Yeah I the they don't need me.
+
+576
+01:12:05,000 --> 01:12:09,430
+Um. So.
+
+577
+01:12:14,510 --> 01:12:18,230
+Uh, testing approved. Preferences.
+
+578
+01:12:18,250 --> 01:12:31,080
+Part of this works for me. Uh, I leafed through the rest, the rest of it as well.
+
+579
+01:12:31,680 --> 01:12:39,780
+And at a high level. Seems good. Nice tests, but nice comprehensive.
+
+580
+01:12:41,340 --> 01:12:55,960
+Unit test. But obviously someone from the search team should sign off on the rest of this before landing.
+
+581
+01:12:58,880 --> 01:13:04,160
+Uh, okay. Reviewed.
+
+582
+01:13:04,310 --> 01:13:11,600
+All right. How's our bill doing? Well, gang, it might not be happening today.
+
+583
+01:13:11,620 --> 01:13:15,820
+We're in the middle of layout. Oh, that's a slow build.
+
+584
+01:13:16,810 --> 01:13:23,740
+Slow build. 88 minutes.
+
+585
+01:13:23,770 --> 01:13:33,850
+Holy smokes. Yeah, well, I guess I haven't done an opt build on windows in a while, and my AC cache is just not saturated.
+
+586
+01:13:35,140 --> 01:13:42,850
+I think at some point I should put in the service service order for a new desktop, a new Windows desktop.
+
+587
+01:13:42,850 --> 01:13:46,210
+This one. When was this made? When do I find out?
+
+588
+01:13:46,480 --> 01:13:51,190
+Find out when Windows ten machine built.
+
+589
+01:13:53,310 --> 01:13:56,730
+Uh, system info.
+
+590
+01:14:08,520 --> 01:14:21,200
+System info. Where?
+
+591
+01:14:22,190 --> 01:14:27,650
+When? When was this? What do I know?
+
+592
+01:14:27,680 --> 01:14:32,660
+What am I looking for? Type system info. Scroll a bit in the list and shows original windows installed date.
+
+593
+01:14:33,710 --> 01:14:47,890
+Does it? Software environment. System summary like when original windows installed the.
+
+594
+01:14:49,990 --> 01:14:53,130
+Install. Eight.
+
+595
+01:14:59,770 --> 01:15:10,679
+Playboy. Or do debug builds over the weekend.
+
+596
+01:15:10,680 --> 01:15:16,010
+Opt and debug builds. Yeah. Well, I don't know.
+
+597
+01:15:16,020 --> 01:15:20,840
+I don't know. But I guess we can look up the model number of this machine and find out when it was manufactured.
+
+598
+01:15:20,850 --> 01:15:24,870
+It was. It's a Lenovo P7 ten Thinkstation.
+
+599
+01:15:26,580 --> 01:15:30,450
+Lenovo P7 ten Thinkstation.
+
+600
+01:15:42,290 --> 01:15:49,390
+I still make them, I guess. Xeon processor.
+
+601
+01:15:53,630 --> 01:15:59,630
+He logical cause BIOS version 2017 So at least 2017.
+
+602
+01:16:00,140 --> 01:16:06,030
+So it's like seven years old. Just six and a bit years old.
+
+603
+01:16:09,500 --> 01:16:13,670
+I don't know. I feel like it should be faster. Maybe there's more I can do.
+
+604
+01:16:15,440 --> 01:16:19,310
+Maybe there's some configuration stuff I can do to make the builds faster.
+
+605
+01:16:20,270 --> 01:16:26,270
+But I'm really I'm really bummed because I thought we'd be able to test in time.
+
+606
+01:16:27,260 --> 01:16:31,760
+So we might have to end it here. Dang, I've done enough reviewing this.
+
+607
+01:16:31,970 --> 01:16:35,210
+We might have to be a To be continued as a real teaser.
+
+608
+01:16:35,660 --> 01:16:39,190
+It's a real tease where I was like, Hey, I'm going to be doing that thing.
+
+609
+01:16:39,200 --> 01:16:46,760
+We're going to see if it works. And then we never got there. But we did the Thunderbird thing and we reviewed some patches.
+
+610
+01:16:47,690 --> 01:16:51,050
+So yeah, maybe I'll end the stream there and I won't touch it.
+
+611
+01:16:51,060 --> 01:16:54,950
+I'll wait for this build to finish and then I won't look at it. I won't try it out.
+
+612
+01:16:55,290 --> 01:17:02,810
+We'll try it next week. I have to pull up my calendar for a quick sec because I think there's an episode we're going to have to skip.
+
+613
+01:17:05,270 --> 01:17:11,570
+Yeah. Episode two. So the week after next, The week after next.
+
+614
+01:17:11,870 --> 01:17:15,620
+The 27th. No episode on the 27th.
+
+615
+01:17:17,230 --> 01:17:23,390
+I did this. Where's the bug for the Thunderbird?
+
+616
+01:17:28,910 --> 01:17:34,970
+Did this in here. Uh, Boo.
+
+617
+01:17:35,140 --> 01:17:41,500
+Bill took too long. Let's look again next week.
+
+618
+01:17:42,920 --> 01:17:48,410
+And no episode on March 27th.
+
+619
+01:17:49,730 --> 01:17:55,690
+Due to an unstable build meeting. So that's the week after next.
+
+620
+01:17:55,900 --> 01:18:01,360
+So I will see you. What's your take about Devin Watts?
+
+621
+01:18:01,360 --> 01:18:04,510
+Devin? I'm out of the loop. What's Devin?
+
+622
+01:18:06,970 --> 01:18:13,120
+Devin, the world's first fully autonomous A.I. software engineer, learns over time, collaborates with users.
+
+623
+01:18:13,450 --> 01:18:17,200
+I don't know. I've never tried. I'll have to look into it. I don't know what Devin is.
+
+624
+01:18:17,680 --> 01:18:22,329
+I've been out of the loop. Probably.
+
+625
+01:18:22,330 --> 01:18:25,980
+Probably. Interesting. But I don't know. We'll see. Sure.
+
+626
+01:18:25,990 --> 01:18:30,280
+Go ahead. Put a link to Devin in the chat. That's fine. All right.
+
+627
+01:18:30,310 --> 01:18:34,840
+We'll pick this up next week with episode whatever.
+
+628
+01:18:34,840 --> 01:18:37,900
+Episode 360. Woo! 360.
+
+629
+01:18:38,080 --> 01:18:42,370
+I'll do a spin. Maybe I'll do a spin next week. And we'll see you next.
+
+630
+01:18:42,610 --> 01:18:50,740
+Next week, whenever we actually take a look at that, that thing that we built last week and having it work in Firefox.
+
+631
+01:18:51,100 --> 01:18:54,610
+All right. Have yourselves a great week, everybody. Take care.
+
+632
+01:18:55,210 --> 01:19:03,090
+Bye bye. The joy of loading the.
+
+633
+01:19:07,170 --> 01:19:09,150
+Oh, no. How do I end this?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

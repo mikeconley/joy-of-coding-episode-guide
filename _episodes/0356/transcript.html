@@ -1,0 +1,2702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 356 - February 21, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 356 - February 21, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=1c1bef78-6b0e-4247-9582-b106011bde19</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=1c1bef78-6b0e-4247-9582-b106011bde19">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,172 --> 00:00:09,682
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:09,832 --> 00:00:13,672
+Hello and welcome to episode 356 of The Joy of Coding.
+
+3
+00:00:13,672 --> 00:00:16,972
+My name is Mike Connelly. It's so good to have you here. Welcome.
+
+4
+00:00:17,002 --> 00:00:23,752
+Going to be live hacking on some Firefox stuff today. I'm going to be writing some patches, maybe writing some code, going to be reviewing some stuff.
+
+5
+00:00:24,622 --> 00:00:29,272
+Let's get into it. I'll start by sharing my screen one second.
+
+6
+00:00:31,422 --> 00:00:34,972
+We had guess what, It's February 21st, 2020 for everybody.
+
+7
+00:00:35,362 --> 00:00:40,251
+I don't know if you knew that. Episode 356 Hey, no plan survives breakfast.
+
+8
+00:00:40,252 --> 00:00:43,522
+I think I know what I want to do today. I think I know how things are going to go. But it might not.
+
+9
+00:00:43,912 --> 00:00:48,022
+It might not. We things might go completely sideways. I might get sidelined.
+
+10
+00:00:49,132 --> 00:00:57,951
+Rat Hold on. Some problem or stock or who knows what will happen or we might not even get past the first review.
+
+11
+00:00:57,952 --> 00:01:01,702
+We might be working on that the whole time. Who knows? No plan survives breakfast.
+
+12
+00:01:01,702 --> 00:01:04,012
+We're going to do our best to get through it. That's the first thing.
+
+13
+00:01:04,262 --> 00:01:08,481
+Second thing is, if you're watching this, the agenda that we're looking at is something that you have access to.
+
+14
+00:01:08,482 --> 00:01:14,332
+If you want to click on links and follow along and stuff, if you're watching this on YouTube or dial dot zone check of the video description,
+
+15
+00:01:15,112 --> 00:01:17,992
+if you're watching this on your Mozilla check of the details section over there,
+
+16
+00:01:18,232 --> 00:01:24,112
+and if you're watching this on air or just sit on Mozilla, if you're watching this on Twitch, it's down in the channel.
+
+17
+00:01:24,112 --> 00:01:31,431
+Details down below. I'm seeing some chat lake metal ones is where are you Mike I'm guessing that's just that's that's from just
+
+18
+00:01:31,432 --> 00:01:38,692
+before I started so I'm here I'm here Lake Meadow one and crossbar says hello Can I ask you code question?
+
+19
+00:01:38,872 --> 00:01:42,082
+Sure, why not? Go ahead, drop it in the chat and I'll do my best to try to answer it.
+
+20
+00:01:42,712 --> 00:01:46,552
+Okay. Now, while we're waiting on that, let's do some reviews.
+
+21
+00:01:46,552 --> 00:01:49,882
+So I've had some review requests in my review queue for a little bit.
+
+22
+00:01:50,812 --> 00:01:54,532
+It's time that I get down to business and really review these.
+
+23
+00:01:55,882 --> 00:02:01,371
+I took a look at one of these last week and I'd like to get these cleared out.
+
+24
+00:02:01,372 --> 00:02:05,032
+So what is this? What are we looking at? Well, guess what, everyone?
+
+25
+00:02:06,372 --> 00:02:11,111
+There is a there's a dialog. There's a new dialog for clearing your history.
+
+26
+00:02:11,112 --> 00:02:16,752
+So if you go to history clear recent history, you'll see this dialog is the new ish dialog.
+
+27
+00:02:18,102 --> 00:02:22,532
+I actually think there's maybe a small bug here with the size of this font that's new.
+
+28
+00:02:22,542 --> 00:02:27,132
+That might be a recent regression, but suffice it to say there is a dialog and it is new.
+
+29
+00:02:27,492 --> 00:02:34,122
+And one thing that it doesn't currently do according to this bug, it doesn't remember the user selection.
+
+30
+00:02:34,122 --> 00:02:42,012
+So for example, if you fill in the dialog, you open the dialog and you choose some things and then you clear your history and then you reopen it.
+
+31
+00:02:43,152 --> 00:02:46,752
+It doesn't remember your previous selection and we would like we would like it to do that.
+
+32
+00:02:46,752 --> 00:02:51,762
+So that's what this patch does. I think that's for parody with the original Clear History dialog.
+
+33
+00:02:54,082 --> 00:02:58,702
+So there are three patches in the series. This is her sheet.
+
+34
+00:02:58,702 --> 00:03:08,901
+One of our interns, I believe, working on this. Paul is I believe his teammate is I believe his mentor has already given this one a review.
+
+35
+00:03:08,902 --> 00:03:12,472
+So I don't I don't really need to look at this one because Paul has signed off on it.
+
+36
+00:03:12,472 --> 00:03:16,432
+And but I think what I'm going to do is I'm just going to familiarize myself with what?
+
+37
+00:03:18,472 --> 00:03:22,071
+Uh oh, okay.
+
+38
+00:03:22,072 --> 00:03:26,592
+So cross badge, so quick diversion. Cross badge.
+
+39
+00:03:26,602 --> 00:03:33,651
+Right. I'm having problems in my for loop. Once it sees the nulls, it stops the loop and idea how to fix it.
+
+40
+00:03:33,652 --> 00:03:38,352
+Any idea how to fix it? Well, let's hope I'm not about to get owned.
+
+41
+00:03:38,362 --> 00:03:40,792
+Let's take a look at this pastebin. Okay.
+
+42
+00:03:42,772 --> 00:03:53,512
+So this is some see it looks like and we're doing a there's a function that does I presume some kind of string comparison between two strings.
+
+43
+00:03:54,172 --> 00:04:00,712
+There's an int main here. We start with some statically defined arrays, character arrays.
+
+44
+00:04:01,162 --> 00:04:04,642
+We're going to scan F into the s array.
+
+45
+00:04:05,272 --> 00:04:10,462
+Uh, hopefully no one puts in more than 100,000 characters.
+
+46
+00:04:11,212 --> 00:04:13,281
+We're going to do another scan F into the T array,
+
+47
+00:04:13,282 --> 00:04:20,392
+and then they're running Mr. Comp and they're not doing anything with the result almost, but they're running it.
+
+48
+00:04:20,392 --> 00:04:31,762
+And then what do we do here? So we get we're passing we're like getting the references to these two character arrays.
+
+49
+00:04:32,002 --> 00:04:34,432
+So these two pointers show up on the other side.
+
+50
+00:04:35,362 --> 00:04:46,012
+We're going to create some in here staring it in zero four or zero for some S and some T, and we're going to create picture.
+
+51
+00:04:57,312 --> 00:05:05,882
+I mean, those. Let me just keep reading this for a second so it looks like we want to loop.
+
+52
+00:05:09,752 --> 00:05:13,292
+Zero. While AI is less than.
+
+53
+00:05:16,872 --> 00:05:20,261
+S. I. Plus.
+
+54
+00:05:20,262 --> 00:05:32,782
+Plus i. And then if I is 32, then we.
+
+55
+00:05:33,412 --> 00:05:36,832
+What is the what is the mean? Like, what are you trying to do?
+
+56
+00:05:37,762 --> 00:05:41,192
+Tell me. This is the assignment. Oh, this is for us.
+
+57
+00:05:41,242 --> 00:05:45,472
+Is this a school assignment? Hold up, hold up.
+
+58
+00:05:45,712 --> 00:05:52,432
+You said assignment cross badge. I don't think I should be helping you with an assignment.
+
+59
+00:05:52,702 --> 00:05:59,212
+I'm afraid I can give you maybe a little bit of feedback what I would suggest.
+
+60
+00:06:01,862 --> 00:06:07,742
+I would I would review for loops and what they're trying to do.
+
+61
+00:06:07,772 --> 00:06:13,942
+Like I would maybe what you could focus on instead of doing the comparison is start smaller,
+
+62
+00:06:13,952 --> 00:06:19,962
+see if you can loop through the array of characters and print out each character.
+
+63
+00:06:20,342 --> 00:06:25,082
+Just do. Just try that. Like I can see that you're trying to.
+
+64
+00:06:28,082 --> 00:06:34,292
+Particularly as a pointer. See if you can get each other.
+
+65
+00:06:34,662 --> 00:06:39,312
+So yeah, I would try and like, avoid this stuff for now.
+
+66
+00:06:39,332 --> 00:06:42,602
+Just do one at a time or just just focus on one.
+
+67
+00:06:42,602 --> 00:06:50,102
+And the first thing to do is to just see if you can loop through one of these arrays and print out the characters one by one onto the screen,
+
+68
+00:06:50,102 --> 00:06:54,992
+just to get just to get four loops kind of under your belt and under your hands.
+
+69
+00:06:57,122 --> 00:07:00,151
+I did, but stuck on the exit the loop. Yeah.
+
+70
+00:07:00,152 --> 00:07:10,502
+I have a feeling that just kind of reading this, that the so the loop will continue to run.
+
+71
+00:07:10,922 --> 00:07:15,122
+While I is less than I.
+
+72
+00:07:16,112 --> 00:07:21,122
+So what I would recommend is you kind of look around on the internet,
+
+73
+00:07:21,122 --> 00:07:31,352
+maybe look through your textbook on examples of how one can iterate through a character array and like how what's the beginning,
+
+74
+00:07:31,422 --> 00:07:36,992
+middle and end of that? Like where do you start? What's the end and how do you iterate through it?
+
+75
+00:07:37,862 --> 00:07:43,501
+I really don't think I don't want to go into too much more detail though,
+
+76
+00:07:43,502 --> 00:07:46,652
+because I don't want to make this into a stream where I help people with their homework.
+
+77
+00:07:47,162 --> 00:07:56,132
+But that's where I would would recommend you focus on is just focus on doing a for loop through the string
+
+78
+00:07:56,132 --> 00:08:02,312
+printing one character at a time and really study how four loops are supposed to work with character arrays.
+
+79
+00:08:02,882 --> 00:08:06,602
+You know, what's the beginning? How does the middle work?
+
+80
+00:08:06,812 --> 00:08:10,342
+And then very importantly, how is the how does the exit work?
+
+81
+00:08:10,352 --> 00:08:17,132
+How does it how does a four loop terminate and how are you supposed to terminate when you're iterating an array of something?
+
+82
+00:08:17,582 --> 00:08:24,272
+Like how how does it know when to end? So really, look at that. Okay, I'm going to stop there.
+
+83
+00:08:24,272 --> 00:08:30,902
+I'm sorry. I can't be more clear. I don't want to make this into a into like, a homework assistant.
+
+84
+00:08:31,142 --> 00:08:35,341
+I don't want to help you cheat. This is good. So I'm going to give you some advice.
+
+85
+00:08:35,342 --> 00:08:39,602
+So Cross-body, which is that this is a really interesting problem.
+
+86
+00:08:40,442 --> 00:08:44,672
+You're at the very beginning, and so I'm so excited for you to, like, learn this stuff.
+
+87
+00:08:44,912 --> 00:08:50,822
+And if you're struggling with it, if you're still trying to like, you're still wrestling with it.
+
+88
+00:08:51,032 --> 00:09:00,772
+That's great. That's that's really that's a that means that you've got so much so much like potential for learning here because there's a puzzle.
+
+89
+00:09:00,782 --> 00:09:05,702
+This is a puzzle and there are a couple of ways of approaching it.
+
+90
+00:09:05,702 --> 00:09:13,232
+But the way I would try and approach is to simplify it and just look at the basic operation of going through an array.
+
+91
+00:09:13,532 --> 00:09:21,422
+I think of an array is like a single array is just like, you know, an ice cube tray.
+
+92
+00:09:21,782 --> 00:09:24,931
+But instead of it being like a square,
+
+93
+00:09:24,932 --> 00:09:29,852
+it's just a long line of ice cubes and there are little slots and you're for Loop
+
+94
+00:09:29,852 --> 00:09:35,422
+is trying to go through each part of the ice cube tray until it reaches the end.
+
+95
+00:09:35,732 --> 00:09:47,102
+How does it know when the end is like? How are you supposed to know that and how do you reach in and do something with each item in the ice cube tray?
+
+96
+00:09:47,492 --> 00:09:51,332
+That's the way I visualize it anyways. Yeah.
+
+97
+00:09:51,332 --> 00:09:57,932
+And this idea of like iterating through an array, this is stuff that will should be in a text book.
+
+98
+00:09:57,932 --> 00:10:01,411
+And if it's not in a textbook, you will find examples online.
+
+99
+00:10:01,412 --> 00:10:07,082
+That's these are the key phrases to look for, like iterating a character array and see that's what you're trying to do.
+
+100
+00:10:08,252 --> 00:10:11,422
+Okay. Let's let's get into this.
+
+101
+00:10:12,832 --> 00:10:16,142
+So I'm just familiarizing myself with the first patch in the stack.
+
+102
+00:10:16,162 --> 00:10:18,622
+I don't have to review this one, but I just want to know how it works.
+
+103
+00:10:19,252 --> 00:10:32,062
+So it looks like there are some press that are being set up here, some default ones privacy dot clear history History form data and downloads.
+
+104
+00:10:32,092 --> 00:10:36,642
+That's true. Cookies and stores true cache that sense true and site settings set to false.
+
+105
+00:10:37,422 --> 00:10:43,942
+Then there's this different branch which is clear site data history form data and
+
+106
+00:10:43,942 --> 00:10:49,132
+downloads false cookies and source true cache true and site settings is false.
+
+107
+00:10:50,892 --> 00:10:55,551
+Your history clear site Data Clear History and clear Site data preferences are
+
+108
+00:10:55,552 --> 00:10:59,572
+used to remember user pref options based on the two different entry points.
+
+109
+00:11:00,442 --> 00:11:08,922
+I see there are two different entry points to worry about and in the sanitized dialog, what do we do?
+
+110
+00:11:12,982 --> 00:11:16,132
+So there's some stuff here.
+
+111
+00:11:16,132 --> 00:11:26,662
+I guess those for the old dialog we would get an access to a checkbox and we were, we were just set some references to some DOM elements.
+
+112
+00:11:27,742 --> 00:11:32,002
+We only did that if we weren't using the old dialog. And then over here.
+
+113
+00:11:32,002 --> 00:11:36,892
+So where does this get moved to this get what happened to this?
+
+114
+00:11:37,852 --> 00:11:42,172
+Okay, got moved. Moved.
+
+115
+00:11:43,852 --> 00:11:48,412
+Are we in the same function? We're still inside of a net. There's a long function.
+
+116
+00:11:49,162 --> 00:11:54,322
+Initialization function is quite long. Let's take a look at the whole thing.
+
+117
+00:12:01,762 --> 00:12:07,252
+Okay, so that's the whole initialization function. So we are moving this elsewhere.
+
+118
+00:12:07,432 --> 00:12:11,502
+And then there's a chunk here that clear site data has its own default checkboxes.
+
+119
+00:12:11,512 --> 00:12:18,172
+All other entry points Follow the clear history default press. Um.
+
+120
+00:12:22,312 --> 00:12:28,462
+Is this being moved or is it this is being removed? Looks like this is being removed altogether.
+
+121
+00:12:35,372 --> 00:12:49,602
+Um. My 163165 9898.
+
+122
+00:13:00,982 --> 00:13:11,602
+So the usages are all being removed. Okay. Instead, we get access to the clear site data group box in the dialog.
+
+123
+00:13:14,372 --> 00:13:18,272
+If in clear on shut down new dialog.
+
+124
+00:13:21,222 --> 00:13:27,972
+But no can shut down set in clear on shutdown to try to remove the other group elements that aren't related to the context.
+
+125
+00:13:27,972 --> 00:13:35,742
+The dialog is opened in okay you know remove some DOM elements.
+
+126
+00:13:37,652 --> 00:13:42,452
+I guess we were doing that before and now we're removing site data as well.
+
+127
+00:13:45,092 --> 00:13:54,152
+And then. There was some Elton an attribute set in going on here that's happening down here now.
+
+128
+00:13:58,232 --> 00:14:01,682
+Here we are checking after the initial check box values based on the context.
+
+129
+00:14:01,682 --> 00:14:05,071
+The dialog is opened and categories are not remembered from last time.
+
+130
+00:14:05,072 --> 00:14:07,922
+So we are reversing this comment, it seems.
+
+131
+00:14:07,922 --> 00:14:19,852
+So at the very least, it was known that we weren't remembering the last cattle categories being selected and now we're changing that clearly.
+
+132
+00:14:19,862 --> 00:14:28,622
+To add a new dialog we remove this, otherwise we remove that and then we're getting access to the checkbox.
+
+133
+00:14:28,622 --> 00:14:39,511
+We were getting access to the checkboxes and then updating accept buttons state after each one is selected out of it.
+
+134
+00:14:39,512 --> 00:14:42,932
+Listen to the checkbox. Ensure that the clear but is disabled if no checkboxes are checked.
+
+135
+00:14:42,932 --> 00:14:46,352
+Okay. And the defaults.
+
+136
+00:14:48,572 --> 00:14:59,162
+I see. So we were getting we're having some defaults reference point to one or the other of these and then we
+
+137
+00:14:59,162 --> 00:15:06,662
+were going through the checkboxes and setting them to be checked to be true if the defaults were okay.
+
+138
+00:15:06,662 --> 00:15:15,122
+Now instead. Okay, here's where we send those references here.
+
+139
+00:15:15,122 --> 00:15:21,572
+We get all the checkboxes. So like all of the setting is happening further down, I guess.
+
+140
+00:15:22,912 --> 00:15:28,912
+Where where does that occur? All checkboxes. There's a get item press.
+
+141
+00:15:31,822 --> 00:15:35,092
+Return the bullion perhaps, that correspond to the checkboxes on the dialog.
+
+142
+00:15:37,802 --> 00:15:42,212
+Time spent prefacing the bull. Don't return it.
+
+143
+00:15:44,162 --> 00:15:52,682
+Oh, that's interesting. So instead of going through all of the preferences and filtering for ones that.
+
+144
+00:15:57,712 --> 00:16:03,352
+Don't violate these constraints. We're just getting all of the checkboxes and getting the preference attributes from them.
+
+145
+00:16:05,872 --> 00:16:10,462
+Column The value of a preference element is seen from the actual pref preference.
+
+146
+00:16:10,462 --> 00:16:15,742
+Get pref value equals true found found find any other search enable.
+
+147
+00:16:21,642 --> 00:16:27,492
+Okay. I see if some of them are.
+
+148
+00:16:30,422 --> 00:16:35,731
+As soon as one of them is true, then found is true.
+
+149
+00:16:35,732 --> 00:16:47,312
+And then we'll I guess one of the if at least one of them is checked, will will at the accept button be pressed?
+
+150
+00:16:48,092 --> 00:17:10,812
+Okay. Mom and dad get on homes to clear claims to clear based on checked boxes.
+
+151
+00:17:11,172 --> 00:17:16,782
+So we'll go through all the checkboxes. Where does the initial state?
+
+152
+00:17:19,422 --> 00:17:26,532
+Maybe I missed it. Maybe the initial state was being set elsewhere.
+
+153
+00:17:28,392 --> 00:17:32,411
+What do we. You know what it is?
+
+154
+00:17:32,412 --> 00:17:38,442
+I'll bet you there's some magical binding stuff going on here.
+
+155
+00:17:41,542 --> 00:17:45,472
+Adding new checkboxes.
+
+156
+00:17:47,092 --> 00:17:56,302
+Let's let's take a look at this. We'll pump up the font so you can see what I'm doing.
+
+157
+00:17:56,302 --> 00:18:01,942
+I am pulling down these patches. I'm going to take them all We can take a look at this.
+
+158
+00:18:05,182 --> 00:18:10,402
+Does the sanitized dialog have some kind of like, preference binding preferences?
+
+159
+00:18:14,742 --> 00:18:28,232
+Where does that come from? I think this is some kind of global.
+
+160
+00:18:30,362 --> 00:18:34,591
+Um, where does this load it? Uh, preferences.
+
+161
+00:18:34,592 --> 00:18:46,532
+Bindings. Yeah. Yeah. Okay, so I understand now.
+
+162
+00:18:46,892 --> 00:18:52,501
+So preferences bindings for the people aren't familiar with them allows us to connect items
+
+163
+00:18:52,502 --> 00:18:59,731
+in about config with DOM elements and have like bidirectional synchronization between them.
+
+164
+00:18:59,732 --> 00:19:07,892
+So that like if you change like these boolean attribute or boolean preferences will probably usually be represented as like a checkbox or something.
+
+165
+00:19:08,072 --> 00:19:12,752
+If you uncheck it, it will write to about config, the preferences database.
+
+166
+00:19:13,202 --> 00:19:21,542
+And similarly, if you were to like programmatically change the preference it in about config or flip it about config,
+
+167
+00:19:21,902 --> 00:19:26,012
+that is supposed to update the DOM element that's being represented here.
+
+168
+00:19:26,342 --> 00:19:35,042
+So that's what the preferences bindings do. And, and I think we're kind of like getting some of this by writing bidirectional thinking for free,
+
+169
+00:19:35,252 --> 00:19:40,772
+which is why we're not seeing the, the, the checked attribute being set.
+
+170
+00:19:41,792 --> 00:19:52,421
+Let's go ahead and apply these patches. So, you know, I don't even need to really review this patch.
+
+171
+00:19:52,422 --> 00:19:55,862
+I wasn't asked to review it, but now I kind of get a sense of what it's trying to do.
+
+172
+00:19:55,872 --> 00:20:00,311
+I am curious about how this is going to look like we are.
+
+173
+00:20:00,312 --> 00:20:05,772
+We're effectively we're adding a new section here, but we may not show it.
+
+174
+00:20:07,262 --> 00:20:10,321
+Really depends on the the entry point.
+
+175
+00:20:10,322 --> 00:20:16,802
+Maybe because, like, these are these group boxes, they're being like, removed from the dorm,
+
+176
+00:20:16,802 --> 00:20:22,622
+depending on the way that we enter into the sanitized dialog, which is interesting.
+
+177
+00:20:26,222 --> 00:20:33,841
+Let's take a look and see if we can see the two different ways we can enter the sanitize enter into the sanitize dialog.
+
+178
+00:20:33,842 --> 00:20:37,652
+So I know one way is clear recent history that's this.
+
+179
+00:20:39,482 --> 00:20:43,672
+The other way might be site data.
+
+180
+00:20:45,292 --> 00:20:56,322
+Pure data, this one. So like.
+
+181
+00:20:58,232 --> 00:21:03,872
+This should be the clear site data group box. Take a look.
+
+182
+00:21:10,902 --> 00:21:18,561
+I've got to choose the right frame. Clear site data group box.
+
+183
+00:21:18,562 --> 00:21:22,702
+Right. Okay. Okay. I think I understand.
+
+184
+00:21:23,212 --> 00:21:28,492
+Whereas like what we have right now. Clear data.
+
+185
+00:21:34,212 --> 00:21:38,681
+Oh, you know what it is? I think I understand. I know why we're duplicating it.
+
+186
+00:21:38,682 --> 00:21:42,762
+It's because we want to remember different states.
+
+187
+00:21:47,602 --> 00:21:52,822
+For the different contexts. So ones for whether you're clearing site data,
+
+188
+00:21:53,092 --> 00:21:57,622
+the other ones for whether or not your clearing history and we want to remember them independently of one another.
+
+189
+00:21:57,952 --> 00:22:03,022
+And so our sheet solution is to have two different sets of preferences.
+
+190
+00:22:04,652 --> 00:22:08,522
+And for remembering those states and two different group boxes.
+
+191
+00:22:09,862 --> 00:22:21,832
+Okay. And then we're using strings and whatnot. I mean, some of it's a little awkward in that like we're sharing IDs here.
+
+192
+00:22:24,122 --> 00:22:35,802
+I think I will mention that. So like, there's already a history form in downloads.
+
+193
+00:22:38,742 --> 00:22:42,342
+Item right here, and we're adding another one here.
+
+194
+00:22:44,592 --> 00:22:50,802
+So I know this patch is already reviewed, but I wanted to mention this.
+
+195
+00:22:51,462 --> 00:22:58,902
+I see what you're doing, and I get it. We want to remember the state, the.
+
+196
+00:22:59,652 --> 00:23:02,082
+The states of the checkboxes.
+
+197
+00:23:06,812 --> 00:23:18,992
+Depending on the contexts that they're presented in, either via the clear history pathway or the clear site data pathway.
+
+198
+00:23:23,052 --> 00:23:29,351
+In doing so. You know, that's a that's a fine way of doing it.
+
+199
+00:23:29,352 --> 00:23:40,602
+And you get to take advantage of the preferences, bindings and fluid to mostly recycle.
+
+200
+00:23:41,642 --> 00:23:51,322
+The original mark. One of the things you're also recycling are the IDs of the original markup.
+
+201
+00:23:52,282 --> 00:23:57,222
+Like this one. Street form data and downloads.
+
+202
+00:23:59,112 --> 00:24:02,742
+You have. There's a preexisting.
+
+203
+00:24:04,562 --> 00:24:10,482
+So with that, I'd. This feels like a little bit of a foot gun.
+
+204
+00:24:12,772 --> 00:24:20,682
+Is there anything that actually uses? That dumb idea.
+
+205
+00:24:23,232 --> 00:24:28,362
+As dom id attributes are supposed to be unique.
+
+206
+00:24:29,742 --> 00:24:33,262
+I generally assume. To be you need.
+
+207
+00:24:35,862 --> 00:24:49,542
+If the ID is being used, it might be best to have it instead be something like have it instead belong to a different attribute.
+
+208
+00:24:50,532 --> 00:24:56,812
+Like. I don't know.
+
+209
+00:24:59,572 --> 00:25:17,422
+Clearing. Clearing item, IED clearing item type for something, and then queries can go against document query selector.
+
+210
+00:25:20,862 --> 00:25:27,832
+Bearing item type equals. It's free form data and downloads.
+
+211
+00:25:31,892 --> 00:25:38,452
+That way we don't violate the one eye unique vibe.
+
+212
+00:25:39,602 --> 00:25:48,812
+Assumption for DOM elements. I don't think that needs to block this, but would be good to clean up.
+
+213
+00:25:50,802 --> 00:25:54,692
+In a follow up. All right.
+
+214
+00:25:57,272 --> 00:26:01,062
+Submit. So now we know what he's doing.
+
+215
+00:26:01,112 --> 00:26:04,112
+Let's look at the other patches here.
+
+216
+00:26:04,802 --> 00:26:09,592
+This is the one one of the ones I'm actually supposed to test for, remembering the user, perhaps in the clear history dialog.
+
+217
+00:26:09,602 --> 00:26:14,162
+Okay, so he's writing tests. That's great. Let's take a quick.
+
+218
+00:26:15,722 --> 00:26:19,532
+Oh, okay. So he's got two tests that he's writing is. Oh, he's adding.
+
+219
+00:26:22,552 --> 00:26:28,702
+Let's see what he's doing. He's modified. Clear site data.
+
+220
+00:26:28,712 --> 00:26:34,172
+This one condition. I don't know what that's all about. And then he's added tasks to this one.
+
+221
+00:26:34,322 --> 00:26:38,522
+Let's let's take a look at this one to begin with. What is this clear site data?
+
+222
+00:26:38,552 --> 00:26:45,312
+Let's look at this whole thing. Test clear data.
+
+223
+00:26:47,802 --> 00:26:51,272
+Looks like a big utility function. Does anything actually use it?
+
+224
+00:26:53,242 --> 00:26:59,072
+Down here tests clear data. So these are different variations on doing a very complicated thing.
+
+225
+00:26:59,092 --> 00:27:07,912
+I wish. This this method was was commented was documented with a explaining like what it does and what these are for.
+
+226
+00:27:10,312 --> 00:27:17,782
+But let's read through. So we open a new tab. We add a persistent storage permission, we open a new tab, and then we remove it.
+
+227
+00:27:19,972 --> 00:27:23,991
+And then we open a test, say, which says in add cache.
+
+228
+00:27:23,992 --> 00:27:30,662
+Okay, fill index TB with test data. Register some service workers, test the initial state's.
+
+229
+00:27:32,932 --> 00:27:40,852
+Okay. And then we open up the dialog, the clear history, clear site data dialog.
+
+230
+00:27:47,572 --> 00:27:53,722
+Uh, then we make sure that the dialog is showing the totals, the size totals correctly.
+
+231
+00:27:55,442 --> 00:28:02,042
+Okay, so those two arguments are for checking the boxes on on what we're going to try and clear.
+
+232
+00:28:06,242 --> 00:28:09,802
+This test. It looks like it's designed to also work for the old dialog.
+
+233
+00:28:09,812 --> 00:28:18,302
+That's interesting. Okay, here. So if we're not clearing either and we're using the old clear history dialog.
+
+234
+00:28:21,062 --> 00:28:26,252
+Then simulate user input to one of the checkboxes to trigger the event listing for disabling the clear button.
+
+235
+00:28:32,262 --> 00:28:41,262
+Wait for condition the button is disabled. Otherwise clear button.
+
+236
+00:28:44,592 --> 00:28:48,292
+So I guess there are other things that will be deleted in that case.
+
+237
+00:28:48,312 --> 00:28:51,542
+What? I fully understand.
+
+238
+00:28:51,542 --> 00:29:00,061
+I guess the old dialog. You must choose one or the other for any of this to go through.
+
+239
+00:29:00,062 --> 00:29:08,642
+But for the new one, maybe there's more options. Okay.
+
+240
+00:29:13,172 --> 00:29:18,932
+And over here sanitized dialog v2. So this is just for the new dialog test.
+
+241
+00:29:18,932 --> 00:29:22,322
+Remembering user options are various entry points. So get a dialog helper.
+
+242
+00:29:24,902 --> 00:29:32,642
+We're going to check the pref checkboxes and these I guess we're not performing in check.
+
+243
+00:29:32,642 --> 00:29:40,862
+We're actually setting a state to one or the other and then accepting open and then wait for it to close.
+
+244
+00:29:41,642 --> 00:29:48,392
+Validate if preps are remembered. So we open it up again, validate checkbox that cookies and storage is false.
+
+245
+00:29:48,392 --> 00:29:55,792
+Site settings is true. Yeah.
+
+246
+00:29:55,862 --> 00:30:02,222
+Cookies and storage should be false sightings. It's true that we're going to check site settings as false cookies in storage is true.
+
+247
+00:30:02,582 --> 00:30:06,272
+Then we're going to cancel and we'll open it up again.
+
+248
+00:30:06,662 --> 00:30:10,262
+And it shouldn't have saved. So cookies in storage is false site settings.
+
+249
+00:30:10,262 --> 00:30:13,472
+It's true. Cancel again.
+
+250
+00:30:13,802 --> 00:30:16,922
+Open it up again. And then.
+
+251
+00:30:22,862 --> 00:30:28,542
+Do we? Can we merge these two?
+
+252
+00:30:32,132 --> 00:30:34,622
+Uh, feels like we can probably merge these two.
+
+253
+00:30:39,932 --> 00:30:51,572
+Or is there a good reason why we'd want to close the dialog again before opening it to set these press these checkboxes?
+
+254
+00:30:56,222 --> 00:30:59,222
+Settings. Two false cache. Two false cookies in storage.
+
+255
+00:30:59,222 --> 00:31:07,222
+Two True. Accept and then validate that cache is false cookies and storage is true.
+
+256
+00:31:07,272 --> 00:31:16,802
+Site settings is true. I. So one thing I've noticed is that we're being a bit inconsistent.
+
+257
+00:31:18,862 --> 00:31:25,042
+In the ordering of items here, for example, in the above lines.
+
+258
+00:31:26,482 --> 00:31:35,782
+706 to 708. We have site settings cache and then cookies and storage.
+
+259
+00:31:38,722 --> 00:31:42,382
+And here on the line 718 to 720.
+
+260
+00:31:42,952 --> 00:31:48,232
+We have cash, keys and storage and site settings.
+
+261
+00:31:49,372 --> 00:31:59,942
+This makes verifying. Visually verifying the assumption is a little more difficult.
+
+262
+00:32:02,502 --> 00:32:11,682
+Can we please try to keep. Setting and checking in the same order across each test.
+
+263
+00:32:15,152 --> 00:32:18,932
+Each each part of this test.
+
+264
+00:32:22,152 --> 00:32:28,402
+Okay. It's a dead code here.
+
+265
+00:32:28,402 --> 00:32:31,942
+Okay. And that got removed. Then down here.
+
+266
+00:32:32,272 --> 00:32:38,052
+Oh, this. This is an older version, I guess, to the default default press.
+
+267
+00:32:38,062 --> 00:32:48,692
+Okay. We're just extending on that. I'm I'm fine with that.
+
+268
+00:32:49,382 --> 00:32:53,852
+You know, minus these 2 minutes of a major, I'm going to accept that.
+
+269
+00:32:54,422 --> 00:33:04,802
+That's good. Okay, my great preface for Clear History dialog for both contexts.
+
+270
+00:33:05,312 --> 00:33:11,912
+What if the test also implicitly tests the order of toggling the checks?
+
+271
+00:33:12,962 --> 00:33:18,212
+I mean, maybe. Maybe that's the maybe that's what he's doing.
+
+272
+00:33:18,602 --> 00:33:21,482
+That would be more testing the preferences bindings though.
+
+273
+00:33:22,172 --> 00:33:31,442
+In which case I would recommend he not be testing that part and to instead write a test for the preferences bindings to check if order matters.
+
+274
+00:33:33,452 --> 00:33:42,562
+But good thinking. Good thinking. All right.
+
+275
+00:33:43,542 --> 00:33:48,192
+So I had looked at this last week and I talked a little bit.
+
+276
+00:33:48,312 --> 00:33:54,012
+So what he's doing is we've got these old preferences and.
+
+277
+00:33:58,232 --> 00:34:02,612
+But since this is nightly, it should be all right. The migration should run the same again.
+
+278
+00:34:02,612 --> 00:34:08,612
+Wouldn't be too costly. What are your thoughts? Has migrated to new press.
+
+279
+00:34:10,622 --> 00:34:17,132
+Is this nightly only? Perhaps.
+
+280
+00:34:18,152 --> 00:34:32,232
+It's my great new preface False. Maybe migrate sanitizer.
+
+281
+00:34:33,112 --> 00:34:37,552
+If in clear on shut down new dialog.
+
+282
+00:34:38,182 --> 00:34:46,162
+And that's only true if art mode equals queer and not use old dialog and use old dialog.
+
+283
+00:34:48,052 --> 00:34:51,472
+Where does that come from? Use of dialog comes from.
+
+284
+00:34:53,892 --> 00:34:59,682
+Privacy sanitize use old clear history dialog and that is.
+
+285
+00:35:00,792 --> 00:35:05,302
+Okay. Held to nightly. I see. Okay.
+
+286
+00:35:05,412 --> 00:35:19,212
+So yeah I mean, it is held to nightly for now. I think I didn't realize that this had been held nightly until now.
+
+287
+00:35:19,792 --> 00:35:27,982
+Okay, this makes sense. Thanks. So yeah, he's just changing some of the some of the rules here.
+
+288
+00:35:32,262 --> 00:35:35,862
+It's my great new press, my great all press. The new press clearance shut down.
+
+289
+00:35:37,002 --> 00:35:40,212
+So we have to assume that people will not have gone through.
+
+290
+00:35:41,172 --> 00:35:43,512
+This is interesting. Migrations are interesting.
+
+291
+00:35:47,352 --> 00:35:54,572
+We have to think about people honestly who've been going through the process of having the new migration,
+
+292
+00:35:54,582 --> 00:35:58,752
+the story, the new dialog turned on, and then having the press migrated.
+
+293
+00:35:58,962 --> 00:36:04,242
+And by migrated, I mean there are old press and they're being like at runtime,
+
+294
+00:36:05,262 --> 00:36:13,002
+we're reading those old press in and writing new press to that those map to to use from here forward.
+
+295
+00:36:13,842 --> 00:36:20,862
+It's like a database migration if you've ever done one of those and that, you know, if we're doing that a nightly that makes sense.
+
+296
+00:36:20,862 --> 00:36:25,241
+We need to make sure that when this finally gets turned on on beta and goes
+
+297
+00:36:25,242 --> 00:36:31,602
+out to release that people in on those channels will also properly migrate.
+
+298
+00:36:35,352 --> 00:36:38,592
+So what were the old what was the old migration doing?
+
+299
+00:36:45,492 --> 00:36:50,982
+Um. Shut down.
+
+300
+00:36:54,032 --> 00:37:02,732
+It was getting privacy clearance shut down cookies clearance shut down, history and clearance shut down cash and clearance shut down site settings.
+
+301
+00:37:03,242 --> 00:37:06,452
+And then writing those press.
+
+302
+00:37:06,662 --> 00:37:10,832
+It wasn't. It was also wasn't changing them.
+
+303
+00:37:12,232 --> 00:37:16,912
+It's just getting them and then writing new ones. That's interesting.
+
+304
+00:37:28,142 --> 00:37:35,952
+CPD. So how does this work?
+
+305
+00:37:37,452 --> 00:37:49,812
+Context. We read.
+
+306
+00:37:55,042 --> 00:38:07,561
+Clear on. Shut down. Clear on shut down.
+
+307
+00:38:07,562 --> 00:38:15,932
+And the other one is CPD. Okay.
+
+308
+00:38:18,272 --> 00:38:25,412
+Okay, hold on. So. If we clear on shutdown, price clearance shutdown, that's functionally equivalent.
+
+309
+00:38:25,562 --> 00:38:26,582
+Functionally equivalent.
+
+310
+00:38:26,582 --> 00:38:39,092
+We read those in the new context equals if a context is clear and shutdown, then clear and shutdown v two or it's clear history.
+
+311
+00:38:40,232 --> 00:38:48,822
+And then we're writing the new context. I see.
+
+312
+00:38:50,532 --> 00:38:58,532
+Okay. Okay.
+
+313
+00:39:04,822 --> 00:39:14,532
+Okay. I think I understand. And then. Chernobyl presser affected by a factor that affected scientific literature.
+
+314
+00:39:14,532 --> 00:39:18,222
+That's what gets new press false. Okay.
+
+315
+00:39:18,732 --> 00:39:30,372
+I think I understand. Privacy Santé is clear and shut down.
+
+316
+00:39:31,002 --> 00:39:41,532
+It used to be sanitized and shut down. But that preface changing centers on shut down is now clear on Shut down has migrated to new perhaps.
+
+317
+00:39:41,532 --> 00:39:44,681
+And then CPD. I don't know what that stands for.
+
+318
+00:39:44,682 --> 00:39:49,661
+CPD sanitized but clear and shut down.
+
+319
+00:39:49,662 --> 00:39:54,282
+Group Remove your site data. Clear Personal data, I would presume.
+
+320
+00:39:56,202 --> 00:40:00,492
+Clear site data. Clear private data. Private data.
+
+321
+00:40:07,122 --> 00:40:19,192
+Okay. Clear private data. History form data cookies, offline app sessions, settings and cache.
+
+322
+00:40:21,922 --> 00:40:26,152
+And then also I see queer history cookies in storage as fast.
+
+323
+00:40:30,022 --> 00:40:41,072
+Okay. And then. We're making sure that the new dialog when it opens has the right state and that migration completed.
+
+324
+00:40:42,702 --> 00:40:50,382
+Okay. That's nice. Um. It's nice that that's tested.
+
+325
+00:40:56,102 --> 00:41:01,492
+And so he's just renaming a preference here. Okay.
+
+326
+00:41:03,432 --> 00:41:06,562
+Okay. I think I get it.
+
+327
+00:41:06,582 --> 00:41:18,132
+I think I get what he's doing. I think what I will recommend is there another place where CPD is being used?
+
+328
+00:41:19,812 --> 00:41:23,652
+And shut down privacy sanitized CPD.
+
+329
+00:41:25,392 --> 00:41:28,812
+Just like a. Yeah.
+
+330
+00:41:30,792 --> 00:41:37,982
+Mitt. I'd love it if we could either use something more descriptive.
+
+331
+00:41:39,292 --> 00:41:46,192
+And CPD. I assume that stands for clear private data.
+
+332
+00:41:47,792 --> 00:41:50,432
+Or is it clear personal data?
+
+333
+00:41:52,962 --> 00:42:06,342
+Or at the very least, add some documentation here where the preference default is set to explain what the acronym is for.
+
+334
+00:42:11,802 --> 00:42:18,832
+Okay. I'm fine with that. I think I get it. So I'm going to go ahead and.
+
+335
+00:42:20,892 --> 00:42:24,702
+You can go and do that. All right. That's it. That's it.
+
+336
+00:42:25,392 --> 00:42:32,202
+Good job. I am very curious about, you know, while I'm thinking about it.
+
+337
+00:42:33,962 --> 00:42:37,892
+This over inflated font size, I suspect.
+
+338
+00:42:39,482 --> 00:42:42,602
+I think I know. I think someone else knows about this.
+
+339
+00:42:45,662 --> 00:42:51,092
+I think I saw a bug go by about. I just want to double check that this is being fixed.
+
+340
+00:42:52,802 --> 00:42:59,922
+Uh, let me see. I just got check by email. This one.
+
+341
+00:43:03,882 --> 00:43:07,072
+Uh, added some select sales and parent or broker side panel.
+
+342
+00:43:07,092 --> 00:43:10,632
+Probably had some sort. Oh, no, that was not correct.
+
+343
+00:43:10,992 --> 00:43:22,532
+Um. If it was.
+
+344
+00:43:23,722 --> 00:43:28,872
+What else? Standardized headings.
+
+345
+00:43:34,442 --> 00:43:37,802
+Uh, well, let's take a look. Let's take a look at the headings. So.
+
+346
+00:43:42,142 --> 00:43:46,292
+What's going on here? So we've got an H2.
+
+347
+00:43:53,282 --> 00:43:56,582
+Is that supposed to be font size x large?
+
+348
+00:44:03,062 --> 00:44:10,042
+Title text. Looks like it is supposed to be.
+
+349
+00:44:10,042 --> 00:44:13,642
+And then this this text and typography.
+
+350
+00:44:20,472 --> 00:44:27,421
+Comes from line 16. Jules.
+
+351
+00:44:27,422 --> 00:44:39,152
+February 8th. Hmm.
+
+352
+00:44:40,682 --> 00:44:43,741
+Maybe. I think I should probably just double check.
+
+353
+00:44:43,742 --> 00:44:47,702
+Like, is this the right appearance? Is this the expected appearance?
+
+354
+00:44:49,412 --> 00:44:52,682
+When the dialog is open this way, let's file a bug.
+
+355
+00:44:52,712 --> 00:45:01,271
+Let's find out. Sanitize data sanitization.
+
+356
+00:45:01,272 --> 00:45:09,372
+Where's the good place for for this book Toolkit Data Sanitization, Sanitization.
+
+357
+00:45:14,992 --> 00:45:19,402
+Is the new sanitization dialog header too large?
+
+358
+00:45:21,512 --> 00:45:27,812
+Hey. Need it for.
+
+359
+00:45:31,502 --> 00:45:37,322
+I was just looking at the news sanitization dialog while reviewing.
+
+360
+00:45:38,672 --> 00:45:44,522
+Such and such. What was I reviewing? By such and such.
+
+361
+00:45:45,722 --> 00:45:52,742
+And I notice that the header on the dialog when opened from the history.
+
+362
+00:45:54,112 --> 00:45:59,662
+Opened in the clear history context for the.
+
+363
+00:46:00,612 --> 00:46:06,482
+Opened via. A clear history entry point is kind of large.
+
+364
+00:46:06,842 --> 00:46:11,652
+See Screenshot. Is that the intended appearance?
+
+365
+00:46:13,262 --> 00:46:16,322
+Okay, so let's paste the image.
+
+366
+00:46:24,312 --> 00:46:28,562
+Uh, submit. And this is maybe a defect.
+
+367
+00:46:31,192 --> 00:46:42,552
+Okay. Okay.
+
+368
+00:46:43,692 --> 00:46:46,991
+What did I want to do? I wanted to do the promise stuff.
+
+369
+00:46:46,992 --> 00:46:49,992
+So we. Last week. Last week?
+
+370
+00:46:49,992 --> 00:46:55,002
+Last week on Joy of Coding we were working on.
+
+371
+00:46:56,442 --> 00:47:03,311
+There's a new API for asynchronously asynchronously fetching fab icons.
+
+372
+00:47:03,312 --> 00:47:15,732
+It was called obtain cached icon file async creatively enough o script he says Maybe add that you run Mac to the bug.
+
+373
+00:47:15,742 --> 00:47:20,202
+Yeah. Why not? If it's at all useful.
+
+374
+00:47:20,222 --> 00:47:24,062
+I'm running on mac os another.
+
+375
+00:47:26,332 --> 00:47:34,062
+I'm running on nightly. Screenshot is from nightly.
+
+376
+00:47:35,572 --> 00:47:38,632
+Today's nightly on Mac OS Sonoma.
+
+377
+00:47:41,122 --> 00:47:47,302
+So we got our cool function here and it's doing some interesting stuff.
+
+378
+00:47:48,022 --> 00:47:58,282
+I think the most interesting part, it calculates an icon path and if it can't find if it calculates an icon path,
+
+379
+00:47:58,282 --> 00:48:03,232
+it doesn't check to see whether or not a file is there, but it calculates where and a fabric on file could be.
+
+380
+00:48:04,252 --> 00:48:13,732
+And then our goal is to dispatch a job to the IO thread to do the actual starting to see whether or not there's a file there.
+
+381
+00:48:15,892 --> 00:48:19,052
+And we are having build problems.
+
+382
+00:48:19,072 --> 00:48:30,262
+That was the that was what we were dealing with is that whenever I have this, like new rainbow functional lambda thing, then.
+
+383
+00:48:31,662 --> 00:48:37,172
+For some reason, the function signature, it doesn't like it.
+
+384
+00:48:38,292 --> 00:48:47,531
+It doesn't like it. And I don't know why. And unfortunately, my RTP is being a little unresponsive.
+
+385
+00:48:47,532 --> 00:48:50,472
+Very go no matching function,
+
+386
+00:48:50,472 --> 00:49:03,132
+no matching member function to for the call to resolve or reject because apparently promise Holder isn't the right type or.
+
+387
+00:49:08,102 --> 00:49:13,472
+No matching function matching member function candidate function template not viable.
+
+388
+00:49:13,832 --> 00:49:18,722
+No known conversion from the reference.
+
+389
+00:49:22,162 --> 00:49:25,412
+Remove reference to loss promise holder Ms.
+
+390
+00:49:25,412 --> 00:49:28,532
+Promise string and its.
+
+391
+00:49:31,392 --> 00:49:35,172
+Resolve or reject. I think I just wanted to reject.
+
+392
+00:49:38,182 --> 00:49:42,202
+Let's try it maybe. Or let's. Let's just resolve.
+
+393
+00:49:42,532 --> 00:49:48,202
+Promise, Holder. Promise Holder is a mars promise Holder.
+
+394
+00:49:48,532 --> 00:49:52,552
+Let's just look at see what people have done with that before.
+
+395
+00:49:55,142 --> 00:50:03,512
+Moore's Promise Holder. We call insurer on it, though.
+
+396
+00:50:04,032 --> 00:50:08,352
+Here we've moved the holder into something called impending data requests.
+
+397
+00:50:15,162 --> 00:50:24,642
+And presumably. For each one you can do like reject or maybe reject.
+
+398
+00:50:28,362 --> 00:50:35,412
+On the promise holder you can reject. So maybe that's what I'll let's let's do that Let's promise Holder.
+
+399
+00:50:35,742 --> 00:50:44,042
+Dot reject. And then what are they passing?
+
+400
+00:50:47,472 --> 00:50:55,561
+Let's air failure and then [INAUDIBLE]. I This feels very familiar.
+
+401
+00:50:55,562 --> 00:51:00,182
+I think we did this before, but let's see what it throws at us now.
+
+402
+00:51:02,552 --> 00:51:08,412
+I have a feeling we're kind of going in circles here. That's okay.
+
+403
+00:51:08,432 --> 00:51:16,262
+Sometimes when you're going in circles, you're actually slowly narrowing in on the center of the circle.
+
+404
+00:51:22,812 --> 00:51:28,172
+Now don't don't get overconfident just because it built widget windows.
+
+405
+00:51:28,182 --> 00:51:33,552
+Yeah, here we go. It's the linking where things start to fall apart.
+
+406
+00:51:34,032 --> 00:51:42,972
+Okay, so the candidate value reject can take a reject value and a method name.
+
+407
+00:51:55,282 --> 00:52:02,492
+Object argument. No, no conversion from.
+
+408
+00:52:04,792 --> 00:52:15,312
+This, a.k.a. Promise. HOLDER And it holds a promise that promise can resolve to character.
+
+409
+00:52:15,852 --> 00:52:22,002
+String choices since t string or it can reject within as result and its exclusive.
+
+410
+00:52:22,782 --> 00:52:28,632
+And then we cannot convert that to Mozilla mas promise holder base.
+
+411
+00:52:30,932 --> 00:52:35,702
+Muslims promise not to drink tea and as a result.
+
+412
+00:52:35,702 --> 00:52:38,822
+True or.
+
+413
+00:52:39,542 --> 00:52:44,552
+Mozilla Mars Promise Holder. Mozilla Mars promise.
+
+414
+00:52:45,362 --> 00:52:53,222
+Charge 16 T as a result. True. That's like a so the the base.
+
+415
+00:52:57,632 --> 00:53:02,952
+Holds truth. Convert.
+
+416
+00:53:08,432 --> 00:53:13,352
+I think we're doing this wrong. Pros alter.
+
+417
+00:53:17,242 --> 00:53:21,252
+But promise Holder what I'm told.
+
+418
+00:53:23,232 --> 00:53:32,492
+What are your methods? It implements the implements to.
+
+419
+00:53:38,262 --> 00:53:42,672
+It's templated for promise type. That's problems for their face.
+
+420
+00:53:58,012 --> 00:54:01,732
+I can pass it, reject or reject value.
+
+421
+00:54:07,632 --> 00:54:12,851
+Did I do this wrong? This is fairly difficult to read.
+
+422
+00:54:12,852 --> 00:54:20,062
+So we have the holder. And the holder.
+
+423
+00:54:22,022 --> 00:54:32,732
+Let's go back to that example. For the clipboard when I like this example, get data promise.
+
+424
+00:54:38,722 --> 00:54:49,432
+Is a mars promise and obtain cached icon file async promise is also.
+
+425
+00:54:51,332 --> 00:54:56,012
+Uh, Amores Promise? I believe we define it here.
+
+426
+00:54:57,122 --> 00:55:01,272
+TypeDef. And a string.
+
+427
+00:55:10,722 --> 00:55:15,972
+I typed effort they used using. I don't know if that super matters.
+
+428
+00:55:18,162 --> 00:55:26,422
+Okay. So that checks out and we create a holder for it and then we ensure.
+
+429
+00:55:32,722 --> 00:55:44,692
+The the holder. We create the holder first and Holder Dutton sure creates the promise for us was sure do.
+
+430
+00:55:47,312 --> 00:55:51,442
+Yes. This is a member very close to Methodist Church. Sure.
+
+431
+00:55:51,832 --> 00:55:55,882
+So we'll go ahead and create a new promise. I see.
+
+432
+00:55:58,882 --> 00:56:05,142
+So that works. And then we're dispatching to a background thread.
+
+433
+00:56:05,152 --> 00:56:12,712
+We're moving the holder, we move the icon file, and here I'm saying promise Holder.
+
+434
+00:56:13,192 --> 00:56:21,092
+Dot reject. And it's complaining.
+
+435
+00:56:25,622 --> 00:56:32,792
+Calling dot reject doesn't work because the candidate function template is not viable.
+
+436
+00:56:36,902 --> 00:56:41,992
+A.K.A. this. I have a harder time reading this last one like remove reference t.
+
+437
+00:56:42,002 --> 00:56:48,151
+I don't know what that means, but here it kind of blows it out for me cause that's different.
+
+438
+00:56:48,152 --> 00:56:52,622
+Context. Mozilla Moore's Promise Holder.
+
+439
+00:57:05,042 --> 00:57:13,052
+Cannot convert. There's this man's prize holder base.
+
+440
+00:57:19,972 --> 00:57:33,981
+The holder itself. Yes, It's weird.
+
+441
+00:57:33,982 --> 00:57:38,332
+This is like kind of recursive. A mars Promise holder.
+
+442
+00:57:44,162 --> 00:58:21,972
+Part of its definition is itself. I don't think that's going to matter.
+
+443
+00:58:22,242 --> 00:58:38,542
+But. I don't think there are any great examples in the tree of doing what it is that I'm trying to do.
+
+444
+00:58:42,462 --> 00:58:48,872
+That's let's look for some more of them. Yeah,
+
+445
+00:58:48,932 --> 00:58:55,382
+it's worth these asking whether or not it seems to be something about that you are using was promise
+
+446
+00:58:55,382 --> 00:59:01,262
+holder base and not promise Holder even though AMA's promise Holder is AMA's promise Holder base.
+
+447
+00:59:02,552 --> 00:59:11,892
+He links to this. Yeah. Most promise the older holder is a kind of mass promise holder base, but it also is part of its own definition.
+
+448
+00:59:12,522 --> 00:59:16,032
+Or is it that one of the parameters are wrong? I don't know. It's very abstract.
+
+449
+00:59:17,112 --> 00:59:23,242
+Um. Yeah, I really didn't like that cause that I added.
+
+450
+00:59:28,002 --> 00:59:39,312
+Error. This argument to member function insurer has type a a.k.a but function is not marked const.
+
+451
+00:59:39,912 --> 00:59:46,752
+I see. So that's no good. So calling Holder is actually going to change it.
+
+452
+00:59:48,072 --> 01:00:03,602
+Calling insured changes it so it can't be caused. Mm hmm.
+
+453
+01:00:09,752 --> 01:00:25,192
+I sold her. This is for dorm promises.
+
+454
+01:00:30,372 --> 01:00:34,932
+Not exactly the same. And this one is for.
+
+455
+01:00:39,952 --> 01:00:43,072
+Okay. Okay. Okay. Hold up. Hold up.
+
+456
+01:00:45,632 --> 01:01:00,732
+Standard move. Let's see if we can copy this form and see what happens.
+
+457
+01:01:01,392 --> 01:01:13,572
+Maybe that will make it happier. So we're saying make unique a mars promise holder of a particular kind of promise.
+
+458
+01:01:14,502 --> 01:01:20,042
+Okay. The auto. Promise holder equals.
+
+459
+01:01:21,622 --> 01:01:28,952
+Make unique. Then a mars promise holder.
+
+460
+01:01:30,592 --> 01:01:34,342
+Of a fad like this.
+
+461
+01:01:34,582 --> 01:01:39,802
+This garbage. Then we.
+
+462
+01:01:41,822 --> 01:01:47,372
+Instantiate, and then we get access to the promise.
+
+463
+01:01:50,142 --> 01:01:55,001
+Ralph Poynter The promise equals promise.
+
+464
+01:01:55,002 --> 01:02:00,822
+Holder And sure funk. Okay.
+
+465
+01:02:04,342 --> 01:02:08,052
+Then. Were they doing?
+
+466
+01:02:10,602 --> 01:02:17,142
+Fastest quote source. Here's the Lambda promise or standard move promise Holder.
+
+467
+01:02:19,962 --> 01:02:23,472
+And then it's saying resolve if exists. True.
+
+468
+01:02:23,472 --> 01:02:29,802
+And it's using. Oh, it's using its pointer.
+
+469
+01:02:29,982 --> 01:02:42,032
+Okay. Let's say, reject if exists.
+
+470
+01:02:49,122 --> 01:02:53,632
+She insists that the thing. Reject, if exists.
+
+471
+01:02:58,692 --> 01:03:05,982
+What do you think of that? Good old trick of copying what's already in search, folks.
+
+472
+01:03:06,012 --> 01:03:11,562
+Yeah, I mean, it's a little bit of kabuki holding for sure.
+
+473
+01:03:12,522 --> 01:03:19,572
+I'm way outside my comfort zone with these Mars promises. I'm really just looking for legitimate forms.
+
+474
+01:03:19,782 --> 01:03:22,872
+Legitimate forms to do what it is that I'm trying to do.
+
+475
+01:03:22,882 --> 01:03:26,382
+I'm hoping my reviewers can tell me if if there's a better way of doing it.
+
+476
+01:03:28,032 --> 01:03:32,322
+Use of undeclared identifier. Okay, I can fix that. 1077.
+
+477
+01:03:33,492 --> 01:03:39,282
+Yeah. Never heard you. All right.
+
+478
+01:03:39,712 --> 01:03:50,761
+Try again. The thing is, I want to be able to, like, ultimately understand what it is that I just wrote.
+
+479
+01:03:50,762 --> 01:03:56,612
+If it works, if that works and and it compiles.
+
+480
+01:03:56,822 --> 01:04:02,762
+I'm not satisfied until I understand why. Like, what's the difference between what I had written before and what I've written now?
+
+481
+01:04:02,762 --> 01:04:05,882
+Like, why is a unique pointer helpful here?
+
+482
+01:04:07,952 --> 01:04:15,072
+Look, it's linking. It's working. Incredible.
+
+483
+01:04:22,412 --> 01:04:30,302
+Okay. So we're going to I'm going to add a I to do figure out why I can't just.
+
+484
+01:04:31,342 --> 01:04:35,632
+Do this. Why is a unique point here helpful?
+
+485
+01:04:40,772 --> 01:04:53,592
+How come? I can't just pass this holder to the lambda and call it resolve or act on it.
+
+486
+01:04:57,292 --> 01:05:00,292
+So roughly says it's the dot versus the arrow. Maybe.
+
+487
+01:05:01,732 --> 01:05:08,722
+I mean, let's try it. Let's put it back and then see if the see if the arrow helps.
+
+488
+01:05:15,292 --> 01:05:19,342
+Wow. Lincoln, Lincoln Park over here.
+
+489
+01:05:21,772 --> 01:05:26,782
+CPU's not even that busy. What you doing?
+
+490
+01:05:26,842 --> 01:05:30,632
+There we go. Okay. But, um.
+
+491
+01:05:31,732 --> 01:05:37,372
+Do I have. Do I have a. Kind of.
+
+492
+01:05:38,042 --> 01:05:42,662
+I wish I had a dumb ass. Well, closest thing I got.
+
+493
+01:05:43,202 --> 01:05:49,922
+Okay, so let's. Let's take this stuff. Comment it out when I put this stuff.
+
+494
+01:05:53,922 --> 01:05:58,722
+Put this stuff back. We'll call this promise Holder instead.
+
+495
+01:06:05,442 --> 01:06:25,052
+And see if this compiles. Make you knee.
+
+496
+01:06:29,652 --> 01:06:33,312
+I got it. But I don't think this is going to work for maybe.
+
+497
+01:06:33,942 --> 01:06:37,722
+Yeah. It's not a pointer.
+
+498
+01:06:38,382 --> 01:06:42,202
+I mean, he's die. Maybe it needed to be a pointer.
+
+499
+01:06:42,222 --> 01:06:48,932
+Maybe that's the thing. What's make you need to again?
+
+500
+01:06:59,032 --> 01:07:09,061
+Unique. Helper function for all continued objects in arrays during unique point.
+
+501
+01:07:09,062 --> 01:07:18,272
+Containing the resulting point of this makes make unique are as follows If type is in array disallowed deleted in overload view if type is an array t.
+
+502
+01:07:19,712 --> 01:07:27,752
+Type. So we don't it's neither of these. If type is not a rate the arguments past make unique are forwarded into a new call initialize.
+
+503
+01:07:29,822 --> 01:07:34,672
+Oh. Should I have been?
+
+504
+01:07:36,552 --> 01:07:57,492
+I was creating this on the stack. Minecraft pointer.
+
+505
+01:08:00,692 --> 01:08:13,222
+Hold her. I mean this on the stack.
+
+506
+01:08:16,092 --> 01:08:22,302
+Uh. That's all on the stack.
+
+507
+01:08:22,312 --> 01:08:32,512
+We're moving it into a select audio output task, which is a get user immediate task.
+
+508
+01:08:42,452 --> 01:08:50,042
+Oh, man. We make a ref pointer, we pass it.
+
+509
+01:08:53,122 --> 01:09:00,772
+Select your task. We take all these households a holder.
+
+510
+01:09:01,852 --> 01:09:05,712
+We move it into us. Okay.
+
+511
+01:09:05,722 --> 01:09:13,872
+So I don't think we're on a different thread here. I don't think I'm.
+
+512
+01:09:19,712 --> 01:09:22,902
+But over here. Unique pointer. Holder.
+
+513
+01:09:29,172 --> 01:09:34,332
+What's the definition? Bake unique eliminates use of new from code entirely.
+
+514
+01:09:36,342 --> 01:09:39,342
+What's the difference between Moore's assert and regular assert?
+
+515
+01:09:40,302 --> 01:09:48,252
+While Moore's assert will in debug builds, crash the browser, intentionally crash the browser and create a crash report.
+
+516
+01:09:50,442 --> 01:09:54,672
+I'm not sure what you mean by a regular cert. Like is there a C plus plus a assert?
+
+517
+01:09:55,732 --> 01:09:59,272
+Is there some kind of assert?
+
+518
+01:10:10,362 --> 01:10:13,562
+My I don't know. I've never used this before.
+
+519
+01:10:13,572 --> 01:10:17,502
+If this is what you're referring to. I've never used this before. I do know.
+
+520
+01:10:17,532 --> 01:10:21,212
+Okay, so it looks like we will crash main.
+
+521
+01:10:21,732 --> 01:10:27,762
+Well, we'll abort here in the event of an assertion failure.
+
+522
+01:10:28,452 --> 01:10:42,092
+But I will tell you that. I don't know how old the stuff is, but Mars Desert is old from like the early the late nineties, early 2000.
+
+523
+01:10:42,112 --> 01:10:49,052
+So my guess is Mars Desert is just a much older way of doing a survey.
+
+524
+01:10:51,122 --> 01:11:01,642
+You know we've had it since pre. You know, we've had it since before C++ had its own, like a cert library, I guess.
+
+525
+01:11:01,642 --> 01:11:07,401
+And the standard library festooned all explicit release clause are safe, include aggressively notice safety,
+
+526
+01:11:07,402 --> 01:11:09,952
+casting, fineness, correctly maintain ownership of the unique power guarantees.
+
+527
+01:11:09,952 --> 01:11:12,861
+No leaks or possible pairs are best of class of create through a factory method.
+
+528
+01:11:12,862 --> 01:11:19,912
+The classes in private instructor initializing unique port using so it means that there's only one thing pointing at something at one time.
+
+529
+01:11:23,752 --> 01:11:29,422
+Using a new expression requires repeating the name of the new type, whereas Make unique comes with the auto keyword only does it once.
+
+530
+01:11:30,052 --> 01:11:34,912
+This is repetitive, this is shorter.
+
+531
+01:11:37,132 --> 01:11:42,382
+Okay. Since uh, in the long I was probably reasonable assumption in the short amount of talk your
+
+532
+01:11:42,382 --> 01:11:45,952
+judgment call the make you need can be assigned directly to a unique pointer.
+
+533
+01:11:47,972 --> 01:11:52,912
+Make any is exceptions save and exception thrown out for duty succeeds will leak the memory.
+
+534
+01:11:54,982 --> 01:12:01,762
+Well I don't have a great answer yet for why we need to use unique pointer here but.
+
+535
+01:12:13,562 --> 01:12:22,352
+It seems like. It's the difference between.
+
+536
+01:12:25,682 --> 01:12:30,692
+I think it's a threading maybe has to do with transferring memory between threads.
+
+537
+01:12:34,742 --> 01:12:38,762
+Maybe we can find more examples, Nick.
+
+538
+01:12:40,212 --> 01:12:43,752
+Make unique. Promise.
+
+539
+01:12:45,912 --> 01:12:52,322
+Prop info comment holder and sure, here we move.
+
+540
+01:12:52,332 --> 01:13:00,112
+Yeah, this is exactly the form that we want. This is what we want.
+
+541
+01:13:07,572 --> 01:13:12,462
+Okay. All right.
+
+542
+01:13:12,462 --> 01:13:17,922
+Well, I guess I learned that that's how it's supposed to be. That's what I've learned today.
+
+543
+01:13:21,732 --> 01:13:31,452
+I guess my guess is that it has to do with moving something allocated on the stack.
+
+544
+01:13:35,902 --> 01:13:46,972
+Across to our worker thread. And the lambda function that runs in it.
+
+545
+01:13:48,382 --> 01:13:52,072
+Okay, well, anyways, we've got something that compiles. That's good.
+
+546
+01:13:55,782 --> 01:14:03,372
+And what I want to do now, instead of just like automatically rejecting is we're going to check to see if the.
+
+547
+01:14:04,742 --> 01:14:08,702
+Uh, actually, I should put that back so I can read to it.
+
+548
+01:14:09,212 --> 01:14:12,902
+But we should see whether or not the file is actually there.
+
+549
+01:14:14,432 --> 01:14:19,172
+So what we were doing before was we were checking to see if the icon file exists.
+
+550
+01:14:22,412 --> 01:14:26,712
+And so we can do that immediately. We can do IKO file exists.
+
+551
+01:14:34,892 --> 01:14:37,892
+So Boule exists.
+
+552
+01:14:39,362 --> 01:14:45,302
+And as a result. RV And then.
+
+553
+01:14:47,862 --> 01:14:55,492
+If Nez failed RV. Promise Holder.
+
+554
+01:14:57,092 --> 01:15:01,412
+Ject if exists and we're going to pass our v.
+
+555
+01:15:03,872 --> 01:15:10,282
+If it does exist. Then we're going to resolve.
+
+556
+01:15:15,522 --> 01:15:19,302
+And. We're going to resolve with the.
+
+557
+01:15:20,232 --> 01:15:24,662
+Oh, well, hold on a second. We have to. There's all these rules.
+
+558
+01:15:24,672 --> 01:15:29,982
+We have to see whether or not it needs to be invalidated.
+
+559
+01:15:34,862 --> 01:15:45,272
+Okay, Well, let's put some commentary in. The way this one works is there's like two branches if it exists.
+
+560
+01:15:46,352 --> 01:15:50,462
+Check to see if it's invalid, like if it's expired.
+
+561
+01:15:50,462 --> 01:15:56,432
+And if so, go retrieve the new one. If it doesn't exist, go retrieve off the network.
+
+562
+01:15:57,032 --> 01:16:02,012
+And then it's. If we escape here, it means we must have.
+
+563
+01:16:02,432 --> 01:16:06,542
+We must have found it. Now, I wonder if we can improve on that a little bit,
+
+564
+01:16:06,542 --> 01:16:17,582
+because both of these jobs occur in the event that either the file is invalidated or the file doesn't exist.
+
+565
+01:16:41,382 --> 01:16:47,802
+Let's get the last modified time file amount.
+
+566
+01:16:47,832 --> 01:17:03,982
+Let's basically copy this stuff. Tain the files last modification time and seconds.
+
+567
+01:17:06,392 --> 01:17:09,722
+And then this method.
+
+568
+01:17:10,082 --> 01:17:14,642
+Oh, can I call this on this thread? Get Iseo cache seconds.
+
+569
+01:17:14,642 --> 01:17:24,531
+Timeout. What is that? Oh, we're going to do a pref read.
+
+570
+01:17:24,532 --> 01:17:29,492
+We may need to pass this in. From the main thread.
+
+571
+01:17:30,002 --> 01:17:35,432
+We can't read the preface off of the main thread, so we may have to pass this and.
+
+572
+01:17:40,572 --> 01:18:03,582
+Okay. Um.
+
+573
+01:18:08,282 --> 01:18:12,232
+So if it fails, we're going to.
+
+574
+01:18:14,342 --> 01:18:19,262
+If we couldn't get them modified. Okay, here's here's the rule.
+
+575
+01:18:21,982 --> 01:18:45,632
+Either. We couldn't stand it. I think what I want to say is like.
+
+576
+01:18:51,722 --> 01:18:54,752
+The opposite of this if.
+
+577
+01:19:01,162 --> 01:19:07,582
+So what it's like and has succeeded. I think there is and I succeeded.
+
+578
+01:19:15,282 --> 01:19:20,472
+Now time is file mod time is a less than that.
+
+579
+01:19:22,682 --> 01:19:28,202
+If the last month call failed I mean to save if the last.
+
+580
+01:19:32,632 --> 01:19:35,842
+You get last modified seated.
+
+581
+01:19:38,012 --> 01:19:45,132
+I think we can do better if the file seems to be less than I could read.
+
+582
+01:19:45,142 --> 01:19:48,432
+Cache second. Time out old.
+
+583
+01:19:50,612 --> 01:19:56,612
+Then we can go ahead and return its path on the file system.
+
+584
+01:20:02,132 --> 01:20:05,732
+Okay, Go ahead and returns path in the file system.
+
+585
+01:20:07,922 --> 01:20:16,432
+So that's this part. Path.
+
+586
+01:20:18,222 --> 01:20:30,302
+If NASA succeeded. Then.
+
+587
+01:20:32,372 --> 01:20:42,462
+I think I go back. You need to write.
+
+588
+01:20:47,002 --> 01:20:51,892
+Or, you know, resolve the promise path.
+
+589
+01:20:51,952 --> 01:20:57,982
+So we need a string. I think it's like auto.
+
+590
+01:21:05,282 --> 01:21:14,532
+And it's out of stream. Hi seo file path for to get it.
+
+591
+01:21:17,422 --> 01:21:26,242
+He succeeded in getting it. Then we need to resolve finally promise Holder resolve if exists.
+
+592
+01:21:29,312 --> 01:21:34,282
+And yeah, it's a string and a string.
+
+593
+01:21:34,292 --> 01:21:39,032
+So I think we can just say. I think I can just say that.
+
+594
+01:21:41,672 --> 01:21:49,192
+Then return. Now if we get here.
+
+595
+01:21:50,622 --> 01:22:00,642
+And we just need to re retrieve something when either the icon wasn't.
+
+596
+01:22:02,852 --> 01:22:06,182
+Icon wasn't there or was too old.
+
+597
+01:22:06,782 --> 01:22:18,942
+Let's. That's too old. Or we failed to get information about it.
+
+598
+01:22:20,952 --> 01:22:24,132
+Fall back to re retrieving it.
+
+599
+01:22:28,022 --> 01:22:36,722
+Okay. And then we will do this. Pash icon file from fabric on you or I async.
+
+600
+01:22:39,062 --> 01:22:52,672
+Now what does that do? We're on a different thread. We check to see whether or not places exists.
+
+601
+01:22:55,852 --> 01:23:01,662
+Oh, boy. We get the fava con service.
+
+602
+01:23:10,952 --> 01:23:20,292
+Well, we might have to dispatch a job back to the main thread to do this part and then have the callback.
+
+603
+01:23:32,752 --> 01:23:43,822
+Then resolve the promise. Five.
+
+604
+01:23:43,832 --> 01:23:50,612
+I got that already. Get that out of here.
+
+605
+01:23:50,612 --> 01:24:03,362
+Page six A gun Data ready. When it's not available.
+
+606
+01:24:07,792 --> 01:24:14,272
+Download it on complete, it'll write it to the disk.
+
+607
+01:24:17,562 --> 01:24:28,092
+And then. We write the icon on the IO thread.
+
+608
+01:24:39,812 --> 01:24:46,172
+What happens to the run of Windows, the run of all async and code and write icon.
+
+609
+01:24:48,932 --> 01:24:54,921
+This of. So we write, We write, right.
+
+610
+01:24:54,922 --> 01:24:58,462
+And eventually we will run the round table here.
+
+611
+01:25:01,162 --> 01:25:15,092
+What would be lovely is if we actually. Oh, boy.
+
+612
+01:25:15,272 --> 01:25:21,602
+If we get the we need to get the path out here. It's just a callbacks being called, but it's not being passed anything useful.
+
+613
+01:25:23,522 --> 01:25:32,242
+It's just saying, Hey, I'm done. Hmm.
+
+614
+01:25:36,972 --> 01:25:49,952
+Okay. Call bacteria retrieving it.
+
+615
+01:25:51,312 --> 01:26:01,222
+So, unfortunately. This involves invoking.
+
+616
+01:26:04,242 --> 01:26:11,172
+We have to. Q our honorable.
+
+617
+01:26:13,092 --> 01:26:16,472
+I've to kick this off on the main thread.
+
+618
+01:26:21,072 --> 01:26:24,742
+So we have to bounce. Back over there.
+
+619
+01:26:27,012 --> 01:26:32,412
+So we're going to start we're going to queue a function here.
+
+620
+01:26:40,282 --> 01:26:50,962
+On the main thread to do a thing. Now, what did we do in the jump list Builder?
+
+621
+01:26:53,322 --> 01:27:09,802
+Dispatch two main thread OC. So there's like a new rentable function.
+
+622
+01:27:20,652 --> 01:27:27,452
+And what we're going to. We're going to pass back the.
+
+623
+01:27:31,572 --> 01:27:35,182
+What did it use to get it? The u.
+
+624
+01:27:35,202 --> 01:27:38,321
+R. I. So we actually will need the u. R.
+
+625
+01:27:38,322 --> 01:27:43,092
+I in here as well you to move the u.
+
+626
+01:27:43,092 --> 01:27:58,902
+R. I. Hmm.
+
+627
+01:28:18,842 --> 01:28:38,182
+I wonder what we could do instead. Yes, we can.
+
+628
+01:28:38,182 --> 01:28:42,122
+Because this is a promise. We could change it.
+
+629
+01:28:42,142 --> 01:28:45,782
+So, like. If we go. Promise, Holder.
+
+630
+01:28:47,322 --> 01:28:53,002
+Reject, if exists. What was the signal that we used?
+
+631
+01:28:53,022 --> 01:29:08,532
+It was an answer, not available. And then what we could do is over here, we could put a van on this promise.
+
+632
+01:29:11,682 --> 01:29:16,991
+In the event of a resolution, do nothing.
+
+633
+01:29:16,992 --> 01:29:22,122
+In the event of a rejection, handle the rejection on the main thread.
+
+634
+01:29:25,362 --> 01:29:30,882
+By kicking off the acing part. Oh, boy.
+
+635
+01:29:31,302 --> 01:29:36,012
+No. Then we have to. Can you.
+
+636
+01:29:36,192 --> 01:30:00,572
+Can you change Molly's promises? Look, if you've a mars promise and you reject on it and you chain that into another.
+
+637
+01:30:05,252 --> 01:30:09,542
+Oh, boy. This is a lot harder than I thought it was going to be.
+
+638
+01:30:09,572 --> 01:30:13,802
+Carve that on my tombstone. All right. I'm going to have to think about this for a bit.
+
+639
+01:30:16,502 --> 01:30:20,132
+Hey, thanks for watching. We figured out our compilation issue, kind of.
+
+640
+01:30:20,612 --> 01:30:24,632
+We learned what we needed to do. We needed to use make unique.
+
+641
+01:30:24,842 --> 01:30:32,192
+This seems to be the pattern. Unfortunately, the the process of actually retrieving the fab icon.
+
+642
+01:30:32,192 --> 01:30:37,202
+We've got to like message back to the main thread to go get the fab icon.
+
+643
+01:30:37,472 --> 01:30:48,512
+I think I want to take some time, maybe next week to look at how the the Fab Icon service works, because maybe there's another way of doing this.
+
+644
+01:30:48,932 --> 01:30:57,692
+But yeah, I suspect we're going to have to message back to the main thread, kick this part off,
+
+645
+01:30:58,412 --> 01:31:07,652
+and then resolve the promise that we're returning here once our callback, once our callback is fired.
+
+646
+01:31:07,862 --> 01:31:13,082
+But we have to get the path out somehow. Oh, this is awkward.
+
+647
+01:31:13,142 --> 01:31:18,482
+This is awkward. We might end up having to rewrite humongous chunks of some of this stuff.
+
+648
+01:31:23,082 --> 01:31:34,152
+Five. I can't data for page like the fabric answer is get feedback on data for page and the fabric on ready like these these running balls.
+
+649
+01:31:44,212 --> 01:31:57,142
+When the Fab online cash is available. These renewals, I'd love it if I could somehow have it pass the path and it just be ignored by the old version.
+
+650
+01:32:00,712 --> 01:32:10,611
+The old consumer of this stuff. So the run of all the decoding, the downloading of the fabrication and the encoding of it, that's fine.
+
+651
+01:32:10,612 --> 01:32:13,732
+It's the writing where eventually the running ball is run.
+
+652
+01:32:16,762 --> 01:32:23,392
+Are we able to pass more information like the path here?
+
+653
+01:32:23,752 --> 01:32:28,612
+That's something to think about next week. Hey. Hey, gang.
+
+654
+01:32:28,612 --> 01:32:32,562
+Thanks for watching. This was episode 356 of The Joy of Coding.
+
+655
+01:32:32,572 --> 01:32:35,692
+We got through a bunch of reviews. Thanks for sitting through those.
+
+656
+01:32:36,022 --> 01:32:40,342
+And then we started to get into this stuff. We were able to get our stuff compiled.
+
+657
+01:32:40,732 --> 01:32:49,072
+Good news, the jump list, the jobless stuff that we've been working on, that all of this is kind of tangential to the jump in stuff just went to beta.
+
+658
+01:32:49,912 --> 01:32:53,062
+So it's it's going out there in 124 beta.
+
+659
+01:32:53,362 --> 01:33:01,401
+And if all goes well in beta was testing it on beta and eventually it'll fall, goes well, it'll go to release on by default in 124 release.
+
+660
+01:33:01,402 --> 01:33:05,932
+So I'm pretty excited about that. I'm going to wrap it here.
+
+661
+01:33:06,172 --> 01:33:11,272
+Thanks again, everybody. Let me know what you thought of the stream. There's a link in the agenda to this episode.
+
+662
+01:33:11,272 --> 01:33:14,452
+I'm actually going to link to rating Forum.
+
+663
+01:33:14,452 --> 01:33:20,481
+I'm going to put a link to the rate this episode form in the chat.
+
+664
+01:33:20,482 --> 01:33:24,472
+I just did that. Please click on that. You can use that to let me know what you thought of the stream,
+
+665
+01:33:24,472 --> 01:33:27,982
+but you can also use it to ask questions if you saw something that you were curious about.
+
+666
+01:33:28,792 --> 01:33:33,861
+You want me to expand upon. You asked me questions and I'll do my best to try and answer them.
+
+667
+01:33:33,862 --> 01:33:40,071
+I myself am quite, quite confused still on why we needed to use a unique pointer,
+
+668
+01:33:40,072 --> 01:33:44,662
+but I'm hoping to eventually sort of sort that out and I have to talk to some of our C++
+
+669
+01:33:44,662 --> 01:33:50,222
+experts and Moore's Promise experts to guide me on on what what the heck is going on there.
+
+670
+01:33:50,842 --> 01:33:55,612
+But until then, courage, everybody. And I will see you next week.
+
+671
+01:33:56,062 --> 01:34:05,002
+Take care, everyone. Bye bye. The joy of loading the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

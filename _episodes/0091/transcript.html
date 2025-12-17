@@ -1,0 +1,3569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 91</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 91</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=e0dd6605-b929-43b7-8383-ac1600012f53</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=e0dd6605-b929-43b7-8383-ac1600012f53">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:15,250 --> 00:00:25,590
+Well. Hello and welcome to episode ninety, One of the joy of Coding.
+
+2
+00:00:25,590 --> 00:00:30,840
+My name's Mike Conley. Gonna be Hakon and some rest Firefox see stuff today.
+
+3
+00:00:30,840 --> 00:00:35,010
+It's going to be a little low level. Still sort of figuring my way around rust.
+
+4
+00:00:35,010 --> 00:00:40,830
+If you've been watching the past couple weeks, it's going to be more that, but hopefully a little more focused.
+
+5
+00:00:40,830 --> 00:00:47,370
+We'll see. I hope to make more forward progress this week, more than we've made in the past.
+
+6
+00:00:47,370 --> 00:00:53,990
+So let's get down to business. Where are we at? Here, let me share my screen.
+
+7
+00:00:53,990 --> 00:01:00,480
+Boop, boop, boop. Okay. Today is February 15th, 2017.
+
+8
+00:01:00,480 --> 00:01:04,500
+A reminder that no plan survives breakfast. I do hope to write some rest today.
+
+9
+00:01:04,500 --> 00:01:08,850
+And I do hope it goes well. I hope it goes according to plan, but it might not because that's reality.
+
+10
+00:01:08,850 --> 00:01:13,350
+And I haven't planned anything, really. I'm going to be tackling these problems as they come up.
+
+11
+00:01:13,350 --> 00:01:17,730
+I'm going to be I haven't got a prescriptive solution or anything.
+
+12
+00:01:17,730 --> 00:01:22,710
+And it's a little bit difficult to to sort of put on a show.
+
+13
+00:01:22,710 --> 00:01:26,520
+Well, so, like thinking out loud and solving a problem.
+
+14
+00:01:26,520 --> 00:01:33,750
+So you're you have to bear with me. There's a you know, I'm solving these problems or attempting solutions on the fly.
+
+15
+00:01:33,750 --> 00:01:37,170
+So it's possible that we'll write stuff and it'll get thrown out.
+
+16
+00:01:37,170 --> 00:01:45,870
+I know that there was some commentary. There was some feedback from my last episode about Rust, where one of the questions I ask in my AM rate,
+
+17
+00:01:45,870 --> 00:01:50,310
+this episode form, which you should totally fill out, is, is there anything you'd like to see less of?
+
+18
+00:01:50,310 --> 00:01:56,580
+And the response was spending two hours of rust coding, resulting in nothing at all, because that's exactly what happened.
+
+19
+00:01:56,580 --> 00:01:58,470
+We wrote some stuff in Rust.
+
+20
+00:01:58,470 --> 00:02:07,080
+Actually, I was interesting, I, I was messing around with struts and and traits and it didn't actually end up going really anywhere.
+
+21
+00:02:07,080 --> 00:02:11,880
+And in fact, I've tossed out most of that code and that sometimes is reality.
+
+22
+00:02:11,880 --> 00:02:18,870
+I'm going to try to avoid that today. But. But no promises because no plan survives breakfast.
+
+23
+00:02:18,870 --> 00:02:25,160
+So let me just quickly check and make sure that I am recording my mike works and that I'm streaming across.
+
+24
+00:02:25,160 --> 00:02:30,090
+Let's see Facebook. I got Facebook. I got YouTube. I got Twitch is going.
+
+25
+00:02:30,090 --> 00:02:36,870
+I got air. Mozilla is going. So I think we are in good shape.
+
+26
+00:02:36,870 --> 00:02:45,150
+We're streaming. In case you want to watch this on any of those other channels, I've been posting to this sub Reddit called Watch People code,
+
+27
+00:02:45,150 --> 00:02:49,560
+which I think there's a link to down here in the Links section.
+
+28
+00:02:49,560 --> 00:02:55,470
+And in the post itself, there's a link to all the different ways you can watch the stream.
+
+29
+00:02:55,470 --> 00:03:00,030
+If it turns out you don't want to watch it on air Mozilla, but you want to watch it on Twitch,
+
+30
+00:03:00,030 --> 00:03:03,540
+there's a link to my Twitch channel and you can watch it there.
+
+31
+00:03:03,540 --> 00:03:12,790
+And you can also this this document that I just dropped, that Lincoln, this document, the agenda, so to speak, is available to you.
+
+32
+00:03:12,790 --> 00:03:16,710
+It's, um, it's in the additional link section.
+
+33
+00:03:16,710 --> 00:03:20,220
+If you're watching this on air Mazola, if you scroll down, there's an additional link section.
+
+34
+00:03:20,220 --> 00:03:23,970
+If you're watching this on YouTube, it is in the description for the video.
+
+35
+00:03:23,970 --> 00:03:31,610
+And if you are watching this on, let's see, Facebook, unfortunately, there's no way I can add a description to the posts.
+
+36
+00:03:31,610 --> 00:03:37,980
+So I post the agenda after the fact. Sorry about that. And if you're watching this on Twitch, I'm about to drop it in the twitch chat.
+
+37
+00:03:37,980 --> 00:03:45,240
+So here's the link to the agenda. Let me remember if I just did this copy to the clipboard and I've just dropped it into the twitch chat.
+
+38
+00:03:45,240 --> 00:03:49,830
+And also the link to rating the episode. I'm also going to drop on the Twitch chat.
+
+39
+00:03:49,830 --> 00:03:53,490
+You should totally rate this episode. Let me know how I can make it better because I read them all.
+
+40
+00:03:53,490 --> 00:03:57,780
+I read all the ratings before we get started. I also want to give a quick shout out.
+
+41
+00:03:57,780 --> 00:04:06,010
+I did this last week. I'm doing it again to a good, good friend of mine, Dennis, on the Web compatibility team.
+
+42
+00:04:06,010 --> 00:04:13,260
+He's on the team that tries to figure out why stuff is like why Web sites break in some browsers,
+
+43
+00:04:13,260 --> 00:04:16,770
+but not others and try and like improve compatibility between browsers.
+
+44
+00:04:16,770 --> 00:04:26,200
+Maybe a Web site was designed for only one type of browser or, you know, maybe they're there doing something just a little weird with some old.
+
+45
+00:04:26,200 --> 00:04:34,700
+Like, I don't know, prefixed styles or some like basically any kind of breadth of cross browser compatibility issue.
+
+46
+00:04:34,700 --> 00:04:40,800
+That's the part of that team. And he started do this series similar to the joy of and called the joy of diagnosis.
+
+47
+00:04:40,800 --> 00:04:46,440
+This is episode zero. I believe it's gonna be semi regular sort of series.
+
+48
+00:04:46,440 --> 00:04:53,790
+And you should totally check it out if you're interested in seeing what goes on when we try and figure out what's broken across different browsers.
+
+49
+00:04:53,790 --> 00:04:58,590
+And there's already some feedback here. If you read this says incredible.
+
+50
+00:04:58,590 --> 00:05:04,860
+I really enjoyed the video. I look forward to the next episodes. So that's that was four days ago as a great endorsement.
+
+51
+00:05:04,860 --> 00:05:08,460
+I'm giving an endorsement as well. You should totally check it out. So I'm done plugging that.
+
+52
+00:05:08,460 --> 00:05:12,630
+Let's get down to business where we're gonna be writing some rest today.
+
+53
+00:05:12,630 --> 00:05:16,380
+I just. Rust is not a language I'm super, super comfortable with.
+
+54
+00:05:16,380 --> 00:05:24,010
+That's why it's kind of going so. So slowly, I'm learning it as I go, I'm more comfortable with JavaScript and C++,
+
+55
+00:05:24,010 --> 00:05:29,590
+which Geko is traditionally written in Rust, we're starting to use more and more in the browser.
+
+56
+00:05:29,590 --> 00:05:32,800
+And it's something that I hope to become really good at.
+
+57
+00:05:32,800 --> 00:05:36,580
+But I'm not there yet. I can read it. I can I can sort of read it.
+
+58
+00:05:36,580 --> 00:05:42,070
+But I'm having difficulty writing it and getting used to it. So let's try that today.
+
+59
+00:05:42,070 --> 00:05:51,820
+I've also switched back to Sublime. Last week I was using the Atom editor and there was like someone suggested it and twitch a couple of weeks ago.
+
+60
+00:05:51,820 --> 00:05:58,150
+They said, you should try Adam because Sublime, at least the version I had didn't have rust syntax highlighting.
+
+61
+00:05:58,150 --> 00:06:03,180
+As I say, he should try Adam and I tried Adam and it was OK but was too slow.
+
+62
+00:06:03,180 --> 00:06:09,190
+And then like the performance characteristics of it, just like it felt sluggish, which, you know,
+
+63
+00:06:09,190 --> 00:06:16,810
+it pains me to say because I know that a lot of it's built on top of Web technology and hopefully where the web will just get faster.
+
+64
+00:06:16,810 --> 00:06:23,440
+Hopefully the web I hope to use. Adam one day because it's built with Web technology like JavaScript and CSX.
+
+65
+00:06:23,440 --> 00:06:27,220
+And so we should strive to all use Adam. People who love the Web.
+
+66
+00:06:27,220 --> 00:06:31,600
+But right now, it's just it's too slow. So hopefully faster soon.
+
+67
+00:06:31,600 --> 00:06:36,860
+OK. So what I've done, I've switched back to sublime text, actually bought the third one, sublime text three.
+
+68
+00:06:36,860 --> 00:06:40,660
+I bought a license or rather Mazola bought me a license because I requested one.
+
+69
+00:06:40,660 --> 00:06:44,860
+And they're nice like that. And. And so now I've got Russin tax filing.
+
+70
+00:06:44,860 --> 00:06:50,230
+So I got what I wanted and. And we can keep going.
+
+71
+00:06:50,230 --> 00:06:57,520
+OK, so what am I doing? What am I doing today? We're looking at some rest and it's sort of the same problem as before.
+
+72
+00:06:57,520 --> 00:07:07,330
+I want to I've got this thing. We have this, like, special language in the the tree in Missoula Central called IPD l.
+
+73
+00:07:07,330 --> 00:07:13,030
+And I want to convert that. Like, the whole point of that language is to take care of writing a bunch of
+
+74
+00:07:13,030 --> 00:07:17,770
+boilerplate that's used to set up communications across pipes between processes.
+
+75
+00:07:17,770 --> 00:07:22,870
+So you write in IPD l file, which declares a communications protocol between processes.
+
+76
+00:07:22,870 --> 00:07:26,920
+Then the IPL parser compiler, I should say, convert's,
+
+77
+00:07:26,920 --> 00:07:34,150
+that IPD l file into a bunch of boilerplate C++ that we can then like include an subclass in our code.
+
+78
+00:07:34,150 --> 00:07:43,960
+So the compiler takes care of like the IPD El Paso compiler takes care of doing all of the sort of loop boring generation of code.
+
+79
+00:07:43,960 --> 00:07:48,370
+And that's what we're working on. Traditionally that was written in Python. It's written in Python.
+
+80
+00:07:48,370 --> 00:07:51,730
+It exists in the tree as Python. It's very complicated python.
+
+81
+00:07:51,730 --> 00:07:57,460
+We're hoping to rewrite it and rust both for more speed and just to simplify it, because right now it's too complicated.
+
+82
+00:07:57,460 --> 00:08:01,450
+It's hard to hack on. So where are we at?
+
+83
+00:08:01,450 --> 00:08:07,630
+Well, we've got the parser done. This is something that I've been working on with several other developers at Mozilla.
+
+84
+00:08:07,630 --> 00:08:15,160
+Kind of on the side there is this sort of library for Rust called Lawler Pop.
+
+85
+00:08:15,160 --> 00:08:19,930
+It's a utility that you use to write a parser. Right.
+
+86
+00:08:19,930 --> 00:08:28,000
+Right. Yeah. To pass a certain syntax. And so Lollipop, the the syntax has all been laid out.
+
+87
+00:08:28,000 --> 00:08:32,590
+We've sort of defined how IPD l works as a syntax.
+
+88
+00:08:32,590 --> 00:08:34,310
+And so now we're at the state.
+
+89
+00:08:34,310 --> 00:08:43,450
+And this is the part that I'm kind of I've taken some responsibility of support, the point where we want to take the AB, the Høst.
+
+90
+00:08:43,450 --> 00:08:47,140
+That's short for abstract syntax tree things. Syntax tree.
+
+91
+00:08:47,140 --> 00:08:54,520
+Yeah, an abstract syntax tree. So that's the stuff that we converted the IPL file to this data structure.
+
+92
+00:08:54,520 --> 00:08:59,560
+We want to turn that into C++ using rust.
+
+93
+00:08:59,560 --> 00:09:09,200
+So it's lots of lots of different stuff going on. And what we've got here in this file, we're already at the point where, like Parser Pass,
+
+94
+00:09:09,200 --> 00:09:15,700
+we're taking in some directories that we're including and some file like that might have some include files in them.
+
+95
+00:09:15,700 --> 00:09:22,210
+And then we have some file names of IPD L files that we want to pass and we pass those over to the parser.
+
+96
+00:09:22,210 --> 00:09:25,390
+So there's this module called parser and we called pass on it.
+
+97
+00:09:25,390 --> 00:09:32,940
+And what we get are maybe T.U. S's at T.U. is actually short for translation or translation unit.
+
+98
+00:09:32,940 --> 00:09:41,830
+It's called translation unit. Yes. And translation Yune is like the top level node of an IPD l file the Høst at the very top.
+
+99
+00:09:41,830 --> 00:09:49,090
+There's a translation unit inside that. There's all this like stuff that we want to like, convert into C++.
+
+100
+00:09:49,090 --> 00:09:52,960
+So we hopefully get back a translation unit.
+
+101
+00:09:52,960 --> 00:09:58,180
+And then now what we're doing is we're going through each of the translation use because we might have several.
+
+102
+00:09:58,180 --> 00:10:06,250
+Because we may have passed several files. Want to go through each of these translation units and turn them into C++.
+
+103
+00:10:06,250 --> 00:10:11,770
+And so what I'm doing is right here, this is something I wrote the other day,
+
+104
+00:10:11,770 --> 00:10:19,240
+is I'm iterating over the translation units and the translation units is basically this Hashmat,
+
+105
+00:10:19,240 --> 00:10:28,510
+between a path to the IPL file that we generated or that we read in that we that we read in and past.
+
+106
+00:10:28,510 --> 00:10:34,060
+And then the T.U. is the translation unit for that file because there's only ever one per file.
+
+107
+00:10:34,060 --> 00:10:40,060
+And there. Now I'm calling this function. I define called compile translation unit passing in that path.
+
+108
+00:10:40,060 --> 00:10:44,670
+And the translation unit. And we're getting something back. Excuse me.
+
+109
+00:10:44,670 --> 00:10:50,710
+We're getting back an option and rust option is something that's in one of two states, either some or none.
+
+110
+00:10:50,710 --> 00:10:54,610
+And if it's some, we unwrap that some because it's our result.
+
+111
+00:10:54,610 --> 00:10:58,600
+And if it's none, then we error it out like we we we handle that case.
+
+112
+00:10:58,600 --> 00:11:06,370
+None means, you know, I, I wanted to be like you called me and I didn't give you what you wanted.
+
+113
+00:11:06,370 --> 00:11:12,160
+I'm returning none essentially as opposed to. No. Because there is no Knowland rest really.
+
+114
+00:11:12,160 --> 00:11:19,150
+And I'm to I chose an option just arbitrarily. There's something similar in Rust called result which is like okay.
+
+115
+00:11:19,150 --> 00:11:25,900
+An error as opposed to some and none. And I think they have slightly different characteristics.
+
+116
+00:11:25,900 --> 00:11:33,520
+And I think result wraps an option. But right now we're using an option because that's the way.
+
+117
+00:11:33,520 --> 00:11:40,300
+I don't know. That's the way compile is written. If we want switch tours result down the road, we can do that.
+
+118
+00:11:40,300 --> 00:11:45,260
+I'm still learning. So maybe an option is not the right choice here, but that's what we're gonna go with.
+
+119
+00:11:45,260 --> 00:11:49,800
+Now, if during review we decide we want to do something else, we'll do something else.
+
+120
+00:11:49,800 --> 00:11:53,610
+We have to move forward. Try not to be trying not to get bogged down.
+
+121
+00:11:53,610 --> 00:11:57,750
+So we're going to move forward and try and write some code this time.
+
+122
+00:11:57,750 --> 00:12:00,130
+So let's get down to business.
+
+123
+00:12:00,130 --> 00:12:09,540
+Compile translation unit is taking in the path buffer, which is the path of the IPO file and the translation unit and what it's going to return.
+
+124
+00:12:09,540 --> 00:12:15,000
+This is a little complicated and it's kind of long. I have a feeling that I should be wrapping this around for better readability.
+
+125
+00:12:15,000 --> 00:12:19,200
+But for now, what we're returning is a tipple or tuple.
+
+126
+00:12:19,200 --> 00:12:26,340
+I don't exactly know how to pronounce that, but is a two element thing, not a vector that can grow or shrink.
+
+127
+00:12:26,340 --> 00:12:30,870
+It's like a fixed sized pairing of things.
+
+128
+00:12:30,870 --> 00:12:39,420
+And the first element of that pair is a mapping between a file name that we want to write to and a string of the C++.
+
+129
+00:12:39,420 --> 00:12:47,220
+We want to write to that file. And then the other thing in the second element of that tuple is a vector of strings.
+
+130
+00:12:47,220 --> 00:12:58,020
+And why do we want that? Well, if you go back a couple of episodes, we started by running a very simple IPD l file through the Python compiler.
+
+131
+00:12:58,020 --> 00:13:02,370
+And looking at what it's spat out and it spat out a couple of things.
+
+132
+00:13:02,370 --> 00:13:06,930
+So this was the empty IPD l file that we we put through the compiler.
+
+133
+00:13:06,930 --> 00:13:10,980
+It's a an empty protocol. It's what's called empty. It's the name of it.
+
+134
+00:13:10,980 --> 00:13:16,650
+And we say that the child can send an async message called message.
+
+135
+00:13:16,650 --> 00:13:20,130
+And what's generated is like child empty dot h.
+
+136
+00:13:20,130 --> 00:13:24,750
+So that's sort of the convention will produce at least the following files.
+
+137
+00:13:24,750 --> 00:13:29,520
+Empty dot S.P. Empty dot h. I'm sorry, I can't like expand this.
+
+138
+00:13:29,520 --> 00:13:37,210
+I can't make this grow I don't think. Yeah. I can only make it over here grow but empty dot S.P. and empty dot age because that's the,
+
+139
+00:13:37,210 --> 00:13:45,030
+the sort of base common stuff that both the parent and the child in the IPC communications.
+
+140
+00:13:45,030 --> 00:13:51,720
+I guess a relationship will inherit and then we have the specialized stuff
+
+141
+00:13:51,720 --> 00:13:56,280
+like in this IPD l file only the child can send this message called message.
+
+142
+00:13:56,280 --> 00:14:04,990
+And so empty child gets this. I believe there is a function that we can inherit.
+
+143
+00:14:04,990 --> 00:14:11,530
+Call it. Oh, sorry, was I.
+
+144
+00:14:11,530 --> 00:14:15,580
+I misread this, so child receives an async message called message.
+
+145
+00:14:15,580 --> 00:14:20,530
+So empty child has this function on it that we have to implement.
+
+146
+00:14:20,530 --> 00:14:32,050
+If you were to create a subclass of empty child called receive message and parent, empty parent has a function called send send.
+
+147
+00:14:32,050 --> 00:14:37,180
+Where's it send message. Where would it be. Send message.
+
+148
+00:14:37,180 --> 00:14:39,660
+Yeah, right there. Must you send message.
+
+149
+00:14:39,660 --> 00:14:50,140
+And that's actually already implemented for us because that is a send message is something that you, you call,
+
+150
+00:14:50,140 --> 00:14:55,960
+you don't have to implement yourself the boilerplate implements for you but the received like what you do when you receive that message.
+
+151
+00:14:55,960 --> 00:15:02,530
+That's something that you as the implementer of, of a protocol need to sort of sort out yourself.
+
+152
+00:15:02,530 --> 00:15:07,780
+So we get an empty that age and empty that CBP and empty child that age,
+
+153
+00:15:07,780 --> 00:15:13,180
+an empty child that CBP will get an empty parent died H and empty parent CBP with a bunch of boilerplate.
+
+154
+00:15:13,180 --> 00:15:20,680
+And then we get this other stuff. Get this thing called IPC message start dot h and IPC message type name.
+
+155
+00:15:20,680 --> 00:15:27,430
+And these two files are used to like I believe they're used like at the global
+
+156
+00:15:27,430 --> 00:15:32,080
+inter process communication layer to classify what kind of messages are coming in,
+
+157
+00:15:32,080 --> 00:15:38,830
+because in the end there's a single switch essentially that's looking at the messages coming in between processes and saying,
+
+158
+00:15:38,830 --> 00:15:44,200
+well, who who does this message belong to? Each message will come in kind of with an identifier.
+
+159
+00:15:44,200 --> 00:15:55,210
+And that's what these two things do, is they'll map the they'll map the message identifier to where it needs to go.
+
+160
+00:15:55,210 --> 00:16:00,720
+I believe. I think that's how it works anyways.
+
+161
+00:16:00,720 --> 00:16:07,710
+So this is the thing that we actually need to spit out as well as like these two files are important to spit out.
+
+162
+00:16:07,710 --> 00:16:14,430
+And that's interesting because this is this is sort of an aggregation across all of the IPD, all files that we pass.
+
+163
+00:16:14,430 --> 00:16:20,250
+We're going to produce a single IP message, starting a single ABC message type name.
+
+164
+00:16:20,250 --> 00:16:27,420
+And then also individual like child and parent. And, you know, basic class pairs like DOT agency.
+
+165
+00:16:27,420 --> 00:16:35,550
+BP pays for each of the protocols. So there's all the individual protocol files, the CPB in H files for the child parent in base.
+
+166
+00:16:35,550 --> 00:16:43,320
+And then there will be after all of that, there's a single IPC message start that age and a single IPC message type named IACP.
+
+167
+00:16:43,320 --> 00:16:45,540
+So that's what this vector string is for.
+
+168
+00:16:45,540 --> 00:16:52,500
+Because what I'm going to do and hoping I can do this episode is every time we call compile translation unit,
+
+169
+00:16:52,500 --> 00:17:10,020
+I'm hoping that what can be returned is a set of messages that the translation unit will send back and forth and then we can sort of grow this table,
+
+170
+00:17:10,020 --> 00:17:13,740
+grow a hash memory. It's more like a set of these messages.
+
+171
+00:17:13,740 --> 00:17:20,310
+And after we're done going through all these translation units, we should have an accumulation of all the messages that can be sent back and forth.
+
+172
+00:17:20,310 --> 00:17:26,430
+And then I'm hoping we can then dump out our two special files here.
+
+173
+00:17:26,430 --> 00:17:30,990
+IPC messages start nipsy message type name. And that's what I'm hoping to focus on today.
+
+174
+00:17:30,990 --> 00:17:35,160
+Not so much the empty of like the parent and child and the base,
+
+175
+00:17:35,160 --> 00:17:46,710
+but the global message start and message type name files because I, I feel like that's the simplest step forward.
+
+176
+00:17:46,710 --> 00:17:51,380
+So let's try that today and maybe we'll even get to write a test.
+
+177
+00:17:51,380 --> 00:17:55,710
+So that is a long winded explanation. Hopefully you get a sense of what we're doing today.
+
+178
+00:17:55,710 --> 00:17:59,730
+You'll notice that even though I'm I'm accepting the messages.
+
+179
+00:17:59,730 --> 00:18:05,160
+So this is compile translation unit. I'm matching the return result of compiled translation.
+
+180
+00:18:05,160 --> 00:18:12,210
+And if it is something as opposed to nothing as opposed to none, if it's some, then the result will be that to topple.
+
+181
+00:18:12,210 --> 00:18:15,240
+I was telling you about and I'm doing a deconstruction here, though.
+
+182
+00:18:15,240 --> 00:18:21,300
+The first element I'm calling mapping and the second one I'm calling messages and I'm not doing anything with messages in here.
+
+183
+00:18:21,300 --> 00:18:30,240
+This will still compile, though. Let me. Let me show you.
+
+184
+00:18:30,240 --> 00:18:37,920
+Bump up the font. So this should compile. If I'm not mistaken.
+
+185
+00:18:37,920 --> 00:18:45,030
+Oh, yeah. I'd already built it before and let's run the tests. Yes. The tests run and it still works, but we don't do anything with the messages.
+
+186
+00:18:45,030 --> 00:18:52,000
+What I want to do is accumulate. More of these messages.
+
+187
+00:18:52,000 --> 00:18:59,300
+And I'm pretty sure it's it's straight forward to get the list of messages from a translation unit.
+
+188
+00:18:59,300 --> 00:19:03,110
+So let's take a look at the Høst. The Høst is.
+
+189
+00:19:03,110 --> 00:19:09,650
+This is the structure that we are creating whenever we pass the IPL file.
+
+190
+00:19:09,650 --> 00:19:17,850
+And there is a. There is something called protocol.
+
+191
+00:19:17,850 --> 00:19:23,430
+Oh, yeah, yeah. There's a protocol, a single protocol for a translation unit.
+
+192
+00:19:23,430 --> 00:19:29,220
+There's almost like meta information, but then there's this protocol and it's got a namespace and a protocol.
+
+193
+00:19:29,220 --> 00:19:40,950
+And we'll take a look at protocol. Now. And protocol, if I look at the structure of it, has all these messages and that is what we want to get at.
+
+194
+00:19:40,950 --> 00:19:43,620
+So inside our compiler,
+
+195
+00:19:43,620 --> 00:19:51,480
+we're going to take this translation unit that we were passed and I mean to see if we can get a reference to these messages as messages structure.
+
+196
+00:19:51,480 --> 00:20:00,000
+And so there'll be this like message declaration thing and it's got an identifier and some semantics in and out prams.
+
+197
+00:20:00,000 --> 00:20:07,770
+And I don't think we need most of these things. I think we just need the name and the name coupled with, like some other information,
+
+198
+00:20:07,770 --> 00:20:14,370
+maybe from the top level translation unit should be enough to flesh out the vector that I'm hoping to pass
+
+199
+00:20:14,370 --> 00:20:23,010
+back to the parent about what we're gonna drop into this IPC message starting IPC message type name file.
+
+200
+00:20:23,010 --> 00:20:32,150
+So a lot of this I'm going to just get like commented out at first because I don't want to even think about it.
+
+201
+00:20:32,150 --> 00:20:36,350
+And result is gonna be like this hash map. It's gonna be an empty one.
+
+202
+00:20:36,350 --> 00:20:41,540
+What I really want to deal with is this vector that I want to pass back to the parent.
+
+203
+00:20:41,540 --> 00:20:50,000
+So I'm going to say that it is a. So, like, let messages.
+
+204
+00:20:50,000 --> 00:20:58,350
+Equal vector, an empty vector. And I'm going to be adding things to this vector, so I have to make it immutable.
+
+205
+00:20:58,350 --> 00:21:02,990
+Is a mutable variable because things in rust are immutable by default.
+
+206
+00:21:02,990 --> 00:21:11,160
+And so I'm going to. It's possible that I don't even need to like a.
+
+207
+00:21:11,160 --> 00:21:15,780
+Iterate the messages and append each one. Perhaps I could just do a straight copy.
+
+208
+00:21:15,780 --> 00:21:19,230
+I'm not entirely sure yet, but we're gonna find out when we start messing with this stuff.
+
+209
+00:21:19,230 --> 00:21:25,710
+So this should still build actually our test run test appeal test.
+
+210
+00:21:25,710 --> 00:21:32,720
+Oh, it doesn't. Because I cannot infer type for. Underscore.
+
+211
+00:21:32,720 --> 00:21:38,710
+Underscore. Let me messages equal a vector.
+
+212
+00:21:38,710 --> 00:21:54,150
+Maybe I have to tell it what kind of vector, I think. Sir, another place where I've used Vak, I think I saw in some other place back.
+
+213
+00:21:54,150 --> 00:21:58,560
+How do I. So how do I create.
+
+214
+00:21:58,560 --> 00:22:04,680
+Do I have to create a new vector? Let me take a look at some rust example code.
+
+215
+00:22:04,680 --> 00:22:09,450
+So a great place to look for rust example, code from people who know it really well is the servo project.
+
+216
+00:22:09,450 --> 00:22:15,720
+That's the browser project. Let's see if I can find an example of vector being used.
+
+217
+00:22:15,720 --> 00:22:25,000
+So, yeah, let keyframes equal Veck. Now, maybe it's because I need it to be mutable.
+
+218
+00:22:25,000 --> 00:22:34,020
+And that's that's why it's. Let me.
+
+219
+00:22:34,020 --> 00:22:39,380
+That one let me buffer equals vector and then.
+
+220
+00:22:39,380 --> 00:22:45,500
+Open parentheses and close parentheses, maybe that's what I want, instead of saying, let me out Vector.
+
+221
+00:22:45,500 --> 00:22:50,070
+I've got these square brackets. Maybe I need to say open close parentheses.
+
+222
+00:22:50,070 --> 00:22:57,590
+I'm not entirely sure what the difference is. I like I'm saying I'm guessing that it means just.
+
+223
+00:22:57,590 --> 00:23:03,020
+Like create an inline empty vector. I don't know why the parentheses would make a difference here.
+
+224
+00:23:03,020 --> 00:23:10,380
+That's still though it still isn't like A cannot infer the type type annotations or janeck generic parameter binding required.
+
+225
+00:23:10,380 --> 00:23:17,060
+This originates in a macro. So the current create this is error o two eight two.
+
+226
+00:23:17,060 --> 00:23:21,620
+So let's see if we can look that up. May there's an example.
+
+227
+00:23:21,620 --> 00:23:38,690
+Rust vector Itochu eight to. SCANA.
+
+228
+00:23:38,690 --> 00:23:47,870
+Air index go to eight to type in France did not result in one unique Postle type.
+
+229
+00:23:47,870 --> 00:23:53,810
+So maybe I need to like, give it a hint. So like let.
+
+230
+00:23:53,810 --> 00:23:59,720
+Mute, then maybe I have to give it a type. Let me messages.
+
+231
+00:23:59,720 --> 00:24:03,890
+So it's gonna be a vector of string type string.
+
+232
+00:24:03,890 --> 00:24:10,340
+Maybe it'll like that and I'll put these square brackets back. Is that enough to appease the gods of the rust compiler?
+
+233
+00:24:10,340 --> 00:24:14,720
+It is. It is enough. So I had to give it a hint.
+
+234
+00:24:14,720 --> 00:24:19,600
+I had to tell it. Look, you're gonna be a vector of strings, you know? And like, I'm setting a type.
+
+235
+00:24:19,600 --> 00:24:28,910
+Okay. That seems reasonable. So I guess we need those anymore.
+
+236
+00:24:28,910 --> 00:24:33,770
+It's interesting, I wonder when it's when it can do type inference and when it can't.
+
+237
+00:24:33,770 --> 00:24:41,980
+I'm not exactly sure yet. Let's see.
+
+238
+00:24:41,980 --> 00:24:49,180
+So the next thing I want to do is look inside this translation unit and I'm gonna have it.
+
+239
+00:24:49,180 --> 00:24:58,610
+Let's see. When the HST translation you, I want to get the protocol.
+
+240
+00:24:58,610 --> 00:25:06,550
+Two. So I want to say, like let protocol equal to.
+
+241
+00:25:06,550 --> 00:25:14,520
+Protocol. Unwrap. Aw, [INAUDIBLE].
+
+242
+00:25:14,520 --> 00:25:27,430
+Can I say expects should have had a protocol, now expects, I think will cause us to want to raise an exception and otherwise will unwrap the protocol.
+
+243
+00:25:27,430 --> 00:25:34,310
+So that way, I've got like some air checking in, expects maybe it's supposed to be expect.
+
+244
+00:25:34,310 --> 00:25:44,120
+I actually expect. Cannot move out of borrowed context.
+
+245
+00:25:44,120 --> 00:25:52,810
+Ha! So I've heard of this sort of thing before. I believe this is the the borrow checker is yelling at me.
+
+246
+00:25:52,810 --> 00:25:57,090
+So let's look at these in the Rust Air Index.
+
+247
+00:25:57,090 --> 00:26:09,060
+You tried to move out of a value which was borrowed. So in this example, we've got a structure called The Dark Knight.
+
+248
+00:26:09,060 --> 00:26:12,720
+And then a function on it called Nothing is True.
+
+249
+00:26:12,720 --> 00:26:21,030
+And then a main function that says, give me is RF cell on The Dark Knight and then borrow it and then call it and says,
+
+250
+00:26:21,030 --> 00:26:25,010
+no, you cannot move out of the board context. Nothing is true. Method takes the ownership cell.
+
+251
+00:26:25,010 --> 00:26:31,050
+However, self can be moved because Borro only provides a reference to The Dark Knight, which the bore of the content owned by the RSL fixed.
+
+252
+00:26:31,050 --> 00:26:44,230
+They are your three choices. Try to avoid moving the variable, somehow reclaim the ownership or implement the copy trade on the type.
+
+253
+00:26:44,230 --> 00:26:54,630
+Enter. Moving out of a member of a mute, immutably board structures finally put something back.
+
+254
+00:26:54,630 --> 00:27:14,190
+Maybe I should be looking at this in the book. Borrowing.
+
+255
+00:27:14,190 --> 00:27:22,920
+So in this example. We have a function that takes two vectors and borrows them, I think that's what that means.
+
+256
+00:27:22,920 --> 00:27:27,510
+It's passing like to me, my C++ is like, Oh, you're passing it.
+
+257
+00:27:27,510 --> 00:27:37,150
+You're taking a reference to. But I believe what it means is Borro.
+
+258
+00:27:37,150 --> 00:27:53,750
+In Rust. Instead of taking a vector i3 to I 30 twos, as our arguments take a reference and instead of passing v1 v2 directly, you pass in.
+
+259
+00:27:53,750 --> 00:27:58,070
+These we call this is a reference rather than owning a resource. It borrows ownership.
+
+260
+00:27:58,070 --> 00:28:07,050
+So that means that in our compiled translation unit function, we've borrowed path, buffer and translation unit.
+
+261
+00:28:07,050 --> 00:28:18,460
+OK. So far, so good.
+
+262
+00:28:18,460 --> 00:28:24,220
+And binding the borrows something does not allocate the resource Francos at scope.
+
+263
+00:28:24,220 --> 00:28:30,580
+That's good. Means after the call for news, original bias references are immutable, like bindings.
+
+264
+00:28:30,580 --> 00:28:40,590
+The vectors can't be changed at all. So for some reason, Russ seems to think that whenever ice call dot protocol.
+
+265
+00:28:40,590 --> 00:28:46,110
+Don't expect I'm getting I'm like somehow mutating it.
+
+266
+00:28:46,110 --> 00:28:51,490
+I mean, see what happens when I do. Oh. Oh. I wonder if.
+
+267
+00:28:51,490 --> 00:29:03,210
+No, I don't know what that would be if DOT expect will like. Attempt to mutate the translation unit.
+
+268
+00:29:03,210 --> 00:29:23,850
+I'm going to. See here.
+
+269
+00:29:23,850 --> 00:29:41,850
+Sasha had a protocol. To.
+
+270
+00:29:41,850 --> 00:29:47,050
+Well, if I can I just say get a reference to the protocol.
+
+271
+00:29:47,050 --> 00:29:51,520
+I think I was trying that a second ago. No, it doesn't like it.
+
+272
+00:29:51,520 --> 00:30:01,580
+Oh, uh oh, sorry. I need to put a semicolon there. Because apparently.
+
+273
+00:30:01,580 --> 00:30:10,250
+Oh, to prevent move use RF protocol. Because whenever I say a protocol is tuda protocol, I'm saying that it is.
+
+274
+00:30:10,250 --> 00:30:18,530
+It is moving. I'm moving it. Somehow.
+
+275
+00:30:18,530 --> 00:30:28,970
+So if I say let RF protocol. Can't do that.
+
+276
+00:30:28,970 --> 00:30:36,530
+Countermovement. But I find you and.
+
+277
+00:30:36,530 --> 00:30:57,700
+That it likes, but I can't call Dot, expect dot. Can I call? Ref protocol real, and it's just that's a bad name, but protocol dot expect test so that.
+
+278
+00:30:57,700 --> 00:31:02,300
+No, it doesn't like that because I'm moving it out of the borrowed context.
+
+279
+00:31:02,300 --> 00:31:10,160
+This is called fighting the borrow checker in rust parlance.
+
+280
+00:31:10,160 --> 00:31:31,040
+So. See?
+
+281
+00:31:31,040 --> 00:31:40,600
+What I wanted to hear. I've got a translation unit and I want to manipulate.
+
+282
+00:31:40,600 --> 00:31:49,380
+I've got a reference to it. I need to essentially I want to get at the car just like get at the.
+
+283
+00:31:49,380 --> 00:32:00,400
+Colin Self. I got a feeling and something like that. It cannot move out of borrowed content.
+
+284
+00:32:00,400 --> 00:32:06,210
+I got a feeling this is a super common, super common problem.
+
+285
+00:32:06,210 --> 00:32:10,730
+Let's take SDI reference to me. You won't be available after the call, this place to get it back.
+
+286
+00:32:10,730 --> 00:32:24,930
+The previous. Clone it.
+
+287
+00:32:24,930 --> 00:32:31,770
+OK, so here's an example I have on the stack overflow question.
+
+288
+00:32:31,770 --> 00:32:37,920
+Let's see if this applies to us, so we have an income of Valan Val, too, we have a structure.
+
+289
+00:32:37,920 --> 00:32:45,650
+It takes a field, one of type mine and one in a field to have string and I have a function that will take a structure string and a string.
+
+290
+00:32:45,650 --> 00:32:52,170
+And the function to which takes a bore borrows one of the items.
+
+291
+00:32:52,170 --> 00:32:56,790
+And then the function F.A. receives a reference to my genome, one as a priority,
+
+292
+00:32:56,790 --> 00:33:01,780
+but the struct one contains an old Maita one start on contains an owned.
+
+293
+00:33:01,780 --> 00:33:10,540
+This means that you're actually try and turn a reference into an own value. Reference to an old value.
+
+294
+00:33:10,540 --> 00:33:20,150
+Function to. That's saying you might want to try cloning it.
+
+295
+00:33:20,150 --> 00:33:26,760
+Uh, can we are any these colonial.
+
+296
+00:33:26,760 --> 00:33:34,260
+Qualified I.D., yes, namespace compressed does cologne sensor makes this cologne nesting, this cologne priority.
+
+297
+00:33:34,260 --> 00:33:38,150
+So a bunch of these do clone. Maybe all of them do.
+
+298
+00:33:38,150 --> 00:33:43,470
+No direction does clone creation identifier.
+
+299
+00:33:43,470 --> 00:33:56,850
+But like. Protocol. Does it does not do clone.
+
+300
+00:33:56,850 --> 00:34:01,580
+Interesting. So there's another function here are there's a type check.
+
+301
+00:34:01,580 --> 00:34:06,450
+Ah, yes. I wonder if it does anything I can use as an example like protocol.
+
+302
+00:34:06,450 --> 00:34:20,160
+Do we ever see it? Doing any kind of manipulation of protocol.
+
+303
+00:34:20,160 --> 00:34:33,060
+Protocol typedef. Messages, managers.
+
+304
+00:34:33,060 --> 00:34:55,070
+Really? Try to find something, something something, uh.
+
+305
+00:34:55,070 --> 00:35:01,430
+Now, that's very useful. When try and transfer ownership.
+
+306
+00:35:01,430 --> 00:35:04,960
+This is against the grain for us. You cannot transfer ownership something board because you don't own it.
+
+307
+00:35:04,960 --> 00:35:08,270
+You shouldn't borrow food. My car and give it to first person in the street.
+
+308
+00:35:08,270 --> 00:35:13,170
+This is still shooting you in the car and allow you to make changes. You cannot move head at a meet self.
+
+309
+00:35:13,170 --> 00:35:22,430
+And, you know, because I leave the limitless direction. Use auction takes sleeth the variable where it is changing it in place, then moving in.
+
+310
+00:35:22,430 --> 00:35:36,530
+Take ownership of the structure instead of borrowing in. So what if we take ownership of the struct instead of borrowing and.
+
+311
+00:35:36,530 --> 00:35:45,490
+So check. Translation. Oh, sorry. So compiler.
+
+312
+00:35:45,490 --> 00:35:49,860
+These translation units. So maybe instead.
+
+313
+00:35:49,860 --> 00:35:59,160
+Maybe I should. Pass it like that.
+
+314
+00:35:59,160 --> 00:36:03,220
+Mute. Translation You can't do that.
+
+315
+00:36:03,220 --> 00:36:09,030
+I shouldn't really be mutable. Pass the translation and compound.
+
+316
+00:36:09,030 --> 00:36:18,630
+Translation You t you and t use to use is something that I get out of maybe ts which is from pass or not pass.
+
+317
+00:36:18,630 --> 00:36:22,860
+Pass it up. Pass is going to return me back. Some translation units.
+
+318
+00:36:22,860 --> 00:36:27,900
+So maybe that was my problem. I shouldn't have been passing in a borrowing translation.
+
+319
+00:36:27,900 --> 00:36:32,550
+You. Maybe can pass it in directly and then will let me do this.
+
+320
+00:36:32,550 --> 00:36:41,920
+Let's find out. Expected a structure and instead found a reference in compile.
+
+321
+00:36:41,920 --> 00:36:59,450
+Translation unit. Can I do it that way, I'm guessing here.
+
+322
+00:36:59,450 --> 00:37:03,020
+Expected reference found a structure. Oh, because.
+
+323
+00:37:03,020 --> 00:37:12,570
+OK. So that's what I want to do, I guess. No.
+
+324
+00:37:12,570 --> 00:37:21,410
+Value moved. Move occurs because IPL has not implement copy train.
+
+325
+00:37:21,410 --> 00:37:28,050
+So maybe. Passing a clone.
+
+326
+00:37:28,050 --> 00:37:38,050
+Really just guessing here. So it likes that.
+
+327
+00:37:38,050 --> 00:37:50,330
+And because I PDL path is a path, it's called a path above, maybe what I can do then is I'll just pass in the borrowing.
+
+328
+00:37:50,330 --> 00:37:56,880
+Of a path above. It's like that.
+
+329
+00:37:56,880 --> 00:38:08,520
+OK. It's cloning it.
+
+330
+00:38:08,520 --> 00:38:13,100
+Okey dokey, and then we're going to. So we've got a translation.
+
+331
+00:38:13,100 --> 00:38:17,630
+It looks like we're able get our protocol. So that's good. So I can go back here.
+
+332
+00:38:17,630 --> 00:38:23,850
+And I think what's going on here is Russell is doing exactly what I wanted to.
+
+333
+00:38:23,850 --> 00:38:31,290
+Panic. That call option unwrap three 23 inside option Hulot.
+
+334
+00:38:31,290 --> 00:38:36,260
+What? Why did I fail? I failed somewhere.
+
+335
+00:38:36,260 --> 00:38:45,290
+Probably here should have had a protocol, probably panic here.
+
+336
+00:38:45,290 --> 00:39:15,740
+Bet that's the story. Mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm.
+
+337
+00:39:15,740 --> 00:39:21,000
+Sorry, I'm just humming some. Humming some George Harrison.
+
+338
+00:39:21,000 --> 00:39:25,800
+So where did I panic here? Panic, try and panic and.
+
+339
+00:39:25,800 --> 00:39:33,390
+Yeah. Should have had a protocol. Whenever I attempt to pass ip dl h.
+
+340
+00:39:33,390 --> 00:39:38,590
+So the translation unit might actually not have a protocol if it's an H file.
+
+341
+00:39:38,590 --> 00:39:44,000
+OK, so I think I have to have that. So it might not have a protocol.
+
+342
+00:39:44,000 --> 00:39:50,680
+The translation unit might be a header. So we cannot say whether or not it's actually got a.
+
+343
+00:39:50,680 --> 00:39:59,940
+For sure, whether or not it's got a. A protocol or not?
+
+344
+00:39:59,940 --> 00:40:04,020
+If it does, though, I think maybe so. We need to not expect it.
+
+345
+00:40:04,020 --> 00:40:20,870
+We have to check. So. See if this.
+
+346
+00:40:20,870 --> 00:40:28,230
+Translation unit has a protocol. Note that.
+
+347
+00:40:28,230 --> 00:40:33,420
+Di, pedophiles have protocols defined in them.
+
+348
+00:40:33,420 --> 00:40:37,790
+But I pdl age files do not. OK.
+
+349
+00:40:37,790 --> 00:40:43,060
+So. Let's say a protocol equals.
+
+350
+00:40:43,060 --> 00:40:49,770
+We're going to see if Tudeh up protocol. And then on an option, because this is an option rust option.
+
+351
+00:40:49,770 --> 00:40:54,880
+We're going to look at the rust option spec here.
+
+352
+00:40:54,880 --> 00:41:04,380
+I think there's like some kind of. Is some return true, is some.
+
+353
+00:41:04,380 --> 00:41:12,730
+Get these extra prices is some, then we're going to.
+
+354
+00:41:12,730 --> 00:41:20,060
+Get the protocol. And then we're going to.
+
+355
+00:41:20,060 --> 00:41:41,940
+So that should. Compile. Mm mm mm mm mm mm mm mm.
+
+356
+00:41:41,940 --> 00:41:50,160
+Still failed. And I think it's because I accidentally kicked off the compiler before I'd hit Save in the file.
+
+357
+00:41:50,160 --> 00:41:54,000
+So this should not fail. I don't believe we should not panic here.
+
+358
+00:41:54,000 --> 00:42:00,640
+This shall pass. Yes, that all passes.
+
+359
+00:42:00,640 --> 00:42:12,720
+OK, good. So if we have a profile, a protocol, I should say, if we have a protocol, then we should be able to get the protocols, messages.
+
+360
+00:42:12,720 --> 00:42:27,060
+Messages will be a vector. Messages, equal protocol messages, and then what are these messages, a message declaration.
+
+361
+00:42:27,060 --> 00:42:37,590
+We're going to gists. Let's see what happens if we just print out the message, name, identifier and identifier.
+
+362
+00:42:37,590 --> 00:42:43,180
+Struct identifier is an I.D. and a location.
+
+363
+00:42:43,180 --> 00:42:54,950
+So I'm just gonna say I.D. So for let I iterate again for, oh, I just.
+
+364
+00:42:54,950 --> 00:43:03,500
+Message. Of set out in message, in messages.
+
+365
+00:43:03,500 --> 00:43:10,710
+And then I can say. Print line.
+
+366
+00:43:10,710 --> 00:43:18,440
+My name. Might I have a message named and then the hat?
+
+367
+00:43:18,440 --> 00:43:25,510
+And I'm going to pass a message DOT named I.D. because a name is a identifier.
+
+368
+00:43:25,510 --> 00:43:31,280
+And the idea is the string. OK.
+
+369
+00:43:31,280 --> 00:43:38,730
+So let's see what happens when I do that. I'm also going to, you know, capture the spoonbill doesn't like that.
+
+370
+00:43:38,730 --> 00:43:44,100
+Argument never used. Message that aimed at I.D.
+
+371
+00:43:44,100 --> 00:43:54,070
+Argument never used. I'm sure, but I'm using it message that name that I done what?
+
+372
+00:43:54,070 --> 00:43:57,710
+For message in messages. Message dot.
+
+373
+00:43:57,710 --> 00:44:07,890
+Name. Argument. Can I just, like, do that? Oh, it's because I'm using old style print format strings.
+
+374
+00:44:07,890 --> 00:44:12,990
+I should do it like that. That's how you format strings rest.
+
+375
+00:44:12,990 --> 00:44:20,630
+It still doesn't like it because. No field day messages on tape.
+
+376
+00:44:20,630 --> 00:44:28,660
+And then what we have here is a temple of namespace and protocol. So.
+
+377
+00:44:28,660 --> 00:44:39,210
+I should say it's not. It's a protocol.
+
+378
+00:44:39,210 --> 00:44:47,640
+Messages equals protocol topple. And then I think I just referred to the first one.
+
+379
+00:44:47,640 --> 00:44:54,710
+I actually want the second one. Protocol topple.
+
+380
+00:44:54,710 --> 00:45:02,180
+Dot messages. I think that'll work.
+
+381
+00:45:02,180 --> 00:45:06,350
+You to access Teppo, and that's his trouble. Oh, darn. One interesting.
+
+382
+00:45:06,350 --> 00:45:23,720
+That's how you access. Topples. That's kind of weird, but OK.
+
+383
+00:45:23,720 --> 00:45:28,970
+OK, so I have a message, name, child message, paire message, both message good, good, good, good, good.
+
+384
+00:45:28,970 --> 00:45:33,680
+This works. Message, sync, message, interrupt. Message, message, message to message.
+
+385
+00:45:33,680 --> 00:45:38,810
+So good. We've got the names of the messages. That's exactly what we wanted.
+
+386
+00:45:38,810 --> 00:45:43,270
+And now we need to we need to, like, put them in this collection.
+
+387
+00:45:43,270 --> 00:45:57,120
+And I have a feeling we're gonna want to prefix them, maybe with the with the name.
+
+388
+00:45:57,120 --> 00:46:04,440
+So like the. The way that these were generated over here is it's like namespace.
+
+389
+00:46:04,440 --> 00:46:07,900
+And then the message. So we might need to do the same thing.
+
+390
+00:46:07,900 --> 00:46:14,210
+We'll concatenate the protocols namespace.
+
+391
+00:46:14,210 --> 00:46:22,250
+And then the message. And the namespace is something that we see on the translation unit.
+
+392
+00:46:22,250 --> 00:46:27,870
+And there's a namespace. Yeah, and a namespace is.
+
+393
+00:46:27,870 --> 00:46:40,400
+Oh, wait, hold on a second namespace also we get from the protocol. Namespace.
+
+394
+00:46:40,400 --> 00:46:45,970
+And I wonder if, like, can Kalari nested named spaces?
+
+395
+00:46:45,970 --> 00:46:53,060
+Namespace and then a protocol namespace. We have nested named spaces.
+
+396
+00:46:53,060 --> 00:47:01,560
+Let's take a look at how the lollipop works. Namespace.
+
+397
+00:47:01,560 --> 00:47:10,430
+The canonical namespace, the translation unit. And then.
+
+398
+00:47:10,430 --> 00:47:18,240
+Namespace thing. So they're they're Kimie, multiple name spaces.
+
+399
+00:47:18,240 --> 00:47:24,690
+I don't know how often that's used, but it sounds like we can have several names, bases here.
+
+400
+00:47:24,690 --> 00:47:32,440
+And so what we want to do is, one, to probably take the top level namespace, concatenated it with the.
+
+401
+00:47:32,440 --> 00:47:38,530
+Like the. Protocol namespace. And then the message.
+
+402
+00:47:38,530 --> 00:47:44,710
+So. Top level namespace.
+
+403
+00:47:44,710 --> 00:47:48,530
+Top level namespace. How do we get access to that? That's on the translation.
+
+404
+00:47:48,530 --> 00:47:56,240
+You. So let top level.
+
+405
+00:47:56,240 --> 00:47:59,890
+Namespace equal to dot net.
+
+406
+00:47:59,890 --> 00:48:06,810
+I think I just like call namespace on it and then I can get the.
+
+407
+00:48:06,810 --> 00:48:16,020
+Namespace struct namespace is a has a name and names spaces.
+
+408
+00:48:16,020 --> 00:48:28,390
+Why are there names, bases under a namespace? Name spaces.
+
+409
+00:48:28,390 --> 00:48:37,600
+Like every other name spaces. Add odor namespace.
+
+410
+00:48:37,600 --> 00:48:50,460
+Oh, we can call. Oh, that's interesting. Stream from namespace self namespace spaces insert zero.
+
+411
+00:48:50,460 --> 00:48:58,230
+Strong ad oter namespace. When would that be used?
+
+412
+00:48:58,230 --> 00:49:10,900
+So if something is namespace. Namespace thing.
+
+413
+00:49:10,900 --> 00:49:22,070
+We might already actually have. Namespace insert you look at.
+
+414
+00:49:22,070 --> 00:49:28,840
+We might already have like a collection under name spaces, and we don't need to actually.
+
+415
+00:49:28,840 --> 00:49:36,030
+We won't need to do the concatenation ourselves. We're going to have this vector. On the namespace of the protocol.
+
+416
+00:49:36,030 --> 00:49:54,870
+OK, I think that's what I'm seeing here. OK, so like we get the money.
+
+417
+00:49:54,870 --> 00:50:04,100
+We're gonna get the protocols namespace. But name is equal protocol topple.
+
+418
+00:50:04,100 --> 00:50:19,070
+Zero. I think that's what it is, Protocol Temple is what is under translation unit protocol, and it is a temple of namespace protocol and a namespace.
+
+419
+00:50:19,070 --> 00:50:32,220
+We just determined has other names, bases. But also a message, that's what it is, a message.
+
+420
+00:50:32,220 --> 00:50:41,970
+Protocols, Nancy, protocol and then a protocol. Has a set of messages and a message declaration.
+
+421
+00:50:41,970 --> 00:50:47,430
+Doesn't have a namespace. OK.
+
+422
+00:50:47,430 --> 00:50:54,270
+What are things that have names, bases, translation unit, a space?
+
+423
+00:50:54,270 --> 00:51:04,510
+Has a train, has a namespace or can't have a collection and spaces.
+
+424
+00:51:04,510 --> 00:51:08,840
+And that's interesting. OK.
+
+425
+00:51:08,840 --> 00:51:16,010
+Well, that's crazy. But all right, this sort of like pattern of option namespace.
+
+426
+00:51:16,010 --> 00:51:21,530
+I also I'm curious about how often we're gonna get namespace back from things we're calling.
+
+427
+00:51:21,530 --> 00:51:28,630
+It's not too often. OK. So the zero with element is a namespace.
+
+428
+00:51:28,630 --> 00:51:34,490
+Name space. Name spaces. Is that what it is named space?
+
+429
+00:51:34,490 --> 00:51:44,320
+That word is losing all meaning. So that should be a vector of named spaces now.
+
+430
+00:51:44,320 --> 00:51:58,110
+I want to concatenate all of those together. But first, I mean, I say for namespace in name spaces.
+
+431
+00:51:58,110 --> 00:52:07,150
+With namespace. Namespace dot name is that.
+
+432
+00:52:07,150 --> 00:52:14,720
+Oh, yeah. Which is identifier dot Ida. That's crazy.
+
+433
+00:52:14,720 --> 00:52:21,180
+OK, so let's see if it likes that. Nope.
+
+434
+00:52:21,180 --> 00:52:27,800
+Did you mean name spaces? I think I may have. I think I may have gone too deep.
+
+435
+00:52:27,800 --> 00:52:34,230
+I think that's what I meant. Unknown field on the namespace.
+
+436
+00:52:34,230 --> 00:52:42,720
+Namespace is. It's an oh, it's just a string.
+
+437
+00:52:42,720 --> 00:53:02,840
+Oh, OK. So maybe I can just do that. Use of moved value, namespace milkers, because namespace astep streams implement copy.
+
+438
+00:53:02,840 --> 00:53:08,770
+For namespace named spaces.
+
+439
+00:53:08,770 --> 00:53:18,620
+Dot com. I guess I'll just do you know. No move occurs because, Nancy, this is tied strings now I'm a copy boy.
+
+440
+00:53:18,620 --> 00:53:25,870
+Use a move value namespace. Is the borrow checker again. Doesn't like that I'm iterating.
+
+441
+00:53:25,870 --> 00:53:33,290
+Iterating the set of names, spaces. Is there?
+
+442
+00:53:33,290 --> 00:53:42,740
+Maybe there's something simpler I can do, too, like rust join vector of strings.
+
+443
+00:53:42,740 --> 00:53:50,260
+And rust sliced concat, X joint is available. So.
+
+444
+00:53:50,260 --> 00:53:56,920
+Oh, I can just do dot join on a vector. Wow.
+
+445
+00:53:56,920 --> 00:54:09,420
+Really? So maybe I can just do. With name spaces.
+
+446
+00:54:09,420 --> 00:54:19,140
+I mean, to do that, and I'm going to name spaces dot join.
+
+447
+00:54:19,140 --> 00:54:25,210
+Let's see if it likes that. Whoa, it might it might like it.
+
+448
+00:54:25,210 --> 00:54:33,880
+That's crazy. Vector of strings, I mean, just called dot join traditionally C and C++.
+
+449
+00:54:33,880 --> 00:54:46,970
+I've never had. Amazing. Super amazing support for strings.
+
+450
+00:54:46,970 --> 00:54:58,650
+Not a whole lot of namespace is being printed out, by the way. I'm just seeing, like, emptiness.
+
+451
+00:54:58,650 --> 00:55:11,710
+No name spaces. So maybe.
+
+452
+00:55:11,710 --> 00:55:23,200
+Let's take a look inside our test files here. Yeah, there's one called.
+
+453
+00:55:23,200 --> 00:55:31,630
+End point declaration. And it should have a namespace called musila.
+
+454
+00:55:31,630 --> 00:55:41,120
+So if I do. Target, debug, IPL parser.
+
+455
+00:55:41,120 --> 00:55:50,820
+Um, include dye and then. What was it called?
+
+456
+00:55:50,820 --> 00:56:01,280
+Namespace, basic. Unrecognized option.
+
+457
+00:56:01,280 --> 00:56:06,680
+And Cappotelli, I have a message, name message with the name Space's basic.
+
+458
+00:56:06,680 --> 00:56:15,620
+OK, well, that's good. Now, namespace basic. Can I do?
+
+459
+00:56:15,620 --> 00:56:25,430
+Namespace Foo. Can protocol could do that.
+
+460
+00:56:25,430 --> 00:56:36,910
+I got a feeling it's not going to like that. Uh. Doesn't like that token, but I wonder if I can do, like, nested named spaces like namespace foo.
+
+461
+00:56:36,910 --> 00:56:46,760
+Namespace bar. Yeah, basic foobar, it's working.
+
+462
+00:56:46,760 --> 00:56:57,690
+That's good. That's good. You good? OK, that's exactly what I wanted to see.
+
+463
+00:56:57,690 --> 00:57:08,750
+So we're actually we've got our name spaces. And I'm going to join them.
+
+464
+00:57:08,750 --> 00:57:19,920
+With nothing. And then. Print line.
+
+465
+00:57:19,920 --> 00:57:29,610
+Message. And then that that and that is name spaces message.
+
+466
+00:57:29,610 --> 00:57:39,020
+I can't do that in here, so slightly different, slight variation.
+
+467
+00:57:39,020 --> 00:57:42,410
+Cargo build doesn't like that.
+
+468
+00:57:42,410 --> 00:57:51,860
+Once the macro symbol, which is an exclamation mark. It's like that either.
+
+469
+00:57:51,860 --> 00:58:01,110
+Message dot. Name. Right. That's what it wants.
+
+470
+00:58:01,110 --> 00:58:09,000
+How would you have for time? Hey, I think we're making forward progress is slow, but sure is and steady wins the race.
+
+471
+00:58:09,000 --> 00:58:14,850
+Seriously. Know if he was actually watching him, do I have any viewers?
+
+472
+00:58:14,850 --> 00:58:21,490
+I got some viewers, not too many. That some stream health here.
+
+473
+00:58:21,490 --> 00:58:28,090
+I got four viewers. All right. Hello, you viewers. Good to see a.
+
+474
+00:58:28,090 --> 00:58:36,250
+For viewers there, just a vanity vanity checking my viewer account because I'm so vain.
+
+475
+00:58:36,250 --> 00:58:43,930
+So now I'm going to run that manual test again. Target debug IPL password dash I woo devil.
+
+476
+00:58:43,930 --> 00:58:49,990
+Tiago Crono says, yes, you have some viewers. Kapa.
+
+477
+00:58:49,990 --> 00:58:55,500
+That's what you folks say on Twitter right now, tests.
+
+478
+00:58:55,500 --> 00:59:00,460
+Okay. And then what was a basic namespace? Namespace, basic.
+
+479
+00:59:00,460 --> 00:59:04,560
+It's the one. I actually don't want to include it.
+
+480
+00:59:04,560 --> 00:59:10,150
+I want to compile it, so that's what I'll do.
+
+481
+00:59:10,150 --> 00:59:16,740
+Message. Basic message and basic, I think, is the namespace.
+
+482
+00:59:16,740 --> 00:59:23,190
+So. Hey, I think we're okay. Let me just double check.
+
+483
+00:59:23,190 --> 00:59:29,980
+Let's see if there are any other things with name spaces in here. We should write some like.
+
+484
+00:59:29,980 --> 00:59:40,390
+Some Testa's point union namespace. What's a union namespace gunsight and.
+
+485
+00:59:40,390 --> 00:59:51,620
+Union namespace kiddie's has it. OK, Puppis, so it should come out with Puppis message.
+
+486
+00:59:51,620 --> 01:00:03,890
+Union name spaced. Puppis message, great dance as he's watching the Aimo Elmo, right, lurking in the Twitch chat,
+
+487
+01:00:03,890 --> 01:00:10,640
+probably message your count, maybe the fact that Dennis so that fellow was telling you about the joy of diagnosis.
+
+488
+01:00:10,640 --> 01:00:17,660
+He is actually watching this right now. I'm so flattered and blushing internally and it sounds like he's got both twitch, twitch and arrow open.
+
+489
+01:00:17,660 --> 01:00:22,310
+So he's a superfan. He's got like me in stereo, probably with a little bit of delay.
+
+490
+01:00:22,310 --> 01:00:26,600
+So the fact that you can make sense of that blows my mind.
+
+491
+01:00:26,600 --> 01:00:30,890
+Although maybe you're just talking about the chat. That's probably more realistic, but great to see it does.
+
+492
+01:00:30,890 --> 01:00:36,340
+Thanks for being here. I really dig your show. What are we doing?
+
+493
+01:00:36,340 --> 01:00:41,830
+So I think we've got something that kind of works. We've got our name spaces that we've joined all together.
+
+494
+01:00:41,830 --> 01:00:47,110
+We've got our list of messages. And now we're gonna do is you're just going to spew them out.
+
+495
+01:00:47,110 --> 01:00:53,210
+We're gonna concatenate them together basically like we've written here, but we're gonna put them inside.
+
+496
+01:00:53,210 --> 01:00:59,140
+This. Oh, see, I'm shadowing. I've got two things, day messages.
+
+497
+01:00:59,140 --> 01:01:08,220
+I mean, a message string's. That's why they call it.
+
+498
+01:01:08,220 --> 01:01:14,250
+Yeah, I'm gonna format. Can I do it this way format.
+
+499
+01:01:14,250 --> 01:01:24,220
+Exclamation mark that join them together and then I'm gonna say message STRs dot.
+
+500
+01:01:24,220 --> 01:01:31,770
+And then what is is like standard Rosta vector append or is it pushed back or what is it.
+
+501
+01:01:31,770 --> 01:01:36,750
+When you add to. Victor, what do you do?
+
+502
+01:01:36,750 --> 01:01:41,820
+What do you do? What do you do? Push. Just push. Push.
+
+503
+01:01:41,820 --> 01:01:46,490
+I might need to do something like dot to owned. There.
+
+504
+01:01:46,490 --> 01:01:57,930
+Let's see if it likes that. Will it build?
+
+505
+01:01:57,930 --> 01:02:00,690
+Amazing. Yes, it will.
+
+506
+01:02:00,690 --> 01:02:06,610
+So I'm going to play a sound in celebration because I don't normally play sounds which supports RC, so I'm not actually watching a stream.
+
+507
+01:02:06,610 --> 01:02:12,360
+Actually, that's true, Dennis. Good call. I'm also connected to Twitch via I.R.S.
+
+508
+01:02:12,360 --> 01:02:19,370
+Right on. Cool beans.
+
+509
+01:02:19,370 --> 01:02:23,990
+Played some sounds there. So I'm pretty happy I'm actually making what feels like forward progress.
+
+510
+01:02:23,990 --> 01:02:34,450
+Hopefully it'll end up just ripping the stuff out later. But now I've got these message strings and now I can return this vector.
+
+511
+01:02:34,450 --> 01:02:40,370
+I think I can return that. And it should like it.
+
+512
+01:02:40,370 --> 01:02:47,390
+Yes, it does. So if that's true, then I should be able to construct.
+
+513
+01:02:47,390 --> 01:02:59,370
+I should have all the information I need to construct this. And maybe even this.
+
+514
+01:02:59,370 --> 01:03:09,150
+Which is great. So. Let's see.
+
+515
+01:03:09,150 --> 01:03:12,880
+Messages. And then I can I want I can count.
+
+516
+01:03:12,880 --> 01:03:19,540
+So I've got, like, let me message strings stirs equal.
+
+517
+01:03:19,540 --> 01:03:24,040
+It's gonna be a just another vector of strings I guess.
+
+518
+01:03:24,040 --> 01:03:37,380
+Vector string. All message strings.
+
+519
+01:03:37,380 --> 01:03:50,810
+That's what I'll call it, and then I'm going to say all message stirs, extend messages.
+
+520
+01:03:50,810 --> 01:04:00,650
+Will you build that? Amazing. Oh, yes.
+
+521
+01:04:00,650 --> 01:04:04,940
+I'm on a more reliable network this week, so I've a feeling that's why my sounds are actually working.
+
+522
+01:04:04,940 --> 01:04:10,460
+I'm using. Are you a programmer or do you just have fun programing? Asks Devel Tiago Cronos.
+
+523
+01:04:10,460 --> 01:04:15,710
+I'm a programmer and I have fun programing. Why not both?
+
+524
+01:04:15,710 --> 01:04:19,070
+So I'm a professional software engineer. That's what I do for my my day job.
+
+525
+01:04:19,070 --> 01:04:21,050
+But I also have a good time doing it.
+
+526
+01:04:21,050 --> 01:04:29,600
+I work for Mozilla, the creator of Firefox, and a bunch of other cool stuff, including reste or like I don't say I can't say we created rust.
+
+527
+01:04:29,600 --> 01:04:34,140
+We sort of we we sponsored it and now we're growing rust.
+
+528
+01:04:34,140 --> 01:04:39,950
+The creator of Rust is actually a fellow named Greenhaw. Brilliant, brilliant software engineers, not Apple, I believe.
+
+529
+01:04:39,950 --> 01:04:46,970
+But now the rust rust is guided by a community of people and sponsored and supported by Mazola.
+
+530
+01:04:46,970 --> 01:04:54,740
+So that's what I do for a living. I work on the Firefox Web browser and right now I'm working on a thing that helps us build that more reliably.
+
+531
+01:04:54,740 --> 01:05:03,900
+I'd say. So that works, Will, we'll have constructed all of these message strings.
+
+532
+01:05:03,900 --> 01:05:09,740
+And now I want to like. I mean, to say.
+
+533
+01:05:09,740 --> 01:05:18,650
+At this point, I need to ensure that somehow we didn't accidentally.
+
+534
+01:05:18,650 --> 01:05:23,580
+Wait, ipc message start. Dot h. And I'm C message type.
+
+535
+01:05:23,580 --> 01:05:30,710
+Named CVP r. Lips are.
+
+536
+01:05:30,710 --> 01:05:37,160
+Why are you on a complete are to. Special.
+
+537
+01:05:37,160 --> 01:05:47,020
+Files that will create after. Iterating all translation units.
+
+538
+01:05:47,020 --> 01:06:16,410
+We'd better not have passed any. Are compiled, compiled any translation units that will result in files with those names.
+
+539
+01:06:16,410 --> 01:06:19,830
+Devotee of Akaroa says, Awesome. That's the kind of dream job everyone's doing what you like.
+
+540
+01:06:19,830 --> 01:06:25,380
+I absolutely have a dream job. I know what it I don't want to go off on a tangent here.
+
+541
+01:06:25,380 --> 01:06:31,980
+We're actually on a roll, but I am so privileged to be able to, like, wake up in the morning and enjoy my job.
+
+542
+01:06:31,980 --> 01:06:36,720
+I am. I've been doing this professionally for about five and a half, almost six years now.
+
+543
+01:06:36,720 --> 01:06:42,390
+And every day I wake up and I'm happy to go to work. I'm happy to do my job.
+
+544
+01:06:42,390 --> 01:06:47,760
+You know, the Mozilla mission really resonates with me that the people here, I really enjoy the community,
+
+545
+01:06:47,760 --> 01:06:55,080
+the wider community and also the paid staff who work with me in the office here, but also like just the puzzles and problems like this.
+
+546
+01:06:55,080 --> 01:06:57,450
+This is a cool problem that I'm working on. I'm really enjoying it.
+
+547
+01:06:57,450 --> 01:07:04,710
+So and they like I get to I just sort of made up this show, The Joy of coding, and I can just do that.
+
+548
+01:07:04,710 --> 01:07:09,060
+And there's no problem with that. And they're like, no, you have to get approval or anything.
+
+549
+01:07:09,060 --> 01:07:15,070
+I just do it. And people seem to dig it. So I keep doing it. So I take a chunk out of my day and do it.
+
+550
+01:07:15,070 --> 01:07:22,170
+So I want to just make an assertion. So is there like a rust search function?
+
+551
+01:07:22,170 --> 01:07:29,360
+Can I put that inside? Anything besides tests ensure that this will invoke a panic?
+
+552
+01:07:29,360 --> 01:07:40,470
+Yeah, yeah. That's what I want to do, essentially search. And I'm going to have these to be special names.
+
+553
+01:07:40,470 --> 01:07:52,070
+So there is a way that I can like. Have special names or special strings like static strings.
+
+554
+01:07:52,070 --> 01:08:04,310
+Yeah, this is it. And I'm going to call it the IPC message start file.
+
+555
+01:08:04,310 --> 01:08:11,690
+So message start file. Message start header.
+
+556
+01:08:11,690 --> 01:08:18,660
+We call it IPC message start. Dot h. And I'm going to have another one called.
+
+557
+01:08:18,660 --> 01:08:26,100
+Daisy, a message type, name, message type.
+
+558
+01:08:26,100 --> 01:08:36,720
+And what does it do? Like message type? What did you mean?
+
+559
+01:08:36,720 --> 01:08:45,550
+What would you even call this? This is like a message type. Name, message, type name.
+
+560
+01:08:45,550 --> 01:09:02,980
+There's probably a better name for that message type. Message type definitions, and I'll say IBC message type name.
+
+561
+01:09:02,980 --> 01:09:16,640
+So these are static strings. And now I'm going to make sure that after doing all that business, that they are not already inside.
+
+562
+01:09:16,640 --> 01:09:25,770
+The. What we're going to be writing our result, which is a hash map.
+
+563
+01:09:25,770 --> 01:09:30,060
+Now here's the thing where I'm writing this hash map path above. Spring string.
+
+564
+01:09:30,060 --> 01:09:38,160
+I think that's wrong. I've just thought about it. I actually think what we want to return is string and string,
+
+565
+01:09:38,160 --> 01:09:45,770
+because path above is useful if I want to know things about the file path where the file came from.
+
+566
+01:09:45,770 --> 01:09:46,440
+But at this point,
+
+567
+01:09:46,440 --> 01:09:54,000
+I just want to have a file name and the contents of that file because there's an argument to the IPD I'll pass that says put things in this directory.
+
+568
+01:09:54,000 --> 01:09:59,970
+So I don't actually need to know the rest of the information about the path at this point.
+
+569
+01:09:59,970 --> 01:10:05,160
+I do whenever I compile it. But when it like in order to like, go and get the file and pass it and stuff.
+
+570
+01:10:05,160 --> 01:10:08,640
+But whenever it comes to writing it, I just need to know the file name.
+
+571
+01:10:08,640 --> 01:10:16,840
+So let's say that when I go through this, I can pilot compile translation unit shouldn't return.
+
+572
+01:10:16,840 --> 01:10:21,210
+The result is some hash map. Yes.
+
+573
+01:10:21,210 --> 01:10:34,000
+So for now, it's just going to be a hash map and that hash map will be of strings and strings, not of.
+
+574
+01:10:34,000 --> 01:10:40,780
+Path buffs and strings. So that's important. And then I'm going to make sure that the vector.
+
+575
+01:10:40,780 --> 01:10:47,100
+I need to check for whether or not a vector includes a certain value.
+
+576
+01:10:47,100 --> 01:10:52,310
+There's a vector class documentation.
+
+577
+01:10:52,310 --> 01:10:57,030
+I want to check to see whether or not it has a thing.
+
+578
+01:10:57,030 --> 01:11:06,630
+Capacity reserve. This memory stuff truncate a slice, set length swamp, remove, insert, remove, retain.
+
+579
+01:11:06,630 --> 01:11:16,490
+I want like contains that contains. It contains, yes, just contains.
+
+580
+01:11:16,490 --> 01:11:26,880
+OK. And then I have to pass it a borrowed value.
+
+581
+01:11:26,880 --> 01:11:35,090
+OK, so assert that. Result.
+
+582
+01:11:35,090 --> 01:11:58,500
+I'm going to actually call his files to write. Instead of result files to rate.
+
+583
+01:11:58,500 --> 01:12:03,140
+Daisy. Come on, come on, come on. Assert that file's too, right?
+
+584
+01:12:03,140 --> 01:12:11,580
+It contains. Not it doesn't contain.
+
+585
+01:12:11,580 --> 01:12:16,950
+And then a reference to. That.
+
+586
+01:12:16,950 --> 01:12:32,790
+String. I think I can do that. Should not have the message start header yet.
+
+587
+01:12:32,790 --> 01:12:38,580
+I do that. Well, you like it if I build that. No.
+
+588
+01:12:38,580 --> 01:12:45,690
+I mean, file exclamation mark. Sorry. No, that's right. I meant file name.
+
+589
+01:12:45,690 --> 01:12:52,730
+Unresolved name. Result. Yeah. She files to write.
+
+590
+01:12:52,730 --> 01:12:59,060
+And then contains found for it's a hash map, not a vector, Selimi.
+
+591
+01:12:59,060 --> 01:13:04,130
+It's a hash map. Not a vector.
+
+592
+01:13:04,130 --> 01:13:13,300
+So there should be something that's like has key or something with capacity, with hasher, with capacity.
+
+593
+01:13:13,300 --> 01:13:17,630
+He's values. And tree length is empty.
+
+594
+01:13:17,630 --> 01:13:22,530
+Drain clear, get contains key. Yeah, that's what I want.
+
+595
+01:13:22,530 --> 01:13:42,070
+Contains key. And maybe I don't need that part.
+
+596
+01:13:42,070 --> 01:13:52,750
+A lot of warnings about stuff, I'm not actually using it. That's OK. We'll deal with those down the road.
+
+597
+01:13:52,750 --> 01:14:06,780
+That worked. Now. What if I were to, like, accidentally let's put something in here, let's say, instead of result, Miles, to write this one?
+
+598
+01:14:06,780 --> 01:14:15,790
+I'll call it. You say files, too, right?
+
+599
+01:14:15,790 --> 01:14:22,920
+I mean, uh, look at it. I mean, uh, set.
+
+600
+01:14:22,920 --> 01:14:30,240
+Function. Put, function, put.
+
+601
+01:14:30,240 --> 01:14:37,810
+How do I add something you have to a Hashmat. It's insert insert.
+
+602
+01:14:37,810 --> 01:14:41,870
+Then I'm going to say message type her.
+
+603
+01:14:41,870 --> 01:14:47,630
+Yeah. Mr. Start had her boom. So that should.
+
+604
+01:14:47,630 --> 01:15:12,370
+Explode. Construct miscounts stir.
+
+605
+01:15:12,370 --> 01:15:19,560
+Huh? Files two right equals.
+
+606
+01:15:19,560 --> 01:15:32,780
+Hashmat. String, string.
+
+607
+01:15:32,780 --> 01:15:39,990
+Is it better if I'm more explicit there? Yes.
+
+608
+01:15:39,990 --> 01:15:46,650
+So found reference, I need to like do two owned and then two owned.
+
+609
+01:15:46,650 --> 01:15:51,870
+Basically create string copies, I think. So this should cause an explosion.
+
+610
+01:15:51,870 --> 01:15:58,640
+We should panic because what I've done is I've put the thing that I expect not to be in the vector.
+
+611
+01:15:58,640 --> 01:16:04,460
+I'm expecting this to explode on me. A panic should not have the message start header yet.
+
+612
+01:16:04,460 --> 01:16:09,650
+Good. So that's what I wanted. That's working as expected.
+
+613
+01:16:09,650 --> 01:16:20,660
+I want to say the same thing for message type definitions.
+
+614
+01:16:20,660 --> 01:16:27,800
+And now I'm going to construct those two files. So.
+
+615
+01:16:27,800 --> 01:16:36,430
+Files to write. Insert.
+
+616
+01:16:36,430 --> 01:16:47,600
+Message start header. Two owned.
+
+617
+01:16:47,600 --> 01:17:00,060
+A pass and the like. Compile message start header.
+
+618
+01:17:00,060 --> 01:17:07,790
+And then I'm going to pass in our all message string's.
+
+619
+01:17:07,790 --> 01:17:19,640
+Two armed. And I'll do the same thing for message type definitions, compile message.
+
+620
+01:17:19,640 --> 01:17:31,430
+Ty deafens. Two.
+
+621
+01:17:31,430 --> 01:17:38,500
+OK. OK, so now I need to.
+
+622
+01:17:38,500 --> 01:17:43,890
+I need to like. Define these functions.
+
+623
+01:17:43,890 --> 01:17:52,380
+This is going to be a function that takes in.
+
+624
+01:17:52,380 --> 01:18:04,570
+Our vector of messages, right? It's a vector of message string's.
+
+625
+01:18:04,570 --> 01:18:09,410
+And. It's just going to do some insertions.
+
+626
+01:18:09,410 --> 01:18:15,650
+So I'm going to say we can borrow at. Messages.
+
+627
+01:18:15,650 --> 01:18:21,860
+All messages. We're going to borrow.
+
+628
+01:18:21,860 --> 01:18:29,040
+And what we're gonna return is just a string. So I'm going over here.
+
+629
+01:18:29,040 --> 01:18:34,920
+I'm going to just say return. Hey, I did it, too.
+
+630
+01:18:34,920 --> 01:18:40,170
+Owned. And then we do the same thing for the other one.
+
+631
+01:18:40,170 --> 01:18:45,510
+Except instead of message start header, it's gonna be in that thing.
+
+632
+01:18:45,510 --> 01:18:54,790
+It's the same. Hey, this is the message start header.
+
+633
+01:18:54,790 --> 01:19:01,070
+Hey, these are the message type definitions.
+
+634
+01:19:01,070 --> 01:19:08,800
+Two. OK. Let's see if it likes to build that. Nope, expected reference whenever.
+
+635
+01:19:08,800 --> 01:19:30,190
+OK. Yeah, I want to. I said I want to try borrowing. So let's try borrowing.
+
+636
+01:19:30,190 --> 01:19:39,010
+All right. And yeah. All right. It attempts to write those things and file name.
+
+637
+01:19:39,010 --> 01:19:43,770
+Contents. Right.
+
+638
+01:19:43,770 --> 01:19:51,170
+File, name, tune. With contents.
+
+639
+01:19:51,170 --> 01:20:08,650
+And then print nine. Contents, too, two owned.
+
+640
+01:20:08,650 --> 01:20:22,280
+Couple of new lines up. Two owned, apparently doing two owned on string's is a thing you do all the time and rest.
+
+641
+01:20:22,280 --> 01:20:29,790
+That's just the way it is. Hurray!
+
+642
+01:20:29,790 --> 01:20:35,970
+That's what I want to see. So now I can start. I can try and do some string templating.
+
+643
+01:20:35,970 --> 01:20:45,420
+Maybe we can do that in the next 10 minutes. Then I'll call this episode done. So like IPC message start has this like.
+
+644
+01:20:45,420 --> 01:20:51,900
+Structure to it. Well, looks like that.
+
+645
+01:20:51,900 --> 01:21:04,190
+And this is what we want to put inside. I wonder if there's like a good indenting library.
+
+646
+01:21:04,190 --> 01:21:16,180
+Yes. Doesn't matter. Like, how do I do? Rust string's multi-line string's.
+
+647
+01:21:16,180 --> 01:21:36,100
+How do I rate a multi-line string and the rest? Multi-line string, literal.
+
+648
+01:21:36,100 --> 01:21:46,960
+So it's the Left Coast Nonces characters, the first call on.
+
+649
+01:21:46,960 --> 01:22:07,130
+Maybe this is what I want, rostering, literal notation. Return.
+
+650
+01:22:07,130 --> 01:22:16,610
+Equal return. Ah. So I have to, like, let template equal.
+
+651
+01:22:16,610 --> 01:22:23,900
+Ah, that. And then.
+
+652
+01:22:23,900 --> 01:22:37,830
+Like that. And then I can do it like this. And then what if I return just the template?
+
+653
+01:22:37,830 --> 01:22:55,620
+Two owned. What you say when you say, come on.
+
+654
+01:22:55,620 --> 01:23:00,790
+Kimon. Yeah.
+
+655
+01:23:00,790 --> 01:23:09,010
+All right. So I've semester starting now has that string that's great. Now we're gonna start inserting stuff into it.
+
+656
+01:23:09,010 --> 01:23:16,100
+Does Rust have template strings? Core format.
+
+657
+01:23:16,100 --> 01:23:22,910
+I guess it does. Flexible template engine for rust.
+
+658
+01:23:22,910 --> 01:23:28,830
+I don't really want to like. Turning to crazy.
+
+659
+01:23:28,830 --> 01:23:50,510
+We want to keep this, like, really, really simple. But it may be there's like a really cheap.
+
+660
+01:23:50,510 --> 01:23:59,930
+Rusk template engine. Templating and rest handlebars.
+
+661
+01:23:59,930 --> 01:24:07,670
+It's pretty good, apparently. Hannibal's iron.
+
+662
+01:24:07,670 --> 01:24:14,740
+Templates. Mod, liquid, liquid, template language.
+
+663
+01:24:14,740 --> 01:24:21,570
+Templating horror show. That sounds great, mustache twigg, Polly, tarrah.
+
+664
+01:24:21,570 --> 01:24:27,140
+OK. Handlebars, take me to your leader.
+
+665
+01:24:27,140 --> 01:24:33,450
+Whereas at home. Modde.
+
+666
+01:24:33,450 --> 01:24:40,610
+And Horrorshow. And Russ Dash.
+
+667
+01:24:40,610 --> 01:24:46,920
+Handlebars. How big is it? Looks pretty complicated.
+
+668
+01:24:46,920 --> 01:24:54,230
+I don't see anything too complicated. That's the thing, I want something small, super small.
+
+669
+01:24:54,230 --> 01:25:05,660
+Paul Engine. Front time for footprint's ball mod runtime librarian, too, including Integration's, that's the 100.
+
+670
+01:25:05,660 --> 01:25:19,040
+Single lines of code. Law requires a nightly compiler and compile times, we don't want that.
+
+671
+01:25:19,040 --> 01:25:27,830
+I don't want an HD here, Mel. Templating library, flexible template engine.
+
+672
+01:25:27,830 --> 01:25:41,320
+Render file. That's interesting. I don't want to do a whole lot of Firefly, though.
+
+673
+01:25:41,320 --> 01:26:00,690
+Rust string formatting. So maybe I'll just do string like the built in formatting.
+
+674
+01:26:00,690 --> 01:26:28,290
+Formatting. I think I want, like, named.
+
+675
+01:26:28,290 --> 01:26:39,610
+Named, I think, will be a lot easier to understand. Core format.
+
+676
+01:26:39,610 --> 01:26:45,460
+Value. Yeah. That's what I'll do. Mustache value.
+
+677
+01:26:45,460 --> 01:26:56,760
+Our curly braces value. So it'll be like. Mustache.
+
+678
+01:26:56,760 --> 01:27:09,340
+Generated code warning. And then.
+
+679
+01:27:09,340 --> 01:27:28,450
+We want hear the. Indented messages.
+
+680
+01:27:28,450 --> 01:27:48,830
+All right. With karmas. So then I should be able to do.
+
+681
+01:27:48,830 --> 01:27:55,520
+Return format, template to own our template.
+
+682
+01:27:55,520 --> 01:28:04,930
+And then. A set of arguments generated code warning.
+
+683
+01:28:04,930 --> 01:28:12,350
+Equals. Generally, code warning.
+
+684
+01:28:12,350 --> 01:28:21,720
+Um. And then, like, indented messages equals.
+
+685
+01:28:21,720 --> 01:28:31,920
+One, two, three, four, five. I'll just do that for now. See what you think about that.
+
+686
+01:28:31,920 --> 01:28:40,050
+Now, what do you think about that? Now, you know, the format argument must be a string literal.
+
+687
+01:28:40,050 --> 01:28:48,790
+Now. Shoot.
+
+688
+01:28:48,790 --> 01:28:55,320
+I don't want to be a string literal. Format argument must be a string literal.
+
+689
+01:28:55,320 --> 01:29:18,820
+I don't want it to be. Fixes is to replace print's definition.
+
+690
+01:29:18,820 --> 01:29:26,110
+String of. Format with a non literal string.
+
+691
+01:29:26,110 --> 01:29:34,440
+That's what I exactly want. There's an unstable APF for the Passey here.
+
+692
+01:29:34,440 --> 01:29:58,120
+I just you Steria place. Stop, replace.
+
+693
+01:29:58,120 --> 01:30:08,990
+First, and that's, uh. And.
+
+694
+01:30:08,990 --> 01:30:24,270
+Replace. Rest simple string templating man, hoping this would be really easy.
+
+695
+01:30:24,270 --> 01:30:39,940
+Once something small. No, I don't want like all the Fancy's.
+
+696
+01:30:39,940 --> 01:30:55,460
+String template. First string template.
+
+697
+01:30:55,460 --> 01:31:03,090
+Maybe I just. Maybe I can bite the bullet and say format.
+
+698
+01:31:03,090 --> 01:31:17,620
+There's got to be restring. Format multi-line.
+
+699
+01:31:17,620 --> 01:31:25,800
+Arrest reference. That's not what I want.
+
+700
+01:31:25,800 --> 01:31:31,230
+Maybe I need some help. I'm going to ask Luxo TV wants know what I'm making.
+
+701
+01:31:31,230 --> 01:31:35,700
+I'm making an IPL compiler in Rust.
+
+702
+01:31:35,700 --> 01:31:42,170
+And if you're curious to know what that means, I. I recommend that you go back to the very beginning of this episode when it's done.
+
+703
+01:31:42,170 --> 01:31:52,030
+Happily, I happily explain it more or less at the very beginning. I'm going to join the rescue channel.
+
+704
+01:31:52,030 --> 01:32:02,530
+And then maybe I can ask for some help. It's trying to rest RC channel.
+
+705
+01:32:02,530 --> 01:32:18,160
+Can I ask for help? Going to ask for help.
+
+706
+01:32:18,160 --> 01:32:30,270
+That's what you do when you need help. It's okay. As for who?
+
+707
+01:32:30,270 --> 01:32:56,180
+Ping, someone who might know about this. What maybe instead of string template, lence, rust, string interpellation.
+
+708
+01:32:56,180 --> 01:33:41,710
+Dynamic string interpretation is kind of what we want. wish-List Functional Cure Gagas.
+
+709
+01:33:41,710 --> 01:33:48,290
+Mm hmm, mm hmm. Trying to figure out how to put strings together in rust.
+
+710
+01:33:48,290 --> 01:34:14,240
+Hmm hmm. Hmm hmm. Hmm hmm. Come on.
+
+711
+01:34:14,240 --> 01:34:20,960
+No help yet, um. So let's keep looking.
+
+712
+01:34:20,960 --> 01:34:42,880
+Rust, multi-line, string interprete interpellation.
+
+713
+01:34:42,880 --> 01:34:48,950
+Yeah, that's great. If I've got, like, Litoral.
+
+714
+01:34:48,950 --> 01:35:08,200
+Can I pass Ross to pass multi-line string literal?
+
+715
+01:35:08,200 --> 01:35:15,230
+Maybe, maybe if I just do like format.
+
+716
+01:35:15,230 --> 01:35:24,900
+That take that out of the select template thing.
+
+717
+01:35:24,900 --> 01:35:44,940
+Well, that compile, nope. Also, nope.
+
+718
+01:35:44,940 --> 01:35:59,010
+Stirringly rule with a suffix is invalid. I need, like, super simple rust, fast template.
+
+719
+01:35:59,010 --> 01:36:07,460
+Compile time each team out. And I don't want each team or templates fastest template engine in the West.
+
+720
+01:36:07,460 --> 01:36:18,610
+Swanage, better modde and Horrorshow or quite low. I don't want an H team L one.
+
+721
+01:36:18,610 --> 01:36:44,450
+Fast string template language. Fast drinking coordination.
+
+722
+01:36:44,450 --> 01:36:49,910
+Type safe comp. Ginge like templates for rust. Super simple templating language library for us.
+
+723
+01:36:49,910 --> 01:37:01,650
+That sounds good. Let's go back to Horrorshow.
+
+724
+01:37:01,650 --> 01:37:05,780
+What else do we have? I don't want power.
+
+725
+01:37:05,780 --> 01:37:16,670
+I want speed. Compile time.
+
+726
+01:37:16,670 --> 01:37:25,120
+OK, Ido. What is Ido? Go to the home page and look at the documentation.
+
+727
+01:37:25,120 --> 01:37:34,250
+Bring in Ido. We construct. Template.
+
+728
+01:37:34,250 --> 01:37:46,720
+Oh, that's nice. How big is it?
+
+729
+01:37:46,720 --> 01:37:53,960
+Two big. That's not so bad.
+
+730
+01:37:53,960 --> 01:37:59,790
+And what's the license, M.I.T.? Speaking my language.
+
+731
+01:37:59,790 --> 01:38:25,050
+So maybe that's all I need is Ido. Passin a string and then you register static.
+
+732
+01:38:25,050 --> 01:38:32,970
+Very simple tumbling language, that's good. Functional.
+
+733
+01:38:32,970 --> 01:38:45,370
+So accept arguments, so simple, handler, handler with arguments.
+
+734
+01:38:45,370 --> 01:39:02,020
+Oh, so you could, like, register like little functions. I don't want to do that necessarily, but OK.
+
+735
+01:39:02,020 --> 01:39:09,780
+Template. OK. Let's try Itoh. Let's let's try and bring in Itoh, let's try and get that to work and then I'm going to call it a day.
+
+736
+01:39:09,780 --> 01:39:19,500
+So to do that, I go over to cargo and say that there is a dependency on IDO.
+
+737
+01:39:19,500 --> 01:39:24,740
+Equals. And then what's the most recent version? Zero three.
+
+738
+01:39:24,740 --> 01:39:33,810
+Oh, that's what all add. And then I'm going to bring in Itoh.
+
+739
+01:39:33,810 --> 01:39:42,310
+Is Ito ito, ito ito. So in compiler.
+
+740
+01:39:42,310 --> 01:39:48,120
+They say use Ito in their.
+
+741
+01:39:48,120 --> 01:40:06,750
+And then I can say. Let me template Ito Sturr equals Ito new.
+
+742
+01:40:06,750 --> 01:40:19,630
+And then pass it our template. And I'm going to call.
+
+743
+01:40:19,630 --> 01:40:28,650
+Register. Static.
+
+744
+01:40:28,650 --> 01:40:36,750
+And you say generated code warning. Uh, January code warning.
+
+745
+01:40:36,750 --> 01:40:43,270
+Don't do the same thing for. Dented messages.
+
+746
+01:40:43,270 --> 01:40:52,530
+I was going to pass it in like. List of messages to owned.
+
+747
+01:40:52,530 --> 01:41:05,580
+And then return. Template that render now rendered takes, what is that argument there?
+
+748
+01:41:05,580 --> 01:41:17,390
+Render. Harinder.
+
+749
+01:41:17,390 --> 01:41:24,710
+O kay. Just render to.
+
+750
+01:41:24,710 --> 01:41:34,850
+And return the string. OK, so let's try that. Will you build with that?
+
+751
+01:41:34,850 --> 01:41:44,500
+It's gonna go get Itoh now. Compiled Ido.
+
+752
+01:41:44,500 --> 01:41:51,990
+Didn't know what generated code warning was. That makes sense because I haven't actually declared it.
+
+753
+01:41:51,990 --> 01:42:03,040
+Cause cherry code warning. And say a reference to a static string, that is the string.
+
+754
+01:42:03,040 --> 01:42:08,890
+What was it? Code generated.
+
+755
+01:42:08,890 --> 01:42:21,340
+By IPD passer. Actually.
+
+756
+01:42:21,340 --> 01:42:23,530
+I'm not going to put that as a static up top,
+
+757
+01:42:23,530 --> 01:42:30,130
+because most of the time what we're gonna want to do is put in the name of the file that caused us to generate like these two hour special,
+
+758
+01:42:30,130 --> 01:42:38,510
+the message start header and the message type defines are kind of special to.
+
+759
+01:42:38,510 --> 01:42:52,060
+So you say generated. I'm just gonna put these in.
+
+760
+01:42:52,060 --> 01:43:00,680
+Like that. List of messages.
+
+761
+01:43:00,680 --> 01:43:05,870
+Maybe missing, extern, create IDO.
+
+762
+01:43:05,870 --> 01:43:18,990
+I could be. They have to put that over here to.
+
+763
+01:43:18,990 --> 01:43:22,460
+I mean, you don't get horns. No, I guess not.
+
+764
+01:43:22,460 --> 01:43:31,870
+OK. Oh, may I?
+
+765
+01:43:31,870 --> 01:43:42,930
+I need it over here. Sorry, extern, create IDO. Maybe in this one.
+
+766
+01:43:42,930 --> 01:44:06,700
+What extern, create Ido? Maybe a missing.
+
+767
+01:44:06,700 --> 01:44:15,340
+And copilot, IRS. Never heard of Itoh before.
+
+768
+01:44:15,340 --> 01:44:33,190
+Maybe I can search, get hub for extern, create IDO. Well, Upsidaisy.
+
+769
+01:44:33,190 --> 01:44:45,330
+Noise, noise, noise. So rest. Stern create toward desk.
+
+770
+01:44:45,330 --> 01:44:56,530
+Yes. I have to do it like then.
+
+771
+01:44:56,530 --> 01:45:09,680
+You mean self ito? Ito? Stern cain't.
+
+772
+01:45:09,680 --> 01:45:14,650
+What's wrong with this? Do you mean unresolved import ito.
+
+773
+01:45:14,650 --> 01:45:30,750
+Ito. Why doesn't the unresolved import?
+
+774
+01:45:30,750 --> 01:45:44,580
+You need to write Montay twice. So maybe it's because I need to.
+
+775
+01:45:44,580 --> 01:45:55,580
+Is there another place where I do externally, Kate Lawler, prop util. Is there another place in here where you extern Crate Lollipop, you tell?
+
+776
+01:45:55,580 --> 01:46:15,050
+I appeal that R.S. Pass it out, R.S.
+
+777
+01:46:15,050 --> 01:46:24,920
+Maybe this is like use. Self. OK, so like.
+
+778
+01:46:24,920 --> 01:46:44,870
+Is self ito. Ito. That's what I hear, extreme cream.
+
+779
+01:46:44,870 --> 01:46:51,870
+Okay. OK.
+
+780
+01:46:51,870 --> 01:47:04,810
+Well, that's better speak, you know, type arguments. So.
+
+781
+01:47:04,810 --> 01:47:12,670
+Template. Get rid of that. Maybe it's enough to infer what I need.
+
+782
+01:47:12,670 --> 01:47:17,160
+Yes. Seems to like it.
+
+783
+01:47:17,160 --> 01:47:42,660
+Now, let's see if it works. You know, coach generated.
+
+784
+01:47:42,660 --> 01:47:57,470
+Indented messages. Why didn't it render it?
+
+785
+01:47:57,470 --> 01:48:05,210
+It rendered everything until my template string and then it screwed up.
+
+786
+01:48:05,210 --> 01:48:11,170
+Why? That's like you've got one job to do.
+
+787
+01:48:11,170 --> 01:48:21,000
+What? I don't think so. Hey, what happened?
+
+788
+01:48:21,000 --> 01:48:38,960
+Weird, why is it not? Template Prender.
+
+789
+01:48:38,960 --> 01:49:01,080
+Is there like a maximum size template? What's the deal, yo, here?
+
+790
+01:49:01,080 --> 01:49:38,270
+This is not the thing I expect to get tripped up on. What Mr.
+
+791
+01:49:38,270 --> 01:49:43,780
+Oh, oh, I know it is. Yes, I think Dennis is also seeing it, it's the Curly.
+
+792
+01:49:43,780 --> 01:49:50,850
+Yeah. Yeah, I yep. We saw it at the same time, Dennis.
+
+793
+01:49:50,850 --> 01:49:54,750
+It's the curly son of a [INAUDIBLE], maybe.
+
+794
+01:49:54,750 --> 01:50:01,710
+Oh, that's gonna be a pain in the ass. Oh, that's gonna be such a pain and has survived to escape all of these Curley's.
+
+795
+01:50:01,710 --> 01:50:06,080
+I'd rather have a different. Oh, I'd rather have it.
+
+796
+01:50:06,080 --> 01:50:14,120
+Mike, I have to write my own templating module. Greg.
+
+797
+01:50:14,120 --> 01:50:18,690
+But good call, Dennis. Good I good I. Thank you.
+
+798
+01:50:18,690 --> 01:50:24,390
+This is why I live hacked so other people can find my bugs. NRC doesn't like it.
+
+799
+01:50:24,390 --> 01:50:31,660
+You can't escape, folks. Ito is not the solution. I'm going to get burned like crazy Chinese that.
+
+800
+01:50:31,660 --> 01:50:41,750
+Ito is not the solution. Shoot, shoot, shoot, shoot.
+
+801
+01:50:41,750 --> 01:50:52,980
+Well, it's two one. I can't see if anyone in Rust has an opinion about this in the Rust Channel.
+
+802
+01:50:52,980 --> 01:50:57,570
+And actually, I'm also going to remove the ITO library. That's clearly not going to work.
+
+803
+01:50:57,570 --> 01:51:03,430
+So I'm going to get rid of the ITO Library stuff that I added.
+
+804
+01:51:03,430 --> 01:51:27,170
+Don't eat Ito. Don't need Ido anymore.
+
+805
+01:51:27,170 --> 01:51:34,250
+I don't mean you here. And I don't think I had anywhere else that should build.
+
+806
+01:51:34,250 --> 01:51:41,190
+Meanwhile. Who in here would know what I want to know?
+
+807
+01:51:41,190 --> 01:51:49,590
+JDAM. Suppose I'm writing a.
+
+808
+01:51:49,590 --> 01:51:58,730
+Uh. Hey, folks, suppose I'm writing a.
+
+809
+01:51:58,730 --> 01:52:13,550
+Function. A tool that takes in some høst and spews out some generated C++.
+
+810
+01:52:13,550 --> 01:52:18,640
+Where most of that generated C++ is pretty boilerplate.
+
+811
+01:52:18,640 --> 01:52:25,940
+And unlikely to change. How?
+
+812
+01:52:25,940 --> 01:52:46,320
+How do I. Is there a super simple templating template in the library I can use to inject a non boiler plate stuff?
+
+813
+01:52:46,320 --> 01:52:53,890
+Into my string's. I don't.
+
+814
+01:52:53,890 --> 01:53:03,440
+I. Alternatively, can I just use format?
+
+815
+01:53:03,440 --> 01:53:15,450
+Didn't mean to use interrobang there. I mean, the format macro.
+
+816
+01:53:15,450 --> 01:53:19,320
+Because I said format. Exclamation mark, question mark. I should.
+
+817
+01:53:19,320 --> 01:53:23,490
+I'm. I don't want to bring the chat onto the screen. You can't see what I'm writing.
+
+818
+01:53:23,490 --> 01:53:29,520
+I know that I don't like to chat with people. And I see unless they're like they give their consent.
+
+819
+01:53:29,520 --> 01:53:39,020
+So I'll wait until someone responds. Then I'll ask if I can, like, drag the chat onto the screen.
+
+820
+01:53:39,020 --> 01:53:45,980
+Like format with the. With named.
+
+821
+01:53:45,980 --> 01:53:57,880
+Variables is fine, except. That it expects a string literal and I don't know how to pass a string.
+
+822
+01:53:57,880 --> 01:54:10,960
+A multi-line. String, literal to format.
+
+823
+01:54:10,960 --> 01:54:21,850
+Any suggestions? All right, so I'm going to give people a minute or so to come up with something, to give us a way forward.
+
+824
+01:54:21,850 --> 01:54:28,810
+And if that fails, I'm just going to end the episode right there. I actually think we got pretty far along.
+
+825
+01:54:28,810 --> 01:54:44,580
+We made some headway. No more headway than I think we made in past episodes on this particular project, which I'm pretty pleased about.
+
+826
+01:54:44,580 --> 01:54:49,540
+There are a number of template libraries. Hey, did you see?
+
+827
+01:54:49,540 --> 01:55:05,230
+Yeah, I've been browsing through them. Some of them seem seem a bit heavy weight for what I'm looking for.
+
+828
+01:55:05,230 --> 01:55:11,740
+I'm trying to optimize for a compile speed, if at all possible.
+
+829
+01:55:11,740 --> 01:55:18,060
+So the smaller the library, smaller and simpler the library.
+
+830
+01:55:18,060 --> 01:55:30,700
+The better. Template engine, handlebars, liquid.
+
+831
+01:55:30,700 --> 01:55:36,990
+Umbrage has another suggestion. Whoa. What am I looking at here?
+
+832
+01:55:36,990 --> 01:55:59,990
+This is just some paste. Multi-line should be as with normal.
+
+833
+01:55:59,990 --> 01:56:06,860
+So apparently multi-line should be. Usable past into format.
+
+834
+01:56:06,860 --> 01:56:26,550
+So, like. If I say. Return format.
+
+835
+01:56:26,550 --> 01:56:31,020
+Indented messages equals tests.
+
+836
+01:56:31,020 --> 01:56:36,280
+Two armed. Will that work?
+
+837
+01:56:36,280 --> 01:56:56,280
+And then two and. So they're saying multiline streams would work as well.
+
+838
+01:56:56,280 --> 01:57:05,190
+Interesting because Rust is complaining when I do this.
+
+839
+01:57:05,190 --> 01:57:21,980
+Paiste. And Pastebin.
+
+840
+01:57:21,980 --> 01:57:30,740
+Um. Am I somehow.
+
+841
+01:57:30,740 --> 01:57:44,200
+Declaring my multi-line string incorrectly. Complains that.
+
+842
+01:57:44,200 --> 01:58:08,720
+Air string, literal with a suffix is invalid. Also.
+
+843
+01:58:08,720 --> 01:58:23,880
+Pardon my. Ugly rust. I'm new at this.
+
+844
+01:58:23,880 --> 01:58:41,630
+Huh? So I've been given. Oh, I need to use a back slash before.
+
+845
+01:58:41,630 --> 01:58:48,880
+Oh, interesting. Backslash.
+
+846
+01:58:48,880 --> 01:58:55,560
+Tries that. OK. So apparently I need a backslash right here.
+
+847
+01:58:55,560 --> 01:59:09,890
+And then. Do I even need that first to only see?
+
+848
+01:59:09,890 --> 01:59:15,620
+Oh, and then whilst they put in, they put in like, ah, pound, pound.
+
+849
+01:59:15,620 --> 01:59:28,440
+Why is there. But then I put a pound pound at the end of the string.
+
+850
+01:59:28,440 --> 01:59:36,310
+Boarding due to priest error, not expected close parentheses.
+
+851
+01:59:36,310 --> 01:59:42,830
+The important parts are pound pound as equal. Oh, hang on.
+
+852
+01:59:42,830 --> 02:00:04,380
+Let s equal format. Pound, pound. Two old.
+
+853
+02:00:04,380 --> 02:00:13,020
+Especially one. Oh, am I missing a semicolon? Doesn't like.
+
+854
+02:00:13,020 --> 02:00:42,700
+Expected close parentheses, found open parentheses. Huh?
+
+855
+02:00:42,700 --> 02:00:49,510
+Oh. Well, first of all. That shouldn't be here.
+
+856
+02:00:49,510 --> 02:01:07,430
+There's no way that that is complaining about it. So it seems to take the multi-line string now.
+
+857
+02:01:07,430 --> 02:01:14,860
+Which is good. Doesn't seem to like my built in curly braces.
+
+858
+02:01:14,860 --> 02:01:23,660
+That are not string literals or sorry, not.
+
+859
+02:01:23,660 --> 02:01:36,850
+Not not string literals, I mean, not meant to be formatted.
+
+860
+02:01:36,850 --> 02:01:50,710
+So puts. So can I share this?
+
+861
+02:01:50,710 --> 02:02:02,690
+Sure, sure, sure, sure, sure, sure, sure. Just.
+
+862
+02:02:02,690 --> 02:02:24,690
+Uh, Saib. So I guess there's no choice but to escape it.
+
+863
+02:02:24,690 --> 02:02:36,400
+I can't, like, ask. Rest to use some other way of in turn, violating the strings.
+
+864
+02:02:36,400 --> 02:02:50,540
+Like. Or something. So apparently I can escape using double curlee.
+
+865
+02:02:50,540 --> 02:02:58,650
+Like that, that's gonna be a pain in the butt, though. At.
+
+866
+02:02:58,650 --> 02:03:04,860
+Right. OK. That appears to work. But.
+
+867
+02:03:04,860 --> 02:03:12,270
+It means. They are not part of the format string syntax.
+
+868
+02:03:12,270 --> 02:03:24,630
+It's going to be a bit of a pain. Remembering.
+
+869
+02:03:24,630 --> 02:03:29,950
+OK. That works. Thanks. There's no way to modify that right.
+
+870
+02:03:29,950 --> 02:03:37,320
+Like, I'd love it if my strings didn't need to be.
+
+871
+02:03:37,320 --> 02:03:51,310
+Modified. Where it's using embraces in the non in the state, in the boiler plate, C++ stuff.
+
+872
+02:03:51,310 --> 02:04:02,790
+And only inject only interpolate at a more uncommon pattern in the string like.
+
+873
+02:04:02,790 --> 02:04:07,950
+Or. Guess.
+
+874
+02:04:07,950 --> 02:04:13,710
+Saying that's not something I can do out of the box.
+
+875
+02:04:13,710 --> 02:04:25,760
+And if so, is there? OK, well, let's take a look.
+
+876
+02:04:25,760 --> 02:04:31,560
+Hurray! We generated the right stuff. It put in the word test.
+
+877
+02:04:31,560 --> 02:04:37,710
+And that's what I expected from here, indented messages, this test.
+
+878
+02:04:37,710 --> 02:04:46,380
+So that's a pain in the butt. Uh.
+
+879
+02:04:46,380 --> 02:04:52,610
+OK. And I also have to go because apparently I have a meeting now, although I'm pretty sure I don't have a meeting.
+
+880
+02:04:52,610 --> 02:05:03,530
+I'm pretty sure that my meeting starts in. Half an hour.
+
+881
+02:05:03,530 --> 02:05:07,450
+No, he's right. OK. I got to go.
+
+882
+02:05:07,450 --> 02:05:10,810
+Thank you so much for watching episode ninety, One of the Joy of Coding.
+
+883
+02:05:10,810 --> 02:05:14,170
+We did a lot of rough stuff, learned a bunch, and hopefully you enjoyed it.
+
+884
+02:05:14,170 --> 02:05:18,250
+Hopefully that was useful to you. Thanks again for watching. Please write this episode.
+
+885
+02:05:18,250 --> 02:05:23,960
+There are links all over. There's one on the agenda. There's one in the video description.
+
+886
+02:05:23,960 --> 02:05:28,360
+Right. This episode. Let me know what you thought. I'd love to hear about it. I read all the feedback. So do let me know.
+
+887
+02:05:28,360 --> 02:05:34,720
+Take care. I'll see you next week. Bye bye. Joe.
+
+888
+02:05:34,720 --> 02:05:51,126
+They say it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 241 - February 24, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 241 - February 24, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=631bca05-ccaf-42c0-b438-acbb013d149b</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=631bca05-ccaf-42c0-b438-acbb013d149b">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:09,601 --> 00:00:14,221
+Hello and welcome to episode two hundred and forty one of the joy of coding.
+
+2
+00:00:14,221 --> 00:00:22,801
+My name's Mike Connelly. It's so good to have you here. It's it's another day, another another episode hacking on Firefox.
+
+3
+00:00:22,801 --> 00:00:29,371
+And that's what we're gonna get started doing right now. So let me share my screen.
+
+4
+00:00:29,371 --> 00:00:32,761
+You might notice right off the bat for people who've been watching the last couple of streams,
+
+5
+00:00:32,761 --> 00:00:42,931
+I'm back in Evernote, at least temporarily, for the agendas. There is a problem with a part of my script and how it talks to Joplin.
+
+6
+00:00:42,931 --> 00:00:46,891
+I was using Joplin to maintain the agendas and Joplin is great.
+
+7
+00:00:46,891 --> 00:00:55,501
+But there's a point at which the number of results that the API return starts to pagination, and my script is not prepared to handle that.
+
+8
+00:00:55,501 --> 00:01:00,931
+So WAPs back to Evernote for this week until I can fix that. So here's the agenda.
+
+9
+00:01:00,931 --> 00:01:07,281
+If you're new to the stream, a reminder, no plan survives breakfast just like that Joplin thing.
+
+10
+00:01:07,281 --> 00:01:11,341
+Like I didn't know if that was gonna happen until about less than an hour ago.
+
+11
+00:01:11,341 --> 00:01:16,801
+And I just quickly scrambled together to to, you know, put the new agenda here in Evernote.
+
+12
+00:01:16,801 --> 00:01:23,541
+That wasn't so bad. But that's like run of the mill joy of coding, like operating standard operating procedure.
+
+13
+00:01:23,541 --> 00:01:30,451
+Here's, you know, things might not go according to plan, and that's OK. We're just gonna do our best here.
+
+14
+00:01:30,451 --> 00:01:35,311
+That's the first thing. Second thing, the agenda that we're looking at is available.
+
+15
+00:01:35,311 --> 00:01:39,571
+If you want to click on the links and check it out. Right now, it's being hosted by Evernote.
+
+16
+00:01:39,571 --> 00:01:44,461
+Maybe in the future, I'll update the links so that they're back on my home server like the other last two episodes.
+
+17
+00:01:44,461 --> 00:01:49,561
+But at any rate. Check out the video description on YouTube or Air Mazola.
+
+18
+00:01:49,561 --> 00:01:56,311
+And if you're watching this on Twitch to drop the link into the Twitch chat right now.
+
+19
+00:01:56,311 --> 00:02:04,841
+Here it is. Agenda. All right.
+
+20
+00:02:04,841 --> 00:02:09,941
+Let us proceed. What are we doing today? I'm going to skip by the episode guy.
+
+21
+00:02:09,941 --> 00:02:15,261
+There are some things I need to merge in some some changes to the episode guide. Thank you again to Smurf D, who's been contributing there.
+
+22
+00:02:15,261 --> 00:02:19,811
+I saw Danny Colon closed in issue because now we're starting to synchronize agendas up.
+
+23
+00:02:19,811 --> 00:02:21,431
+That's nice.
+
+24
+00:02:21,431 --> 00:02:29,591
+I'm gonna skip by just so that we can get right into some Firefox hacking specifically because the stream might end a little earlier than usual.
+
+25
+00:02:29,591 --> 00:02:33,161
+Normally do about an hour and a half. Am I only do an hour today?
+
+26
+00:02:33,161 --> 00:02:40,281
+I have some other things that might intersect this this time, unfortunately, that I have to get to.
+
+27
+00:02:40,281 --> 00:02:46,571
+But before I dove into the code, I want to address a question that was dropped in to the form.
+
+28
+00:02:46,571 --> 00:02:55,151
+So these rate, this episode links in the recent episodes, I've included a field for a few people have questions and I'll do my best to answer them.
+
+29
+00:02:55,151 --> 00:02:59,081
+And a question came in is what's gonna happen to the icons and the proton menu?
+
+30
+00:02:59,081 --> 00:03:04,831
+So if you're not sure what that is, that's actually very relevant to the work we're going to be doing today,
+
+31
+00:03:04,831 --> 00:03:10,981
+which it relates to the new proton at menus. So that's the menu right here.
+
+32
+00:03:10,981 --> 00:03:20,891
+And the question is, what's going to happen to the icons? Because if you look at the like the old style or let me let me show you what the old menu,
+
+33
+00:03:20,891 --> 00:03:28,491
+if you're not familiar, looks like we've got all these icons on the left.
+
+34
+00:03:28,491 --> 00:03:31,901
+You know, so there's a lot more going on in here.
+
+35
+00:03:31,901 --> 00:03:36,491
+And we've got these these added icons here. What's going to happen to them?
+
+36
+00:03:36,491 --> 00:03:41,291
+So the answer is our current plan is to not have them.
+
+37
+00:03:41,291 --> 00:03:47,601
+So we've really sort of reduced the visual noise here. We did a lot of, I think,
+
+38
+00:03:47,601 --> 00:03:55,831
+the analysis of telemetry to see what items people were using and which ones made sense here and there and like which ones were you know,
+
+39
+00:03:55,831 --> 00:04:00,191
+we we tried to unfold some of the sort of the deeper nested menu items,
+
+40
+00:04:00,191 --> 00:04:05,501
+like we brought that bookmarks and history up from the library because people
+
+41
+00:04:05,501 --> 00:04:11,181
+tended to just go to those and you know that a cut copy and paste items in here.
+
+42
+00:04:11,181 --> 00:04:15,101
+It turns out those weren't very useful for for most people. So we got rid of them, et cetera.
+
+43
+00:04:15,101 --> 00:04:21,701
+And so, like the icons as part of like the REFEED reorganization that we're doing is we're dropping the icons.
+
+44
+00:04:21,701 --> 00:04:25,361
+So that's what's happening, the icons. Now, it's not true for all icons.
+
+45
+00:04:25,361 --> 00:04:32,201
+If you look inside the bookmarks, for example, you can see that we're keeping the five icons for individual recent bookmarks.
+
+46
+00:04:32,201 --> 00:04:39,311
+And that's true for history as well. And for Sync Tabs. So and recently close tabs, recently closed windows, I believe.
+
+47
+00:04:39,311 --> 00:04:43,841
+So it's it's not like all icons are going away.
+
+48
+00:04:43,841 --> 00:04:48,941
+It's it's just the ones for the individual items. So hopefully that answers your question.
+
+49
+00:04:48,941 --> 00:04:53,531
+Is it set in stone? I wouldn't say so. But like, that's what this is where we're headed.
+
+50
+00:04:53,531 --> 00:04:57,821
+This is what we're thinking. So what are we working on today?
+
+51
+00:04:57,821 --> 00:05:03,341
+I wanted to work on fixing some tests. So this is Firefox app menu.
+
+52
+00:05:03,341 --> 00:05:09,491
+There's two I mean, if it wasn't immediately obvious, this preference allows us to flip back and forth between the two modes,
+
+53
+00:05:09,491 --> 00:05:15,091
+the old panel and the old menu and the current app menu and eventually the curve.
+
+54
+00:05:15,091 --> 00:05:21,221
+The current one is gonna be turned on by default. And we don't want to be surprised by a bunch of failing tests when that occurs.
+
+55
+00:05:21,221 --> 00:05:25,721
+So I recently turned it on by default just to see what tests fail.
+
+56
+00:05:25,721 --> 00:05:28,991
+And these are the tests that fail whenever you turn it on by default.
+
+57
+00:05:28,991 --> 00:05:36,491
+So I want to go through these and figure out which ones we need to fix, which ones no longer apply.
+
+58
+00:05:36,491 --> 00:05:42,161
+You know, try trying to make it so that whenever it comes time to turn this thing on, we don't have, like, the tree on fire.
+
+59
+00:05:42,161 --> 00:05:49,451
+That's the plan. But putt putt, putt, putt putt.
+
+60
+00:05:49,451 --> 00:05:57,071
+I see some conversation in the live hacking channel, if you wish, I can help with the Polar Quest reviews for the episode guide.
+
+61
+00:05:57,071 --> 00:06:03,641
+Yeah, maybe that'll be great. Like, maybe I should. Danny Cole, I should add you as a as like a like an admin or something.
+
+62
+00:06:03,641 --> 00:06:12,091
+I mean, I do trust you. So like, let's let's I will consider that, I will consider that that would be very helpful.
+
+63
+00:06:12,091 --> 00:06:17,861
+So here is a list of the tests that are failing. I actually have started on some of these already.
+
+64
+00:06:17,861 --> 00:06:26,321
+I have a lot of this I think is going to be branching inside of these tests to say like it is the proton at menu enabled.
+
+65
+00:06:26,321 --> 00:06:28,841
+If so, don't do this thing.
+
+66
+00:06:28,841 --> 00:06:36,381
+And so if we take a look at the patch of currently God, actually, I might need to rebase it because I think I recently updated my tree.
+
+67
+00:06:36,381 --> 00:06:40,481
+So let's take a quick check to see. Yeah.
+
+68
+00:06:40,481 --> 00:06:56,511
+It's right here. So we're OK. I already read based. So, like, we are starting to do some some branching.
+
+69
+00:06:56,511 --> 00:07:00,861
+Like, for example, in this test, while this item doesn't exist in the proton at nine U.
+
+70
+00:07:00,861 --> 00:07:07,311
+So we just skip this test and the same thing here and here.
+
+71
+00:07:07,311 --> 00:07:13,251
+So I want to start going into this a little bit. Which one did I start with?
+
+72
+00:07:13,251 --> 00:07:19,791
+I did. Browser. You two are added protections, UI there's protections, UI animation to let's run that.
+
+73
+00:07:19,791 --> 00:07:26,751
+And I'm mean to show you how you can run a test with a preference, because if I run this test on its own, I'm just going to run this test on.
+
+74
+00:07:26,751 --> 00:07:54,431
+So let's see how it works. Running, running, running.
+
+75
+00:07:54,431 --> 00:07:59,991
+Yada, yada, yada, yada, yada. OK.
+
+76
+00:07:59,991 --> 00:08:05,061
+Passes and unsurprisingly, I mean, it's it's passing in the current configuration.
+
+77
+00:08:05,061 --> 00:08:09,291
+Now, we're gonna run this test with Proton and then you enabled.
+
+78
+00:08:09,291 --> 00:08:22,731
+So there's a set pref argument here so I can go Mark Mokey, test set, pref browser Proton and enable equals.
+
+79
+00:08:22,731 --> 00:08:48,191
+True. And let's see where it falls over. Interestingly, it still passes.
+
+80
+00:08:48,191 --> 00:08:51,971
+So maybe the failure I saw before was an intermittent.
+
+81
+00:08:51,971 --> 00:08:58,661
+Let's take a quick peek at the jobs. I'd see it as animation to.
+
+82
+00:08:58,661 --> 00:09:02,711
+Oh, you know what? I already evaluated this. The problem is that protections you.
+
+83
+00:09:02,711 --> 00:09:08,591
+Why the protections you test the protections UI animation to run very soon.
+
+84
+00:09:08,591 --> 00:09:19,001
+Like the animation to test runs very quickly, not long after this first test runs and the failure in this one was leaking into this one.
+
+85
+00:09:19,001 --> 00:09:23,501
+So already sorted. So we're actually we're through these two.
+
+86
+00:09:23,501 --> 00:09:29,951
+This was an intermittent test failure. And so we're here on the UI two or one.
+
+87
+00:09:29,951 --> 00:09:36,541
+So UI tour, that's this is an interesting one because I actually am aware of what some of the things we need to do here are,
+
+88
+00:09:36,541 --> 00:09:42,041
+and that is we need to remove some of the old targets from the UI tour.
+
+89
+00:09:42,041 --> 00:09:47,651
+And that means updating these tests so that they don't use those targets anymore.
+
+90
+00:09:47,651 --> 00:09:49,471
+So the UI tour, if you're not familiar with it,
+
+91
+00:09:49,471 --> 00:09:58,061
+it's actually a kind of an old component or an older library that we use to drive the browser whenever the users on a like a support site.
+
+92
+00:09:58,061 --> 00:10:04,181
+So we could say, like, hey, if you click on this button, we'll show you how to access the customize mode of the browser.
+
+93
+00:10:04,181 --> 00:10:08,691
+And so that's on. Like I said, it's old, it's restricted to Mozilla sites.
+
+94
+00:10:08,691 --> 00:10:14,111
+So like the user would click on that and then we would open the panel and show like show a highlight around it.
+
+95
+00:10:14,111 --> 00:10:20,111
+We don't use this very much anymore, but because the menu has been reorganized, we have to change some of the supports.
+
+96
+00:10:20,111 --> 00:10:25,421
+And so we're gonna remove the customized target because not because we're removing toolbar customization.
+
+97
+00:10:25,421 --> 00:10:34,091
+It's here, it's under more tools, but because the UI to our library doesn't know how to transition between panels.
+
+98
+00:10:34,091 --> 00:10:46,721
+And so that is. Yeah, that's that's not a thing that I think we want to program into it.
+
+99
+00:10:46,721 --> 00:10:52,061
+So I feel like this is the simpler choice is to just remove the target for now and down the line,
+
+100
+00:10:52,061 --> 00:10:56,111
+if we decide we want the tour to be able to show the user how to access the customized mode.
+
+101
+00:10:56,111 --> 00:11:02,231
+Well, we can we can demonstrate we can update the library to allow switching between the menus.
+
+102
+00:11:02,231 --> 00:11:11,501
+But in the meantime, we're gonna remove the target. And that's gonna help us with this test here, browser UI two or two.
+
+103
+00:11:11,501 --> 00:11:17,291
+Because one of the first things that does is it checks to see if the customize item is available.
+
+104
+00:11:17,291 --> 00:11:28,871
+Now, I'm just going to do what I'm doing right now is I'm just bailing out of these tests because
+
+105
+00:11:28,871 --> 00:11:33,731
+I'm bailing out these tests because the customized mode is like we're not going to use that.
+
+106
+00:11:33,731 --> 00:11:38,621
+These tests exercise customized mode.
+
+107
+00:11:38,621 --> 00:11:46,361
+Let me just double check with these tests to test info, customize auto open clothes so we make sure that the panel opens up,
+
+108
+00:11:46,361 --> 00:11:55,691
+we get the customized target, and then we wait for the anchor, check out the panels, open, move the info outside.
+
+109
+00:11:55,691 --> 00:12:13,961
+Would you close the app menu? So I wonder if in this case, we should actually, instead of skipping this test,
+
+110
+00:12:13,961 --> 00:12:26,251
+we should modify it to use a different a different target, one that we're gonna keep using.
+
+111
+00:12:26,251 --> 00:12:33,771
+That may might make more sense. Hmm.
+
+112
+00:12:33,771 --> 00:12:46,851
+What's the best way to do this? OK.
+
+113
+00:12:46,851 --> 00:12:54,681
+Because they're a couple of layers here. There's making the test pass. Is updating UI tours so that it works both with proton enabled and disabled.
+
+114
+00:12:54,681 --> 00:13:01,691
+And there is like removing the old junk that's no longer supported from you tour.
+
+115
+00:13:01,691 --> 00:13:08,661
+And what I'm doing is the first step, which is to make the test pass. But if ultimately we're going to make like if this test is actually testing
+
+116
+00:13:08,661 --> 00:13:13,701
+something that we want to be able to work with proton enabled and disabled, then maybe I need to modify this test.
+
+117
+00:13:13,701 --> 00:13:19,041
+But not to do that. I need to update it. I need to update the targets to work with the proton at.
+
+118
+00:13:19,041 --> 00:13:24,691
+So maybe I should do that work first. That might make the most sense.
+
+119
+00:13:24,691 --> 00:13:38,031
+And I don't think that that is too outrageously difficult. So let's let's investigate doing that.
+
+120
+00:13:38,031 --> 00:13:47,001
+So let's think of what a different target would be. So the UI tour library, for example, that this is the documentation for it.
+
+121
+00:13:47,001 --> 00:13:51,801
+Let's choose a different item in the panel for it to choose. Like extensions and themes.
+
+122
+00:13:51,801 --> 00:14:01,681
+Let's choose that one. And I believe that's this like add ons.
+
+123
+00:14:01,681 --> 00:14:09,111
+Yeah. And then you add ons button. And I believe we've got a new one.
+
+124
+00:14:09,111 --> 00:14:18,701
+Uh, for the Proton case, um.
+
+125
+00:14:18,701 --> 00:14:25,841
+Says at Mannu Extensions Theme's button. So I think as an example, let's try doing this.
+
+126
+00:14:25,841 --> 00:14:38,711
+Let's try telling you I tour hey check to see if the check to see if the proton is enabled here.
+
+127
+00:14:38,711 --> 00:14:41,521
+Pref.
+
+128
+00:14:41,521 --> 00:15:04,391
+Find module, get her lazy global, get her lazy, get her log services, preface to e.g. that anyone anywhere in here is safe scheme, resolve your al.
+
+129
+00:15:04,391 --> 00:15:13,311
+You lie to her. You lie to her and NIT isn't a net function, define lazy.
+
+130
+00:15:13,311 --> 00:15:17,001
+Get her on itself. OK. So this might make the most sense to add.
+
+131
+00:15:17,001 --> 00:15:29,411
+Like a lazy commie tells define lazy preference, get her this and we'll call it proton at menu enabled.
+
+132
+00:15:29,411 --> 00:15:34,671
+I think that's what we've called it elsewhere. Proton menu enameled.
+
+133
+00:15:34,671 --> 00:15:39,381
+Right. Yeah. Oh capital. M for consistency.
+
+134
+00:15:39,381 --> 00:15:47,231
+M for consistency. And then on and you enabled.
+
+135
+00:15:47,231 --> 00:15:52,611
+The way that's defined is here.
+
+136
+00:15:52,611 --> 00:16:02,341
+We're basically copying this. That's what we want. OK.
+
+137
+00:16:02,341 --> 00:16:21,721
+And then here in the targets we're gonna make, it's that four query, we're turning into a function where I say, Oh, thank you.
+
+138
+00:16:21,721 --> 00:16:29,971
+Obviously, the lintang is not happy with my styling here, but we'll say, eh, oh.
+
+139
+00:16:29,971 --> 00:16:44,241
+What's the scope of this callback function query? Query it, object query, target, query.
+
+140
+00:16:44,241 --> 00:16:52,671
+If it's a function, then we call it. So if I make it an arrow function, then.
+
+141
+00:16:52,671 --> 00:16:57,861
+This is going to be bound to I think you are tour.
+
+142
+00:16:57,861 --> 00:17:03,111
+Let's find out. Or even maybe even easier. I'll just be explicit.
+
+143
+00:17:03,111 --> 00:17:21,551
+Proton at menu enabled. And if that's the case, then the idea is this.
+
+144
+00:17:21,551 --> 00:17:28,991
+Otherwise, it is that. Turn that, OK?
+
+145
+00:17:28,991 --> 00:17:39,001
+So let's see what happens if I do this. Just as an experiment.
+
+146
+00:17:39,001 --> 00:17:48,871
+What's this upset about? Because I didn't close my brace.
+
+147
+00:17:48,871 --> 00:17:53,361
+And it's probably not liking the style. Which makes sense. OK, so that's fixed.
+
+148
+00:17:53,361 --> 00:18:01,821
+And now I go back to the test browser UI tour to start choosing customize.
+
+149
+00:18:01,821 --> 00:18:08,991
+I'll choose add ons. I want the name of the target was add ons.
+
+150
+00:18:08,991 --> 00:18:20,921
+And what is the show info? Library, show info, target title and text add ons.
+
+151
+00:18:20,921 --> 00:18:26,531
+Let's get add ons. OK.
+
+152
+00:18:26,531 --> 00:18:33,171
+And then let's just see what happens if we do this.
+
+153
+00:18:33,171 --> 00:18:38,291
+Await new promise. Resolve. Oh, is this.
+
+154
+00:18:38,291 --> 00:18:50,531
+This is not an async function. Retro. That's a pain.
+
+155
+00:18:50,531 --> 00:18:58,151
+Oh, there's a then. OK, I see. So I can just like ah there's a done function.
+
+156
+00:18:58,151 --> 00:19:03,281
+So one has to call this done function to indicate that you're done. Let's not do that.
+
+157
+00:19:03,281 --> 00:19:09,071
+So instead I'll just run this test and see what happens with the Atman you enabled.
+
+158
+00:19:09,071 --> 00:19:26,711
+Let's see if it opens up the old app menu. Ah opens up the new Amadu.
+
+159
+00:19:26,711 --> 00:19:31,811
+Wow, this is doing a lot more than I expected it to. Am I running the right test here?
+
+160
+00:19:31,811 --> 00:19:36,071
+I am not. That's the HEVE browser protections. Let's let's do this again.
+
+161
+00:19:36,071 --> 00:19:41,021
+But let's run the right test. So, yeah, that was a surprise.
+
+162
+00:19:41,021 --> 00:19:49,781
+We're looking to run browser UI two or two and I guess I don't really need to supply the whole path.
+
+163
+00:19:49,781 --> 00:20:10,351
+Browser UI tours to. Nothing.
+
+164
+00:20:10,351 --> 00:20:17,101
+Um, and let's see if there are no errors.
+
+165
+00:20:17,101 --> 00:20:26,011
+What's going on here? There are errors, but they seem unrelated. Now, let's run the old one.
+
+166
+00:20:26,011 --> 00:20:32,141
+Let's let's try it and see what happens when you run it without the proton.
+
+167
+00:20:32,141 --> 00:20:41,661
+Then you enabled. Also, nothing that's interesting.
+
+168
+00:20:41,661 --> 00:20:53,171
+Uh oh, maybe I have to do something with it first show info, promise panel shewn window.
+
+169
+00:20:53,171 --> 00:21:03,101
+And get target, wait for pop up at anchor.
+
+170
+00:21:03,101 --> 00:21:07,191
+OK, maybe, maybe I shouldn't have commented all that stuff. Let's comment.
+
+171
+00:21:07,191 --> 00:21:16,361
+Let's put it all back and see just how it breaks. Stead of customized target.
+
+172
+00:21:16,361 --> 00:21:46,801
+We use the add ons target. Sputniks.
+
+173
+00:21:46,801 --> 00:21:56,361
+Does not work. Now, I wonder if this is let's let's just do a quick check here.
+
+174
+00:21:56,361 --> 00:22:07,531
+Let us shelve all these changes that I've just made. Let's quickly run this test without any changes with the browser, the Proton Atman you disabled.
+
+175
+00:22:07,531 --> 00:22:15,421
+I just want to double check. I also don't know if I've been doing mock build faster.
+
+176
+00:22:15,421 --> 00:22:23,461
+Maybe that's my problem. But let's run this test.
+
+177
+00:22:23,461 --> 00:22:40,451
+I expect this to pass. To be clear. Good.
+
+178
+00:22:40,451 --> 00:23:12,241
+Yes. OK, good. Now let's unshelled. Rebuild again and then run the test again.
+
+179
+00:23:12,241 --> 00:23:19,871
+Oh, whoa. Do I have two copies of this? Why do I have two copies in here?
+
+180
+00:23:19,871 --> 00:23:32,971
+Hold on. Jeff. This function looks like it's the exact same function as before.
+
+181
+00:23:32,971 --> 00:23:37,641
+Is it supposed to be test info, customized manual clothes?
+
+182
+00:23:37,641 --> 00:23:42,691
+Oh, it's it's just ones. OK. I understand variations on the theme.
+
+183
+00:23:42,691 --> 00:23:47,761
+OK, let us skip the second one, because that's still using customized mode.
+
+184
+00:23:47,761 --> 00:24:04,161
+We really just care about. No, we can.
+
+185
+00:24:04,161 --> 00:24:28,141
+Well, it's interesting, this one is using awaits. Might want to use that someday.
+
+186
+00:24:28,141 --> 00:24:35,181
+OK, so the add ONS menu was not selected. Let us now undo what I've done to you.
+
+187
+00:24:35,181 --> 00:25:15,971
+I Tewa. Rebuild.
+
+188
+00:25:15,971 --> 00:25:22,171
+OK. So it works. There's something wrong with what I've done in here. I'm going to put all this back.
+
+189
+00:25:22,171 --> 00:25:33,471
+Define lazy preference getter. That's right. OK. So there's something wrong with this.
+
+190
+00:25:33,471 --> 00:26:09,911
+I don't know what it is yet. Let me see what happens if I just revert this part so that instead of returning a function, I return this string.
+
+191
+00:26:09,911 --> 00:26:29,921
+No one should expect this to pass.
+
+192
+00:26:29,921 --> 00:26:44,411
+OK, good. So the problem is here in this thing where I'm using one or the other.
+
+193
+00:26:44,411 --> 00:26:50,971
+Query. Oh.
+
+194
+00:26:50,971 --> 00:26:54,931
+Oh, I think I'm supposed to be returning the node. Got it.
+
+195
+00:26:54,931 --> 00:27:02,011
+A document. Get element by idea. That's what's supposed to be going on.
+
+196
+00:27:02,011 --> 00:27:13,611
+Document got Elena by Ida. I think that's how it's supposed to work.
+
+197
+00:27:13,611 --> 00:27:20,241
+That was just me misunderstanding how this function is supposed to what it's supposed to return.
+
+198
+00:27:20,241 --> 00:27:26,781
+In this case, you return not the I.D., but the actual note itself. Oh, you are tour could not be resolved.
+
+199
+00:27:26,781 --> 00:27:38,301
+Console error could not be resolved. Why not?
+
+200
+00:27:38,301 --> 00:27:56,261
+What happens if I do this turn?
+
+201
+00:27:56,261 --> 00:28:05,741
+Now, Reynolds, put that back. Let's take a quick peek at how query is used.
+
+202
+00:28:05,741 --> 00:28:15,191
+Target, object, query node, if its function, then the node is the return value of target query passing the window document.
+
+203
+00:28:15,191 --> 00:28:21,731
+And if that happens to be null or if we throw an exception, then we say our running target query.
+
+204
+00:28:21,731 --> 00:28:27,521
+And what was the error before error.
+
+205
+00:28:27,521 --> 00:28:35,321
+Target query. Air target could not be resolved.
+
+206
+00:28:35,321 --> 00:28:43,471
+What's that mean? Could not be resolved.
+
+207
+00:28:43,471 --> 00:28:54,051
+If he can't get the target node. Target get target window dot a target.
+
+208
+00:28:54,051 --> 00:29:28,721
+Target couldn't be resolved. Wait for the panel to run.
+
+209
+00:29:28,721 --> 00:29:43,771
+Otherwise, if it's not a function, then we. Get the element from the V o from The View cash.
+
+210
+00:29:43,771 --> 00:29:47,701
+It might be in the view, cash. That's why it's in the document.
+
+211
+00:29:47,701 --> 00:29:56,291
+View cash. Here.
+
+212
+00:29:56,291 --> 00:30:03,621
+That's interesting. Oh, it's a pain.
+
+213
+00:30:03,621 --> 00:30:07,521
+So for a performance optimization, we don't always have the node directly in the document.
+
+214
+00:30:07,521 --> 00:30:13,521
+We have it in this template and it's like inserted into the DOM as like lazily.
+
+215
+00:30:13,521 --> 00:30:24,891
+And so. I'm going to say it's.
+
+216
+00:30:24,891 --> 00:30:31,721
+Get Noad from document.
+
+217
+00:30:31,721 --> 00:30:43,831
+Document. Return.
+
+218
+00:30:43,831 --> 00:31:03,481
+A document query turned a when a document query, selector query or view cache template is.
+
+219
+00:31:03,481 --> 00:31:17,311
+Yes, say, if you catch template for. A dark humor.
+
+220
+00:31:17,311 --> 00:31:29,861
+Return that or that.
+
+221
+00:31:29,861 --> 00:31:39,651
+And that should probably be a query for them and be consistent within this function or within this file.
+
+222
+00:31:39,651 --> 00:31:55,411
+And then we would say up here, you eye to her. Did Noad from document.
+
+223
+00:31:55,411 --> 00:32:10,791
+A document. And then new I tour that node from document a document.
+
+224
+00:32:10,791 --> 00:32:33,421
+OK. Let's see if that satisfies a. WAPs, bad syntax 352.
+
+225
+00:32:33,421 --> 00:32:41,961
+Right. I need to comment. This is not a class. Also, I should probably.
+
+226
+00:32:41,961 --> 00:32:55,721
+We use this here. Node equals this dot get node from document, a window dot document.
+
+227
+00:32:55,721 --> 00:33:13,701
+Target query. No one.
+
+228
+00:33:13,701 --> 00:33:18,531
+What is your problem now? Oh, of course.
+
+229
+00:33:18,531 --> 00:33:32,251
+Uh, ternary. Try it again. Good.
+
+230
+00:33:32,251 --> 00:33:45,771
+And now if it's enabled. Good.
+
+231
+00:33:45,771 --> 00:33:49,911
+OK. So that's that's good. We've got this test passing now.
+
+232
+00:33:49,911 --> 00:34:04,791
+And I think we should keep going with this pattern of like trying to add all the support here.
+
+233
+00:34:04,791 --> 00:34:10,881
+We're ultimately going to remove customize the target.
+
+234
+00:34:10,881 --> 00:34:19,641
+Like I said, let's take a look at the other test now, browser UI tour, too.
+
+235
+00:34:19,641 --> 00:34:32,971
+We're in our re-enable. This one should info add ons, auto open clothes.
+
+236
+00:34:32,971 --> 00:34:55,451
+All this. Shown them the they add ons show photos like add ons, add ons, lets get add ons, add ons, let's get add ons.
+
+237
+00:34:55,451 --> 00:35:04,531
+All right then we're gonna get the target, wait for the pop up panel, blah, blah.
+
+238
+00:35:04,531 --> 00:35:08,561
+Or or or or or and then close this.
+
+239
+00:35:08,561 --> 00:35:17,411
+It's good. And then I think this other one should pass regardless because that one I believe was working before doesn't use the customized target.
+
+240
+00:35:17,411 --> 00:35:42,261
+So now let's run this entire test. OK, and now let's run it with true.
+
+241
+00:35:42,261 --> 00:35:47,541
+Amazing. OK. We're in decent shape. That's that's working.
+
+242
+00:35:47,541 --> 00:35:58,461
+We're going to prettier that and we can move on to the next one, which was you I'd tour for.
+
+243
+00:35:58,461 --> 00:36:12,751
+I have a feeling it's gonna be a lot of the same. Sorry, anything in here using the customized target?
+
+244
+00:36:12,751 --> 00:36:35,741
+So let's see what fails in here. First, make sure it all passes.
+
+245
+00:36:35,741 --> 00:36:52,581
+OK. And now we are going to make the see what part fails.
+
+246
+00:36:52,581 --> 00:37:01,231
+Unsurprisingly, it's some part here in the new app menu. Failing should show info, should show in full tip on email link.
+
+247
+00:37:01,231 --> 00:37:10,931
+So let's see if we can find that line here. That's in this task.
+
+248
+00:37:10,931 --> 00:37:16,181
+Email link and then test switching the info tooltip to the customize button.
+
+249
+00:37:16,181 --> 00:37:41,701
+So let's not use the customize button. Let's say the add ons button show info, promise add ons.
+
+250
+00:37:41,701 --> 00:38:00,861
+OK, so let's now rerun the test with the Atman you disabled.
+
+251
+00:38:00,861 --> 00:38:14,231
+OK. Now we're in Toronto with it enabled. And if this works out, what I'm planning on doing for the remainder of the episode is instead.
+
+252
+00:38:14,231 --> 00:38:17,771
+Oh, we got another one here. We got a live one here.
+
+253
+00:38:17,771 --> 00:38:34,291
+What's this? Should highlight the send to device button on the page action panel.
+
+254
+00:38:34,291 --> 00:38:40,071
+And then test showing it for tooltip on the private window button.
+
+255
+00:38:40,071 --> 00:38:46,081
+That's the one the target is private window. And that needs to change.
+
+256
+00:38:46,081 --> 00:38:59,351
+And you lied to her. Query A.
+
+257
+00:38:59,351 --> 00:39:14,411
+Documents. It's the same thing as before where we check whether or not protons enabled.
+
+258
+00:39:14,411 --> 00:39:25,891
+And if so? Or, uh, here's the old one, if it's enabled.
+
+259
+00:39:25,891 --> 00:39:38,001
+We get the old one. It's enabled the private window.
+
+260
+00:39:38,001 --> 00:39:57,541
+Is this one? And do I need to close that brace?
+
+261
+00:39:57,541 --> 00:40:04,321
+And then it's going to complain about style. I'm going to fix that. There we go.
+
+262
+00:40:04,321 --> 00:40:41,261
+All right. Let's run this and see if it stuck sticks again. Good and false here.
+
+263
+00:40:41,261 --> 00:40:57,481
+Good. OK. So that's test for and then let's do test five.
+
+264
+00:40:57,481 --> 00:41:09,631
+Will run it again with everything disabled. OK.
+
+265
+00:41:09,631 --> 00:41:30,881
+And now we'll run it with it enabled. I expect this to fail.
+
+266
+00:41:30,881 --> 00:41:35,381
+And why is it failing fail? Should hide the library button on the army.
+
+267
+00:41:35,381 --> 00:41:51,151
+While there is no library button test, highlight library and show library sub you.
+
+268
+00:41:51,151 --> 00:41:58,191
+So we have to choose a different menu for which we can like.
+
+269
+00:41:58,191 --> 00:42:13,601
+Show us some view, maybe help. Uh.
+
+270
+00:42:13,601 --> 00:42:27,701
+Try help. Tests highlight help in show help savu.
+
+271
+00:42:27,701 --> 00:42:53,021
+Test time library button. Button.
+
+272
+00:42:53,021 --> 00:43:04,661
+Uh. Element Bayati, so of have to update this to use the right I.D. and then order and dispatch.
+
+273
+00:43:04,661 --> 00:43:15,601
+And same thing here should show the help subdue.
+
+274
+00:43:15,601 --> 00:43:29,481
+Clean up my menu. OK, so.
+
+275
+00:43:29,481 --> 00:43:38,661
+Very name library. Button to help button.
+
+276
+00:43:38,661 --> 00:43:53,121
+And then we're going to change the. If window panel you, Ida, uh, proton menu enabled her.
+
+277
+00:43:53,121 --> 00:44:08,381
+Like, let help button I.D. equals, um, help is right at the bottom.
+
+278
+00:44:08,381 --> 00:44:13,331
+Can you help button to the wise? I think it's a help button.
+
+279
+00:44:13,331 --> 00:44:19,781
+Just help. OK. Rouzer, you are two or five.
+
+280
+00:44:19,781 --> 00:44:30,061
+But ninety is two. Otherwise, it's just this.
+
+281
+00:44:30,061 --> 00:44:40,081
+And let me help you. Well, you know, we might actually have the same sub you.
+
+282
+00:44:40,081 --> 00:44:54,111
+Panel, you I help you? Yeah. Here you are, two or five.
+
+283
+00:44:54,111 --> 00:45:11,551
+Panel, you I help you. All right.
+
+284
+00:45:11,551 --> 00:45:32,721
+And now we're going to try and make pretty happy. Let's see what happens if we run this test with the Atman you disabled.
+
+285
+00:45:32,721 --> 00:45:39,231
+Someone asked the library, but will be removed or is it just the menu? The library menu and the app menu is going away.
+
+286
+00:45:39,231 --> 00:45:43,731
+The library buttons not going to be removed, although we've removed some items from it.
+
+287
+00:45:43,731 --> 00:45:50,151
+So the library button's still here, if you. So we're gonna remove it from the default set currently.
+
+288
+00:45:50,151 --> 00:45:56,061
+So that's not in the toolbar. By default, it'll be in the customized pane except for users who have used it recently.
+
+289
+00:45:56,061 --> 00:46:02,031
+We've been like if we noticed that you've used it within the past couple of releases, we'll keep it in your toolbar.
+
+290
+00:46:02,031 --> 00:46:08,961
+But for users who have never used it, we'll just we'll hide it. We'll put it in the customized pallet and bring it back.
+
+291
+00:46:08,961 --> 00:46:21,451
+All right. So that passes. And we'll do it this way with menu enabled.
+
+292
+00:46:21,451 --> 00:46:28,261
+Good. It works. So that is that test fixed.
+
+293
+00:46:28,261 --> 00:46:32,191
+And there's one more you I or test that I want to fix up.
+
+294
+00:46:32,191 --> 00:46:41,511
+And then, you know, we're in pretty good shape here.
+
+295
+00:46:41,511 --> 00:46:54,091
+Oh, that's. That's right. Here we go.
+
+296
+00:46:54,091 --> 00:47:09,551
+Well, OK, lots of explosions now. Obviously, if I run this with it, false.
+
+297
+00:47:09,551 --> 00:47:17,501
+Interesting. If I have it set to false, this all fails.
+
+298
+00:47:17,501 --> 00:47:26,891
+Is this. Why is that because of changes I've done recently.
+
+299
+00:47:26,891 --> 00:47:31,871
+Let me. That's unusual. I did not expect that.
+
+300
+00:47:31,871 --> 00:47:50,791
+Let me amend this change set, go back a change and just check central to see what happens when I run this test.
+
+301
+00:47:50,791 --> 00:48:02,291
+Fillable targets. We don't do anything special about it.
+
+302
+00:48:02,291 --> 00:48:19,421
+That's the test running right there. Can I have a quick bite of my lunch?
+
+303
+00:48:19,421 --> 00:48:42,351
+Today's lunch is pasta in sauce. Available targets with the app menu.
+
+304
+00:48:42,351 --> 00:48:51,441
+Disabled. Let's see what happens. And it's possible that this test is not designed to be run individually.
+
+305
+00:48:51,441 --> 00:48:58,481
+That could be why it fails. Yeah.
+
+306
+00:48:58,481 --> 00:49:10,031
+All right. Let's try running it in the sequence. So the way we do that is we can say things like start at.
+
+307
+00:49:10,031 --> 00:49:15,191
+Well, repeat, law says that's a good thing, I'm not eating a black hole this time, that's true.
+
+308
+00:49:15,191 --> 00:49:22,151
+You don't want to eat. You don't wanna eat a black hole. Start at once.
+
+309
+00:49:22,151 --> 00:49:30,231
+Give it a browser. You are two or five maybe.
+
+310
+00:49:30,231 --> 00:49:39,241
+And at available targets.
+
+311
+00:49:39,241 --> 00:50:01,901
+And then we just tell it to run the directory. And so it should just run those two tests.
+
+312
+00:50:01,901 --> 00:50:15,451
+OK. So that's good. And now if I'm going to switch the preface to True.
+
+313
+00:50:15,451 --> 00:50:31,701
+We'll see what it complains about. Targets should be as expected, got these, but expected these.
+
+314
+00:50:31,701 --> 00:50:37,221
+I see available targets. So I understand now.
+
+315
+00:50:37,221 --> 00:50:45,711
+This is because we've removed some of the targets, we need to remove some of the targets and we need to update the targets.
+
+316
+00:50:45,711 --> 00:50:53,991
+This is actually good. This is going to force me to update the rest of the the items and UI to her.
+
+317
+00:50:53,991 --> 00:51:04,591
+So what we needed to do is hang on.
+
+318
+00:51:04,591 --> 00:51:18,351
+There is no need to do is find the bug where I listed.
+
+319
+00:51:18,351 --> 00:51:24,501
+Yeah, accounts as add ons help private window and quit.
+
+320
+00:51:24,501 --> 00:51:31,731
+So we've done private window, we've done help, we've done add ons. Let's do quit real quick.
+
+321
+00:51:31,731 --> 00:51:41,801
+So you lie to her, to your security.
+
+322
+00:51:41,801 --> 00:51:54,001
+Uh. Query a document.
+
+323
+00:51:54,001 --> 00:51:59,251
+Oh, yes. Sorry. I knew that. And then I'll say return you.
+
+324
+00:51:59,251 --> 00:52:09,181
+I toured Proton and then you enabled. You lie to her.
+
+325
+00:52:09,181 --> 00:52:19,951
+Get note from document a document. Otherwise, you lie to her.
+
+326
+00:52:19,951 --> 00:52:25,531
+Get Noad from document a document. Yeah.
+
+327
+00:52:25,531 --> 00:52:30,091
+So what's the actual I.D.?
+
+328
+00:52:30,091 --> 00:52:44,131
+I believe it is at menu equip button. I mean, you quit button two unsurprising.
+
+329
+00:52:44,131 --> 00:52:50,761
+OK. And now we will prettier that.
+
+330
+00:52:50,761 --> 00:52:58,181
+So we've done quit private window help and add ons in the last one is account status count status.
+
+331
+00:52:58,181 --> 00:53:13,911
+So currently it's using Atman New Ethics, a label. Label.
+
+332
+00:53:13,911 --> 00:53:23,341
+And what's the. Yeah, there's a second one.
+
+333
+00:53:23,341 --> 00:53:35,311
+FXE label to get the same deal, you know.
+
+334
+00:53:35,311 --> 00:53:44,541
+Except that we can let I.D. equal.
+
+335
+00:53:44,541 --> 00:53:58,321
+You I tour proton at menu enabled menu affect, say, a label to otherwise menu FXE a label.
+
+336
+00:53:58,321 --> 00:54:07,191
+And then use that I.D. I think that's all of them updated, all five.
+
+337
+00:54:07,191 --> 00:54:22,241
+And now let's see what happens if we run this test.
+
+338
+00:54:22,241 --> 00:54:43,711
+Yeah, past beauty. Let's make sure it passes with the menu disabled.
+
+339
+00:54:43,711 --> 00:54:51,791
+Good. Let's update our prettier here, so we've actually done this work.
+
+340
+00:54:51,791 --> 00:55:01,301
+Then there are some targets we want to remove and we should probably do that as a separate step.
+
+341
+00:55:01,301 --> 00:55:30,021
+Yeah, we're probably want to break this up into a couple of different patches, but right now it's all they'd want, one big blob.
+
+342
+00:55:30,021 --> 00:55:48,411
+The last step is to remove some targets, the customized target and the page action button target, customized target.
+
+343
+00:55:48,411 --> 00:55:55,511
+Page. Action button.
+
+344
+00:55:55,511 --> 00:56:06,981
+Target. Let us now.
+
+345
+00:56:06,981 --> 00:56:11,671
+Um. You remove those.
+
+346
+00:56:11,671 --> 00:56:19,261
+Do we have to with targets? Customize, we're gonna get rid of this.
+
+347
+00:56:19,261 --> 00:56:28,971
+And page action button. You read that. Now let's rerun the test.
+
+348
+00:56:28,971 --> 00:56:41,041
+Disabled. Good.
+
+349
+00:56:41,041 --> 00:56:52,201
+And with it enabled. Then we should run the whole sweep, the whole like, you know, to our test suite with a disabled and enabled,
+
+350
+00:56:52,201 --> 00:56:58,531
+and then we can start breaking this up into patches to put up for review. Then we're in good shape.
+
+351
+00:56:58,531 --> 00:57:04,501
+All right. So to do what I just said, running the whole suite, we're gonna get rid of the start and end at.
+
+352
+00:57:04,501 --> 00:57:10,591
+And let's just run this with the preface set to false.
+
+353
+00:57:10,591 --> 00:57:18,741
+And see what happens. And while we watch, I will eat my lunch.
+
+354
+00:57:18,741 --> 00:57:24,781
+Let me know if there are any questions about what I'm doing. Just drop them in the retro.
+
+355
+00:57:24,781 --> 00:57:40,761
+Why is this hanging? I swear I'm not trying to, Rick, roll you.
+
+356
+00:57:40,761 --> 00:57:53,231
+This is stuck for some reason, specified target names, not the allowed set in customize auto open clothes.
+
+357
+00:57:53,231 --> 00:58:04,741
+I thought I got rid of that. That's, uh, browser you eyed tour, huh?
+
+358
+00:58:04,741 --> 00:58:22,971
+Well, I guess I failed to update one add ons, add ons, test highlight add ons.
+
+359
+00:58:22,971 --> 00:58:36,381
+Customize. Customize. Uh, yes.
+
+360
+00:58:36,381 --> 00:58:53,061
+Uh, yes. All right, let's try that again.
+
+361
+00:58:53,061 --> 00:59:02,611
+Scooby doo doo doo doo doo doo doo. Running tests, run and tests run and run in running tests, but no one's now it's out.
+
+362
+00:59:02,611 --> 00:59:23,511
+Oh no. It's gone. It's gone. Something's happening. I don't know if it was intentionally stuck before, but here it's gone.
+
+363
+00:59:23,511 --> 00:59:28,391
+Yeah, you you said there are some things you plan on doing this work, but then got interrupted by it not working.
+
+364
+00:59:28,391 --> 00:59:31,861
+What were those? No pressure on doing them. Just curious if this weren't.
+
+365
+00:59:31,861 --> 00:59:37,941
+That's that's the removals that I'm doing in the UI tour. Like, if all this works, then I'm gonna split this patch up into those, like,
+
+366
+00:59:37,941 --> 00:59:44,231
+individual bugs that are supposed to clean up UI tour and get rid of the old targets.
+
+367
+00:59:44,231 --> 00:59:50,091
+OK. We've got one failure in UI two or four.
+
+368
+00:59:50,091 --> 01:00:05,121
+Let's take a quick peek at that. And then I'm running slowly out of time.
+
+369
+01:00:05,121 --> 01:00:19,351
+I'm running out of time. I'm gonna have to end the stream shortly. OK, so time the waiting for visibility should show highlight.
+
+370
+01:00:19,351 --> 01:00:39,831
+And this was one after highlight, she initially hidden element should not be now checking for visibility on you two or four.
+
+371
+01:00:39,831 --> 01:00:47,291
+So the first things it does test highlight the page action button we write, we got rid of it.
+
+372
+01:00:47,291 --> 01:00:59,921
+The target test highlight. Between page action by noon, you are albar and button on page action panel.
+
+373
+01:00:59,921 --> 01:01:18,511
+I think we should just get rid of this test. Test highlight the action and show the highlight.
+
+374
+01:01:18,511 --> 01:01:25,161
+Then opening the highlight tests, which are the height of the copyright button page action.
+
+375
+01:01:25,161 --> 01:01:33,361
+The panel is open. OK, we should get rid of this test.
+
+376
+01:01:33,361 --> 01:01:41,961
+And then I think this will run smoothly. Reason I'm getting rid of this test is because the target that it's referring to,
+
+377
+01:01:41,961 --> 01:01:50,701
+that it's testing is we've removed it in the UI to our library, intentionally removed it.
+
+378
+01:01:50,701 --> 01:02:23,461
+OK. So now we're going to run the whole suite again. Now we're gonna run it with true and then I think I'm gonna call the stream there.
+
+379
+01:02:23,461 --> 01:02:30,781
+Scooby doo bee dooby dooby dooby doo doo. Amy, why is this paws in here?
+
+380
+01:02:30,781 --> 01:02:37,821
+Hope everything is okay. Scooby Doo doo doo doo doo doo.
+
+381
+01:02:37,821 --> 01:02:52,081
+Rap brought on by a mile by mile. Find out now, Robyn, about why do we do in.
+
+382
+01:02:52,081 --> 01:02:57,171
+Hey, it all passed. All right, good enough for me. All right. Now let's run it with true.
+
+383
+01:02:57,171 --> 01:03:23,471
+Let's hope it also all passes and then we're in decent shape.
+
+384
+01:03:23,471 --> 01:03:27,121
+Mm hmm. Mm hmm. Mm hmm.
+
+385
+01:03:27,121 --> 01:03:54,721
+Any questions, any questions and checking the, uh, the back channel? I don't see anything.
+
+386
+01:03:54,721 --> 01:04:01,801
+All right. We did it. Amazing.
+
+387
+01:04:01,801 --> 01:04:07,411
+So I'm just gonna merge that into my most recent. Wow.
+
+388
+01:04:07,411 --> 01:04:13,461
+Do I. Now I've got to, like, split up. Yes.
+
+389
+01:04:13,461 --> 01:04:31,161
+Give me a knowing. I should turn this into a new comment, because we're getting like this, we should fold into the previous one.
+
+390
+01:04:31,161 --> 01:04:37,441
+But this other stuff is for the removal, so I'm going to say commit a sheet,
+
+391
+01:04:37,441 --> 01:04:45,211
+amend this the browser you are to or test, not you two or four, just you I tour.
+
+392
+01:04:45,211 --> 01:05:07,981
+And then we're going to create a new patch, which is the removals. Just these two removals remove.
+
+393
+01:05:07,981 --> 01:05:22,921
+Customize and page action. Button you are to her targets.
+
+394
+01:05:22,921 --> 01:05:28,171
+And then I think we're weird. I'm going to call there hey. Thank you so much for watching episode.
+
+395
+01:05:28,171 --> 01:05:32,011
+What was this 241 of the joy of coding? I know. Cutting it off a little short.
+
+396
+01:05:32,011 --> 01:05:38,821
+I apologize, but hopefully next week all I'll be able to do the full hour and a half.
+
+397
+01:05:38,821 --> 01:05:43,391
+I appreciate you being here. Appreciate all the questions and the interaction in the back channel.
+
+398
+01:05:43,391 --> 01:05:49,231
+That's great. And I'll I'll see you next week, hopefully. Yeah.
+
+399
+01:05:49,231 --> 01:05:55,581
+Take care of yourselves. So with that, let me just go back here and say.
+
+400
+01:05:55,581 --> 01:05:59,541
+Yeah. Have yourselves a great week. We'll see you next week. Take care.
+
+401
+01:05:59,541 --> 01:07:18,374
+Bye bye.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

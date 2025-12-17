@@ -1,0 +1,2930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 377 - September 18, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 377 - September 18, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=95c88000-132f-4da2-baee-b1d101051603</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=95c88000-132f-4da2-baee-b1d101051603">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,080 --> 00:00:08,600
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy of coding.
+
+2
+00:00:09,080 --> 00:00:13,250
+Hello and welcome to episode 377 of the Joy of coding.
+
+3
+00:00:13,490 --> 00:00:18,860
+My name is Mike Conley. It's so good to have you here. We're going to be live hacking on some Firefox stuff.
+
+4
+00:00:18,860 --> 00:00:24,590
+Um, hopefully making some of the the code in Firefox just a little easier to understand.
+
+5
+00:00:24,680 --> 00:00:30,229
+Um, and maybe fixing a small bug that someone identified earlier today, and then who knows?
+
+6
+00:00:30,230 --> 00:00:35,090
+Who knows how far we'll get. Let me let's get started and I'll I'll explain I'll explain what's going on.
+
+7
+00:00:35,120 --> 00:00:39,890
+So let me start by sharing my screen. Once I find where I put obs, there it is.
+
+8
+00:00:40,160 --> 00:00:44,720
+Here's my screen. This is the agenda. Yes it is September 18th, 2024.
+
+9
+00:00:45,500 --> 00:00:48,739
+Episode 377 A reminder. No plan survives breakfast.
+
+10
+00:00:48,740 --> 00:00:55,819
+I think I know what I want to do today. I have kind of like a, uh, a two element to do list for things that I want to try and, uh,
+
+11
+00:00:55,820 --> 00:01:01,400
+and drive forward today, but we don't know how it's going to go in my I might go completely sideways.
+
+12
+00:01:01,640 --> 00:01:06,110
+We might find that we're completely blocked or we might get distracted by something.
+
+13
+00:01:06,110 --> 00:01:15,589
+That's okay. I'm I'm going to try and capture, like, the whole point of this series is to try and capture what I do during, you know, my time working.
+
+14
+00:01:15,590 --> 00:01:19,850
+If I'm concentrating on some code and things don't always go according to plan, and that's okay.
+
+15
+00:01:19,970 --> 00:01:20,870
+So that's the first thing.
+
+16
+00:01:21,350 --> 00:01:26,839
+The second thing is that, uh, the agenda, that's the thing that we're looking at right now is something that you have access to.
+
+17
+00:01:26,840 --> 00:01:31,130
+So if you want to click on links or follow along, you're more than welcome to do that.
+
+18
+00:01:31,310 --> 00:01:35,660
+The links for the agenda are going to be a little bit different depending on where you're watching the stream.
+
+19
+00:01:35,660 --> 00:01:38,870
+If you're watching this on air Mozilla, it's in the details section over on that side.
+
+20
+00:01:39,230 --> 00:01:44,270
+If you're watching this on YouTube or, um, uh, Twitch, it's down below.
+
+21
+00:01:44,300 --> 00:01:48,500
+Uh, on Twitch, it's in the channel detail section, and on YouTube it's in the video description.
+
+22
+00:01:49,190 --> 00:01:56,030
+Okay. So, uh, what are we doing today? Well, the first thing I wanted to do was take a look at this bug.
+
+23
+00:01:56,210 --> 00:02:04,400
+Uh, about. Oh, sorry. Not this bug. Uh, we might get to this if, uh, if we get stuck with the, uh, the documentation bug.
+
+24
+00:02:04,400 --> 00:02:08,870
+It's this bug. Create docs for customizable UI.
+
+25
+00:02:08,900 --> 00:02:13,789
+So there is this, uh, mechanism that's been in Firefox since about 2014.
+
+26
+00:02:13,790 --> 00:02:16,550
+It was one of the first things I worked on, actually, uh,
+
+27
+00:02:16,550 --> 00:02:22,010
+whenever I moved over from the Thunderbird team to the Firefox team was there was this project called australis,
+
+28
+00:02:22,490 --> 00:02:28,880
+and we basically changed how, uh, toolbar customization and UI customization worked in the browser.
+
+29
+00:02:29,390 --> 00:02:31,130
+And, you know, we try it.
+
+30
+00:02:31,280 --> 00:02:39,919
+The whole goal of it was to make customization of your toolbars, uh, the sort of thing that average users would feel comfortable doing,
+
+31
+00:02:39,920 --> 00:02:46,760
+like it had been stuck in this realm as something that only power users would or could do.
+
+32
+00:02:46,760 --> 00:02:48,530
+And, you know, they're very passionate about it.
+
+33
+00:02:48,530 --> 00:02:53,899
+But there were like a lot of, uh, rough edges and foot guns, and it didn't feel like a polished experience.
+
+34
+00:02:53,900 --> 00:03:03,350
+And so we we applied some attention to that, and we had to basically, um, we had to build, uh,
+
+35
+00:03:03,350 --> 00:03:10,309
+a new mechanism to make it easier to sort of centralize the customization logic across browser windows,
+
+36
+00:03:10,310 --> 00:03:19,910
+because it was all fairly willy willy nilly, um, uh, fragile prior to to the customizable UI module.
+
+37
+00:03:20,090 --> 00:03:24,920
+That's not to say it's not fragile these days. It's it's certainly more resilient than it used to be.
+
+38
+00:03:25,040 --> 00:03:34,100
+Uh, it's certainly an improvement in terms of the, um, the stability of custom toolbar customizations and the adaptability.
+
+39
+00:03:34,550 --> 00:03:41,630
+But, uh, one of the things that has happened is that customizable UI has become this sprawling module.
+
+40
+00:03:42,680 --> 00:03:45,739
+That, uh, is fairly difficult to understand.
+
+41
+00:03:45,740 --> 00:03:51,139
+And one of my colleagues, Sam, was dealing with, uh, a bug or, um,
+
+42
+00:03:51,140 --> 00:03:56,750
+he's working on a feature with a couple of my other colleagues to, you know, support vertical tabs.
+
+43
+00:03:56,750 --> 00:04:02,900
+And one of the things that we have to do is accommodate the users who may have customized things into their tab strip.
+
+44
+00:04:03,350 --> 00:04:10,850
+And so our current solution for now is to move any buttons that have been put into the tab strip into the toolbar, into the nav bar instead.
+
+45
+00:04:11,240 --> 00:04:18,319
+And then like if they disable um, uh, the vertical tabs, then we'll put them back.
+
+46
+00:04:18,320 --> 00:04:23,750
+We'll try and put them back. But it, um, it's uh, you know, it's not perfect.
+
+47
+00:04:23,750 --> 00:04:27,890
+And we're probably gonna, we're going to be hitting some rough edges here and there,
+
+48
+00:04:28,280 --> 00:04:33,710
+but we're hoping that we can satisfy the needs of most of the users who are going to be using vertical tabs.
+
+49
+00:04:34,940 --> 00:04:41,869
+And one of the things that, uh, I we noticed is that, you know, Sam was working on this and I was reviewing some of the patches.
+
+50
+00:04:41,870 --> 00:04:48,800
+Is that like, Holy smokes, this thing needs documentation, customizable UI, not a thing that's well documented.
+
+51
+00:04:48,800 --> 00:04:55,070
+Now, that's not to say there's no documentation. There are function like there's plenty of inline documentation, as you can see.
+
+52
+00:04:55,460 --> 00:05:02,210
+Um, and some of the uh, public methods, uh, are, are actually well documented.
+
+53
+00:05:02,300 --> 00:05:07,040
+Um, let's, let's look at the, uh, let's look at some public methods here.
+
+54
+00:05:07,730 --> 00:05:12,410
+Uh, these are all private. Uh, here here are the public methods.
+
+55
+00:05:13,040 --> 00:05:21,830
+Uh, and they are well documented. However, they're not really, um, available inside of our source docs.
+
+56
+00:05:21,830 --> 00:05:28,430
+We don't have them published as part of, uh, whoops, Firefox source docs, which is where we put all of our source documentation.
+
+57
+00:05:28,430 --> 00:05:34,190
+So for, you know, if you recall, I was working with some people on, uh, like, the backup mechanism.
+
+58
+00:05:34,190 --> 00:05:38,240
+And so you can, uh, or picture in picture is maybe, uh, a better example.
+
+59
+00:05:38,750 --> 00:05:40,430
+Uh, there's a nice diagram in that one.
+
+60
+00:05:40,430 --> 00:05:48,139
+If we look at the source code or the documentation for picture and picture, we've got like a nice diagram and a breakdown of how it works.
+
+61
+00:05:48,140 --> 00:05:54,350
+And then, you know, it kind of goes deep into individual components and how they work.
+
+62
+00:05:54,350 --> 00:06:00,800
+And then there's links to things like, um, or they're examples and how parts of it are used.
+
+63
+00:06:01,400 --> 00:06:05,059
+Uh, and then there's like reference guides for the source code.
+
+64
+00:06:05,060 --> 00:06:07,730
+And like a lot of this stuff is pulled out of the source code.
+
+65
+00:06:07,970 --> 00:06:14,299
+And I think that's where I want to start, is I want to see if we can make it possible to expose the,
+
+66
+00:06:14,300 --> 00:06:21,620
+uh, the documentation for some of these things in the that's, um, available on the public.
+
+67
+00:06:22,340 --> 00:06:29,330
+Uh, yeah. The, the public, uh, publicly available methods.
+
+68
+00:06:30,140 --> 00:06:37,730
+Uh, let me just find where the publicly available methods are because like, that's overflow toolbar documented.
+
+69
+00:06:37,760 --> 00:06:42,650
+Where's customizable UI dot internal, um, internal dot.
+
+70
+00:06:43,880 --> 00:06:47,119
+Uh. Excuse me. Yeah. Here we go.
+
+71
+00:06:47,120 --> 00:06:50,150
+Here we go. Uh, no, that's still overflow toolbar.
+
+72
+00:06:50,150 --> 00:06:55,160
+Whereas toolbar, uh, UI internal UI internal.
+
+73
+00:06:55,160 --> 00:06:58,879
+Go back to the top. All right.
+
+74
+00:06:58,880 --> 00:07:04,040
+So here we are at the top. What is there.
+
+75
+00:07:04,850 --> 00:07:08,510
+Yeah. This is the this is what's exported from the module.
+
+76
+00:07:08,630 --> 00:07:13,970
+And this wraps a lot of methods. And this is the one that has like a bunch of things documented.
+
+77
+00:07:13,970 --> 00:07:16,820
+This is what I want to try and put into our source docs today.
+
+78
+00:07:17,000 --> 00:07:25,610
+But that may involve us having to clean up a bunch of, um JS doc that no longer that that isn't like well formatted.
+
+79
+00:07:25,610 --> 00:07:32,089
+So we, we might have to do today might be a bunch of manual cleanup of some documentation in here, but that's okay.
+
+80
+00:07:32,090 --> 00:07:35,750
+You know, this is going to hopefully help, uh, help people in the future.
+
+81
+00:07:36,110 --> 00:07:43,070
+That's why we're doing it. Uh, no, I oh, before bedtime.
+
+82
+00:07:43,160 --> 00:07:50,180
+I love that, uh, nickname. Right. Does mjs mean you're using a subset of normal JS?
+
+83
+00:07:50,810 --> 00:08:02,480
+Uh, no. Mjs is, uh, what we consider, uh, like we use those extension that extension for an Ecmascript six module or ES6 module.
+
+84
+00:08:03,080 --> 00:08:11,090
+Um, if you're not sure what JavaScript modules are, uh, I mean, there have been module solutions for JavaScript for many, many years.
+
+85
+00:08:11,100 --> 00:08:17,210
+There was like the common JS stuff. There was there's one called the one that started with an A,
+
+86
+00:08:17,360 --> 00:08:23,329
+there's like required JS or like all these different ways of, oh yeah, Achmed, that's what it was.
+
+87
+00:08:23,330 --> 00:08:29,899
+Uh, AMD modules, common JS require JS and they all had like their different solutions and mechanisms for modules.
+
+88
+00:08:29,900 --> 00:08:38,630
+And finally, finally a, a module standard was developed for JavaScript for, for the Ecmascript standards.
+
+89
+00:08:39,050 --> 00:08:50,720
+And uh, where we differentiate uh, just normal script that executes in say like a window context with a module by using the Mjs extension.
+
+90
+00:08:51,590 --> 00:08:55,430
+And, uh, yeah, that seems to be something that we just kind of converged on.
+
+91
+00:08:55,610 --> 00:09:05,809
+Um, you know, the, the module standards, like you can I don't believe you have to use Mjs for modules,
+
+92
+00:09:05,810 --> 00:09:09,950
+but for us, that's how we know that, uh, that, that they're modules.
+
+93
+00:09:09,950 --> 00:09:17,300
+And the this part allows us to, um, sort of indicate at a glance that these are privileged modules.
+
+94
+00:09:18,140 --> 00:09:22,490
+Uh, so hopefully that that helps. That helps. No, I o before bedtime.
+
+95
+00:09:23,360 --> 00:09:25,460
+Okay. So let's see what happens.
+
+96
+00:09:25,910 --> 00:09:33,170
+Uh, well, first of all, let's see what what JSX doc rules are in here, because I know that we have, uh, a couple of rules.
+
+97
+00:09:33,170 --> 00:09:35,750
+There's, like, required JS doc.
+
+98
+00:09:38,510 --> 00:09:51,889
+There's a rule called require js doc, and there's one that's called valid JS doc, and I think valid JS doc is maybe where we'll start,
+
+99
+00:09:51,890 --> 00:09:58,760
+because we're not going to force every method in here to have JS doc to start with, but let's at least get it all to be valid.
+
+100
+00:09:58,760 --> 00:10:08,330
+JS doc. And if you're not familiar with JS doc and maybe you've used like Java Doc before, um, here's some documentation about JS doc.
+
+101
+00:10:10,850 --> 00:10:13,850
+That works doc. Also great. Uh, thank you for the question.
+
+102
+00:10:13,850 --> 00:10:20,300
+No, I oh, before bedtime. I'm glad you asked that. Uh, feel free to ask more questions as I go along.
+
+103
+00:10:21,260 --> 00:10:27,979
+Okay, so how do we opt in to. I'm pretty sure we're not opting into using valid JS doc, uh, in our directory here.
+
+104
+00:10:27,980 --> 00:10:30,650
+And I suspect that's the sort of thing that you either have to opt in to,
+
+105
+00:10:30,650 --> 00:10:35,900
+or our directory was identified as not having valid JS doc, and no one had put in the effort yet.
+
+106
+00:10:36,110 --> 00:10:39,320
+And so they probably like opted out. It's one of those two things.
+
+107
+00:10:39,770 --> 00:10:43,910
+Um, so we have to figure out which one, which which one we're in.
+
+108
+00:10:44,120 --> 00:10:48,190
+Um. Chance talk support.
+
+109
+00:10:48,190 --> 00:10:54,100
+This is interesting if you're looking to enable jazz doctor great uh, generation for your document, please also enable excellent plug in for jazz doc.
+
+110
+00:10:54,110 --> 00:11:00,459
+It's already enabled the top level search box. There are currently two sections with a valid jazz doc and require jazz doc rules are enabled.
+
+111
+00:11:00,460 --> 00:11:03,610
+Oh that's great. So good job documentation again.
+
+112
+00:11:04,000 --> 00:11:08,860
+Yes. Lint rc uh doge's valid.
+
+113
+00:11:11,530 --> 00:11:17,500
+In stock in the top level eslint RC.
+
+114
+00:11:19,010 --> 00:11:25,739
+Currently two sections. I wonder if this is out of date documentation.
+
+115
+00:11:25,740 --> 00:11:32,760
+This is only from April. Um. Let's look at when this landed.
+
+116
+00:11:34,350 --> 00:11:41,000
+Uh. Show change set if like.
+
+117
+00:11:43,260 --> 00:11:51,240
+At the time, uh, it was actually the case that there was a valid section.
+
+118
+00:11:52,650 --> 00:11:55,680
+Because maybe this documentation also needs to be updated.
+
+119
+00:11:56,790 --> 00:12:01,680
+That's the problem. So like documentation it's a good thing.
+
+120
+00:12:02,010 --> 00:12:05,250
+But there's like a a hierarchy of needs for documentation.
+
+121
+00:12:05,520 --> 00:12:10,680
+You need documentation. You need accurate documentation.
+
+122
+00:12:11,890 --> 00:12:15,880
+And you need like accurate and up to date documentation.
+
+123
+00:12:16,300 --> 00:12:21,910
+I guess that's it. It's just two levels. It's better to have some documentation, I would say, than no documentation,
+
+124
+00:12:22,480 --> 00:12:26,410
+because at least you get some clues that were maybe true at one point in time.
+
+125
+00:12:27,350 --> 00:12:30,590
+But up to date, accurate documentation. Um.
+
+126
+00:12:30,860 --> 00:12:34,490
+Fully fleshed out documentation is like the top level. That's what you really, really want.
+
+127
+00:12:35,630 --> 00:12:42,950
+Uh, okay. So let's take a look at this one file and see if there was a JS doc part.
+
+128
+00:12:42,950 --> 00:12:50,510
+Yes, there was, there was something called extends. Uh, valid Json files were opting into it.
+
+129
+00:12:52,580 --> 00:12:56,209
+And these ones were yeah. Customizable UI was not included.
+
+130
+00:12:56,210 --> 00:13:00,620
+So I wonder if there's a place where we're still, um, opting out.
+
+131
+00:13:01,500 --> 00:13:06,600
+Yes. Lint rollouts. Uh, what's this one for?
+
+132
+00:13:06,600 --> 00:13:09,760
+Create instance for excluded files.
+
+133
+00:13:09,780 --> 00:13:11,650
+Was this one valid Jstor?
+
+134
+00:13:11,670 --> 00:13:18,380
+Okay, so it appears to have moved into something called ESLint rollouts, which is this is the current list of rollouts for userland rules.
+
+135
+00:13:18,390 --> 00:13:25,200
+The meta for rollouts is this new exclusions to not be added to the list unless they're a part of a rollout for a new rule?
+
+136
+00:13:25,980 --> 00:13:40,140
+Okay. So what I'm going to do is I'm going to update our documentation, uh, here, um, valid JS doc.
+
+137
+00:13:44,130 --> 00:13:48,300
+So it's it's dark support.
+
+138
+00:13:50,580 --> 00:13:55,980
+In the top level ESLint RC roll outs.
+
+139
+00:13:56,220 --> 00:14:00,630
+That's what it should be. Roll outs.
+
+140
+00:14:04,530 --> 00:14:07,680
+Um, and then this will wrap around.
+
+141
+00:14:10,880 --> 00:14:14,120
+Mhm. Mhm. Mhm. Mhm. Mhm. Okay.
+
+142
+00:14:15,350 --> 00:14:28,579
+So that's the first thing. And the second thing we're going to do is we're going to remove the customizable UI um exclusion for valid JS dock.
+
+143
+00:14:28,580 --> 00:14:33,230
+And I expect there to be big explosions here.
+
+144
+00:14:33,560 --> 00:14:39,350
+So let's remove that rule and then we're going to run uh mock build faster.
+
+145
+00:14:41,720 --> 00:14:50,180
+I actually don't know if I needed to build faster, but then we're going to run, uh, mock lint, and I think I can choose a particular linter.
+
+146
+00:14:50,240 --> 00:14:55,459
+Um. I think I want, uh, because I don't want to run them all.
+
+147
+00:14:55,460 --> 00:14:59,000
+I'm just going to run the one. Uh linters. To run L.
+
+148
+00:15:00,410 --> 00:15:03,560
+S lint browser components, customizable UI.
+
+149
+00:15:04,610 --> 00:15:08,450
+Here goes. I'm expecting big explosions.
+
+150
+00:15:08,450 --> 00:15:11,989
+Let's see. Okay. Yes, yes.
+
+151
+00:15:11,990 --> 00:15:15,619
+Okay, so a big set of explosions. Not so bad.
+
+152
+00:15:15,620 --> 00:15:22,160
+We might. It's 176 problems. Um, but, uh, what's that song?
+
+153
+00:15:22,400 --> 00:15:27,810
+I got 99 problems. I don't think I want to quote that one, but, uh.
+
+154
+00:15:28,020 --> 00:15:31,259
+I've got all these problems, but let's let's.
+
+155
+00:15:31,260 --> 00:15:34,980
+But Apache ain't one. Let's let's make let's make some changes.
+
+156
+00:15:35,760 --> 00:15:38,969
+Um, okay, well, we're going to work our way through this.
+
+157
+00:15:38,970 --> 00:15:46,380
+I believe the, uh, will my VSCode understand the.
+
+158
+00:15:48,630 --> 00:15:52,920
+The the eslint integration?
+
+159
+00:15:53,580 --> 00:15:58,530
+I wonder if I need to like. Because what would be nice is if I could see.
+
+160
+00:16:02,470 --> 00:16:06,350
+The ESLint integration. Turn on me.
+
+161
+00:16:07,900 --> 00:16:13,630
+But but I think do I need like, extensions?
+
+162
+00:16:14,170 --> 00:16:18,930
+Is lent. Uh.
+
+163
+00:16:19,300 --> 00:16:25,150
+Uh, I think I've got this one. Is it on?
+
+164
+00:16:27,700 --> 00:16:32,470
+Do I have to run it? So like ESLint.
+
+165
+00:16:34,530 --> 00:16:38,330
+Restart ESLint server. Sure. There we go.
+
+166
+00:16:38,340 --> 00:16:44,580
+Now, a bunch of stuff just turned red. That's good. Um, here we go.
+
+167
+00:16:44,610 --> 00:16:52,170
+So here's our first error. Let's. We got a big block of errors in here and some errors down there, but let's let's start fixing these.
+
+168
+00:16:55,080 --> 00:17:02,060
+So our first one, um, okay, I collapse.
+
+169
+00:17:02,130 --> 00:17:11,250
+Let me just do that. Is there a way I can like quickly hop to the first error.
+
+170
+00:17:12,810 --> 00:17:17,020
+Nine plus few. Problems.
+
+171
+00:17:18,520 --> 00:17:23,049
+Perfect. Okay, so the first problem is, uh, widget type string.
+
+172
+00:17:23,050 --> 00:17:26,710
+Prefer string. So if I like, do that, is it happy?
+
+173
+00:17:27,970 --> 00:17:31,390
+Yes. And then, uh, prefer lowercase boolean.
+
+174
+00:17:32,500 --> 00:17:37,810
+Nice. Now it's complaining that, uh, it should be returns, not return.
+
+175
+00:17:38,140 --> 00:17:42,790
+And so this is now valid. JS. Doc. Um.
+
+176
+00:17:48,120 --> 00:17:51,720
+Now, this dash I don't think needs to be there.
+
+177
+00:17:51,990 --> 00:17:56,790
+I think what I'm going to do. I've seen this. I've done this elsewhere.
+
+178
+00:17:57,840 --> 00:18:02,340
+True. If the widget is removable.
+
+179
+00:18:04,020 --> 00:18:07,620
+So on the next line. Okay. Next problem.
+
+180
+00:18:08,880 --> 00:18:12,060
+Param the listener object to add.
+
+181
+00:18:12,300 --> 00:18:18,300
+Okay. So. Um.
+
+182
+00:18:20,760 --> 00:18:24,149
+And then this is like a big description of the listener object.
+
+183
+00:18:24,150 --> 00:18:30,120
+And I think what we want to do is a typedef to describe what the listener object is.
+
+184
+00:18:31,140 --> 00:18:36,000
+So, uh, I've done this before in other modules.
+
+185
+00:18:36,300 --> 00:18:40,830
+Uh, typedef. Something like this.
+
+186
+00:18:40,830 --> 00:18:48,030
+So I'm going to start with this. We're going to be copying and pasting the type definition for a widget listener.
+
+187
+00:18:52,370 --> 00:18:55,580
+Is that what this thing is? Add a listener object.
+
+188
+00:18:56,990 --> 00:19:07,370
+Customizable. I'll call it a customizable UI listener. And then there are a bunch of properties and.
+
+189
+00:19:11,690 --> 00:19:17,060
+Not all event handler methods need to be.
+
+190
+00:19:18,470 --> 00:19:23,300
+So I can say that these are these are all optional.
+
+191
+00:19:27,660 --> 00:19:32,130
+And so just first interesting. So if you can delay that is vital. Following that handlers are supported.
+
+192
+00:19:35,000 --> 00:19:46,400
+Okay. So, uh, typedef, uh, can I do, like property function?
+
+193
+00:19:46,430 --> 00:19:52,490
+That's what we want. Capital f function or lowercase f function.
+
+194
+00:19:53,990 --> 00:19:58,040
+What did I do for my greater capital f function property.
+
+195
+00:19:59,210 --> 00:20:10,670
+Okay. So. And then I think there's a way I can describe what the function accepts as arguments.
+
+196
+00:20:12,020 --> 00:20:16,910
+Um, I think I've seen this done by someone else.
+
+197
+00:20:16,940 --> 00:20:20,090
+Backup property.
+
+198
+00:20:22,670 --> 00:20:33,650
+Function. Property. Maybe it was with a program function.
+
+199
+00:20:36,830 --> 00:20:40,520
+Yeah, a function that takes a string. Okay, that's how it's done.
+
+200
+00:20:43,460 --> 00:20:48,050
+Function. And then in parentheses you supply the arguments that it expects.
+
+201
+00:20:49,490 --> 00:20:55,100
+Okay so prop. Property.
+
+202
+00:20:56,390 --> 00:21:03,110
+This is a function. And that function takes a string.
+
+203
+00:21:05,930 --> 00:21:13,760
+A string. Uh and and and number.
+
+204
+00:21:15,110 --> 00:21:19,370
+Now, if I could give those, like, names, that'd be really great. Um.
+
+205
+00:21:21,800 --> 00:21:31,120
+Function. So just doc, uh, function parameter names, uh, named arguments.
+
+206
+00:21:31,130 --> 00:21:43,860
+Named arguments. Function.
+
+207
+00:21:46,560 --> 00:21:52,770
+Function parameter. I want to test way a document.
+
+208
+00:21:52,770 --> 00:21:58,050
+Anonymous objects and functions. Function description.
+
+209
+00:21:58,200 --> 00:22:01,560
+The name of the function. And then it's a function you program.
+
+210
+00:22:05,110 --> 00:22:12,450
+Hmhm. Callback.
+
+211
+00:22:12,990 --> 00:22:18,050
+Oh, callback might be nice. Do we support that? Callback.
+
+212
+00:22:22,280 --> 00:22:29,570
+And Param, I see this is actually exactly what we want, I think, um.
+
+213
+00:22:33,590 --> 00:22:38,930
+So the property here would be. Um.
+
+214
+00:22:40,280 --> 00:22:45,799
+You call this a. On widget.
+
+215
+00:22:45,800 --> 00:22:55,460
+Added callback. Uh.
+
+216
+00:22:57,710 --> 00:23:06,000
+You'll see. Customizable UI. On widget.
+
+217
+00:23:06,000 --> 00:23:13,440
+Added callback. On widget added.
+
+218
+00:23:15,570 --> 00:23:20,220
+Now, can I say then because it's not going to know what that is.
+
+219
+00:23:29,440 --> 00:23:35,350
+Can I say that this is the callback?
+
+220
+00:23:40,950 --> 00:23:45,060
+Syntax error. Property.
+
+221
+00:23:56,240 --> 00:24:00,020
+Uh, call, but just, uh, call back as property.
+
+222
+00:24:09,230 --> 00:24:12,920
+That's tough. Call back. Prem. Yeah. Prem and Steph call back.
+
+223
+00:24:12,920 --> 00:24:17,239
+Is it not liking the. Yeah.
+
+224
+00:24:17,240 --> 00:24:23,910
+It's not liking that. Okay. What's the.
+
+225
+00:24:24,420 --> 00:24:29,250
+Remind me again with the, uh, The Tilled.
+
+226
+00:24:32,630 --> 00:24:37,100
+The tildes for. Particular class, I think.
+
+227
+00:24:39,110 --> 00:24:42,770
+Um. Killed.
+
+228
+00:24:45,470 --> 00:24:53,370
+Named paths. Inner member.
+
+229
+00:24:53,700 --> 00:24:58,020
+I see. So this is not an inner member of customizable UI.
+
+230
+00:25:05,740 --> 00:25:16,360
+So I think what I want is that really. Okay.
+
+231
+00:25:18,070 --> 00:25:21,580
+Yeah, we can take this. Replace that fired.
+
+232
+00:25:22,450 --> 00:25:27,760
+When a widget is added to an area widget, a id is the widget that was added.
+
+233
+00:25:28,600 --> 00:25:36,480
+Okay. So we callback takes a widget ID, which is a string.
+
+234
+00:25:40,530 --> 00:25:47,910
+An area which is also string, and then the position.
+
+235
+00:25:50,670 --> 00:25:54,930
+Which is a number. It's a position which was added.
+
+236
+00:25:55,440 --> 00:26:01,620
+So the widget ID uh the widget the id.
+
+237
+00:26:04,860 --> 00:26:07,530
+Of the widget that was added to an area,
+
+238
+00:26:08,970 --> 00:26:23,100
+the ID of the area that the widget is added to the in the position of the widget in the area that was added here.
+
+239
+00:26:25,170 --> 00:26:28,590
+And then we get rid of that and then that is done.
+
+240
+00:26:28,680 --> 00:26:34,020
+And this is optional. So undefined.
+
+241
+00:26:35,370 --> 00:26:43,680
+Is that how you do that. Um just doc optional parameters optional.
+
+242
+00:26:46,410 --> 00:26:52,260
+You put it in square brackets. Okay. You don't need to say that.
+
+243
+00:26:52,470 --> 00:27:01,710
+So that's valid. And so what we're going to do is we're going to say that this is a customizable UI listener.
+
+244
+00:27:03,720 --> 00:27:07,740
+The listener object to add.
+
+245
+00:27:08,670 --> 00:27:13,139
+So we're going to do each of these. This is strap ID everybody.
+
+246
+00:27:13,140 --> 00:27:18,930
+This is going to be. A bit of repetition on widget added.
+
+247
+00:27:18,930 --> 00:27:31,050
+The next one is on widget moved. And then so I'm going to get rid of this uh fired when the widget is moved within an area.
+
+248
+00:27:35,370 --> 00:27:45,690
+And its area. Uh, it's just a widget ID. And then the area that was moved, the I.D. was moved within.
+
+249
+00:27:46,830 --> 00:27:50,940
+So we don't actually supply. Oh, sorry.
+
+250
+00:27:50,970 --> 00:27:55,170
+Widget moved. Yeah. Sorry. Area that was moved within than the old position.
+
+251
+00:27:55,170 --> 00:27:58,559
+Than the new position. I was wondering, I'm like, why?
+
+252
+00:27:58,560 --> 00:28:02,580
+Uh. A old position?
+
+253
+00:28:06,960 --> 00:28:11,520
+A new position. And.
+
+254
+00:28:15,210 --> 00:28:20,010
+So fired when it's moved within its area. The widget that was moved.
+
+255
+00:28:20,010 --> 00:28:23,370
+The Earth moving in its old position. Its new position. Right. Okay.
+
+256
+00:28:24,510 --> 00:28:31,680
+The original position. Of the widget before being moved.
+
+257
+00:28:34,770 --> 00:28:40,680
+The new position of the widget. For being, uh, after being moved.
+
+258
+00:28:42,720 --> 00:28:49,500
+And then we were going to add our new property on widget moved.
+
+259
+00:28:51,330 --> 00:28:57,390
+And that's this thing. So we'll get rid of this next on widget removed.
+
+260
+00:28:58,620 --> 00:29:05,040
+So that's simpler. Fired when a widget is removed from an area.
+
+261
+00:29:07,290 --> 00:29:16,290
+The, uh, removed removed callback was the ID of the area that the widget was removed from.
+
+262
+00:29:17,490 --> 00:29:20,700
+And then we don't need the positions. And then the next one.
+
+263
+00:29:21,990 --> 00:29:28,020
+Uh, it's like that. One widget removed.
+
+264
+00:29:28,170 --> 00:29:41,770
+That's three. And let's see.
+
+265
+00:29:43,990 --> 00:29:48,550
+There's some spam in here. Spam?
+
+266
+00:29:52,900 --> 00:29:56,380
+Um, okay. So that's done. Widget removed.
+
+267
+00:29:57,010 --> 00:30:03,880
+Next on widget before Dom changed. Property.
+
+268
+00:30:06,190 --> 00:30:12,730
+Oh thank you. Smurf de saving the day on widget before Dom change.
+
+269
+00:30:16,960 --> 00:30:20,560
+And. What's this one?
+
+270
+00:30:20,560 --> 00:30:25,190
+Fired when a widget before a widget's Dom node is acted upon by custom.
+
+271
+00:30:25,190 --> 00:30:29,770
+All customizable UI to add, move or remove it.
+
+272
+00:30:30,070 --> 00:30:35,620
+Hmm. Uh, okay.
+
+273
+00:30:35,630 --> 00:30:40,280
+So let's put that in there. It's very interesting.
+
+274
+00:30:41,060 --> 00:30:46,040
+I guess I'll just copy that whole thing and then that in there.
+
+275
+00:30:52,120 --> 00:30:56,970
+And then that it's a node and next node.
+
+276
+00:30:56,980 --> 00:31:00,520
+So a node is going to be an element of some kind.
+
+277
+00:31:00,850 --> 00:31:03,520
+It's it's in there. It's an element.
+
+278
+00:31:03,690 --> 00:31:11,200
+I think we got confused uh when between nodes and elements, it's not like a text node or anything or a common node.
+
+279
+00:31:13,720 --> 00:31:19,270
+The uh Dom element being acted upon.
+
+280
+00:31:25,940 --> 00:31:31,730
+The notes that don't change. Next notes the domino of a before which a widget will be inserted.
+
+281
+00:31:32,930 --> 00:31:36,350
+Wow. Some of this is very specific. Um.
+
+282
+00:31:39,950 --> 00:31:43,760
+So element. This is optional.
+
+283
+00:31:44,180 --> 00:31:48,770
+This this may not. This may be null. Um.
+
+284
+00:31:53,510 --> 00:32:02,180
+The. Dom element, if any, for which a widget will be inserted.
+
+285
+00:32:09,660 --> 00:32:18,550
+Uh, okay. And then a container is another element.
+
+286
+00:32:20,860 --> 00:32:36,280
+The actual Dom cane container. Uh, for the, uh, a widget could be an overflow panel in case of an overflow toolbar.
+
+287
+00:32:39,910 --> 00:32:43,060
+Uh, and then was removal.
+
+288
+00:32:46,240 --> 00:32:52,420
+It's a boolean. True.
+
+289
+00:32:53,380 --> 00:32:55,960
+If the action about talon's the removal of a Dom node.
+
+290
+00:32:57,370 --> 00:33:06,220
+So yeah, this is again, like it kind of smells like the, uh, this API needs to be cleaned up like that.
+
+291
+00:33:06,220 --> 00:33:10,510
+Leaks a lot of information about the internals.
+
+292
+00:33:11,380 --> 00:33:15,280
+Uh, law of Demeter, gang of Demeter.
+
+293
+00:33:16,570 --> 00:33:27,790
+Um, wait, that that was before. Don't change. Right. Yeah.
+
+294
+00:33:27,820 --> 00:33:32,740
+Okay. So that one's done. After Dom change.
+
+295
+00:33:39,730 --> 00:33:45,430
+So sometimes, sometimes VSCode is very helpful.
+
+296
+00:33:45,430 --> 00:33:49,570
+And sometimes it's super not after Dom change.
+
+297
+00:33:53,260 --> 00:34:02,440
+All right. Like.
+
+298
+00:34:04,810 --> 00:34:10,090
+So fired after the change. The Dom no to the widget fired after.
+
+299
+00:34:11,950 --> 00:34:19,960
+Uh, so this is after. And then it's the same thing.
+
+300
+00:34:21,340 --> 00:34:33,310
+The Dom element that was acted upon, the Dom element that the widget was inserted before.
+
+301
+00:34:35,890 --> 00:34:40,270
+Uh, the action that happened was.
+
+302
+00:34:43,770 --> 00:34:47,470
+For the Dom node. Okay. So done.
+
+303
+00:34:52,090 --> 00:34:58,420
+Making forward progress, gang. Um. Next one's.
+
+304
+00:35:02,080 --> 00:35:14,020
+Uh, this one's called on widget reset. And so we'll add another one of these.
+
+305
+00:35:16,390 --> 00:35:19,750
+Widget reset. And what are the arguments?
+
+306
+00:35:19,750 --> 00:35:23,559
+Just a node in a container fired after a reset.
+
+307
+00:35:23,560 --> 00:35:27,190
+The default placement moves the widgets node to a different location. Okay.
+
+308
+00:35:33,000 --> 00:35:36,710
+Snow to a different location. The Dom element.
+
+309
+00:35:39,250 --> 00:35:44,760
+See. I'm saying element. It's true.
+
+310
+00:35:44,770 --> 00:35:49,070
+They are elements. They will always be elements. Nodes are a superset.
+
+311
+00:35:49,120 --> 00:35:58,930
+Every element is a node. Dom node.
+
+312
+00:36:00,130 --> 00:36:13,390
+Just. Just being consistent.
+
+313
+00:36:15,950 --> 00:36:25,860
+Okay. So, uh, a node is the widget's node.
+
+314
+00:36:29,460 --> 00:36:33,750
+Uh, the Dom node for the widget.
+
+315
+00:36:36,030 --> 00:36:39,390
+That was moved.
+
+316
+00:36:41,880 --> 00:36:49,140
+And then a container. The area, the actual.
+
+317
+00:36:54,080 --> 00:36:58,270
+Big container. What is the.
+
+318
+00:36:58,720 --> 00:37:02,800
+I think. Yeah, it's the actual container element.
+
+319
+00:37:04,220 --> 00:37:10,810
+Yeah. You can take the actual Dom container for the widget after.
+
+320
+00:37:17,120 --> 00:37:27,260
+After the reset. And then. Uh.
+
+321
+00:37:28,180 --> 00:37:35,600
+Okay. Then not this.
+
+322
+00:37:37,430 --> 00:37:41,330
+Get rid of that. Uh, okay.
+
+323
+00:37:45,650 --> 00:37:47,719
+Still, I think we're going to get. We're going to get through.
+
+324
+00:37:47,720 --> 00:37:53,870
+All these will probably be done these in the next five minutes, and then we can move on to some more interesting things.
+
+325
+00:37:56,240 --> 00:38:05,209
+On which should undo. Uh, on undo.
+
+326
+00:38:05,210 --> 00:38:14,020
+Move. That's a node in a container again.
+
+327
+00:38:23,230 --> 00:38:38,410
+Fire after. I'm doing okay. Notice the widgets no to containers the area it was moved into.
+
+328
+00:38:38,530 --> 00:38:44,600
+So it's the same. After the move.
+
+329
+00:38:53,920 --> 00:38:59,240
+Us. After the undo.
+
+330
+00:39:06,080 --> 00:39:12,200
+Undo. Move. Okay.
+
+331
+00:39:17,160 --> 00:39:49,990
+On area reset. And then it takes the area which I think is a string.
+
+332
+00:39:54,670 --> 00:39:59,590
+And then container area is the area that was reset, the domino that was reset.
+
+333
+00:40:01,580 --> 00:40:05,890
+Uh, um, node for the area.
+
+334
+00:40:08,080 --> 00:40:15,840
+That was reset. This is fired for each Dom node.
+
+335
+00:40:27,490 --> 00:40:30,820
+For each dorm node across all windows.
+
+336
+00:40:35,240 --> 00:40:38,700
+So area reset should be the, uh, a string, right?
+
+337
+00:40:38,720 --> 00:40:42,650
+Yeah, it'll be the string. ID?
+
+338
+00:40:50,540 --> 00:40:55,370
+The ID for the area that was reset.
+
+339
+00:40:58,910 --> 00:41:06,530
+Okay. Or a big stretch.
+
+340
+00:41:07,490 --> 00:41:10,520
+How many left? One. Two. Three. Four.
+
+341
+00:41:10,520 --> 00:41:13,729
+Five. Six. Seven. Eight. Nine.
+
+342
+00:41:13,730 --> 00:41:18,380
+Ten. 11. 12. 12. More. Let's see if we can get those done in the next.
+
+343
+00:41:18,980 --> 00:41:23,780
+Yeah, in the next eight minutes. Uh, so let's punch it up a bit on which it created.
+
+344
+00:41:25,790 --> 00:41:38,270
+On which it created. You know, put that up here actually because keep them all kind of grouped.
+
+345
+00:41:44,500 --> 00:41:57,500
+On which it created. Wait.
+
+346
+00:41:57,500 --> 00:42:00,940
+No, I just corrected the wrong one. It's this one I want you created.
+
+347
+00:42:00,950 --> 00:42:06,319
+I think I've confused myself. Um. Yeah.
+
+348
+00:42:06,320 --> 00:42:10,310
+Widget created fire one widget with ID, which has been created before. Was that any placements?
+
+349
+00:42:12,400 --> 00:42:16,309
+Okay. Um.
+
+350
+00:42:16,310 --> 00:42:20,690
+Widget created it. Fired.
+
+351
+00:42:21,950 --> 00:42:25,399
+So that ID has been created before. Is that any places are you doing?
+
+352
+00:42:25,400 --> 00:42:30,320
+Molds have been constructed. Um, so a widget ID.
+
+353
+00:42:35,930 --> 00:42:50,560
+The idea, the widget that was created. On widget.
+
+354
+00:42:50,580 --> 00:43:05,830
+After creation. Actually, you know, what I'm going to do is I'm going to continue to add these to the bottom,
+
+355
+00:43:06,400 --> 00:43:10,690
+and then I'll reorganize this afterwards because I'm really worried about, like, confusing myself.
+
+356
+00:43:12,220 --> 00:43:17,950
+Um. Which is after creation.
+
+357
+00:43:19,990 --> 00:43:26,080
+That takes a widget in an area. I think we've got one like that.
+
+358
+00:43:26,080 --> 00:43:35,740
+Like this. Uh, okay.
+
+359
+00:43:36,160 --> 00:43:41,770
+Fire! Which is where they're placed. Uh. Okay.
+
+360
+00:43:46,150 --> 00:43:52,330
+Fired after widget with Ida. Widget. Ida has been created and has been added to either its default area or the area in which it was placed previously.
+
+361
+00:43:52,330 --> 00:43:58,300
+If the widget has no default area and or it has never been placed anywhere, area may be null, only fired for API based widgets.
+
+362
+00:43:59,350 --> 00:44:06,010
+String or null. The ID of the widget that was just created.
+
+363
+00:44:07,720 --> 00:44:21,640
+The ID of the area that the widget was placed in, or null if it is current now in the customization palette.
+
+364
+00:44:27,030 --> 00:44:37,120
+It is now the customization palette. Uh, on which you destroyed.
+
+365
+00:44:37,930 --> 00:44:44,740
+Okay. Destroyed.
+
+366
+00:44:48,440 --> 00:44:54,130
+Destroyed. And that takes just the widget ID.
+
+367
+00:44:54,340 --> 00:45:03,130
+So that's similar to this one. Uh.
+
+368
+00:45:04,330 --> 00:45:17,640
+Okay. Widgets are destroyed hard when a widget is destroyed.
+
+369
+00:45:19,080 --> 00:45:24,870
+The idea of the widget that was destroyed. Makes sense.
+
+370
+00:45:31,840 --> 00:45:35,469
+How many left? 1234567.
+
+371
+00:45:35,470 --> 00:45:40,780
+Eight 910. Keep going on.
+
+372
+00:45:40,780 --> 00:45:45,609
+Widget. Instance.
+
+373
+00:45:45,610 --> 00:45:54,460
+Removed. And that takes a widget ID and a document.
+
+374
+00:45:54,550 --> 00:46:05,140
+I guess it's kind of like this. Where when a window is unloaded in a widgets instance is destroyed because of this.
+
+375
+00:46:05,500 --> 00:46:16,219
+Okay. Uh, so that's right.
+
+376
+00:46:16,220 --> 00:46:27,920
+That takes a document. So that's a. The, uh.
+
+377
+00:46:30,930 --> 00:46:43,070
+Uh, documents. That the widget belonged to that was just destroyed and that was just unloaded.
+
+378
+00:46:45,880 --> 00:46:56,450
+States removed. For, um, the, uh, widget that was just removed.
+
+379
+00:46:59,060 --> 00:47:03,560
+Okay. On widget drag.
+
+380
+00:47:19,180 --> 00:47:24,310
+On widget drag that takes a widget in an area again.
+
+381
+00:47:28,840 --> 00:47:36,130
+Widget ID in an area fired both when and after which I would.
+
+382
+00:47:36,380 --> 00:47:40,810
+You would want to drive to an area like that. Okay. Nice.
+
+383
+00:47:49,780 --> 00:47:53,920
+The ID of the widget that is being dragged.
+
+384
+00:48:01,430 --> 00:48:10,219
+String or undefined. After the measurements have been done, the notes were removed or undefined after the measurements have been done,
+
+385
+00:48:10,220 --> 00:48:21,760
+and the note has been moved back to its regular area. The area.
+
+386
+00:48:27,730 --> 00:48:35,770
+Or undefined. After the measurements have been done and the node has been moved back to its regular area.
+
+387
+00:48:37,660 --> 00:48:41,050
+Hmm. Let's look at that on which you drag.
+
+388
+00:48:50,180 --> 00:48:55,280
+Does anything call on widget drag? I don't know if anything calls on widget drag on widget drag.
+
+389
+00:48:56,300 --> 00:49:03,869
+Here we go. Customize mode does. Okay.
+
+390
+00:49:03,870 --> 00:49:09,560
+So. Yeah. Undefined. Oh.
+
+391
+00:49:11,090 --> 00:49:18,610
+These are very similar. On which you drag.
+
+392
+00:49:19,270 --> 00:49:23,350
+This is an implementation of the callback.
+
+393
+00:49:37,440 --> 00:49:44,700
+Okay. On customized start card when opening customize mode in a window.
+
+394
+00:49:55,780 --> 00:50:07,480
+Uh. Customize. Start. Fire when opening and customize.
+
+395
+00:50:09,570 --> 00:50:15,000
+Customize mode in a window. This is a window element.
+
+396
+00:50:20,070 --> 00:50:25,320
+To the window in which Customize mode was opened.
+
+397
+00:50:28,080 --> 00:50:33,360
+Okay. And then similarly customize and.
+
+398
+00:50:40,470 --> 00:50:49,070
+And. All right.
+
+399
+00:50:49,070 --> 00:50:55,320
+Winning opening is may be. Entering west.
+
+400
+00:50:55,370 --> 00:50:58,940
+Enter. When exiting.
+
+401
+00:51:01,170 --> 00:51:07,569
+Customers first exit. Customers start.
+
+402
+00:51:07,570 --> 00:51:12,030
+Good. Here we go.
+
+403
+00:51:15,960 --> 00:51:19,110
+How many left? One. Two. Three. Four. Five. Six.
+
+404
+00:51:19,110 --> 00:51:24,540
+Just six left. Gang six left. Making good progress.
+
+405
+00:51:25,560 --> 00:51:38,390
+And we should overflow. Overflow.
+
+406
+00:51:40,430 --> 00:51:45,890
+Takes a node in a container. Like this one.
+
+407
+00:51:54,400 --> 00:51:59,219
+$500. It's glandular for battle.
+
+408
+00:51:59,220 --> 00:52:08,340
+Okay. Fired when a widget's Dom node is overflowing its container, a toolbar overflowing.
+
+409
+00:52:08,340 --> 00:52:12,360
+It's really. It's just a toolbar. Because that's the only way we can overflow right now.
+
+410
+00:52:13,530 --> 00:52:17,730
+The displayed in an overflow panel.
+
+411
+00:52:19,710 --> 00:52:25,030
+Because we can have multiple overflow panels. Okay. Uh, that one today.
+
+412
+00:52:25,110 --> 00:52:33,000
+Yeah. Need to. Right. And the node, the Dom node that overflow for the widget that overflowed.
+
+413
+00:52:35,820 --> 00:52:40,560
+The. What would you do for?
+
+414
+00:52:43,450 --> 00:52:46,750
+The target. Notify listeners the target.
+
+415
+00:52:50,990 --> 00:53:03,490
+What is the target? Reference to the part of the toolbar that accepts customizable UI widgets.
+
+416
+00:53:04,930 --> 00:53:08,290
+Right. The thing that we overflowed from.
+
+417
+00:53:08,620 --> 00:53:14,340
+Okay. The. The Dom container.
+
+418
+00:53:17,070 --> 00:53:24,720
+Or the widget that that the Dom container for the widget that just overflowed.
+
+419
+00:53:27,150 --> 00:53:34,440
+For the widget. The Dom container that the widget just overflowed out of.
+
+420
+00:53:37,380 --> 00:53:41,040
+Okay. On which it underflow.
+
+421
+00:53:52,480 --> 00:54:07,990
+Underflow. Uh, under fire when a widget, uh, stops.
+
+422
+00:54:08,540 --> 00:54:15,160
+Oh, um, a widget that was overflowed under flows back.
+
+423
+00:54:17,320 --> 00:54:24,460
+Into its original container. Overflowed out of its container.
+
+424
+00:54:25,000 --> 00:54:32,120
+Under flows back. Uh.
+
+425
+00:54:37,100 --> 00:54:42,020
+Toolbar. Container. Domino.
+
+426
+00:54:42,020 --> 00:54:45,170
+That was overflowing.
+
+427
+00:54:46,460 --> 00:54:54,620
+That had overflowed out. Dom container that the widget is moving back to.
+
+428
+00:54:58,010 --> 00:55:01,100
+Is under flowing I could to.
+
+429
+00:55:04,050 --> 00:55:09,480
+Okay. Uh, okay.
+
+430
+00:55:09,840 --> 00:55:14,940
+Next up on window opened. That takes a window. I think we've got, like, one of those like this.
+
+431
+00:55:18,140 --> 00:55:35,320
+Window opened. Part of the window that's been acquired once all the period as it set up has been done.
+
+432
+00:55:38,470 --> 00:55:44,460
+The window that opened. Okay.
+
+433
+00:55:45,280 --> 00:56:09,320
+Window closed. I think the window that closed.
+
+434
+00:56:17,300 --> 00:56:21,590
+All right. UN area node registered.
+
+435
+00:56:22,070 --> 00:56:33,960
+Okay. Area.
+
+436
+00:56:34,320 --> 00:56:46,290
+So for a district. And it just takes an area in a container, like we've got something like that area in a container.
+
+437
+00:57:00,590 --> 00:57:03,739
+Fired after an area known as first built when it as registered.
+
+438
+00:57:03,740 --> 00:57:11,870
+This is often when a window, often when the window has opened, but in the case of add ons,
+
+439
+00:57:12,380 --> 00:57:21,530
+could fire when the note has just been registered with customizable UI after an add on update or disable enable sequence.
+
+440
+00:57:22,160 --> 00:57:25,520
+Okay, your ID for the area that was.
+
+441
+00:57:27,530 --> 00:57:36,290
+Oh, I'm getting a delivery. Wonderful. Thank you very much. Guide for the area that was just registered.
+
+442
+00:57:37,580 --> 00:57:48,270
+And what's the other one on area? No container. And the customization target okay.
+
+443
+00:57:50,550 --> 00:57:54,660
+The Dom node for the customizable area.
+
+444
+00:57:57,640 --> 00:58:02,920
+Craig's typing. Let's see what Craig's typing. Okay.
+
+445
+00:58:02,920 --> 00:58:10,610
+Last one. Unregistered. What kind of teas?
+
+446
+00:58:10,630 --> 00:58:14,080
+Oh, I love this question. What kind of teased you drink? Like.
+
+447
+00:58:14,530 --> 00:58:18,820
+Fantastic question. Let's take a pause here on our last one.
+
+448
+00:58:19,360 --> 00:58:24,600
+I'm going to take a sip of tea and I'm gonna tell you. So I'm a simple man.
+
+449
+00:58:25,140 --> 00:58:28,170
+I enjoy, um, like, black teas.
+
+450
+00:58:28,170 --> 00:58:31,710
+Uh, in Canada. I don't know where you are, Craig. I don't know where I'll.
+
+451
+00:58:32,150 --> 00:58:35,190
+Everyone who's watching this. I know where you are in Canada.
+
+452
+00:58:35,190 --> 00:58:41,100
+There are two. I would what I would consider like the Coca Cola and Pepsi of tea brands in Canada.
+
+453
+00:58:41,490 --> 00:58:45,480
+The Coca Cola one, at least in my books, would be called Tetley Tetley Tea.
+
+454
+00:58:45,810 --> 00:58:51,540
+And, uh, the Pepsi is like red Rose, which is interesting because I think Red Rose is actually Canadian.
+
+455
+00:58:52,110 --> 00:59:01,139
+Anyways, the default flavors for those teas, like if you just get like a bag of Tetley and you put it in your in your tea kettle or teapot or whatnot,
+
+456
+00:59:01,140 --> 00:59:12,180
+and you have it steep the default flavors, something called orange Pekoe uh, orange Pekoe is, uh, yeah, from Tetley Canada.
+
+457
+00:59:12,570 --> 00:59:20,010
+Uh, and it it's not actually like it looks kind of orange like it's given this vibe of being like an orange tea,
+
+458
+00:59:20,010 --> 00:59:27,989
+but, um, like, maybe you could argue, but I'm going to hold my tea up to the to the camera here.
+
+459
+00:59:27,990 --> 00:59:31,290
+I don't know if you see it. It's pretty brown. It's pretty brown.
+
+460
+00:59:31,920 --> 00:59:35,040
+Um, maybe it's because we steep it for a really long time.
+
+461
+00:59:35,490 --> 00:59:41,580
+If you put it in, like a really white shallow cup, maybe it's orange, but it's a standard black tea.
+
+462
+00:59:41,580 --> 00:59:50,940
+It's not like fruity. Um, like it doesn't have, like, uh, notes of orange or like, I don't taste orange when I drink it.
+
+463
+00:59:51,210 --> 00:59:54,780
+Oh. You're over, uh, you're over in Ottawa. Okay, so you know what's up.
+
+464
+00:59:54,780 --> 00:59:59,860
+You know about Tetley. You know, you know about, uh, red rose in orange pekoe.
+
+465
+00:59:59,880 --> 01:00:04,740
+So basically, if you go to any, like, uh, Tim Hortons and you ask for tea, you're getting orange pekoe.
+
+466
+01:00:05,340 --> 01:00:10,709
+I find that when I travel, though, outside of Canada, orange pekoe is very unusual.
+
+467
+01:00:10,710 --> 01:00:17,310
+If you go to like the United States and you get some black tea, or if you go, uh, over maybe to the UK or something, or Europe.
+
+468
+01:00:17,790 --> 01:00:23,310
+English breakfast seems to be more common in Earl gray, and I'm not really a fan of either of those.
+
+469
+01:00:23,550 --> 01:00:28,170
+So actually what we do when we travel is we bring our own teabags, we bring our own teabags.
+
+470
+01:00:28,200 --> 01:00:33,570
+Um, we have separate, um, containers for the caffeinated ones and the decaffeinated ones.
+
+471
+01:00:33,930 --> 01:00:39,420
+And, uh, yeah, we bring our own tea because we've been burned too many times being overseas, being like, I'd like a cup of tea.
+
+472
+01:00:39,840 --> 01:00:47,309
+And then we find out that all they have is like, English breakfast or or Earl gray or our camomile, which is my least favorite.
+
+473
+01:00:47,310 --> 01:00:51,690
+I do not like camomile tea. Um, yeah.
+
+474
+01:00:51,780 --> 01:00:55,230
+Uh, I know, uh, Jean-Luc Picard likes Earl gray.
+
+475
+01:00:55,530 --> 01:01:01,380
+Not a fan. I also don't really like teas that smell like they don't taste.
+
+476
+01:01:02,010 --> 01:01:06,060
+Hang on. Let me let me let me reconstruct that since there are teas.
+
+477
+01:01:06,090 --> 01:01:10,730
+So in Canada, there was this big chain called David's Tea.
+
+478
+01:01:10,740 --> 01:01:13,830
+I don't know if it's still around. Yeah, it's still around.
+
+479
+01:01:14,070 --> 01:01:17,810
+And it was like a big deal. Like there were David's teas opening up all over the place.
+
+480
+01:01:17,820 --> 01:01:24,450
+I think that that bubble is kind of popped, but, uh, they had a lot of really delicious smelling teas.
+
+481
+01:01:24,450 --> 01:01:28,589
+But when you taste it, it tasted like hot water. It tasted like tea. And I don't like that.
+
+482
+01:01:28,590 --> 01:01:32,250
+I don't like if there's too much of a contrast between what I'm smelling and what I'm tasting.
+
+483
+01:01:32,550 --> 01:01:41,020
+Like they'd have teas that smelled like an apple pie or, uh, a chocolate souffle or chocolate sundae or something.
+
+484
+01:01:41,020 --> 01:01:44,669
+And I'd be like, oh, it smells incredible. And then I drink it and it would taste like hot water.
+
+485
+01:01:44,670 --> 01:01:47,940
+And I be like, uh, I don't like that experience.
+
+486
+01:01:48,180 --> 01:01:55,800
+What I like about Orange Pekoe is you smell it and it smells exactly like it tastes, which is just kind of dark and bitter.
+
+487
+01:01:56,220 --> 01:02:02,970
+Um, that that's my rant on teas. Thank you for your for watching my rant on teas.
+
+488
+01:02:04,020 --> 01:02:11,250
+Uh, okay. So let's finish this last one. Unregistered.
+
+489
+01:02:19,390 --> 01:02:22,060
+Fired after fired.
+
+490
+01:02:22,060 --> 01:02:32,200
+When an area node is explicitly on a registered by an API caller or by a window closing that a reason parameter indicates which of these is the case.
+
+491
+01:02:32,980 --> 01:02:36,369
+Um, so area container.
+
+492
+01:02:36,370 --> 01:02:39,820
+So there's a reason and I presume that's going to be a string or something.
+
+493
+01:02:41,740 --> 01:02:48,750
+Reason area registered. Degrees and area.
+
+494
+01:02:55,330 --> 01:02:59,860
+Reason. Window closed. That's probably.
+
+495
+01:03:02,500 --> 01:03:06,070
+Yeah. It's these two reasons. Okay. Um.
+
+496
+01:03:10,120 --> 01:03:14,020
+So boram string a reason.
+
+497
+01:03:18,160 --> 01:03:21,640
+One of either customizable UI reason.
+
+498
+01:03:21,850 --> 01:03:30,640
+Window closed or, uh, customized for UI dot reason area.
+
+499
+01:03:31,000 --> 01:03:34,330
+Reason area. Um, registered.
+
+500
+01:03:37,900 --> 01:03:51,430
+Is there a way of saying that this is like, basically an enum is just, uh, you can, um, type, you know, try state values.
+
+501
+01:04:06,490 --> 01:04:16,030
+Uh, this is probably fine for now. Okay, so, um, we can get rid of this, and now we can clean this up a little bit.
+
+502
+01:04:16,310 --> 01:04:23,050
+Atlas project that we fired for various events regarding customization regarding, uh.
+
+503
+01:04:24,270 --> 01:04:31,770
+Window area, widget window area, and widget lifetimes.
+
+504
+01:04:35,310 --> 01:04:39,210
+Lifetime's actions as well as customization.
+
+505
+01:04:41,520 --> 01:04:46,710
+Various customizations. Well. Customization.
+
+506
+01:04:48,700 --> 01:05:03,100
+Actions customization events. Since the listener object to add, not all event handlers need to be defined.
+
+507
+01:05:08,020 --> 01:05:14,590
+Here. This seems important. Just got a message.
+
+508
+01:05:15,130 --> 01:05:22,120
+Gregory Pappas writes do you know why customizable UI uses its own event system, rather than being an event target like backup service?
+
+509
+01:05:22,540 --> 01:05:29,020
+I think it's because this is before Event Target existed as a thing that you could subclass.
+
+510
+01:05:29,770 --> 01:05:37,570
+Um, if we go back far enough, when did I think it was Firefox 29?
+
+511
+01:05:37,960 --> 01:05:42,790
+So if we go back to ESR 17, was there something called event target extends?
+
+512
+01:05:42,970 --> 01:05:46,360
+I don't think you could extend event target.
+
+513
+01:05:50,860 --> 01:05:53,680
+We had the web idol, but I don't think you could extend it.
+
+514
+01:05:56,710 --> 01:06:05,080
+Like we didn't have, uh, we didn't have classes you could like JavaScript didn't have extends as a thing.
+
+515
+01:06:05,590 --> 01:06:14,680
+Um, you could do, like, prototype ish inheritance, but, like, we take a lot for granted that we can do now.
+
+516
+01:06:14,680 --> 01:06:19,930
+Like, we can just, like, extend an event target and get all the stuff for free. Um, yeah.
+
+517
+01:06:19,930 --> 01:06:24,640
+It was it was a different time. A different time. So we had to, like, invent a lot of our own stuff here.
+
+518
+01:06:28,450 --> 01:06:33,460
+Okay. So that's that's done. Uh, I'm going to.
+
+519
+01:06:34,930 --> 01:06:45,680
+There we go. Oh, that's just repetition.
+
+520
+01:06:48,050 --> 01:06:53,090
+Okay, next up, remove a listener. So it's the same one.
+
+521
+01:06:53,210 --> 01:06:59,570
+Same thing. Is this param the listener object to remove.
+
+522
+01:07:03,500 --> 01:07:08,780
+Listener that was previously added with add listener.
+
+523
+01:07:13,400 --> 01:07:17,330
+Okay. Register a customizable area. Here we go.
+
+524
+01:07:17,910 --> 01:07:29,990
+String name. The name of the area to register can only contain alphanumeric characters, dashes and underscores.
+
+525
+01:07:30,470 --> 01:07:35,000
+Props. So props is going to be.
+
+526
+01:07:36,340 --> 01:07:41,050
+An object. And it takes these.
+
+527
+01:07:41,680 --> 01:07:45,040
+So this is actually interesting I've seen this form done before it.
+
+528
+01:07:45,070 --> 01:07:54,160
+We're going to do like this A object props the properties of the area um to register.
+
+529
+01:07:56,830 --> 01:08:02,229
+And then we can go param object or not necessarily an object the type.
+
+530
+01:08:02,230 --> 01:08:07,030
+So string uh a props dot type.
+
+531
+01:08:10,750 --> 01:08:32,950
+The type of area. Being registered either customizable UI type toolbar default or customizable UI.
+
+532
+01:08:32,950 --> 01:08:39,120
+Uh type panel. So it's defaulting to customizable UI.
+
+533
+01:08:39,130 --> 01:08:46,310
+Right type toolbar. Is that true?
+
+534
+01:08:48,500 --> 01:08:59,640
+Register area. Properties.
+
+535
+01:09:01,320 --> 01:09:05,220
+If props has no type, then we set it to type toolbar. Interesting.
+
+536
+01:09:05,490 --> 01:09:09,180
+Wait, props has set its a map. Properties.
+
+537
+01:09:11,570 --> 01:09:16,640
+Props. Okay. Properties for like key.
+
+538
+01:09:17,960 --> 01:09:23,930
+Oh. So we. This is interesting. We, like, convert this object into a map.
+
+539
+01:09:24,410 --> 01:09:30,860
+Why? No idea. Maps were new and cool, and everyone was very excited about them.
+
+540
+01:09:32,660 --> 01:09:36,860
+Uh, okay. So it defaults to UI type toolbar.
+
+541
+01:09:37,040 --> 01:09:40,250
+That's fine. Uh boram.
+
+542
+01:09:40,250 --> 01:09:44,960
+This next one for a menu panel or overflow panel. The anchoring node for the panel.
+
+543
+01:09:47,560 --> 01:09:53,950
+Uh, okay. So this is an element, and I think this can be also, uh, undefined.
+
+544
+01:09:57,370 --> 01:10:01,540
+Anchor. A prop stock.
+
+545
+01:10:01,540 --> 01:10:10,360
+Anchor. For a menu panel.
+
+546
+01:10:15,700 --> 01:10:21,340
+And you panel or global toolbar area. The anchoring node for the panel.
+
+547
+01:10:26,170 --> 01:10:29,220
+Panel. Okay.
+
+548
+01:10:29,230 --> 01:10:45,150
+Overflow. That's a boolean. Um, I also think.
+
+549
+01:10:46,840 --> 01:10:51,400
+It's probably not here. Let's open up customizable UI over here.
+
+550
+01:10:58,260 --> 01:11:06,000
+Let's go to the definition of register area. Immutable properties is overflow.
+
+551
+01:11:09,420 --> 01:11:13,100
+If it has it, it just needs to be present.
+
+552
+01:11:13,110 --> 01:11:18,330
+It doesn't need to be a boolean. It just needs to be present. It looks like um.
+
+553
+01:11:18,630 --> 01:11:24,160
+Is that true? Just an area.
+
+554
+01:11:33,040 --> 01:11:37,700
+Property is. If it's one of the immutable ones.
+
+555
+01:11:46,430 --> 01:11:58,920
+So you can't override it. Okay. So really, it just needs to.
+
+556
+01:12:01,110 --> 01:12:04,200
+Yeah. Um, but we're going to say it's a boolean.
+
+557
+01:12:05,040 --> 01:12:08,520
+The, uh. But it doesn't need to be included. Um.
+
+558
+01:12:09,210 --> 01:12:15,400
+Overflow bool. Set to true.
+
+559
+01:12:18,520 --> 01:12:31,270
+If your toolbar is overflow. Bill. This requires an anchor and has an effect only has an effect for toolbars.
+
+560
+01:12:34,510 --> 01:12:39,670
+Per and so this is an array of widget IDs making up the default contents of the area.
+
+561
+01:12:40,660 --> 01:12:46,810
+Uh, so that's a string array. Hey, props to default placements.
+
+562
+01:12:50,670 --> 01:12:57,780
+Uh. And gray, which is making the default contents.
+
+563
+01:13:02,310 --> 01:13:12,000
+Area. And I'm pretty sure like this is default placements.
+
+564
+01:13:12,000 --> 01:13:15,240
+Something that you must supply.
+
+565
+01:13:17,610 --> 01:13:20,909
+If it. No, it can be just. It can be not included.
+
+566
+01:13:20,910 --> 01:13:24,480
+Default. Collapsed internal only. Oh, boy. That's a good sign.
+
+567
+01:13:26,430 --> 01:13:34,020
+Uh. That's what you want when you expose a sort of thing.
+
+568
+01:13:34,020 --> 01:13:37,650
+Boolean. Default. Collapsed.
+
+569
+01:13:43,620 --> 01:13:54,900
+Applies if the type is type. Toolbar. Customizable UI.
+
+570
+01:13:54,910 --> 01:14:02,860
+The type toolbar specifies if the toolbar is collapsed by default.
+
+571
+01:14:03,520 --> 01:14:14,110
+Defaults to true. Specify null touches null to ensure that the rest.
+
+572
+01:14:16,750 --> 01:14:20,110
+Reset in default area.
+
+573
+01:14:21,070 --> 01:14:30,399
+Don't care about toolbars. Collapse to no character set in default or don't care about toolbars collapse.
+
+574
+01:14:30,400 --> 01:14:35,990
+State. All right. Cool.
+
+575
+01:14:36,650 --> 01:14:40,130
+Um. Done.
+
+576
+01:14:40,490 --> 01:14:46,150
+Now let's. What are you complaining about here? Expected view. Names to be a name.
+
+577
+01:14:46,840 --> 01:14:53,610
+Properties. Got a name? Props. Default. Collapsed. Oh, right.
+
+578
+01:14:54,180 --> 01:14:58,770
+A props, a props. There you go.
+
+579
+01:15:01,720 --> 01:15:06,650
+Better. Got a name?
+
+580
+01:15:07,370 --> 01:15:12,470
+A props. Oh, right. Eight properties.
+
+581
+01:15:16,910 --> 01:15:21,380
+Okay, clean that up. Next.
+
+582
+01:15:24,920 --> 01:15:33,320
+This one is valid, but, uh, doesn't really say anything.
+
+583
+01:15:33,330 --> 01:15:38,239
+It doesn't have parameters set. But I'm not going to try and, like, update the documentation just yet.
+
+584
+01:15:38,240 --> 01:15:41,959
+I'm just going to try and make it so that this is, um, valid.
+
+585
+01:15:41,960 --> 01:15:47,210
+JS doc Jack I o or maybe it's Jack lo, right?
+
+586
+01:15:47,330 --> 01:15:51,400
+Hello. Do you know why GeForce now is not supported by Firefox?
+
+587
+01:15:51,410 --> 01:15:54,950
+Are there technical limitations or it's just Nvidia being Nvidia?
+
+588
+01:15:55,850 --> 01:16:04,940
+The heck is GeForce now? The next generation in cloud gaming transforms your laptop into a powerful gaming rig.
+
+589
+01:16:08,950 --> 01:16:18,760
+It's a subscription service. Uh, unveiled GeForce now clients for Windows and Mac.
+
+590
+01:16:21,400 --> 01:16:26,170
+Is available on windows, Mac OS, Android, iOS, shield TV, Chromebook, Tizen, and web OS devices.
+
+591
+01:16:35,890 --> 01:16:43,040
+Uh, so is it like. Oh, and Smurfd0 you rolls in with a bug.
+
+592
+01:16:43,060 --> 01:16:46,440
+Play GeForce now. Firefox, epiphany are unsupported browsers.
+
+593
+01:16:46,480 --> 01:16:50,619
+This is from four months ago, Jeff says.
+
+594
+01:16:50,620 --> 01:16:52,360
+I reached out to Nvidia about this in 2022.
+
+595
+01:16:52,360 --> 01:16:56,649
+They don't know of any technical reasons for not supporting Firefox, but we're only currently only spurring chromium.
+
+596
+01:16:56,650 --> 01:17:05,440
+Now that they support Safari, it might be worth reaching out again. So, um, they just seem like they are not paying attention.
+
+597
+01:17:05,710 --> 01:17:10,090
+So maybe make some noise. Make some noise.
+
+598
+01:17:10,150 --> 01:17:15,820
+Um, there's a web compat issue here as well. I'm not able to address the issue.
+
+599
+01:17:15,820 --> 01:17:18,850
+You just mentioned the issues reproduce for GNOME web. No. You.
+
+600
+01:17:22,240 --> 01:17:30,850
+Moved to bugzilla on May 25th. Okay. And then mentioned here this is a known issue closed.
+
+601
+01:17:30,850 --> 01:17:38,409
+So really it's this bug. And you know it's just a matter of making noise so that Nvidia is like they don't
+
+602
+01:17:38,410 --> 01:17:41,470
+know of any technical reasons for not supporting Firefox or is not doing it.
+
+603
+01:17:43,900 --> 01:17:47,110
+Make some noise.
+
+604
+01:17:47,110 --> 01:17:54,399
+Okay. Uh, register a panel.
+
+605
+01:17:54,400 --> 01:18:02,260
+Register panel node. This is just like the panel contents Dom node being registered.
+
+606
+01:18:05,140 --> 01:18:15,850
+Uh element node, the panel contents Dom node being registered and then string uh area.
+
+607
+01:18:20,320 --> 01:18:25,030
+The ID of the area for which to register this node.
+
+608
+01:18:25,420 --> 01:18:31,690
+Right. Register panel. Node. Yeah.
+
+609
+01:18:33,210 --> 01:18:36,330
+It's a string. Okay. Fixed.
+
+610
+01:18:39,390 --> 01:18:42,840
+Unregister. The inverse of register area.
+
+611
+01:18:42,840 --> 01:18:45,930
+String. The.
+
+612
+01:18:50,820 --> 01:18:55,740
+It's really the ID but the name of the area to Unregister so I guess I should.
+
+613
+01:18:58,390 --> 01:19:03,250
+The name of the area is Register Area.
+
+614
+01:19:04,390 --> 01:19:07,470
+The name of the area to register. Okay. We call them names.
+
+615
+01:19:07,480 --> 01:19:12,039
+I guess the name of the area to unregister a destroy placements.
+
+616
+01:19:12,040 --> 01:19:15,310
+Whether to destroy the placements. Information. That's got to be a boolean.
+
+617
+01:19:17,440 --> 01:19:23,170
+True. True. If the placements information for the area.
+
+618
+01:19:26,770 --> 01:19:30,550
+Should be destroyed. To.
+
+619
+01:19:32,080 --> 01:19:53,030
+Um. Uh, defaults.
+
+620
+01:19:55,190 --> 01:19:58,400
+Uh, to not destroying.
+
+621
+01:20:01,100 --> 01:20:05,060
+Placement information. Okay.
+
+622
+01:20:06,980 --> 01:20:10,130
+Uh, making good progress.
+
+623
+01:20:10,310 --> 01:20:14,210
+Hey, let's let's take a quick pause here. Let's see how many violations we have.
+
+624
+01:20:14,750 --> 01:20:19,190
+Um, we had 176 problems. Let's see how many we've got now.
+
+625
+01:20:22,250 --> 01:20:29,610
+170 161. It doesn't feel like a huge leap, but that first one took a long time.
+
+626
+01:20:29,630 --> 01:20:36,590
+It took like a half hour. Um. Uh, I think these other ones have been going much more quickly, and so we'll probably get that down.
+
+627
+01:20:36,620 --> 01:20:45,650
+I'm guessing if I do this next episode as well, which I plan to, um, uh, I, I think we'll probably have this done next episode.
+
+628
+01:20:47,480 --> 01:20:50,960
+But before, uh, we end, I wanted to jump over here.
+
+629
+01:20:51,230 --> 01:20:55,550
+Oh, you know what? The build's not done, so I can't jump over here, so let's keep going.
+
+630
+01:20:55,940 --> 01:21:00,530
+I was going to, like, do a thing on my windows machine, but, uh, the build is still going.
+
+631
+01:21:00,650 --> 01:21:04,990
+I didn't expect that. Okay. Uh, the next one is, uh.
+
+632
+01:21:06,760 --> 01:21:14,370
+Uh, add a widget to area. Add a widget to an area. So the idea.
+
+633
+01:21:16,410 --> 01:21:23,570
+Of the widget to add to the area here we're using the ID of the area string,
+
+634
+01:21:23,580 --> 01:21:33,570
+the name of the area, the name of the area to add the widget to, and then the position.
+
+635
+01:21:37,860 --> 01:21:45,780
+At which to add the widget if you do not pass a position. To which will be added to the end of the area.
+
+636
+01:21:51,990 --> 01:21:56,550
+Okay. The idea of the widget to remove.
+
+637
+01:22:02,040 --> 01:22:13,740
+Or remove from its area. Move a widget within an area.
+
+638
+01:22:17,100 --> 01:22:21,600
+The ID of the widget to move and then the position its number.
+
+639
+01:22:22,770 --> 01:22:28,559
+The position to move the widget to negative values or values greater than the
+
+640
+01:22:28,560 --> 01:22:34,590
+number of widgets will be interpreted to mean moving the widget respect to,
+
+641
+01:22:34,590 --> 01:22:39,960
+respectively, the first or last position. That sensible.
+
+642
+01:22:42,630 --> 01:22:51,840
+Widget the. This is the idea of the widget that was just created and sure widget placed in window, which then was just created as that Dom window.
+
+643
+01:22:53,370 --> 01:22:58,620
+The window in which you want to ensure it was added. Why is this API per window, you wonder here.
+
+644
+01:23:03,120 --> 01:23:06,300
+Because if you need this, presumably you yourself need to create the widget.
+
+645
+01:23:06,300 --> 01:23:10,380
+Only those need to loop through them anyway. All right.
+
+646
+01:23:11,040 --> 01:23:14,580
+This is another bit of a smell here that we're doing that.
+
+647
+01:23:16,710 --> 01:23:27,420
+Forced dirty. That sounds like a boolean. Uh, force customizable.
+
+648
+01:23:27,420 --> 01:23:31,980
+You are flush to the prefs file when all batch update updates have finished.
+
+649
+01:23:37,530 --> 01:23:45,240
+Uh. Defaults false. And batch update.
+
+650
+01:23:49,510 --> 01:24:03,520
+Yeah. Create a widget.
+
+651
+01:24:03,540 --> 01:24:06,970
+Oh, boy. So this is also going to be one of those big ones.
+
+652
+01:24:07,050 --> 01:24:11,800
+Let's save that for the end. Ooh.
+
+653
+01:24:13,110 --> 01:24:18,420
+Let's save that. Let's just go through a few more of these.
+
+654
+01:24:20,400 --> 01:24:24,150
+The ID of the widget to destroy. Destroy.
+
+655
+01:24:25,470 --> 01:24:31,740
+Oh, man. Get widget. And then these are things that you get back.
+
+656
+01:24:35,340 --> 01:24:38,850
+Um. Get unused widgets.
+
+657
+01:24:41,270 --> 01:24:48,339
+The palette in which customizable UI should look. Fry, which could be available in someone else but not others.
+
+658
+01:24:48,340 --> 01:24:53,650
+And likewise, API provide widgets might not exist in a private window because the shown private browsing property.
+
+659
+01:24:54,910 --> 01:25:03,760
+Um element. Palette element, and by extension, the window in which customizable UI should look.
+
+660
+01:25:08,270 --> 01:25:20,480
+Because of course, it's all provided. Widgets could be available in some windows but not others, and likewise API provided widgets might not exist.
+
+661
+01:25:20,540 --> 01:25:27,200
+Oh yeah, that is the thing. XUL provided widgets. There was no way of guaranteeing that they'd exist in every window back in the day.
+
+662
+01:25:27,230 --> 01:25:32,180
+Oh, that was such a pain. Um, return an array of widget wrappers.
+
+663
+01:25:33,050 --> 01:25:38,520
+Uh, boy. Um. I'm going to have to do that one later.
+
+664
+01:25:41,750 --> 01:25:46,070
+Okay. The get which IDs? An area that sounds easy.
+
+665
+01:25:47,090 --> 01:25:53,300
+String the name of the area whose placements you want to obtain.
+
+666
+01:25:54,770 --> 01:26:01,400
+Return string. Array. An array containing the ideas that are in the area.
+
+667
+01:26:11,360 --> 01:26:16,129
+Um, maybe all the NBS can be replaced with, like.
+
+668
+01:26:16,130 --> 01:26:26,030
+Note. Um, what does that look like in practice?
+
+669
+01:26:26,420 --> 01:26:31,820
+Note. Yeah.
+
+670
+01:26:33,020 --> 01:26:55,340
+I'll throw. I think there was another ENB above.
+
+671
+01:27:06,440 --> 01:27:20,610
+Right here. Invalid Json.
+
+672
+01:27:20,700 --> 01:27:23,960
+No tag. There's no such thing as a note. DJs.
+
+673
+01:27:23,970 --> 01:27:28,110
+Doc note. Huh?
+
+674
+01:27:37,900 --> 01:27:43,090
+Huh? Never mind. Revert. Revert. Revert.
+
+675
+01:27:47,470 --> 01:27:51,130
+Uh. What's this complaining about? Expecting one line after description.
+
+676
+01:27:53,200 --> 01:27:56,680
+It's complaining that. Replace with returns.
+
+677
+01:27:56,890 --> 01:28:00,130
+Okay, it's 229.
+
+678
+01:28:00,370 --> 01:28:04,150
+Gang, I think I'm gonna. I'm going to stop it there.
+
+679
+01:28:04,180 --> 01:28:12,369
+How many problems do I have left? 161. Well, let's see, uh, probably we're like, at 150, 149.
+
+680
+01:28:12,370 --> 01:28:18,100
+We made big a big leap there. So I figure we can probably get that down to zero pretty quickly.
+
+681
+01:28:18,100 --> 01:28:27,400
+I am going to, um, create a new branch, customizable UI documentation, and I'm going to.
+
+682
+01:28:29,740 --> 01:28:34,600
+Uh, create a. A couple of commits here.
+
+683
+01:28:34,690 --> 01:28:40,360
+Um, first of all, I'm going to create a commit for this change git add.
+
+684
+01:28:40,360 --> 01:28:45,100
+Uh, I'm going to say uh, was it was the bug.
+
+685
+01:28:47,860 --> 01:28:53,500
+Uh, such and such. Update JS doc support documentation.
+
+686
+01:28:56,380 --> 01:29:01,930
+To mention ESLint or C roll out JS.
+
+687
+01:29:06,020 --> 01:29:09,890
+Uh, and that's going to be standard eight. And I'll probably want to review that.
+
+688
+01:29:17,290 --> 01:29:23,860
+And then get status and excellent roll RC rollouts.
+
+689
+01:29:25,600 --> 01:29:32,350
+Uh, such and such, um, enable uh, valid JS doc rule.
+
+690
+01:29:36,640 --> 01:29:45,210
+So the rules called valid valid JS doc is link rule for browser components.
+
+691
+01:29:45,220 --> 01:29:57,400
+Customizable UI. And then to add browser components.
+
+692
+01:29:57,410 --> 01:30:16,800
+Customizable UI. Uh, such and such, um, make customizable UI that system JS pass uh, the valid JS doc eslint rule.
+
+693
+01:30:18,870 --> 01:30:23,820
+Um, maybe I'll say, um, review that one.
+
+694
+01:30:26,640 --> 01:30:32,520
+We'll stop there. Uh, but I'm going to post these as a whip patch.
+
+695
+01:30:32,820 --> 01:30:39,360
+Uh, fab. Submit work in progress. Oh, it doesn't know what my upstream is.
+
+696
+01:30:39,390 --> 01:30:43,379
+I've had this problem before, and you have to supply my upstream and say it's bookmarks.
+
+697
+01:30:43,380 --> 01:30:51,950
+Central. You. Found multiple up streams.
+
+698
+01:30:52,160 --> 01:31:09,750
+Come on. All right.
+
+699
+01:31:09,840 --> 01:31:14,990
+Well, I'm going to stop it there. Hey, thanks, everybody for watching episode 377 of the Joy of coding.
+
+700
+01:31:15,000 --> 01:31:18,510
+I know that there wasn't a lot of, like, Deep Dive and some, you know,
+
+701
+01:31:18,930 --> 01:31:23,729
+sometimes this is software development is you end up you're it's a little bit of grunt
+
+702
+01:31:23,730 --> 01:31:30,300
+work and it's going to pay off like decent documentation pays off in the long run,
+
+703
+01:31:30,330 --> 01:31:37,020
+especially it even if it's just a project that you work on yourself, you will thank yourself.
+
+704
+01:31:37,020 --> 01:31:43,469
+If you have decent documentation, your future self will thank you to have taken the time to written,
+
+705
+01:31:43,470 --> 01:31:49,290
+to write stuff down, and to have your thoughts clear and and to to actually put in the effort to make it,
+
+706
+01:31:49,590 --> 01:31:56,850
+um, to to have something readable and understandable that you don't have to start digging through the code to sort of figure out what's happening.
+
+707
+01:31:56,850 --> 01:32:03,540
+You will save yourself time in the long run. Uh, and if you are working on a team, um, it's it's, you know,
+
+708
+01:32:03,600 --> 01:32:08,760
+the impacts can be huge just to get people onboarded and up to speed on some piece of code.
+
+709
+01:32:09,150 --> 01:32:14,670
+So I highly recommend it. And this is part of the game. This is part of software development is, is is documentation.
+
+710
+01:32:14,670 --> 01:32:19,020
+And that's not always the funnest thing to watch. But uh, it's important.
+
+711
+01:32:20,100 --> 01:32:23,249
+I mean, the good news is we didn't really have to write a whole lot of new documentation.
+
+712
+01:32:23,250 --> 01:32:25,410
+It's more like reformatting documentation.
+
+713
+01:32:26,010 --> 01:32:34,200
+Uh, and I unfortunately, we were so inconsistent in it that I don't think it would have taken too long and would have been too niche to,
+
+714
+01:32:34,410 --> 01:32:36,250
+like, write a tool to automate this.
+
+715
+01:32:36,660 --> 01:32:43,290
+That could have been neat, but, uh, it probably would have resulted in more problems than an actual, uh, good documentation.
+
+716
+01:32:44,250 --> 01:32:48,270
+Anyways, we're getting there, gang, and uh, we'll see how far we get next week.
+
+717
+01:32:48,330 --> 01:32:51,450
+Thanks again for watching. I hope you have yourselves a great week.
+
+718
+01:32:51,660 --> 01:32:57,090
+Uh, if you enjoyed this episode, did enjoy this episode. Maybe you you have questions and you want to ask me.
+
+719
+01:32:57,090 --> 01:33:05,069
+Maybe you want to ask about Firefox or the code base, or JS doc, or customizable UI or Mozilla or whatever you want to ask an open source.
+
+720
+01:33:05,070 --> 01:33:11,190
+Working in open source, working as a software development software developer, um, uh, feel free.
+
+721
+01:33:11,310 --> 01:33:15,090
+Uh, you can ask me questions. Uh, there's a a form here.
+
+722
+01:33:15,090 --> 01:33:20,459
+I'll put the link in the chat here, uh, form to rate this episode.
+
+723
+01:33:20,460 --> 01:33:27,000
+And if you, uh, if you follow through that form at the very end there, there's a section if you want to ask me a question and if I have the answers,
+
+724
+01:33:27,270 --> 01:33:30,690
+because I don't always have the answers, but if I have the answers, I'll try and answer them on the stream.
+
+725
+01:33:31,590 --> 01:33:35,549
+All right. Well, we're calling it there. Thanks again for watching. Have yourselves a great week.
+
+726
+01:33:35,550 --> 01:33:39,540
+Take care everybody. Buh bye.
+
+727
+01:33:42,650 --> 01:33:45,980
+The joy. Oh, dang.
+
+728
+01:33:46,310 --> 01:33:46,670
+See it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

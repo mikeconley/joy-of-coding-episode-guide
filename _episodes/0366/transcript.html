@@ -1,0 +1,2958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 366 - May 15, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 366 - May 15, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6d7d2c3d-4552-4d8e-91d5-b1540137fd92</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6d7d2c3d-4552-4d8e-91d5-b1540137fd92">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,552 --> 00:00:08,972
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. To the joy of coding.
+
+2
+00:00:09,002 --> 00:00:12,391
+Hello and welcome to episode What Is This?
+
+3
+00:00:12,392 --> 00:00:15,422
+366? What episode is this?
+
+4
+00:00:15,422 --> 00:00:18,442
+366 of the Joy of coding. My name is my colleague.
+
+5
+00:00:18,452 --> 00:00:22,442
+It's so good to have you here. We're going to be live hacking on some Firefox stuff today.
+
+6
+00:00:22,592 --> 00:00:29,792
+Same as usual. I'm so excited to have you here with me while we dig into some interesting bugs and some some hacking.
+
+7
+00:00:29,882 --> 00:00:38,311
+Let's get right to it. I'll start by sharing my screen and starting the stream like I normally do by saying, hey, it's May 15th, 2024.
+
+8
+00:00:38,312 --> 00:00:41,672
+Episode 366 A reminder No plan survives breakfast.
+
+9
+00:00:41,672 --> 00:00:44,282
+I think I know how this stream is going to go, but it could be wrong.
+
+10
+00:00:44,342 --> 00:00:48,901
+You know, I kind of have a plan of of what I want to try and do, but we might get sidelined.
+
+11
+00:00:48,902 --> 00:00:54,812
+We might get rat holed, we might get, um, you know, uh, stuck waiting for a build to complete.
+
+12
+00:00:54,962 --> 00:00:58,532
+All sorts of things might occur, and that's okay. We're just going to deal with it as they come.
+
+13
+00:00:59,072 --> 00:01:02,792
+Let's not worry about it. You're going to watch me just deal with it in real time.
+
+14
+00:01:03,032 --> 00:01:08,972
+This is what I like to say is, um, uh, cable access, production value, no edits.
+
+15
+00:01:10,022 --> 00:01:15,331
+Um, so that's the first thing. The second thing is that the agenda that we're looking at is available to you.
+
+16
+00:01:15,332 --> 00:01:21,122
+If you want to, like, click on links and follow along and, you know, uh, explore what some of these things mean.
+
+17
+00:01:21,362 --> 00:01:24,782
+Uh, you can get a copy of this agenda. It's in the video description.
+
+18
+00:01:24,782 --> 00:01:28,262
+If you're watching this on YouTube or diode dot zone, it's over in the details section.
+
+19
+00:01:28,562 --> 00:01:35,672
+If you're over on uh, er Mozilla and it's down in the channel description, I think if you're on Twitch and as I update the, uh, um,
+
+20
+00:01:35,672 --> 00:01:43,262
+agenda, you'll see this little spinny spinning if you reload the agenda, it should render, uh, the updates, uh, um, after you reload.
+
+21
+00:01:44,582 --> 00:01:51,512
+Right. So what do I want to talk about today? Well, I wanted to briefly remind you that there is no episode next week or the week after due to travel.
+
+22
+00:01:51,512 --> 00:01:53,971
+And finally, I'm getting a little bit of, uh, R&R.
+
+23
+00:01:53,972 --> 00:01:59,252
+I'm going to have some, uh, vacation, and I'll be back on June 5th, and I will have an episode then.
+
+24
+00:01:59,552 --> 00:02:04,652
+So no episode. Uh, you'll have to wait for episodes three, 67, and 68 until June 5th.
+
+25
+00:02:04,922 --> 00:02:08,342
+Starting June 5th. That's the first thing. The second thing I want to talk about the weather.
+
+26
+00:02:08,342 --> 00:02:14,852
+What's the weather like? I'm in Toronto. What's the weather like? Well, it's think it's 80 degrees in, as you know, partly cloudy in Toronto.
+
+27
+00:02:14,912 --> 00:02:18,872
+It's actually mostly cloudy. What is this? Hello.
+
+28
+00:02:18,872 --> 00:02:22,622
+This is something new. So I wanted to highlight this because I thought it was kind of neat.
+
+29
+00:02:22,622 --> 00:02:28,142
+Um, and you're getting like a sneak peek of something that we were going to mention inside of the nightly blog,
+
+30
+00:02:28,292 --> 00:02:36,752
+but I thought I'd give you, like, a sneak peek. You, you viewers of this stream, um, which is, you know, hey, the new Tab team has been,
+
+31
+00:02:36,882 --> 00:02:40,442
+uh, really focused on adding new interesting things to new tab.
+
+32
+00:02:40,742 --> 00:02:47,002
+Uh, like, we've got our cool backgrounds, and now we have this thing called a weather widget, which you can disable if you don't want it.
+
+33
+00:02:47,012 --> 00:02:51,571
+You don't have to have it here. You can get rid of it, but if you want it, you can have it be there.
+
+34
+00:02:51,572 --> 00:02:58,352
+It will figure out your region based on, um, it'll like, I think, attempt to do a geolocation on your IP address.
+
+35
+00:02:58,712 --> 00:03:04,082
+Uh, I'm not entirely certain. Um, it might also do a local geolocation lookup.
+
+36
+00:03:04,802 --> 00:03:14,222
+I don't know how it works. I think it uses the same region selection mechanism that, um, our search service work uses, but I can't be certain.
+
+37
+00:03:14,612 --> 00:03:21,212
+And then it will render a weather a weather report, and you can, like, have it show up, uh, in sort of like a simple view.
+
+38
+00:03:21,212 --> 00:03:25,502
+I think this is the default is like a, a more, um, compressed, simplified view.
+
+39
+00:03:25,862 --> 00:03:33,242
+Uh, you can have it show in Fahrenheit. Uh, I have mine in the detailed view and in Celsius because I am Canadian and I like details.
+
+40
+00:03:33,392 --> 00:03:36,482
+Now, how do you get this? If you want this, how do you turn it on?
+
+41
+00:03:36,752 --> 00:03:43,952
+Well, good news, everyone. I know how to do that. And that involves going to about config and type in show weather.
+
+42
+00:03:43,952 --> 00:03:47,282
+And you're going to see two things show up inside of a config.
+
+43
+00:03:47,582 --> 00:03:51,901
+If you set those to true, uh, it should show up on your next new tab open.
+
+44
+00:03:51,902 --> 00:03:55,382
+Now it might not immediately show, um, data right away.
+
+45
+00:03:55,382 --> 00:04:00,692
+I think there's a bug where, um, you know, it might you might have to turn it off and turn it back on.
+
+46
+00:04:00,722 --> 00:04:06,212
+You might need to go over here and, like, flip this off and flip it back on in order for it to, to work properly.
+
+47
+00:04:06,212 --> 00:04:09,601
+But if that's, that's a known bug.
+
+48
+00:04:09,602 --> 00:04:11,792
+And if it isn't fixed already, it'll be fixed soon.
+
+49
+00:04:11,792 --> 00:04:16,832
+But I thought that was kind of neat, and I thought I'd mention it because, uh, some people like to know about the weather.
+
+50
+00:04:18,182 --> 00:04:22,651
+All right, so that's the weather. Uh, updates about the jump list.
+
+51
+00:04:22,652 --> 00:04:28,142
+So since the last stream, there's been some, uh, activity in jump list land.
+
+52
+00:04:28,502 --> 00:04:33,391
+So, I mean, I don't normally work on jump list outside of the stream, to be completely clear.
+
+53
+00:04:33,392 --> 00:04:36,872
+Like, I've been trying to only do jump list stuff during the stream.
+
+54
+00:04:36,872 --> 00:04:42,992
+That means I do about an hour and a half every week, and we kind of crawl forward, and that way you get to see like the whole life cycle.
+
+55
+00:04:43,502 --> 00:04:56,802
+But, uh, we found an issue like, so we posted a patch last week, I think it was May 8th where I was getting a patch put up to, um, try.
+
+56
+00:04:56,852 --> 00:05:04,582
+Did I link to it? I think it was like the easy access error, easy access denied error becoming more resolved.
+
+57
+00:05:04,722 --> 00:05:13,062
+And for that, I think I mentioned this last week and I got a review back from, uh, from a couple of people.
+
+58
+00:05:13,062 --> 00:05:18,072
+I got one from Ray, and I got one from, uh, a guy who's like one of our DJs experts,
+
+59
+00:05:18,072 --> 00:05:22,872
+and we're like, hey, the way that your API just the populate jump list API is,
+
+60
+00:05:23,232 --> 00:05:28,392
+uh, dealing with JavaScript arrays because we're like, we were, uh,
+
+61
+00:05:28,872 --> 00:05:36,641
+accepting arrays of JS values and arrays, like, hey, that's that array is not rooted.
+
+62
+00:05:36,642 --> 00:05:43,992
+Meaning that in theory it could garbage collect and it might not be the safest way of designing an API between JavaScript and C plus.
+
+63
+00:05:43,992 --> 00:05:51,852
+Plus. And so what we should probably do is instead of accepting an array of JS values, accept a jazz value,
+
+64
+00:05:51,882 --> 00:05:58,721
+which might be an array of other values, because a JS value can be like anything from JS land, including JS arrays.
+
+65
+00:05:58,722 --> 00:06:04,062
+And then we can like create in our tests here, create JS arrays and add things to them.
+
+66
+00:06:04,272 --> 00:06:11,952
+So that's what I did. And um, that ended up happening uh, earlier on in this patch series and 1896147.
+
+67
+00:06:11,952 --> 00:06:16,302
+And I tried to get that in before the most recent, uh, merge to beta.
+
+68
+00:06:16,542 --> 00:06:20,352
+So this went to beta. Um, this made it before the, the uplift.
+
+69
+00:06:20,802 --> 00:06:25,992
+Uh, and I'm currently writing nightly 128 but these fixes should be in 127.
+
+70
+00:06:26,172 --> 00:06:32,321
+So that means that, um, there are I think there were some people who are not seeing the jump list show up.
+
+71
+00:06:32,322 --> 00:06:41,862
+If they had configured windows to not show, like, um, recent visits in the search menu, and that should be fixed starting in 127.
+
+72
+00:06:42,102 --> 00:06:49,962
+So that's good. And um, and that'll also have the, the URL truncation issue that crushed optimist brought my attention to.
+
+73
+00:06:50,052 --> 00:06:58,512
+That's also in beta. So crushed optimist I'm very curious whenever you are um, one I don't know what channel you're on if you're on uh,
+
+74
+00:06:58,512 --> 00:07:03,432
+release or beta or nightly, if you're still experiencing the issue that you saw.
+
+75
+00:07:03,432 --> 00:07:08,562
+And if so, we can keep looking. If you're watching this, I'm not sure if you're watching this crushed optimist.
+
+76
+00:07:09,342 --> 00:07:12,462
+Um, sort of says whether you like the weather or not.
+
+77
+00:07:13,392 --> 00:07:16,932
+Yeah. Um, weather, weather. Yeah.
+
+78
+00:07:16,962 --> 00:07:20,802
+This this doesn't allow you to control the weather. It just shows you what the weather is.
+
+79
+00:07:21,072 --> 00:07:25,992
+So it's a little bit, um, a the I guess that's a feature request.
+
+80
+00:07:25,992 --> 00:07:32,682
+If you want to be able to control the weather, we can accept that enhancement request was probably a P5 and probably a lot of research required.
+
+81
+00:07:33,252 --> 00:07:37,542
+Um, all right. Let's keep going here.
+
+82
+00:07:37,542 --> 00:07:41,951
+So that all got fixed and I, I, I rushed it I didn't rush it out,
+
+83
+00:07:41,952 --> 00:07:46,872
+but I didn't do it during the stream because I, I really wanted to get this stuff in before the uplift.
+
+84
+00:07:47,622 --> 00:07:54,341
+And so it's done now that's closed out. Now, the other thing that we were working on, jump list wise, isn't closed out.
+
+85
+00:07:54,342 --> 00:07:58,992
+And that is the, uh, off main thread, uh, jump list.
+
+86
+00:07:59,382 --> 00:08:04,812
+Like the favicon caching mechanism. That's what we've been working on for like a month or so now.
+
+87
+00:08:05,322 --> 00:08:08,862
+And that was waiting on from some reviews.
+
+88
+00:08:08,862 --> 00:08:15,072
+And those reviews have finally come in. So let me actually open up the stack of patches one second here.
+
+89
+00:08:22,272 --> 00:08:29,042
+Okay, so here we go. Uh, we've got three patches, and they're all are plus.
+
+90
+00:08:29,052 --> 00:08:33,282
+So, um, we can, uh, uh, we can.
+
+91
+00:08:33,282 --> 00:08:37,182
+I should answer Massa's question here that there is an expiry.
+
+92
+00:08:37,572 --> 00:08:42,612
+Uh, and we should look into that whether or not there's an expiry, uh, on the cash, which I think there is.
+
+93
+00:08:42,612 --> 00:08:49,542
+But we should double check and answer his question. Question often says the nightly is okay.
+
+94
+00:08:49,542 --> 00:08:52,992
+The issues on the release profile. Any chance of it getting a point? Release this month?
+
+95
+00:08:53,862 --> 00:09:02,202
+Um, unlikely. I look, I don't think my patches would likely make it to a release to release, but the good news is,
+
+96
+00:09:02,262 --> 00:09:10,302
+is that 127 if we look at what terrain is it now, 127 will ship to release on June 11th.
+
+97
+00:09:10,782 --> 00:09:19,512
+Um, so that's less than a month away. So if you're willing to wait just a few more weeks, those fixes will go out, uh, in three and a half weeks.
+
+98
+00:09:20,562 --> 00:09:32,922
+Um, or you could try the beta channel. Um, but, yeah, I, I, I somehow, like, I don't think my patches meet the, the criteria for a beta uplift or.
+
+99
+00:09:32,922 --> 00:09:41,952
+Sorry, I release, uh, dot release. Um. Right along. I mean, maybe they would, but I'll talk to Ramon, but I suspect it won't cross the threshold.
+
+100
+00:09:43,572 --> 00:09:46,932
+Okay. Um, so.
+
+101
+00:09:46,932 --> 00:09:54,012
+Yeah, let's let's figure out, uh, how to answer these questions. I also, uh, rebase these patches, and now I'm doing a build.
+
+102
+00:09:54,252 --> 00:09:56,302
+And hopefully this build does not take too long.
+
+103
+00:09:56,322 --> 00:10:04,062
+I'm really worried that, uh, that this build is going to take forever and be a real problem, but I'm noticing it's skipping a lot of things.
+
+104
+00:10:04,212 --> 00:10:15,071
+So my hope is that a bunch of stuff doesn't actually need to be rebuilt, and that we're hitting either the cache a lot, um, for both rust and C plus.
+
+105
+00:10:15,072 --> 00:10:23,112
+Plus and also that, uh, you know, I've had prior build sitting around that, uh, and build artifacts.
+
+106
+00:10:23,112 --> 00:10:26,651
+So some of those might be being, uh, reused, but we'll see. We'll see.
+
+107
+00:10:26,652 --> 00:10:29,772
+It's building Doc Shell now, so we'll see how that goes.
+
+108
+00:10:29,772 --> 00:10:38,922
+But in the meantime we can start looking into this stuff. So first of all, is there anything that I need to, uh, uh, close out inside of this review?
+
+109
+00:10:39,372 --> 00:10:42,641
+I don't think so. I see it's three, um, submitted comments.
+
+110
+00:10:42,642 --> 00:10:47,382
+I think, um, I can submit those.
+
+111
+00:10:51,492 --> 00:10:58,922
+And then over here, this was, uh, I added some, I added some logging.
+
+112
+00:10:58,932 --> 00:11:01,872
+So that's done. So we can mark that is done.
+
+113
+00:11:03,402 --> 00:11:11,662
+And then we just need to answer my question here where he's just making sure that in the cache find some way of expiring on its own.
+
+114
+00:11:11,662 --> 00:11:16,092
+And I actually can't remember when the cache expires, but now we can, uh, look into it.
+
+115
+00:11:16,092 --> 00:11:24,221
+So let's look into it. So the win utils uh, stuff.
+
+116
+00:11:24,222 --> 00:11:29,352
+This is where the cache is managed. Uh, cache.
+
+117
+00:11:35,352 --> 00:11:42,012
+And there's like a get cache. There's this async delete all fav icons from disk.
+
+118
+00:11:47,222 --> 00:12:03,882
+Which occurs when? Oh, any time the jump list is populated, we destroy the cache.
+
+119
+00:12:17,862 --> 00:12:24,192
+That's interesting. I think I remember Molly telling me about this, um, uh, like, um.
+
+120
+00:12:24,792 --> 00:12:28,182
+Delete. Bug.
+
+121
+00:12:28,452 --> 00:12:33,252
+Async. Fab icon. Delete.
+
+122
+00:12:34,522 --> 00:12:37,992
+What is it? Uh, async delete. Alphabet calls from disk.
+
+123
+00:12:39,552 --> 00:12:46,182
+I seem to recall doing something about this. Um.
+
+124
+00:12:57,332 --> 00:13:00,932
+Let's see what bugzilla says meanwhile.
+
+125
+00:13:01,322 --> 00:13:04,442
+All right. Our build is going through the big, heavy stuff.
+
+126
+00:13:04,442 --> 00:13:10,501
+It's building Dom that always takes the longest. Uh, this is the one I was thinking of.
+
+127
+00:13:10,502 --> 00:13:13,952
+Make jump list builders smarter about clearing old fabricantes from the desk.
+
+128
+00:13:14,492 --> 00:13:19,802
+Every time we repopulate the jump list, run an async job to clear the fab accounts from the desk before potentially repopulating them.
+
+129
+00:13:19,812 --> 00:13:24,422
+This could probably be smart, because these icons are not super likely to change over time.
+
+130
+00:13:25,172 --> 00:13:31,292
+Um. Despite the name doesn't always delete all fab icons.
+
+131
+00:13:31,292 --> 00:13:36,782
+It takes an optional boolean argument for either. Not recently modified fab icons should be skipped when clearing.
+
+132
+00:13:37,892 --> 00:13:42,062
+Oh, so that's maybe what the true is.
+
+133
+00:13:42,062 --> 00:13:45,782
+Um, ignore recent. Uh.
+
+134
+00:13:50,022 --> 00:14:04,482
+Uh, ignore a recent. And wait.
+
+135
+00:14:04,602 --> 00:14:08,142
+Where does this runnable run? Async. Delete.
+
+136
+00:14:09,822 --> 00:14:22,942
+Delete. All fell apart. What thread does that run on? Populate.
+
+137
+00:14:24,292 --> 00:14:30,052
+So in the populate in the and the new one we dispatched to the IO thread okay.
+
+138
+00:14:30,442 --> 00:14:39,172
+So the IO thread will do it. So we can, I think, answer masterpiece question here.
+
+139
+00:14:39,922 --> 00:14:43,042
+So there's some expiry going to happen from for this cash. Yeah.
+
+140
+00:14:43,072 --> 00:14:48,262
+Yes. Uh, yes. Um for the jump list icons.
+
+141
+00:14:49,582 --> 00:14:53,452
+Uh, every time the jump list is refreshed.
+
+142
+00:14:53,872 --> 00:14:57,622
+Currently happens around every five minutes.
+
+143
+00:14:59,032 --> 00:15:05,152
+Um, we clear out any expired fab icons.
+
+144
+00:15:05,812 --> 00:15:10,252
+Um. Um.
+
+145
+00:15:14,502 --> 00:15:17,892
+Uh, now what what was the other nuance in here? It looks so clear.
+
+146
+00:15:17,982 --> 00:15:21,132
+Father cons are over 24 hours plus ten minutes old.
+
+147
+00:15:23,802 --> 00:15:27,732
+Um. Where?
+
+148
+00:15:27,732 --> 00:15:35,802
+Expired seems to mean 24 hours plus ten minutes old.
+
+149
+00:15:36,492 --> 00:15:42,702
+For some reason. Uh, since last.
+
+150
+00:15:42,972 --> 00:15:47,902
+Since last modified. Uh.
+
+151
+00:15:48,232 --> 00:15:53,872
+Uh, so we won't update the favicon until it's at least 24 hours old.
+
+152
+00:16:02,882 --> 00:16:13,021
+Um, we also won't, uh, refresh any cached five icons until the fat.
+
+153
+00:16:13,022 --> 00:16:24,482
+The local cache file is 24 hours old, is at least 25 to 24 hours since last modified.
+
+154
+00:16:27,582 --> 00:16:30,702
+Uh, this is not really. That's very simple. That's kind of nice.
+
+155
+00:16:30,712 --> 00:16:40,192
+They want to accidentally make things more complicated. Uh. There's so much unnecessary disk output happening.
+
+156
+00:16:43,492 --> 00:16:49,792
+Yeah. Okay. So I think that answers masterpiece question.
+
+157
+00:16:52,242 --> 00:17:01,122
+So I think we're good to go here. We're actually good to land these. But I want to make sure that this build is done, uh, and that we, uh,
+
+158
+00:17:01,392 --> 00:17:05,802
+rerun the tests, make sure everything's hunky dory, and then we'll we'll land it.
+
+159
+00:17:06,972 --> 00:17:13,302
+Um. Maybe we'll push up our rebase because like, when was the last time this was updated?
+
+160
+00:17:13,692 --> 00:17:17,402
+Um. May 9th.
+
+161
+00:17:17,412 --> 00:17:20,772
+So about a week ago last Thursday.
+
+162
+00:17:21,492 --> 00:17:27,852
+So I'll push up the rebase patches and then land it. But that involves waiting for this, this build to be done.
+
+163
+00:17:27,852 --> 00:17:31,582
+So in the meantime, I thought we could work on something else. Leftmost cat.
+
+164
+00:17:31,602 --> 00:17:34,842
+Hello. The thing I wanted to work on.
+
+165
+00:17:35,052 --> 00:17:38,382
+Now that Thunderbird is no longer using the jump list.
+
+166
+00:17:39,132 --> 00:17:43,092
+I would thought we could plan out how to remove the old jump list back.
+
+167
+00:17:43,272 --> 00:17:48,732
+I think it's about time now that we seem to have fixed the bugs or the known bugs.
+
+168
+00:17:49,182 --> 00:17:52,892
+Um, maybe we can just get rid of that old back end.
+
+169
+00:17:52,902 --> 00:18:01,092
+So let's plan out how to do that. Um, now, uh, I think there's an existing bug, uh, jump list.
+
+170
+00:18:05,742 --> 00:18:09,882
+By default. Uh, remove the legacy windows.
+
+171
+00:18:09,882 --> 00:18:15,432
+Jump this back end. So this this is, uh, some of the questions from a month ago.
+
+172
+00:18:15,462 --> 00:18:21,342
+I suspect the user have been fixed. Um.
+
+173
+00:18:23,592 --> 00:18:27,252
+So, uh, missing options in taskbar.
+
+174
+00:18:27,822 --> 00:18:39,162
+Like, I think this is a person who had configured windows to not show items in, uh, like, recent history, and we will have fix that.
+
+175
+00:18:39,552 --> 00:18:48,462
+So I'm going to, uh, and yeah, uh, Eddie Lee concurs.
+
+176
+00:18:50,742 --> 00:18:56,112
+Um, so now that that's closed, I think we can really, um, move.
+
+177
+00:18:56,232 --> 00:19:00,362
+We can consider moving forward with this. And how do we do it? How do you remove a component like this?
+
+178
+00:19:00,372 --> 00:19:06,311
+Now, the good news is that I think when we designed the new jump list back end, we really did.
+
+179
+00:19:06,312 --> 00:19:18,612
+Uh, I think we didn't. Okay. Job of making it so that it is fairly isolated, not too, um, not too wrapped up in, uh, in other components, like it's,
+
+180
+00:19:18,612 --> 00:19:29,622
+it's been there's a switching mechanism that allows us to switch it on and off, but when it's even, uh, um, in this configuration, uh, it's not deep.
+
+181
+00:19:30,102 --> 00:19:34,872
+Got like deep tendrils and other components. It's fairly isolated with like that one entry point.
+
+182
+00:19:35,202 --> 00:19:40,662
+So that should allow us to, uh, to switch it off pretty easily or get rid of it rather really easily.
+
+183
+00:19:41,412 --> 00:19:45,042
+So the way I tend to like to do these things, let's put together a plan.
+
+184
+00:19:45,672 --> 00:19:49,452
+Um, let's actually create a new note.
+
+185
+00:19:50,592 --> 00:19:56,741
+Um, so, uh, game plan.
+
+186
+00:19:56,742 --> 00:20:02,892
+Here's the game plan. I like to start by getting rid of the tests.
+
+187
+00:20:04,692 --> 00:20:08,082
+You get rid of the tests because, well, you don't need them anymore.
+
+188
+00:20:08,192 --> 00:20:16,422
+You're the thing that you're testing. Uh, hey, look, get rid of the tests that specifically test the legacy back end.
+
+189
+00:20:17,892 --> 00:20:22,932
+Then we're not going to need those anymore. Then, uh, let's get rid of, um.
+
+190
+00:20:23,982 --> 00:20:30,372
+And that can be like one patch I like to do. I like to kind of break it up, uh, makes it easier for for people to review.
+
+191
+00:20:31,302 --> 00:20:36,102
+And then we're going to get rid of. Let's see here.
+
+192
+00:20:36,132 --> 00:20:39,672
+Uh, we renamed it like, Legacy Jump List.
+
+193
+00:20:40,932 --> 00:20:49,272
+There aren't too many entry points. Um, there is usage inside of when taskbar.
+
+194
+00:20:50,292 --> 00:20:52,151
+So we're going to get rid of,
+
+195
+00:20:52,152 --> 00:21:02,142
+I think the point where when taskbar invokes legacy jump list builder like this whole thing create legacy jump list builder.
+
+196
+00:21:02,502 --> 00:21:06,942
+Um, get rid of create legacy jump list builder.
+
+197
+00:21:07,782 --> 00:21:14,532
+Uh. On when? Taskbar. Um.
+
+198
+00:21:15,822 --> 00:21:21,822
+Oh, even before that. Um. Get rid of windows.
+
+199
+00:21:21,822 --> 00:21:24,882
+Jump list. Start system. Mjs.
+
+200
+00:21:25,332 --> 00:21:30,072
+Um, uh, support for the legacy back end.
+
+201
+00:21:32,772 --> 00:21:36,642
+Then get rid of create legacy jump list back and builder.
+
+202
+00:21:37,152 --> 00:21:40,962
+Uh, create legacy. Jump was builder on uh and decide when taskbar.
+
+203
+00:21:45,912 --> 00:21:53,082
+And then. I think it's just a matter of.
+
+204
+00:21:59,662 --> 00:22:05,192
+Getting rid of the I can see jump list builder.
+
+205
+00:22:05,242 --> 00:22:13,402
+Uh, item. That's one of the things that's only used inside of a like it's only used internally.
+
+206
+00:22:14,122 --> 00:22:20,122
+Uh, and then there's builder. Oh, builder.
+
+207
+00:22:22,232 --> 00:22:25,802
+That's only used internally in an would win taskbar, and we'll get rid of that one.
+
+208
+00:22:26,432 --> 00:22:30,452
+We have to get rid of these registrations inside of component scanf.
+
+209
+00:22:32,162 --> 00:22:36,002
+Uh, list item builder.
+
+210
+00:22:37,322 --> 00:22:38,282
+I think that's all of it.
+
+211
+00:22:39,062 --> 00:22:54,572
+So, uh, and then get rid of the legacy jump list things inside, uh, widget windows along with the components icon registrations.
+
+212
+00:22:54,872 --> 00:22:57,902
+And that should do it. That should do it.
+
+213
+00:22:58,322 --> 00:23:03,852
+That's my plan. Uh, so how do we do that?
+
+214
+00:23:04,572 --> 00:23:12,842
+Well, we can't actually. This this machine, this windows machine is actually we're stuck.
+
+215
+00:23:12,842 --> 00:23:16,982
+We're going to have to eyeball this one, I think because I'm going to do this on my macOS machine.
+
+216
+00:23:17,552 --> 00:23:21,392
+I'm going to check out central. And we're going to do it here on my Mac OS machine.
+
+217
+00:23:22,052 --> 00:23:30,302
+Um, and you know, obviously I want to bring these patches over onto the other, um, onto my windows machine whenever they're done.
+
+218
+00:23:30,542 --> 00:23:36,872
+So these will be work in progress patches. But, um, I figure we can do them here while we wait for that build to complete.
+
+219
+00:23:37,442 --> 00:23:45,122
+So we'll start with the first, uh, part of the plan, which is we need to get rid of the jump lists, windows, jump list support.
+
+220
+00:23:45,482 --> 00:23:52,232
+Oh, and, uh, as well as the prefs experimental feature flag.
+
+221
+00:23:53,192 --> 00:23:59,162
+Okay, so that means going let's start with feature manifest jump list.
+
+222
+00:24:01,082 --> 00:24:08,162
+We're going to get rid of this. We're going to get rid of.
+
+223
+00:24:13,172 --> 00:24:16,892
+Um legacy back end.
+
+224
+00:24:24,992 --> 00:24:28,412
+Um, we're going to get rid of.
+
+225
+00:24:34,292 --> 00:24:46,662
+Like sit back and. Legacy list building.
+
+226
+00:24:48,922 --> 00:24:53,242
+So we're going to get rid of build list legacy. So let's find the main entry point here.
+
+227
+00:24:55,012 --> 00:25:00,352
+If you use legacy back end. So we'll start with this. We're going to where this will never be true.
+
+228
+00:25:01,132 --> 00:25:11,662
+So we'll get rid of that. Use legacy.
+
+229
+00:25:14,422 --> 00:25:25,182
+On. This will never be true. What else you'd like to see?
+
+230
+00:25:25,182 --> 00:25:39,752
+Back end. So. Okay, now, because we're no longer using the legacy back end, I think there are certain things in here that are no longer necessary.
+
+231
+00:25:39,762 --> 00:25:43,182
+Certain functions like, um, build list, legacy.
+
+232
+00:25:45,432 --> 00:25:55,212
+Is there the term legacy? Um, I think we can start getting rid of this, uh, build list.
+
+233
+00:25:55,212 --> 00:26:02,501
+Legacy. Commit.
+
+234
+00:26:02,502 --> 00:26:06,672
+Build. I don't think anything's using commit build anymore.
+
+235
+00:26:07,332 --> 00:26:11,652
+Build frequent was. Build recent. Build frequent.
+
+236
+00:26:12,402 --> 00:26:17,292
+No one's using that. We don't do any of this anymore.
+
+237
+00:26:20,862 --> 00:26:31,942
+Those recent. Delete active jump list.
+
+238
+00:26:34,372 --> 00:26:40,112
+Uh. I think we can just make.
+
+239
+00:26:40,742 --> 00:26:45,572
+That's always going to be true. Um.
+
+240
+00:26:50,012 --> 00:26:56,582
+Build tasks. Don't need that anymore. Build custom.
+
+241
+00:26:59,372 --> 00:27:03,721
+Don't need it. All of it.
+
+242
+00:27:03,722 --> 00:27:06,782
+Just burn it down. Commit. Build. Don't need it.
+
+243
+00:27:07,052 --> 00:27:22,532
+Start. Build. Don't need it. As pending statements.
+
+244
+00:27:23,672 --> 00:27:27,212
+Don't need it. What? Pending statements?
+
+245
+00:27:32,482 --> 00:27:37,792
+Don't need it. Liz type.
+
+246
+00:27:39,652 --> 00:27:45,862
+Don't need it. Don't you go. Just burn it down.
+
+247
+00:27:46,312 --> 00:27:50,752
+Um. Is there anything else that we can get rid of?
+
+248
+00:27:50,782 --> 00:28:06,101
+Let's work our way up from the bottom. This is all the timer stuff and when to run updates.
+
+249
+00:28:06,102 --> 00:28:09,822
+That's fine. Um.
+
+250
+00:28:10,362 --> 00:28:15,702
+Create templates. Builder. Okay, that's all fine.
+
+251
+00:28:15,732 --> 00:28:19,372
+Refresh. Prefs. That's fine.
+
+252
+00:28:30,442 --> 00:28:36,662
+I think we're good. Built PBY.
+
+253
+00:28:37,022 --> 00:28:50,612
+Yeah. Uh. Shutting down. Uh.
+
+254
+00:29:02,402 --> 00:29:05,712
+If not shutting down. Okay, it makes sense.
+
+255
+00:29:08,572 --> 00:29:14,572
+I think that's it. I think that's it. Um.
+
+256
+00:29:18,902 --> 00:29:25,122
+I think some of these preferences are no longer used. Uh, frequent.
+
+257
+00:29:25,292 --> 00:29:29,162
+Frequent and able. Recent. Enabled. Max list. Item count.
+
+258
+00:29:30,942 --> 00:29:38,812
+Tasks enabled. No.
+
+259
+00:29:39,042 --> 00:29:42,702
+Okay. You won't keep them. Okay.
+
+260
+00:29:42,942 --> 00:29:48,462
+Well that's that. Um. So that took care of prefs.
+
+261
+00:29:48,462 --> 00:29:52,572
+The experimental feature flag and the jump list support. So that's going to be our first patch.
+
+262
+00:29:56,602 --> 00:30:01,972
+Uh, yeah, I don't. I don't see your amazing emotes. I see every NGO fire.
+
+263
+00:30:03,232 --> 00:30:06,742
+Can you can someone summarize what that cool emote means, please?
+
+264
+00:30:11,882 --> 00:30:20,912
+Uh, bugs such and such. Uh or remove, uh, support.
+
+265
+00:30:21,212 --> 00:30:27,722
+Uh, like c jump list. Uh builder support.
+
+266
+00:30:33,992 --> 00:30:37,712
+Uh support from windows jump lists, dot system.
+
+267
+00:30:37,712 --> 00:30:47,962
+And. Yes. It's a smiling Jigglypuff with flames by burning all down.
+
+268
+00:30:47,972 --> 00:30:52,292
+Oh, good. Yeah! Burn it! Yeah! Let it rip.
+
+269
+00:30:56,402 --> 00:31:04,222
+Let go. Come on. Come on down. I was not expecting that that build to actually need to occur.
+
+270
+00:31:04,232 --> 00:31:08,432
+So that's one of those things. That's one of those live streaming things.
+
+271
+00:31:08,432 --> 00:31:12,242
+And no plan survives breakfast things. So that's done.
+
+272
+00:31:12,812 --> 00:31:17,192
+Next, let's get rid of the tests that specifically test the legacy back end.
+
+273
+00:31:17,732 --> 00:31:21,752
+So I believe there are a few of these, um.
+
+274
+00:31:23,882 --> 00:31:27,452
+Tests. Unit test, task bar, legacy jump list items.
+
+275
+00:31:28,682 --> 00:31:36,062
+I think that's it. It's just the one. So we're going to just get rid of that widget.
+
+276
+00:31:36,242 --> 00:31:40,292
+Windows test. Uh unit.
+
+277
+00:31:41,612 --> 00:31:51,482
+Uh widget. Test unit. Test taskbar, legacy jump list items.
+
+278
+00:31:53,012 --> 00:31:57,182
+And we're also going to get rid of this entry in here.
+
+279
+00:32:09,352 --> 00:32:15,262
+And then we can commit that. Remove legacy jump list builder.
+
+280
+00:32:15,892 --> 00:32:31,952
+Uh. Unit tests. And now we'll get rid of the usage of Create Legacy Jump list builder because nothing should be using it now.
+
+281
+00:32:31,982 --> 00:32:39,582
+There's there was only one thing using it. Besides that test.
+
+282
+00:32:39,582 --> 00:32:48,012
+And that was jump start since that MJ's. And we just removed that usage so we can go ahead and get rid of that now.
+
+283
+00:32:48,672 --> 00:32:57,782
+So and assign win task bar create legacy to get out of here.
+
+284
+00:32:57,792 --> 00:33:04,302
+We're done. Okay.
+
+285
+00:33:05,382 --> 00:33:11,192
+And that means uh we can go over to win taskbar CPP.
+
+286
+00:33:12,132 --> 00:33:17,532
+Great legacy jobless builder. Tony that.
+
+287
+00:33:24,422 --> 00:33:39,401
+I think it also means we don't need this anymore. Okay.
+
+288
+00:33:39,402 --> 00:33:49,122
+And then legacy jump as builders and and as I like to see genderless builder don't need that and we're we're done there.
+
+289
+00:33:52,542 --> 00:33:56,452
+Um. So we can commit that.
+
+290
+00:33:59,332 --> 00:34:03,352
+Uh, x uh, usage and win.
+
+291
+00:34:03,352 --> 00:34:20,561
+Taskbar. All right.
+
+292
+00:34:20,562 --> 00:34:25,152
+And then the last part, which is to get rid of all the legacy stuff, the all the C plus plus.
+
+293
+00:34:25,152 --> 00:34:29,072
+So get rid of the legacy jump plus things.
+
+294
+00:34:29,082 --> 00:34:32,982
+So what are the things that start with legacy jump list.
+
+295
+00:34:33,342 --> 00:34:37,902
+There are these interfaces. There are these files.
+
+296
+00:34:38,472 --> 00:34:52,362
+We already got rid of this test. Let's start by getting rid of the uh, the interfaces, um, widget, uh, side legacy job list builder.
+
+297
+00:34:58,632 --> 00:35:04,942
+Good. Goodbye. Good night, sweet prince. There's a lot of history there to to wipe out.
+
+298
+00:35:07,342 --> 00:35:10,492
+Trump list item. See you later.
+
+299
+00:35:11,222 --> 00:35:18,622
+Then there are some entries inside of. The master bill that we'll need to get rid of.
+
+300
+00:35:21,112 --> 00:35:27,772
+Legacy. Okay.
+
+301
+00:35:29,812 --> 00:35:34,132
+And then we can get rid of the implementation.
+
+302
+00:35:34,132 --> 00:35:42,231
+That's these. So HDR widget windows legacy jump list star.
+
+303
+00:35:42,232 --> 00:36:01,472
+Really get rid of it all. And then the registration.
+
+304
+00:36:01,502 --> 00:36:06,812
+Um. Inside of components icon.
+
+305
+00:36:06,902 --> 00:36:14,162
+And I think there's probably something in a widget build somewhere or a MassDOT build that I'll need to reference.
+
+306
+00:36:14,312 --> 00:36:22,762
+Um. Widget windows models dot build legacy.
+
+307
+00:36:23,032 --> 00:36:28,312
+Yeah. Have to get rid of that. And that.
+
+308
+00:36:30,482 --> 00:36:35,182
+And then code legacy.
+
+309
+00:36:36,292 --> 00:36:43,912
+Jump list builder jump list item jump a separator jump list link.
+
+310
+00:36:44,122 --> 00:36:47,722
+You're all these things that were in jump list item we can get rid of.
+
+311
+00:36:52,342 --> 00:37:00,532
+See you later. And that should do it.
+
+312
+00:37:00,832 --> 00:37:05,632
+Um, let's just hg grep legacy under widget.
+
+313
+00:37:09,082 --> 00:37:15,062
+See if I missed any. Oh.
+
+314
+00:37:15,662 --> 00:37:20,882
+Uh. Uh oh. Sorry. Legacy jump list.
+
+315
+00:37:30,342 --> 00:37:36,182
+Still cooking. Two things.
+
+316
+00:37:36,812 --> 00:37:43,462
+Oh, okay. So I have to. I have to actually update the prior commit.
+
+317
+00:37:43,472 --> 00:37:54,032
+I missed some things. So I can go ahead and, uh, remove legacy jump list builder backend interfaces and backend.
+
+318
+00:37:59,332 --> 00:38:02,662
+It's a happy day. I'm very happy I finally got to do that.
+
+319
+00:38:03,562 --> 00:38:08,752
+And he hasn't landed yet, hasn't been reviewed yet, hasn't even been compiled yet.
+
+320
+00:38:09,022 --> 00:38:13,012
+But it feels good to just get rid of code. Um.
+
+321
+00:38:14,902 --> 00:38:25,272
+Legacy. See.
+
+322
+00:38:27,492 --> 00:38:31,662
+Plus builder. More information.
+
+323
+00:38:37,702 --> 00:38:46,162
+Were there any other usages of an inside legacy or legacy jump list building that I should know about?
+
+324
+00:38:46,192 --> 00:38:50,242
+All of these got removed. These got removed.
+
+325
+00:38:53,302 --> 00:38:59,622
+Removed. Removed. Removed.
+
+326
+00:38:59,622 --> 00:39:02,722
+Removed. That's all been updated.
+
+327
+00:39:02,742 --> 00:39:08,372
+This, I think, will be updated automatically. This is modified.
+
+328
+00:39:08,382 --> 00:39:13,752
+Yeah. Yeah, exactly. That'll get compiled. Um.
+
+329
+00:39:18,792 --> 00:39:25,692
+I don't that'll get built at compile time. Oh.
+
+330
+00:39:29,212 --> 00:39:32,422
+I guess. Yeah. There's some more things. More things.
+
+331
+00:39:34,282 --> 00:39:38,902
+Okay. Uh, we're going to get rid of some CI stuff.
+
+332
+00:39:41,902 --> 00:39:54,682
+Valid CI uses. Um.
+
+333
+00:40:00,562 --> 00:40:04,192
+It's interfaces, and I may not be present at all platforms.
+
+334
+00:40:06,182 --> 00:40:10,502
+I guess each of us. Okay.
+
+335
+00:40:14,102 --> 00:40:20,632
+And then Ms. Calm and knit. What's that for?
+
+336
+00:40:21,082 --> 00:40:39,422
+Oh, for linting. In preparation.
+
+337
+00:40:39,422 --> 00:40:48,592
+All you need is. Uh.
+
+338
+00:40:48,592 --> 00:40:53,092
+All right. Anything else?
+
+339
+00:40:53,962 --> 00:41:01,042
+Taskbar for idle. Got updated. Address widget C.I.D.
+
+340
+00:41:02,152 --> 00:41:10,072
+This needs to be updated. Okay, so hold on.
+
+341
+00:41:10,342 --> 00:41:19,852
+Um, let's commit this last chunk. Remove legacy jump list builder references in linting.
+
+342
+00:41:21,172 --> 00:41:29,032
+Linting tools. Like a size mark for review.
+
+343
+00:41:29,062 --> 00:41:49,492
+That. So in the prior patch I'm going to get rid of these references.
+
+344
+00:41:52,012 --> 00:41:55,401
+I'd like to see Jenkins build their job list.
+
+345
+00:41:55,402 --> 00:41:58,792
+Item separator. Link shortcut.
+
+346
+00:42:08,752 --> 00:42:19,561
+All right. What else? Components are configured, updated master build got update data.
+
+347
+00:42:19,562 --> 00:42:25,412
+Those that test got removed. Um, these are generated things, so we don't need them.
+
+348
+00:42:27,122 --> 00:42:31,462
+Oh, wow. We generate I didn't realize this. We generate rust stuff from our xp.
+
+349
+00:42:31,472 --> 00:42:35,912
+Com interfaces. Um, like, uh.
+
+350
+00:42:40,932 --> 00:42:46,812
+Huh? Okay. Um. Generate.
+
+351
+00:42:46,842 --> 00:42:50,352
+This is all generated stuff. We don't need to worry about it, so I think that's it.
+
+352
+00:42:50,682 --> 00:42:54,582
+I think we got it all. HG.
+
+353
+00:42:54,702 --> 00:42:58,441
+Next. Yeah.
+
+354
+00:42:58,442 --> 00:43:08,542
+All that's automated. Correct. So I think that's all of it.
+
+355
+00:43:09,532 --> 00:43:14,542
+Uh, how's our build going? Still inside of Dom.
+
+356
+00:43:15,442 --> 00:43:20,002
+Holy smokes. Uh.
+
+357
+00:43:20,602 --> 00:43:28,832
+All right. Let's. Here's what we're going to do.
+
+358
+00:43:28,862 --> 00:43:33,782
+We're going to go mas. Fabs submit. Uh whip.
+
+359
+00:43:40,672 --> 00:43:46,042
+And then I want to push these to try and see what happens.
+
+360
+00:44:13,452 --> 00:44:13,952
+Hmhm.
+
+361
+00:44:13,992 --> 00:44:23,321
+Okay, well, while that's cooking, we can figure out what we're going to do next, because that might more or less end our, uh, our jump list journey.
+
+362
+00:44:23,322 --> 00:44:30,012
+Like, I, I that feels like a decent bookend to our whole journey with the jump list.
+
+363
+00:44:31,032 --> 00:44:34,091
+Um, I can't even remember how we got here.
+
+364
+00:44:34,092 --> 00:44:41,382
+I think it was like a bug from two years ago that someone mentioned, and I was like, oh, we should move this thing off of the main thread.
+
+365
+00:44:43,422 --> 00:44:56,922
+And we did. Okay, so what can we work on in the meantime?
+
+366
+00:44:57,492 --> 00:45:01,182
+Uh, so we can check that off. Let's go back to the agenda.
+
+367
+00:45:03,342 --> 00:45:09,672
+Uh, worked on removing the legacy backend so I can put a link to that.
+
+368
+00:45:11,832 --> 00:45:18,132
+Uh, here. Um, well, I can maybe talk a little bit about.
+
+369
+00:45:19,092 --> 00:45:24,222
+Now, I have the. Can you smell what the rock is cooking? Uh.
+
+370
+00:45:24,492 --> 00:45:28,122
+People's eyebrow. Ready? There you go.
+
+371
+00:45:28,992 --> 00:45:32,832
+Um, can you smell what the build is building?
+
+372
+00:45:33,192 --> 00:45:43,301
+It's dumb. It's dumb. Uh, I think what I'm going to do after I post this,
+
+373
+00:45:43,302 --> 00:45:52,482
+to try as I might talk a little bit about another project that has been taking a lot of my time, and we might keep working on it a little bit.
+
+374
+00:45:52,662 --> 00:45:58,982
+Um. But I want to.
+
+375
+00:45:59,342 --> 00:46:02,722
+Before I do that, I'm going to push these up.
+
+376
+00:46:02,732 --> 00:46:06,662
+Also, I should check and make sure that there's no patches that require review.
+
+377
+00:46:07,442 --> 00:46:11,592
+Uh oh. Yeah. There's some patches that we can review.
+
+378
+00:46:11,612 --> 00:46:15,932
+That'd be a good idea. To.
+
+379
+00:46:17,802 --> 00:46:25,022
+Three. Okay.
+
+380
+00:46:25,322 --> 00:46:36,122
+I have some patches that we can review. Uh, let me move these over to here.
+
+381
+00:46:38,372 --> 00:46:49,552
+And we can look at those next. So what does this remove interactive test as it causes accessibility check to fail.
+
+382
+00:46:54,372 --> 00:46:59,562
+Uh, this is a preferences test. Hello, Javier.
+
+383
+00:46:59,592 --> 00:47:03,222
+Could you please look at this? I want you here. Change that line on auto land.
+
+384
+00:47:04,302 --> 00:47:08,262
+I found the culprit. The test is interact with a manual zoo element which lacks an Aria label by attribute.
+
+385
+00:47:08,262 --> 00:47:12,312
+I have no experience there, but I'm trying to provide a fix for it. Remove interactive test as it causes.
+
+386
+00:47:13,572 --> 00:47:22,462
+So instead we're going to remove the test. In order to check this fixes the bug.
+
+387
+00:47:22,472 --> 00:47:29,432
+Launching tracer with mail a11y checks is required. I'll try cyber server push for issues I lost a long time ago because of inactivity.
+
+388
+00:47:29,852 --> 00:47:34,742
+Could you here please? Before the push when I've seen Fatburger doesn't support A11 checks automatically removed test wasn't strictly needed.
+
+389
+00:47:34,752 --> 00:47:38,822
+Was just kind of just in case. Let's test also for this to.
+
+390
+00:47:43,782 --> 00:47:48,122
+Both languages, but it's failing because.
+
+391
+00:47:53,432 --> 00:48:00,902
+Interactives enter, active elements must be labeled IDE available languages, and it's not labeled.
+
+392
+00:48:05,452 --> 00:48:11,902
+Should it be labeled? Let's take a look at the.
+
+393
+00:48:12,772 --> 00:48:19,101
+Oh, so these are. These are finished being, uh, uh, submitted uh, to fabric here.
+
+394
+00:48:19,102 --> 00:48:22,372
+I'm going to block tri fuzzy.
+
+395
+00:48:22,942 --> 00:48:32,632
+No artifact. Uh, I'm going to get this to build, do an opt, build on opt and debug build on windows.
+
+396
+00:48:34,982 --> 00:48:50,162
+Out in the wild. Works.
+
+397
+00:48:50,162 --> 00:48:56,912
+Zerg 2.1.2. Okay, apparently that's a package that we needed.
+
+398
+00:48:58,022 --> 00:49:02,721
+Work. Zerg. Starling collected.
+
+399
+00:49:02,722 --> 00:49:14,542
+But what is that? Work as work. So with SGI was CGU web application library.
+
+400
+00:49:16,382 --> 00:49:22,462
+Provide me what that is again. Web server gateway interface.
+
+401
+00:49:23,212 --> 00:49:26,632
+Oh I see. It's like the.
+
+402
+00:49:28,882 --> 00:49:33,202
+How your Apache server will talk to your application.
+
+403
+00:49:33,892 --> 00:49:37,752
+Okay. Um, what do I want to do here?
+
+404
+00:49:37,762 --> 00:49:49,162
+I want to I just want to build on win 64 art and debug and then build win 32 of debug.
+
+405
+00:49:53,422 --> 00:49:59,242
+Let's do that. Okay.
+
+406
+00:50:02,602 --> 00:50:07,522
+So this available languages thing. Um, what is it?
+
+407
+00:50:07,612 --> 00:50:11,932
+Well, I think it is in the language. Is sub dialog in here?
+
+408
+00:50:12,292 --> 00:50:21,612
+Uh, languages? Apparently this item is not labeled.
+
+409
+00:50:21,882 --> 00:50:27,462
+Um. And should it be?
+
+410
+00:50:29,802 --> 00:50:38,752
+Uh, we have to choose the subframe. When you list data Elton and ID.
+
+411
+00:50:41,512 --> 00:50:47,782
+Archer's placeholder label. Select a language to add.
+
+412
+00:50:51,922 --> 00:50:55,642
+And it's saying that it requires Aria labeled by.
+
+413
+00:51:00,102 --> 00:51:04,782
+Do you have any other menu lists that have Aria labeled by um.
+
+414
+00:51:06,192 --> 00:51:12,922
+Where am I? Menu list.
+
+415
+00:51:19,712 --> 00:51:25,062
+Yeah, we've got one here. Any list.
+
+416
+00:51:26,492 --> 00:51:32,721
+Actions. Menu. Search engine.
+
+417
+00:51:32,722 --> 00:51:43,932
+Default header. So inside of preferences, we'll like use.
+
+418
+00:51:48,142 --> 00:51:51,352
+This header. So is there a header that makes sense to.
+
+419
+00:52:02,782 --> 00:52:09,232
+Default engine. Um.
+
+420
+00:52:15,512 --> 00:52:30,442
+Default engine search. All right.
+
+421
+00:52:30,442 --> 00:52:34,372
+Described by. So that's described by that.
+
+422
+00:52:35,362 --> 00:52:41,601
+So what should describe this. Default search engine.
+
+423
+00:52:41,602 --> 00:52:45,862
+Web height web page. Language settings. Web pages. Choose languages.
+
+424
+00:52:48,682 --> 00:52:58,942
+Um. I think this is actually.
+
+425
+00:52:59,242 --> 00:53:04,012
+Wait. And why? It's a tier two test.
+
+426
+00:53:04,012 --> 00:53:15,742
+Okay. I think this is actually sidestepping a real issue, which is that the menu list lacks the aria described by attribute.
+
+427
+00:53:17,302 --> 00:53:21,442
+Um, which it should probably have.
+
+428
+00:53:22,792 --> 00:53:34,101
+So what does that mean? Like if I am using the accessibility inspector and I look at this, I can see that it's labeled by default search engine.
+
+429
+00:53:34,102 --> 00:53:38,422
+But if I'm over here and I inspect. Whoops.
+
+430
+00:53:38,782 --> 00:53:44,212
+Um. Have to choose the right frame.
+
+431
+00:54:01,802 --> 00:54:06,032
+Combo box. The combo box.
+
+432
+00:54:13,762 --> 00:54:17,062
+You almost wanted to be described by the first item.
+
+433
+00:54:25,822 --> 00:54:31,582
+Menu item. Or rather, you want to be described by its own label.
+
+434
+00:54:33,352 --> 00:54:43,942
+But we don't do that. Label.
+
+435
+00:54:56,172 --> 00:55:02,562
+So. Yeah, I'm I'm not comfortable just skipping this chunk of the test, which just makes sure that the.
+
+436
+00:55:06,602 --> 00:55:16,001
+The add button is disable after clicking on the avail. Which you should probably have.
+
+437
+00:55:16,002 --> 00:55:26,642
+Um. You cannot ask any Yeti.
+
+438
+00:55:30,062 --> 00:55:34,502
+For situations like this where we have a visual menu list.
+
+439
+00:55:37,442 --> 00:55:41,222
+In this context, I'll take a screenshot.
+
+440
+00:55:46,142 --> 00:55:56,762
+The select language to add. It's the select a Language to add menu list.
+
+441
+00:55:59,462 --> 00:56:08,852
+Um. What's the right move for, um, making these a11y tests pass?
+
+442
+00:56:09,242 --> 00:56:15,272
+Presumably it's to add an Aria attribute here.
+
+443
+00:56:18,602 --> 00:56:29,732
+But the best thing that I think labels them meaning of the combo box is the a label of the first item.
+
+444
+00:56:31,772 --> 00:56:37,972
+Select a language to add. Any suggestions?
+
+445
+00:56:39,442 --> 00:56:49,342
+Okay, submit. Then you kind of have to do this thing to make sure that, oh yeah, that that image is properly attached.
+
+446
+00:56:50,872 --> 00:56:55,662
+So I'm going to also double um, check.
+
+447
+00:56:55,672 --> 00:57:03,501
+And what I'm going to do is I'm going to request I need to info a Yeti offline half days right now.
+
+448
+00:57:03,502 --> 00:57:11,872
+Okay. Uh, needed following a Yeti for, uh, and then this.
+
+449
+00:57:15,622 --> 00:57:21,351
+Okay. So that's done. Builds.
+
+450
+00:57:21,352 --> 00:57:28,032
+Finally done, Dom. And now it's in graphics. Okay, how about the try build?
+
+451
+00:57:28,042 --> 00:57:32,481
+I think the try build one out. It's there yet it's doing a decision.
+
+452
+00:57:32,482 --> 00:57:39,952
+It's trying to figure out what to build. Um and then hopefully it'll, it'll start building it.
+
+453
+00:57:40,852 --> 00:57:45,261
+Uh, what's another thing I want to review? Uh, so that was the first thing to review.
+
+454
+00:57:45,262 --> 00:57:48,442
+This is another one. Throw an error file. Too big.
+
+455
+00:57:48,442 --> 00:57:51,922
+If the favicon data size is over the max favicon buffer size.
+
+456
+00:57:55,372 --> 00:58:04,072
+What is this? Um, an assertion failure when fuzzing.
+
+457
+00:58:06,562 --> 00:58:15,782
+Found by visiting a live website with the debug build. Di okay.
+
+458
+00:58:15,812 --> 00:58:21,782
+Uh oh. So we just aren't handling a massive, uh, a massive favicon.
+
+459
+00:58:22,562 --> 00:58:32,012
+The reason of the crash was as that the size of favicon in report websites was over the favicon buffer size page loads were cleared.
+
+460
+00:58:32,932 --> 00:58:39,772
+So we need to do something similar and set up favicon for page two approach that came up with the fix to do the same thing for set favicon for
+
+461
+00:58:39,772 --> 00:58:46,731
+page the original correlate code the payloads are empty return just s okay written return MSR file too big so that we know what actually happens.
+
+462
+00:58:46,732 --> 00:58:52,402
+I'm choosing approach to uh. I think the approach I agree I with Mac here.
+
+463
+00:58:52,402 --> 00:58:58,112
+I think the approach is fine. Um.
+
+464
+00:59:02,392 --> 00:59:09,442
+So let's take a look at migration here. So this is inside of.
+
+465
+00:59:09,902 --> 00:59:16,252
+Whoa! Where are we? Here. What just happened? Why did, uh.
+
+466
+00:59:18,972 --> 00:59:22,662
+Why did it? Well, that's a weird looking view.
+
+467
+00:59:23,922 --> 00:59:26,952
+I wanted it to kind of, like, expand up. There we go.
+
+468
+00:59:27,912 --> 00:59:33,372
+Um, so this is inside the part of the migration mechanism.
+
+469
+00:59:33,822 --> 00:59:38,092
+The part that reads in. Yeah.
+
+470
+00:59:38,372 --> 00:59:45,072
+Yeah. Hello? Hello. I'm Dallas. Yes, this is a bunch of people just gathered around my desk watching me tool around.
+
+471
+00:59:45,112 --> 00:59:49,052
+I don't mind it. Sometimes people find bugs in what I'm writing.
+
+472
+00:59:50,372 --> 00:59:52,892
+Um, and that. That's helpful.
+
+473
+00:59:55,572 --> 01:00:03,012
+So in this case, this is the part that reads in fav icons from other browsers and inserts them into our own favicon database.
+
+474
+01:00:03,852 --> 01:00:10,552
+Um. And what he's doing is he's moving the catch two down here I see.
+
+475
+01:00:13,312 --> 01:00:22,422
+Okay. That's fine. That's fine. Um, and I think that's all he needed me to review was, uh, that change.
+
+476
+01:00:22,422 --> 01:00:27,672
+So for the, um, uh, migration utils change makes sense.
+
+477
+01:00:28,152 --> 01:00:32,981
+Thanks. Submit. Why do we have a favicon?
+
+478
+01:00:32,982 --> 01:00:37,892
+DB? Great question. So these fab icons up here, uh, that you see.
+
+479
+01:00:37,902 --> 01:00:41,262
+So what's a fab icon? You know, every time you go to a website or not? Every time.
+
+480
+01:00:41,262 --> 01:00:47,231
+But most websites you go to, like if I go to Mozilla, Dawg, there's a little icon that shows up in the corner.
+
+481
+01:00:47,232 --> 01:00:54,402
+That's the fab icon. Um, I think it's originally fab is for favorite because that's what you used to call like bookmarks.
+
+482
+01:00:54,402 --> 01:00:59,442
+And it was a way of it's like this organic standard that developed where a
+
+483
+01:00:59,442 --> 01:01:05,261
+website could have a special icon file somewhere in its directory structure,
+
+484
+01:01:05,262 --> 01:01:10,042
+like at the root of mozilla.org, there's probably something called favicon SEO.
+
+485
+01:01:10,302 --> 01:01:13,782
+Yeah, there it is. And that's like web browsers.
+
+486
+01:01:13,782 --> 01:01:19,092
+No to map fav icons to certain sites based on clues like that.
+
+487
+01:01:19,272 --> 01:01:24,252
+I think you can also use like meta tags inside of the HTML to to indicate what your favicon should be,
+
+488
+01:01:25,152 --> 01:01:32,502
+and you can update the favicon with script and stuff, but you don't always want to request those things over the network.
+
+489
+01:01:32,772 --> 01:01:39,672
+You don't always want to like be online downloading. You don't want to have to download these images every time you're like, um.
+
+490
+01:01:40,882 --> 01:01:44,362
+Uh, you're, you're, you know, showing the list of bookmarks.
+
+491
+01:01:44,572 --> 01:01:49,342
+And so what we do is when you visit a web page for the first time, we've never seen the favicon before.
+
+492
+01:01:49,492 --> 01:01:54,382
+We take it and we copy it into a database. It's like a local cache of the fab icons.
+
+493
+01:01:54,682 --> 01:01:58,792
+And we like scale them to different sizes, because oftentimes the fab icons that you'll like,
+
+494
+01:01:58,792 --> 01:02:04,422
+if we go to, um, let's go to facebook.com and look for their fab icon derecho.
+
+495
+01:02:04,972 --> 01:02:11,172
+Uh, that's not exactly what I was looking for. If we go to facebook.com and and look at oh, what?
+
+496
+01:02:11,182 --> 01:02:14,652
+Look at their. Look at this view source, bro.
+
+497
+01:02:15,002 --> 01:02:19,522
+What what are you doing? You're doing.
+
+498
+01:02:19,972 --> 01:02:24,802
+What are you doing? Um, somewhere in here, there should be a, uh.
+
+499
+01:02:27,412 --> 01:02:31,342
+OG image. I'm looking for a fab icon. Fab icon.
+
+500
+01:02:32,182 --> 01:02:37,102
+Icon. Rel equals icon. This is how you indicate what your fab icon is.
+
+501
+01:02:38,902 --> 01:02:43,282
+Oh, okay, so it's the same one I was looking for. The higher, higher quality one.
+
+502
+01:02:43,292 --> 01:02:49,072
+Um, or a higher dimension one, because some websites.
+
+503
+01:02:50,242 --> 01:03:01,462
+Uh, let's find a good example. Um. There's one that's a nice big, uh, fab icon there that's way bigger than what's, uh, appearing over here.
+
+504
+01:03:01,822 --> 01:03:06,652
+And what happens is when we see a fab icon, we will throw it in the database, but we'll also like,
+
+505
+01:03:06,982 --> 01:03:12,442
+process it and create multiple copies like, so that we have different copies at different scales.
+
+506
+01:03:12,832 --> 01:03:17,362
+Um, that's not true. If we scale them up like we will use.
+
+507
+01:03:18,412 --> 01:03:28,382
+Um, and how do I phrase this? We create multiple copies at lower scales so that for contexts like this where you're showing it,
+
+508
+01:03:28,382 --> 01:03:33,271
+I think it's technically this is supposed to be like a 16 by 16 icon, even though I'm on a retina display.
+
+509
+01:03:33,272 --> 01:03:34,472
+And so it's actually denser than that.
+
+510
+01:03:34,742 --> 01:03:43,562
+These are 16 by 16 fab icons, um, where we retrieve the 16 by 16 variant of the favicon from the database and display them there.
+
+511
+01:03:44,402 --> 01:03:49,322
+And if you're there ever context where the favicon need to be bigger like over here these fab icons,
+
+512
+01:03:49,322 --> 01:03:52,712
+these are higher quality versions of these of the fab icons.
+
+513
+01:03:53,042 --> 01:03:58,532
+Um, they'll, they'll render at the at the larger resolution so they don't look all pixelated.
+
+514
+01:03:59,832 --> 01:04:04,022
+Uh, I hope that makes sense. Anyways, so that's that's why we have the fab icon database.
+
+515
+01:04:04,022 --> 01:04:11,882
+It's like a local cache of all the fab icons. Um, and, uh, whenever you import from another browser.
+
+516
+01:04:11,882 --> 01:04:19,232
+Last, I think it was like a year and a half ago. Um, the migration wizard in Firefox, when you bring in like, bookmarks and history and stuff,
+
+517
+01:04:19,592 --> 01:04:24,632
+you get all of the bookmarks in history from the other browsers, but none of the fab icons would come over.
+
+518
+01:04:24,632 --> 01:04:31,112
+And so your browser would look pretty horrific, like you just see the sort of the default favicon all over the place.
+
+519
+01:04:31,292 --> 01:04:36,032
+The default fab icon is this globe. Um, was a default.
+
+520
+01:04:38,342 --> 01:04:43,412
+Fab icon. Um. It's, uh.
+
+521
+01:04:45,932 --> 01:04:51,842
+Where's the preview? Show me the preview. Or even better, I can, like, load it myself.
+
+522
+01:04:51,872 --> 01:04:56,401
+Um, so this thing can.
+
+523
+01:04:56,402 --> 01:05:01,502
+Can you see? Uh oh. It's so dark. I mean, I'm in dark mode.
+
+524
+01:05:02,252 --> 01:05:09,332
+Um. Hang on. Force light mode there.
+
+525
+01:05:09,632 --> 01:05:17,252
+That's what the fab. That's the default fab icon. And just everything would have that fav icon icon.
+
+526
+01:05:17,852 --> 01:05:23,641
+And it was like, if you're trying to migrate people over from other browsers, you want to make them feel as comfortable as possible,
+
+527
+01:05:23,642 --> 01:05:27,542
+because you're probably at the point where they just switched and you want to
+
+528
+01:05:27,542 --> 01:05:31,151
+get out of their way and make their browser feel useful to them immediately.
+
+529
+01:05:31,152 --> 01:05:37,622
+And so if everything is like kind of looking broken with their fab icons looking like this, um, that's not a great experience.
+
+530
+01:05:37,742 --> 01:05:41,312
+Now those those will update when people eventually visit those websites.
+
+531
+01:05:41,702 --> 01:05:46,741
+Um, you know, we'll we'll go ahead and update all the fab icons after you visit them.
+
+532
+01:05:46,742 --> 01:05:51,811
+And then slowly over time, those globes would go away. But it wasn't a great initial experience.
+
+533
+01:05:51,812 --> 01:05:59,322
+And so some I worked with some students in 2023 to migrate the fab icons from other browsers, uh, into Firefox.
+
+534
+01:05:59,322 --> 01:06:05,672
+So that that that was interesting. Um, and what else did I want to mention?
+
+535
+01:06:07,112 --> 01:06:13,082
+Oh, uh, the reason why we don't just hit the network, because that's an option.
+
+536
+01:06:13,292 --> 01:06:19,862
+You can just like, instead of showing the default fab icon, you could just, like, hit the network and download all these fab icons.
+
+537
+01:06:19,892 --> 01:06:24,722
+The problem with that is that, first of all, that's a lot of network requests after import.
+
+538
+01:06:25,382 --> 01:06:33,542
+But second of all, you may you know, we want to prevent people from making accidental network requests.
+
+539
+01:06:33,932 --> 01:06:41,792
+We don't want them to like, import from another browser and then open up a bunch of network, um, traffic to sites that maybe they don't mean to.
+
+540
+01:06:41,822 --> 01:06:49,382
+Maybe they are importing from another browser. That browser has fab icons from domains that, like you could get in trouble for.
+
+541
+01:06:49,382 --> 01:06:53,941
+If you happen to open a network request accidentally to, you know,
+
+542
+01:06:53,942 --> 01:06:59,431
+say you're in a particular country where accessing certain domains may put you on like,
+
+543
+01:06:59,432 --> 01:07:03,482
+uh, like a watch list from the federal authorities or something.
+
+544
+01:07:03,662 --> 01:07:11,282
+We don't want that to happen accidentally. You know, uh, we don't want you to import from a bunch of fab icons, and suddenly you're,
+
+545
+01:07:11,282 --> 01:07:15,092
+like, super in trouble or, like, you're in a really sticky position.
+
+546
+01:07:15,722 --> 01:07:23,012
+So that's that's the trade off. Uh, anyways, uh, okay, let's let's see where we're at.
+
+547
+01:07:23,162 --> 01:07:26,372
+Uh, this build is now building the JavaScript engine.
+
+548
+01:07:26,972 --> 01:07:31,892
+I think, uh, I've gone ahead and reviewed that.
+
+549
+01:07:31,892 --> 01:07:35,582
+I think there's one more thing I wanted to review, which was this patch.
+
+550
+01:07:35,582 --> 01:07:45,632
+Oh. By, uh. Um, does good seeing you make feature gate features to try page use the same jigsaw filtering as Nimbus.
+
+551
+01:07:46,892 --> 01:07:51,752
+Uh, it doesn't really make sense to have an additional way of specifying.
+
+552
+01:07:51,842 --> 01:08:01,532
+So what what, uh, Heise is working on is this part of, uh, about preferences, the experiments tab here where, um,
+
+553
+01:08:01,532 --> 01:08:06,782
+it's possible for us to, like, populate this with a bunch of different, you know, experiments that people can opt into.
+
+554
+01:08:07,202 --> 01:08:11,521
+I think what we're working on is trying to make it so that it's not just in nightly, but, uh, release.
+
+555
+01:08:11,522 --> 01:08:17,822
+People will also have access to some experiments. And it sounds like we have this issue where, um,
+
+556
+01:08:18,122 --> 01:08:22,472
+it doesn't make sense to have an additional way of specifying whether a feature experiment or toggle whatever is available on a given,
+
+557
+01:08:22,832 --> 01:08:26,222
+uh, build specific to features that are in the feature gate code.
+
+558
+01:08:27,062 --> 01:08:32,162
+Excuse me? When this was built, it relied on the ifdef mechanisms that we use for JS, C plus plus.
+
+559
+01:08:32,162 --> 01:08:36,752
+This part of the browser doesn't seem to be reason that switched over to the pixel based checks we use for Nimbus.
+
+560
+01:08:36,932 --> 01:08:41,462
+So Jackson is interesting because it's like it's not just like static.
+
+561
+01:08:42,122 --> 01:08:48,202
+Um. Uh, static check of, like, on Windows 10.
+
+562
+01:08:49,732 --> 01:08:53,042
+You know, 30. Two bit.
+
+563
+01:08:53,052 --> 01:08:56,972
+Not that's not a bit. Good example like on Windows 10.
+
+564
+01:08:57,332 --> 01:09:00,862
+Um, on the beta channel or something. Those are static checks that we can do.
+
+565
+01:09:00,872 --> 01:09:05,102
+Jack. So is more like profile is over 30 days old.
+
+566
+01:09:05,342 --> 01:09:11,862
+Um. Has created at least five bookmarks, so he can be a lot more expressive with a pixel.
+
+567
+01:09:12,392 --> 01:09:16,202
+Um, it's like a little language for for matching.
+
+568
+01:09:16,412 --> 01:09:20,132
+Matching things. Uh, if you're curious about what jigsaw looks like.
+
+569
+01:09:23,192 --> 01:09:27,362
+Uh, JavaScript expression language.
+
+570
+01:09:30,212 --> 01:09:36,361
+So powerful context based expression parser and evaluator.
+
+571
+01:09:36,362 --> 01:09:42,332
+So you can say like, does a thing match this expression?
+
+572
+01:09:44,102 --> 01:09:49,681
+Does a thing match this expression? And like you can develop your own functions and whatnot.
+
+573
+01:09:49,682 --> 01:09:53,821
+So it's pretty handy. Longer term, this may help us to move the consumers of each game to Nimbus.
+
+574
+01:09:53,822 --> 01:09:57,272
+Altogether, though this is a larger project. In the interim, this is about 200 lines of. Net code removal.
+
+575
+01:09:57,272 --> 01:09:59,582
+So the. That seems useful in and of itself.
+
+576
+01:10:00,092 --> 01:10:05,432
+Note that at least in the interim, the default value of a given feature game must match the default value of its pref.
+
+577
+01:10:06,872 --> 01:10:10,532
+Which is determined at compile time, and so this doesn't immediately yield more expressiveness.
+
+578
+01:10:10,862 --> 01:10:16,382
+Example. We can immediately filter on geo or other runtime characteristics. We'll likely investigate how to change this in the future.
+
+579
+01:10:16,382 --> 01:10:19,872
+However, it does yield more expressive expressiveness for uh,
+
+580
+01:10:19,892 --> 01:10:23,422
+where we expose features in this way, which is desirable especially in non nightly branches.
+
+581
+01:10:23,432 --> 01:10:27,032
+Either way, this is about 200 lines of code removal. That sounds amazing.
+
+582
+01:10:27,452 --> 01:10:33,872
+So let's check this out. Uh, meanwhile before I forget like is this building.
+
+583
+01:10:33,872 --> 01:10:39,422
+So it's we passed linting. Uh, I guess we ran linting on Linux.
+
+584
+01:10:40,292 --> 01:10:43,771
+Uh, and we're also going to lint on windows.
+
+585
+01:10:43,772 --> 01:10:47,101
+That's interesting. I wonder why we did those things. Clang formats happy.
+
+586
+01:10:47,102 --> 01:10:50,462
+And then now these builds are cooking. These builds are a cooking.
+
+587
+01:10:50,702 --> 01:10:53,762
+So we'll see how that goes. Uh, okay.
+
+588
+01:10:53,882 --> 01:10:58,732
+So. Is there a stack of patches here.
+
+589
+01:10:58,742 --> 01:11:01,352
+No. But for some reason, this failed to apply.
+
+590
+01:11:03,482 --> 01:11:08,852
+Uh, I'm open to figuring a better way of doing this via dependency injection, but this is just mimicking the code,
+
+591
+01:11:08,852 --> 01:11:13,232
+so I guess so I'll read these comments in line, actually, because I don't actually know what he's referring to.
+
+592
+01:11:15,332 --> 01:11:18,902
+Um. Let's.
+
+593
+01:11:19,212 --> 01:11:22,722
+Before we read the comments, let's actually, um.
+
+594
+01:11:25,852 --> 01:11:30,232
+Hide all of the. Can I hide all the comments?
+
+595
+01:11:31,522 --> 01:11:36,392
+Hide all in line. Let's just look at the patch and see what he's doing. So feature gates.
+
+596
+01:11:36,412 --> 01:11:42,232
+Is that mjs? What does it do? So he's set up a bunch of lazy getters.
+
+597
+01:11:46,192 --> 01:11:50,302
+Uh, so that that we're all okay.
+
+598
+01:11:53,402 --> 01:11:56,612
+And custom targeting. Okay.
+
+599
+01:11:59,492 --> 01:12:10,652
+Default. So. We define a property called default combined context, which we try and get.
+
+600
+01:12:13,202 --> 01:12:16,952
+The A is router targeting environment, and if we don't find it.
+
+601
+01:12:19,082 --> 01:12:24,722
+We don't do anything. We just carry on. We get a targeting context.
+
+602
+01:12:29,562 --> 01:12:32,682
+Can we combine the contexts custom targeting?
+
+603
+01:12:34,512 --> 01:12:38,172
+Create targeting context in the ace writer. And then I guess it's okay.
+
+604
+01:12:38,382 --> 01:12:43,302
+I never I don't know what a targeting context. I don't know what a targeting context is.
+
+605
+01:12:43,842 --> 01:12:53,052
+Um. When is it targeting context?
+
+606
+01:13:04,812 --> 01:13:10,032
+How do you combine context merge multiple targeting context objects without accidentally evaluating them?
+
+607
+01:13:10,932 --> 01:13:14,652
+So you just create a proxy that.
+
+608
+01:13:17,652 --> 01:13:29,502
+For each context. If we happen to find a property that will return the first one.
+
+609
+01:13:32,112 --> 01:13:38,081
+Okay. Okay. I guess that's the thing we can do.
+
+610
+01:13:38,082 --> 01:13:41,352
+And so this is just the empty object then. All right.
+
+611
+01:13:44,172 --> 01:13:50,472
+And then we delete the default combined context on lazy.
+
+612
+01:13:56,712 --> 01:14:02,652
+And then, oh, we delete ourselves or replace ourselves with this and return combined context.
+
+613
+01:14:03,642 --> 01:14:07,692
+Um, isn't this doing the same thing as chrome utils?
+
+614
+01:14:07,692 --> 01:14:13,192
+Define lazy getter? I agree, that's a great question.
+
+615
+01:14:13,302 --> 01:14:16,782
+I think that is what it's doing. Um.
+
+616
+01:14:21,012 --> 01:14:28,752
+And then get combined context. It will combine a bunch of contexts with the default combined context.
+
+617
+01:14:31,452 --> 01:14:38,292
+And return a new targeting context that of all of the combined contexts.
+
+618
+01:14:39,912 --> 01:14:42,942
+What? Okay, okay.
+
+619
+01:14:44,892 --> 01:14:47,892
+I don't fully know what that means, but let's keep reading.
+
+620
+01:14:50,292 --> 01:14:52,242
+Build feature gate implementation.
+
+621
+01:14:52,252 --> 01:15:01,992
+So for each of these target value keys, whether or not it's a default value or is public, we o we will evaluate the jack sill value.
+
+622
+01:15:04,692 --> 01:15:09,522
+With the definition of default value is public okay.
+
+623
+01:15:12,252 --> 01:15:16,032
+And then we'll return the implementation with the definition.
+
+624
+01:15:19,842 --> 01:15:22,872
+Same. So that became a sink.
+
+625
+01:15:22,902 --> 01:15:27,342
+Okay. And then there's, like, a bunch of stuff here.
+
+626
+01:15:27,372 --> 01:15:33,972
+These are these are the static things that we were, uh, checking before that I guess we can get rid of.
+
+627
+01:15:38,672 --> 01:15:43,561
+Take a Jack's expression evaluated against that standard. In this context, extend with some additional properties.
+
+628
+01:15:43,562 --> 01:15:48,482
+Define a custom targeting trait for successful or NULL.
+
+629
+01:15:48,482 --> 01:15:52,022
+If there was some problem. The checksum expression, which will also log an error in the console.
+
+630
+01:15:54,932 --> 01:15:58,262
+That's what we were using before. Yeah okay.
+
+631
+01:16:00,422 --> 01:16:03,661
+So we take the expression all the contexts.
+
+632
+01:16:03,662 --> 01:16:09,542
+We combine the contexts. Oh.
+
+633
+01:16:09,952 --> 01:16:16,342
+What's this? Why do we need.
+
+634
+01:16:22,022 --> 01:16:26,822
+Uh, this, uh, leftover. I'm not sure what it's doing.
+
+635
+01:16:29,582 --> 01:16:31,622
+We're just accessing target in context.
+
+636
+01:16:32,762 --> 01:16:43,802
+And then we will do context to val with default, the check expression, and then make sure that what's returned is a boolean.
+
+637
+01:16:47,022 --> 01:16:52,422
+Well. Is it a boolean? Return a boolean to true or false or null if there is some problem?
+
+638
+01:16:53,232 --> 01:16:58,752
+Yeah okay. So that makes sense.
+
+639
+01:16:59,232 --> 01:17:02,712
+And this is the part that was like evaluating static facts.
+
+640
+01:17:04,632 --> 01:17:10,421
+Then uh, here's some implementations. Uh feature gate implementation.
+
+641
+01:17:10,422 --> 01:17:19,192
+We got rid of all of these. Seemed you unused.
+
+642
+01:17:19,192 --> 01:17:27,702
+It's out test and I don't see when we would use them. Check with the default value.
+
+643
+01:17:27,712 --> 01:17:31,582
+This feature gate would be on another browser with different facts, such as on another platform.
+
+644
+01:17:32,752 --> 01:17:39,772
+Hmm. Okay. Public is public original value.
+
+645
+01:17:40,762 --> 01:17:48,382
+I guess this is all related to. Um, who's calling needs?
+
+646
+01:17:48,442 --> 01:17:57,172
+Who is calling is public with. Of course that who goes there?
+
+647
+01:17:58,312 --> 01:18:01,312
+The just the test. So there's a test.
+
+648
+01:18:02,302 --> 01:18:09,622
+These are like test only functions. And then here is our check expression.
+
+649
+01:18:15,092 --> 01:18:18,212
+Some documentation at the top of the file describing each field go a long way,
+
+650
+01:18:18,212 --> 01:18:22,261
+because I imagine folks will get confusing strings or quote rules where they would expect to see rules.
+
+651
+01:18:22,262 --> 01:18:25,952
+Maybe even renaming these to is public expression default value expr.
+
+652
+01:18:32,702 --> 01:18:38,162
+His public checks will. Default.
+
+653
+01:18:40,652 --> 01:18:51,092
+On the Drexel. Um.
+
+654
+01:18:58,072 --> 01:19:03,172
+Channel is Public channel's nightly.
+
+655
+01:19:23,182 --> 01:19:33,942
+They leave your false. It's about to go by fast.
+
+656
+01:19:34,622 --> 01:19:37,682
+A pool is apparently a better way of doing this. Yeah.
+
+657
+01:19:37,952 --> 01:19:44,922
+That's fine. Um.
+
+658
+01:19:47,082 --> 01:19:52,512
+If the, uh, property name is default value.
+
+659
+01:19:53,712 --> 01:19:57,912
+Expr or default value.
+
+660
+01:20:00,162 --> 01:20:07,482
+Check. So I think it'll explain away that awkwardness a bit.
+
+661
+01:20:11,602 --> 01:20:16,912
+Uh. All right. And then generate feature definitions.
+
+662
+01:20:19,132 --> 01:20:25,431
+Python has match. That's interesting. No.
+
+663
+01:20:25,432 --> 01:20:31,222
+Uh oh. Sure. Default value text is public text.
+
+664
+01:20:34,252 --> 01:20:40,022
+Nice fixed typo. Public.
+
+665
+01:20:40,862 --> 01:20:45,982
+False. Where are we?
+
+666
+01:20:46,002 --> 01:20:49,392
+What is this? To generate the feature definitions.
+
+667
+01:20:51,702 --> 01:20:59,292
+Um. Oh I see. So this apparently this tomo file will ultimately.
+
+668
+01:21:01,392 --> 01:21:08,232
+Um. Uh, originally this getting turned into something else, but I guess it's not actually happening anymore.
+
+669
+01:21:10,842 --> 01:21:17,772
+Process configured file. Devo.
+
+670
+01:21:18,092 --> 01:21:22,092
+So is this a test in a test result?
+
+671
+01:21:23,512 --> 01:21:31,785
+True default value. I guess I will.
+
+672
+01:21:34,072 --> 01:21:39,172
+Uh, the, uh, that was my neighbor being neighborly.
+
+673
+01:21:41,122 --> 01:21:47,842
+Uh, so that's good. See here.
+
+674
+01:21:59,752 --> 01:22:07,072
+Network. So in this case, I guess because null is probably being.
+
+675
+01:22:09,472 --> 01:22:12,922
+Or is testing a search result process file name.
+
+676
+01:22:12,932 --> 01:22:16,552
+File name. Make test file path. Good process files in file name.
+
+677
+01:22:17,332 --> 01:22:21,832
+Is there one called whoops. Is there one called good?
+
+678
+01:22:22,882 --> 01:22:26,632
+There is. And I already passed it. Minimal feature.
+
+679
+01:22:26,632 --> 01:22:36,502
+Oh I see. Doesn't set a default value. It defaults to is public false with no default value okay.
+
+680
+01:22:44,072 --> 01:22:47,222
+And then there's a bunch of the processing that you don't need anymore.
+
+681
+01:22:52,812 --> 01:23:00,842
+More tests. Test. Cause that's the mineral feature again.
+
+682
+01:23:00,842 --> 01:23:06,272
+None from good. It's all seems like the same thing.
+
+683
+01:23:10,032 --> 01:23:13,602
+Results. Json load output output from main.
+
+684
+01:23:14,052 --> 01:23:19,332
+Okay. Is public.
+
+685
+01:23:24,432 --> 01:23:36,912
+What add definition in a test definition is public equals definition is public, not test fact or test fact.
+
+686
+01:23:37,602 --> 01:23:45,402
+Otherwise default value is not test fact or is test fact.
+
+687
+01:23:45,412 --> 01:23:54,942
+Okay, I think I understand what's happening here. This is going to ensure that test fact is yeah this this office chair is falling apart.
+
+688
+01:23:55,152 --> 01:23:59,682
+You have no idea. There's there's I'm using I've been using this since I was in school.
+
+689
+01:24:00,432 --> 01:24:03,732
+Um, it's all reliable. I mean, it's perfectly good.
+
+690
+01:24:04,512 --> 01:24:08,742
+Um, uh, that seems to be good anyways.
+
+691
+01:24:09,042 --> 01:24:13,451
+Oh, no. Equal feature.
+
+692
+01:24:13,452 --> 01:24:19,062
+Default value would be false. Which would be false because test fact was not provided.
+
+693
+01:24:26,222 --> 01:24:34,842
+For? I think we removed. That helper said that makes sense as public files.
+
+694
+01:24:37,862 --> 01:24:45,622
+And yeah, we removed that that helper as well. And then here are some facts.
+
+695
+01:24:48,642 --> 01:24:52,542
+Targeting facts. Evaluate checks. Evaluate the targeting facts.
+
+696
+01:24:52,542 --> 01:24:57,402
+True. False. True. False. True. So that.
+
+697
+01:24:57,462 --> 01:25:03,152
+That's true. Cert falls.
+
+698
+01:25:12,412 --> 01:25:17,782
+Sir Paul's literal falls should work.
+
+699
+01:25:19,672 --> 01:25:31,002
+Boolean. Literal. True should work. Um.
+
+700
+01:25:32,442 --> 01:25:36,372
+Equal future contracts. False or true?
+
+701
+01:25:37,422 --> 01:25:43,452
+Compound expressions were false with false to or true.
+
+702
+01:25:43,482 --> 01:25:46,752
+One should be true. Um.
+
+703
+01:25:47,892 --> 01:25:51,192
+Non-existing terms. Expression get coerced. Bool false.
+
+704
+01:25:51,822 --> 01:25:58,962
+Await. Test fact is false. Test fact should be true for identifying is true.
+
+705
+01:25:58,962 --> 01:26:03,852
+The expression returns true. Okay, I'm reasonably happy with that.
+
+706
+01:26:04,212 --> 01:26:10,001
+Um, this seems fine to me. This seems good to me.
+
+707
+01:26:10,002 --> 01:26:14,532
+Uh, just a few notes. See below. Notes and suggestions.
+
+708
+01:26:16,272 --> 01:26:20,502
+But otherwise I'm generally happy with that. How are we doing?
+
+709
+01:26:20,532 --> 01:26:28,662
+Did this thing build? Uh, this is brutal. I really expected us to actually be able to push the fab icon stuff up.
+
+710
+01:26:28,782 --> 01:26:35,712
+Uh, yeah, and get it on auto land, but it seems like this build won't be finished in time.
+
+711
+01:26:35,712 --> 01:26:39,101
+But guess what, gang? I'm going to do it when this build is finished.
+
+712
+01:26:39,102 --> 01:26:46,272
+And I'm going to run the, uh, favicon, uh, async favicon thing through some paces, and then I'm going to queue up for autoland,
+
+713
+01:26:46,812 --> 01:26:56,082
+um, and then hopefully, uh, it'll, it'll um, you know, everything, everything will be grand and it'll merge.
+
+714
+01:26:56,382 --> 01:27:00,882
+And then we've got the jump list is basically entirely off of the main thread.
+
+715
+01:27:01,242 --> 01:27:08,382
+And then we can remove, we can, we can get those patches for removing the legacy back end hopefully reviewed.
+
+716
+01:27:08,652 --> 01:27:12,012
+Um, it looks like the builds went through. It builds correctly.
+
+717
+01:27:12,222 --> 01:27:13,782
+So that's a really good sign.
+
+718
+01:27:14,022 --> 01:27:21,491
+So maybe, uh, I just need to rebase those patches, send them over to my windows machine here and make sure that the you know,
+
+719
+01:27:21,492 --> 01:27:26,022
+everything with the new back end still functions. And then we can get those up for review.
+
+720
+01:27:26,412 --> 01:27:32,112
+And I might do that during my next stream on June 5th, because there's no real rush to remove the legacy back end.
+
+721
+01:27:32,592 --> 01:27:37,152
+Um, and maybe you'd enjoy watching that, and then we can work on something new.
+
+722
+01:27:37,182 --> 01:27:44,772
+Maybe we'll we'll work on something completely different. Hey, thanks for watching episode 366 of the Joy of coding.
+
+723
+01:27:44,772 --> 01:27:47,982
+Uh, I hope that was interesting. Uh, let me know what you thought.
+
+724
+01:27:48,342 --> 01:27:52,391
+There's a link here in the agenda to send me your feedback.
+
+725
+01:27:52,392 --> 01:27:58,992
+If there's stuff you want to see, stuff you don't want to see, um, maybe there's, um, a question you want answered or you.
+
+726
+01:27:59,082 --> 01:28:03,161
+I can try answering it on the stream. Send it in, and you can send it in with this form.
+
+727
+01:28:03,162 --> 01:28:06,311
+Um, link to rate this episode.
+
+728
+01:28:06,312 --> 01:28:09,971
+I'm just just going to drop the link into the chat. I read everything that comes in.
+
+729
+01:28:09,972 --> 01:28:15,822
+I really appreciate it when people write in, because it lets me know that you know what's working and what's not working.
+
+730
+01:28:16,992 --> 01:28:26,682
+So do please do that if you have a quick second and that's it and I will see you on June 5th, uh, where episode 367 will hopefully air.
+
+731
+01:28:26,712 --> 01:28:29,981
+Uh, presuming, you know, I don't get sick or something.
+
+732
+01:28:29,982 --> 01:28:35,022
+So stay tuned. And with that, I'll call it. Have yourselves a great couple of weeks.
+
+733
+01:28:35,022 --> 01:28:39,372
+Everybody take care. Bye bye.
+
+734
+01:28:41,022 --> 01:28:44,412
+The joy of coding.
+
+735
+01:28:44,592 --> 01:28:44,952
+See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

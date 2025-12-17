@@ -1,0 +1,2805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 280 - February 23, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 280 - February 23, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=baa296a2-63b8-4b9e-98da-ae4500f0cdee</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=baa296a2-63b8-4b9e-98da-ae4500f0cdee">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:07,043 --> 00:00:13,243
+Welcome. To the jury coding.
+
+2
+00:00:13,243 --> 00:00:17,293
+Hello and welcome to episode two hundred and eighty of the joy of coding.
+
+3
+00:00:17,293 --> 00:00:22,453
+My name is Mike Conley. It's so good to have you here. We're going to be hacking on some Firefox stuff today.
+
+4
+00:00:22,453 --> 00:00:29,083
+I can't wait. Let's get started. Let's do it. Let me just share my screen.
+
+5
+00:00:29,083 --> 00:00:36,373
+Ah, yeah, let me pull up the agenda here. So today is February 23rd, 2022 episode 280.
+
+6
+00:00:36,373 --> 00:00:42,103
+And a reminder no plan survives breakfast. I have a sense of what I want to do today, but I don't know if I'm going to succeed.
+
+7
+00:00:42,103 --> 00:00:46,243
+I don't know how things are going to go. We might get blocked, sidetracked, derailed, rabbit hold.
+
+8
+00:00:46,243 --> 00:00:47,863
+All sorts of things could happen.
+
+9
+00:00:47,863 --> 00:00:56,473
+We might just make no forward progress, but you'll get to watch the whole time and see me struggle because that's the name of the game.
+
+10
+00:00:56,473 --> 00:01:01,493
+The second thing you should know is that there's this agenda that we're looking at with all these handy dandy links.
+
+11
+00:01:01,493 --> 00:01:07,063
+Something that you have access to if you're watching this on YouTube. Check out the video description for a link.
+
+12
+00:01:07,063 --> 00:01:10,663
+If you're watching this on air, Mozilla, it'll be in the video details section.
+
+13
+00:01:10,663 --> 00:01:17,893
+And if you're on Twitch, then it should be in the Twitch chat right now.
+
+14
+00:01:17,893 --> 00:01:22,993
+There you go. There it is, there's jazz in the Twitch chat. Hopefully that shows up in the Twitch chat.
+
+15
+00:01:22,993 --> 00:01:27,373
+Sometimes the joy of coding Twitch chat works. Sometimes it doesn't.
+
+16
+00:01:27,373 --> 00:01:33,223
+In fact, maybe let me just double check if someone in the Twitch chat could just say something,
+
+17
+00:01:33,223 --> 00:01:36,913
+and I'll see if it shows up inside of the live hacking matrix channel.
+
+18
+00:01:36,913 --> 00:01:41,503
+Because that's where I just posted the agenda and I have some bridging. It works.
+
+19
+00:01:41,503 --> 00:01:48,073
+Boom. Thanks, Murphy. OK, so what I wanted wanted to do today was, first of all,
+
+20
+00:01:48,073 --> 00:01:54,373
+I want to follow up on some of the work that we did last week with probes and tell, you know, tell you how it's going and where that's at.
+
+21
+00:01:54,373 --> 00:01:59,143
+Those weren't very like big bugs that we were working on, but you know,
+
+22
+00:01:59,143 --> 00:02:02,173
+they were things that you watched me do, and so I figure we should follow up on them.
+
+23
+00:02:02,173 --> 00:02:05,893
+And then the second thing is, I want to revisit something that we were doing earlier this month,
+
+24
+00:02:05,893 --> 00:02:10,663
+which was porting the video controls widget to using the fluent system.
+
+25
+00:02:10,663 --> 00:02:17,413
+And I don't think I've worked on that at all since the last time I worked on it with that, which was, I think, on February 2nd.
+
+26
+00:02:17,413 --> 00:02:24,343
+I think it was an episode 277. So we're going to this is going to be like a continuation episode of episode 277 with
+
+27
+00:02:24,343 --> 00:02:28,093
+the fact that like the added fact that I haven't worked on it in that much time.
+
+28
+00:02:28,093 --> 00:02:34,183
+So like there will be some sort of reloading context brain state back in,
+
+29
+00:02:34,183 --> 00:02:38,683
+as well as dealing with any changes that may have happened in the platform or in the video controls since then.
+
+30
+00:02:38,683 --> 00:02:45,913
+So that'll be very exciting when we rebasing the Old Patch, all sorts of all sorts of business.
+
+31
+00:02:45,913 --> 00:02:50,413
+So let's start with these probes. Where do they get to? Well, the code's all been reviewed.
+
+32
+00:02:50,413 --> 00:03:02,203
+There were two patches in particular. We were looking at the tab closed probes that was this one, and I posted a patch and I posted it up for review.
+
+33
+00:03:02,203 --> 00:03:06,973
+The patch has been reviewed. It's been accepted. I'm still waiting on data review.
+
+34
+00:03:06,973 --> 00:03:14,773
+And then the other one was related to the about home start up cash probes.
+
+35
+00:03:14,773 --> 00:03:20,253
+Which ones that. They have been this one.
+
+36
+00:03:20,253 --> 00:03:25,473
+Yeah, seven days ago. And this one is in the same state, the patch to update the probes.
+
+37
+00:03:25,473 --> 00:03:26,553
+They have been approved.
+
+38
+00:03:26,553 --> 00:03:33,303
+I'm just waiting on data reviews or data stewards looking through the review requests and the data renewal requests that I've posted.
+
+39
+00:03:33,303 --> 00:03:37,563
+And then they will approve them or deny them based on the information I put in.
+
+40
+00:03:37,563 --> 00:03:42,003
+And that will let me know whether or not I can land these patches to bump the expiry.
+
+41
+00:03:42,003 --> 00:03:48,843
+Or they might say, No, we don't want you to collect this information anymore, in which case we will remove the probes, so we'll see how it goes.
+
+42
+00:03:48,843 --> 00:03:57,143
+But just a little update that. I wanted to now fast forward to this other bug, so this is the video controls, the fluid thing.
+
+43
+00:03:57,143 --> 00:04:00,563
+I'm not going to explain what this bug is about.
+
+44
+00:04:00,563 --> 00:04:05,813
+I don't want to do that again, especially because I did it so recently in episode two hundred and seventy seven.
+
+45
+00:04:05,813 --> 00:04:12,863
+So if you're curious, maybe don't watch this stream first, maybe go watch 277.
+
+46
+00:04:12,863 --> 00:04:17,303
+You'll get all that context and and then come back to 280.
+
+47
+00:04:17,303 --> 00:04:23,003
+But what I need to do actually is get some of that context myself. Let's see where we ended up.
+
+48
+00:04:23,003 --> 00:04:26,703
+Uh, two seventy seven.
+
+49
+00:04:26,703 --> 00:04:35,073
+Way of coding, episode 277, let's see where I ended in this one, one's a little recursive, a little joy of coding within the joy of coding.
+
+50
+00:04:35,073 --> 00:04:40,323
+Where did we get to? I think we were dealing with like test failures.
+
+51
+00:04:40,323 --> 00:04:46,143
+Oh yeah, I was like trying to hack my way around various test failures that we were hitting.
+
+52
+00:04:46,143 --> 00:04:50,083
+And basically, your security passport?
+
+53
+00:04:50,083 --> 00:05:02,823
+Oh, we realized that like the L10 end property wasn't allowed or like I didn't have access to it in the scope that I wanted it in,
+
+54
+00:05:02,823 --> 00:05:15,323
+which was the monkey test, I believe. What is that position duration?
+
+55
+00:05:15,323 --> 00:05:20,603
+And yeah, there were there were some test failures, and let's see if we can run some of these tests and see where they're at.
+
+56
+00:05:20,603 --> 00:05:26,603
+But first, excuse me, we have to rebase the old patches. So let's start there.
+
+57
+00:05:26,603 --> 00:05:33,223
+So let me clear my. My terminal and zoom in so you can see, whoa.
+
+58
+00:05:33,223 --> 00:05:39,793
+Move to the wrong display, what you do in I term, what you doing?
+
+59
+00:05:39,793 --> 00:05:47,083
+Yeah, I found the patch before. Here, this is easier if you use a whip.
+
+60
+00:05:47,083 --> 00:05:53,693
+Actually, it doesn't show everything, it just shows you your stuff in relation to other things.
+
+61
+00:05:53,693 --> 00:05:59,473
+So it's this one. And I had added like this sort of debugging commit on top.
+
+62
+00:05:59,473 --> 00:06:08,573
+So let's let's take those we're going to rebase those onto onto tip.
+
+63
+00:06:08,573 --> 00:06:18,773
+And see what happens if it bases cleanly. Had some conflicts.
+
+64
+00:06:18,773 --> 00:06:25,163
+All right, so let's see, let's deal with those, those conflicts.
+
+65
+00:06:25,163 --> 00:06:29,993
+Let me start by. Hold on a second.
+
+66
+00:06:29,993 --> 00:06:36,933
+I want to make sure I wasn't working on a security bug in my editor here. I forgot to close my editor.
+
+67
+00:06:36,933 --> 00:06:44,533
+I want to make sure I don't have anything in here you're not supposed to see. OK.
+
+68
+00:06:44,533 --> 00:06:53,223
+You know, I've been a. A new window, maybe.
+
+69
+00:06:53,223 --> 00:07:00,963
+Where did it go? Where is where are you sublime text? I said open up choice, that's a new, new file.
+
+70
+00:07:00,963 --> 00:07:03,873
+Oh, I'm looking at it. What is wrong with me? It's right here.
+
+71
+00:07:03,873 --> 00:07:10,593
+OK, so here, here, here we are, and I'm going to close these because they're not relevant.
+
+72
+00:07:10,593 --> 00:07:18,693
+Close, close, close, close. What I want to open up is this file video controls that J.S.
+
+73
+00:07:18,693 --> 00:07:25,033
+And look for our. Oh, yeah, we've got some conflicts here.
+
+74
+00:07:25,033 --> 00:07:34,963
+So what happened inside a video controls in the meantime? It looks like maybe some.
+
+75
+00:07:34,963 --> 00:07:43,423
+Some Aria labels got added, some accessibility work occurred. So that might have an impact on how this patch works.
+
+76
+00:07:43,423 --> 00:07:50,413
+Let's take a quick look at the patch where that was introduced. So this is a line from something that got introduced.
+
+77
+00:07:50,413 --> 00:08:12,803
+We'll go ahead and. We'll leave this in the background, we might not need that.
+
+78
+00:08:12,803 --> 00:08:18,833
+None of this looks new. This all looks like it was there before. I don't know why I was having such a problem with it.
+
+79
+00:08:18,833 --> 00:08:35,153
+Let's look at the log. So some recent patches that landed our keyboard and screen reader access improvements that we can take a look at that patch.
+
+80
+00:08:35,153 --> 00:08:44,783
+Click to play area label patch. Let's take a look at that and this one that changes the video sick time to five seconds by default.
+
+81
+00:08:44,783 --> 00:08:56,553
+Video Control video controls jazz.
+
+82
+00:08:56,553 --> 00:09:04,243
+There's some work here on setting the ARIA states.
+
+83
+00:09:04,243 --> 00:09:13,273
+Showing in high in closed caption menu. I don't think that's what we're hitting, we might be hitting this conflict, a conflict for this change here.
+
+84
+00:09:13,273 --> 00:09:28,063
+How about the click to play area label one? Yeah, maybe that's what we're hearing is that this one here clicked place that at RCA label, this is new.
+
+85
+00:09:28,063 --> 00:09:36,763
+OK. And what were we doing before we were getting the state on whether or not we were paused?
+
+86
+00:09:36,763 --> 00:09:42,793
+We were getting the idea of the string that we wanted.
+
+87
+00:09:42,793 --> 00:09:49,673
+And then we set the attribute such that the.
+
+88
+00:09:49,673 --> 00:09:54,813
+I. Said attributes on the play button.
+
+89
+00:09:54,813 --> 00:10:03,333
+We set the l10n ID to be this OK?
+
+90
+00:10:03,333 --> 00:10:17,783
+Our label, so I presume we also want the ARIA label to be the same thing, I believe that's something that we can do with fluent like I believe.
+
+91
+00:10:17,783 --> 00:10:27,263
+Our label is one of those things we can also supply, so we can update instead of, uh, well, we set it on the play button.
+
+92
+00:10:27,263 --> 00:10:39,063
+We also want to put it on the Click to play button. So let's take a look at our video controls fluent file.
+
+93
+00:10:39,063 --> 00:10:42,813
+Yeah, it looks like we are already doing the aerial label stuff.
+
+94
+00:10:42,813 --> 00:10:53,203
+Um, so it looks like we just want to do the exact same thing on the click to Play button.
+
+95
+00:10:53,203 --> 00:11:07,093
+OK, so. We play.
+
+96
+00:11:07,093 --> 00:11:10,603
+I think that's what we want to do here. All right.
+
+97
+00:11:10,603 --> 00:11:17,963
+Next up. Yeah, these were our other emerging conflicts here.
+
+98
+00:11:17,963 --> 00:11:26,333
+And if you're wondering why I'm not using like a merge tool like Cade and cater for, there are a couple of different commercials.
+
+99
+00:11:26,333 --> 00:11:30,023
+I cannot stand three way merger rules. It's not my I'm not a fan.
+
+100
+00:11:30,023 --> 00:11:39,953
+I prefer these conflict markers, but that's, you know, float. However you want to float your boat, you know, do whatever it makes sense for you.
+
+101
+00:11:39,953 --> 00:11:44,063
+So what happened down here under Where are we? We're inside.
+
+102
+00:11:44,063 --> 00:11:49,913
+Generate content online two eight six nine near this casting button thing.
+
+103
+00:11:49,913 --> 00:11:56,143
+I think we saw, yeah, we saw a change here inside of.
+
+104
+00:11:56,143 --> 00:12:11,133
+Screen reader one. So what happened was that we had this button and then some additional area controls got added to it.
+
+105
+00:12:11,133 --> 00:12:15,723
+Before it just had what did it just have?
+
+106
+00:12:15,723 --> 00:12:22,483
+It just had the data l10n I.D. because it looks like we were already using fluent on some of this.
+
+107
+00:12:22,483 --> 00:12:28,343
+Closed caption button. Oh, that's nice, that's nice.
+
+108
+00:12:28,343 --> 00:12:35,553
+I didn't know that. I didn't know we were already using some fluid.
+
+109
+00:12:35,553 --> 00:12:43,653
+For video controls, not much, but just a little bit. Uh, this is added by James, not that long ago.
+
+110
+00:12:43,653 --> 00:12:49,503
+OK, cool. So a button got added.
+
+111
+00:12:49,503 --> 00:12:52,263
+The RCA controls attribute was added.
+
+112
+00:12:52,263 --> 00:13:04,683
+Aria has pop up, Aria expanded and then the data l10n I.D. for video controls closed captioning button, which was originally used down here.
+
+113
+00:13:04,683 --> 00:13:17,373
+And then we have another div. This is something new the tracklist container, and it's using a mixture of both.
+
+114
+00:13:17,373 --> 00:13:26,033
+While it's using a mixture of both DTD and fluent.
+
+115
+00:13:26,033 --> 00:13:43,363
+Huh? Let's take a look at the final state of this thing. And it's using a data l10n idea of closed caption button.
+
+116
+00:13:43,363 --> 00:13:50,533
+Oops! And that sets off a label to closed captions.
+
+117
+00:13:50,533 --> 00:14:00,733
+And then we have this off label. So the ARIA label on the tracklist also has this label of closed captions.
+
+118
+00:14:00,733 --> 00:14:09,313
+The button and the container. I guess it's a some kind of pop up menu.
+
+119
+00:14:09,313 --> 00:14:13,453
+They both have that same label. OK. All right.
+
+120
+00:14:13,453 --> 00:14:19,783
+His pop up menu? I understand.
+
+121
+00:14:19,783 --> 00:14:23,563
+OK, so let's try and deconflict this a little bit before.
+
+122
+00:14:23,563 --> 00:14:29,593
+What we were changing was we were. What were we doing?
+
+123
+00:14:29,593 --> 00:14:41,373
+If I look at the Old Patch? What was it doing around here?
+
+124
+00:14:41,373 --> 00:14:52,073
+No. And casting button.
+
+125
+00:14:52,073 --> 00:15:01,773
+We changed it from casting label. Using we got rid of all of those attributes.
+
+126
+00:15:01,773 --> 00:15:08,883
+So let's let's actually get rid of the change that we were trying to make here.
+
+127
+00:15:08,883 --> 00:15:20,153
+Well, we'll just kind of like isolated away. We'll put this stuff back.
+
+128
+00:15:20,153 --> 00:15:28,733
+Oh, there's a there's a bit of this, a. So this stuff goes here.
+
+129
+00:15:28,733 --> 00:15:33,353
+And then this was like new.
+
+130
+00:15:33,353 --> 00:15:41,093
+But we already have the trackless container here.
+
+131
+00:15:41,093 --> 00:15:52,373
+So, you know, some were basically having to merge the work. So this is the new ish trackless container with.
+
+132
+00:15:52,373 --> 00:16:00,503
+Fluent, but we need to make sure it has the right Arias stuff, so hidden true role presentation.
+
+133
+00:16:00,503 --> 00:16:09,963
+OK, so that all can stay the same. Then we have the ID, the class data l10n ID here.
+
+134
+00:16:09,963 --> 00:16:21,053
+That's what we're going to bring in. We're going to bring in these two parts.
+
+135
+00:16:21,053 --> 00:16:29,313
+Closed caption off. Wait, a second, is that yeah, on the track list?
+
+136
+00:16:29,313 --> 00:16:39,343
+OK. OK, that's what you want to do. All right. OK.
+
+137
+00:16:39,343 --> 00:16:44,383
+And then Ford.
+
+138
+00:16:44,383 --> 00:16:50,573
+This stuff is no longer relevant. I don't believe.
+
+139
+00:16:50,573 --> 00:16:55,913
+This can go away. This can go away. So this is like this vestigial stuff that tried to merge but couldn't.
+
+140
+00:16:55,913 --> 00:17:07,773
+So where does it go? The casting button? I think it belongs up here, actually.
+
+141
+00:17:07,773 --> 00:17:16,703
+Instead of putting, ARIA label will put video controls casting button label, because that should have an Aria label.
+
+142
+00:17:16,703 --> 00:17:23,533
+Oh, it doesn't, it doesn't.
+
+143
+00:17:23,533 --> 00:17:38,283
+So casting button was going to set casting a button label, but that just sets this label doesn't set the Aria Attribute Aria label attribute.
+
+144
+00:17:38,283 --> 00:17:56,083
+And the ARIA label attribute was added. Casting, but it had one casting label.
+
+145
+00:17:56,083 --> 00:18:03,983
+Interesting. Yet that doesn't look right.
+
+146
+00:18:03,983 --> 00:18:09,983
+Elton in I'd video controls casting button label.
+
+147
+00:18:09,983 --> 00:18:21,813
+Couldn't just be like cars to screen, I think it's supposed to be the RCA label, actually, this might be wrong.
+
+148
+00:18:21,813 --> 00:18:42,173
+All right, we'll put that there for now. OK, so then we'll put the ID in the data out and then ID equals such and such.
+
+149
+00:18:42,173 --> 00:18:47,923
+Then we can get rid of this because this is the same closed caption button as this, and then we should have it.
+
+150
+00:18:47,923 --> 00:18:54,163
+I believe. So let's review because I know that was a lot.
+
+151
+00:18:54,163 --> 00:19:06,313
+We're supposed to have a casting button after the volume stack and a closed caption button and a trackless container that got moved.
+
+152
+00:19:06,313 --> 00:19:12,793
+It looks like as part of the, uh, as part of this change that we're merging with.
+
+153
+00:19:12,793 --> 00:19:17,783
+So that was part of the complication. That's so that's fine.
+
+154
+00:19:17,783 --> 00:19:22,773
+And then the full screen button. OK.
+
+155
+00:19:22,773 --> 00:19:30,713
+And we've removed these data CDs. Do we have any debts left over, so there's this closed caption off one.
+
+156
+00:19:30,713 --> 00:19:40,503
+I have a feeling that's not supposed to be there. Uh, yeah, we're supposed to use this stuff instead.
+
+157
+00:19:40,503 --> 00:19:48,663
+So we'll get rid of this, and we'll put this in and say, Oh yeah, we already have those things, we just get rid of the off label.
+
+158
+00:19:48,663 --> 00:20:02,293
+That's a line up that attribute. Um, what else do we see any other?
+
+159
+00:20:02,293 --> 00:20:13,053
+I don't see any leftover CDs. The ampersand is really make them stand out, so let's look to see if there are any other conflict markers.
+
+160
+00:20:13,053 --> 00:20:20,163
+So I think we're good. All right. Let's let's see if that works, so we'll resolve this one.
+
+161
+00:20:20,163 --> 00:20:27,993
+If you you can list all the conflicted files and you can say, All right, this one, I think is done.
+
+162
+00:20:27,993 --> 00:20:47,433
+Video controls dogs. All right, let's continue our rebase.
+
+163
+00:20:47,433 --> 00:20:54,933
+Merging, Hey, all right, so we finished our rebase, and hopefully it makes sense what happened?
+
+164
+00:20:54,933 --> 00:21:11,143
+I don't even know what's in this debugging patch. Let's take a quick look. Yeah, it's me just like dumping stuff.
+
+165
+00:21:11,143 --> 00:21:21,793
+Yeah, I have a feeling this is me, just just debugging and messing around, trying to figure out why things are the way they are.
+
+166
+00:21:21,793 --> 00:21:41,243
+OK, so let's build and take a look at what the video controls look like now.
+
+167
+00:21:41,243 --> 00:21:47,843
+Hmm, mm hmm. Mm hmm. I didn't see any questions come in on the rate this episode form last week.
+
+168
+00:21:47,843 --> 00:21:56,413
+So if people have questions about what I'm doing or fluent or anything like that, let me know, just drop it in the chat.
+
+169
+00:21:56,413 --> 00:22:04,183
+far-Right, thanks, Andreas. So apparently, rebasing is a surprisingly soothing experience, hey, I can make it even smoother.
+
+170
+00:22:04,183 --> 00:22:14,953
+Pegging. All right, let's check out some. Let's check out the video controls and do some, like late night radio video controls debugging here.
+
+171
+00:22:14,953 --> 00:22:19,723
+Let's put Big Bug Bunny up fully broken video controls.
+
+172
+00:22:19,723 --> 00:22:26,233
+You have to look and see what's going on here. My number 23 column 15 looks like it's a bad rebase.
+
+173
+00:22:26,233 --> 00:22:37,363
+So let's figure out what went wrong. All right. Going to move that line number 23 column 15, what went wrong?
+
+174
+00:22:37,363 --> 00:22:44,903
+Number 23? Paul, 15.
+
+175
+00:22:44,903 --> 00:22:46,283
+That that can't be right.
+
+176
+00:22:46,283 --> 00:22:57,653
+I have a feeling that this these line numbers are bogus because it's past its past markup, so the lie numbers are all bogus bogus.
+
+177
+00:22:57,653 --> 00:23:03,023
+Yeah, this is total Asmar Asmar edition of the joy of coding.
+
+178
+00:23:03,023 --> 00:23:10,043
+Hey, we're all going to hang out. Everything's going, be great. Hey, if this is what you want the joy of coding to become, we can totally do that.
+
+179
+00:23:10,043 --> 00:23:16,673
+I've got my nice wide diaphragm Mike here, and we can just take it easy if you don't want me to be super energetic.
+
+180
+00:23:16,673 --> 00:23:23,033
+All right, so let's let's find this button it was click to play right equals like to play?
+
+181
+00:23:23,033 --> 00:23:29,183
+Holy smokes. OK, so we've got a couple here because we create two different bindings.
+
+182
+00:23:29,183 --> 00:23:35,453
+We've got one. When you've got like no controls on mobile, I don't think that's what we're hitting.
+
+183
+00:23:35,453 --> 00:23:43,493
+And then we got this one over here where you have full blown controls on desktop.
+
+184
+00:23:43,493 --> 00:23:51,233
+And I think the problem is that this thing is actually, you know, part of what I read based on actually added a new DTD.
+
+185
+00:23:51,233 --> 00:23:58,643
+And we're not supposed to use CDs. So what we need to do is port this from being a DTD into being a fluent string.
+
+186
+00:23:58,643 --> 00:24:04,793
+And, you know, unfortunately, this is one of those things that it explodes so poorly.
+
+187
+00:24:04,793 --> 00:24:08,513
+Whenever a DVD is missing, we get what's called the yellow screen of death.
+
+188
+00:24:08,513 --> 00:24:13,433
+That's what we're kind of seeing here, a representation of what we have always called the yellow screen of death,
+
+189
+00:24:13,433 --> 00:24:17,963
+which is an XML parsing error because it's looking for an entity.
+
+190
+00:24:17,963 --> 00:24:26,093
+In this case, the play button dot play label entity that is missing and it fails just spectacularly, just spectacularly.
+
+191
+00:24:26,093 --> 00:24:31,793
+Excuse me. You probably don't want to hear me burp in high definition, so I turned away.
+
+192
+00:24:31,793 --> 00:24:36,383
+OK, so let's see if we can port this thing to fluid.
+
+193
+00:24:36,383 --> 00:24:44,513
+So we got this play button up play label, and we probably have video controls that still know where is playable.
+
+194
+00:24:44,513 --> 00:24:53,843
+Where's that coming from? So there was a play controls play label.
+
+195
+00:24:53,843 --> 00:24:59,783
+I see. And what were we what are we currently using it for?
+
+196
+00:24:59,783 --> 00:25:07,883
+Because maybe we're supposed to be reusing it. We use it on the Click to play button and on the play button.
+
+197
+00:25:07,883 --> 00:25:12,353
+So click the play button. Where's the play button right here?
+
+198
+00:25:12,353 --> 00:25:16,553
+And oh yeah, this is what we had worked on before where they were setting the Oreo label.
+
+199
+00:25:16,553 --> 00:25:32,083
+We can just get rid of that Oreo label. Entirely, because we've got a script now over here.
+
+200
+00:25:32,083 --> 00:25:39,103
+Not start fade, it's the l10n thing, said Attribute and so.
+
+201
+00:25:39,103 --> 00:25:44,263
+Attributes, we were doing it earlier here on the Click to Play button.
+
+202
+00:25:44,263 --> 00:25:50,833
+We set play dynamically based on whether or not its player played or paused.
+
+203
+00:25:50,833 --> 00:25:55,003
+So we're all good now. We don't need that. All right.
+
+204
+00:25:55,003 --> 00:26:01,843
+Let's reload this thing and see what happens. Big Buck Barney time.
+
+205
+00:26:01,843 --> 00:26:05,893
+All right, we got a video controls. Do we have to?
+
+206
+00:26:05,893 --> 00:26:10,693
+We have RCA labels. I have no idea. Um, let's see.
+
+207
+00:26:10,693 --> 00:26:19,783
+We've got our time showing up. That's good. We can use the accessibility tools to sort of inspect this thing and check it out.
+
+208
+00:26:19,783 --> 00:26:28,483
+It's got a labels play position, mute volume, full screen.
+
+209
+00:26:28,483 --> 00:26:35,083
+A bunch of. There's like this weird graphic in the corner, I don't know what that is.
+
+210
+00:26:35,083 --> 00:26:39,343
+But then the the play button, if I hit it, it changes.
+
+211
+00:26:39,343 --> 00:26:43,603
+It's labeled to pause. So that's working nicely and the click to play button.
+
+212
+00:26:43,603 --> 00:26:53,353
+I'm not entirely certain how we trigger click to play. Maybe from just like making it so that this thing can't autoplay.
+
+213
+00:26:53,353 --> 00:26:56,533
+Trying to think of what's a good example of non auto playing video.
+
+214
+00:26:56,533 --> 00:27:05,473
+Maybe if I go to HDMI five videos and go here, I'll bet you these show the click the play button.
+
+215
+00:27:05,473 --> 00:27:09,583
+That's this thing. So let's examine that. Yeah, and it's this play.
+
+216
+00:27:09,583 --> 00:27:14,653
+That's great. That's great. How's how's the ace RMR?
+
+217
+00:27:14,653 --> 00:27:21,613
+Ah, we dig in this. Is this really annoying? I can't tell if people were being serious when they said it should always be like this.
+
+218
+00:27:21,613 --> 00:27:26,803
+If this is super annoying, if it's getting obnoxious, let me know if this is what you're all into.
+
+219
+00:27:26,803 --> 00:27:38,083
+You know, that's cool. I can keep doing this. So let me know. So I think IRA, I think our are hurt.
+
+220
+00:27:38,083 --> 00:27:43,213
+Fluent migration is worked properly, but now we have to figure out if our tests are still failing.
+
+221
+00:27:43,213 --> 00:27:53,983
+So we're going to quit right now. And what I'm going to do is I'm going to actually use a command called H.G Absorb because what I've got here
+
+222
+00:27:53,983 --> 00:28:01,303
+is I've got some changes that have not been committed that I don't want to commit to the debugging patch.
+
+223
+00:28:01,303 --> 00:28:05,923
+I want them to be part of this. And so there's this really great command called Absorb,
+
+224
+00:28:05,923 --> 00:28:12,513
+which will attempt to determine where the changes in my commit stack should go, my uncommitted changes.
+
+225
+00:28:12,513 --> 00:28:19,393
+So I'm going to try it and we're going to see if I can guess it. So H.G absorb know it, couldn't guess it.
+
+226
+00:28:19,393 --> 00:28:31,933
+This is apparently Mark Wahlberg impression. Hey, hey, we're all say when he's programing.
+
+227
+00:28:31,933 --> 00:28:35,413
+Hey, how's your mother? We're going to we're going to work on some code here.
+
+228
+00:28:35,413 --> 00:28:39,223
+We're working on fluid. Hey, hey, say hi to your mother for me.
+
+229
+00:28:39,223 --> 00:28:44,323
+All right, we're going to do this.
+
+230
+00:28:44,323 --> 00:28:47,863
+Yeah, there's it's like, not sure what I want to do here.
+
+231
+00:28:47,863 --> 00:28:52,813
+I'm going to say, OK, I'm going to go update here. No, doesn't like it.
+
+232
+00:28:52,813 --> 00:29:03,013
+OK? In that case, she shelve update here. And then I'm going to replay Oh, man.
+
+233
+00:29:03,013 --> 00:29:14,023
+And Mercurial is going to use this as an opportunity to install a bunch of stuff from NPR for lending that's actually not Mercurio's fault.
+
+234
+00:29:14,023 --> 00:29:19,333
+I have a I have a hook enabled such that a bunch of lending happens on commits,
+
+235
+00:29:19,333 --> 00:29:25,063
+which is great for making sure that I don't accidentally commit stuff that's going to fail are limiting step,
+
+236
+00:29:25,063 --> 00:29:33,013
+but also means that periodically commits take a little bit longer because a bunch of npm stuff has to happen.
+
+237
+00:29:33,013 --> 00:29:39,453
+JavaScript node. All right.
+
+238
+00:29:39,453 --> 00:29:41,823
+Say hi to your mother for me.
+
+239
+00:29:41,823 --> 00:29:50,653
+That's what I associate with Mark Wahlberg, I think when I think of Mark Wahlberg, I think of Andy Samberg, his impression of Mark Wahlberg.
+
+240
+00:29:50,653 --> 00:30:02,463
+And so I can't think of anything else he's been in, except that banned or no, it was his brother, Donnie Wahlberg, that was part of the battle.
+
+241
+00:30:02,463 --> 00:30:09,003
+Was it not Backstreet Boys new kids on the block? Yeah, I'm showing my age.
+
+242
+00:30:09,003 --> 00:30:13,923
+Hey, what's going on here? Hey, hey, mercurial.
+
+243
+00:30:13,923 --> 00:30:19,863
+How can be taken so long? Say hi to your mother for me.
+
+244
+00:30:19,863 --> 00:30:24,333
+All right. I don't know. So watchman is this thing.
+
+245
+00:30:24,333 --> 00:30:31,023
+If you're curious, watchman is this thing that tries to like, Um, oh, the other guys he was in the other guys.
+
+246
+00:30:31,023 --> 00:30:40,533
+I think I may have seen that. I think I may have seen that. Um, he was also in the The Departed, which I also saw, and it was very good.
+
+247
+00:30:40,533 --> 00:30:44,433
+But I can't think of. I can't actually remember either of those performances.
+
+248
+00:30:44,433 --> 00:30:51,693
+I just remember enjoying the films. OK, so now we've got our changes shelved and then I went back a commit.
+
+249
+00:30:51,693 --> 00:30:53,773
+Now I'm going to unhealthy.
+
+250
+00:30:53,773 --> 00:31:01,393
+Normally, it doesn't take this long, but I guess it went to go get a bunch of stuff from NPR, so we're going to uncover change.
+
+251
+00:31:01,393 --> 00:31:07,033
+Watchmen is really struggling. I don't know what's going on here. So I was in the middle of explaining what Watchmen is.
+
+252
+00:31:07,033 --> 00:31:11,353
+Watchmen is a tool that sits in the background and watches changes to the repository
+
+253
+00:31:11,353 --> 00:31:16,993
+and uses it as an opportunity to to re index as a performance optimization.
+
+254
+00:31:16,993 --> 00:31:24,553
+Think of it as like a the thing that's always watching the file system and telling material Hey, I saw a file change time to re index.
+
+255
+00:31:24,553 --> 00:31:30,043
+And um, and I think it's really struggling right now.
+
+256
+00:31:30,043 --> 00:31:36,603
+It's timing out. So I don't know if.
+
+257
+00:31:36,603 --> 00:31:46,843
+Like, it is not something that mercurial needs, but it is something that is very helpful in making mercurial more performant, I find.
+
+258
+00:31:46,843 --> 00:31:53,233
+So a lot of a lot of great suggestions from Mark Wahlberg films inside of the live action Matrix channel,
+
+259
+00:31:53,233 --> 00:31:59,113
+in particular the other guys and the departed. Great choices, great choices.
+
+260
+00:31:59,113 --> 00:32:06,673
+OK, we need to figure out what are the tests that were failing before so that we can attempt to to re fix them?
+
+261
+00:32:06,673 --> 00:32:11,653
+Wow, this really struggling. OK, so what were the tests?
+
+262
+00:32:11,653 --> 00:32:16,243
+I think it was. Video controls underscored direction.
+
+263
+00:32:16,243 --> 00:32:22,043
+So let's find out where those are.
+
+264
+00:32:22,043 --> 00:32:27,893
+Craig is typing, so it was under toolkit, content, tests, widgets.
+
+265
+00:32:27,893 --> 00:32:34,823
+This test, in particular, the video controls direction test. So we're going to try those out.
+
+266
+00:32:34,823 --> 00:32:38,783
+So we have uncommitted our change here. I'm going to amend.
+
+267
+00:32:38,783 --> 00:32:47,493
+And then next, and that will allow us to, uh.
+
+268
+00:32:47,493 --> 00:32:58,233
+You know, I'm pretty sure this the node scripts, though, the npm stuff, the listing I'm doing on my hook does slow things down.
+
+269
+00:32:58,233 --> 00:33:02,883
+In particular, this this Watchmen thing, I really apologize.
+
+270
+00:33:02,883 --> 00:33:08,583
+You're having to watch me sit here and wait. It normally does not take this long, so I don't know what's going wrong.
+
+271
+00:33:08,583 --> 00:33:19,053
+I might have to, like, restart the Watchmen service. In fact, let's try and figure out how to do that right now.
+
+272
+00:33:19,053 --> 00:33:31,653
+Watchmen. Watchmen, Mercury, mercurial first monitor for faster results, oh, monitoring.
+
+273
+00:33:31,653 --> 00:33:45,213
+All right, this is the project. And how do I restart? Restart the Damon Dogs.
+
+274
+00:33:45,213 --> 00:33:51,303
+We crawl for any. Where are the logs?
+
+275
+00:33:51,303 --> 00:33:58,293
+I don't know. Watchmen shut down server.
+
+276
+00:33:58,293 --> 00:34:05,223
+OK. Uh. Wait.
+
+277
+00:34:05,223 --> 00:34:18,813
+Quite the prompt. So I have amended I want to just rebased this on top.
+
+278
+00:34:18,813 --> 00:34:25,713
+Meanwhile, let's see if we can restart our Watchmen service. Help.
+
+279
+00:34:25,713 --> 00:34:36,523
+Shut down, server. How do I restart the server?
+
+280
+00:34:36,523 --> 00:34:50,553
+Shut down server help. Come on.
+
+281
+00:34:50,553 --> 00:34:58,893
+Uh, Watchmen shut down server.
+
+282
+00:34:58,893 --> 00:35:11,803
+How do we make the service restart? How do we start the service? Watch project, maybe if I just shut down the service, it will automatically restart.
+
+283
+00:35:11,803 --> 00:35:18,003
+Let's try it. Let's find out. OK, we've shut down the server.
+
+284
+00:35:18,003 --> 00:35:28,953
+Oh, man, that broke the sofa thing that I'm using right now to update the the agenda on the fly because that also eases Watchmen.
+
+285
+00:35:28,953 --> 00:35:33,453
+So I just watched a whole bunch of stuff break in the background. It's OK. I've restarted it.
+
+286
+00:35:33,453 --> 00:35:37,893
+So maybe it's all good now. OK, so we've got our changes.
+
+287
+00:35:37,893 --> 00:35:45,573
+Wow, that was a long walk. I was a long walk. Let's go back up here.
+
+288
+00:35:45,573 --> 00:35:51,693
+We're going to build and we're going to run our test. Watchmen is still unavailable.
+
+289
+00:35:51,693 --> 00:35:57,063
+What is going wrong? Performing initial crawl?
+
+290
+00:35:57,063 --> 00:36:05,673
+How do we avoid crawls all?
+
+291
+00:36:05,673 --> 00:36:11,093
+Situations lawsuit to stay the file system, frequent calls are undesirable.
+
+292
+00:36:11,093 --> 00:36:22,403
+There are no simple formula for saying your system is bigger, is better. Oh man, it's brutal.
+
+293
+00:36:22,403 --> 00:36:29,753
+Anyway, we're done our bill. Let's run a test. OK, so the test we want to run is video control's direction test.
+
+294
+00:36:29,753 --> 00:36:35,073
+This is a, I believe, a monkey test. Yeah.
+
+295
+00:36:35,073 --> 00:36:43,593
+So we're going to run that test and see what happens. I have a feeling it's still going to fail.
+
+296
+00:36:43,593 --> 00:36:49,703
+We should also see if there were any recent tests added by these changes.
+
+297
+00:36:49,703 --> 00:36:58,553
+How to modify it looks like a test was added here and a test was added here.
+
+298
+00:36:58,553 --> 00:37:02,903
+And no test is out for this one, so we're going to want to rerun this entire directory.
+
+299
+00:37:02,903 --> 00:37:08,123
+Maybe, huh? Let's just run the whole directory.
+
+300
+00:37:08,123 --> 00:37:18,113
+It didn't even find video controls, direction test. I don't know why, because it exists.
+
+301
+00:37:18,113 --> 00:37:22,823
+Oh, because that's just the helper script. I see. Let's just run the whole directory.
+
+302
+00:37:22,823 --> 00:37:29,873
+Toolkit Components Widget. No toolkit content widgets.
+
+303
+00:37:29,873 --> 00:37:35,803
+Tests. Oh, tests, widgets.
+
+304
+00:37:35,803 --> 00:37:49,473
+There we go. Run the whole directory. I like how the chat is turning into a big Marky Mark appreciation thread.
+
+305
+00:37:49,473 --> 00:37:55,503
+That's great. Say hi to your mother for me.
+
+306
+00:37:55,503 --> 00:38:05,973
+All right, let's run these tests. Punch test again. Run, that's great.
+
+307
+00:38:05,973 --> 00:38:18,523
+OK. Those tests passed, all right. What's next? OK, we got a couple of failing tests with two failing tests.
+
+308
+00:38:18,523 --> 00:38:32,203
+Eight failing tests. All right. Let us start a list, so act of bugs, I already started a note here and I don't remember what this was for.
+
+309
+00:38:32,203 --> 00:38:41,163
+But what we can do is we can start editing this a little bit and add our list of failing tests.
+
+310
+00:38:41,163 --> 00:38:46,313
+As almost like a checklist, although all of these appear.
+
+311
+00:38:46,313 --> 00:38:54,783
+Well, that's not true, they're not all in the same file. Most of them are clustered in one one file to test video control size.
+
+312
+00:38:54,783 --> 00:39:00,953
+So let's look at that. Let's look at that second.
+
+313
+00:39:00,953 --> 00:39:05,453
+Well, let's let's look at that first to actually test the new controls size.
+
+314
+00:39:05,453 --> 00:39:11,433
+First of all, does it fail consistently? So Mark Moki Test.
+
+315
+00:39:11,433 --> 00:39:23,873
+There. What's another thing that Marky Mark says, try Wahlburgers.
+
+316
+00:39:23,873 --> 00:39:41,973
+Oh, that's really interesting. This past this time, let's try it again.
+
+317
+00:39:41,973 --> 00:39:51,633
+OK. What if I run it with? If I run it in the series.
+
+318
+00:39:51,633 --> 00:40:04,863
+So one of the things we're able to do is when we are running tests, which are tests of tests, which it will be test at any time.
+
+319
+00:40:04,863 --> 00:40:10,503
+This test video controls size. It's run as part of a series of tests.
+
+320
+00:40:10,503 --> 00:40:16,023
+And when they're run as a series, they're actually run, you know, inside of this like little subframe.
+
+321
+00:40:16,023 --> 00:40:20,643
+And I wonder if the actual subframe is causing the test failure to occur.
+
+322
+00:40:20,643 --> 00:40:31,983
+So what we can do is instead of waiting to run this whole series, well, we'll say run this directory, but start at.
+
+323
+00:40:31,983 --> 00:40:39,313
+Test for the controls, vti and an end at. That one, think that'll work?
+
+324
+00:40:39,313 --> 00:40:53,093
+Let's find out. Say hi to your mother for me.
+
+325
+00:40:53,093 --> 00:41:00,723
+I don't think this is doing what I thought it was going to do. This is running just the whole full blown suite again.
+
+326
+00:41:00,723 --> 00:41:11,683
+OK. Which is Mark Monkey Test, why is it run like two of them?
+
+327
+00:41:11,683 --> 00:41:15,973
+There's browser, not any and what's the other one?
+
+328
+00:41:15,973 --> 00:41:34,123
+There are two suites of tests and look in the directory toolkit content tests, widgets just like the Chrome monkey tests.
+
+329
+00:41:34,123 --> 00:41:42,453
+And the monkey test monkey tests. So one thing you can do is he can pass in the.
+
+330
+00:41:42,453 --> 00:41:52,923
+Any file? If it's not sure which tests you want to run, because I guess I didn't specify a flavor.
+
+331
+00:41:52,923 --> 00:41:58,773
+It's like, hey, there are I haven't found any tests that you want to run, no checks are actually run.
+
+332
+00:41:58,773 --> 00:42:12,373
+Because I guess it's not able to. Maybe I don't need a supply of a dot h html.
+
+333
+00:42:12,373 --> 00:42:17,443
+Unfortunately, start at and that I don't think I fully understand them.
+
+334
+00:42:17,443 --> 00:42:24,123
+Let's see what happens if I do it just this way. Yeah, it worked.
+
+335
+00:42:24,123 --> 00:42:32,833
+Wow. Oh, it's running, that's running all over.
+
+336
+00:42:32,833 --> 00:42:38,113
+OK. Interestingly, we got our failures this time,
+
+337
+00:42:38,113 --> 00:42:51,073
+so I do think it has something to do with the the size of the the iframe that it's running inside of, uh, test video controls size.
+
+338
+00:42:51,073 --> 00:43:00,613
+Let's take a look at this document. And when did this get introduced, was this?
+
+339
+00:43:00,613 --> 00:43:07,153
+Now a new test. Oops!
+
+340
+00:43:07,153 --> 00:43:29,503
+Come on. This was added way back in the day, 2016.
+
+341
+00:43:29,503 --> 00:43:41,083
+Like, what if I should make sure that the content? Is like 1000, I equals 1000.
+
+342
+00:43:41,083 --> 00:43:47,383
+Just as a test. Let's see what happens. Does that affect it?
+
+343
+00:43:47,383 --> 00:44:07,923
+It's a little bit of an experiment. So I'm just curious.
+
+344
+00:44:07,923 --> 00:44:17,153
+Yeah, that did affect it. The number of test failures went down from eight to six.
+
+345
+00:44:17,153 --> 00:44:31,313
+Which is wild, because what we what we touched was not like the ones that ended up passing or not the ones that we touched as bizarre.
+
+346
+00:44:31,313 --> 00:44:39,773
+Now before I continue, it would be great if if I could figure out how to start and end, that thing worked.
+
+347
+00:44:39,773 --> 00:44:44,123
+Let me just quickly review if I can find any documents.
+
+348
+00:44:44,123 --> 00:45:05,953
+Start, right? Is there anything in here? Tests. Here we go, debugging intermittency.
+
+349
+00:45:05,953 --> 00:45:10,213
+You can use start at and end at flags with Mark MOT to run.
+
+350
+00:45:10,213 --> 00:45:16,453
+It doesn't really tell you what you pass it.
+
+351
+00:45:16,453 --> 00:45:28,123
+Um. Update the title for Start If can fill you start at and run subset of tests.
+
+352
+00:45:28,123 --> 00:45:37,973
+And start at.
+
+353
+00:45:37,973 --> 00:45:53,673
+If options start, then start at equals. Has that ever worked?
+
+354
+00:45:53,673 --> 00:45:58,433
+I is that what's getting passed kind of getting down a rabbit hole here,
+
+355
+00:45:58,433 --> 00:46:18,333
+but I want to see what's being passed here, ex-British, uh uh, do we pass it those arguments?
+
+356
+00:46:18,333 --> 00:46:24,393
+So you are armed? Oh, it's part of the you earl that's browsed to, I understand.
+
+357
+00:46:24,393 --> 00:46:41,793
+OK, so we have to have to let it run a little bit longer and we'll take a look at the page that's loaded.
+
+358
+00:46:41,793 --> 00:46:47,633
+Nothing. All right. How about keep open? That's going to. The window open.
+
+359
+00:46:47,633 --> 00:46:56,933
+I apologize for getting so distracted. A for 40 years is some kind of touchstone.
+
+360
+00:46:56,933 --> 00:47:06,193
+Yeah, I think that's what Danny Collins is referring to, so start at and end at is being supplied, but it's just not being abided by.
+
+361
+00:47:06,193 --> 00:47:27,563
+Um. Mr. Hunter, start.
+
+362
+00:47:27,563 --> 00:47:41,743
+Jake, Start. Screen tests, file names, skip tests.
+
+363
+00:47:41,743 --> 00:47:53,783
+Let's find out what this thing does. Uh, yeah, a chunk of fire tests.
+
+364
+00:47:53,783 --> 00:48:04,253
+Start, test pattern and test path ends with.
+
+365
+00:48:04,253 --> 00:48:09,743
+Interesting. OK. OK. I can work with this chunk of my tests.
+
+366
+00:48:09,743 --> 00:48:23,023
+I've never learned. I never knew how this stuff worked. Start index is.
+
+367
+00:48:23,023 --> 00:48:29,683
+And and index is.
+
+368
+00:48:29,683 --> 00:48:37,913
+See, put that that work. Am I even allowed to print stuff?
+
+369
+00:48:37,913 --> 00:48:46,043
+How's this going to go? Getting a little distracted, but the whole reason I want to do this is so I can run the tests more quickly.
+
+370
+00:48:46,043 --> 00:48:53,843
+Dumping test context. Start indexes 19 ending is 15.
+
+371
+00:48:53,843 --> 00:49:03,633
+Did I get them reversed? Is that why start at test video controls VTi?
+
+372
+00:49:03,633 --> 00:49:11,773
+And that test really control size. What?
+
+373
+00:49:11,773 --> 00:49:22,103
+So why are the indexes all wrong, watch? Show me dump test.
+
+374
+00:49:22,103 --> 00:49:35,533
+I guess. Yeah.
+
+375
+00:49:35,533 --> 00:49:43,263
+A4 40, that's what my music teacher always told me to make sure my tuner was set to.
+
+376
+00:49:43,263 --> 00:49:51,543
+I think it's I don't exactly know what it means, but I think it has to do with like frequency.
+
+377
+00:49:51,543 --> 00:50:03,723
+So the order is dimensions. Then.
+
+378
+00:50:03,723 --> 00:50:17,843
+Holy smokes, you know what, I think these are being automatically put into alphabetical order and these are out of order, alphabetical order.
+
+379
+00:50:17,843 --> 00:50:23,393
+Wow, that's really unintuitive. OK, so here's what we're going to do,
+
+380
+00:50:23,393 --> 00:50:31,913
+here's what we're going to do to make ourselves make things easier as we're going to put this in alphabetical order.
+
+381
+00:50:31,913 --> 00:50:36,893
+We can actually use the, uh, this listing here.
+
+382
+00:50:36,893 --> 00:50:46,523
+So I was audio controls, dimensions. Then one six, the test bug one six five with this one.
+
+383
+00:50:46,523 --> 00:50:54,513
+Put that next. This is worth it, trust me, and then eight, nine, eight.
+
+384
+00:50:54,513 --> 00:51:04,363
+What there is with that one, with its skip rules and then mouse capture area.
+
+385
+00:51:04,363 --> 00:51:08,763
+Where is it? This is why these should always be in alphabetical order.
+
+386
+00:51:08,763 --> 00:51:14,883
+Uh. What has?
+
+387
+00:51:14,883 --> 00:51:18,483
+Capture. There it is.
+
+388
+00:51:18,483 --> 00:51:24,663
+Yeah, it's already there. OK. And then you would sandbox, then unbind, then video controls,
+
+389
+00:51:24,663 --> 00:51:42,293
+those are in the right spots and then audio controls time our video controls, audio video controls, audio and audio direction.
+
+390
+00:51:42,293 --> 00:51:52,763
+Controls what you control. Audio and direction and click to play, uh, video controls.
+
+391
+00:51:52,763 --> 00:52:00,973
+Click to play and then closed caption menu.
+
+392
+00:52:00,973 --> 00:52:09,953
+And then error, what's?
+
+393
+00:52:09,953 --> 00:52:17,163
+And then what's crazy and then I frame full screen.
+
+394
+00:52:17,163 --> 00:52:29,293
+What was after that chance disables? I know this isn't probably the finest thing to watch, but trust me, this will all pay off in the end.
+
+395
+00:52:29,293 --> 00:52:39,903
+To disabled key handler boom. Done. You control size and then.
+
+396
+00:52:39,903 --> 00:52:54,253
+Standalone. And then video direction video, no audio interaction, you know, audio.
+
+397
+00:52:54,253 --> 00:53:00,083
+VTi. And then where's orientation go?
+
+398
+00:53:00,083 --> 00:53:08,363
+I must have missed. Is it skipped it, skip, that's why.
+
+399
+00:53:08,363 --> 00:53:12,083
+OK, so we'll put that manually will figure out.
+
+400
+00:53:12,083 --> 00:53:17,213
+I think we can figure it out. Elemento There it is.
+
+401
+00:53:17,213 --> 00:53:30,713
+Jake, I'm A. Know. OK, so now when we run this, it should regenerate the list and then the indexes should be the right number.
+
+402
+00:53:30,713 --> 00:53:34,103
+Wait, no, no, I have to supply the right, the right ones now.
+
+403
+00:53:34,103 --> 00:53:42,793
+It's like video controls. Size is the one we care about, so let's put orientation before that.
+
+404
+00:53:42,793 --> 00:53:50,413
+Start at. It controls orientation.
+
+405
+00:53:50,413 --> 00:53:59,143
+And then you control size. This should work. So I mean,
+
+406
+00:53:59,143 --> 00:54:14,393
+we take a to do lesson learned like we need to I need to share that information with my fellow engineers out there that this is how this stuff works.
+
+407
+00:54:14,393 --> 00:54:26,903
+Why is it doing key handler? Ten needed rookie handler.
+
+408
+00:54:26,903 --> 00:54:35,493
+I asked the two orientation then sides, why did two key handler? Let's let's look at its list again.
+
+409
+00:54:35,493 --> 00:54:45,383
+OK. Dimensions or the new controls.
+
+410
+00:54:45,383 --> 00:54:52,403
+H r, d, f g h quick orientation, did I put orientation in the wrong spot?
+
+411
+00:54:52,403 --> 00:55:00,013
+Oh, because it skipped. That's why ah, fool, fool, I should have done Ki handler as my.
+
+412
+00:55:00,013 --> 00:55:07,343
+It's my first one. OK.
+
+413
+00:55:07,343 --> 00:55:26,363
+Then I need to put in here. How come I can't escape this like formatting that I'm in this like gray formatting, help me escape.
+
+414
+00:55:26,363 --> 00:55:45,833
+That's why. OK. To Dos. File a bug to add, or that puts all monkey test any files into alphabetical order.
+
+415
+00:55:45,833 --> 00:55:53,263
+OK, that's important. OK, let's run this. This should be nice and short,
+
+416
+00:55:53,263 --> 00:56:05,113
+and this was a long walk so that we could run our tests very quickly and not have to run them all trying to find the minimal set.
+
+417
+00:56:05,113 --> 00:56:18,013
+OK, so we've got our. Because when we run it on its own, that's that still passes, right?
+
+418
+00:56:18,013 --> 00:56:40,523
+If I just run video control size, it will pass. I think that has been our observation, I should write this down.
+
+419
+00:56:40,523 --> 00:56:54,733
+Yeah. Running. On its own passes, so I have to run it with another test in order to hit the failure.
+
+420
+00:56:54,733 --> 00:57:02,393
+Now ideally this this test that runs just before it is actually a little too long.
+
+421
+00:57:02,393 --> 00:57:07,683
+I wonder if I will temporarily skip this one and put it back to running the orientation test.
+
+422
+00:57:07,683 --> 00:57:11,303
+Let's see if that one passes and see if this is faster.
+
+423
+00:57:11,303 --> 00:57:19,763
+The faster we can make the test run, the faster we can create the sort of like feedback loop on whether or not we're making forward progress.
+
+424
+00:57:19,763 --> 00:57:29,553
+I always find that's a good first step when dealing with a bug like this is shorten the feedback loop.
+
+425
+00:57:29,553 --> 00:57:34,533
+No, this is not slow. This is this is slower, much slower.
+
+426
+00:57:34,533 --> 00:57:46,133
+Let's see if we can find a different one. Um, let's skip if.
+
+427
+00:57:46,133 --> 00:57:59,973
+True or. And we'll do the jazz disabled one. Yes, disabled.
+
+428
+00:57:59,973 --> 00:58:19,153
+There's no underscore. Say hi to your mother for me.
+
+429
+00:58:19,153 --> 00:58:25,393
+Good, much faster. That's I think it's as good as it's going to get progress.
+
+430
+00:58:25,393 --> 00:58:35,513
+Containers should live longer than 48. What does that mean? So let's look at the actual test itself and see what it's testing and failing to pass on.
+
+431
+00:58:35,513 --> 00:58:52,263
+Longer than. So it's talking about the scrubber widths.
+
+432
+00:58:52,263 --> 00:58:59,553
+What happens is this test. What does it do?
+
+433
+00:58:59,553 --> 00:59:16,013
+For each video element, we push a function that returns a promise that resolves after this test, UI function runs.
+
+434
+00:59:16,013 --> 00:59:27,443
+Test cases push. Stairs like the weight to the metadata is loaded and that resolves, so then we just sort of like,
+
+435
+00:59:27,443 --> 00:59:37,343
+I think we go through these test cases, we execute the individual tasks and then we call simple test finish.
+
+436
+00:59:37,343 --> 00:59:51,303
+I see. So let us now see what happens if we increase this area even further.
+
+437
+00:59:51,303 --> 01:00:02,023
+Let's see if that influences the test. Duration should be I got false expected.
+
+438
+01:00:02,023 --> 01:00:12,113
+True. It doesn't impact it.
+
+439
+01:00:12,113 --> 01:00:21,513
+What happens if we wait? You know, the reason I'm doing all of this is because I.
+
+440
+01:00:21,513 --> 01:00:34,113
+It's protest. The reason I'm doing all of this is because and I find the fact that it passes whenever it's run in isolation rather mysterious.
+
+441
+01:00:34,113 --> 01:00:43,333
+So let's try this window set timer. Instead of executing soon, see what happens if we do a set timer that runs after one second?
+
+442
+01:00:43,333 --> 01:01:04,923
+How many video elements are there? Oh, man, this that'll take a while, so let's reduce that to 100 milliseconds.
+
+443
+01:01:04,923 --> 01:01:13,643
+Because I want to see if it's a layout like a race related to it and how it's laid out.
+
+444
+01:01:13,643 --> 01:01:26,723
+Well, this is complaining because the test attempted to use a flip if flakey layout, and we're failing some of the tests, so it's even worse.
+
+445
+01:01:26,723 --> 01:01:41,623
+So using set timer did not help. Yeah, we tend not to like to use timers, but this is it's upset because I tried to use it as a debugging tool.
+
+446
+01:01:41,623 --> 01:01:48,853
+OK, well, then the next thing we need to do is kind of go through these one at a time to figure out what's going wrong here.
+
+447
+01:01:48,853 --> 01:01:58,523
+Let's try and reduce this even further. So for one of these?
+
+448
+01:01:58,523 --> 01:02:03,533
+One of these videos, we don't know which one it is, one of these videos is failing.
+
+449
+01:02:03,533 --> 01:02:15,653
+I think it's the one that complains about 48 progress and terror should longer than 48 should.
+
+450
+01:02:15,653 --> 01:02:23,763
+Then men scrubber with which? Is touch control?
+
+451
+01:02:23,763 --> 01:02:33,613
+I see. So I don't know which one it is, let's try and reduce the number of videos that we have to deal with.
+
+452
+01:02:33,613 --> 01:02:52,273
+Let's just take this first one. Let's see if that one fails.
+
+453
+01:02:52,273 --> 01:03:02,953
+That one does not fail. Let's add a few more.
+
+454
+01:03:02,953 --> 01:03:11,503
+So kind of bisecting by hand here, I'm very curious to know if we can reduce again,
+
+455
+01:03:11,503 --> 01:03:18,223
+it's reducing the the loop, the feedback loop, trying to make this pass or fail as quickly as possible.
+
+456
+01:03:18,223 --> 01:03:23,083
+OK, so we've got some failures and it's in some of these videos, but we don't think it's the first video.
+
+457
+01:03:23,083 --> 01:03:30,083
+Can we reduce it even further? Is it one of these two?
+
+458
+01:03:30,083 --> 01:03:44,463
+Maybe we can do this headless as well, so we don't have so much flashing around.
+
+459
+01:03:44,463 --> 01:03:50,753
+Let me just double check, because sometimes headless will affect things as well.
+
+460
+01:03:50,753 --> 01:03:57,683
+I don't want to switch to it unless we're confident that it's not having an impact on the test.
+
+461
+01:03:57,683 --> 01:04:20,703
+OK, it is having an impact on the test. So one of these two, is it the first one?
+
+462
+01:04:20,703 --> 01:04:27,273
+It is the first one, though, this one should now fail.
+
+463
+01:04:27,273 --> 01:04:42,223
+I put this like this this one video to of height 240 or width 240, height 320.
+
+464
+01:04:42,223 --> 01:04:49,533
+Oh, that's interesting. Do they both need to be involved?
+
+465
+01:04:49,533 --> 01:05:02,603
+If that's the case, I want to see what this looks like. Huh.
+
+466
+01:05:02,603 --> 01:05:06,923
+And now it passed, so do we have some inconsistency here? Let's run this again.
+
+467
+01:05:06,923 --> 01:05:12,653
+Do we have some intermittent failure? Am I going?
+
+468
+01:05:12,653 --> 01:05:25,083
+Am I? Am I losing my marbles? What, let's add this one.
+
+469
+01:05:25,083 --> 01:05:36,433
+Do they all just pass now? Is a job done? Has the fish escaped the bucket?
+
+470
+01:05:36,433 --> 01:06:02,613
+Has the fish escaped the bucket? He screamed into the void.
+
+471
+01:06:02,613 --> 01:06:08,283
+Wait a second. OK, now we put that video back.
+
+472
+01:06:08,283 --> 01:06:23,293
+Hold on, I I am skeptical about 320 120 by 320.
+
+473
+01:06:23,293 --> 01:06:39,613
+All right. Run it again, this time with my mouse cursor over here.
+
+474
+01:06:39,613 --> 01:06:55,753
+No, that's not it. Zawinul seeing this, that's not the inconsistency.
+
+475
+01:06:55,753 --> 01:06:59,803
+My am I seeing this just by myself?
+
+476
+01:06:59,803 --> 01:07:09,793
+I'm trying to find the minimal set, maybe I require all of these videos, you know, that might make sense if this has to do with layout.
+
+477
+01:07:09,793 --> 01:07:17,383
+Maybe it's less to do with an individual video and more about the full set of videos, the way they're laid out.
+
+478
+01:07:17,383 --> 01:07:30,023
+And one way we could try and reduce. The timing the time of this test is to reduce the number of video elements that we get.
+
+479
+01:07:30,023 --> 01:07:41,233
+So instead of getting all the elements that are the video elements will get, uh, let's get the fourth one.
+
+480
+01:07:41,233 --> 01:07:50,233
+Or, sorry, the fifth one. And that's for sure, if he says yes, hence my LOL.
+
+481
+01:07:50,233 --> 01:08:00,743
+Yes. Watch me suffer with intermittent test failures.
+
+482
+01:08:00,743 --> 01:08:11,913
+Uh. Thank.
+
+483
+01:08:11,913 --> 01:08:20,913
+Get element by tag name returns, a A. list and not an array.
+
+484
+01:08:20,913 --> 01:08:43,303
+What are we talking about, right? All right, fine, do that.
+
+485
+01:08:43,303 --> 01:08:56,833
+Could be and so could be so difficult test, OK, we got one, we got one, so 180 by 320.
+
+486
+01:08:56,833 --> 01:09:01,753
+That's this one VIDEO at index for the fifth one here.
+
+487
+01:09:01,753 --> 01:09:06,943
+This is the one that's failing. The duration should hide.
+
+488
+01:09:06,943 --> 01:09:32,053
+Duration should hide. This is line one for excuse me to control the duration label should be hidden.
+
+489
+01:09:32,053 --> 01:09:41,023
+But it's not. So let's keep this open and see if we can see what's going get like an actual visual indication of what's going on here.
+
+490
+01:09:41,023 --> 01:09:51,113
+So we expect the duration label to not be present.
+
+491
+01:09:51,113 --> 01:09:58,113
+We can I just keep this loaded, can I just not finish?
+
+492
+01:09:58,113 --> 01:10:22,343
+Where's it safe finish? Just don't finish. And we can open up to have tools and take a closer look.
+
+493
+01:10:22,343 --> 01:10:33,273
+What are we looking at here? This frame showed me this frame.
+
+494
+01:10:33,273 --> 01:10:42,483
+Two one, two, three, four five, this one, so we expect the duration to be hidden.
+
+495
+01:10:42,483 --> 01:10:49,613
+I think. And it is.
+
+496
+01:10:49,613 --> 01:11:01,473
+What was the actual failure? Scooby Doo.
+
+497
+01:11:01,473 --> 01:11:08,853
+Oh, man, there's so much logging I put in to start.
+
+498
+01:11:08,853 --> 01:11:22,783
+Where does it fail? Test passed has passed unexpected failed, the duration should be hidden.
+
+499
+01:11:22,783 --> 01:11:38,943
+But the duration is hidden. OK.
+
+500
+01:11:38,943 --> 01:11:46,333
+Let's see here. Well, I did expand it out.
+
+501
+01:11:46,333 --> 01:11:53,693
+What would be nice is if we could actually scroll around inside of that.
+
+502
+01:11:53,693 --> 01:12:01,373
+Test runner sort of frame. And see what it looks like inside of the frame.
+
+503
+01:12:01,373 --> 01:12:10,263
+So how do I make the scrollable this frame? Test frame.
+
+504
+01:12:10,263 --> 01:12:28,343
+Uh, let's make it scrollable. Scroll.
+
+505
+01:12:28,343 --> 01:12:45,283
+So you're scrolling is no on it. Forget that. Oh, interesting when it's laid out like this.
+
+506
+01:12:45,283 --> 01:12:54,313
+We're all kind of like in this line. And the duration does appear to be hidden.
+
+507
+01:12:54,313 --> 01:13:01,813
+Let's double check that the one we care about. What we're going to do is we're going to decorate it.
+
+508
+01:13:01,813 --> 01:13:12,113
+Zero one two three four. Um.
+
+509
+01:13:12,113 --> 01:13:29,633
+When I outline it and read and then the other thing we're going to do is this test runner thing, the test frame ID equals test frame.
+
+510
+01:13:29,633 --> 01:13:41,033
+Monkey tests, which. Harness.
+
+511
+01:13:41,033 --> 01:13:49,323
+Uh, scrolling equals. So you're.
+
+512
+01:13:49,323 --> 01:14:03,913
+Who said scrolling equals no on this thing. Single test run.
+
+513
+01:14:03,913 --> 01:14:24,323
+So a tribute scroll. No.
+
+514
+01:14:24,323 --> 01:14:39,553
+Test runner, this removes that. Mahek, who adds it frame, test, frame, frame, source, test run tests.
+
+515
+01:14:39,553 --> 01:15:06,753
+And are you a single test case are. Which it.
+
+516
+01:15:06,753 --> 01:15:22,043
+Hmm. Might be this. I don't know.
+
+517
+01:15:22,043 --> 01:15:29,393
+Let's take a look at the document on to run.
+
+518
+01:15:29,393 --> 01:15:33,563
+What is this? Based on Moki unit tests.
+
+519
+01:15:33,563 --> 01:15:45,143
+What is this small? Where do we link to Moki Kit-Kat?
+
+520
+01:15:45,143 --> 01:15:50,093
+Out of server AHA, we can.
+
+521
+01:15:50,093 --> 01:15:58,203
+What is this? So we construct some kind of. Oh, man, look at this.
+
+522
+01:15:58,203 --> 01:16:07,443
+This is why this is so hard to, oh, this is ancient stuff, OK?
+
+523
+01:16:07,443 --> 01:16:13,333
+Monkey test server it jazz scrolling.
+
+524
+01:16:13,333 --> 01:16:24,313
+We're going to get rid of that. Wild, this is wild stuff, people, wild stuff.
+
+525
+01:16:24,313 --> 01:16:29,083
+The monkey test framework, very old before my time.
+
+526
+01:16:29,083 --> 01:16:34,683
+I don't know what's going on with it. OK.
+
+527
+01:16:34,683 --> 01:16:39,873
+So this is the one we care about. Look, the duration is is present, and that's why it's failing.
+
+528
+01:16:39,873 --> 01:17:09,143
+We expect this duration to, I guess, not be present. So why is it present?
+
+529
+01:17:09,143 --> 01:17:15,023
+Uh, let's let's think for a second.
+
+530
+01:17:15,023 --> 01:17:22,343
+So what this stuff is exercising? Well, first of all, is this actually broken or is this a test that is kind of flaky?
+
+531
+01:17:22,343 --> 01:17:27,893
+Let's see if we can find that out. Big Buck Barney again.
+
+532
+01:17:27,893 --> 01:17:34,313
+Can I make this video a, uh, video?
+
+533
+01:17:34,313 --> 01:17:51,233
+Can I say like, resizable? No, can I wrap it in something that's resizable?
+
+534
+01:17:51,233 --> 01:18:02,343
+Um, h tml resizable, I think there is something resized property that's maybe what I'm thinking of.
+
+535
+01:18:02,343 --> 01:18:07,923
+Resize, that's what I want. Re size, how does it work?
+
+536
+01:18:07,923 --> 01:18:15,273
+Text size and arbitrary elements you can resize to make any and resizable.
+
+537
+01:18:15,273 --> 01:18:20,193
+Yeah, it's what I want. So say resize both.
+
+538
+01:18:20,193 --> 01:18:25,833
+So get rid of that instead. On the body, I'll say resize both.
+
+539
+01:18:25,833 --> 01:18:31,653
+Does that work? Can I do that? No. How it on the video. Resize both.
+
+540
+01:18:31,653 --> 01:18:58,283
+Can I? Are you lying to me or? Has been paragraph, I am resizable, sizable success.
+
+541
+01:18:58,283 --> 01:19:02,093
+So why aren't you resizable? How do you make it resizable, bar?
+
+542
+01:19:02,093 --> 01:19:08,323
+Oh, I think you have to say that it's maybe you have to supply an overflow rule.
+
+543
+01:19:08,323 --> 01:19:18,563
+OK. OK. OK. That's why. Uh, overflow scroll.
+
+544
+01:19:18,563 --> 01:19:27,983
+What still not resizable? Overflow scroll resizable.
+
+545
+01:19:27,983 --> 01:19:44,993
+Can I put this inside? Uh, this.
+
+546
+01:19:44,993 --> 01:19:50,213
+And then say controls on it. OK.
+
+547
+01:19:50,213 --> 01:20:06,613
+Good news, everyone. Good news, everyone. And then can I make this thing flex?
+
+548
+01:20:06,613 --> 01:20:17,733
+Um, no, sorry, uh, flex.
+
+549
+01:20:17,733 --> 01:20:25,623
+There's three sides or a.
+
+550
+01:20:25,623 --> 01:20:30,573
+You screwed myself here, may have screwed myself here, everybody.
+
+551
+01:20:30,573 --> 01:20:45,273
+Um. What do I want to width equals 500 x height, five hundred.
+
+552
+01:20:45,273 --> 01:20:54,443
+VIDEO. Our pets. OK, so how do I make the video?
+
+553
+01:20:54,443 --> 01:20:59,333
+Um, flex with it, I'm trying to remember how how this works.
+
+554
+01:20:59,333 --> 01:21:05,423
+We did this. Oh oh, hang on. With.
+
+555
+01:21:05,423 --> 01:21:12,233
+No. Uh.
+
+556
+01:21:12,233 --> 01:21:20,993
+I mean, this needs to be display. Actually, I'm kind of panicking here a flex.
+
+557
+01:21:20,993 --> 01:21:44,603
+How do I make this work the way I think it's supposed to work, that might be the problem is that it was a paragraph border red and.
+
+558
+01:21:44,603 --> 01:21:50,303
+We have to apply this rule. OK. Two, I have thank goodness that makes more sense.
+
+559
+01:21:50,303 --> 01:22:07,663
+OK. So look at what we've got here, we've got this behavior where when we shrink this size, the first thing that goes is the.
+
+560
+01:22:07,663 --> 01:22:21,703
+Volume, then the remaining duration and then the current position and then or like the play had scrubber.
+
+561
+01:22:21,703 --> 01:22:28,273
+And then finally, the volume toggle, play and pause or like the last thing we keep around.
+
+562
+01:22:28,273 --> 01:22:43,093
+So those are the rules. And it sounds like the issue is that we've changed things somewhat in the third bill here.
+
+563
+01:22:43,093 --> 01:22:49,303
+Now that I've got this, I can publish it. Uh, save a snapshot.
+
+564
+01:22:49,303 --> 01:22:58,723
+OK, so let's let's see if we can recreate the issue.
+
+565
+01:22:58,723 --> 01:23:05,413
+Oh yeah. Look, we're never showing. We never show the remaining duration.
+
+566
+01:23:05,413 --> 01:23:14,293
+We've broken that somehow. So that's an issue.
+
+567
+01:23:14,293 --> 01:23:19,873
+Um, is that why is that?
+
+568
+01:23:19,873 --> 01:23:26,983
+No, it's appearing here. So for some reason, it's not appearing here.
+
+569
+01:23:26,983 --> 01:23:36,463
+And that's our first. That's our first thing that I think we can investigate, like an actual broken, broken behavior.
+
+570
+01:23:36,463 --> 01:23:46,153
+Um, one thing we can do is we can start inspecting the content of the anonymous source of the shadow area within the video element.
+
+571
+01:23:46,153 --> 01:23:51,073
+So like the stuff that we add for video controls in the shadow DOM, we can inspect it with our dev tools.
+
+572
+01:23:51,073 --> 01:24:02,713
+Once we flip this pref inspector, show all anonymous content because that allows us to kind of like drill in a little bit and go like, Whoop.
+
+573
+01:24:02,713 --> 01:24:09,703
+Hang on, we have to focus the right frame that one and find our video.
+
+574
+01:24:09,703 --> 01:24:19,793
+Oh, do we have to restart? We may have to restart. OK.
+
+575
+01:24:19,793 --> 01:24:35,873
+Try again. Enough sound from you and suspect or video, OK, so we can get inside the shadow root.
+
+576
+01:24:35,873 --> 01:24:49,993
+Look at the video controls. We're going to expand this thing out and see if we can find the.
+
+577
+01:24:49,993 --> 01:25:02,623
+You OK? I want the new controls picture in toggle control bar at the bottom position duration box.
+
+578
+01:25:02,623 --> 01:25:20,403
+That's that one. And then. Position and then duration is nine, five, six, and it's only showing the position and not the duration.
+
+579
+01:25:20,403 --> 01:25:30,893
+Because it's hidden. This thing has been hidden on us. If I remove that attribute that hidden that it comes back hidden equals false.
+
+580
+01:25:30,893 --> 01:25:46,383
+Does this? But what is going on here?
+
+581
+01:25:46,383 --> 01:25:57,353
+You know, I'll bet you this is being updated like what I have here is a snapshot that is out of date.
+
+582
+01:25:57,353 --> 01:26:02,423
+Like, if I do that and get it, the give me, give me at it.
+
+583
+01:26:02,423 --> 01:26:12,973
+Come on. Show, um.
+
+584
+01:26:12,973 --> 01:26:22,963
+I want to execute in the runner. Seriously, I need this thing.
+
+585
+01:26:22,963 --> 01:26:36,023
+Give it. Give me access to this. It was set to hidden, and we're definitely not at 37 still.
+
+586
+01:26:36,023 --> 01:26:50,123
+Um. Right. How do I make sure that this is up to date?
+
+587
+01:26:50,123 --> 01:26:54,083
+Basically, I think DevTools is lying to us a little bit here, and in fact,
+
+588
+01:26:54,083 --> 01:27:07,243
+maybe I can do better by using the browser toolbox to get a fresh, a fresh look.
+
+589
+01:27:07,243 --> 01:27:12,913
+Uh, control bar, duration, box, yeah, 154 duration.
+
+590
+01:27:12,913 --> 01:27:23,473
+And this is once again hidden. And this stuff gets hidden, I've looked into this someone says you don't have auto refresh and dev tools,
+
+591
+01:27:23,473 --> 01:27:31,663
+I have a feeling we're hitting a real weird edge case. Smurf D, which is that fluent, is updating stuff on the fly inside the shadow dom.
+
+592
+01:27:31,663 --> 01:27:37,033
+And so I think our dev tools is falling over in that particular edge case,
+
+593
+01:27:37,033 --> 01:27:47,773
+which is not something I would expect web developers to ever hit using fluent in the shadow dom of, in particular, a U.A. widget.
+
+594
+01:27:47,773 --> 01:27:52,693
+So it's a very special kind of gecko thing that doesn't exist. You can't create those on the web.
+
+595
+01:27:52,693 --> 01:27:58,303
+So I have a feeling that's what we're falling into here is where it's a very sort of niche problem for us.
+
+596
+01:27:58,303 --> 01:28:01,093
+Browser does that web developers probably wouldn't hit because yeah,
+
+597
+01:28:01,093 --> 01:28:10,603
+normally when stuff is updated on the fly, you do generally see it reflected inside of the dev tools.
+
+598
+01:28:10,603 --> 01:28:17,863
+It might also be because of this pref, like the anonymous content thing, might not update properly.
+
+599
+01:28:17,863 --> 01:28:30,313
+That might also be it. So that hidden rule being applied or not being applied as I understand it has to do with where I've added logging.
+
+600
+01:28:30,313 --> 01:28:45,053
+The hidden attribute is controlled by. Hidden by adjustment is hidden explicitly is hidden by adjustment.
+
+601
+01:28:45,053 --> 01:29:09,973
+Because, like there's this very complicated pieces of machineries where like we set the hidden state.
+
+602
+01:29:09,973 --> 01:29:19,363
+On a particular control, we've got a minimum test case here, though, like kind of we've got this this thing with a particular ID.
+
+603
+01:29:19,363 --> 01:29:24,913
+So what we can do is add some very specific logging.
+
+604
+01:29:24,913 --> 01:29:41,963
+If controlled, our ID equals this, then we can say dump setting duration span hidden to control what is hidden explicitly.
+
+605
+01:29:41,963 --> 01:29:58,083
+Explicitly. And adjustment, it's my own control that is hidden by adjustment.
+
+606
+01:29:58,083 --> 01:30:07,173
+And what would also be nice is a stack, so stack.
+
+607
+01:30:07,173 --> 01:30:18,023
+So let's reload this. Let's take a look at our.
+
+608
+01:30:18,023 --> 01:30:32,863
+Our consul here, setting duration span heading to and what's the rule false and true, so if either of them are true, then it gets hidden.
+
+609
+01:30:32,863 --> 01:30:38,173
+So by adjustment is true, and that's on adjust control size when we're handling a particular event.
+
+610
+01:30:38,173 --> 01:30:46,223
+Now let's let's resize this a little bit. Let's make it nice and big.
+
+611
+01:30:46,223 --> 01:30:54,513
+And we're saying, Hey, Hayden, should be false. Hayden should be false.
+
+612
+01:30:54,513 --> 01:31:03,883
+But it's not actually updating the hidden attribute. We haven't removed the hidden attribute.
+
+613
+01:31:03,883 --> 01:31:12,203
+Now, why is that? Interesting question.
+
+614
+01:31:12,203 --> 01:31:21,173
+His control for right Dom element.
+
+615
+01:31:21,173 --> 01:31:29,643
+Are we barking up the wrong tree? True.
+
+616
+01:31:29,643 --> 01:31:38,733
+It's control and false. OK, I think I know what's going wrong. I think I know it's going wrong.
+
+617
+01:31:38,733 --> 01:31:54,093
+Whoo boy. OK, control of adjustable controls define properties on the control and the control is.
+
+618
+01:31:54,093 --> 01:32:03,943
+From this from prioritized controls, this so-called so-called prioritize controls equals.
+
+619
+01:32:03,943 --> 01:32:08,373
+These things play button, including the duration span, which.
+
+620
+01:32:08,373 --> 01:32:16,263
+I erased from this, uh, maybe I should put that that.
+
+621
+01:32:16,263 --> 01:32:41,633
+Duration span. Yeah.
+
+622
+01:32:41,633 --> 01:32:59,653
+You know, inspired, uh. Hey. Add this as well, OK, I think I know what's going wrong, and I'll explain in a second.
+
+623
+01:32:59,653 --> 01:33:08,343
+And then we're going to put that back. Spam, was that OK, we did put that back.
+
+624
+01:33:08,343 --> 01:33:14,763
+OK, so here's what I think is going wrong. Dev, not dev tools.
+
+625
+01:33:14,763 --> 01:33:27,243
+Fluent has this really neat feature, which allows us to overlay items inside of the the dom with the preexisting markup.
+
+626
+01:33:27,243 --> 01:33:43,083
+Let me give you an example inside of our video controls here we have this duration, span thing duration span.
+
+627
+01:33:43,083 --> 01:33:48,723
+Which is held inside this position duration box. Let me find the market for you.
+
+628
+01:33:48,723 --> 01:33:49,743
+Here it is.
+
+629
+01:33:49,743 --> 01:34:01,593
+So we have this position duration box, which has the span inside it with this special attribute, data l10n name equals position, duration, format.
+
+630
+01:34:01,593 --> 01:34:10,713
+And one of the advantages to doing this is that or like what we're trying to do here is we have this markup defined, but we have no strings involved.
+
+631
+01:34:10,713 --> 01:34:21,133
+But what we do have is in our l10n string or l10n ID thing for the duration business here.
+
+632
+01:34:21,133 --> 01:34:29,183
+We have this construction that allows us to define the the string with Mark up to describe
+
+633
+01:34:29,183 --> 01:34:35,683
+to like to properly render the position in the duration with the mark up involved.
+
+634
+01:34:35,683 --> 01:34:42,433
+And what happens is supposedly the duration is supposed to be injected in the right spot like it's supposed
+
+635
+01:34:42,433 --> 01:34:50,233
+to find the associated span data alternate name and then inject the duration this part inside it.
+
+636
+01:34:50,233 --> 01:34:54,613
+Based on this l10n string, that's how it's supposed to work.
+
+637
+01:34:54,613 --> 01:35:01,443
+I worry that what's actually happening is that the contents are being replaced.
+
+638
+01:35:01,443 --> 01:35:09,993
+So let's see if that's the case. And so this is going to require us to dig a little bit into how data Elton and name works.
+
+639
+01:35:09,993 --> 01:35:14,493
+I don't want to spend too long on this. I know I'm going over time a little bit, but I do want to understand this.
+
+640
+01:35:14,493 --> 01:35:21,963
+So data Elton and name, how does that work? Let's quickly look up the fluent documentation that Elton and name.
+
+641
+01:35:21,963 --> 01:35:27,783
+The idea is you can do markup localization. You localize a fragment, take care of the rest.
+
+642
+01:35:27,783 --> 01:35:32,163
+Populating the element with the message value developer provides only a single message to localize the whole home,
+
+643
+01:35:32,163 --> 01:35:40,953
+including the value of selected attributes. So you, you create this fragment and then fluent will overlay the translation onto the source fragment,
+
+644
+01:35:40,953 --> 01:35:51,483
+preserving attributes, the preexisting attributes and adding translation side, uh, attributes to be retained.
+
+645
+01:35:51,483 --> 01:35:56,193
+So does fragment translation or markup localization?
+
+646
+01:35:56,193 --> 01:36:07,293
+Does it like it's definitely manipulating the dom? Does it remove the um, the underlying element that you're overlaying?
+
+647
+01:36:07,293 --> 01:36:14,403
+That's what I want to know. So data l10n name, let's see how that implementation works.
+
+648
+01:36:14,403 --> 01:36:31,403
+Um, this is definitely going to be in our either in our C++ l10n test l10n overlays.
+
+649
+01:36:31,403 --> 01:36:40,353
+That's good. We'll start with the tests. Sign literal world, translate the element.
+
+650
+01:36:40,353 --> 01:36:46,503
+Get the inner HTML that verify the inner and match the expectations.
+
+651
+01:36:46,503 --> 01:36:56,473
+OK. L10n overlays translate element.
+
+652
+01:36:56,473 --> 01:37:05,383
+Let's look for data l10n name. Getting a node for named element.
+
+653
+01:37:05,383 --> 01:37:12,593
+What do we do with that? Get the node.
+
+654
+01:37:12,593 --> 01:37:26,083
+We sanitize it and replace it.
+
+655
+01:37:26,083 --> 01:37:49,883
+Node four named elements sanitized. So for each child node, for fragment.
+
+656
+01:37:49,883 --> 01:37:55,713
+Sanitized node and then.
+
+657
+01:37:55,713 --> 01:38:01,063
+We replace it. Replace child.
+
+658
+01:38:01,063 --> 01:38:08,893
+Yeah, we we we sang it, it's sanitized. And then we replace it, that's exactly what happens.
+
+659
+01:38:08,893 --> 01:38:25,483
+That's the problem. OK, so let me write this down. Our video controls does all of this gunk to make sure that l10n, uh uh, uses?
+
+660
+01:38:25,483 --> 01:38:42,223
+Oh no. To make sure that our controls properly collapse in in on themselves in a particular order when?
+
+661
+01:38:42,223 --> 01:38:53,573
+We collapse in on themselves in a particular order when the element is sized or resides basically laid out.
+
+662
+01:38:53,573 --> 01:39:02,843
+The references to the individual controls is set up during construction time.
+
+663
+01:39:02,843 --> 01:39:11,153
+But this happens before this happens, before this can happen.
+
+664
+01:39:11,153 --> 01:39:14,353
+I think this does happen before layout occurs.
+
+665
+01:39:14,353 --> 01:39:31,433
+And when using fragment overlays, we replace the items with data l10n name with a translated element that is sanitized.
+
+666
+01:39:31,433 --> 01:39:38,093
+So the references that we set up.
+
+667
+01:39:38,093 --> 01:39:40,473
+During construction.
+
+668
+01:39:40,473 --> 01:39:56,623
+No longer point at the relevant element, they're pointing at elements that were replaced in the dorm, so they're no longer connected to the dorm.
+
+669
+01:39:56,623 --> 01:40:13,303
+That's the problem. So ideally, we would make sure that translation has completed before we get all of those references.
+
+670
+01:40:13,303 --> 01:40:19,903
+I think that's that's maybe our solution here, but we might have to get back to that at another time.
+
+671
+01:40:19,903 --> 01:40:34,993
+I think I'm going to Wowee kind of a douchey what's a douchey Smurf de douchey define douchey the earl of.
+
+672
+01:40:34,993 --> 01:40:47,473
+I'm not sure what you're saying, Smurf de Um, but I suspect you're not referring to the Earl of Dukey wrongly spelled.
+
+673
+01:40:47,473 --> 01:40:55,873
+OK. I suspect what you mean is, wow, what a what a non obvious bug.
+
+674
+01:40:55,873 --> 01:41:00,343
+That's what I assume you're saying. And yes, yes, that's what we're hitting.
+
+675
+01:41:00,343 --> 01:41:06,703
+One of the nice things about fluent is that it's asynchronous. You know, it does all this translation on the fly.
+
+676
+01:41:06,703 --> 01:41:14,863
+I think part of the issue is that the video controls set up all of those references way too early before localization is completed.
+
+677
+01:41:14,863 --> 01:41:22,873
+And maybe we need to wait until localization is completed before we set up those references and then add a bunch of documentation for this stuff.
+
+678
+01:41:22,873 --> 01:41:30,763
+Excuse me? Excuse me? I'm sorry for doing a high, high fidelity belch into the microphone.
+
+679
+01:41:30,763 --> 01:41:35,413
+Hey, so I think we're going to end this asmar version of the joy of coding.
+
+680
+01:41:35,413 --> 01:41:41,683
+Thank you so much for watching episode two hundred and eighty. I hope that was really interesting.
+
+681
+01:41:41,683 --> 01:41:47,143
+Let me know what you thought. There's a rate this episode link in the agenda right here.
+
+682
+01:41:47,143 --> 01:41:53,503
+If you follow the agenda, in fact, let me copy the link address and put it inside the Twitch chat.
+
+683
+01:41:53,503 --> 01:41:59,413
+So if you follow that form, you can let me know what you thought. Maybe. Maybe you always want me to speak like Mark Wahlberg.
+
+684
+01:41:59,413 --> 01:42:06,643
+Or maybe you always want me to kind of do in a similar part where we dig into like a rebase or something really calmly and smoothly.
+
+685
+01:42:06,643 --> 01:42:11,293
+That's cool. Let me know. Let me know. Doozie Smurf meant doozy.
+
+686
+01:42:11,293 --> 01:42:14,803
+Yes, it's a doozy. But hey, we got there. We figured a thing out.
+
+687
+01:42:14,803 --> 01:42:18,313
+I think that's what was important. It was very circuitous. But we got there.
+
+688
+01:42:18,313 --> 01:42:24,553
+And the good news is that I think this is probably the root for most of those other failures is that the
+
+689
+01:42:24,553 --> 01:42:32,053
+the references aren't being set up correctly so or they're out of date by the time the resize occurs.
+
+690
+01:42:32,053 --> 01:42:38,503
+So we might be on our path here to fixing this soon, but we'll we'll we'll check it out next time.
+
+691
+01:42:38,503 --> 01:42:43,813
+Hey, thank you so much for watching episode 280 of the joy of coding.
+
+692
+01:42:43,813 --> 01:42:48,763
+I hope to see you next week. Have yourselves. Have yourselves a great week.
+
+693
+01:42:48,763 --> 01:42:54,583
+Take care. Bye bye. There's going to be there's going to be like a really sort of raucous closer because I'm
+
+694
+01:42:54,583 --> 01:42:59,503
+going to play the closing theme and it's it's not going to blend well with my smart thing.
+
+695
+01:42:59,503 --> 01:43:04,543
+So have yourselves a great rest of your week.
+
+696
+01:43:04,543 --> 01:43:09,373
+The joy. Holding what a tone shift.
+
+697
+01:43:09,373 --> 01:43:19,704
+All right. Take care, everyone. Bye bye.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,2673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 317 - February 22, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 317 - February 22, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=9dcbb942-af9b-43bf-a65d-af8000f37272</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=9dcbb942-af9b-43bf-a65d-af8000f37272">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,502 --> 00:00:08,532
+Welcome. Through the Joy Cup O.
+
+2
+00:00:09,512 --> 00:00:14,492
+Hello and welcome to Episode 317 of The Joy of Coding.
+
+3
+00:00:14,522 --> 00:00:19,412
+My name is Mike Conley. It's so good to have you here. We're going to be hacking on some Firefox stuff today.
+
+4
+00:00:19,442 --> 00:00:22,742
+It's going to be great. I mean, looking at some patches, going to be trying to fix some stuff up.
+
+5
+00:00:23,612 --> 00:00:27,372
+I'm really looking forward to it. Let's get started.
+
+6
+00:00:27,422 --> 00:00:32,312
+We'll start by sharing my screen. Well, here it is.
+
+7
+00:00:33,092 --> 00:00:40,472
+Yeah. Today's February 22nd, 2023 Episode 317 A reminder No plan survives breakfast.
+
+8
+00:00:40,502 --> 00:00:42,182
+I kind of know what I want to do today.
+
+9
+00:00:42,842 --> 00:00:49,262
+I have a general sense of the trajectory of this episode, but I don't actually know how things are going to go.
+
+10
+00:00:49,292 --> 00:00:56,012
+Like last week I thought we were going to write tests for the windows jump list stuff, and then we ended up doing fab icon stuff for it instead.
+
+11
+00:00:56,762 --> 00:01:01,591
+This week I thought maybe we'd start with tests, but now we have to wait in the background.
+
+12
+00:01:01,592 --> 00:01:06,212
+Have got to compile running because I forgot to compile. So that's running. So we might have to find some stuff to do in the meantime.
+
+13
+00:01:07,922 --> 00:01:13,202
+But, you know, we're just going to roll with it. We'll figure it out as we go. That's the whole point of this series.
+
+14
+00:01:13,202 --> 00:01:16,952
+And and we'll we'll find our way forward. That's the first thing.
+
+15
+00:01:17,222 --> 00:01:22,112
+The second thing is there is an agenda that you can have access to.
+
+16
+00:01:22,112 --> 00:01:29,311
+If you're watching this on YouTube or diode zone, you can check the video description down below.
+
+17
+00:01:29,312 --> 00:01:35,612
+If you're watching this on air, Mozilla, it's over there in the details section and if you're watching this on Twitch, then it's down below.
+
+18
+00:01:35,612 --> 00:01:38,102
+And like the channel, details are building to the agenda.
+
+19
+00:01:38,552 --> 00:01:43,862
+There's also a link to the rate this episode form, which you can use to let me know what you thought of this episode when it's done.
+
+20
+00:01:44,192 --> 00:01:51,481
+Every episode has one of those forms, and if you're watching this on like the YouTube playback,
+
+21
+00:01:51,482 --> 00:01:57,782
+just check out the description and you'll find the the link on each video and how you can give me feedback on each episode.
+
+22
+00:01:58,622 --> 00:02:01,832
+There's also an episode guide if you haven't heard of the episode guide.
+
+23
+00:02:02,402 --> 00:02:06,542
+I'm going to take a moment to plug the episode guide. So the episode guide is completely viewer driven.
+
+24
+00:02:06,542 --> 00:02:13,592
+It's something that you viewers just like you contribute to and help grow and and make and enrich.
+
+25
+00:02:14,972 --> 00:02:20,252
+A special shout out to Smurf D, who is, I'd say, the most prolific contributor to the episode guide.
+
+26
+00:02:20,552 --> 00:02:25,952
+That's a way of finding out maybe what's happened in previous episodes without necessarily having to watch those episodes.
+
+27
+00:02:26,372 --> 00:02:28,381
+You know, it usually has a copy of the agenda,
+
+28
+00:02:28,382 --> 00:02:37,711
+but also links to links to the videos and maybe additional context on what I covered that maybe didn't get put into the agenda, that sort of thing.
+
+29
+00:02:37,712 --> 00:02:41,312
+So check out the episode guide and if you yourself want to contribute to the episode guide,
+
+30
+00:02:41,492 --> 00:02:46,112
+you're more than welcome to either for this episode or a past episode or for a future episode.
+
+31
+00:02:47,162 --> 00:02:51,062
+Send me a pull request to the repository. The episode guide is hosted on GitHub.
+
+32
+00:02:51,272 --> 00:02:56,492
+I'm very, you know, I'm not too picky about the sorts of things that are emerging.
+
+33
+00:02:56,502 --> 00:03:03,122
+So go ahead. If we think it's useful, will merge it in. So if you've got your own corrections agenda, you want to expand on something,
+
+34
+00:03:03,122 --> 00:03:10,832
+you want to, you know, fill in some details on something maybe that I glossed over.
+
+35
+00:03:11,162 --> 00:03:14,422
+That's a great opportunity. And you can do that with a bulwark as to the repository.
+
+36
+00:03:14,462 --> 00:03:16,802
+If you're not sure what a pull request or repository is,
+
+37
+00:03:16,802 --> 00:03:23,042
+follow these links in the agenda here and they will do their best to explain to you what's going on.
+
+38
+00:03:23,582 --> 00:03:25,622
+So speaking of what's going on, what are we doing today?
+
+39
+00:03:26,582 --> 00:03:32,642
+Well, like I said, I thought we'd get that back to the windows, jump live stuff, specifically the automated testing part.
+
+40
+00:03:33,662 --> 00:03:40,892
+Oh, yes. We also want to handle the URL removal stuff. We're going to look at that and reentry to build lists.
+
+41
+00:03:41,882 --> 00:03:45,992
+But we also I want to start getting into the idea of testing.
+
+42
+00:03:46,922 --> 00:03:52,682
+Oh, maybe. See, maybe we want we do want to do these things first before we start getting into testing.
+
+43
+00:03:52,682 --> 00:03:56,072
+We do have a plan for testing. We'd come up with that I think, two episodes ago.
+
+44
+00:03:56,612 --> 00:04:06,272
+But I think maybe let's do these sorts of things first to sort of like solidify our understanding of this whole ecosystem of code,
+
+45
+00:04:06,632 --> 00:04:10,512
+and then then we can work on our tests. Let's see how our build is going.
+
+46
+00:04:10,512 --> 00:04:16,622
+Know in the background we're at the point where we're building security and toolkit toolkits, a good sign a lot of the build.
+
+47
+00:04:16,772 --> 00:04:20,042
+This is a pro-tip for anyone who builds Mozilla central.
+
+48
+00:04:21,302 --> 00:04:29,702
+It uses multiple threads thankfully to build and so it's going to saturate all your cores and do all the builds.
+
+49
+00:04:29,702 --> 00:04:34,142
+But generally speaking, it does it in alphabetical order, roughly.
+
+50
+00:04:34,322 --> 00:04:40,651
+So when you start seeing tool kit and your eye loader and widget, you know that that's good.
+
+51
+00:04:40,652 --> 00:04:44,731
+You're heading towards the end of the directory because those are the like, that's the end of the alphabet.
+
+52
+00:04:44,732 --> 00:04:46,262
+Now that's not always true.
+
+53
+00:04:46,262 --> 00:04:52,442
+We've got a couple of other things that are I think they have build dependencies that happen later on, like some stuff in network and accessible.
+
+54
+00:04:52,652 --> 00:04:55,022
+And then this is the last step. We're actually nearing the end of the build.
+
+55
+00:04:55,022 --> 00:05:01,472
+We're actually linking XBL, that deal that's done where we're we're done the hardest part of the build.
+
+56
+00:05:01,772 --> 00:05:05,502
+So that's good. We might actually get to that work on the stuff. Pretty soon.
+
+57
+00:05:08,652 --> 00:05:13,902
+Yeah. What did I want to do? We want to look at starting with the the URL removal case.
+
+58
+00:05:14,412 --> 00:05:26,202
+So recall that whenever you we open up sublime recall whenever you right click on the Firefox
+
+59
+00:05:26,202 --> 00:05:34,901
+icon on windows will show not only the like the list of you know actions that you can perform,
+
+60
+00:05:34,902 --> 00:05:42,522
+like you can open a new window or that sort of thing. We also show a list of frequent sites that you visit right now.
+
+61
+00:05:42,522 --> 00:05:48,702
+These are mines broken on my current build and for some reason it's showing recent as opposed to frequent.
+
+62
+00:05:49,512 --> 00:05:53,022
+I don't know why that is. That's a really interesting result.
+
+63
+00:05:53,412 --> 00:05:59,832
+We might want to investigate how if there are other people out there who might be in the same the same state, and we could maybe we could fix them.
+
+64
+00:06:00,372 --> 00:06:05,141
+But, you know, you can right click on these and choose to remove them from the list.
+
+65
+00:06:05,142 --> 00:06:07,542
+That's something that Windows records.
+
+66
+00:06:08,142 --> 00:06:15,492
+And then whenever the next time you update the list, it will hand you back all of the items that had gotten removed.
+
+67
+00:06:15,492 --> 00:06:19,932
+And what you're supposed to do is then remove those from your internal database.
+
+68
+00:06:20,202 --> 00:06:25,072
+And that's what the code used to do, like the, the existing jumbled stuff does.
+
+69
+00:06:25,122 --> 00:06:31,362
+If we take a look at Windows jump lists, I believe there is a oh, are we already doing it?
+
+70
+00:06:31,812 --> 00:06:35,381
+We might already be doing it. Maybe we did this last week. Clear history.
+
+71
+00:06:35,382 --> 00:06:39,882
+Yeah, it looks like we were to call it. I think we might have already figured that part out, gang.
+
+72
+00:06:40,632 --> 00:06:44,562
+So maybe. Maybe we don't have to worry about that. It looks like we already did it.
+
+73
+00:06:44,862 --> 00:06:48,821
+I just forgot to check it off. So sorry for. For that confusion.
+
+74
+00:06:48,822 --> 00:06:55,992
+I'm catching up as much as you are. I don't work on this between episodes, so, you know, I'm sort of refreshing myself as I do it.
+
+75
+00:06:56,322 --> 00:06:59,682
+The other thing I want to do is handle reentry into build list.
+
+76
+00:07:00,702 --> 00:07:07,872
+You know, build list is this async function that does some pretty intense stuff with the jump lists and the the Places database.
+
+77
+00:07:08,112 --> 00:07:14,952
+And I want to make it so that, you know, we don't end up stacking up a whole lot of requests in here.
+
+78
+00:07:16,092 --> 00:07:23,562
+If, for example, build list gets called a thousand times, then well, if there's a preexisting build list already underway,
+
+79
+00:07:23,892 --> 00:07:28,062
+we'll just let that one complete and we'll bail out and then we'll just catch it the next time around.
+
+80
+00:07:28,062 --> 00:07:31,272
+That's what I'm hoping we can do here. Get our builders done.
+
+81
+00:07:31,512 --> 00:07:38,982
+So let's do that. Let's, let's see if we can hack in some mechanism to handle reentry.
+
+82
+00:07:39,162 --> 00:07:42,792
+I've actually seen a similar mechanism.
+
+83
+00:07:44,052 --> 00:07:47,442
+Uh, where.
+
+84
+00:07:47,652 --> 00:07:52,481
+How do you do this? Oh, yeah, you can. You can have an internal state variable.
+
+85
+00:07:52,482 --> 00:07:58,482
+We know that this builder, for example, has some internal state variables.
+
+86
+00:08:00,792 --> 00:08:06,042
+I think what we can do, there's like there was one called like pending statements.
+
+87
+00:08:06,252 --> 00:08:12,672
+So it was already kind of doing this before. So what I'm going to do is like building is building.
+
+88
+00:08:16,252 --> 00:08:21,622
+Equals false. We'll add that and then we'll say build list.
+
+89
+00:08:24,592 --> 00:08:30,382
+If we're already in the midst of a prior call to build list,
+
+90
+00:08:31,042 --> 00:08:50,092
+fill out if this dot is building return and then if not, then we'll set this to is building to true.
+
+91
+00:08:53,412 --> 00:08:59,502
+And then, uh, we'll go through all this and then we'll say this, that his building was false.
+
+92
+00:09:00,012 --> 00:09:06,372
+So that's one way of doing it. Now, it's not the most it's not the most reliable.
+
+93
+00:09:06,912 --> 00:09:11,682
+In the event that something goes wrong between here and here, we might get stuck with.
+
+94
+00:09:11,682 --> 00:09:16,752
+Is building set to true the whole time? So one thing we could do.
+
+95
+00:09:18,072 --> 00:09:24,432
+Uh oh. Oh, it looks like it already put in a comment to do that sort of thing.
+
+96
+00:09:24,592 --> 00:09:28,002
+So I can I'll just freeze that.
+
+97
+00:09:29,052 --> 00:09:35,072
+But what I'm thinking of doing, I've used this pattern before, is I'll use what's called a try.
+
+98
+00:09:35,082 --> 00:09:39,102
+Finally, I'm going to wrap all of this stuff in a try.
+
+99
+00:09:42,432 --> 00:09:54,491
+Uh, how do I. And, yeah, we go and then finally say, hey, we're, we're, we're done building.
+
+100
+00:09:54,492 --> 00:10:02,202
+And what this means is, like, in the event that an exception does ultimately get thrown in this try block no matter what.
+
+101
+00:10:02,442 --> 00:10:05,862
+Like, if that happens, will this will just clear this variable or set it to false?
+
+102
+00:10:07,092 --> 00:10:13,452
+Quantum, says Concha. I don't know what that means. I don't know what that means, Quantum But I'm going to assume it's a positive message.
+
+103
+00:10:17,672 --> 00:10:28,232
+So I feel pretty good about that. We also saw this NSA error or failure when we called update not long after startup.
+
+104
+00:10:28,772 --> 00:10:36,242
+Let's see if we still see that. Let's build faster and run again with these changes.
+
+105
+00:10:39,542 --> 00:10:43,742
+It's an emote on twitch. There's quantum quantum. What does it mean?
+
+106
+00:10:44,252 --> 00:10:47,642
+Of an animate character waving. Hi. Oh, hello. Yeah.
+
+107
+00:10:48,752 --> 00:10:55,022
+So, to be clear, if you're using anime or like twitch emotes or whatnot, I generally don't see them.
+
+108
+00:10:55,262 --> 00:11:02,702
+I'm using, I'm in, I'm in Matrix, I'm in the Matrix and I've bridged the twitch chat to Matrix so I can see what you're saying,
+
+109
+00:11:04,682 --> 00:11:06,962
+but it's coming to me just as text.
+
+110
+00:11:08,222 --> 00:11:15,632
+So I see what you're writing as text, but whenever you use something fancy and twitchy, like an emote, I just see the text version of it.
+
+111
+00:11:15,902 --> 00:11:20,492
+And in this case, it was Concha conscious. And I don't even know what that means.
+
+112
+00:11:20,702 --> 00:11:26,671
+I'm generally like at this point in my streaming career, I understand when someone's trying to use something like that on Twitch.
+
+113
+00:11:26,672 --> 00:11:33,332
+It's just that I am not part of Twitch culture. I don't really know what these what these words or phrases or emotes mean.
+
+114
+00:11:33,662 --> 00:11:38,102
+I don't know what what attitude they're attempting to convey.
+
+115
+00:11:39,272 --> 00:11:42,812
+So apologies if I if I respond incorrectly.
+
+116
+00:11:44,432 --> 00:11:49,532
+All right. Let's run this thing. Am I using a custom chat client?
+
+117
+00:11:49,742 --> 00:11:53,342
+I'm using a client called Element, which is a matrix client.
+
+118
+00:11:54,752 --> 00:11:57,872
+And and that's how I'm connecting to Twitch.
+
+119
+00:11:59,342 --> 00:12:03,062
+All right, so we've got our build here.
+
+120
+00:12:03,512 --> 00:12:07,142
+Let's see. Do we have any of the history in our console of, like, the prior?
+
+121
+00:12:07,562 --> 00:12:11,312
+Yes, we do. We can import this stuff. We're going to call update.
+
+122
+00:12:13,232 --> 00:12:16,502
+Okay. So where did this NSA error unexpected come from?
+
+123
+00:12:16,832 --> 00:12:19,832
+That's what I want to know and do.
+
+124
+00:12:19,832 --> 00:12:23,762
+Subsequent calls. Now we get failure. Failure.
+
+125
+00:12:23,762 --> 00:12:31,632
+Failure. So I want to know where that first unexpected came from.
+
+126
+00:12:33,072 --> 00:12:39,462
+I'll also notice that, like, Oh, well, maybe we can follow it.
+
+127
+00:12:39,492 --> 00:12:46,362
+Let's let's start again and see if we can determine where this stuff's coming from.
+
+128
+00:12:47,082 --> 00:12:53,282
+Let's open up our debugger. Let's try and follow and figure out where this exception is coming from.
+
+129
+00:12:53,292 --> 00:12:59,912
+I presume it's coming from the promise shop list.
+
+130
+00:13:00,702 --> 00:13:06,012
+I guess we've got to import it from Windows.
+
+131
+00:13:10,342 --> 00:13:17,262
+I see this sometimes where like, I've got to kind of like refresh by choosing the right window.
+
+132
+00:13:22,782 --> 00:13:26,292
+Sometimes scary if you open up the debugger too quickly.
+
+133
+00:13:27,552 --> 00:13:36,072
+Here we go. Windows, jump lists. I'm going to assume that that exceptions being thrown.
+
+134
+00:13:38,472 --> 00:13:43,962
+Um, and what I'm gonna do instead of using the browser console in one window, in the toolbox in the other.
+
+135
+00:13:44,202 --> 00:13:52,632
+I'm going to use the console in the same window. If I hit escape, I get a console at the bottom, so import that.
+
+136
+00:13:53,112 --> 00:13:56,922
+Oh, that's already imported. That's great. When taskbar jump lists.
+
+137
+00:14:00,042 --> 00:14:03,702
+Update. Okay.
+
+138
+00:14:03,942 --> 00:14:08,862
+Then we enter here. So we haven't seen that exception yet. We're not in the process of building.
+
+139
+00:14:09,612 --> 00:14:12,792
+We do all these things. We get our DB connection.
+
+140
+00:14:12,822 --> 00:14:17,532
+Oh, that's interesting. Oh, uh, we.
+
+141
+00:14:17,532 --> 00:14:21,491
+We step out because we're still awaiting. Do we get any rose?
+
+142
+00:14:21,492 --> 00:14:27,252
+We did get some rose. Okay. Or we're going to where we were waiting to get a connection.
+
+143
+00:14:27,252 --> 00:14:32,862
+We got our connection. Now we're going to get some rose. So far, no exceptions.
+
+144
+00:14:33,462 --> 00:14:41,052
+We've got our rose. We're going to produce our list of custom descriptions.
+
+145
+00:14:41,052 --> 00:14:44,972
+And so. That's an empty array.
+
+146
+00:14:45,302 --> 00:14:51,122
+That's interesting. That's really interesting.
+
+147
+00:14:52,472 --> 00:15:05,812
+Rose came back empty. People have said they can't execute cached order by p last a p title.
+
+148
+00:15:06,742 --> 00:15:10,222
+So do we just not have any history?
+
+149
+00:15:10,792 --> 00:15:14,632
+Is that what's happened? Somehow we don't have history. And then.
+
+150
+00:15:19,762 --> 00:15:25,482
+We're going to call this and I'm also going to put something here.
+
+151
+00:15:27,322 --> 00:15:31,222
+So we never we never called in to clear history.
+
+152
+00:15:31,792 --> 00:15:38,392
+We went right into the finally, this is where your name error not available came from, I guess.
+
+153
+00:15:39,202 --> 00:15:45,231
+So we called populate jump list. We passed in an empty, empty custom descriptions.
+
+154
+00:15:45,232 --> 00:15:54,662
+That's really interesting. Well, let's quickly take a look at our history in this browser profile.
+
+155
+00:15:58,022 --> 00:16:04,922
+We have history here. How come our, uh.
+
+156
+00:16:05,102 --> 00:16:14,362
+Our query here. Why?
+
+157
+00:16:14,382 --> 00:16:18,882
+How come it return? No, Rose. That's my question.
+
+158
+00:16:20,772 --> 00:16:28,832
+So let's call it again. Rose.
+
+159
+00:16:31,662 --> 00:16:38,582
+Okay. Now, we did get some rose. And then.
+
+160
+00:16:39,582 --> 00:16:44,292
+Then do we get something like custom descriptions?
+
+161
+00:16:44,322 --> 00:16:55,642
+Yeah. Is it possible that we called it too early before?
+
+162
+00:16:56,602 --> 00:17:02,272
+Like, I wonder if now this will accept. Yeah.
+
+163
+00:17:02,302 --> 00:17:06,832
+Now, now we've got some removed URLs.
+
+164
+00:17:08,722 --> 00:17:12,952
+None to remove them building as false.
+
+165
+00:17:13,132 --> 00:17:16,582
+So that worked. And then we get these things.
+
+166
+00:17:18,652 --> 00:17:22,852
+So there's like a point early on whenever it looks like this gives us nothing.
+
+167
+00:17:30,762 --> 00:17:34,392
+So I guess one thing we need to do is make sure that.
+
+168
+00:17:39,552 --> 00:17:46,692
+If this is in, theoretically, this thing can always be called with an empty set of custom descriptions.
+
+169
+00:17:49,672 --> 00:17:56,032
+Um. So I guess we just need to make sure that it handles that case.
+
+170
+00:17:59,922 --> 00:18:03,401
+He's a jumper. Is the same as a skip list. Or are those completely unrelated? I don't know.
+
+171
+00:18:03,402 --> 00:18:10,952
+What's the skip list? Oh, skip list is like some kind of data structure.
+
+172
+00:18:11,882 --> 00:18:20,162
+Oh, a probabilistic data structure for average complexity. Or is it the best featured story on the talent list?
+
+173
+00:18:20,912 --> 00:18:25,782
+Skip List. Skip List is built in layers, paths or link list each hala as an express named the list.
+
+174
+00:18:26,022 --> 00:18:31,172
+Oh, I've seen one of these before. Right.
+
+175
+00:18:31,382 --> 00:18:35,672
+It's like Fast Lane. No, it is not the same.
+
+176
+00:18:35,732 --> 00:18:42,472
+Skip list is completely unrelated. The skip list looks like a data structure that does its best to make for like
+
+177
+00:18:42,482 --> 00:18:48,482
+to allow you to do efficient traversing efficient walking of linked lists.
+
+178
+00:18:51,862 --> 00:18:54,892
+Oh, this first search as well as insertion.
+
+179
+00:18:57,142 --> 00:19:00,982
+Whereas a jump list that is a there's a Windows concept.
+
+180
+00:19:00,982 --> 00:19:03,982
+That's this thing. This is a jump list right here. This is the jump list.
+
+181
+00:19:07,582 --> 00:19:11,362
+Oh, we've we've entered here again. That's interesting. We entered here on our own.
+
+182
+00:19:15,392 --> 00:19:20,102
+Um. Do we have Rose? Yes, we do.
+
+183
+00:19:27,232 --> 00:19:32,552
+And there they are. Okay, so what do I want to do?
+
+184
+00:19:32,572 --> 00:19:37,162
+I want to make it easy for us to test this case.
+
+185
+00:19:37,552 --> 00:19:42,622
+So I'm going to update our code to just pass an empty array every time.
+
+186
+00:19:46,462 --> 00:19:52,432
+So instead of passing custom descriptions, we're going to pass in the empty array every time.
+
+187
+00:19:54,772 --> 00:20:00,352
+Let's pretend that that's that's what goes on. Then let's see what falls over.
+
+188
+00:20:03,352 --> 00:20:07,402
+I hope that answered your question, Quantum. Thanks. Thanks for asking it last.
+
+189
+00:20:07,582 --> 00:20:12,922
+Let me know if you've got questions, gang. If you've got questions about what I'm doing or what's going on, just drop them in the chat.
+
+190
+00:20:12,952 --> 00:20:20,332
+I'll do my best to answer. Okay.
+
+191
+00:20:22,322 --> 00:20:31,852
+Um. So I suspect.
+
+192
+00:20:36,072 --> 00:20:46,282
+This is going to throw. We already got it in this area.
+
+193
+00:20:46,282 --> 00:20:49,492
+Unexpected somehow. I wonder where that came from.
+
+194
+00:20:52,702 --> 00:20:58,462
+Yeah, that. That there's another innocent or unexpected.
+
+195
+00:20:59,092 --> 00:21:03,112
+So when you pass in something empty, it fails. Let's take a look at why that would be.
+
+196
+00:21:07,702 --> 00:21:12,592
+He did answer my question. It became obvious once he tested it. But at first I was just looking at 20 lines of code and unsure what it was doing.
+
+197
+00:21:12,862 --> 00:21:16,702
+Fair enough. That story of my life. Story of my life.
+
+198
+00:21:17,842 --> 00:21:26,272
+Okay. Let's take a look at the the definition then of populate jump list or the implementation.
+
+199
+00:21:45,912 --> 00:22:01,362
+So here we iterate. Will ultimately end up passing an empty array, I think, over here.
+
+200
+00:22:06,782 --> 00:22:09,722
+And what was the error that we got back in us? Error. Unexpected.
+
+201
+00:22:16,262 --> 00:22:30,092
+My guess is it will have to do with like down here whenever we start like build a custom collection or add the object,
+
+202
+00:22:32,702 --> 00:22:39,062
+like what are we used to do whenever there was no gym plus builder?
+
+203
+00:22:43,302 --> 00:22:53,632
+And windows jump lists. When there were no results from the places query.
+
+204
+00:22:58,302 --> 00:23:04,452
+You know completion handle result call back get history results.
+
+205
+00:23:09,782 --> 00:23:14,072
+There was no result. There are no more results.
+
+206
+00:23:14,082 --> 00:23:26,912
+Build the list. Items is a mutable array saying build custom items.
+
+207
+00:23:28,052 --> 00:23:33,272
+So presumably this could have been an empty array.
+
+208
+00:23:33,272 --> 00:23:39,272
+Okay. And so was build custom, do build custom if items.
+
+209
+00:23:40,292 --> 00:23:43,862
+Then it will add list to build. I see. I see.
+
+210
+00:23:44,102 --> 00:23:48,892
+So in the event that there are no items, then it just skips this whole thing altogether.
+
+211
+00:23:48,902 --> 00:23:51,182
+I think we can do that. I think that's easy for us.
+
+212
+00:23:52,142 --> 00:24:03,392
+I think we can look at the custom description length and skip all of this if there are no custom descriptions.
+
+213
+00:24:05,862 --> 00:24:10,732
+If. A custom descriptions laying.
+
+214
+00:24:13,942 --> 00:24:26,982
+I think we'll do this. Yeah.
+
+215
+00:24:27,192 --> 00:24:32,562
+I think that'll work. Let's build that and see what happens and see if our error message goes away.
+
+216
+00:24:46,512 --> 00:24:53,152
+Snow's coming. Look out. Now, what is this, some kind of.
+
+217
+00:24:53,182 --> 00:24:57,262
+I didn't even just by hovering my mouse it opens that that's so brutal.
+
+218
+00:25:02,942 --> 00:25:13,792
+Snow off and on now. See.
+
+219
+00:25:17,152 --> 00:25:25,762
+Where are we going to get to here? There's something else I'd like to do today that's completely unrelated.
+
+220
+00:25:25,762 --> 00:25:27,622
+It has to do more with migration,
+
+221
+00:25:29,032 --> 00:25:38,692
+and it's to give feedback on a patch to make it easier to import fab icons to make it possible to import Fabricantes from safari.
+
+222
+00:25:39,742 --> 00:25:45,922
+Excuse me, I'd like to review this patch, and so I might do that.
+
+223
+00:25:48,532 --> 00:25:55,512
+Excuse me. Before this. Before this episode is through.
+
+224
+00:25:55,522 --> 00:25:59,652
+So let me just open this in a background tab.
+
+225
+00:26:02,752 --> 00:26:08,362
+There's a student that I'm working with who's waiting for review, and I'd like to do that.
+
+226
+00:26:10,402 --> 00:26:13,492
+Okay, we've got our bill. Let's run and see what happens.
+
+227
+00:26:22,392 --> 00:26:27,552
+Okay. Oh, no.
+
+228
+00:26:27,882 --> 00:26:34,332
+Yeah. Let's see. So if we don't see an NSA error failure, I think we succeeded.
+
+229
+00:26:36,892 --> 00:26:39,952
+All right. Looking good. Gang, that was the problem.
+
+230
+00:26:43,762 --> 00:26:47,632
+And so, yeah, now we don't show any items here.
+
+231
+00:26:49,102 --> 00:26:55,372
+That's good. So now we can re restore.
+
+232
+00:26:57,562 --> 00:27:03,942
+Custom descriptions. Smurf d likes it.
+
+233
+00:27:05,712 --> 00:27:12,072
+Smurf d's like nice. Um.
+
+234
+00:27:13,162 --> 00:27:17,502
+Okay. So that I think solves that error failure.
+
+235
+00:27:18,922 --> 00:27:23,322
+So here's a question. How about private browsing windows? How do the icon caches work for those?
+
+236
+00:27:23,342 --> 00:27:26,722
+How do the build lists work for those? That's a really good question.
+
+237
+00:27:27,772 --> 00:27:31,641
+We definitely don't want to intermingle between those two things.
+
+238
+00:27:31,642 --> 00:27:34,702
+We got to be careful of this.
+
+239
+00:27:34,702 --> 00:27:38,932
+I actually maybe will do this first because I feel like the private browsing one is going to take longer.
+
+240
+00:27:39,532 --> 00:27:42,862
+I want to see how Thunderbird uses the jump list builder if at all,
+
+241
+00:27:43,642 --> 00:27:49,882
+just to see if there's anything special we need to do for Thunderbird or to prevent ourselves from breaking Thunderbird.
+
+242
+00:27:50,422 --> 00:27:55,672
+So Thunderbird is also available in search box or code review our code searching tool,
+
+243
+00:27:55,672 --> 00:27:59,422
+but it's under a directory, a special repository called Comm Central.
+
+244
+00:28:00,842 --> 00:28:04,402
+And what I'm looking for is Jump List Builder.
+
+245
+00:28:08,222 --> 00:28:15,602
+So they have something under windows jump lists as well. Like they have a copy of ours.
+
+246
+00:28:16,142 --> 00:28:19,712
+But they they have their own. I think this is the one that they're using.
+
+247
+00:28:21,002 --> 00:28:25,282
+Windows Jump Start JSM. So let's take, let's take a look and see how they use it.
+
+248
+00:28:25,292 --> 00:28:31,352
+I'm going to guess that they use in the like the exact same way. Yeah.
+
+249
+00:28:33,752 --> 00:28:41,912
+Yeah. They just run startup on it and then here is your, your tasks.
+
+250
+00:28:48,842 --> 00:28:53,152
+So see, I think we can make Thunderbirds so much simpler as well.
+
+251
+00:28:53,162 --> 00:28:57,391
+Like, they'll also get the advantage because it's already a simpler implementation.
+
+252
+00:28:57,392 --> 00:29:03,392
+So we don't have to do all these hoops of starting the build and netting the build, committing the bill to boarding the build.
+
+253
+00:29:03,392 --> 00:29:07,622
+Like all of these things we can just like call into the API and be done with it.
+
+254
+00:29:08,402 --> 00:29:12,122
+They don't show, I think. What do they do? Populate they have tasks.
+
+255
+00:29:12,392 --> 00:29:15,812
+They build tasks. I don't think they do any custom things.
+
+256
+00:29:19,052 --> 00:29:22,622
+No, they don't. They don't add any custom elements.
+
+257
+00:29:22,622 --> 00:29:30,572
+It's just the the the default like a here the tasks of like let's compose a message or open the address book.
+
+258
+00:29:30,812 --> 00:29:34,442
+That's it. So they'll take advantage of this as well.
+
+259
+00:29:35,942 --> 00:29:40,082
+See how Thunderbird uses that. It's a simple usage.
+
+260
+00:29:40,442 --> 00:29:44,102
+They don't have any custom items.
+
+261
+00:29:47,612 --> 00:29:51,182
+Oh, I guess that means that we have to account for the possibility.
+
+262
+00:29:53,522 --> 00:30:03,192
+Like we. We've we threw an exception.
+
+263
+00:30:05,652 --> 00:30:13,182
+If the custom title is empty. And yet sometimes.
+
+264
+00:30:18,322 --> 00:30:24,742
+Okay. Here's what I think we should do. If custom title is empty and a custom descriptions length,
+
+265
+00:30:25,012 --> 00:30:36,172
+we only want to throw an exception here in the event that the user has like we've supplied some some descriptions.
+
+266
+00:30:36,862 --> 00:30:40,462
+Only then will we throw an error if the custom title is empty.
+
+267
+00:30:40,732 --> 00:30:47,152
+That's what I'm thinking. Let's see. Winter upgraded to winter storm should look outside.
+
+268
+00:30:47,722 --> 00:30:51,862
+Oh, man. Boop, boop, boop, boop, boop, boop, wichita.
+
+269
+00:30:51,862 --> 00:30:56,212
+Morning, boo, boo, boo, boo. Toronto.
+
+270
+00:30:59,682 --> 00:31:06,561
+Stay safe, everybody. Man.
+
+271
+00:31:06,562 --> 00:31:10,162
+This is this is a has an alert.
+
+272
+00:31:15,232 --> 00:31:19,641
+See, this is good. Just looking at Thunderbird, we were able to sort of like suss out another requirement here,
+
+273
+00:31:19,642 --> 00:31:26,032
+which is that sometimes we don't want to pass in that custom list and we need to be okay with that.
+
+274
+00:31:26,962 --> 00:31:35,882
+Snow in the winter. Weird. Yeah, I know. It's been a remarkably, like, non snowy winter.
+
+275
+00:31:35,902 --> 00:31:38,762
+That's not to say it hasn't been cold. It's been cold certainly in Toronto.
+
+276
+00:31:38,762 --> 00:31:42,592
+And I say that especially because I'm sitting in a basement right now and it's freezing down here.
+
+277
+00:31:43,432 --> 00:31:48,472
+I've gotten very used to being cold at work. I just put on sweaters.
+
+278
+00:31:49,312 --> 00:31:53,152
+But yeah, there hasn't been a whole lot of snow.
+
+279
+00:31:53,362 --> 00:32:05,542
+There's been a little bit. There's been places and stick around. I've only shoveled the sidewalk like three times this winter, which is unusual.
+
+280
+00:32:09,202 --> 00:32:13,012
+My phone is going off. Let me just silence that real quick. Sorry.
+
+281
+00:32:13,462 --> 00:32:22,232
+Sorry, gang. Okay.
+
+282
+00:32:23,882 --> 00:32:27,362
+All right. Uh.
+
+283
+00:32:29,122 --> 00:32:32,932
+Um. Right.
+
+284
+00:32:36,052 --> 00:32:41,822
+Um. Well, actually. Well, actually, I want to test that scenario now.
+
+285
+00:32:41,842 --> 00:32:48,172
+I want to make it so that I can pass in nothing.
+
+286
+00:32:49,102 --> 00:32:55,222
+The empty string and an empty array.
+
+287
+00:33:08,482 --> 00:33:12,052
+Smurf. He was kind of mocking the alert. Oh, yeah, I know.
+
+288
+00:33:12,172 --> 00:33:15,552
+I know. I know. I'm sorry. I should have.
+
+289
+00:33:15,562 --> 00:33:18,892
+I shouldn't have. Just, like, explained your joke. I apologize.
+
+290
+00:33:24,072 --> 00:33:27,462
+All right. Here we go.
+
+291
+00:33:34,352 --> 00:33:40,412
+So it's into it. Now, what if I say.
+
+292
+00:33:43,402 --> 00:33:49,312
+Um. Will there populate?
+
+293
+00:33:53,862 --> 00:34:02,191
+Build their populate jump list when taskbar.
+
+294
+00:34:02,192 --> 00:34:08,292
+Jump list. Build their tasks.
+
+295
+00:34:09,482 --> 00:34:13,712
+I'm going to say foo bar. And then.
+
+296
+00:34:17,882 --> 00:34:22,952
+The empty array. I want this to throw an exception. Missing.
+
+297
+00:34:24,272 --> 00:34:31,742
+Oh. Um. Fallback icon index.
+
+298
+00:34:31,982 --> 00:34:37,641
+Zero. It wants. Oh right.
+
+299
+00:34:37,642 --> 00:34:40,912
+Right. Right right. Right. Right right. Right right. Okay okay okay.
+
+300
+00:34:40,912 --> 00:34:47,452
+Okay. Let's just do that then we're just going to call it from here.
+
+301
+00:34:48,022 --> 00:34:52,672
+We'll say await the start builder. Populate jump lists.
+
+302
+00:34:55,962 --> 00:35:01,092
+Task descriptions, and then we're going to say FUBAR.
+
+303
+00:35:01,242 --> 00:35:04,282
+And then, um. All right.
+
+304
+00:35:04,412 --> 00:35:15,672
+No, no. We're going to pass in the empty string, but then, uh, we're going to pass in some rose system descriptions.
+
+305
+00:35:21,322 --> 00:35:24,652
+This should throw an exception. Oh. Midler.
+
+306
+00:35:25,402 --> 00:35:29,961
+I meant builder gang. Midler, this should through answer illegal value.
+
+307
+00:35:29,962 --> 00:35:34,612
+Yes. And then whenever I put in like test, that should work.
+
+308
+00:35:36,142 --> 00:35:39,202
+Yeah, I like it. Play.
+
+309
+00:35:42,312 --> 00:35:45,762
+Okay. Good stuff. Good stuff. All right. I feel good about that.
+
+310
+00:35:47,622 --> 00:35:51,732
+So we're going to put those default organs back.
+
+311
+00:35:55,032 --> 00:35:59,382
+So that'll help for Thunderbird so we can knock that off the list here.
+
+312
+00:36:01,272 --> 00:36:05,742
+Uh, we just have to. We have to. We should support that case.
+
+313
+00:36:10,722 --> 00:36:14,082
+How about private browsing windows? Yeah, let's look into that.
+
+314
+00:36:15,222 --> 00:36:19,012
+So my understanding is that there are two separate builders.
+
+315
+00:36:19,962 --> 00:36:30,432
+Um, and how how does the existing implementation differentiate and behave differently on the builders?
+
+316
+00:36:30,462 --> 00:36:34,692
+Like it creates a new instance and.
+
+317
+00:36:39,632 --> 00:37:00,502
+The whole PBE builder. We create a jump list builder and then we say, true, is there any other difference?
+
+318
+00:37:00,742 --> 00:37:05,092
+So there's a second argument here. We say false and false in this constructor.
+
+319
+00:37:05,632 --> 00:37:08,632
+What is the Builder constructor?
+
+320
+00:37:10,782 --> 00:37:18,282
+What does that mean?
+
+321
+00:37:19,962 --> 00:37:23,862
+What does it mean to pass these different arguments?
+
+322
+00:37:23,922 --> 00:37:42,392
+These are fully ignored. There.
+
+323
+00:37:43,712 --> 00:37:49,132
+What are these arguments mean we passed? Does is it used in a different way?
+
+324
+00:37:49,142 --> 00:37:55,892
+Constructor or builder? It doesn't look like it actually uses those arguments to do anything.
+
+325
+00:37:59,222 --> 00:38:05,792
+What's that about? Okay, so let's ignore those, but we might just want to remove those.
+
+326
+00:38:10,562 --> 00:38:19,532
+The fact that something is a jump list builder like the P builder we passed true whenever we call create jump list builder.
+
+327
+00:38:24,922 --> 00:38:28,352
+Tasks. Frequent, recent. Maybe that is what it means.
+
+328
+00:38:28,372 --> 00:38:34,102
+Tasks frequent. Recent. Except that it doesn't do anything with them like it's.
+
+329
+00:38:35,962 --> 00:38:42,142
+Maybe one day. There was a time. Maybe there was a time when it would pay attention to those args.
+
+330
+00:38:43,492 --> 00:38:49,132
+Let's take a look at the changes here. Builder.
+
+331
+00:38:49,372 --> 00:39:02,112
+Class builder. Mm.
+
+332
+00:39:03,512 --> 00:39:16,662
+Nope. Show annotated if he added this.
+
+333
+00:39:27,372 --> 00:39:33,092
+Also. Refresh.
+
+334
+00:39:33,112 --> 00:39:39,342
+Perhaps they constructed it. That doesn't make sense.
+
+335
+00:39:39,612 --> 00:39:45,352
+I think these are just fully ignored. You know, these arguments to try and get at them.
+
+336
+00:39:47,302 --> 00:39:53,352
+I think that was just something that people missed. Like, maybe you're right.
+
+337
+00:39:53,362 --> 00:39:57,892
+Maybe it was tax tasks, frequent, recent. But it's ultimately press that control them.
+
+338
+00:40:02,332 --> 00:40:11,152
+And how does that work? Yeah. Uh, refresh preps for the builder.
+
+339
+00:40:12,862 --> 00:40:16,732
+False. False. Zero. Show Tesla relevant.
+
+340
+00:40:20,562 --> 00:40:27,552
+Explicitly disabled. Okay. We don't show frequent or recent entries.
+
+341
+00:40:30,922 --> 00:40:36,472
+For the private browsing one. Okay. That is useful to know.
+
+342
+00:40:42,452 --> 00:40:47,162
+So actually, is this how we're going to make like we will make use of that.
+
+343
+00:40:52,442 --> 00:41:03,602
+We'll make use of that. So refresh preps does what is like show these things and yeah, I guess this is what we need to like.
+
+344
+00:41:07,102 --> 00:41:12,552
+We need to pay attention to these. So.
+
+345
+00:41:14,732 --> 00:41:21,482
+Say If we don't show frequent, if we don't show anything, then we just get out of there.
+
+346
+00:41:25,382 --> 00:41:30,122
+Um. When would show tasks be false?
+
+347
+00:41:41,592 --> 00:41:44,712
+Mm. There's a preference.
+
+348
+00:41:47,292 --> 00:41:52,451
+Tasks enabled. So maybe we also have to support that.
+
+349
+00:41:52,452 --> 00:42:05,242
+Can can we pass in no tasks. That's important to know.
+
+350
+00:42:05,262 --> 00:42:10,572
+What happens if I pass in the empty array here? We might have to support this as well.
+
+351
+00:42:13,332 --> 00:42:16,692
+So. Yeah. Crushed optimist. I think you were right. Tasks frequent.
+
+352
+00:42:16,692 --> 00:42:24,652
+Recent. Good call. So now it's snow off and on.
+
+353
+00:42:24,802 --> 00:42:29,542
+I don't think the weather knows what it wants to be. What do you want?
+
+354
+00:42:30,262 --> 00:42:34,082
+What do you want? Okay.
+
+355
+00:42:35,462 --> 00:42:38,952
+Oh, yeah.
+
+356
+00:42:38,952 --> 00:42:44,862
+It does not like that as Sarah failure.
+
+357
+00:42:44,922 --> 00:42:53,082
+Okay, so we need to adjust our code here to account for the possibility of an empty list here.
+
+358
+00:42:57,792 --> 00:43:16,082
+So. Descriptions descriptions in over here begin list.
+
+359
+00:43:19,212 --> 00:43:27,272
+And then we only want to do this if. Task descriptions dot length.
+
+360
+00:43:41,672 --> 00:44:13,282
+Uh. And this should probably go inside here.
+
+361
+00:44:18,012 --> 00:44:47,862
+Well. I'm curious to know what happens if we don't do either those and call commit list.
+
+362
+00:44:48,852 --> 00:45:20,382
+So let's let's actually build this and find out. Hmm.
+
+363
+00:45:26,242 --> 00:45:30,512
+Hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm.
+
+364
+00:45:31,262 --> 00:45:35,012
+While waiting for that to build. Yep. Safari five. I can't import.
+
+365
+00:45:35,492 --> 00:45:42,622
+Let's sort of think about what's going on in here. So I've reviewed this a couple of different times,
+
+366
+00:45:42,622 --> 00:45:49,102
+and the way it works is kind of interesting because of the way Safari stores have icons, which we kind of had to reverse engineer.
+
+367
+00:45:49,492 --> 00:46:00,832
+There's an SKU like database, and from that we can look up like you or I mappings to these special IDs and then
+
+368
+00:46:00,832 --> 00:46:07,792
+those IDs map to files the actual fabric on files which are just files on the disk.
+
+369
+00:46:08,152 --> 00:46:15,592
+But we had to realize that we had to like MD5 hash the IDs to produce the fab icon file name.
+
+370
+00:46:15,612 --> 00:46:19,522
+It was like really circuitous and bizarre and. Good ole apple.
+
+371
+00:46:19,552 --> 00:46:24,502
+Good ole apple. Anyways, let's.
+
+372
+00:46:26,482 --> 00:46:32,542
+Let's see here. Start. The migration was for our collection by retrieving fabric on data and then we migrate the root data.
+
+373
+00:46:32,542 --> 00:46:36,921
+First, try to get the five I condado users bookmarks and safari five icons stored as files with a unique name.
+
+374
+00:46:36,922 --> 00:46:42,482
+The entry five actually used to create a map, a bookmark, URLs of other countries.
+
+375
+00:46:42,532 --> 00:46:48,552
+Yes, that's the right call. We start with the mapping. We need to learn which fab icons all.
+
+376
+00:46:48,592 --> 00:46:57,862
+We pull out all the fab icons and we get rows from the database.
+
+377
+00:46:57,862 --> 00:47:04,042
+We figure out a mapping of id to.
+
+378
+00:47:09,182 --> 00:47:13,922
+To the data and we migrate the collection.
+
+379
+00:47:16,562 --> 00:47:31,262
+Yeah, that makes sense. So we pass in the mapping each time because what we're going to do when we finally migrate these things is we convert
+
+380
+00:47:31,772 --> 00:47:43,472
+the entries that got pulled out and then we're going to insert those into the database columns for each country.
+
+381
+00:47:46,892 --> 00:47:50,342
+We get the URL and we try and find the file.
+
+382
+00:47:51,062 --> 00:47:59,222
+We read the data out of the fabric on file and we push it into fabricantes array and then.
+
+383
+00:48:02,722 --> 00:48:07,972
+Yeah. The nesting. This is a recursion thing, so I really want to test this personally.
+
+384
+00:48:08,302 --> 00:48:10,402
+I want to, like, run this through some paces.
+
+385
+00:48:10,582 --> 00:48:16,462
+The good news is that I think Alvin, who wrote this, has done a good job of I think he wrote an automated test for this.
+
+386
+00:48:19,732 --> 00:48:25,822
+And I'm eager to see food travel.
+
+387
+00:48:26,932 --> 00:48:33,662
+14 items checked for outcomes. My grade. She was sorry about.
+
+388
+00:48:52,182 --> 00:48:56,042
+See, this is just checking to see that the fab icons are in the database.
+
+389
+00:48:58,152 --> 00:49:01,512
+Certain five icons. Oh, I see.
+
+390
+00:49:02,862 --> 00:49:07,481
+For each one, we get the fabric. We ask places to see if a fabric exists.
+
+391
+00:49:07,482 --> 00:49:10,822
+And if so, we resolve. Okay, I see what you're doing.
+
+392
+00:49:10,842 --> 00:49:15,232
+He's going through the database to make sure they all got inserted. Okay, interesting.
+
+393
+00:49:15,252 --> 00:49:18,252
+We'll give out a look. The first.
+
+394
+00:49:18,252 --> 00:49:25,882
+Let's let's go back to what we were doing over here. Okay.
+
+395
+00:49:27,592 --> 00:49:34,652
+We're going to. Turn off. We're going to import this stuff.
+
+396
+00:49:35,942 --> 00:49:41,972
+Let's call jump list update and sort of breakpoint here and we'll say a.
+
+397
+00:49:46,152 --> 00:49:50,712
+This star builder populate not fiddler builder.
+
+398
+00:49:56,302 --> 00:50:04,792
+Populate jump list empty and empty that work.
+
+399
+00:50:08,202 --> 00:50:14,172
+Works. Works. Then what if I pass it?
+
+400
+00:50:15,192 --> 00:50:22,642
+The task descriptions. Eh?
+
+401
+00:50:23,112 --> 00:50:30,002
+And then. For a bra and then pass at the custom descriptions.
+
+402
+00:50:34,962 --> 00:50:39,372
+A And then what happens if I pass it? No task descriptions.
+
+403
+00:50:46,532 --> 00:50:53,152
+Um. Hey.
+
+404
+00:50:53,192 --> 00:51:03,782
+All right, all right. I think we're in good shape. So what I'm going to do is we're going to start paying attention to those press now over
+
+405
+00:51:03,782 --> 00:51:10,352
+here and windows jump lists in the event that the we're not configured to show tasks.
+
+406
+00:51:13,702 --> 00:51:27,882
+Uh. And task descriptions we're not going to populate.
+
+407
+00:51:29,032 --> 00:51:33,881
+So what we'll do is we'll start out task descriptions as the empty array.
+
+408
+00:51:33,882 --> 00:51:41,202
+And then if this start show tasks, then we're in a map.
+
+409
+00:51:45,362 --> 00:51:48,842
+Wait. What? Uh.
+
+410
+00:51:48,962 --> 00:51:53,942
+Yeah, we're going to, uh, then set task descriptions.
+
+411
+00:52:00,182 --> 00:52:10,512
+Um. And then.
+
+412
+00:52:11,022 --> 00:52:17,142
+Yeah, if this doesn't show frequent.
+
+413
+00:52:19,952 --> 00:52:28,672
+We don't support show recent. Um.
+
+414
+00:52:39,932 --> 00:52:49,262
+Let Custom descriptions rules that custom title equals the string.
+
+415
+00:52:54,112 --> 00:53:02,022
+Uh, so. Title.
+
+416
+00:53:07,602 --> 00:53:10,632
+Custom custom descriptions.
+
+417
+00:53:13,182 --> 00:53:16,422
+So if show frequent is enabled that we do these things.
+
+418
+00:53:19,682 --> 00:53:31,002
+Okay. So what that should mean is that we won't show the only only recent defaults to false.
+
+419
+00:53:31,962 --> 00:53:35,832
+Yes. And we're not actually showing recent like we're to be clear,
+
+420
+00:53:35,832 --> 00:53:42,012
+crushed optimist where I'm making an intentional choice to not support the
+
+421
+00:53:42,012 --> 00:53:45,462
+recent configuration because it's like we haven't had that on by default ever.
+
+422
+00:53:46,302 --> 00:53:49,902
+And maybe if someday we want to show recent instead I'll build it out.
+
+423
+00:53:49,902 --> 00:53:53,622
+But for now we're just showing frequent if it's enabled.
+
+424
+00:54:04,362 --> 00:54:08,952
+That's presuming I'm fully understanding what you're saying. PB Builder.
+
+425
+00:54:17,182 --> 00:54:21,532
+Fresh preface. False. False show tasks.
+
+426
+00:54:21,892 --> 00:54:27,112
+But then false and then false and then zero. Yeah. Oh, so weird.
+
+427
+00:54:27,472 --> 00:54:32,092
+Okay, so we should see frequent over here.
+
+428
+00:54:33,082 --> 00:54:36,172
+Uh, let's get our tasks showing up.
+
+429
+00:54:36,892 --> 00:54:42,532
+Um, I think we need to do this.
+
+430
+00:54:44,362 --> 00:54:47,572
+Get it to actually flush state.
+
+431
+00:54:50,902 --> 00:54:56,192
+We? Yeah. And then what we're going to do is we're going to open up our private browsing window.
+
+432
+00:54:58,442 --> 00:55:08,972
+There's tasks, and then we're going to open a debugger for this window or console, rather.
+
+433
+00:55:10,572 --> 00:55:15,151
+And taskbar. Yes.
+
+434
+00:55:15,152 --> 00:55:18,662
+I didn't have to do it that way. But like. Yeah.
+
+435
+00:55:18,782 --> 00:55:22,292
+Tasks over here, frequent over here.
+
+436
+00:55:22,832 --> 00:55:28,392
+Hey, we're in good shape. Now, let's see if what happens if we turn off the.
+
+437
+00:55:28,432 --> 00:55:35,952
+The tasks preference. List tasks enabled false.
+
+438
+00:55:38,192 --> 00:55:43,532
+Tasks. Go away. Turn him back on. Tasks come back.
+
+439
+00:55:44,882 --> 00:55:50,592
+Uh. Recent. Oh, sorry.
+
+440
+00:55:50,612 --> 00:55:55,502
+Recent is not supported. Frequent. Frequent goes away.
+
+441
+00:55:55,532 --> 00:55:58,942
+Let's turn tasks off. Hey.
+
+442
+00:55:58,952 --> 00:56:03,842
+Hey. I feel pretty good about this gang. Whew.
+
+443
+00:56:05,402 --> 00:56:08,552
+All right. And, yeah, we're just going to ignore.
+
+444
+00:56:09,662 --> 00:56:15,362
+We're ignore the other one, so I feel pretty good about that. All right.
+
+445
+00:56:15,692 --> 00:56:19,052
+Tests. We have come. It has come to this.
+
+446
+00:56:19,652 --> 00:56:27,572
+Let's now commit what we've got. Make sure we haven't got any, like, tattoos or print FS or something.
+
+447
+00:56:27,812 --> 00:56:33,142
+It's building. Yeah, yeah, yeah. Uh, uh, we've got some trailing space there.
+
+448
+00:56:33,152 --> 00:56:36,572
+We'll get rid of those and SEC. Uh.
+
+449
+00:56:36,932 --> 00:56:41,762
+Okay. All right. Um.
+
+450
+00:56:50,112 --> 00:56:57,162
+Okay. Let us now commit this or amend or commit.
+
+451
+00:57:02,662 --> 00:57:06,622
+We had written out sort of an outline of a testing plan.
+
+452
+00:57:08,632 --> 00:57:11,782
+I said, Let's update Wind Taskbar to have a new method.
+
+453
+00:57:12,112 --> 00:57:17,442
+Oh, I got I got a T delivery gang. Oh, t, thank you so much.
+
+454
+00:57:17,452 --> 00:57:20,932
+Anonymous t deliverer. I got t delivery. Look at this.
+
+455
+00:57:21,292 --> 00:57:25,622
+Look at this. Seen that? What service?
+
+456
+00:57:25,642 --> 00:57:32,301
+Thank you so much. Let's update Wind Taskbar to have a new method that can be accessed from native codes, not through X.
+
+457
+00:57:32,302 --> 00:57:36,922
+Become code like do create jump list builder or something.
+
+458
+00:57:37,312 --> 00:57:41,932
+Have it take it argument as a reference to something that implements the jump list manager interface.
+
+459
+00:57:43,962 --> 00:57:47,052
+Have jumpers build or move that thing to the background thread.
+
+460
+00:57:50,512 --> 00:58:00,141
+And the background thread owns it. Then in our tests have our g test called to create a jump list builder passing it somewhere.
+
+461
+00:58:00,142 --> 00:58:04,942
+Mark So jump as manager and then call its populate jump list method for testing.
+
+462
+00:58:10,172 --> 00:58:23,402
+Edge in Chrome show recent and jump list says crushed optimist cool we don't who show frequent but that's an interesting observation crushed optimist.
+
+463
+00:58:29,912 --> 00:58:35,012
+So we did this, too. We're at the bottom of our list, gang.
+
+464
+00:58:50,662 --> 00:59:11,132
+Just thinking about this. Do we want something that's like a like a jump list manager?
+
+465
+00:59:15,262 --> 00:59:31,332
+Class, an abstract class. I'm just trying to think about how we would do this.
+
+466
+00:59:34,572 --> 00:59:38,172
+It's going to write some things down here. Joan Plus manager.
+
+467
+00:59:38,232 --> 00:59:51,452
+Like an abstract class. What the heck? And there were two implementations.
+
+468
+01:00:00,912 --> 01:00:09,192
+One is the real one that wraps, uh, what is it called?
+
+469
+01:00:11,022 --> 01:00:30,162
+Trumpists. Custom destination list.
+
+470
+01:00:42,642 --> 01:00:58,542
+It wraps one of these things. And then my fake one that.
+
+471
+01:00:59,892 --> 01:01:06,852
+It allows us to interrogate it for things.
+
+472
+01:01:06,852 --> 01:01:10,632
+It has been passed for testing.
+
+473
+01:01:14,562 --> 01:01:37,772
+So what do we do with jump list manager? We ensure that it exists and then we'll call things like set app ID.
+
+474
+01:01:43,792 --> 01:01:47,212
+So this thing needs to have something called set I.D. on it.
+
+475
+01:01:47,662 --> 01:01:52,742
+Uh. Takes, I guess, a string.
+
+476
+01:01:56,282 --> 01:02:09,072
+Well, so we do with it. We don't need this anymore.
+
+477
+01:02:12,982 --> 01:02:19,552
+Oh, shoot. How are we going to do this while keeping the old one? Hmm?
+
+478
+01:02:20,272 --> 01:02:36,382
+Keep the old one working. I really don't want to disturb the old mechanism.
+
+479
+01:02:37,522 --> 01:02:44,722
+I want to remove the old mechanism eventually. So I wonder if what we could do is.
+
+480
+01:02:51,732 --> 01:02:57,482
+Only use our special wrapper class here in populate jump list.
+
+481
+01:03:00,582 --> 01:03:06,772
+And don't use it anywhere else. Is that plausible?
+
+482
+01:03:13,282 --> 01:03:44,032
+So we'd only use it. We only use it.
+
+483
+01:03:48,972 --> 01:03:56,862
+Here. We'd say begin list on it and we get out.
+
+484
+01:03:56,862 --> 01:04:19,172
+And the thing that's like an array. Collection.
+
+485
+01:04:19,382 --> 01:04:30,782
+We create a collection and then we call an object on it, and then we would say add user tasks on it.
+
+486
+01:04:36,962 --> 01:04:48,632
+Know this is the out stuff. Okay, so you'd want it to return some kind of, like, object array, and maybe we can, we can construct one of these like.
+
+487
+01:04:54,552 --> 01:04:58,572
+Maybe there's a way we can, like, do that ourselves.
+
+488
+01:05:00,402 --> 01:05:05,622
+And then it needs to we need to be able to call add user tasks on it.
+
+489
+01:05:20,092 --> 01:05:23,242
+And depend category on it and commit list.
+
+490
+01:05:27,202 --> 01:05:30,522
+So do we need that one? Boy.
+
+491
+01:05:32,102 --> 01:05:35,822
+Let's go back to the top here. We need to be able to say begin list.
+
+492
+01:05:39,142 --> 01:05:45,962
+Uh, turns in each result. We need to be able to call.
+
+493
+01:05:48,842 --> 01:05:55,352
+And these are tasks. It's also a neat result.
+
+494
+01:06:00,482 --> 01:06:04,702
+An append category. So.
+
+495
+01:06:06,592 --> 01:06:47,282
+It's nature's hold and then commit last. That's one way of testing this.
+
+496
+01:06:47,432 --> 01:06:55,442
+That's going to test the back end. We're going to be able to test this. And in parts, we can test the back end with the test.
+
+497
+01:06:57,372 --> 01:07:00,492
+And then we'll test the scripting here.
+
+498
+01:07:03,192 --> 01:07:21,652
+And what we can do is we can. Uh.
+
+499
+01:07:27,612 --> 01:07:36,372
+Mark this out to return some kind of special object for which we we mark out or we prepare.
+
+500
+01:07:36,492 --> 01:07:44,892
+We like wrap it or something that is easier to do in JavaScript or we can like stub out some stuff and override some functions.
+
+501
+01:07:47,142 --> 01:07:51,942
+The populate jump list part in particular and the obtain and cache fab icon part.
+
+502
+01:07:54,072 --> 01:08:01,482
+So we'll we'll save that for later. I think these are the pieces that we need from the.
+
+503
+01:08:03,902 --> 01:08:08,402
+I don't actually think we need to set out, by the way.
+
+504
+01:08:10,842 --> 01:08:14,112
+So I think we do. Who calls it?
+
+505
+01:08:14,832 --> 01:08:22,502
+Who calls it? I'll set that by.
+
+506
+01:08:26,762 --> 01:08:34,672
+In said app user model I.D. Calls that.
+
+507
+01:08:44,232 --> 01:08:53,612
+Here when we can create it. To post.
+
+508
+01:09:08,542 --> 01:09:13,582
+So we still need to be able to do that. Okay.
+
+509
+01:09:41,632 --> 01:09:44,992
+We had originally made this off main threat. We might want to do that again someday.
+
+510
+01:09:48,602 --> 01:09:53,422
+We can get rid of some of those locks. The good news is this only happens once.
+
+511
+01:10:03,312 --> 01:10:09,742
+Okay. So I think. What.
+
+512
+01:10:10,022 --> 01:10:15,662
+These are all the things we need. Begin list add user tasks, a pen category and commit list.
+
+513
+01:10:16,172 --> 01:10:20,192
+If we can construct something like that and then wrap.
+
+514
+01:10:21,452 --> 01:10:23,972
+We'll have to. That'll be an abstract one.
+
+515
+01:10:26,462 --> 01:10:37,942
+And then we'll have like the real one that will wrap one of these and just forward the arguments on and then the other one.
+
+516
+01:10:39,742 --> 01:10:51,852
+How will the fake one work? Begin list.
+
+517
+01:10:52,242 --> 01:11:16,782
+What is begin this do again. It wants to get an out pram.
+
+518
+01:11:18,732 --> 01:11:31,402
+So. Wants to be prepared to provide an out perram.
+
+519
+01:11:39,322 --> 01:11:44,562
+Uh, which is a and an outside object array.
+
+520
+01:11:45,552 --> 01:11:49,312
+Or just an AI object or a A.I. object.
+
+521
+01:11:49,462 --> 01:12:06,382
+Right now, can we create those things on our own? Can I create one, uh, object?
+
+522
+01:12:20,502 --> 01:12:26,652
+It looks like I can like query interface a collection in the collection I can create like this.
+
+523
+01:12:28,422 --> 01:12:34,252
+So yes, I think. I think I can do that.
+
+524
+01:12:35,522 --> 01:12:40,922
+And just query interface it to and I object array.
+
+525
+01:12:53,232 --> 01:12:58,282
+Yeah. Like this. Okay.
+
+526
+01:12:58,312 --> 01:13:05,902
+That's straightforward. We can do that by creating a collection.
+
+527
+01:13:07,602 --> 01:13:21,142
+An empty collection. Or a collection that, like, we want to be able to.
+
+528
+01:13:22,462 --> 01:13:28,012
+What do we do with the, um. The object is will like remove.
+
+529
+01:13:31,472 --> 01:13:42,572
+What do we do with the object we like? Convert it into anything. We get how many things are in it and then we try and get these shall link.
+
+530
+01:13:51,022 --> 01:13:56,182
+So we'd have to like create a shell link for each one.
+
+531
+01:13:56,482 --> 01:14:06,192
+If we want to simulate removals. Smurf D says a good start must be to have a press that you can flip to enable the new or old feature.
+
+532
+01:14:06,462 --> 01:14:12,462
+Well, yeah. I mean, like, I presume what you're talking about is like the newer old backends and we do have a prep for that.
+
+533
+01:14:12,462 --> 01:14:15,912
+So that's good. Creating an empty collection.
+
+534
+01:14:19,352 --> 01:14:22,402
+Tis den, John says. I saw that chat was disabled on YouTube.
+
+535
+01:14:22,412 --> 01:14:27,692
+Any specific reason? Yes, because I don't know how to bridge that to Matrix, so I wouldn't be able to watch it.
+
+536
+01:14:28,682 --> 01:14:35,972
+If you yourself know how I could bridge YouTube chat to Matrix, let me know and then we can try and I could turn it on.
+
+537
+01:14:39,402 --> 01:14:42,822
+What's to be. Fraser had a pram. Like, how do you want to like.
+
+538
+01:14:44,302 --> 01:14:47,662
+Gee, Mark. And can you get it to. Always.
+
+539
+01:14:48,652 --> 01:14:54,182
+You can prepare something with a function that will return. Shell links.
+
+540
+01:14:55,062 --> 01:14:59,992
+We always run these tests on windows. We can create a collection of shell links.
+
+541
+01:15:00,002 --> 01:15:09,692
+I think that's possible. Or a collection that returns shell links and then add user tasks.
+
+542
+01:15:10,622 --> 01:15:27,572
+We want this to. Just taking array takes an array of tasks and returns and a result.
+
+543
+01:15:29,072 --> 01:15:37,162
+We can then examine what was passed. Category.
+
+544
+01:15:45,772 --> 01:15:49,042
+Uh, takes a string.
+
+545
+01:15:49,432 --> 01:15:53,452
+It's like a string and a collection. This is a collection.
+
+546
+01:15:55,352 --> 01:16:03,532
+Uh, per am. Uh, Max items and per am.
+
+547
+01:16:04,912 --> 01:16:08,602
+Uh, collection. Or object array.
+
+548
+01:16:14,452 --> 01:16:19,282
+String collection takes a string and collection for the custom lists.
+
+549
+01:16:20,482 --> 01:16:29,882
+Custom list. And then commit list just returns its returns and the result.
+
+550
+01:16:31,352 --> 01:16:35,822
+So it's really these two that we care the most about or these three rather.
+
+551
+01:16:36,002 --> 01:16:38,642
+Commit list is like a no op in our test.
+
+552
+01:16:39,662 --> 01:16:45,062
+It's just a way for the we can just like presume that it got called or like we should test that it got called.
+
+553
+01:16:47,172 --> 01:16:53,672
+Okay. Okay, um, let's do this.
+
+554
+01:16:54,692 --> 01:17:01,832
+How do we do this? We're going to create an abstract class under jump list builder.
+
+555
+01:17:13,442 --> 01:17:23,182
+It class jump lists. Jump list manager.
+
+556
+01:17:29,752 --> 01:17:36,102
+Uh, and how do I make an abstract class?
+
+557
+01:17:36,102 --> 01:17:41,142
+And, uh, how do I do this?
+
+558
+01:17:46,202 --> 01:17:53,192
+What in the world? No, it's. Interfaces have started classes.
+
+559
+01:17:56,812 --> 01:18:07,762
+Class, public, virtual right. We're an abstract classes virtual void show and then derived void.
+
+560
+01:18:08,962 --> 01:18:15,772
+Right. Virtual. That's how you do it. Okay. Virtual h result.
+
+561
+01:18:16,702 --> 01:18:20,092
+Uh, what is. What is our interface look like? H result.
+
+562
+01:18:20,812 --> 01:18:23,932
+Begin list. Um.
+
+563
+01:18:29,242 --> 01:18:32,302
+So no one in each result is in here? I hope so.
+
+564
+01:18:38,152 --> 01:18:52,822
+H result begin list and begin lists. What is the jump list man or jump list list here?
+
+565
+01:18:53,212 --> 01:18:57,982
+Custom destination. Let's begin list you and PC min slots.
+
+566
+01:19:09,292 --> 01:19:21,222
+Uh. And then Floyd.
+
+567
+01:19:30,322 --> 01:19:33,442
+We're just going to copy the interface here and see what happens.
+
+568
+01:19:35,262 --> 01:19:41,722
+And user tasks virtual. Age results.
+
+569
+01:19:44,222 --> 01:19:47,762
+Virtual nature and user tasks was out like.
+
+570
+01:19:50,312 --> 01:20:04,262
+Uh. In AI object array virtual page result add.
+
+571
+01:20:05,832 --> 01:20:24,742
+A pen category. I know.
+
+572
+01:20:24,872 --> 01:20:28,352
+And, uh.
+
+573
+01:20:28,922 --> 01:20:36,062
+Comment list. Comment list. Comment list takes nothing.
+
+574
+01:20:47,772 --> 01:20:53,062
+Okay. Now, will this build will it know what I'm talking about with these things?
+
+575
+01:20:54,672 --> 01:20:59,472
+Let's find out. Nothing is implementing any of that stuff.
+
+576
+01:21:23,182 --> 01:21:26,202
+Hmm. Once a semicolon. Great.
+
+577
+01:21:36,612 --> 01:21:42,902
+Now I'm curious too. Like YouTube chat bridge matrix.
+
+578
+01:21:45,062 --> 01:21:49,552
+Bridge three Matrix and YouTube Live Stream Chat. Oh, that's on the wish list.
+
+579
+01:21:53,672 --> 01:22:05,942
+It's on a wish list. YouTube chat matrix.
+
+580
+01:22:14,932 --> 01:22:21,402
+Um. How troops. It called.
+
+581
+01:22:31,202 --> 01:22:37,962
+Bridge, which. Twitch chat combined YouTube and twitch chat.
+
+582
+01:22:42,652 --> 01:22:55,302
+Was this person say? I got a feeling it's just like, hey, how to have all of the chats up on the same at the same time.
+
+583
+01:22:57,282 --> 01:23:03,282
+Um, where they want you to do bed in the stream.
+
+584
+01:23:04,572 --> 01:23:11,602
+It's twitch. Like, what's it look like? Show me what it looks like. Using the wrong browser, Chief.
+
+585
+01:23:13,282 --> 01:23:20,981
+All right. Uh. Oh.
+
+586
+01:23:20,982 --> 01:23:35,362
+You could use free stream to. It's Twitch talking to YouTube then.
+
+587
+01:23:44,492 --> 01:23:54,082
+This is Twitch. I don't know what I'm looking at. I still use free stream.
+
+588
+01:23:57,182 --> 01:24:01,892
+Maybe there's something I can use from their building or cluster.
+
+589
+01:24:03,422 --> 01:24:12,022
+Yeah. And connected. How did that chat come up?
+
+590
+01:24:12,052 --> 01:24:16,612
+What did you do? This chat window is here.
+
+591
+01:24:19,292 --> 01:24:24,441
+And then like. Zoom.
+
+592
+01:24:24,442 --> 01:24:27,712
+Zoom. I say hello to a tutorial right now is.
+
+593
+01:24:37,162 --> 01:24:40,672
+Oh, okay. So it all ends up going through streams.
+
+594
+01:24:40,672 --> 01:24:47,912
+So it's not really bridged. It's more like. You don't get this.
+
+595
+01:24:47,922 --> 01:24:59,792
+I don't think you get the single spot. I think you get the. You just get, like, signals that people are interested in talking to you.
+
+596
+01:25:00,722 --> 01:25:05,792
+Okay, hold on, Joe. Plus, Bill is our age. What did I do wrong this time?
+
+597
+01:25:11,182 --> 01:25:15,682
+I did. I did that. Did I?
+
+598
+01:25:17,752 --> 01:26:19,792
+Oh. Turned out build again. Hmm.
+
+599
+01:26:20,202 --> 01:26:23,502
+Sorry. I've gone quiet for a second. I probably shouldn't have done that.
+
+600
+01:26:23,712 --> 01:26:34,302
+This looks like the build is going okay. What I think I want to do now is maybe call this jump list manager base and then class jump list manager.
+
+601
+01:26:35,962 --> 01:26:39,322
+And then have this inherit from jump list manager base.
+
+602
+01:26:43,992 --> 01:26:50,382
+And then also have it, um, the constructor.
+
+603
+01:26:52,842 --> 01:26:55,842
+Uh, well, you don't have French.
+
+604
+01:27:02,202 --> 01:27:07,192
+Have it, except. The.
+
+605
+01:27:17,452 --> 01:27:25,012
+Agile reference. Guarded by a monitor.
+
+606
+01:27:27,422 --> 01:27:31,222
+I think we want the same monitor. I think.
+
+607
+01:27:31,842 --> 01:27:49,002
+I don't know. Um.
+
+608
+01:28:01,552 --> 01:28:16,302
+Joe Manchin, a hedgehog reference. Campus manager.
+
+609
+01:28:28,322 --> 01:28:39,102
+Destination list. Well, that would be a thing that maybe can just be passed through like that.
+
+610
+01:28:42,222 --> 01:28:45,992
+And then three inch monitor.
+
+611
+01:28:46,002 --> 01:28:54,662
+Can you pass a monitor as an argument? Should you?
+
+612
+01:28:57,512 --> 01:29:01,802
+Yes. Oh, um. Yeah.
+
+613
+01:29:02,132 --> 01:29:21,602
+Okay. Pretty entrenched on that door.
+
+614
+01:29:25,562 --> 01:29:37,502
+Uh. Public.
+
+615
+01:29:40,622 --> 01:29:44,002
+Uh uh, we're going to override these methods.
+
+616
+01:29:45,722 --> 01:29:50,042
+How did we. Yeah, you, you just concrete the two, right.
+
+617
+01:29:50,042 --> 01:29:54,842
+You say like. Page result in list.
+
+618
+01:29:55,262 --> 01:30:07,362
+We're going to just copy these. And what we'll do is we'll just forward this.
+
+619
+01:30:12,652 --> 01:30:34,142
+Uh. Just push for this.
+
+620
+01:30:34,862 --> 01:30:39,482
+I think we're going to be doing this a lot. Um, cause, um.
+
+621
+01:30:39,512 --> 01:30:44,262
+Joan last. Sure. We should get the lock.
+
+622
+01:30:46,322 --> 01:30:56,072
+How does that work? Yeah.
+
+623
+01:30:58,572 --> 01:31:03,162
+Basically this. Um.
+
+624
+01:31:13,762 --> 01:31:18,352
+We should return. I don't know what we return. Some kind of, like, error message there.
+
+625
+01:31:20,372 --> 01:31:23,372
+Uh. I just returned one day to.
+
+626
+01:31:26,342 --> 01:31:30,542
+Um. Otherwise, we get the jobless manager and we'll call.
+
+627
+01:31:36,962 --> 01:31:49,152
+And we'll just pass the arguments. Right.
+
+628
+01:31:50,242 --> 01:31:57,622
+That makes sense. What's the now like about this?
+
+629
+01:32:03,262 --> 01:32:06,262
+Oh, well, Trump, his manager, began.
+
+630
+01:32:06,892 --> 01:32:20,482
+Let's. That's what. It's no longer a virtual.
+
+631
+01:32:37,452 --> 01:32:41,472
+Well, we say end user tasks.
+
+632
+01:32:49,192 --> 01:32:53,132
+Um. Category.
+
+633
+01:32:54,302 --> 01:32:58,322
+I think this will work. Don't actually know.
+
+634
+01:32:59,862 --> 01:33:03,092
+We can find out about the category.
+
+635
+01:33:03,102 --> 01:33:10,912
+We're just going to forward it all along. Um.
+
+636
+01:33:13,022 --> 01:33:17,902
+Comment list. Just.
+
+637
+01:33:30,212 --> 01:33:39,182
+What does it think of that? First.
+
+638
+01:33:42,512 --> 01:33:45,512
+How does this work over here? I am jobless manager.
+
+639
+01:33:52,822 --> 01:33:57,842
+Princeton's. Yeah.
+
+640
+01:33:57,842 --> 01:34:01,372
+Okay. I'm jealous, man. She was jealous. Manager When we passed it.
+
+641
+01:34:01,382 --> 01:34:21,802
+Okay. Um. And monitoring every inch monitor.
+
+642
+01:34:23,412 --> 01:34:30,642
+That work. Oh, I have to.
+
+643
+01:34:37,232 --> 01:34:41,612
+See. Will this compile?
+
+644
+01:34:42,212 --> 01:34:45,452
+I think we're just going to see if this compiles and we'll call the episode there.
+
+645
+01:34:47,132 --> 01:34:50,132
+It might not compile and still be in the end to end the episode.
+
+646
+01:34:51,962 --> 01:34:56,402
+But we're in an interesting spot. We're in an interesting spot where we got something that seems to work pretty
+
+647
+01:34:56,402 --> 01:35:02,732
+well and we're starting to verge on something that can theoretically be tested.
+
+648
+01:35:07,382 --> 01:35:12,542
+Hates it. Hates it because.
+
+649
+01:35:12,542 --> 01:35:21,322
+Hold on. Because before we bail out it hates it because it doesn't know it.
+
+650
+01:35:21,332 --> 01:35:27,812
+And reenter and monitor is because I spelled it wrong.
+
+651
+01:35:33,652 --> 01:35:46,552
+Restaurant. Let's try that again.
+
+652
+01:35:46,582 --> 01:35:49,822
+I can't resist. Let's try one more time and then we'll end it.
+
+653
+01:35:51,232 --> 01:35:57,142
+I do think this is not going to work. At least not it's not going to build this iteration, but we're going to figure it out.
+
+654
+01:35:59,212 --> 01:36:05,152
+It is unfortunate that the way that this is designed, we're going to be taking a lock for each of these calls.
+
+655
+01:36:06,622 --> 01:36:11,542
+Didn't understand that this is what you meant. Yeah. Come on, C++, get it together.
+
+656
+01:36:12,982 --> 01:36:18,112
+Still doesn't like it because it has a default private constructor.
+
+657
+01:36:18,802 --> 01:36:25,462
+Or we're going to have to look into this later. Private here.
+
+658
+01:36:26,182 --> 01:36:30,171
+No viable overload. Okay.
+
+659
+01:36:30,172 --> 01:36:41,001
+We'll look into that next. Next week. Thank you so much for watching The Joy of Coding Episode 317 I hope that was interesting.
+
+660
+01:36:41,002 --> 01:36:46,912
+Let me know what you thought. There's a link in here to rate the episode. I am eager to hear what you think, how things are going.
+
+661
+01:36:47,272 --> 01:36:51,472
+I read everything that comes in. I want to hear your thoughts. Thank you so much for watching.
+
+662
+01:36:51,622 --> 01:36:55,852
+Have yourselves a great week, everybody. Take care. Bye bye.
+
+663
+01:36:57,742 --> 01:37:01,072
+The joy. Loading.
+
+664
+01:37:01,382 --> 01:37:01,772
+See it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

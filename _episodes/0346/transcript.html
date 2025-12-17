@@ -1,0 +1,3342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 346 - November 8, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 346 - November 8, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a8a86812-e4a5-41fc-9ba1-b0b40100ce63</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a8a86812-e4a5-41fc-9ba1-b0b40100ce63">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:05,892 --> 00:00:09,482
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Through the joy cup o d.
+
+2
+00:00:09,882 --> 00:00:13,751
+Hello and welcome to episode 346 of The Joy of Coding.
+
+3
+00:00:13,752 --> 00:00:22,932
+My name is Mike Connelly. It's so good to have you here. We're going to be live hacking on some Firefox going deep into tests and and strings and and
+
+4
+00:00:22,932 --> 00:00:27,372
+wide characters and who knows what we're going to what trouble we're going to get into today.
+
+5
+00:00:27,372 --> 00:00:31,332
+But it's going to be fun. That's the name of the game.
+
+6
+00:00:31,902 --> 00:00:36,912
+Let's let's start by sharing my screen. Yep it's episode 346.
+
+7
+00:00:37,242 --> 00:00:41,231
+It is November 8th, 2023. A reminder, no plan survives breakfast.
+
+8
+00:00:41,232 --> 00:00:46,682
+I think I know how the stream is going to go, but who knows? Maybe I'll have to restart it because I forgot the sounds or something like that.
+
+9
+00:00:46,752 --> 00:00:50,172
+That happened at the beginning of the stream. And who knows? It'll happen again.
+
+10
+00:00:50,562 --> 00:00:57,162
+Could happen. We don't know. I'm going to do my best. This is there's not really there's not going to be any edits.
+
+11
+00:00:57,162 --> 00:01:02,712
+None of this has been pre-planned. You're just watching software development like I like I like to say it's in the raw.
+
+12
+00:01:02,742 --> 00:01:07,242
+You're watching warts and all. My process as I as I work on some stuff.
+
+13
+00:01:07,482 --> 00:01:11,922
+That's the first thing. The second thing is that the agenda that we're looking at is something that you have access to.
+
+14
+00:01:11,952 --> 00:01:15,821
+Depending on where you are watching the stream. It'll be in a couple of different places.
+
+15
+00:01:15,822 --> 00:01:19,212
+So if you're on YouTube or Diogo Zone, it's down in the video description.
+
+16
+00:01:19,632 --> 00:01:23,021
+If you're watching this on YouTube, it's Oh, I just mentioned YouTube.
+
+17
+00:01:23,022 --> 00:01:28,842
+If you're watching this on air Mozilla, it's over in the details section. If you're watching this on Twitch, it's down in the channel details.
+
+18
+00:01:30,822 --> 00:01:34,122
+Yeah it's there's also a viewer driven episode guide.
+
+19
+00:01:34,122 --> 00:01:38,141
+I'll quickly plug that if you have your own notes, addenda or corrections.
+
+20
+00:01:38,142 --> 00:01:45,852
+The episode guide is a great place for you to sort of like add your own notes because it's a it's a completely viewer driven episode guide.
+
+21
+00:01:45,852 --> 00:01:53,562
+You can send a pull request to the repository for each episode, add your own notes, corrections agenda, expand on pontificate if you'd like.
+
+22
+00:01:54,792 --> 00:01:58,602
+Yeah, that's that's a resource for you and for yourselves in the future.
+
+23
+00:01:58,782 --> 00:02:04,242
+And you know, if you're watching this in the future, hello, maybe there's an episode guide for this episode.
+
+24
+00:02:04,632 --> 00:02:14,322
+We'll see. Okay, what are we up to today? Well, first of all, I want to do some Q&A because some questions had come in via the form.
+
+25
+00:02:14,742 --> 00:02:21,852
+If you are interested in asking me questions, you can always submit. There's a rate this episode link at the bottom of the agenda.
+
+26
+00:02:21,852 --> 00:02:27,552
+I always throw it in the chat at the end of the episode and you can submit questions that way and I'll do my best to try and answer them.
+
+27
+00:02:27,792 --> 00:02:36,742
+This first one isn't really a question. It's more of a comment. So in the last episode I was showing off a couple of what were they enemies?
+
+28
+00:02:37,692 --> 00:02:40,242
+They were some kind of enum related to.
+
+29
+00:02:43,632 --> 00:02:50,982
+I don't exactly remember, but we were talking about strings or we're talking about new ways of representing numbers.
+
+30
+00:02:51,282 --> 00:02:58,812
+And I thought that because the what we saw was like, I think it was something like, um, uh,
+
+31
+00:03:00,132 --> 00:03:15,012
+for you, something like that for, for you, a zero for you, something like that for you, for No.
+
+32
+00:03:16,122 --> 00:03:21,611
+Eight. You basically I saw some enemies last week.
+
+33
+00:03:21,612 --> 00:03:28,332
+You can, I guess, watch watched the the stream If you, if you didn't watch last week's stream you can find it.
+
+34
+00:03:28,752 --> 00:03:38,862
+And the enemies were being represented using like the special way of of describing numbers like this is one way
+
+35
+00:03:38,862 --> 00:03:44,742
+of doing it and it's just like I think it was raw integers 13i think those are signed I suspect signed integers.
+
+36
+00:03:45,942 --> 00:03:55,932
+And I had made the mistake of claiming that because one ended in a U that it meant that it was like a hexadecimal representation of a number.
+
+37
+00:03:56,412 --> 00:03:59,532
+And this person is saying that's wrong. It's not.
+
+38
+00:03:59,532 --> 00:04:01,601
+It's just unsigned, not related to Hex.
+
+39
+00:04:01,602 --> 00:04:10,242
+And then they, they forwarded me this link where they talk about, yeah, integer literals and the different ways you can sort of represent them.
+
+40
+00:04:11,112 --> 00:04:18,672
+And so a hex literal is whenever you have zero X and then some character sequence that I, I understand,
+
+41
+00:04:18,942 --> 00:04:25,122
+I recognize that octal is interesting because it's the digit zero followed by one of these numbers.
+
+42
+00:04:25,122 --> 00:04:26,612
+That's how you represent octal.
+
+43
+00:04:26,712 --> 00:04:40,212
+As you start with zero, the decimal literal is a non-zero start, and then suffixes can have either you uppercase or lowercase.
+
+44
+00:04:40,212 --> 00:04:42,341
+You do mean that it's an unsigned integer.
+
+45
+00:04:42,342 --> 00:04:50,112
+And I guess that's something that like you might do if you want to like, help the compiler out and say like,
+
+46
+00:04:50,112 --> 00:04:54,492
+Oh, this is how many values can be represented in this chunk of memory,
+
+47
+00:04:55,212 --> 00:05:02,112
+Because if it's signed, then you you basically cut it in half because half of them will be negative and the other half will be positive.
+
+48
+00:05:02,832 --> 00:05:07,132
+So yeah, it's a way of saying here's an on. Signed integer, I guess.
+
+49
+00:05:08,842 --> 00:05:12,592
+Okay. Well, thank you for whoever wrote that in. Um, that's helpful.
+
+50
+00:05:12,802 --> 00:05:16,192
+Mm hmm. Excuse me. Okay. This was a question.
+
+51
+00:05:16,202 --> 00:05:20,192
+Advanced usage of search box. Is there any documentation on the search query syntax?
+
+52
+00:05:20,212 --> 00:05:26,012
+I've learned a useful query is calls to function name depth four on someone's toots in Mozilla social before.
+
+53
+00:05:26,032 --> 00:05:29,552
+Sorry, I can't find the original post. Is there more? I don't actually know this one.
+
+54
+00:05:29,572 --> 00:05:34,311
+Let's check it out. So search fox calls to function name.
+
+55
+00:05:34,312 --> 00:05:40,852
+Let's say calls to an a stock shell and a stock shell.
+
+56
+00:05:42,232 --> 00:05:46,702
+No calls to.
+
+57
+00:05:47,842 --> 00:05:52,342
+Let's let's find a function name set.
+
+58
+00:05:55,222 --> 00:06:04,292
+Allow off shore. So when I recall this, actually, let's find something that has a C++ caller.
+
+59
+00:06:06,572 --> 00:06:13,582
+Uh. When utils has registry key.
+
+60
+00:06:13,592 --> 00:06:17,902
+Okay, so let's use that. Has registry when utils has registry key.
+
+61
+00:06:22,202 --> 00:06:26,372
+Depth four. So I'm not actually seeing this.
+
+62
+00:06:26,652 --> 00:06:36,062
+Uh, is this. I've never heard of this search syntax before, but maybe there's some some documentation here.
+
+63
+00:06:36,182 --> 00:06:43,652
+Search folks contribute. Here's the GitHub page. It can do regular expression matching path filtering users lobbying.
+
+64
+00:06:45,872 --> 00:06:50,832
+Here are the things that are indexed. Cross-referencing. Um.
+
+65
+00:06:51,452 --> 00:06:56,882
+Syntax highlighting. Source code.
+
+66
+00:06:56,882 --> 00:07:00,702
+So this is a source code. So is there anything in here about what was the syntax?
+
+67
+00:07:00,712 --> 00:07:06,082
+It was calls to, calls to. Oh, okay.
+
+68
+00:07:06,092 --> 00:07:11,632
+So in the query string calls to.
+
+69
+00:07:14,502 --> 00:07:20,522
+In Traverse. Did I have to give it?
+
+70
+00:07:20,522 --> 00:07:35,282
+Maybe the fully qualified, like instead of, um, calls to, uh, when utils has a registry key.
+
+71
+00:07:35,702 --> 00:07:38,732
+Was it? That was the one, right? I was the name of the method.
+
+72
+00:07:39,962 --> 00:07:43,762
+Okay, maybe I have to give it like the the full the namespace name.
+
+73
+00:07:43,772 --> 00:07:47,282
+What. What namespace are we in. Namespace mozilla widget.
+
+74
+00:07:49,082 --> 00:07:58,552
+Maybe I have to give it that mozilla widget. No, I don't know.
+
+75
+00:07:58,562 --> 00:08:02,822
+I don't know what this means. I don't know what calls to does.
+
+76
+00:08:04,862 --> 00:08:08,702
+Let's try one more thing. You two girls has a registry key.
+
+77
+00:08:10,022 --> 00:08:15,482
+So I noticed that looking at this, it's like there's some kind of context menu code that does some of this stuff.
+
+78
+00:08:19,442 --> 00:08:24,032
+If settings dot diagraming is enabled. Oh.
+
+79
+00:08:25,322 --> 00:08:32,522
+Is that enabled? No, it's not.
+
+80
+00:08:34,142 --> 00:08:39,782
+I don't know how one enables that, but I know who works on this stuff.
+
+81
+00:08:39,812 --> 00:08:43,022
+This is Andrew Sutherland, who works on this stuff.
+
+82
+00:08:43,142 --> 00:08:51,452
+I know he's a a big fan of ways of, like, making the code easier to explore and work with.
+
+83
+00:08:52,052 --> 00:08:56,272
+So, yeah, I don't know. I don't.
+
+84
+00:08:56,362 --> 00:09:02,672
+I'm guessing that the reason that there's not much useful documentation is that this stuff is very much still underway, still being worked on.
+
+85
+00:09:03,092 --> 00:09:09,932
+But the person who works on it is Andrew Sutherland, and I can probably share his.
+
+86
+00:09:12,052 --> 00:09:15,292
+It's Mozilla social account.
+
+87
+00:09:16,862 --> 00:09:23,642
+People want to follow him because he periodically. But periodically.
+
+88
+00:09:26,642 --> 00:09:30,392
+Post about this stuff. Uh, here.
+
+89
+00:09:38,552 --> 00:09:54,242
+All right. Here it is. Follow. That's Assaf, who works on Diagraming in search Fox in his spare time, as you know.
+
+90
+00:09:54,452 --> 00:10:04,982
+He's just really interested in that sort of thing. I think what you're pointing at only maybe only works when Diagraming is enabled.
+
+91
+00:10:05,882 --> 00:10:09,572
+Okay. Not a technical question. Your Firefox theme looks great.
+
+92
+00:10:09,602 --> 00:10:21,782
+However, the link to the theme may be broken. So for example in here tonight, Mike's Firefox color theme.
+
+93
+00:10:22,712 --> 00:10:25,752
+Oh my.
+
+94
+00:10:25,952 --> 00:10:34,682
+Where's my theme? It's not even really the theme that I'm using anymore.
+
+95
+00:10:35,692 --> 00:10:41,731
+Uh, where are my themes? You Hang on.
+
+96
+00:10:41,732 --> 00:10:47,282
+Let me. Let me tear this out to a new window. I mean, where's my theme?
+
+97
+00:10:48,182 --> 00:10:51,422
+My themes. Blue shift.
+
+98
+00:10:53,242 --> 00:10:57,422
+Oh, yeah. This is my theme. I think you're right. I think I've the the link is wrong to the theme.
+
+99
+00:10:57,422 --> 00:11:01,592
+So what? Uh, it used to be called electric Blue.
+
+100
+00:11:01,592 --> 00:11:07,382
+Blue. And now it's something else entirely. So where's my steam?
+
+101
+00:11:07,382 --> 00:11:14,472
+Did I still have it here? In episode 343.
+
+102
+00:11:23,992 --> 00:11:31,722
+Do I have something in here about my theme? I'm so confused.
+
+103
+00:11:38,832 --> 00:11:50,322
+Theme Mike's Firefox click through this right at the very bottom under other under other glossary links.
+
+104
+00:11:52,582 --> 00:11:56,071
+Please should bake and BP so you know. Okay.
+
+105
+00:11:56,072 --> 00:11:59,612
+Well, that sounds like it's busted and needs to be this instead.
+
+106
+00:11:59,762 --> 00:12:03,302
+But this isn't even my current theme. My current theme is.
+
+107
+00:12:03,482 --> 00:12:09,742
+So let me update this here. Here's my current theme. Current theme Electric.
+
+108
+00:12:09,902 --> 00:12:14,522
+What is it I call the blue shift. Blue shift is here.
+
+109
+00:12:14,732 --> 00:12:26,702
+Current theme is something called This is one of the Firefox colorways that got eventually published to AMO called Cheers Bold.
+
+110
+00:12:27,062 --> 00:12:33,602
+Let's see if we can find it. Cheers. Bold. Yeah, this is the theme I'm currently using.
+
+111
+00:12:34,772 --> 00:12:40,052
+Uh, current theme. Cheers. Bold. You can install it there so you can follow those links.
+
+112
+00:12:40,372 --> 00:12:45,691
+Hmm. Okay. That is a little bit of preamble. I've got a little bit more in that.
+
+113
+00:12:45,692 --> 00:12:54,482
+I have a, um. I have an extension that I, I work on called too.
+
+114
+00:12:54,492 --> 00:13:00,542
+Bartel. I don't know if you've ever, um, if anyone here has ever played world before.
+
+115
+00:13:00,542 --> 00:13:06,652
+Oh, I've seen some chatter. Hello. How are you doing? Vinit Vinit Kimi Vin Vinny.
+
+116
+00:13:06,722 --> 00:13:10,442
+I never remember how to pronounce your name. Vin it to me. Hello, Mike.
+
+117
+00:13:10,442 --> 00:13:15,001
+How are you doing? And you jinxed it. Sound went the moment you said it. I still have sound here.
+
+118
+00:13:15,002 --> 00:13:18,512
+I'm hearing him talk, at least. Guess it was just me. Okay. Well, I'm glad.
+
+119
+00:13:18,512 --> 00:13:23,432
+I'm glad. It's all working. I'm glad things are still coming through.
+
+120
+00:13:23,432 --> 00:13:29,942
+I'm okay. So I have a a web extension I manage called Table.
+
+121
+00:13:29,972 --> 00:13:38,912
+I wrote it. It's a very silly web extension. Its job is to if you've ever played wordplay, you know, those grids that you'll get of like the you know,
+
+122
+00:13:39,092 --> 00:13:45,212
+here's how I did and it'll be like a couple of green squares, a couple of yellow squares, maybe some gray squares.
+
+123
+00:13:45,542 --> 00:13:54,091
+Well, I wrote an add on to do you have like a similar visualization that gets created, but it's based on the state of your current tabs.
+
+124
+00:13:54,092 --> 00:13:59,612
+So when you click on it, it copies that to your clipboard and then you can like paste that somewhere.
+
+125
+00:13:59,612 --> 00:14:04,171
+So for example, if I put that in here, it's not worded, it's just my Firefox tabs.
+
+126
+00:14:04,172 --> 00:14:09,932
+Purple means that I've got a PIN tab here and then green means that they're fully loaded.
+
+127
+00:14:10,712 --> 00:14:18,122
+And if I happen to have any like unloaded because I can discard a tab there because I have an ad on to do that, I do that again,
+
+128
+00:14:18,482 --> 00:14:22,891
+then one of them will be discarded and you can just kind of create a visualization
+
+129
+00:14:22,892 --> 00:14:26,102
+like that and you can paste it into into Mastodon or Twitter or whatever,
+
+130
+00:14:26,432 --> 00:14:37,382
+whatever. Yeah. And someone has submitted a patch to do this, but instead of being restricted to just the window that you're within that you're in,
+
+131
+00:14:37,382 --> 00:14:42,452
+it's going to look across all your windows and.
+
+132
+00:14:44,922 --> 00:14:48,972
+That's that's their patch. I don't know if I do want that.
+
+133
+00:14:50,052 --> 00:14:55,932
+Come to think of it. Because I don't know if that's as obvious.
+
+134
+00:14:57,402 --> 00:15:00,822
+Like the way it currently works is it'll always look at the window that you're
+
+135
+00:15:00,822 --> 00:15:08,352
+currently that you click the button in and that's what it'll copy to to your clipboard.
+
+136
+00:15:08,652 --> 00:15:17,322
+I think I don't think I want this. I'm going to I'm going to say thank you.
+
+137
+00:15:18,852 --> 00:15:23,052
+Thanks. I'm going to say thank you. Thanks, Craig.
+
+138
+00:15:23,712 --> 00:15:28,212
+This is from Craig who might even be watching the stream. And if you're watching the stream.
+
+139
+00:15:28,512 --> 00:15:32,082
+Hello. Thanks for the patch.
+
+140
+00:15:32,982 --> 00:15:37,492
+So I've been thinking about this. A little bit.
+
+141
+00:15:42,462 --> 00:15:46,212
+I get what we're what you're aiming for here.
+
+142
+00:15:47,382 --> 00:15:55,542
+A way of getting a representation of the existing tabs across all windows.
+
+143
+00:15:58,092 --> 00:16:07,122
+What I was what two Berdahl currently does was kind of always my intention,
+
+144
+00:16:08,922 --> 00:16:21,762
+which was to just copy the current window windows tabs into the clipboard, copy a representation of the current windows, taps into the clipboard.
+
+145
+00:16:27,232 --> 00:16:36,742
+Part of the reason of that. Like, I think I think I'd be more willing to accept this patch.
+
+146
+00:16:38,452 --> 00:16:42,562
+Uh. If.
+
+147
+00:16:44,412 --> 00:16:47,472
+Like it's supposed to be a snapshot of a window.
+
+148
+00:16:47,892 --> 00:16:55,332
+Yeah, I think that's, that's. That was the aim. Um, the trying and trying to articulate this.
+
+149
+00:16:55,332 --> 00:17:06,112
+Like, this is all esthetics, right? Like it's. But I think I'm kind of happy with the way it currently works.
+
+150
+00:17:06,712 --> 00:17:11,632
+I realize that's an esthetic choice.
+
+151
+00:17:13,492 --> 00:17:18,952
+Subjective, subjective, subjective choice here, but I think I'm going to stick with it.
+
+152
+00:17:22,852 --> 00:17:25,932
+I hope. I hope you understand.
+
+153
+00:17:27,672 --> 00:17:37,842
+Thanks so much. Close. So much appreciated for the the patch there.
+
+154
+00:17:38,532 --> 00:17:43,212
+Um, I mean, maybe we can make it a setting.
+
+155
+00:17:43,692 --> 00:17:52,212
+Currently, I don't think too has any settings. Uh, I think it's fairly, fairly dumb in that.
+
+156
+00:17:52,222 --> 00:17:57,472
+Yeah, it doesn't have any options, but maybe we could make that a setting, actually.
+
+157
+00:17:57,552 --> 00:18:03,102
+Yeah. Here, here's what we'll do. Here's what we're going to do. Greg, hang on.
+
+158
+00:18:03,342 --> 00:18:09,572
+Let's reopen this. Okay, maybe.
+
+159
+00:18:10,802 --> 00:18:15,242
+Hold on. Maybe I was to her. To I.
+
+160
+00:18:16,112 --> 00:18:20,852
+I rushed to close this. I absolutely accept this.
+
+161
+00:18:21,122 --> 00:18:30,362
+If we made it a non default option and we had some ability to have people opt into it,
+
+162
+00:18:32,432 --> 00:18:48,242
+if you're willing to either add a keyboard combo for this mode or an options page that people could turn this mode on, I definitely accept this.
+
+163
+00:18:49,022 --> 00:18:52,502
+I definitely accept that. So let me comment like that.
+
+164
+00:18:52,952 --> 00:19:04,292
+There we go. So then I'll go over the files changed and I'm going to request changes, see commentary in the pull request.
+
+165
+00:19:06,862 --> 00:19:10,542
+All right, now, let's, uh.
+
+166
+00:19:11,632 --> 00:19:20,632
+We've done questions, I think. Oh, I found a theme is also, I've never known that the theme could also change the page's color.
+
+167
+00:19:20,902 --> 00:19:27,832
+Found that while browsing spider monkey dev, in my understanding this correctly themes are.
+
+168
+00:19:27,862 --> 00:19:33,681
+I don't believe themes can change any particular color,
+
+169
+00:19:33,682 --> 00:19:44,032
+but I think they can express to a web page that you are using a dark theme and that you prefer dark web pages.
+
+170
+00:19:44,422 --> 00:19:56,002
+I think that's how it works. So they can't like a browser theme, can't like change any color arbitrary arbitrarily on any web page.
+
+171
+00:19:56,872 --> 00:20:04,251
+I think what it does is some themes are light, some themes are dark, and using some heuristic,
+
+172
+00:20:04,252 --> 00:20:11,721
+I think using color sampling or maybe it's even declared in the theme manifest, maybe you can override it.
+
+173
+00:20:11,722 --> 00:20:15,802
+I don't know. But a theme is is evaluated as being a light theme or a dark theme.
+
+174
+00:20:16,252 --> 00:20:20,362
+And then I believe that is expressed to a web page in a web page,
+
+175
+00:20:20,362 --> 00:20:28,882
+if it has cscs that can differentiate between light and dark like spider monkey dot dev probably has a way of of doing that.
+
+176
+00:20:28,882 --> 00:20:34,312
+In fact, let's let's go check it out. Let's see what happens if we go to spider monkey dot Dev, I've got a dark theme.
+
+177
+00:20:34,702 --> 00:20:40,341
+This is what it looks like when I've got a dark theme. Now, what if I tell spider monkey dot dev that I have a light theme?
+
+178
+00:20:40,342 --> 00:20:47,692
+Because that's the thing you can do in the inspector. You can, like, force it. There's a button here, like toggle light theme.
+
+179
+00:20:48,052 --> 00:20:50,152
+Yeah, this is the light theme mode.
+
+180
+00:20:50,602 --> 00:20:57,232
+I've like forced it to be into light theme and this is forcing it to be in dark theme, forcing the light, and then this is just whatever you have.
+
+181
+00:20:57,532 --> 00:21:00,772
+So this is what if I had a light theme installed? That's what it would look like.
+
+182
+00:21:02,182 --> 00:21:06,502
+That's interesting. I didn't know that. Good job, Spider monkey, dot Dev.
+
+183
+00:21:07,342 --> 00:21:13,792
+It's a good way to to to sort of adapt to your user base.
+
+184
+00:21:15,312 --> 00:21:22,762
+So Murphy writes, I saw you posted about the idea. S Is there a mail you can tip Mozilla Foundation about similar horrible things that might happen?
+
+185
+00:21:26,962 --> 00:21:33,952
+You know, I believe this is the sort of thing that the foundation will often want to sort of tell people about.
+
+186
+00:21:35,422 --> 00:21:39,562
+Let's see. Mozilla Foundation newsletter.
+
+187
+00:21:43,442 --> 00:21:48,092
+I think you can add you can subscribe to a newsletter here.
+
+188
+00:21:48,662 --> 00:21:52,082
+This is the sort of thing so someone in I'm just going to put this in question.
+
+189
+00:21:52,652 --> 00:21:55,732
+I saw you posted about ideas.
+
+190
+00:21:55,742 --> 00:21:58,462
+If you're not familiar with that, that's a thing that's currently going on in Europe,
+
+191
+00:22:01,712 --> 00:22:05,582
+and I think this is the place you can go to like sign up for our newsletter.
+
+192
+00:22:06,182 --> 00:22:08,402
+It doesn't have to be in English, you know, just from that part.
+
+193
+00:22:09,452 --> 00:22:14,702
+Okay, let's get back to Windows jumper stuff, because that's what we've been focusing on.
+
+194
+00:22:14,702 --> 00:22:18,692
+And I want to make sure we we took a good run at it.
+
+195
+00:22:19,532 --> 00:22:26,431
+So if you recall, if you were watching last week, we'd reached a point where we'd realized that the tests that we'd written,
+
+196
+00:22:26,432 --> 00:22:34,112
+like a couple of weeks ago, the tests weren't actually doing strings correctly, like we weren't copying our strings correctly.
+
+197
+00:22:37,112 --> 00:22:53,222
+I made a silly error and I thought I could use like formatted strings during assignment and I can't, or at least not the way I was doing it.
+
+198
+00:22:54,452 --> 00:22:57,542
+And I am pretty sure that if I run this,
+
+199
+00:22:57,542 --> 00:23:05,852
+it's going to fail because I kind of rewatched last week's video and I think that's where we left off, is that we have some failing tests.
+
+200
+00:23:06,422 --> 00:23:10,081
+And I don't exactly remember the last thing that I did before that.
+
+201
+00:23:10,082 --> 00:23:13,862
+I think we were like somewhere in here.
+
+202
+00:23:15,872 --> 00:23:19,051
+In fact, like, I haven't touched this this Windows machine.
+
+203
+00:23:19,052 --> 00:23:24,872
+So like, this is the last thing we did is like, I added this print def I guess.
+
+204
+00:23:26,882 --> 00:23:31,592
+So it's, let's, let's link and see what happens.
+
+205
+00:23:34,472 --> 00:23:40,142
+I'm gonna refresh my memory. Var daemon says Imagine typing so fast but then clicking on the comment button.
+
+206
+00:23:40,712 --> 00:23:47,701
+Well I don't know. Mac users command enter. Yeah, I was a bit quick to hit send on that comment.
+
+207
+00:23:47,702 --> 00:23:50,852
+I should have should have waited a second.
+
+208
+00:23:51,302 --> 00:24:01,592
+Okay. So a bunch of logging is going out here are failing tests and so populate jump list only task is failing because.
+
+209
+00:24:03,442 --> 00:24:10,762
+Set app idea is being called and I guess we didn't expect it to populate jump list only tasks.
+
+210
+00:24:12,472 --> 00:24:32,552
+Um. Uninteresting unknown file error uninteresting mock function call returning default value.
+
+211
+00:24:36,082 --> 00:24:39,112
+This is a test description for an item. Length is 38.
+
+212
+00:24:39,112 --> 00:24:46,312
+Generate the test test test function call set app idea returns zero.
+
+213
+00:24:46,702 --> 00:24:57,622
+The descriptions match one another, but it fails because of this that we expected test back and set appeared to be called once and.
+
+214
+00:25:06,912 --> 00:25:12,692
+And it wasn't. Times.
+
+215
+00:25:19,272 --> 00:25:27,422
+So that by day point test application I. So we're definitely supposed to call set app I.D.
+
+216
+00:25:31,322 --> 00:25:41,412
+I think we do it. When we construct the jump list builder.
+
+217
+00:25:45,162 --> 00:25:54,092
+I wonder if we have a race test here. Because what's happening is, like as soon as you construct this thing,
+
+218
+00:25:54,272 --> 00:26:02,282
+one of the first things it does is it sends a job to a background thread to do a thing to set the app.
+
+219
+00:26:02,292 --> 00:26:11,842
+I'd. And I wonder if what's happening is after we construct this stuff and that job is dispatched.
+
+220
+00:26:12,232 --> 00:26:17,572
+When we run our test, we might be reaching the point where, like we do some work over here.
+
+221
+00:26:18,112 --> 00:26:22,312
+The other thread does call, said sharp eyed. But then we.
+
+222
+00:26:26,972 --> 00:26:34,062
+Like if I move this up a little bit. Um.
+
+223
+00:26:37,062 --> 00:26:41,952
+In fact, we can move all of this up. Almost all of this up.
+
+224
+00:26:42,522 --> 00:26:47,652
+I'm going to move this one thing up a little bit. I need to move it up right here.
+
+225
+00:26:49,902 --> 00:26:53,362
+I wonder if that's going to get rid of that, if that's a race.
+
+226
+00:26:53,382 --> 00:26:56,622
+I wonder if that'll help when we can do that for the other places as well.
+
+227
+00:26:56,832 --> 00:27:07,872
+That doesn't like you haven't fully eliminated the race, but you've made it a lot less likely to have the back ground.
+
+228
+00:27:09,252 --> 00:27:14,622
+Oh, you know, we've eliminated it by doing it, setting up the expectation before we run the construction.
+
+229
+00:27:14,622 --> 00:27:19,632
+So that should eliminate it for this test. Let's see if that works.
+
+230
+00:27:19,962 --> 00:27:23,922
+And if so, then I think we should probably use that same pattern for the other tests.
+
+231
+00:27:25,332 --> 00:27:33,302
+Mm hmm. While we're waiting, I have some news to share about something that we had been doing.
+
+232
+00:27:33,312 --> 00:27:37,212
+Was it last last episode of the episode for that about NSA main thread pointer holder.
+
+233
+00:27:37,572 --> 00:27:48,942
+So we updated. We updated our stuff our patch to use NZ's main thread pointer holder for when we're passing
+
+234
+00:27:48,942 --> 00:27:53,982
+the promise from the main thread to the worker thread and then back again for the resolution.
+
+235
+00:27:54,822 --> 00:27:58,812
+And originally I thought, Let's see here.
+
+236
+00:28:00,312 --> 00:28:08,742
+Originally I thought the reason that we wanted to do that I wrote that here is because it was possible that the
+
+237
+00:28:08,742 --> 00:28:18,422
+promise might get thrown away by the caller before the background thread has a chance to try and resolve it,
+
+238
+00:28:18,432 --> 00:28:24,161
+in which case the reference I thought maybe the reference was going to get dropped and then the
+
+239
+00:28:24,162 --> 00:28:31,422
+background thread would try and like access a promise that had been destroyed and then we'd explode,
+
+240
+00:28:31,662 --> 00:28:35,172
+you know, or we'd go into like use after free territory.
+
+241
+00:28:35,862 --> 00:28:41,261
+That's not true. Apparently so. One of my colleagues, r k RSA,
+
+242
+00:28:41,262 --> 00:28:48,192
+writes My understanding based mostly on that comment and on the definition of dumb promise is that it's indeed necessary,
+
+243
+00:28:48,192 --> 00:28:50,232
+but not for the reasons stated here.
+
+244
+00:28:50,862 --> 00:28:59,562
+Okay, so strap in and as main thread pointer holder is needed because dom promised though ref counted is not thread safely ref counted.
+
+245
+00:29:00,522 --> 00:29:06,612
+When the promise is thrown away, it may collide with another threads discarding of its ref pointer.
+
+246
+00:29:07,542 --> 00:29:16,722
+Ah so that so instead of you might have like a ref count of two and then whenever you know one pointer gets two.
+
+247
+00:29:16,932 --> 00:29:27,612
+If two of those ref counts of two of those pointers go away at a very, you know, very close to one another at the same time on two different threads,
+
+248
+00:29:28,212 --> 00:29:33,671
+you could get into a situation where like they both see that there is like a ref count
+
+249
+00:29:33,672 --> 00:29:39,102
+of two and then they both try and decrement it to one and then you have a memory leak.
+
+250
+00:29:39,672 --> 00:29:49,602
+So that's the problem. It's not that we might accidentally create or the potential for use after free.
+
+251
+00:29:49,752 --> 00:29:53,981
+It's a potential for a memory leak that's more likely to leave the promise object
+
+252
+00:29:53,982 --> 00:29:57,792
+improperly still live rather than geolocated early per the comment and proxy release.
+
+253
+00:29:57,792 --> 00:30:06,072
+I think these should also generally be and its main thread pointer handle, open square print or open bracket or where you want.
+
+254
+00:30:06,082 --> 00:30:11,292
+Call these less than sign for brevity, which may sense the lint or all on its own.
+
+255
+00:30:12,612 --> 00:30:18,942
+And then there's a question here which we should probably try and answer. So yeah, the center, I think, got very upset at some point.
+
+256
+00:30:18,972 --> 00:30:23,502
+Let's see where the litter is, is complaining, Is the litter complaining about something?
+
+257
+00:30:23,952 --> 00:30:29,922
+I thought the lint complained about something. Yeah, there's the Clintons complaining about formatting.
+
+258
+00:30:34,762 --> 00:30:39,952
+So hold on a second. What are you. What is the Lynch complaining about?
+
+259
+00:30:39,982 --> 00:30:43,642
+Warning This change is not follow. So formatting. Formatting. Formatting.
+
+260
+00:30:43,822 --> 00:30:47,452
+Format. Format. Format. That's what it's mostly complaining about.
+
+261
+00:30:47,452 --> 00:30:51,342
+What is per the common and proxy release.
+
+262
+00:30:51,682 --> 00:30:57,922
+H. I think this should generally be main thread pointer handle, such and such.
+
+263
+00:31:02,592 --> 00:31:10,081
+Right. When you're older. The semantics of ref pointer and its main third pointer holder tee would be cumbersome.
+
+264
+00:31:10,082 --> 00:31:15,452
+So we also introduce an s main thread pointer handle t, which is conceptually identical.
+
+265
+00:31:17,072 --> 00:31:28,442
+So the pattern is. Oh so I don't have to do ref pointer and that's made three pointer holder t I can just do.
+
+266
+00:31:33,312 --> 00:31:39,732
+I can create a new. And this main thread you're holding something like.
+
+267
+00:31:44,412 --> 00:31:50,872
+Uh. Let's go to the.
+
+268
+00:31:53,422 --> 00:32:00,442
+So instead of make reft pointer, ask me to see if we can find an example of what he's referring to.
+
+269
+00:32:03,532 --> 00:32:14,242
+Yeah, this is what it's saying then, as arguments go.
+
+270
+00:32:21,852 --> 00:32:39,641
+Um. So so call back so you can just like, construct one of these things.
+
+271
+00:32:39,642 --> 00:32:45,972
+Wrapping it around something. In this case, it's our DOM promise, so we should take that and pass it around.
+
+272
+00:32:46,892 --> 00:32:51,572
+Well, I don't understand the self. Self what? You doing?
+
+273
+00:32:54,792 --> 00:32:58,512
+Let's see an example of someone doing this with a DOM promise.
+
+274
+00:33:02,772 --> 00:33:10,662
+Here we are again with. So I'm kind of doing that point.
+
+275
+00:33:18,582 --> 00:33:27,332
+Instead of saying make ref point or it's saying. Just create one of these.
+
+276
+00:33:33,552 --> 00:33:36,942
+You have it wrapped the promise. Okay. We can try and do that.
+
+277
+00:33:37,592 --> 00:33:47,122
+Let's see if we fixed our test failure, though. What was the one we just tried to fix?
+
+278
+00:33:47,152 --> 00:33:51,802
+It was purely jumble. It's only tasks that fixed that one.
+
+279
+00:33:52,822 --> 00:33:58,882
+Let's update all of the all of the.
+
+280
+00:33:59,782 --> 00:34:05,542
+Places where we do that. And maybe what we'll do is we'll even add a comment.
+
+281
+00:34:10,402 --> 00:34:17,122
+We set this up here expectation here because the test back and.
+
+282
+00:34:18,062 --> 00:34:26,752
+Because set up I'd. We'll be called soon after.
+
+283
+00:34:26,752 --> 00:34:30,232
+Construction of the jump. List Builder.
+
+284
+00:34:31,972 --> 00:34:46,272
+He had the background thread. Okay, So let's find all of the places where we do this and replace it.
+
+285
+00:34:49,422 --> 00:34:57,792
+This. Am.
+
+286
+00:35:03,322 --> 00:35:11,212
+Another one. After this.
+
+287
+00:35:11,492 --> 00:35:16,492
+That stuff up. Somewhat repetitious.
+
+288
+00:35:27,972 --> 00:35:37,102
+Some boilerplate what you're going to do. And I have this one comment.
+
+289
+00:35:38,522 --> 00:35:49,742
+Oops. Was my comment. Here we go.
+
+290
+00:35:50,792 --> 00:35:54,212
+Okay. Now, where are the other failures?
+
+291
+00:35:54,572 --> 00:35:59,912
+Populate jump list only custom items. Why did it fail?
+
+292
+00:36:02,672 --> 00:36:09,212
+Um. It's rather unclear.
+
+293
+00:36:10,082 --> 00:36:17,572
+Failed. Custom items.
+
+294
+00:36:18,322 --> 00:36:24,352
+So it failed because an interesting mock function call.
+
+295
+00:36:24,382 --> 00:36:30,022
+Oh, it's the same thing as before. Okay. So we might actually be able we may have gotten rid of a bunch of these things.
+
+296
+00:36:30,082 --> 00:36:36,292
+Let's try it. That's good.
+
+297
+00:36:36,502 --> 00:36:46,162
+Making our tests more resilient. Craig says.
+
+298
+00:36:46,182 --> 00:36:49,572
+I suppose I have more learning to do about Firefox add ons to get the patch up to snuff.
+
+299
+00:36:49,722 --> 00:36:53,952
+You know, if you want it. Going back to Journal for a second if you wanted to.
+
+300
+00:36:58,572 --> 00:37:09,762
+Fast track. This one thing you could do is I know that we have an existing like thing that looks at whether or not you're holding down shift.
+
+301
+00:37:09,762 --> 00:37:19,712
+If you're holding down shift, then it'll be for it won't truncate, it won't truncate the message that you copy the clipboard.
+
+302
+00:37:19,722 --> 00:37:25,512
+So if we could do something similar where like we only add all windows if you have a different modifier.
+
+303
+00:37:26,142 --> 00:37:38,292
+Um, so if we look at web extension click modifiers, let's look at the keyboard modifiers on the click.
+
+304
+00:37:39,612 --> 00:37:44,231
+So I could have shift alt command control or Mac control. Maybe we could add one of these.
+
+305
+00:37:44,232 --> 00:37:51,641
+Like what if can command shift or holding down command is what makes it so that it goes across all windows.
+
+306
+00:37:51,642 --> 00:37:58,752
+I'd accept that command or that would be, I think, meta on like the Windows keyboard key,
+
+307
+00:38:00,582 --> 00:38:08,532
+the Windows key on the Windows keyboard and command on Mac OS that might be worth doing and that shouldn't be too bad.
+
+308
+00:38:08,532 --> 00:38:11,952
+Craig Like because you can use you can use this as inspiration.
+
+309
+00:38:11,952 --> 00:38:18,222
+Like if on click data modifiers includes command, then do this work like re compute your windows and tabs.
+
+310
+00:38:18,822 --> 00:38:23,262
+I think that's totally acceptable. I would accept that patch.
+
+311
+00:38:26,302 --> 00:38:29,722
+What am I doing? What am I doing back to this?
+
+312
+00:38:29,752 --> 00:38:34,742
+So our other tests are more resilient.
+
+313
+00:38:34,762 --> 00:38:38,242
+That's good. And now we're getting to this. The more interesting stuff, I think.
+
+314
+00:38:38,542 --> 00:38:47,002
+Truncated description. That's the test that we had written last time, and we expected it to pass.
+
+315
+00:38:53,342 --> 00:39:00,891
+We're failing one of our expectations. Generated Title Generated Description.
+
+316
+00:39:00,892 --> 00:39:05,362
+Generate Title. Description. Google.
+
+317
+00:39:05,362 --> 00:39:12,262
+Mark tried the following one expectation it didn't match. Expect to call these things compared generate show linked to the definitions.
+
+318
+00:39:16,452 --> 00:39:22,411
+Custom title also didn't match. One failed test.
+
+319
+00:39:22,412 --> 00:39:30,692
+Actual function count called in. We expected a pen category to be called once and add user tasks to be called once and was never called.
+
+320
+00:39:32,252 --> 00:39:41,442
+Interesting. Description.
+
+321
+00:39:41,982 --> 00:39:46,302
+So we'd never even reached the point where we say whether or not the descriptions match one another.
+
+322
+00:39:47,022 --> 00:39:54,072
+So let's go back up here to our matcher. This is the thing that is doing our comparisons.
+
+323
+00:39:57,372 --> 00:40:03,372
+And let's just do some classic print f debugging, comparing lengths.
+
+324
+00:40:08,402 --> 00:40:17,462
+Print death count was and desk's length was.
+
+325
+00:40:25,382 --> 00:40:31,642
+And those didn't match. So count desks.
+
+326
+00:40:32,432 --> 00:40:39,922
+Length. Else the lengths matched.
+
+327
+00:40:43,612 --> 00:40:58,692
+Okay. And then for each description, we're going to say could not cast the item at that to a i.
+
+328
+00:40:58,922 --> 00:41:03,512
+I shall link. That's.
+
+329
+00:41:03,882 --> 00:41:06,922
+I, um.
+
+330
+00:41:11,882 --> 00:41:17,192
+Somehow got back a no got to know.
+
+331
+00:41:19,862 --> 00:41:23,402
+Pointer at I after getting.
+
+332
+00:41:25,512 --> 00:41:29,262
+After converting to a showing that really shouldn't happen.
+
+333
+00:41:31,572 --> 00:41:39,582
+And then. And failed to get prop store on.
+
+334
+00:41:44,272 --> 00:41:50,752
+Failed to get title. On such and such.
+
+335
+00:41:51,562 --> 00:42:02,812
+And then title we're very into string of failed to convert variant to string
+
+336
+00:42:02,812 --> 00:42:10,372
+convert title to string on such and such and we'll say titles did not match.
+
+337
+00:42:14,172 --> 00:42:33,522
+And then verses titles on did not match and that is desk and title get and title.
+
+338
+00:42:33,732 --> 00:42:57,072
+Let's see if it is happy bringing that and then fail to get path on the failed uh paths did not match such and such verses.
+
+339
+00:42:57,072 --> 00:43:02,322
+Uh so it's a dust and path that get and path.
+
+340
+00:43:06,492 --> 00:43:12,312
+Uh, could not get arguments on such and such.
+
+341
+00:43:14,522 --> 00:43:19,082
+Um. If arguments with past arguments equals.
+
+342
+00:43:22,622 --> 00:43:27,482
+Arguments did not match on such and such.
+
+343
+00:43:29,272 --> 00:43:37,112
+Since it's desk argument Scott valued I get and an art buff.
+
+344
+00:43:39,802 --> 00:43:48,652
+Otherwise the arguments should be empty arguments should have been empty on I but was not.
+
+345
+00:43:52,252 --> 00:44:00,222
+And then down to the interesting part here, going to the description failed to get a description on my.
+
+346
+00:44:02,582 --> 00:44:06,842
+And then descriptions match one another.
+
+347
+00:44:08,102 --> 00:44:14,672
+Let's see if that's enough to sort of like let's let's not be a full blown completionist here.
+
+348
+00:44:18,332 --> 00:44:25,082
+Yeah, I had to. I was giving a second argument to some constructors of functions or functions which were expecting a size nine.
+
+349
+00:44:25,132 --> 00:44:28,171
+Yeah, I think I addressed those. Let's double check.
+
+350
+00:44:28,172 --> 00:44:33,872
+Let's maybe go through this stuff again. I was trying to when I was constructing the.
+
+351
+00:44:37,182 --> 00:44:52,632
+The short list descriptions here. Yeah, I was, uh, I was using like, a second argument, and I think I fixed those looking at these.
+
+352
+00:44:52,632 --> 00:44:57,462
+I think I fixed those. That was the problem.
+
+353
+00:44:58,182 --> 00:45:05,862
+Okay. And so what the issue is, is if these all pass and then we get to our truncate test.
+
+354
+00:45:18,572 --> 00:45:32,322
+So it's never actually called. Did we never get to that point in our test truncate description?
+
+355
+00:45:42,592 --> 00:45:49,792
+Construct. We call populate jump list.
+
+356
+00:46:02,532 --> 00:46:08,202
+Okay, well, here we go. Populate jump do populate jump list.
+
+357
+00:46:11,082 --> 00:46:19,872
+How do we get here? And then.
+
+358
+00:46:26,012 --> 00:46:29,312
+Here's the thing. Where do we do the truncation truncate.
+
+359
+00:46:31,682 --> 00:46:43,682
+Max power. This happens whenever we construct the shell link from the description.
+
+360
+00:46:46,532 --> 00:46:53,072
+Okay. And that occurs inside populate jump list.
+
+361
+00:46:53,282 --> 00:46:56,772
+Okay. Well, here we go.
+
+362
+00:46:56,792 --> 00:47:00,962
+Print f doing populate do populate jump list.
+
+363
+00:47:00,992 --> 00:47:06,952
+Enter. And, uh.
+
+364
+00:47:14,582 --> 00:47:23,492
+So saying ag user tasks is never called user tasks, expect to call unsatisfied so we never reach there.
+
+365
+00:47:33,992 --> 00:47:38,522
+We have some task descriptions. Let's go.
+
+366
+00:47:40,752 --> 00:47:46,582
+Um. Creating a shell link.
+
+367
+00:47:51,862 --> 00:47:55,052
+Add an object to collection.
+
+368
+00:47:58,872 --> 00:48:03,292
+And then. Adding user tasks.
+
+369
+00:48:04,912 --> 00:48:09,952
+Now, if we ever bail out, that would happen here at the rejection point.
+
+370
+00:48:13,432 --> 00:48:17,082
+Rejecting. All right.
+
+371
+00:48:20,282 --> 00:48:30,932
+Otherwise, if we resolve, I expect us to get all the way down here exiting to populate jump lists.
+
+372
+00:48:34,272 --> 00:48:40,182
+This is very mysterious, not least of all because I picked the wrong terminal there.
+
+373
+00:48:46,762 --> 00:48:52,522
+Yeah. Thanks for trying that out, Craig. I again, I appreciate the patch always.
+
+374
+00:48:52,732 --> 00:48:56,772
+And obviously no rush. It's, it's a silly add on to Myrtle.
+
+375
+00:48:57,892 --> 00:49:02,992
+It's just a silly thing. I saw someone, someone else had written like a snippet to.
+
+376
+00:49:03,922 --> 00:49:07,352
+To. Oh.
+
+377
+00:49:07,642 --> 00:49:10,912
+Oh, we're not even. We're not even building. That's the problem.
+
+378
+00:49:11,212 --> 00:49:14,442
+Hold up. It's a warning. Warning. Warning. And then an error.
+
+379
+00:49:14,452 --> 00:49:17,482
+A missing semicolon online. 57.
+
+380
+00:49:20,352 --> 00:49:26,142
+I got to say, that is a huge foot gun that the tests might. It'll still look like it ran even though the build failed.
+
+381
+00:49:26,982 --> 00:49:44,192
+That's a foot gun. We're going to figure this out, people.
+
+382
+00:49:45,362 --> 00:49:48,542
+I can. I can almost taste it. We're right at the finish line.
+
+383
+00:49:54,062 --> 00:49:58,412
+Warning. Warning. One warning. Just warnings.
+
+384
+00:49:59,852 --> 00:50:04,222
+We can survive these. Linking.
+
+385
+00:50:06,622 --> 00:50:09,742
+We're linking people. What are you thinking about?
+
+386
+00:50:10,732 --> 00:50:18,832
+A blinking over here. Okay.
+
+387
+00:50:20,932 --> 00:50:32,132
+Aha. So that.
+
+388
+00:50:32,162 --> 00:50:40,542
+Okay, so. Count was one, desks, length was two, and those don't match.
+
+389
+00:50:40,542 --> 00:50:47,682
+So we expected two to go in. Count is how many.
+
+390
+00:50:53,902 --> 00:50:56,992
+Oh boy. Shell links.
+
+391
+00:51:02,382 --> 00:51:07,752
+Creating a shell and adding object collection, creating a shell and adding object collection, adding user tasks.
+
+392
+00:51:09,372 --> 00:51:12,642
+The count was one. Somehow the count is one.
+
+393
+00:51:20,722 --> 00:51:24,502
+Oh, I remember. I remember. Okay.
+
+394
+00:51:25,162 --> 00:51:33,232
+The issue is that I think there was a reason why we were making it so that these things had, like, indexes put into them.
+
+395
+00:51:33,652 --> 00:51:46,132
+And it's because I think that the Win32 API of the collection is keying off of something like the URL or like the the title or something.
+
+396
+00:51:46,762 --> 00:51:51,772
+And so if they match, then they don't they, it doesn't get added alongside.
+
+397
+00:51:51,772 --> 00:51:59,091
+I think it's just like thrown out. So if each of these things match, then then it's no good.
+
+398
+00:51:59,092 --> 00:52:06,322
+That's why we had to, that's why we were putting in those those new numbers.
+
+399
+00:52:06,472 --> 00:52:10,912
+That's why we're putting in the numbers. So I want to try I think it was someone had this idea.
+
+400
+00:52:11,272 --> 00:52:15,262
+Could I. Could I do it this way? Could I do a literal, like, a tuple?
+
+401
+00:52:15,532 --> 00:52:18,622
+I don't know if this'll be acceptable, but let's find out.
+
+402
+00:52:19,592 --> 00:52:28,462
+Um, it was like. I think this may have been Smurf's Smurf D's idea that if I go like you title equals this.
+
+403
+00:52:30,362 --> 00:52:33,382
+Um. And then.
+
+404
+00:52:44,252 --> 00:52:50,102
+Then whenever I do a sign, can I do the same thing? Item.
+
+405
+00:52:55,922 --> 00:53:04,532
+Uh, and then I'm going to put this the beginning. This is it at four task.
+
+406
+00:53:06,652 --> 00:53:15,512
+Four item I. I think.
+
+407
+00:53:15,512 --> 00:53:23,562
+And then. Let's see if.
+
+408
+00:53:26,322 --> 00:53:33,032
+This works. I don't even know if that would compile.
+
+409
+00:53:34,682 --> 00:53:41,821
+I don't know if that's how. You had the same issue last time.
+
+410
+00:53:41,822 --> 00:53:46,202
+Can you maybe remove the test binary before running to be to be sure it is built?
+
+411
+00:53:46,682 --> 00:53:52,292
+Good question. This feels like something worth filing. I'm going to I'm going to add an item here.
+
+412
+00:53:54,062 --> 00:54:02,282
+Make it so that if a if G test fails to build that, the test will fail to run.
+
+413
+00:54:07,472 --> 00:54:14,852
+I think that's worth doing. Hmm.
+
+414
+00:54:21,802 --> 00:54:27,562
+Okay. Still failed. But for different reasons.
+
+415
+00:54:37,362 --> 00:54:43,722
+Looks like a smiley face. Oh, wrong. Titles on items here did not match.
+
+416
+00:55:05,542 --> 00:55:10,931
+Mm hmm. Generated title.
+
+417
+00:55:10,932 --> 00:55:18,402
+Let's see what the generated title was. Yeah.
+
+418
+00:55:18,432 --> 00:55:24,102
+Generate this. This. I don't think this is working.
+
+419
+00:55:27,972 --> 00:55:32,142
+Hmm. Okay.
+
+420
+00:55:33,642 --> 00:55:42,822
+I need to find how to do interpolation better.
+
+421
+00:55:44,652 --> 00:55:52,232
+Undo, undo and do it. Do. Let's figure out how to do interpolation.
+
+422
+00:56:01,652 --> 00:56:11,272
+Um. A sign.
+
+423
+00:56:15,062 --> 00:56:29,572
+Uh, case sensitive. Ooh.
+
+424
+00:56:29,582 --> 00:56:39,712
+And a sprint FC string. That looks like that sounds familiar.
+
+425
+00:56:46,502 --> 00:56:51,212
+It's kind of an old school way of doing it, but I think that's what you're supposed that that's maybe the thing to do.
+
+426
+00:56:51,482 --> 00:57:00,842
+A long during that. Derive from its extreme behaves like an auto c string.
+
+427
+00:57:00,842 --> 00:57:04,411
+Start taking trans struct APIs to predict style format string parameter list.
+
+428
+00:57:04,412 --> 00:57:14,382
+Okay. Let's try this nice auto string title.
+
+429
+00:57:16,452 --> 00:57:28,722
+Um. Auto string.
+
+430
+00:57:37,162 --> 00:57:41,262
+Task. I.
+
+431
+00:57:44,182 --> 00:57:55,912
+Let's just see if that'll compile. What theme are you using and sublime.
+
+432
+00:58:00,202 --> 00:58:05,692
+This is the default theme, I'm pretty sure. Yeah, this is the default theme.
+
+433
+00:58:09,462 --> 00:58:13,002
+Some 50 points at this. You should be able to do this.
+
+434
+00:58:14,322 --> 00:58:21,042
+Can I just I guess I could concatenate, but I don't think I can.
+
+435
+00:58:21,342 --> 00:58:27,052
+Will it accept concatenation? With the number.
+
+436
+00:58:27,652 --> 00:58:31,372
+I can concatenated strings. Can I concatenated to a number?
+
+437
+00:58:33,322 --> 00:58:46,802
+I mean. Generate a title to do this build.
+
+438
+00:58:46,822 --> 00:58:54,432
+I got a feeling this didn't build. Yeah.
+
+439
+00:58:54,552 --> 00:59:02,782
+Again it didn't, it didn't build. I just happened to catch it that time.
+
+440
+00:59:03,532 --> 00:59:12,141
+Can't. No matching. Oh. Oh. Because it's in C string and it's print f c string print.
+
+441
+00:59:12,142 --> 00:59:19,582
+Def. I need to convert a u t f print death string.
+
+442
+00:59:22,262 --> 00:59:25,592
+That C string. And then.
+
+443
+00:59:28,432 --> 00:59:32,652
+There's, like, conversion functions. Um.
+
+444
+00:59:36,762 --> 00:59:41,922
+Uh, append was a copy as converted to a.
+
+445
+00:59:45,412 --> 00:59:50,062
+TV. Ooh.
+
+446
+00:59:50,072 --> 00:59:54,122
+Append print def. Oh that's append int.
+
+447
+00:59:55,022 --> 01:00:00,152
+Maybe that's what I want. Append print def. And print f.
+
+448
+01:00:09,662 --> 01:00:13,322
+Yes. Yes. This is what I want.
+
+449
+01:00:13,592 --> 01:00:18,072
+This is what I want. Now.
+
+450
+01:00:20,712 --> 01:00:25,932
+How do I. What's the way to do this?
+
+451
+01:00:27,882 --> 01:00:31,942
+Um. Auto string.
+
+452
+01:00:31,962 --> 01:00:37,092
+Title. Will's test task.
+
+453
+01:00:39,982 --> 01:00:44,512
+And then title append int i.
+
+454
+01:00:52,042 --> 01:00:58,462
+Um, okay. And then there's ah, generate title and then description and then assign.
+
+455
+01:01:00,062 --> 01:01:17,952
+Print death. Four item.
+
+456
+01:01:28,362 --> 01:01:32,162
+Oh append print def append print def assign print at.
+
+457
+01:01:34,762 --> 01:01:43,372
+Tend to print death. I.
+
+458
+01:01:45,332 --> 01:01:50,942
+Right. Okay. Then description is append print f.
+
+459
+01:01:52,952 --> 01:01:57,962
+Item. I.
+
+460
+01:02:09,862 --> 01:02:13,312
+What do you think about that? Would you think about that?
+
+461
+01:02:13,582 --> 01:02:18,952
+Yeah. I feel like I made that bad Spice Girls joke a ton of times.
+
+462
+01:02:20,482 --> 01:02:31,672
+I apologize if. If you've been watching the stream forever, you've probably heard me repeat jokes and catchphrases so many times.
+
+463
+01:02:31,882 --> 01:02:39,081
+I apologize. Anyone who's known me for any longer than, like, a month or two will hear me repeat ad nauseum.
+
+464
+01:02:39,082 --> 01:02:42,592
+Things like what? You think about that.
+
+465
+01:02:42,742 --> 01:02:46,311
+Now you know how I feel. Okay, now.
+
+466
+01:02:46,312 --> 01:02:49,402
+Now it's really complaining. It's interesting.
+
+467
+01:02:49,402 --> 01:02:56,152
+It's like this one complained so hard that the test didn't run, which I guess is good.
+
+468
+01:02:59,782 --> 01:03:05,571
+No matching constructor for auto string. Oh, right.
+
+469
+01:03:05,572 --> 01:03:15,142
+Because I had to put a U in front of it to indicate that, hey, this is the dealio.
+
+470
+01:03:17,752 --> 01:03:22,642
+I was an air Arrow member reference variable. A title.
+
+471
+01:03:23,022 --> 01:03:26,842
+It's not a pointer. Title is not a pointer. Right.
+
+472
+01:03:31,112 --> 01:03:36,392
+The error can initialize a parameter of type caused star with a value L type.
+
+473
+01:03:39,042 --> 01:03:47,862
+Initialize a parameter of type constant star within l value of type constant char 16 t.
+
+474
+01:03:54,392 --> 01:03:58,562
+Passing argument to parameter format. Oh, wait, why?
+
+475
+01:04:06,302 --> 01:04:10,892
+So this one doesn't expect. Okay.
+
+476
+01:04:11,522 --> 01:04:15,332
+All right. I guess I shouldn't start with those.
+
+477
+01:04:16,352 --> 01:04:23,132
+All right. Let's see if that's any better. So someone writes Mike karaoke stream When?
+
+478
+01:04:23,462 --> 01:04:28,142
+Maybe Right now. Let's see. Let's sing a song.
+
+479
+01:04:31,482 --> 01:04:36,212
+At first I was afraid I was. I was petrified.
+
+480
+01:04:37,592 --> 01:04:42,752
+I don't even have. I don't remember the words. I was the worst karaoke ever.
+
+481
+01:04:46,172 --> 01:04:51,242
+A lot of warnings. I can get by with warnings, but we're linking here.
+
+482
+01:04:51,272 --> 01:04:58,372
+Let's. Let's try another karaoke. What's.
+
+483
+01:04:58,652 --> 01:05:09,382
+Any requests? Any requests? Okay, now we're near problems.
+
+484
+01:05:11,332 --> 01:05:16,192
+Okay, that's good. I'm seeing. I'm seeing the right.
+
+485
+01:05:16,702 --> 01:05:25,972
+We're getting what we wanted, which is numbers being inserted. So it's still the same issue is that the counts are wrong.
+
+486
+01:05:39,562 --> 01:06:00,892
+That's a very strange. Am I doing it wrong down here in this test?
+
+487
+01:06:29,952 --> 01:06:38,891
+Countless. So we create a shell link to populate an object collection, another object collection.
+
+488
+01:06:38,892 --> 01:06:44,172
+We adding user tasks. We're comparing the lengths, countless one descriptions, lengths to two.
+
+489
+01:06:44,202 --> 01:06:47,892
+Those don't match for each of them.
+
+490
+01:06:49,422 --> 01:06:55,251
+Countless one. Why do we do this? I was one.
+
+491
+01:06:55,252 --> 01:07:00,382
+Desk's length was two. Why are we doing this four times?
+
+492
+01:07:02,592 --> 01:07:19,852
+Count as one. This.
+
+493
+01:07:49,502 --> 01:07:56,042
+Hmm. Have you fixed both test cases or just one since you made a copy of the old test case?
+
+494
+01:07:57,872 --> 01:08:01,282
+I don't know what you mean, Chris. Tell me more.
+
+495
+01:08:01,322 --> 01:08:04,832
+Because maybe you have a good nose for this stuff. So what? Tell me more.
+
+496
+01:08:22,522 --> 01:08:26,992
+Fixed. Both test cases are only just one since you made a copy of the old test case.
+
+497
+01:08:27,532 --> 01:08:32,492
+Tell me more. Also the title.
+
+498
+01:08:34,412 --> 01:08:38,012
+Well, he didn't write this test case from scratch. Yes.
+
+499
+01:08:38,882 --> 01:08:52,962
+Tell me more about what you mean by fixing it. Percent category a point to match.
+
+500
+01:09:04,152 --> 01:09:12,772
+The issue length should be in both. Length and formatting.
+
+501
+01:09:13,852 --> 01:09:17,122
+Both are using. Maybe I'm misunderstanding.
+
+502
+01:09:17,272 --> 01:09:25,402
+Both are using this utility called Generate Windows jump plus shortcut descriptions.
+
+503
+01:09:26,002 --> 01:09:32,632
+And this is where I've made a bunch of I've done a bunch of logging, so I think I can get rid of all this logging now.
+
+504
+01:09:34,792 --> 01:09:41,872
+This is where I've done all of the adjustments for length and whatnot.
+
+505
+01:09:43,222 --> 01:09:49,182
+And this should be used everywhere, not just in like it's used in jump list only tasks.
+
+506
+01:09:49,192 --> 01:09:52,882
+It's used only custom items. Populate.
+
+507
+01:09:52,882 --> 01:09:56,932
+Jump list. TRUNCATE Description.
+
+508
+01:10:06,662 --> 01:10:11,221
+Well, that's why, uh, again.
+
+509
+01:10:11,222 --> 01:10:16,822
+Why for? Four times.
+
+510
+01:10:25,882 --> 01:10:38,762
+My. Okay, Well, one thing I want to do.
+
+511
+01:10:43,032 --> 01:10:50,832
+Popular entered. Creating a shell link adding user tasks.
+
+512
+01:10:54,302 --> 01:10:59,462
+One thing I want to point. Oh, we do we do exit here exiting.
+
+513
+01:10:59,462 --> 01:11:07,042
+Do populate your post here. It's doing the comparison.
+
+514
+01:11:27,402 --> 01:11:40,162
+Any time add user tasks is called. We should just be the ones.
+
+515
+01:11:48,832 --> 01:11:55,072
+Hmm. You having user tasks?
+
+516
+01:11:55,702 --> 01:12:01,252
+The number of tasks is high, and let's get the count.
+
+517
+01:12:07,342 --> 01:12:14,912
+Which. Counts don't match.
+
+518
+01:12:18,042 --> 01:12:28,652
+Count. So we get the count you into 30 2tp task array.
+
+519
+01:12:28,662 --> 01:12:33,342
+Get count you in 32 T count equals zero.
+
+520
+01:12:44,062 --> 01:12:49,522
+More printf between comparing and counting to figure out why it's run four times.
+
+521
+01:12:51,682 --> 01:13:06,532
+Comparing and counting. Oops.
+
+522
+01:13:06,712 --> 01:13:12,921
+Couldn't save. He's in that section.
+
+523
+01:13:12,922 --> 01:13:20,801
+Open. What? What do you mean?
+
+524
+01:13:20,802 --> 01:13:26,432
+Can be saved with the user maps section open. I guess maybe it was compiling.
+
+525
+01:13:31,712 --> 01:13:38,482
+Never hit that issue before. Good job. Sublime text. Okay.
+
+526
+01:13:46,772 --> 01:13:50,731
+To populate jumpers, truncate description Do populate jumpers?
+
+527
+01:13:50,732 --> 01:13:55,252
+Do we have testers once go showing an article adding user tests?
+
+528
+01:13:55,262 --> 01:13:59,312
+The number of tests is one haha.
+
+529
+01:14:02,812 --> 01:14:13,432
+So that is the issue is that for some reason when we do this adding object to collection, you shall link.
+
+530
+01:14:25,302 --> 01:14:34,292
+And the Object Pete Collection. Schelling from description.
+
+531
+01:14:36,362 --> 01:14:56,332
+Something wrong in here? Subscription.
+
+532
+01:15:01,802 --> 01:15:07,572
+Description was. But.
+
+533
+01:15:18,192 --> 01:15:26,022
+Hmm. Add user tasks.
+
+534
+01:15:28,442 --> 01:15:31,982
+It's called twice. No, it's called once.
+
+535
+01:15:34,702 --> 01:15:41,452
+With an object collection that claims that it has a size of one when we know that we've added two items to it.
+
+536
+01:15:53,032 --> 01:16:02,302
+Right. Um. Why?
+
+537
+01:16:06,122 --> 01:16:11,042
+Jeff pointer link died get. Every address.
+
+538
+01:16:13,652 --> 01:16:16,802
+W print def. Yeah. Okay.
+
+539
+01:16:22,042 --> 01:16:40,271
+I mean. Let's let's see if this compile.
+
+540
+01:16:40,272 --> 01:16:48,362
+Let's see what happens first. Yeah.
+
+541
+01:16:48,362 --> 01:16:52,082
+It is a wide, wide characters.
+
+542
+01:16:53,312 --> 01:16:57,212
+Not my favorite. I get it. I get it.
+
+543
+01:16:57,542 --> 01:17:00,812
+Lost characters. Some of them need to be wide.
+
+544
+01:17:03,822 --> 01:17:08,442
+But they're all ASCII for our purposes, so. Okay, fine.
+
+545
+01:17:09,892 --> 01:17:27,752
+We print effort is. Am I truncating them?
+
+546
+01:17:27,752 --> 01:17:30,782
+Wrong. Copy.
+
+547
+01:17:32,512 --> 01:17:36,652
+Description. Get above max power. Get the description.
+
+548
+01:18:02,742 --> 01:18:05,832
+Check all calls to assign. Make sure you don't give them a second argument.
+
+549
+01:18:09,432 --> 01:18:14,402
+All right, hold on. One thing at a time. Here, print def.
+
+550
+01:18:15,402 --> 01:18:19,112
+We've got this buff. Um.
+
+551
+01:18:28,342 --> 01:18:42,242
+Would you be happy if I did this? To.
+
+552
+01:18:50,482 --> 01:18:59,872
+Orchestra. What am I doing?
+
+553
+01:18:59,892 --> 01:19:11,912
+What am I doing? I need. Oh, right.
+
+554
+01:19:11,952 --> 01:19:23,972
+It's the same issue as before. Uh, we print tea, and I think I have to put you in front of it.
+
+555
+01:19:24,492 --> 01:19:29,402
+Right. To say, Hey. Be advised.
+
+556
+01:19:30,422 --> 01:19:35,272
+Right. Or l. So what?
+
+557
+01:19:35,272 --> 01:19:43,032
+L That's what. So says.
+
+558
+01:19:44,472 --> 01:19:49,792
+See what happens whenever it tries to do its thing.
+
+559
+01:19:49,812 --> 01:19:53,802
+I haven't saved yet with the L prefix. Okay.
+
+560
+01:19:58,432 --> 01:20:10,322
+Her six t. Okay, so we've made it. We made a little bit better, but l I guess is C for wide.
+
+561
+01:20:16,712 --> 01:20:29,612
+Good job. C C++. What a silly industry in a silly language is C++.
+
+562
+01:20:34,052 --> 01:20:38,572
+Good job. Um.
+
+563
+01:20:40,742 --> 01:20:46,412
+Tonight, I'm going to have myself a real good time.
+
+564
+01:20:46,592 --> 01:20:50,642
+I feel like I have.
+
+565
+01:20:51,062 --> 01:20:56,112
+And the world is turned inside out.
+
+566
+01:20:56,132 --> 01:21:04,712
+You're floating around in ecstasy, so don't stop me.
+
+567
+01:21:04,922 --> 01:21:11,132
+No, don't stop me, cause I haven't.
+
+568
+01:21:11,282 --> 01:21:14,592
+Whoa. What's. What's this question?
+
+569
+01:21:20,612 --> 01:21:32,972
+Okay. TRUNCATE Description. Yes, test descriptions, creating a shell and file description was this.
+
+570
+01:21:33,362 --> 01:21:39,482
+And then it's like these weird characters at the end, which to me is like.
+
+571
+01:21:40,232 --> 01:21:43,412
+Oh. Didn't get.
+
+572
+01:21:43,562 --> 01:21:46,832
+Didn't get null terminated. Yeah.
+
+573
+01:21:47,042 --> 01:21:54,582
+So across we're. It's copy.
+
+574
+01:22:06,712 --> 01:22:12,222
+Description. Okay, here's what I think I'm going to do.
+
+575
+01:22:12,522 --> 01:22:21,192
+This is all quite silly. I think what I want to do is create a new auto string.
+
+576
+01:22:26,432 --> 01:22:35,762
+Um, desk with limit truncated desk description.
+
+577
+01:22:36,402 --> 01:22:40,472
+I'm going to copy a desk description to it.
+
+578
+01:22:40,922 --> 01:22:44,582
+Now, the reason I can't do this to a desktop AM description is because that's a constant.
+
+579
+01:22:44,732 --> 01:22:55,682
+I can't change it because it's a constant. I'm going to create a copy and I'm going to say truncated description, truncate max path.
+
+580
+01:22:57,392 --> 01:23:01,562
+And then. Can I do this?
+
+581
+01:23:07,612 --> 01:23:18,202
+Uh, truncated description. Dev.
+
+582
+01:23:18,742 --> 01:23:57,062
+I always get very. Oh Craig's try not to laugh while I while I do antics.
+
+583
+01:23:57,082 --> 01:24:02,002
+Let me see if I can make Craig laugh. Let's see.
+
+584
+01:24:02,032 --> 01:24:07,202
+Do I have any good jokes? Okay.
+
+585
+01:24:09,602 --> 01:24:16,292
+Two hunters are in the woods. Now, hang on. Uh, 758.
+
+586
+01:24:18,662 --> 01:24:23,672
+Each descriptions. Don't get right.
+
+587
+01:24:25,682 --> 01:24:31,202
+Two hunters are in the woods and you know, they're out there in the middle of nowhere.
+
+588
+01:24:31,652 --> 01:24:35,312
+Yeah, great. Joe did cause a great joke. Nailed it. Hold on, hold on.
+
+589
+01:24:35,342 --> 01:24:38,602
+Hold your applause. Two hunters are in the woods.
+
+590
+01:24:38,612 --> 01:24:43,802
+They're way in the middle of nowhere. They happen. They're just outside of cell range, But they've still got signal.
+
+591
+01:24:43,982 --> 01:24:48,422
+And all of a sudden, you know, one of them just keels over it, goes up and falls over.
+
+592
+01:24:49,712 --> 01:24:52,921
+The other freak sounds like, Oh, what do I do? And he pulls out a cell phone.
+
+593
+01:24:52,922 --> 01:24:58,922
+He's got one bar and he calls 911. He's got his rifle, his hunting rifle on his shoulder.
+
+594
+01:24:58,922 --> 01:25:03,301
+And he's talking to the nine one. One operator goes not on one operator, my friend.
+
+595
+01:25:03,302 --> 01:25:06,992
+We're hunting and my friend just killed over and I think he's dead.
+
+596
+01:25:07,292 --> 01:25:10,772
+And then the 911 operator goes, well, is he dead?
+
+597
+01:25:11,012 --> 01:25:16,262
+Can you are you sure he's dead? And then the guy on the phone goes, okay, hold on just a second.
+
+598
+01:25:16,322 --> 01:25:20,912
+He puts the phone down and then the operator hears Blam, blam, blam.
+
+599
+01:25:21,842 --> 01:25:25,042
+And the guy goes back on the phone and goes, Okay, he's dead.
+
+600
+01:25:25,052 --> 01:25:29,192
+Now what? That's the joke.
+
+601
+01:25:30,302 --> 01:25:34,592
+All right. Can't convert trivial types of frenetic expression.
+
+602
+01:25:34,772 --> 01:25:38,582
+Oh, wait. I did this wrong. I did this wrong. I need to do it this way.
+
+603
+01:25:39,682 --> 01:25:45,151
+Dad, get. Smurf.
+
+604
+01:25:45,152 --> 01:25:51,002
+Do you like it? I'm going to retroactively apply our forward port.
+
+605
+01:25:51,002 --> 01:25:54,482
+Your great joke, Dany Colon. And assume you also liked that joke.
+
+606
+01:25:56,072 --> 01:25:59,762
+I don't know if Craig is laughing in his office. I'm here's what I'm guessing.
+
+607
+01:25:59,762 --> 01:26:03,421
+I'm guessing Craig, like, exhaled through his nose, his nostrils.
+
+608
+01:26:03,422 --> 01:26:06,962
+He was like when he heard me do that.
+
+609
+01:26:07,412 --> 01:26:12,242
+That's my guess. That's the thrash. That's. That's the level of that joke is my guess.
+
+610
+01:26:21,902 --> 01:26:25,292
+We're linking exactly that. Nailed it.
+
+611
+01:26:30,332 --> 01:26:42,992
+When people say L.O.L. Which is supposed to stand for laughing out loud, I think it really should be r e etm n which is exhaling through my nose.
+
+612
+01:26:43,562 --> 01:26:49,952
+Oh, now we have a crash. That's interesting.
+
+613
+01:27:07,472 --> 01:27:13,002
+Hmm. Didn't we deal with this before Trump came?
+
+614
+01:27:32,772 --> 01:27:37,302
+Longer. The new length must be less than.
+
+615
+01:27:42,132 --> 01:27:45,641
+She's become longer. And maybe I have to.
+
+616
+01:27:45,642 --> 01:27:50,562
+Only if. Okay.
+
+617
+01:27:51,712 --> 01:28:12,491
+If I. Truncated description that length is greater than max path, then truncated description is not a good best description.
+
+618
+01:28:12,492 --> 01:28:23,682
+Copy. Um.
+
+619
+01:28:26,082 --> 01:28:36,642
+How's that? Oh, Craig was holding it in.
+
+620
+01:28:36,652 --> 01:28:41,902
+He says he would have laughed out loud if he were alone or in a place where it doesn't make sense to be randomly laughing.
+
+621
+01:28:41,932 --> 01:28:47,782
+Okay, so here's my goal for the next 2 minutes is to make Craig laugh out loud, hopefully not get him in trouble at work,
+
+622
+01:28:48,052 --> 01:28:52,522
+but [INAUDIBLE] make some noise so that someone in his like office is like, what the heck?
+
+623
+01:28:53,032 --> 01:28:56,752
+What? What is someone having a great time? That's my goal.
+
+624
+01:28:58,252 --> 01:29:01,911
+So I'm going to do an impression of someone in Craig's office.
+
+625
+01:29:01,912 --> 01:29:07,102
+I don't know. I don't know Craig. I don't know anyone in Craig's office or whoever, wherever Craig is.
+
+626
+01:29:07,102 --> 01:29:12,811
+But I'm going to do an impression of someone in that office. Hey, Craig, what are you watching over there?
+
+627
+01:29:12,812 --> 01:29:16,762
+Are you watching? You are. Hey.
+
+628
+01:29:17,292 --> 01:29:23,152
+Hey. What you watching? You watching Someone working with some C++, doing some strings.
+
+629
+01:29:23,782 --> 01:29:28,172
+What's that all about? Air. I don't know if that made you laugh.
+
+630
+01:29:28,192 --> 01:29:32,782
+I don't know if that's. If that's even close to anyone who's in your office.
+
+631
+01:29:33,142 --> 01:29:39,352
+Okay, so we've bypassed the crash description Buffer f.
+
+632
+01:29:42,332 --> 01:29:49,612
+Failed on truncate description again. But for.
+
+633
+01:29:59,192 --> 01:30:08,382
+Different reasons. Description Buffer.
+
+634
+01:30:13,772 --> 01:30:16,862
+Subscription copy. How do I copy?
+
+635
+01:30:23,952 --> 01:30:28,052
+A copy. And it's auto string.
+
+636
+01:30:37,182 --> 01:30:42,582
+Copy paste or which is some NSA stringer reference.
+
+637
+01:30:43,992 --> 01:30:49,882
+And description. Maybe it's this.
+
+638
+01:30:49,902 --> 01:31:03,872
+Do I do that to get a copy of it? Hopefully I didn't get you in trouble at work, Craig.
+
+639
+01:31:04,052 --> 01:31:11,102
+I hope you didn't happen to, like, unplug your speakers while I was doing that impression of someone in your office.
+
+640
+01:31:11,372 --> 01:31:15,572
+And then they heard it, and it was exactly what they sound like, and they're like, Hey, is that me?
+
+641
+01:31:16,382 --> 01:31:23,042
+Hey, how did you get a recording of me? How come my voice is coming out of your computer now?
+
+642
+01:31:43,502 --> 01:31:47,382
+I notice that Craig is not typing anymore, so maybe he's been dragged away from his desk.
+
+643
+01:31:47,402 --> 01:31:51,082
+Maybe they've handed him. It's like they've had it in his pink slip.
+
+644
+01:31:51,092 --> 01:31:55,622
+They're like, Hey, you're, you know, making fun of. We heard the voice.
+
+645
+01:31:55,622 --> 01:32:01,102
+We heard the voice. Can't do that. See what is going on here?
+
+646
+01:32:01,112 --> 01:32:08,212
+Description Buffer is. Oh, truncated description.
+
+647
+01:32:08,692 --> 01:32:13,042
+That's working. That's working. Okay, that's working. Truncated description is working.
+
+648
+01:32:13,402 --> 01:32:21,732
+Added object to items. Good. And then when we look at the description buffer.
+
+649
+01:32:30,272 --> 01:32:36,922
+Description. Desk and description equals.
+
+650
+01:32:42,992 --> 01:32:52,992
+Expected. So we're failing here.
+
+651
+01:32:55,452 --> 01:32:59,141
+The buffer to have description.
+
+652
+01:32:59,142 --> 01:33:02,352
+Buffer description.
+
+653
+01:33:05,682 --> 01:33:10,942
+Expected. Desk and description expected.
+
+654
+01:33:12,202 --> 01:33:28,322
+For some reason, m description is empty. Descriptions match one another.
+
+655
+01:33:45,402 --> 01:33:48,672
+We're going long, gang. It's we're 8 minutes past the half hour.
+
+656
+01:33:48,702 --> 01:33:54,032
+Normally, I would like I would end it right around here, but I am determined to figure this out.
+
+657
+01:33:54,042 --> 01:33:58,452
+I will. I will figure this out if it's the last thing I do.
+
+658
+01:34:03,972 --> 01:34:10,902
+If it's the last thing that I do, I've got a lot of cups around me today, cups and pop cans.
+
+659
+01:34:10,902 --> 01:34:17,082
+So that's why I'm being extra silly is because I'm uber caffeinated.
+
+660
+01:34:20,442 --> 01:34:24,882
+No more caffeine for Mike today. Yeah. I can't believe I'm like this.
+
+661
+01:34:25,002 --> 01:34:28,602
+I'm like this. I'm freaking out.
+
+662
+01:34:30,072 --> 01:34:35,592
+My heart is going to, like, blast out of my chest. Like. Like a cannon Cannonball.
+
+663
+01:34:36,822 --> 01:34:40,992
+Okay, descriptions when we do it right.
+
+664
+01:34:43,942 --> 01:34:47,151
+Comparing descriptions match one another description.
+
+665
+01:34:47,152 --> 01:34:51,142
+But first he expected blank and then they apparently match one another.
+
+666
+01:34:52,642 --> 01:35:00,062
+I am skeptical. Before.
+
+667
+01:35:03,052 --> 01:35:16,282
+Expected. Just above.
+
+668
+01:35:16,682 --> 01:35:21,752
+HRT. Just above. Link that description.
+
+669
+01:35:24,782 --> 01:35:35,032
+If it doesn't. Description. W print def.
+
+670
+01:35:38,032 --> 01:35:43,232
+L. Do that.
+
+671
+01:35:50,562 --> 01:35:55,832
+Do that instead. So some kind of let's ask a question.
+
+672
+01:35:55,832 --> 01:35:59,372
+I didn't take out my ear, but I was hearing like one year. And then the other good thing it was a simple question.
+
+673
+01:36:00,542 --> 01:36:06,122
+I'm glad it didn't get you in trouble, Greg. That would have been devastating.
+
+674
+01:36:12,002 --> 01:36:15,422
+But what was the person who came to your desk? Did they sound like this?
+
+675
+01:36:15,772 --> 01:36:19,202
+Ray Hey, everyone, I got a question. I got a question for you, Greg.
+
+676
+01:36:21,742 --> 01:36:27,382
+Do you know anyone who's wrestling with strengths in C++?
+
+677
+01:36:29,422 --> 01:36:35,872
+Right. So I've got a friend, a very close friend who might even be watching the stream.
+
+678
+01:36:35,872 --> 01:36:41,902
+I don't know. Probably not. I suspect he's at work, and we played in D together.
+
+679
+01:36:45,912 --> 01:36:51,532
+Basket. Okay, maybe that's fine.
+
+680
+01:36:53,512 --> 01:36:57,411
+And anytime he does voices for characters, he's got a couple of go to voices.
+
+681
+01:36:57,412 --> 01:37:01,472
+And one of them is this voice. I don't know you guys. Let's go.
+
+682
+01:37:01,852 --> 01:37:05,692
+And I love it. It's one of my favorites. Like, we'll be playing dandy.
+
+683
+01:37:05,692 --> 01:37:09,622
+We're going around in town. We're just talking to, like, some townsfolk, and that's what they sound like.
+
+684
+01:37:09,802 --> 01:37:15,112
+Oh, hey, how's it going? Welcome to the town. Truncated description.
+
+685
+01:37:15,322 --> 01:37:20,122
+That's all right. And then lengths match comparing length description by fair expected.
+
+686
+01:37:22,452 --> 01:37:27,782
+That's good. Item zero. Oh, they do not match.
+
+687
+01:37:27,792 --> 01:37:30,922
+Look. Look.
+
+688
+01:37:34,602 --> 01:37:52,582
+They actually don't match. Is it because the last character will be the null character?
+
+689
+01:37:53,542 --> 01:37:57,532
+Is that it? Oh, boy.
+
+690
+01:37:59,842 --> 01:38:09,112
+Is that it? Expected.
+
+691
+01:38:10,792 --> 01:38:13,912
+I think that's it. Let's find out.
+
+692
+01:38:21,202 --> 01:38:24,742
+Off by one. He's working with Pee-Wee Herman.
+
+693
+01:38:25,162 --> 01:38:31,042
+Yeah. Hey, your shout out to Pee-Wee Herman, R.I.P.
+
+694
+01:38:31,432 --> 01:38:34,762
+You know, moment of silence for Pee-Wee Herman. What a what a genius.
+
+695
+01:38:36,142 --> 01:38:40,672
+But yeah, Pee-Wee Herman. That's. That's who Craig sometimes works with.
+
+696
+01:38:40,702 --> 01:38:45,982
+That's my guess. I don't know. I don't know, Craig. I don't know. Your workplace. Maybe you're surrounded by people who sound like this.
+
+697
+01:38:47,362 --> 01:39:08,332
+Hey, crack. I'm joking. I'm joking. We did it.
+
+698
+01:39:08,692 --> 01:39:13,192
+We did it. We figured out the problem off by one the last character.
+
+699
+01:39:13,382 --> 01:39:22,312
+Okay. When you have a buffer, a string buffer. I think what we have here was a sort of a confusion between, like the gecko strings and like,
+
+700
+01:39:22,792 --> 01:39:29,392
+native layer, like w chars strings, where when you set the length with a gecko string,
+
+701
+01:39:30,352 --> 01:39:42,952
+one of these things over here you are when you like, you're setting the total length of the string, not including the null character.
+
+702
+01:39:44,242 --> 01:39:53,212
+And I think when you when we're over here and we were copying the string when we truncate, I believe.
+
+703
+01:40:02,992 --> 01:40:06,562
+Yes, that's the difference is the difference between set length and truncate.
+
+704
+01:40:09,032 --> 01:40:15,012
+You'd think that we refer to the same thing. You'd think you'd have the same.
+
+705
+01:40:15,782 --> 01:40:19,712
+We got rid of. Of this part. Why would they be so confused?
+
+706
+01:40:21,032 --> 01:40:24,642
+Well, they are. I'm not going to look too closely at it.
+
+707
+01:40:24,672 --> 01:40:27,762
+Let's clean this up. Let's clean this up.
+
+708
+01:40:27,912 --> 01:40:32,652
+I'm sick and tired of this bug. Let's clean it up.
+
+709
+01:40:34,032 --> 01:40:37,692
+Print out. Let's get rid of all our print apps. We'll run our test again.
+
+710
+01:40:38,412 --> 01:40:52,162
+We're going to format our stuff. All right.
+
+711
+01:41:02,952 --> 01:41:08,262
+I keep going to the wrong turn. I'm just going to exit this one. Um.
+
+712
+01:41:19,302 --> 01:41:23,682
+There's no difference between Turkey and say like truncate just checks that the length is not greater than the current length.
+
+713
+01:41:26,102 --> 01:41:31,432
+Right. Right.
+
+714
+01:41:50,182 --> 01:41:58,052
+But why? To the empty.
+
+715
+01:42:01,652 --> 01:42:27,222
+Subscription. And wrong one.
+
+716
+01:42:36,802 --> 01:42:50,692
+So here's here's what I'm I'm still mulling this over. Like, why do I have to change the description length to be max path minus one to match.
+
+717
+01:42:59,332 --> 01:43:04,372
+So that we truncate to the same length. Why?
+
+718
+01:43:04,792 --> 01:43:15,242
+Why do I have to use minus one here? Jon.
+
+719
+01:43:15,352 --> 01:43:39,962
+Kate. Set lengths.
+
+720
+01:43:39,962 --> 01:43:58,992
+New lengths. Why?
+
+721
+01:44:08,632 --> 01:44:15,311
+It passes. As you said.
+
+722
+01:44:15,312 --> 01:44:18,522
+Otherwise it would use the null Terminator as a character and not match.
+
+723
+01:44:19,122 --> 01:44:25,572
+Is that it? Except that like it uses set length under the hood.
+
+724
+01:44:28,402 --> 01:44:32,422
+It's the same thing. TRUNCATE and settling for the same thing.
+
+725
+01:44:35,032 --> 01:44:40,112
+Mr. Buckley. Mr.
+
+726
+01:44:44,002 --> 01:44:58,522
+It's become men and we get the minimum of length, the length or the total length, and then we start up a bulk rate and pool length preserve.
+
+727
+01:45:19,072 --> 01:45:27,572
+It doesn't make me feel good when I don't understand this stuff. Capacity does not include room for the terminating null character.
+
+728
+01:45:27,842 --> 01:45:44,352
+That's important. Capacity is greater than zero.
+
+729
+01:45:44,592 --> 01:45:51,842
+The buffer is immutable or zero. Size capacity is less than so shrinking.
+
+730
+01:46:06,832 --> 01:46:18,852
+It might buffer. We're not going to want to increase the capacity of capacity.
+
+731
+01:46:52,412 --> 01:47:04,012
+Your capacity. Okay, well, before we've got our test passing, I'm happy with that.
+
+732
+01:47:05,182 --> 01:47:12,172
+Uh, let's see here. Um. Just for my own curiosity.
+
+733
+01:47:14,612 --> 01:47:18,932
+The task description length is.
+
+734
+01:47:21,552 --> 01:47:25,632
+Task desk and description length.
+
+735
+01:47:30,702 --> 01:47:47,512
+Then over here. Description copy length is.
+
+736
+01:47:51,802 --> 01:48:04,612
+Okay. How to strengthen characters and sets length to five, then try to compare the same five characters.
+
+737
+01:48:05,872 --> 01:48:10,942
+Yeah, okay. I mean, we could let's we can do a little test here.
+
+738
+01:48:24,852 --> 01:48:36,882
+Test that. Trump versus away.
+
+739
+01:48:52,242 --> 01:48:56,822
+All right. Five. I'd buy, buy, buy, buy, buy you.
+
+740
+01:48:56,992 --> 01:49:01,242
+You want Z? You. You got it.
+
+741
+01:49:03,072 --> 01:49:09,342
+And over here. Do you also. What said you?
+
+742
+01:49:11,022 --> 01:49:21,442
+I presume so. Okay, let's do a test.
+
+743
+01:49:24,052 --> 01:49:28,162
+Um, create a new auto string.
+
+744
+01:49:50,162 --> 01:49:53,372
+U.N. treaty I equals one.
+
+745
+01:49:53,612 --> 01:50:02,192
+What? I just saw it as happy and then as auto string copy.
+
+746
+01:50:05,462 --> 01:50:12,712
+Right. And then I'm going to description and truncate max power.
+
+747
+01:50:18,412 --> 01:50:29,472
+Uh, my copy. And then my got set lang max pants.
+
+748
+01:50:30,812 --> 01:50:54,032
+When Darth. Description. My coffee.
+
+749
+01:51:08,692 --> 01:51:13,802
+On. The task description.
+
+750
+01:51:24,692 --> 01:51:29,831
+Right. Description.
+
+751
+01:51:29,832 --> 01:51:35,382
+Copy length is 260 after it was sent.
+
+752
+01:51:41,572 --> 01:51:54,612
+Task Description Length. Has been truncated to max path minus one.
+
+753
+01:52:15,582 --> 01:52:29,432
+But up here. Life is different.
+
+754
+01:52:31,182 --> 01:52:44,022
+The lengths are different. If I truncate this to minus one to.
+
+755
+01:53:01,482 --> 01:53:08,462
+Will it still pass? Hmm.
+
+756
+01:53:10,742 --> 01:53:14,012
+Greater equals. Sorry.
+
+757
+01:53:14,012 --> 01:53:34,182
+Yes, greater equals. Thank you. Is it possible that it's not it's not gecko, It's this shell link thing that the limit is max path.
+
+758
+01:53:37,112 --> 01:53:49,732
+Including the null Terminator. And so whenever I was doing this, copying and truncating to max path.
+
+759
+01:53:51,982 --> 01:54:00,352
+That doesn't include the null Terminator because we just read that up here.
+
+760
+01:54:02,332 --> 01:54:06,862
+That capacity does not include the room for the terminating null character.
+
+761
+01:54:11,282 --> 01:54:20,642
+And so we're losing that one character here whenever we write into the the shell link.
+
+762
+01:54:22,292 --> 01:54:30,702
+That's my guess. Um, error cannot do all this fun stuff.
+
+763
+01:54:30,722 --> 01:54:35,162
+Okay, that's fine. You know what? I'm okay with that.
+
+764
+01:54:37,232 --> 01:54:41,132
+I'm going to disable this thing that I was trying to do.
+
+765
+01:54:45,792 --> 01:54:52,502
+I think we may have figured it out. I think that's what happened.
+
+766
+01:54:52,512 --> 01:55:03,012
+And that makes me feel a lot better that the what we are hitting is a mismatch between how Gecko's strings deal with capacity and how
+
+767
+01:55:03,012 --> 01:55:12,522
+a shell link deals string deals with capacity where a shell links maximum length includes the null character and the gecko string.
+
+768
+01:55:12,522 --> 01:55:16,692
+The maximum length is not including the null character.
+
+769
+01:55:18,492 --> 01:55:22,512
+And that that is my guess.
+
+770
+01:55:30,522 --> 01:55:35,542
+And if this passes. Let's go home.
+
+771
+01:55:35,842 --> 01:55:39,442
+We nailed it. We figured it out, gang. That was the issue.
+
+772
+01:55:40,372 --> 01:55:44,572
+That was the issue. So let's. Let's write that down.
+
+773
+01:55:50,422 --> 01:55:59,502
+So truncate. According to the interview for Max Path still sometimes too large.
+
+774
+01:56:02,112 --> 01:56:12,822
+We truncate to max path minus one to leave room for the null character.
+
+775
+01:56:20,662 --> 01:56:23,812
+To leave room to leave room for the null character.
+
+776
+01:56:31,562 --> 01:56:35,282
+Two. Max path minus one since.
+
+777
+01:56:35,642 --> 01:56:42,122
+And as auto strings don't include the null character.
+
+778
+01:56:46,252 --> 01:57:02,122
+In their capacity calculations. But the strings for I shall lynx the string for I shall link w.
+
+779
+01:57:03,792 --> 01:57:12,322
+Description does. Uh, don't include the male character in the capacity of the string analogy.
+
+780
+01:57:12,682 --> 01:57:24,512
+So. So by truncating to max path minus one, the same string, the gecko.
+
+781
+01:57:25,052 --> 01:57:36,142
+What? What week? The contents of the truncated, the full contents.
+
+782
+01:57:39,752 --> 01:57:54,842
+Of the. Truncated gecko string and a solid string will be copied into the ice shell length description buffer.
+
+783
+01:58:01,042 --> 01:58:04,522
+All right. We did it.
+
+784
+01:58:06,262 --> 01:58:09,662
+We did it. Yes. Yes.
+
+785
+01:58:09,682 --> 01:58:17,811
+Okay. It's 303. I'm sorry.
+
+786
+01:58:17,812 --> 01:58:24,892
+We're going to wait one more episode to get this all cleaned up. I think what we can do, though, is we can clean up the formatting.
+
+787
+01:58:25,132 --> 01:58:30,532
+Let's mock what we have with high def.
+
+788
+01:58:32,632 --> 01:58:39,382
+We can get rid of this, too. You don't need that anymore.
+
+789
+01:58:40,312 --> 01:58:46,892
+Uh. Oh, isn't it nice to figure stuff out?
+
+790
+01:58:47,882 --> 01:58:51,991
+Feels good, gang. All right, this shell.
+
+791
+01:58:51,992 --> 01:58:55,012
+I'm just going to close it. And.
+
+792
+01:58:55,022 --> 01:58:58,242
+Okay, so we got rid of that thing. We put our nice documentation.
+
+793
+01:58:59,762 --> 01:59:06,292
+Um. He added a new line there for some reason.
+
+794
+01:59:07,612 --> 01:59:11,542
+Uh, match. Let's get rid of that.
+
+795
+01:59:14,362 --> 01:59:17,512
+We added a new line under that this.
+
+796
+01:59:21,072 --> 01:59:26,512
+Got rid of some print deaths. Clean up a bunch of that.
+
+797
+01:59:27,772 --> 01:59:36,432
+Move some stuff around. But a new line at the end of the file.
+
+798
+01:59:45,332 --> 02:00:00,622
+Um. Amend. And now Marc Lynch outgoing fix.
+
+799
+02:00:02,522 --> 02:00:17,082
+Fix the formatting. I do want to do the thing that our crossing was talking about over here, where we change I guess we change some of this to.
+
+800
+02:00:22,372 --> 02:00:26,632
+So we just use like a new and as main thread thread pointer handle.
+
+801
+02:00:28,222 --> 02:00:35,302
+And I do we want to assemble Do we ever assemble the argument string from parts that we just received from the host and treat it as opaque nonsense?
+
+802
+02:00:43,032 --> 02:00:46,122
+In the form of his arguments in the web audience would probably be a dumb string.
+
+803
+02:00:46,122 --> 02:01:02,122
+And we ran through a command line. That may be a separate bug, though. Yeah, well, we'll disassemble the argument string from parts, I'm pretty sure.
+
+804
+02:01:04,492 --> 02:01:07,762
+Jump list builder whenever it creates.
+
+805
+02:01:13,462 --> 02:01:19,682
+The args set arguments. Test args.
+
+806
+02:01:20,942 --> 02:01:27,462
+Are. We just like we do it manually.
+
+807
+02:01:33,502 --> 02:01:40,102
+Task arcs. And over here, arguments is just the URL.
+
+808
+02:01:43,132 --> 02:01:47,782
+Um, I agree that might be a separate bug. Okay.
+
+809
+02:01:48,562 --> 02:01:52,551
+I think I'm going to call there. Fixed a bunch of formatting stuff.
+
+810
+02:01:52,552 --> 02:02:01,972
+Let's go ahead and absorb. That's because going to.
+
+811
+02:02:01,972 --> 02:02:06,482
+No. Oh, good for you.
+
+812
+02:02:23,552 --> 02:02:27,392
+All right. That's good. And I'm going to call it there.
+
+813
+02:02:27,422 --> 02:02:31,802
+Hey, thanks so much for watching episode, whatever this was, 346 of the joy coating.
+
+814
+02:02:32,042 --> 02:02:37,651
+That was pretty interesting. We fixed we figured, okay, we figured out a race in our test.
+
+815
+02:02:37,652 --> 02:02:43,582
+We fix that fairly quickly. We figured out what was going wrong here with our comparators.
+
+816
+02:02:43,592 --> 02:02:52,172
+It turns out there was a mismatch in our understanding between how gecko strings and string buffers, and I show links calculate length in capacity.
+
+817
+02:02:52,922 --> 02:03:00,302
+Gecko strings don't include the Nell character in their capacity calculations, whereas like I guess I shall link string buffers do.
+
+818
+02:03:00,992 --> 02:03:04,682
+And we looked at a patch for two brittle. I answered some questions.
+
+819
+02:03:05,612 --> 02:03:09,752
+What a great what a great day. Wow. Feeling good villain donk.
+
+820
+02:03:11,462 --> 02:03:15,181
+Hey, thanks for watching. Episode 346. I hope you enjoyed this episode.
+
+821
+02:03:15,182 --> 02:03:19,411
+Let me know what you thought. There is a form at the bottom of this episode called Rate.
+
+822
+02:03:19,412 --> 02:03:24,752
+This episode. I'm actually going to drop it in both chats right now. Rate this episode form.
+
+823
+02:03:25,532 --> 02:03:31,651
+This is how you can let me know what you thought or if you have questions, maybe.
+
+824
+02:03:31,652 --> 02:03:37,592
+Did you like the funny voices? Did you prefer if I didn't do funny voices?
+
+825
+02:03:37,592 --> 02:03:42,751
+What did you think, Craig? What did you think? Everybody, you can send messages to me this way and you can also ask questions,
+
+826
+02:03:42,752 --> 02:03:48,002
+and I'll do my best to try and answer them the next dream, and I will hopefully see you then soon.
+
+827
+02:03:48,752 --> 02:03:53,491
+Take care, everybody. Have yourselves a great week. Take care of yourselves.
+
+828
+02:03:53,492 --> 02:03:56,792
+If you're if things are getting cold, stay warm.
+
+829
+02:03:56,792 --> 02:04:00,122
+If things are getting warm, stay cool and we'll see you soon.
+
+830
+02:04:00,132 --> 02:04:03,182
+Take care, everyone. The joy.
+
+831
+02:04:04,102 --> 02:04:06,552
+Loading the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

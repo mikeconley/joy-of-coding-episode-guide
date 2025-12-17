@@ -1,0 +1,3037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 339 - September 20, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 339 - September 20, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=26cbf252-b2c8-4ffb-8709-b0820147ada5</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=26cbf252-b2c8-4ffb-8709-b0820147ada5">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,308 --> 00:00:09,838
+Welcome. Through the Joy Cup loading.
+
+2
+00:00:10,378 --> 00:00:14,368
+Hello and welcome to episode 339 of The Joy of Coding.
+
+3
+00:00:14,698 --> 00:00:20,018
+Woohoo! My name is Mike Connelly and so good to have you here. Going to be live hacking on some Firefox stuff today is going to be great.
+
+4
+00:00:20,038 --> 00:00:26,548
+It's going to be a good time. I'm so glad you're with me. Let's get down to business and I'll start by sharing my screen.
+
+5
+00:00:27,658 --> 00:00:31,858
+All right, here's my screen. This is today's agenda.
+
+6
+00:00:31,888 --> 00:00:35,728
+It is September 20th, 2023. Episode 339.
+
+7
+00:00:35,728 --> 00:00:40,588
+A reminder No plan survives breakfast. I think I know what I want to do today. I think I have a sense of how it might go.
+
+8
+00:00:41,758 --> 00:00:46,548
+We're going to start with a build error, probably, and hopefully figure it out.
+
+9
+00:00:46,558 --> 00:00:49,588
+I hope it doesn't take me an hour and a half. I hope we figure it out before then.
+
+10
+00:00:49,588 --> 00:00:54,088
+I sure hope. But who knows? Who knows? I haven't tried to solve it ahead of time.
+
+11
+00:00:54,088 --> 00:00:57,778
+So you're just going to watch me deal with it in real time?
+
+12
+00:00:57,778 --> 00:01:03,268
+So that's the first thing. The second thing is that the agenda that we're looking at is something that you have access to if you want to follow along.
+
+13
+00:01:03,478 --> 00:01:08,778
+If you want to click on some of the links, if you're watching this on YouTube or dot zone, it's down in the video description.
+
+14
+00:01:08,788 --> 00:01:11,307
+If you're watching this on air Mozilla, it's over in the details section.
+
+15
+00:01:11,308 --> 00:01:14,608
+If you're watching this on Twitch, it's down in the channel, details down below.
+
+16
+00:01:15,268 --> 00:01:18,957
+Now, before I launch into this, I also want to do a quick shadow up for the episode Guide.
+
+17
+00:01:18,958 --> 00:01:24,508
+The episode guide is a completely viewer driven resource that talks about, you know,
+
+18
+00:01:24,518 --> 00:01:31,618
+it has notes and information about each individual episode, links to the episode, the agenda.
+
+19
+00:01:31,888 --> 00:01:37,408
+Some of the stuff I covered, handy links, and it's completely viewer driven.
+
+20
+00:01:37,408 --> 00:01:41,217
+So that means that if you are interested in adding your own notes,
+
+21
+00:01:41,218 --> 00:01:48,658
+then the corrections expanding on some part of the expanding on some part of the episode
+
+22
+00:01:48,658 --> 00:01:52,798
+guide you're well within your right and you just can send me a pull request on GitHub.
+
+23
+00:01:53,218 --> 00:01:56,188
+And as a matter of fact, there are a number of pull requests.
+
+24
+00:01:56,458 --> 00:02:02,098
+Most of these are for dependencies that I haven't closed in a while, mainly because this is just a static web page.
+
+25
+00:02:02,368 --> 00:02:04,768
+But Smurf D has sent in a couple of episodes.
+
+26
+00:02:04,978 --> 00:02:12,388
+I think it is worth merging these in because we're a couple, we're quite a few episodes behind, so we're going to start by merging these episodes in.
+
+27
+00:02:13,318 --> 00:02:22,288
+So let's let's get started there. Let me just foreground, foreground the chat so I can see what's going on in the chat.
+
+28
+00:02:23,488 --> 00:02:26,938
+Okay. Hello, everyone. Hello, orcas.
+
+29
+00:02:26,938 --> 00:02:36,208
+Hello. Dan Schwab. Hello. Moet Okay, let's start by looking at Smurf D's poll request here for episodes 333, 34 and 35.
+
+30
+00:02:37,288 --> 00:02:42,177
+So in each of these cases, Smurf D is supplying these like markdown files.
+
+31
+00:02:42,178 --> 00:02:48,768
+And I don't like, do a whole lot of editorializing whenever I'm merging the stuff in.
+
+32
+00:02:48,778 --> 00:02:51,448
+I'm pretty easygoing when it comes to the episode guide.
+
+33
+00:02:52,498 --> 00:02:57,327
+But what I do like to do is make sure that there are some, you know, just some of the basics are covered.
+
+34
+00:02:57,328 --> 00:03:00,178
+Like, for example, we would need to make sure that the date, the episode number are correct.
+
+35
+00:03:00,178 --> 00:03:09,088
+So for episode 333, it was July 26th that looks right and 2023 and these links look correct.
+
+36
+00:03:09,688 --> 00:03:14,008
+And then what were the things that we covered while I talked about the episode guide and I also talked about
+
+37
+00:03:15,718 --> 00:03:22,498
+we were reviewing a patch from Danny Collin and we took a look at that and we went deep on jump loss again.
+
+38
+00:03:23,218 --> 00:03:26,338
+And that was episode 333. That looks right. Moving on.
+
+39
+00:03:26,338 --> 00:03:30,208
+334 was on August 2nd.
+
+40
+00:03:30,598 --> 00:03:38,158
+That looks correct. August 2nd, 2023 That also looks correct.
+
+41
+00:03:39,298 --> 00:03:42,808
+I talked a little bit about the next Firefox view that's coming out.
+
+42
+00:03:42,808 --> 00:03:49,558
+If you're not familiar with it, it's coming to a beta near you soon. But if you're on nightly, you're you already should have it enabled.
+
+43
+00:03:50,128 --> 00:03:57,358
+Uh, there was no episode. The next week I talked about the Thunderbird team talking about the Thunder cast and then we did more jobless stuff.
+
+44
+00:03:57,748 --> 00:04:01,977
+And then for episode 330, that was 334.
+
+45
+00:04:01,978 --> 00:04:05,968
+Episode 335 was on August 9th.
+
+46
+00:04:07,648 --> 00:04:12,418
+And that looks right. Yes, yes, yes.
+
+47
+00:04:13,318 --> 00:04:16,438
+Uh, no. Episode next week due to travel.
+
+48
+00:04:17,038 --> 00:04:21,838
+Uh, I talked about security bugs. I answered a question. This was a viewer question that someone had sent in.
+
+49
+00:04:22,528 --> 00:04:25,858
+Excuse me, This was a viewer question that someone had sent in with.
+
+50
+00:04:26,008 --> 00:04:33,538
+With the rate this episode form, which you can find in the agenda down here, rate this episode.
+
+51
+00:04:33,538 --> 00:04:36,748
+If you click on that link, you can send me an questions and I can try and answer them.
+
+52
+00:04:37,468 --> 00:04:41,158
+And then we did more jump live stuff and that's it. So I'm happy with these.
+
+53
+00:04:41,158 --> 00:04:45,928
+Let's let's go ahead and say like, amazing, we're going to submit my review.
+
+54
+00:04:46,048 --> 00:04:53,338
+I don't really need to review. I am just going I kind of just merged it, but I'm happy to also give the approval and I'd like to say thanks.
+
+55
+00:04:54,858 --> 00:04:59,988
+I'd like to say thanks to Smurf D. I know Smurf D knows I'm thankful, but I like to say thanks every time.
+
+56
+00:05:00,238 --> 00:05:07,968
+Hello, Vainglory. Okay, so we're going do the exact same thing for episodes 36, 37 and 38 in the 300 series.
+
+57
+00:05:08,568 --> 00:05:12,438
+So the next episode was 336 on August 30th. That's right.
+
+58
+00:05:13,258 --> 00:05:17,388
+Um, the link looks right.
+
+59
+00:05:18,798 --> 00:05:25,758
+Oh, yeah. We talked a little bit about some of the. Chris things.
+
+60
+00:05:25,838 --> 00:05:31,368
+Was that how it's formatted? There are some missing underscores there, so I'm actually going to edit this.
+
+61
+00:05:32,538 --> 00:05:41,117
+Uh, let's see. Edit file. Expect results succeeded.
+
+62
+00:05:41,118 --> 00:05:49,248
+This might just help people if they're ever like working with these assertions, doing their SEO stuff,
+
+63
+00:05:49,488 --> 00:05:59,028
+making sure the terms look right and as a couple of underscores have gotten stripped out for some reason.
+
+64
+00:06:00,288 --> 00:06:04,518
+Okay, I'm happy with that. Go ahead and commit those changes.
+
+65
+00:06:05,268 --> 00:06:10,068
+Fix some, fix some missing underscores.
+
+66
+00:06:12,498 --> 00:06:15,528
+Commit to that branch. Thanks GitHub for letting me do that.
+
+67
+00:06:18,858 --> 00:06:22,958
+Wait a second. How come? Refresh. Yes, Refresh. Yeah, they are.
+
+68
+00:06:24,528 --> 00:06:30,608
+And then in episode 337, that was September 6th.
+
+69
+00:06:30,618 --> 00:06:40,188
+That. That's right. Um, again, these probably they're.
+
+70
+00:06:40,458 --> 00:06:48,618
+They're busted in some of the other ones as well. But I'm going to fix them here and it's error unexpected.
+
+71
+00:06:48,618 --> 00:06:52,248
+And then it is error failure.
+
+72
+00:06:54,048 --> 00:06:58,728
+Uh, more missing underscores.
+
+73
+00:07:01,348 --> 00:07:04,888
+There's probably just something in the tooling. Yeah, I.
+
+74
+00:07:04,948 --> 00:07:11,588
+This is not on use, Murphy. This is on the tooling. And then September 13th, episode 338.
+
+75
+00:07:12,188 --> 00:07:15,658
+Um, okay. Right, right.
+
+76
+00:07:15,688 --> 00:07:22,888
+I talked about how we're making viewed H s execute faster and Firefox did a quick pivot in the migration wizard.
+
+77
+00:07:23,698 --> 00:07:29,278
+Finally, I'm to do these last. Fixes of these underscores.
+
+78
+00:07:31,568 --> 00:07:38,558
+And then see if I can fix them in. My agenda from here forward.
+
+79
+00:07:38,678 --> 00:07:44,708
+I think now you say, um. Final fix of underscores.
+
+80
+00:07:48,148 --> 00:07:51,538
+Okay, So we're I'm otherwise happy with these.
+
+81
+00:07:51,548 --> 00:07:57,388
+So I'll go ahead and say Amazing.
+
+82
+00:07:58,678 --> 00:08:02,248
+Submit a review and then we'll go ahead and merge them in.
+
+83
+00:08:04,618 --> 00:08:11,097
+Thanks so much. Thank you again, Murphy, for helping us flesh out the the episode guide.
+
+84
+00:08:11,098 --> 00:08:15,987
+If you yourself want to send in your own contributions to the episode,
+
+85
+00:08:15,988 --> 00:08:21,268
+guide their instructions in the agenda on how to do that, I highly, highly encourage you to do that.
+
+86
+00:08:22,408 --> 00:08:32,878
+So the reason I'm so I'm putting like backslash is before the underscore because otherwise they're interpreted as.
+
+87
+00:08:37,188 --> 00:08:46,968
+Oh, I don't need to do that. I thought they would be interpreted as like, um, underlines or something.
+
+88
+00:08:47,658 --> 00:08:50,748
+So maybe I can just get rid of these. Okay.
+
+89
+00:08:51,228 --> 00:08:56,108
+Well, hopefully that that fixes it from here on forward. Who knows?
+
+90
+00:08:56,468 --> 00:09:00,218
+Oh. Oh, that was from the 13th. Let's up. So let's update today's as well.
+
+91
+00:09:01,088 --> 00:09:08,258
+We're going to get rid of these back slashes and that we can get started on what I wanted to work on today,
+
+92
+00:09:09,218 --> 00:09:15,108
+which was just more back slashes over here.
+
+93
+00:09:15,128 --> 00:09:18,428
+Do I need these? Probably. Yeah.
+
+94
+00:09:18,438 --> 00:09:22,938
+Because otherwise it'll think it's a link, won't it? I guess not.
+
+95
+00:09:24,408 --> 00:09:28,217
+Who's to say? Let's get.
+
+96
+00:09:28,218 --> 00:09:32,328
+Let's get working. So we had been working on this.
+
+97
+00:09:32,638 --> 00:09:36,618
+Tests were up. Some in the wrong place, wrong place, right time.
+
+98
+00:09:37,468 --> 00:09:41,328
+We're working on this g test called test Jump plus builder.
+
+99
+00:09:41,748 --> 00:09:52,877
+We're building up our special comparator, what we call a matter for the mocking framework to compare a list of I shell links.
+
+100
+00:09:52,878 --> 00:09:56,808
+That's the Win32 structure. A collection of shell links.
+
+101
+00:09:56,808 --> 00:10:02,028
+That's what how your tasks are described inside of the Windows jump list and
+
+102
+00:10:02,328 --> 00:10:06,498
+what we internally in Firefox and Gecko refer to as like Windows shortcut.
+
+103
+00:10:06,918 --> 00:10:13,038
+When we call them Windows jump, let's shortcut descriptions and we want to compare the two to make sure that they're the same.
+
+104
+00:10:13,458 --> 00:10:19,068
+And we are currently failing to build this comparator because of something.
+
+105
+00:10:19,068 --> 00:10:22,098
+We couldn't figure out what it was last week. And so I'm hoping we can figure it out this week.
+
+106
+00:10:22,608 --> 00:10:26,538
+So hopefully that's enough. Preamble This first thing is a warning. I'm going to ignore that for now.
+
+107
+00:10:26,898 --> 00:10:33,608
+What I care about is this error. Let's let's widen the window a little bit.
+
+108
+00:10:35,268 --> 00:10:41,538
+No matching constructor for initialization of Windows Jump List Shortcut description.
+
+109
+00:10:41,538 --> 00:10:46,188
+So I am attempting to get an element.
+
+110
+00:10:47,748 --> 00:10:51,948
+I'm saying, Hey, I've got I've got this nested array.
+
+111
+00:10:52,188 --> 00:11:00,018
+In this case, the desks nest array is of windows jump the shortcut descriptions and I want to get an element at it.
+
+112
+00:11:00,258 --> 00:11:11,448
+And clearly I'm not doing that correctly. So let's see if we can find an example of getting an element and make sure we're doing it right.
+
+113
+00:11:11,868 --> 00:11:24,368
+Hmm. So in all cases, and I think we may have done we may have done this last time as well.
+
+114
+00:11:24,788 --> 00:11:31,448
+In all cases, it looks like what it is expecting is to give me a pointer back, a pointer to the thing.
+
+115
+00:11:31,778 --> 00:11:37,028
+So this maybe and again, this is something that we I think tried last week.
+
+116
+00:11:37,448 --> 00:11:38,528
+This should be a pointer.
+
+117
+00:11:38,828 --> 00:11:47,018
+And as soon as this becomes a pointer, then desk instead of using dot here, I'm going to want to use that because disk as a pointer.
+
+118
+00:11:47,768 --> 00:11:55,718
+Um should also you know if not desk turned false.
+
+119
+00:11:56,568 --> 00:12:02,018
+Um, let's go ahead and see if this builds.
+
+120
+00:12:39,228 --> 00:12:44,298
+All right. Now it's complaining that there's no viable conversion from.
+
+121
+00:12:53,798 --> 00:12:57,648
+I see. I see.
+
+122
+00:12:57,668 --> 00:13:02,348
+So now it's the other way around like desks is supposed to be.
+
+123
+00:13:03,898 --> 00:13:08,608
+You look at shell links HQ desks is actually a.
+
+124
+00:13:10,618 --> 00:13:16,998
+Um. Desks, desks, desks.
+
+125
+00:13:20,058 --> 00:13:24,918
+Append element desk. It's an amnesty array of windows jump list shortcut descriptions.
+
+126
+00:13:25,458 --> 00:13:27,648
+So maybe before I continue,
+
+127
+00:13:27,648 --> 00:13:38,068
+let's look at examples of of these things like because they don't always have to be pointers they can be other structures, right.
+
+128
+00:13:38,088 --> 00:13:47,508
+Like accessible data in this in this case and s t rate that's a pointer substitution mapping.
+
+129
+00:13:48,738 --> 00:13:52,698
+So like, like substitutions.
+
+130
+00:13:56,888 --> 00:14:06,808
+Append element. What do we do We ever do anything with some mappings and get those get those mappings out.
+
+131
+00:14:07,048 --> 00:14:13,708
+Mapping. Uh, and as to.
+
+132
+00:14:20,488 --> 00:14:24,688
+Resources. Resources. Send register.
+
+133
+00:14:24,688 --> 00:14:26,378
+Chrome. That's sending a message.
+
+134
+00:14:27,298 --> 00:14:36,178
+I'm just looking for examples of us using an s t array for not pointers, because this is basically what I have here is like a fancy struct.
+
+135
+00:14:39,338 --> 00:14:58,608
+Um. And it's not allocated on the heap.
+
+136
+00:14:58,908 --> 00:15:03,778
+Like, check this out. It's it's allocated on the stack.
+
+137
+00:15:03,798 --> 00:15:09,588
+You can tell I'm not using new or anything or calling into something that allocates memory explicitly.
+
+138
+00:15:09,588 --> 00:15:14,328
+It's allocated on the heap. And I guess basically what I want to do.
+
+139
+00:15:18,108 --> 00:15:31,988
+Maybe is, but something on the heat. I just want to see more examples.
+
+140
+00:15:32,498 --> 00:15:39,188
+It's not my it's not something I'm super used to working with, like C++ arrays.
+
+141
+00:15:41,418 --> 00:15:49,328
+Brands like Choices. A steering wheel penned element, a permission choice.
+
+142
+00:15:52,658 --> 00:15:55,928
+And then what do you do with these choices? Choices?
+
+143
+00:15:55,928 --> 00:15:59,168
+Life. Then we allow the call back and we just throw it away.
+
+144
+00:15:59,498 --> 00:16:18,488
+Oh. Maybe we maybe we want it to be a point.
+
+145
+00:16:19,268 --> 00:16:30,667
+But like, is there a. And as t array animation property.
+
+146
+00:16:30,668 --> 00:16:33,788
+That sounds interesting. Result.
+
+147
+00:16:33,908 --> 00:16:41,318
+Animation property for keyframe build properties and then show me getting properties out.
+
+148
+00:16:42,188 --> 00:16:48,948
+Who calls you? Properties in share based styles.
+
+149
+00:16:52,338 --> 00:17:01,368
+Properties for property. We iterate through them for consort property reference property in properties.
+
+150
+00:17:02,988 --> 00:17:12,828
+Okay. So.
+
+151
+00:17:24,458 --> 00:17:30,918
+Element. Yeah, Maybe what I want is.
+
+152
+00:17:32,238 --> 00:17:38,018
+This concert. Windows Jump list.
+
+153
+00:17:38,018 --> 00:17:41,888
+Shortcut Description. Maybe this is what I want.
+
+154
+00:17:44,738 --> 00:17:57,078
+And then this becomes a reference again. Here is what his listeners.
+
+155
+00:17:57,078 --> 00:18:00,328
+Listeners. Right.
+
+156
+00:18:00,498 --> 00:18:04,948
+And as to auto as auto to observe or rate of these things.
+
+157
+00:18:06,938 --> 00:18:10,508
+See what happens whenever I do that. Let's just see.
+
+158
+00:18:13,848 --> 00:18:19,248
+If you remove the ampersand from the desk or sit with that, or was it that way you had before?
+
+159
+00:18:21,918 --> 00:18:25,818
+I wanted I added this, I added this ampersand.
+
+160
+00:18:26,778 --> 00:18:32,088
+I think what I want to say is I want a what I have here is a.
+
+161
+00:18:36,668 --> 00:18:40,758
+What am I trying to say? Alright.
+
+162
+00:18:40,758 --> 00:18:44,718
+Right. And then I then this makes no sense because it can't be null pointer.
+
+163
+00:18:46,978 --> 00:18:54,038
+It is a Windows jump. The shortcut description. What am I trying to say?
+
+164
+00:18:55,868 --> 00:19:04,958
+Ampersand. I'm saying like, this is a.
+
+165
+00:19:07,298 --> 00:19:11,978
+Like slicing in. Give me a memory. Like a not a pointer, but like.
+
+166
+00:19:14,508 --> 00:19:17,538
+Get me the item pointed out here directly.
+
+167
+00:19:19,908 --> 00:19:23,808
+I think that's what I'm trying to say. It's like.
+
+168
+00:19:25,738 --> 00:19:28,798
+Someone who's better at explaining memory stuff. Help me, please.
+
+169
+00:19:31,828 --> 00:19:43,428
+Warning. Warning. Warning. Warning. Warning. Uh, expand from macro non void function does not return to value and all control paths.
+
+170
+00:19:43,458 --> 00:19:50,678
+Okay, well, I can deal with that. Initialize the variable description to silence this warning.
+
+171
+00:19:56,878 --> 00:20:09,668
+Oh P.W. ster. Oh, crashed.
+
+172
+00:20:11,588 --> 00:20:16,748
+So I wonder. I wonder if we are accessing.
+
+173
+00:20:18,998 --> 00:20:29,948
+Yeah. Okay, so here's my thinking. This is a classic, like C++ sort of thing where I think rust really shines because it's so good at,
+
+174
+00:20:29,948 --> 00:20:36,938
+like, making it clear who owns what and transferring memory and whatnot.
+
+175
+00:20:38,528 --> 00:20:47,908
+What we have here is an array. It's allocated on the stack inside of this function.
+
+176
+00:20:48,268 --> 00:20:53,338
+And then we allocate. We don't allocate. It's like. Stack allocated.
+
+177
+00:20:53,848 --> 00:20:57,088
+There's there are two ways you can like allocate memory.
+
+178
+00:20:58,098 --> 00:21:09,738
+Stack allocation and heap allocation. Stack allocation is like whenever you have, you know, each line in your function or in your method or something,
+
+179
+00:21:10,158 --> 00:21:15,258
+one of them might declare a type are variable or something.
+
+180
+00:21:15,258 --> 00:21:24,288
+Say I want to use a struct, I want to do this, I want to do that. And it's doing it not by requesting memory from the from the operating system.
+
+181
+00:21:24,618 --> 00:21:31,937
+Instead, what it's saying is, you know, at compile time, we know that we need a thing of this size.
+
+182
+00:21:31,938 --> 00:21:35,808
+It's like stack allocate it. I don't know how else to describe that.
+
+183
+00:21:36,138 --> 00:21:43,068
+It's like at compile time, we know that we need to have this thing that we're going to manipulate.
+
+184
+00:21:43,278 --> 00:21:52,097
+And then whenever it goes outside, when the when we get this this execution frame off of the stack, we don't require it anymore.
+
+185
+00:21:52,098 --> 00:21:59,568
+It goes out of scope. And I think that's what's happening here, is we allocate this on the stack, we allocate the array on the stack,
+
+186
+00:21:59,898 --> 00:22:11,118
+we put the thing on the stack into this other thing on the stack, and then we call into this and.
+
+187
+00:22:17,728 --> 00:22:21,478
+They shouldn't be gone yet because we block.
+
+188
+00:22:24,438 --> 00:22:33,378
+Huh? But it crashed. Hmm.
+
+189
+00:22:33,718 --> 00:22:38,698
+Mm. Let's try it again.
+
+190
+00:22:39,118 --> 00:22:45,208
+Let's end. And if and when this thing crashes, we can try and debug how we're getting there.
+
+191
+00:22:47,828 --> 00:22:52,138
+Description. Equals null pointer. That gets rid of that warning.
+
+192
+00:22:52,168 --> 00:22:59,457
+What was the other warning? The first warning was non void.
+
+193
+00:22:59,458 --> 00:23:05,658
+Function does not return a value in all control paths. Are you sure?
+
+194
+00:23:08,478 --> 00:23:11,868
+64. Oh, yeah.
+
+195
+00:23:15,438 --> 00:23:19,618
+This needs to. Return true here.
+
+196
+00:23:22,878 --> 00:23:31,978
+That could also be a problem. Not that the. Ba ba boom.
+
+197
+00:23:32,308 --> 00:23:33,838
+That I'm doing something funky with memory.
+
+198
+00:23:33,838 --> 00:23:44,487
+Because here's why I'm kind of waffling a little bit on this memory thing is because we allocate these things are allocated on the stack,
+
+199
+00:23:44,488 --> 00:23:52,228
+and then we call into all of these helpers here and then we block.
+
+200
+00:23:52,828 --> 00:23:56,728
+So these things stay alive. We know that these things are going to stay alive.
+
+201
+00:24:00,088 --> 00:24:03,207
+Because the method has like this test function has an exited.
+
+202
+00:24:03,208 --> 00:24:11,968
+So it's not it's gross, but I wouldn't expect that we'd be pointing to like invalid memory anymore.
+
+203
+00:24:15,148 --> 00:24:20,128
+Okay. We still crash. What are the details?
+
+204
+00:24:26,918 --> 00:24:31,717
+Yeah, I shouldn't have submitted that crash report because. Because this is a local build.
+
+205
+00:24:31,718 --> 00:24:35,978
+The symbols or none of them all make sense. Let's do this again.
+
+206
+00:24:35,978 --> 00:24:42,428
+But let's add the debugger. And see if we can figure out what's going on here.
+
+207
+00:25:08,608 --> 00:25:16,438
+Now. I would have liked it if when we had crashed, we would have gotten ourselves into.
+
+208
+00:25:18,268 --> 00:25:24,958
+Oh. Oh, okay.
+
+209
+00:25:26,908 --> 00:25:30,508
+Uh, no. So hold on, hold on, hold on.
+
+210
+00:25:30,538 --> 00:25:38,368
+What do I want to do here? I do have a copy of Visual Studio that I use.
+
+211
+00:25:38,888 --> 00:25:44,188
+I thought I used to use. I thought I used. Are you serious?
+
+212
+00:25:44,188 --> 00:25:50,997
+That like, my license is. License your licenses.
+
+213
+00:25:50,998 --> 00:25:54,628
+Guns to L.A. We have to check for anybody. Licenses and a check for an update license.
+
+214
+00:25:56,398 --> 00:26:07,648
+Sorry, you have to watch this. I might want to do this. Offscreen. Hold on a second. Yeah, it's emailing me codes and stuff.
+
+215
+00:26:08,638 --> 00:26:11,728
+It's been a while since I've used Visual Studio on this machine, I guess.
+
+216
+00:26:13,618 --> 00:26:27,688
+Um. Okay, here's the one time code.
+
+217
+00:26:33,968 --> 00:26:37,428
+Check for an updated license. Okay, It's updated my license.
+
+218
+00:26:37,448 --> 00:26:41,408
+Great. Okay, so I have. I have an updated license.
+
+219
+00:26:41,828 --> 00:26:45,488
+Fantastic. So let's try all of that again.
+
+220
+00:27:04,168 --> 00:27:07,678
+Okay. Ron.
+
+221
+00:27:10,378 --> 00:27:16,708
+Now. I hope this. I would have liked the debugger.
+
+222
+00:27:20,888 --> 00:27:26,258
+If I if I say start again, we'll crash again. Yes.
+
+223
+00:27:26,268 --> 00:27:29,438
+Okay, good. Now, how do I make it so that you.
+
+224
+00:27:31,728 --> 00:27:35,868
+Start debugging. Like I want.
+
+225
+00:27:39,668 --> 00:27:46,198
+But I'd. It's not what I want.
+
+226
+00:27:54,228 --> 00:27:58,128
+What do I want? How do I.
+
+227
+00:28:00,318 --> 00:28:09,978
+I need to know where I. Like whenever I crash.
+
+228
+00:28:09,988 --> 00:28:16,448
+Normally it should like, tell me, okay, we're going to have to do this differentially.
+
+229
+00:28:16,708 --> 00:28:28,298
+This is a pain in the butt, but we're going to do it this way. Let's get rid of some things and see if we still crash.
+
+230
+00:28:29,738 --> 00:28:36,018
+Let's get rid of this. He's profile manager.
+
+231
+00:28:37,698 --> 00:28:41,118
+I don't exactly know what you mean. Chris Watts Profile Manager.
+
+232
+00:28:46,148 --> 00:28:58,538
+You're guessing the profile got broken. So for XPS, Shell or sorry, not SBC Shell for G tests, I don't even think we create a profile.
+
+233
+00:28:58,658 --> 00:29:05,108
+Not necessarily. Um, like a I think a user profile occurs.
+
+234
+00:29:06,008 --> 00:29:18,258
+Um. Later in the process like we've we've got SBY calm, but I don't think we're at the point when we run g tests.
+
+235
+00:29:19,308 --> 00:29:26,898
+What the. I guess I included that.
+
+236
+00:29:29,418 --> 00:29:32,628
+All right. Still crashing. Still crashing.
+
+237
+00:29:42,628 --> 00:29:46,768
+So it's not. Matt, which is interesting.
+
+238
+00:29:48,538 --> 00:30:05,298
+Is it this? Because maybe we're no the referencing link.
+
+239
+00:30:06,048 --> 00:30:14,418
+Maybe link in our particular case is no pointer, even though this doesn't just doesn't fail.
+
+240
+00:30:15,978 --> 00:30:20,548
+That could happen. Yeah.
+
+241
+00:30:21,088 --> 00:30:32,428
+So Gecko and Firefox, they have different levels of of of execution and for our tests they execute with XP.
+
+242
+00:30:32,428 --> 00:30:40,258
+Com enabled. But there's no user profile, there's no dom, no window, nothing like that.
+
+243
+00:30:42,658 --> 00:30:51,748
+You kind of have to construct the you're, you're at like the beginning of the universe and you get to choose what atoms you want to work with.
+
+244
+00:30:51,758 --> 00:30:55,458
+Oh. Interesting.
+
+245
+00:30:55,478 --> 00:31:00,338
+Interesting. So it has nothing to do. Okay, so now maybe it's this.
+
+246
+00:31:00,908 --> 00:31:06,218
+Maybe it's this, uh.
+
+247
+00:31:06,248 --> 00:31:14,938
+Um. Just getting rid of stuff.
+
+248
+00:31:17,768 --> 00:31:22,748
+Does it show the line it crashed at? Not really. Which is super annoying.
+
+249
+00:31:24,488 --> 00:31:29,828
+If I had a debug build, it might. It might give me a whole a better sense of it.
+
+250
+00:31:29,828 --> 00:31:33,578
+And maybe that's the next step is to create a debug build.
+
+251
+00:31:33,578 --> 00:31:39,518
+But that would take a while to get up and running and maybe I should have that running for next time actually.
+
+252
+00:31:39,758 --> 00:31:44,858
+We can have both a debug and an opt to build. But for now I think the faster thing is guessing.
+
+253
+00:31:44,858 --> 00:31:47,108
+That's maybe my shortest path to success here.
+
+254
+00:31:48,248 --> 00:31:56,707
+If I wasn't streaming, what I do maybe is to create a debug build and go work on something else and then I'd come back.
+
+255
+00:31:56,708 --> 00:32:01,298
+But I really want to focus on this. So let's let's do a little bit of guessing first.
+
+256
+00:32:03,428 --> 00:32:09,428
+Okay. No crash. So I'm reasonably certain now that we are no the referencing right here.
+
+257
+00:32:09,638 --> 00:32:20,258
+That link is no. A failed return.
+
+258
+00:32:20,258 --> 00:32:29,228
+False. Get her address link. If not, link.
+
+259
+00:32:31,868 --> 00:32:39,858
+Return false. And then let's bring all this stuff back.
+
+260
+00:32:49,808 --> 00:32:50,948
+Let's see what it says.
+
+261
+00:32:56,428 --> 00:33:03,778
+Yeah, I was so focused on it being about the array, it didn't occur to me that this other chunk might actually be what's causing the crash.
+
+262
+00:33:04,048 --> 00:33:07,318
+That is, sometimes I feel like I've run into that before.
+
+263
+00:33:07,818 --> 00:33:12,807
+I it seems strange to me that getting something at what is this thing?
+
+264
+00:33:12,808 --> 00:33:17,818
+This is some kind of like, I object collection. Um, let's look at the.
+
+265
+00:33:17,968 --> 00:33:21,728
+The rules. Object. Object array. Sorry.
+
+266
+00:33:22,268 --> 00:33:26,658
+We want the. We want the.
+
+267
+00:33:29,188 --> 00:33:36,778
+Microsoft documentation. If his method method succeeds returns as OC,
+
+268
+00:33:36,798 --> 00:33:40,788
+otherwise it returns an H result error code reference to the desired interface and
+
+269
+00:33:40,788 --> 00:33:44,718
+he receives the interface pointer request in our idea and the index of the object.
+
+270
+00:33:51,828 --> 00:34:01,148
+So. Link isn't null ish.
+
+271
+00:34:10,628 --> 00:34:16,958
+Description. Description.
+
+272
+00:34:22,458 --> 00:34:32,328
+Jeff Bezos. Get description Info Tips.
+
+273
+00:34:41,798 --> 00:34:52,008
+I shall. LP stirrer a pointer to the buffer.
+
+274
+00:34:52,758 --> 00:34:56,598
+It's a buffer, not a null pointer.
+
+275
+00:34:59,088 --> 00:35:06,558
+Yeah. Okay, so here's the thing. We need a buffer, not a raw pointer.
+
+276
+00:35:06,828 --> 00:35:13,728
+That's like a null pointer. We get description is going to write the string into a string buffer.
+
+277
+00:35:14,388 --> 00:35:22,098
+That's the problem. Uh, do we have an example of getting stuff out of a shell link?
+
+278
+00:35:25,798 --> 00:35:35,338
+I think we do. Um, whenever we are trying to determine what things were removed or removals.
+
+279
+00:35:39,068 --> 00:35:45,468
+Down here. I believe in remove icon casket.
+
+280
+00:35:46,118 --> 00:35:53,008
+Like over here we get at the shell link, right?
+
+281
+00:35:53,018 --> 00:35:56,318
+We create a buffer. This is what we do.
+
+282
+00:35:56,828 --> 00:36:01,448
+Max path w char t.
+
+283
+00:36:02,528 --> 00:36:11,968
+So I think this is closer to what we want. Um, so that's where that was going wrong.
+
+284
+00:36:14,128 --> 00:36:22,688
+Buff. Info tip size.
+
+285
+00:36:24,968 --> 00:36:28,598
+Link. Get description.
+
+286
+00:36:31,748 --> 00:36:42,848
+Actually, I just be. Ah, I was a bit circuitous equals buff.
+
+287
+00:36:44,168 --> 00:36:48,448
+So I work. Let's see.
+
+288
+00:36:48,748 --> 00:36:57,898
+Let's see what the compiler thinks. Info Tip size is the size, so you can use stack again.
+
+289
+00:37:04,318 --> 00:37:12,438
+Info Tip size is the size. Yeah.
+
+290
+00:37:12,918 --> 00:37:19,508
+Um. I think that's what you mean, right?
+
+291
+00:37:20,438 --> 00:37:31,198
+Yeah. And then cage the maximum number of characters to copy.
+
+292
+00:37:32,828 --> 00:37:40,977
+Yeah. Okay.
+
+293
+00:37:40,978 --> 00:37:44,128
+No crash. That's good. And it passes.
+
+294
+00:37:45,538 --> 00:37:52,268
+So that means. We've got something.
+
+295
+00:37:56,618 --> 00:37:59,648
+We have successfully compared the description.
+
+296
+00:38:00,188 --> 00:38:06,728
+Hey, that's good. That's good. Okay, so we've successfully compared this thing.
+
+297
+00:38:06,968 --> 00:38:10,058
+Let's compare the other things. The other required things.
+
+298
+00:38:10,688 --> 00:38:15,658
+That's the title and the path. Uh, let's do that next.
+
+299
+00:38:15,668 --> 00:38:19,958
+So, um.
+
+300
+00:38:29,788 --> 00:38:33,148
+Tidal will use the same buffer.
+
+301
+00:38:34,588 --> 00:38:43,278
+Link get title. What's the. No.
+
+302
+00:38:44,208 --> 00:38:48,348
+What do they. What do they have for title? What do we do with the title?
+
+303
+00:38:48,648 --> 00:38:56,348
+We. Oh, it's part of this prop store thing, right?
+
+304
+00:38:56,378 --> 00:38:59,968
+We're going to have to get a prop store out. Okay.
+
+305
+00:38:59,978 --> 00:39:02,588
+Is there anything else that's not created using a prop store?
+
+306
+00:39:02,948 --> 00:39:09,218
+There's the path, the description we just tested and then arguments and then icon location.
+
+307
+00:39:10,208 --> 00:39:15,918
+Okay, let's do path next then. Path.
+
+308
+00:39:28,418 --> 00:39:32,848
+Max and Max path. Okay.
+
+309
+00:39:34,998 --> 00:39:46,728
+Well desk buff. W hrt have.
+
+310
+00:39:51,448 --> 00:39:56,158
+Path buff. Max path.
+
+311
+00:39:57,318 --> 00:40:02,688
+And then we're going to ensure that the path that's what we have on there.
+
+312
+00:40:02,688 --> 00:40:07,228
+Right on. Yeah.
+
+313
+00:40:07,238 --> 00:40:12,488
+Path. Uh, equals path above.
+
+314
+00:40:13,648 --> 00:40:16,668
+This should be a desk.
+
+315
+00:40:18,838 --> 00:40:24,598
+Okay, let's compile that. Hey, we're making forward progress.
+
+316
+00:40:27,418 --> 00:40:32,248
+Not nice. We might have our matcher done and then we can move on.
+
+317
+00:40:33,778 --> 00:40:38,098
+Um, are there ways of simplifying this matcher? Almost assuredly.
+
+318
+00:40:38,788 --> 00:40:43,618
+But I'm not looking for pretty just yet. I'll get to that during code review and stuff we can.
+
+319
+00:40:44,038 --> 00:40:48,118
+All the C++ and Win32 experts can tell me all the.
+
+320
+00:40:48,958 --> 00:40:53,948
+All the helpers I should be using instead. Oh, Get Path has some other stuff.
+
+321
+00:40:53,968 --> 00:40:57,658
+What is it? The buffer and then the size.
+
+322
+00:41:00,748 --> 00:41:13,728
+A in characters the buffer a pointer to a Win32 find data structure if this parameter is null null and then flags.
+
+323
+00:41:14,958 --> 00:41:21,118
+Huh. Um. What does one.
+
+324
+00:41:21,588 --> 00:41:25,098
+What does this thing do over here and get. Do we ever.
+
+325
+00:41:25,338 --> 00:41:38,928
+We never do get path. Amazing. We just get arguments.
+
+326
+00:41:40,228 --> 00:41:44,058
+Oh, well. And we get icon location.
+
+327
+00:41:44,358 --> 00:41:47,748
+So we're kind of breaking new ground here, but I'm sure we can figure this out.
+
+328
+00:41:48,078 --> 00:41:53,388
+So I'm going to pass NULL as a third argument. And then what was the other one?
+
+329
+00:41:54,138 --> 00:42:01,908
+Flags. Flags that specify the type of path information to retrieve short path unsupported.
+
+330
+00:42:01,998 --> 00:42:07,038
+Do not use. Raw path. Relative priority.
+
+331
+00:42:07,038 --> 00:42:12,598
+Retrieves Path of issue. Of the shortcuts targeted relative to the path.
+
+332
+00:42:15,338 --> 00:42:19,148
+Let's get this this short path. Let's see what that does.
+
+333
+00:42:20,828 --> 00:42:32,888
+SGP short path. Can be a combination of the following values.
+
+334
+00:42:32,898 --> 00:42:39,888
+Don't use that one raw path name, standard name or relative priority.
+
+335
+00:42:57,278 --> 00:43:18,598
+Mm hmm. Okay failed in ad user tasks.
+
+336
+00:43:18,718 --> 00:43:26,877
+Google Mark tried one expectation it didn't match it expected challenge to equal comparing them actual
+
+337
+00:43:26,878 --> 00:43:32,638
+to be called ones actually ever called unsatisfied active unexpected error mock function call.
+
+338
+00:43:39,908 --> 00:43:50,738
+It was unsatisfied. Presumably because the path didn't equal what we expected.
+
+339
+00:43:52,148 --> 00:44:01,558
+So let's print both. Path from ice shell link path buff.
+
+340
+00:44:04,068 --> 00:44:16,278
+And pat in our Windows shortcut list description when just double the shortcut Description Desktop and Typekit.
+
+341
+00:44:18,498 --> 00:44:24,138
+I think I can do that. Right. And then we'll see what the dealio is.
+
+342
+00:44:26,178 --> 00:44:29,838
+What is the path that we supply in the.
+
+343
+00:44:30,318 --> 00:44:39,588
+So some slash path test slash path? I wonder if this is just obviously invalid and I wonder if that's why it's it's freaking out a little bit.
+
+344
+00:44:45,978 --> 00:45:07,928
+Warning. Stream guy.
+
+345
+00:45:19,908 --> 00:45:30,948
+Convert UTF 16 UTF is maybe what we want pass from is shell link is empty, Right?
+
+346
+00:45:30,978 --> 00:45:37,638
+Okay. I have a feeling that's what's going on is that the Win32 API is not happy with this sort of garbage.
+
+347
+00:45:44,538 --> 00:45:49,008
+Uh. Garbage path I've supplied.
+
+348
+00:45:52,428 --> 00:45:56,518
+How about if I do it that way? Is that. Is that valid?
+
+349
+00:45:56,538 --> 00:46:01,308
+Maybe like Win32. I wonder if it's expecting stuff like this.
+
+350
+00:46:15,528 --> 00:46:26,238
+Akers is asking about W print F So I think what we tend to do is we'll use like the, the normal thin, not wide print F, but we'll convert.
+
+351
+00:46:26,418 --> 00:46:29,628
+We'll do like a conversion from UTF 16 to UTF eight.
+
+352
+00:46:30,288 --> 00:46:34,758
+They're like utilities for that, isn't it?
+
+353
+00:46:35,148 --> 00:46:39,768
+Oh yeah. Sorry. We want o from the one. Uh, yeah, for this one.
+
+354
+00:46:40,848 --> 00:46:45,168
+You're right. You're right for path buff at least.
+
+355
+00:46:53,348 --> 00:46:58,238
+And for some reason that past that doesn't make any sense why that would pass.
+
+356
+00:47:00,488 --> 00:47:06,868
+Because. And change anything.
+
+357
+00:47:09,118 --> 00:47:15,148
+So do we have non determinism here? Why would that be passing now?
+
+358
+00:47:16,378 --> 00:47:30,568
+That freaks me out. No, not happy.
+
+359
+00:47:30,608 --> 00:47:41,508
+Not happy. Not happy.
+
+360
+00:47:51,488 --> 00:47:57,708
+HRT y charges of print.
+
+361
+00:48:05,238 --> 00:48:16,908
+Why chances. That's the dealio.
+
+362
+00:48:16,908 --> 00:48:20,298
+I need to use a different the different format.
+
+363
+00:48:22,128 --> 00:48:33,788
+Should this be less? You change the path values.
+
+364
+00:48:33,788 --> 00:48:38,438
+So maybe it's correct. When did I change the path value? When I change the path value.
+
+365
+00:48:43,158 --> 00:48:49,158
+When did I do that? Oh.
+
+366
+00:48:49,458 --> 00:48:52,708
+Oh, down here. You're right. You're right. Maybe that's what made it work.
+
+367
+00:48:53,158 --> 00:49:02,098
+Is this. You're right. I think I may have fixed it just by changing it to a valid, like, path Windows path.
+
+368
+00:49:03,628 --> 00:49:09,718
+I'd forgotten I'd done that. And you're absolutely right. And that might explain exactly what's gone on here.
+
+369
+00:49:10,228 --> 00:49:17,188
+Um, and why this is suddenly working. Hooray.
+
+370
+00:49:18,228 --> 00:49:23,858
+Um, it's. It's weird that it's not printing stuff.
+
+371
+00:49:26,788 --> 00:49:35,207
+I would have expected it to print. Oh, because they are equaling we never we never enter this branch.
+
+372
+00:49:35,208 --> 00:49:38,928
+That's why they don't print. Okay. Okay.
+
+373
+00:49:39,078 --> 00:49:44,028
+So that's good. We've got path working. Next up, what's the next one?
+
+374
+00:49:45,978 --> 00:49:50,778
+Uh, so there's fallback icon index.
+
+375
+00:49:50,778 --> 00:49:55,488
+Let's do that one. That one's easy. No strings involved, No strings attached.
+
+376
+00:49:56,838 --> 00:50:00,288
+Uh, link, Get, uh, icon.
+
+377
+00:50:00,288 --> 00:50:06,198
+Was it icon? Location? Yeah.
+
+378
+00:50:06,948 --> 00:50:15,218
+In this case. Get icon location is a buffer wasn't for.
+
+379
+00:50:23,778 --> 00:50:27,058
+Oh, the address of a buffer that precedes the path of the file containing the icon.
+
+380
+00:50:29,358 --> 00:50:33,198
+Right. That's only if there is an icon path.
+
+381
+00:50:34,368 --> 00:50:41,178
+Okay. Um, and in this case, what is the.
+
+382
+00:50:43,878 --> 00:50:47,028
+The path? I'll use max path again.
+
+383
+00:50:48,578 --> 00:50:52,828
+Um. Yeah.
+
+384
+00:50:56,818 --> 00:51:00,558
+Uh. Buff.
+
+385
+00:51:04,618 --> 00:51:08,248
+Uh, icon path buff.
+
+386
+00:51:22,608 --> 00:51:37,907
+Duff. Comic buff. Max path icon path buff icon index.
+
+387
+00:51:37,908 --> 00:51:52,108
+We're going to. I'm going to make sure that the.
+
+388
+00:51:55,268 --> 00:52:02,668
+What's the behavior here? That's true.
+
+389
+00:52:11,518 --> 00:52:24,368
+Spec. Set icon location 5:00 only event that valid icon you or I has not been supplied.
+
+390
+00:52:31,058 --> 00:52:36,398
+If an icon of path was passed and it's not empty. Set the icon location to be.
+
+391
+00:52:40,818 --> 00:52:47,868
+Okay. We'll choose the the actual executable path, otherwise the icon path and the index will be zero.
+
+392
+00:52:47,898 --> 00:53:03,048
+Okay, that's what we need to test. So if desk dot M, uh, was it called icon path?
+
+393
+00:53:06,338 --> 00:53:10,898
+I am icon power and I do it.
+
+394
+00:53:11,138 --> 00:53:15,458
+It's not got value is empty.
+
+395
+00:53:16,748 --> 00:53:22,858
+Not empty. If.
+
+396
+00:53:25,608 --> 00:53:29,598
+I don't think I need to use dot value. I think I just do like is empty.
+
+397
+00:53:31,128 --> 00:53:41,208
+If it's not empty, then I'm going to ensure that if.
+
+398
+00:53:44,658 --> 00:53:53,008
+Uh. Desk and icon path.
+
+399
+00:53:56,088 --> 00:54:05,008
+Equals. Eye contact buff return false.
+
+400
+00:54:05,278 --> 00:54:11,188
+Why is it doing double spacing all of a sudden or quadruple spacing?
+
+401
+00:54:19,008 --> 00:54:24,158
+It's not. And then if.
+
+402
+00:54:27,818 --> 00:54:34,808
+Not desktop and fallback icon index.
+
+403
+00:54:39,778 --> 00:54:44,448
+Equals. So.
+
+404
+00:54:46,398 --> 00:54:51,558
+Icon index should equal zero. Icon index nine equals zero.
+
+405
+00:54:53,578 --> 00:55:05,508
+Return false. She document this?
+
+406
+00:55:07,488 --> 00:55:10,488
+Yeah. How come? What's going on? Sublime.
+
+407
+00:55:10,488 --> 00:55:15,738
+How come you're double space Your. Turn spaces tab with two.
+
+408
+00:55:16,038 --> 00:55:45,418
+Thank you. If the Windows jump list shortcut description supplied an icon path, then it should match icon path path and AI icon index of zero.
+
+409
+00:55:48,578 --> 00:56:00,458
+Otherwise the icon pack should equal the, uh, the link path.
+
+410
+00:56:03,638 --> 00:56:17,378
+The ice shoveling path. Uh, property and the fallback icon and the.
+
+411
+00:56:19,118 --> 00:56:22,758
+Icon index should match.
+
+412
+00:56:25,088 --> 00:56:40,358
+Uh, the windows jump, the list shortcut description, fallback, icon index.
+
+413
+00:56:40,898 --> 00:56:45,068
+That's what the property was. Or the. Yeah, fallback icon index.
+
+414
+00:56:45,818 --> 00:56:56,078
+Good. Okay. So if not, desk and icon path and path.
+
+415
+00:56:58,608 --> 00:57:12,128
+Dot equals. Icon, path buff or icon index is not equal to deaths or.
+
+416
+00:57:14,218 --> 00:57:25,058
+Best. Desktop and fallback icon index.
+
+417
+00:57:25,058 --> 00:57:32,538
+It's not equal to. Icon index false.
+
+418
+00:57:33,838 --> 00:57:46,508
+Think that'll do it. Presuming that does it, that takes care of the fallback icon index, the icon path, the description,
+
+419
+00:57:47,108 --> 00:57:57,878
+the path we need to do, the arguments and the title and I think the arguments is pretty straightforward.
+
+420
+00:57:59,918 --> 00:58:10,468
+Um. It's not happy because, you know, every name is empty and optional and it's.
+
+421
+00:58:10,478 --> 00:58:13,658
+Oh, because it's an optional. That's why I need value.
+
+422
+00:58:14,828 --> 00:58:28,828
+Um. If icon path was passed if icon path or.
+
+423
+00:58:31,028 --> 00:58:35,378
+Was passed and is not empty. That's basically what I want to say.
+
+424
+00:58:41,138 --> 00:58:50,498
+Yeah. Ask.
+
+425
+00:58:52,108 --> 00:58:57,097
+Not argument. Sorry. Icon iPhone. iPad and iPhone.
+
+426
+00:58:57,098 --> 00:59:10,968
+iPad. Valley is not empty.
+
+427
+00:59:14,238 --> 00:59:18,048
+And we assume that equals. Yeah, that's. That's right.
+
+428
+00:59:20,448 --> 00:59:26,618
+Dot value equals. Try that.
+
+429
+00:59:29,228 --> 00:59:33,978
+In my opinion it suggests desk m icon path should equal path buff.
+
+430
+00:59:36,518 --> 00:59:40,208
+Desktop icon path should equal icon.
+
+431
+00:59:48,048 --> 00:59:51,478
+Yes. Yes. Wait.
+
+432
+00:59:55,308 --> 01:00:04,598
+Wait, wait, wait, wait, wait, wait. In the else branch I can't should equal.
+
+433
+01:00:06,718 --> 01:00:12,448
+Yeah. Okay. Equal icon path above.
+
+434
+01:00:14,988 --> 01:00:19,678
+No, that should equal empath. Path buff.
+
+435
+01:00:28,988 --> 01:00:35,668
+I see. I can't power. Should equal path ba which.
+
+436
+01:00:39,348 --> 01:00:46,828
+And the icon index. I was the icon path buff.
+
+437
+01:00:49,508 --> 01:00:55,798
+But equal. The window is short.
+
+438
+01:00:56,188 --> 01:01:05,918
+I jump the shortcut description path. I can't see a match.
+
+439
+01:01:06,158 --> 01:01:09,518
+He. Well, that icon index.
+
+440
+01:01:11,598 --> 01:01:17,748
+Yeah. Still unhappy.
+
+441
+01:01:18,588 --> 01:01:22,948
+It's unhappy because use of it doesn't know what people think is right.
+
+442
+01:01:22,968 --> 01:01:28,308
+I think I've done some copy paste. Link.
+
+443
+01:01:30,878 --> 01:01:38,368
+Index. Yeah. Thank you for the the good eyes.
+
+444
+01:01:38,368 --> 01:01:44,067
+They're orcas. Orcas is like my second pair of eyes on this stuff.
+
+445
+01:01:44,068 --> 01:01:52,448
+And that's great. Now, have I done this in the right order?
+
+446
+01:01:52,628 --> 01:01:56,138
+Maybe I should be so, like title path arguments.
+
+447
+01:01:57,278 --> 01:02:05,308
+We've got we've not done title because that's all up in here, so we'll do that next.
+
+448
+01:02:05,318 --> 01:02:09,848
+But there's path and then arguments.
+
+449
+01:02:10,958 --> 01:02:16,298
+So I wonder if we should do these in order. And so I'm going to put title our path up here.
+
+450
+01:02:21,228 --> 01:02:26,918
+And then arguments go here. And then description.
+
+451
+01:02:26,918 --> 01:02:31,988
+Icon path. Description. Then icon path.
+
+452
+01:02:33,218 --> 01:02:36,838
+Yeah. And then fallback icon index.
+
+453
+01:02:36,848 --> 01:02:40,058
+So that's that's good. And so we're going to put title at the very top here.
+
+454
+01:02:41,058 --> 01:02:45,258
+Really? Title. That just just to sort of keep things in some kind of order.
+
+455
+01:02:45,798 --> 01:02:49,158
+So I'm pretty happy so far. Let's do arguments next.
+
+456
+01:02:51,918 --> 01:02:57,138
+Get arguments. Actually, we have an example of that already in the tree.
+
+457
+01:02:57,828 --> 01:03:05,318
+We do that over here, get arguments. And it uses Mac's path as well.
+
+458
+01:03:07,208 --> 01:03:11,588
+Um. ARGs buff max path.
+
+459
+01:03:13,748 --> 01:03:21,638
+Blank get arguments. And the arguments forget arguments are just the buffer and then the length.
+
+460
+01:03:25,348 --> 01:03:29,128
+And that if failed H.R.
+
+461
+01:03:31,508 --> 01:03:37,808
+And then we're going to say if not test and arguments equals.
+
+462
+01:03:39,478 --> 01:03:42,748
+ARGs buff. Return False.
+
+463
+01:03:44,728 --> 01:03:55,038
+Um. Well now. Pair each member of a Windows jump list.
+
+464
+01:03:55,038 --> 01:04:07,268
+Sure. Of the windows jump a short description with what is stored in the ice shell link.
+
+465
+01:04:11,148 --> 01:04:21,658
+We'll start with the title. Um, next is Pam.
+
+466
+01:04:26,028 --> 01:04:30,138
+Arguments in. Title.
+
+467
+01:04:36,128 --> 01:04:41,208
+Arguments. Description.
+
+468
+01:04:46,748 --> 01:04:57,388
+And then this is a combination of icon path and fallback icon index.
+
+469
+01:04:57,718 --> 01:05:03,158
+These should be I just realize now they're not title case.
+
+470
+01:05:08,518 --> 01:05:13,858
+Uh, and I wonder as well if we should.
+
+471
+01:05:15,008 --> 01:05:19,958
+To this title.
+
+472
+01:05:22,888 --> 01:05:26,608
+Per. Arguments.
+
+473
+01:05:29,528 --> 01:05:33,907
+Description. Icon.
+
+474
+01:05:33,908 --> 01:05:39,918
+Path. And. Well, that guy got tax.
+
+475
+01:05:43,878 --> 01:05:48,018
+So arguments did we did we that and make sure it worked.
+
+476
+01:05:49,708 --> 01:05:53,628
+Well, we'll run that. And while we're doing that, let's figure out the title.
+
+477
+01:05:53,638 --> 01:05:59,848
+Now, the title is interesting because the way the title is stored, according to all of this, is that.
+
+478
+01:06:02,608 --> 01:06:11,998
+Um. There's this structure called a prop store on the.
+
+479
+01:06:15,538 --> 01:06:21,508
+Uh, there's a, a structure called the a prop store.
+
+480
+01:06:26,738 --> 01:06:36,068
+What's PSL? That's the eye challenge. We can query, interface the PSL to a prop store, and then.
+
+481
+01:06:40,388 --> 01:06:50,938
+I want to get a value from it. Prop variant, you get a variant out of it and I need to like I basically need to do the reverse of this.
+
+482
+01:06:54,698 --> 01:06:59,608
+Okay. So first of all, did that pass?
+
+483
+01:06:59,698 --> 01:07:06,147
+It did. It built and it passed. That's great. So now we need to do this.
+
+484
+01:07:06,148 --> 01:07:09,898
+So we're going to get a prop store.
+
+485
+01:07:14,038 --> 01:07:23,008
+Uh link query interface prop store if failed return false.
+
+486
+01:07:25,988 --> 01:07:35,778
+Let's just build that. Does that compile? And then while that's running, we're going to need to get a value.
+
+487
+01:07:35,798 --> 01:07:39,458
+So I need to look at the interface of a property store.
+
+488
+01:07:40,148 --> 01:07:45,528
+Maybe there are some examples of using a property store. Getting stuff out.
+
+489
+01:07:45,678 --> 01:07:51,218
+Here we go. Prop store. Are there any prop store?
+
+490
+01:07:51,228 --> 01:07:54,228
+Get values. Prop store.
+
+491
+01:07:54,468 --> 01:07:59,228
+Get value. Ha! Here we go.
+
+492
+01:07:59,268 --> 01:08:03,168
+Prop variant. And then what do you do with the prop variant? Variant to string?
+
+493
+01:08:03,188 --> 01:08:06,458
+Oh, this is exactly what I want. Okay, this is great.
+
+494
+01:08:06,488 --> 01:08:13,208
+This is great. I have exactly what I need. Oh.
+
+495
+01:08:13,418 --> 01:08:19,718
+Oh, I've got. I've got builders here. Uh, no member named equals in optional.
+
+496
+01:08:19,808 --> 01:08:29,038
+Oh, okay. Write em arguments. Get arguments if.
+
+497
+01:08:36,228 --> 01:08:41,148
+Desk arguments was passed.
+
+498
+01:08:42,228 --> 01:08:49,878
+Then. This was optional.
+
+499
+01:08:51,028 --> 01:08:59,868
+Then arguments got value. Equals args buff return false.
+
+500
+01:08:59,868 --> 01:09:02,928
+Otherwise I expect args buff to be the empty string.
+
+501
+01:09:07,038 --> 01:09:13,808
+Uh. How do I.
+
+502
+01:09:13,838 --> 01:09:17,108
+How do I represent that? Uh. Um.
+
+503
+01:09:20,888 --> 01:09:24,838
+It's like stir and calm. I need to.
+
+504
+01:09:27,478 --> 01:09:36,608
+Uh, which it does. Or is there a way I can check it?
+
+505
+01:09:36,648 --> 01:09:55,678
+The thing is the empty string with these kinds of things. What's the right way?
+
+506
+01:09:56,188 --> 01:10:00,898
+I guess if I check that the length, the length is, is zero.
+
+507
+01:10:01,498 --> 01:10:06,748
+That's probably fine. So in this case, args.
+
+508
+01:10:08,358 --> 01:10:17,998
+Um. Stir in large salads, stir in line or bites string.
+
+509
+01:10:19,418 --> 01:10:28,588
+And do I ever use stern when? Size to else if Sturr and Len.
+
+510
+01:10:35,008 --> 01:10:40,228
+ARGs buff max path nine equals zero.
+
+511
+01:10:42,268 --> 01:10:45,298
+Return false. Something like that.
+
+512
+01:10:48,868 --> 01:10:52,317
+Craigs like. I was curious though. Look at your joy of coding episode guide.
+
+513
+01:10:52,318 --> 01:10:56,578
+I think it was episode 298 in August 24th, 2022 when jump list work started.
+
+514
+01:10:56,578 --> 01:10:59,728
+Yes. Been working on this for a while now. Here's the thing.
+
+515
+01:10:59,968 --> 01:11:03,658
+It's been off and on and I've only been doing this work during the stream.
+
+516
+01:11:04,018 --> 01:11:11,458
+So all told, we've been we've got about maybe about two weeks worth of two full weeks of full time effort on this.
+
+517
+01:11:12,838 --> 01:11:20,907
+So it does feel like slow going, but that's because I'm not working on it outside of the stream and I'm kind of having to ramp up, stir and line.
+
+518
+01:11:20,908 --> 01:11:31,158
+It doesn't know what stir end Line is. There is stern.
+
+519
+01:11:35,218 --> 01:11:40,828
+C runtime library. I get you string at H.
+
+520
+01:11:43,618 --> 01:11:56,708
+Do I have to bring you in? Let's try that.
+
+521
+01:11:59,318 --> 01:12:02,318
+But yeah. Good detective work, Craig. Thumbs up.
+
+522
+01:12:11,928 --> 01:12:17,968
+It doesn't help. I'd say that, like working in the native layer is sometimes a lot slower.
+
+523
+01:12:18,438 --> 01:12:25,997
+I find because of compile times, uh, he also doesn't know what there.
+
+524
+01:12:25,998 --> 01:12:39,018
+And Lennon's here. During that h.
+
+525
+01:12:45,628 --> 01:12:53,488
+Oh, wait, uh, you know, matching function call, because maybe it's the wrong size.
+
+526
+01:12:53,488 --> 01:12:56,608
+Maybe it wants w stir w cha.
+
+527
+01:12:59,098 --> 01:13:07,128
+What is w? Chart systems.
+
+528
+01:13:07,158 --> 01:13:16,388
+Number of elements. Okay. That's probably what I want. As and when.
+
+529
+01:13:18,148 --> 01:13:26,828
+That comes from where? W.
+
+530
+01:13:28,378 --> 01:13:33,308
+H. During that. H. H. Okay. What do you think of that?
+
+531
+01:13:35,128 --> 01:13:38,428
+The happier. What layer do I prefer working in?
+
+532
+01:13:39,358 --> 01:13:45,597
+My happiest is whenever I'm and what I find is my most productive is when I'm just below the surface
+
+533
+01:13:45,598 --> 01:13:53,698
+of the UI working on like the JavaScript layer between platform or talking to platform and the oh,
+
+534
+01:13:54,388 --> 01:13:58,018
+what's something that should be streamed at each.
+
+535
+01:13:59,588 --> 01:14:07,508
+Just under the, the, the UI, uh, talking to the UI, even building out the UI.
+
+536
+01:14:08,348 --> 01:14:12,428
+But that's the, and yeah, the one that builds the fastest is always helpful.
+
+537
+01:14:13,808 --> 01:14:21,518
+Uh, it might be time for a new Windows machine. That's the other thing is that my, um, my Windows machine isn't the fastest.
+
+538
+01:14:21,518 --> 01:14:23,748
+It's also not the machine. I tend to do most of my work on.
+
+539
+01:14:23,768 --> 01:14:33,127
+And because we're doing Windows jumbo stuff, I have to work on my Windows machine, Stir and lan, I shouldn't be using that.
+
+540
+01:14:33,128 --> 01:14:37,898
+I should be using. This.
+
+541
+01:14:45,428 --> 01:14:48,678
+Or is there a way? Win32.
+
+542
+01:14:48,698 --> 01:14:53,288
+Check. Empty string. Compare. Check of a string is empty.
+
+543
+01:14:53,618 --> 01:14:58,177
+What's the best way I could use string line?
+
+544
+01:14:58,178 --> 01:15:04,898
+But save saves a function, cost or comp. This is just checking to see if the first character is the null null character.
+
+545
+01:15:07,508 --> 01:15:35,928
+I guess I could do that. Okay, so this stuff up here with the prop store seems to be working.
+
+546
+01:15:35,948 --> 01:15:41,378
+Okay, that's good. That all works. What we need to do now is get at the.
+
+547
+01:15:42,768 --> 01:15:48,308
+The title, and we're going to do that. Uh, I, we had this before.
+
+548
+01:15:48,318 --> 01:16:06,508
+What was it? Prop store, get value. So we need to get a prop variant.
+
+549
+01:16:10,048 --> 01:16:13,438
+We and we're going to get the value out.
+
+550
+01:16:16,218 --> 01:16:21,318
+Prop store get value. But in this case, we want Peaky.
+
+551
+01:16:21,348 --> 01:16:25,788
+What is it? Title. Peaky Title.
+
+552
+01:16:31,318 --> 01:16:35,248
+Then we need to check to make sure that that work.
+
+553
+01:16:41,458 --> 01:16:45,208
+Uh, and then we need to get the string out.
+
+554
+01:16:47,008 --> 01:16:56,728
+It's like this prop variant to string. So in this case, we don't want the stored ammo a comedy, we want the title.
+
+555
+01:16:57,298 --> 01:17:06,328
+And so I'd like to know what peak title, the maximum size it can be Peaky title.
+
+556
+01:17:16,488 --> 01:17:23,458
+Peak. Max There it is. Okay.
+
+557
+01:17:25,228 --> 01:17:28,438
+Title. Peter.
+
+558
+01:17:28,438 --> 01:17:43,258
+Max. I get the title Prop very two string, and we're going to, uh, make sure that that passes.
+
+559
+01:17:46,658 --> 01:17:50,778
+And then. We need to compare.
+
+560
+01:17:51,378 --> 01:17:54,758
+And the title is not negotiable. It was passed.
+
+561
+01:17:54,768 --> 01:17:58,338
+So if I am title, it equals.
+
+562
+01:17:58,548 --> 01:18:02,988
+If it doesn't equal title, return false.
+
+563
+01:18:03,168 --> 01:18:06,798
+And that should do it. That should give us all of the properties.
+
+564
+01:18:13,188 --> 01:18:16,908
+And that should be our matcher. Done. Is it pretty now?
+
+565
+01:18:18,558 --> 01:18:23,778
+Is it readable? Arguably. Does it get the job done?
+
+566
+01:18:23,808 --> 01:18:32,268
+Yes, it does. And that's what I care about right now. At some point when these tests are done, I'm not going to spend too much time clean this up.
+
+567
+01:18:32,268 --> 01:18:35,747
+I'm going to post it for review. Oh, very interesting.
+
+568
+01:18:35,748 --> 01:18:39,378
+It doesn't know what that is. Prop varying to string as a helper.
+
+569
+01:18:41,448 --> 01:18:45,618
+From where? Prop variant to string.
+
+570
+01:18:47,718 --> 01:18:53,818
+And it comes from Prop VR you till that age.
+
+571
+01:18:54,768 --> 01:18:59,448
+Is that what we bring in? Yes, Prop. And we probably want prop key as well.
+
+572
+01:19:02,668 --> 01:19:05,838
+Oh, uh, missing property to string in. Okay.
+
+573
+01:19:05,848 --> 01:19:14,138
+We probably want all of these things. Let's unlearn.
+
+574
+01:19:23,138 --> 01:19:26,578
+Okay, so we want some of this. Maybe, um.
+
+575
+01:19:31,388 --> 01:19:37,618
+Curious how many other places we have stuff like this. Just this one place.
+
+576
+01:19:41,958 --> 01:19:47,098
+Okay. Uh oh.
+
+577
+01:19:47,728 --> 01:19:51,358
+Like, uh. And I will also say this.
+
+578
+01:19:54,888 --> 01:20:16,508
+It's improper strain. Okay.
+
+579
+01:20:17,018 --> 01:20:31,928
+Pretty verbose. But if this is all happy with it, then I think what we've got here is a much more robust way of comparing the shell that go in.
+
+580
+01:20:32,888 --> 01:20:38,498
+And we have a model that we can work off for comparing the custom set as well, the customs task descriptions.
+
+581
+01:20:45,478 --> 01:20:51,568
+Model. I mean, like, they'll be exactly the same.
+
+582
+01:20:53,308 --> 01:20:59,218
+Custom task descriptions are exactly the same. They're they're all windows jump with shortcut descriptions.
+
+583
+01:20:59,668 --> 01:21:02,758
+So that's good. We've got we're we're in good shape there.
+
+584
+01:21:03,658 --> 01:21:11,428
+Hey, we did it. Let's save. Let's. Let's make sure that we've got all the sodas blown off this thing.
+
+585
+01:21:17,888 --> 01:21:21,338
+And amend.
+
+586
+01:21:22,898 --> 01:21:26,108
+That's a good way where we're towards the end of the episode.
+
+587
+01:21:26,118 --> 01:21:29,488
+Let's see if we can do one more thing. What are we testing?
+
+588
+01:21:29,498 --> 01:21:38,648
+What if we've been cleaning up this test? And what it does is it makes sure that when we populate the jump list.
+
+589
+01:21:41,148 --> 01:21:45,378
+That that works. Um.
+
+590
+01:21:48,618 --> 01:21:52,817
+No custom items. It should call the following methods on the back and in order abort.
+
+591
+01:21:52,818 --> 01:21:57,888
+Let's begin list Add user tasks and commit list. And I think we do test that thing.
+
+592
+01:21:58,368 --> 01:22:03,528
+Yeah. At times one no append category and then.
+
+593
+01:22:09,278 --> 01:22:13,448
+Let's add another task. Let's let's see if we can.
+
+594
+01:22:13,448 --> 01:22:20,748
+We can make this work. Desk one. Title One Desk one Path one.
+
+595
+01:22:21,018 --> 01:22:30,348
+Desk one. Uh, description to description one.
+
+596
+01:22:34,068 --> 01:22:38,748
+Uh, Desk one. Desk one. Let's.
+
+597
+01:22:42,048 --> 01:22:52,198
+Let's append another one. My first test has.
+
+598
+01:22:53,438 --> 01:23:05,488
+Once to my second test has. And let's add some of the optional things.
+
+599
+01:23:07,218 --> 01:23:16,428
+Um. Well, first of all, let's let's not this is another test description.
+
+600
+01:23:17,918 --> 01:23:20,978
+Title two. Part two.
+
+601
+01:23:28,328 --> 01:23:41,588
+Description to. Append element one and append element to.
+
+602
+01:23:42,488 --> 01:23:45,878
+Let's see if this passes. Well, I didn't mean to amend.
+
+603
+01:23:46,628 --> 01:23:54,788
+What you're going to do. Okay, let's see if this passes. We've added a second element to the jump list in this test.
+
+604
+01:23:55,838 --> 01:24:06,458
+And it should, if all goes well, pass. But I'm going to if it does, I'm going to modify the second item to have some of our optional items included.
+
+605
+01:24:10,428 --> 01:24:16,198
+Error. Uh huh.
+
+606
+01:24:19,018 --> 01:24:30,657
+Okay. Okay. Right. Okay. So I need to desk one Jazz value desk, one desk, one jazz valued desk, one jazz value.
+
+607
+01:24:30,658 --> 01:24:43,408
+I'm going to do the same thing for. As to jazz value.
+
+608
+01:24:45,198 --> 01:24:56,588
+Just to. Desk to jazz value.
+
+609
+01:24:57,748 --> 01:25:02,838
+Append element. Desk one.
+
+610
+01:25:07,898 --> 01:25:12,798
+Right. Okay.
+
+611
+01:25:15,228 --> 01:25:18,318
+The second task leaves his desk. One thing shouldn't be desk to thing.
+
+612
+01:25:18,498 --> 01:25:21,738
+Oh, did I miss one second task?
+
+613
+01:25:22,308 --> 01:25:27,198
+Oh, yeah, you're right. You're right. You're right. You're right. And when you're right, you're right.
+
+614
+01:25:31,118 --> 01:25:35,528
+Abort. Abort. Again.
+
+615
+01:25:35,648 --> 01:26:05,058
+Good call, Craig. Good eyes. C'mon linker, let's go.
+
+616
+01:26:05,068 --> 01:26:11,127
+Link link. Listen only.
+
+617
+01:26:11,128 --> 01:26:14,868
+Okay, guys, I have glasses. Well, I just.
+
+618
+01:26:14,878 --> 01:26:18,868
+Good. Good catch. How about I say that? Good catch and look at it works.
+
+619
+01:26:19,228 --> 01:26:25,048
+So we've got both of our our items showing up in our fake jump list.
+
+620
+01:26:25,378 --> 01:26:29,278
+And now let's add. Let's see if we can add some of our optional items.
+
+621
+01:26:29,518 --> 01:26:32,698
+I've never done this from C++ before.
+
+622
+01:26:33,148 --> 01:26:38,158
+So let's try one. Let's start with icon path.
+
+623
+01:26:38,788 --> 01:26:44,458
+So Icon path. Um, how do we do this?
+
+624
+01:26:48,588 --> 01:26:55,488
+It's an optional. So was passed is one of those things.
+
+625
+01:27:00,978 --> 01:27:08,088
+As defined on an optional. Does he have one of those things like assign assign a value was passed.
+
+626
+01:27:11,408 --> 01:27:15,788
+Equals optional string was passed return.
+
+627
+01:27:15,878 --> 01:27:21,968
+Okay, so you just set equals on it. Okay, so that's good.
+
+628
+01:27:22,178 --> 01:27:37,448
+So I can say desk two dot icon path equals icon path to and auto string icon path to.
+
+629
+01:27:39,168 --> 01:27:42,468
+Um. See some.
+
+630
+01:27:43,908 --> 01:27:55,258
+Icon, PMG. And the fallback icon index is ignored.
+
+631
+01:27:56,308 --> 01:27:59,688
+So. That's a zero.
+
+632
+01:28:01,928 --> 01:28:07,268
+It's expected to be. Zero.
+
+633
+01:28:07,868 --> 01:28:12,158
+And then the other one is arguments. So we can set some arguments, I guess.
+
+634
+01:28:13,628 --> 01:28:18,398
+Um, and what's the order title.
+
+635
+01:28:19,778 --> 01:28:25,598
+Title path, then arguments, Title path, then arguments.
+
+636
+01:28:27,368 --> 01:28:44,738
+And as auto string arguments to you are one are to our three task to arguments equals arguments to.
+
+637
+01:28:47,718 --> 01:29:08,268
+All right, Let's see if this builds. What was the other one?
+
+638
+01:29:08,268 --> 01:29:14,048
+So we've done if we've done. Jump this builder.
+
+639
+01:29:15,218 --> 01:29:18,218
+We've tested this, this.
+
+640
+01:29:18,758 --> 01:29:21,158
+We're testing this, and then we have to test this.
+
+641
+01:29:21,908 --> 01:29:30,068
+And I don't know how we're going to test this one, but we can think about that one later, but that this is like the really, really hard one.
+
+642
+01:29:30,338 --> 01:29:35,468
+And it's I think we're going to get a much easier time testing this one.
+
+643
+01:29:35,738 --> 01:29:42,638
+I don't know what the dealio is with this one, but yeah, this is this is all feeling pretty good.
+
+644
+01:29:44,108 --> 01:29:51,188
+Except that the Senate bill argues no viable, overloaded equals on class optional.
+
+645
+01:29:51,968 --> 01:30:00,928
+No. No conversion from NASA out of string. Substring.
+
+646
+01:30:05,878 --> 01:30:10,528
+Hmm. Uh, let's see here.
+
+647
+01:30:12,048 --> 01:30:18,008
+How do you pass? Let's let's look at this in.
+
+648
+01:30:19,838 --> 01:30:26,168
+Let's find another example whereby idol in a dictionary.
+
+649
+01:30:32,098 --> 01:30:39,598
+Dom string, first party domain psych and first party domain.
+
+650
+01:30:41,938 --> 01:30:46,838
+Read Perram. Right.
+
+651
+01:30:46,958 --> 01:30:52,108
+Per hand. What is right around here?
+
+652
+01:30:55,308 --> 01:30:58,968
+Prim treats stand. That's not exactly right.
+
+653
+01:31:00,418 --> 01:31:10,708
+Um. What is the thing?
+
+654
+01:31:10,728 --> 01:31:17,498
+Shared map. To.
+
+655
+01:31:25,118 --> 01:31:29,978
+Places offend a dictionary required.
+
+656
+01:31:30,128 --> 01:31:46,188
+These are all required. Okay. No. Good. This is interesting.
+
+657
+01:31:46,188 --> 01:31:57,528
+This one is expressed such that it's like got a default value of no.
+
+658
+01:32:00,668 --> 01:32:03,938
+And I don't understand why that's different from being optional.
+
+659
+01:32:07,908 --> 01:32:16,728
+Maybe it's the equivalent. And parents do it, too.
+
+660
+01:32:16,748 --> 01:32:26,138
+Yeah. Okay. Her mural equals a dict.
+
+661
+01:32:27,888 --> 01:32:34,298
+Hey. Uh, okay, That's not quite right. Is all the same.
+
+662
+01:32:37,088 --> 01:32:40,308
+Oh, I'm getting a tea delivery. Wonderful. Thank you very much.
+
+663
+01:32:40,328 --> 01:32:54,538
+Thank you very much. How do you set a DOM string?
+
+664
+01:32:56,788 --> 01:33:01,828
+That's my question. It seems like I can't do it.
+
+665
+01:33:06,378 --> 01:33:16,908
+No known conversion from NASA auto string to optional anesthesia and CHA 16 candidate function.
+
+666
+01:33:34,208 --> 01:33:41,418
+Do I want? An extreme. No.
+
+667
+01:33:44,788 --> 01:33:47,968
+No. Oh. What do I want here?
+
+668
+01:33:51,378 --> 01:34:05,268
+This trip was short description. Strip.
+
+669
+01:34:13,778 --> 01:34:17,498
+What happens if I make this arguments in a string instead?
+
+670
+01:34:18,578 --> 01:34:28,148
+What happens then? Maybe I'm using the wrong string type.
+
+671
+01:34:29,048 --> 01:34:32,318
+That's very possible. What is an auto string?
+
+672
+01:34:39,038 --> 01:34:46,358
+Function as a string for member variables and as are local stack pace variables, which is what I've got here.
+
+673
+01:34:47,808 --> 01:34:50,598
+As dependance during When you have a raw character point,
+
+674
+01:34:50,598 --> 01:34:55,548
+you need to convert to it as a string compatible string substring to extract fragments of existing strings.
+
+675
+01:35:00,228 --> 01:35:11,178
+Okay, so that's not right. Um, and we were looking at something like, uh, optional.
+
+676
+01:35:16,038 --> 01:35:20,078
+Our was passed. Start there again was passed.
+
+677
+01:35:21,158 --> 01:35:29,808
+This isn't binding declarations. You can be pat and an end as substring.
+
+678
+01:35:32,358 --> 01:35:37,698
+Like who? Is there anyone out there? It's calling.
+
+679
+01:35:47,098 --> 01:35:57,038
+Eight died on. Set source.
+
+680
+01:35:57,488 --> 01:36:01,688
+What is audio? Oh, I need to write.
+
+681
+01:36:02,708 --> 01:36:06,548
+I write and place. What does it mean?
+
+682
+01:36:08,228 --> 01:36:20,188
+That's on a maybe. Optional.
+
+683
+01:36:22,088 --> 01:36:31,028
+Optional. I just need to see more things using optional.
+
+684
+01:36:37,488 --> 01:36:53,388
+Optional. Great HD now documented.
+
+685
+01:37:04,058 --> 01:37:07,717
+Cause the fine arts here. It's an optional.
+
+686
+01:37:07,718 --> 01:37:13,038
+You create an optional. I create an optional.
+
+687
+01:37:13,038 --> 01:37:19,848
+And then I say point to a fake string arg zero.
+
+688
+01:37:22,008 --> 01:37:30,408
+She's value destroying. And then I'd say. Our zero is a reference to it.
+
+689
+01:37:31,638 --> 01:37:34,908
+So would I say that arguments equals.
+
+690
+01:37:37,118 --> 01:37:41,708
+A reference to arguments too. Is that what you're looking for?
+
+691
+01:37:44,078 --> 01:37:51,388
+Last zero. Would you accept that?
+
+692
+01:37:52,768 --> 01:38:00,038
+I think I'm going to end the stream shortly, but I'm curious to know if this is what it's going to accept.
+
+693
+01:38:00,058 --> 01:38:12,268
+I'll be very surprised. Yeah. Okay. No viable overload from point A string to concept optional and a steady stream.
+
+694
+01:38:15,578 --> 01:38:24,528
+So I might have to create an optional. Optional.
+
+695
+01:38:26,108 --> 01:38:33,408
+And as. A string.
+
+696
+01:38:40,038 --> 01:38:47,528
+File name. Then files and a string.
+
+697
+01:38:50,218 --> 01:38:57,108
+Okay. Okay. And then what do we do with file name paths?
+
+698
+01:38:57,208 --> 01:39:05,978
+Okay, So. I'm going to create an optional.
+
+699
+01:39:07,308 --> 01:39:11,538
+Optional and as a string.
+
+700
+01:39:15,878 --> 01:39:19,238
+Our optional args.
+
+701
+01:39:27,418 --> 01:39:31,998
+Um. And then I'm going to say.
+
+702
+01:39:34,528 --> 01:39:37,558
+Optional args.
+
+703
+01:39:40,478 --> 01:39:43,898
+Equals arguments to.
+
+704
+01:39:45,348 --> 01:39:48,348
+Feel like that's equivalent to what I was doing down here.
+
+705
+01:39:52,688 --> 01:39:59,078
+But let's see. A strain.
+
+706
+01:40:02,978 --> 01:40:07,538
+There are any times where we do like offshore.
+
+707
+01:40:14,898 --> 01:40:38,618
+It's all an essay during a. Still not happy.
+
+708
+01:40:41,368 --> 01:40:50,397
+Cause unexpected semicolon warning H Unexpected semicolon Optional four or five.
+
+709
+01:40:50,398 --> 01:41:11,858
+Three. I think it doesn't know what optional is.
+
+710
+01:41:13,978 --> 01:41:24,338
+Optional. Missoula Dome optional. We might have to include it.
+
+711
+01:42:08,098 --> 01:42:16,108
+It really doesn't like optional and has a strong optional and unexpected semicolon after an expression.
+
+712
+01:42:22,798 --> 01:42:51,588
+Here. It's really unhappy about this. Undeclared identifier.
+
+713
+01:42:52,158 --> 01:43:04,298
+It just is very unhappy. Do I have to say I'm using O class optional first time.
+
+714
+01:43:05,078 --> 01:43:08,988
+Okay, that's optional. Finding.
+
+715
+01:43:16,818 --> 01:43:24,818
+Um. What did I just add?
+
+716
+01:43:24,838 --> 01:43:28,258
+It was called binding declaration that H.
+
+717
+01:43:32,958 --> 01:43:37,098
+Using. And so, uh, Dom.
+
+718
+01:43:40,848 --> 01:43:56,798
+Maybe I need this. Okay, No matter what.
+
+719
+01:43:56,818 --> 01:44:01,648
+This is where it ends. We've made great forward progress in building out our competitor.
+
+720
+01:44:01,678 --> 01:44:05,578
+In fact, I can go ahead and probably check this off.
+
+721
+01:44:08,278 --> 01:44:15,018
+And instead I should add an item for testing with optional arguments.
+
+722
+01:44:15,028 --> 01:44:21,598
+We're almost there. Uh, reference to optional is ambiguous.
+
+723
+01:44:24,558 --> 01:44:27,788
+And he found by name, woke up as optional candidate followed by name.
+
+724
+01:44:28,098 --> 01:44:37,728
+Is testing optional? Oh, so that's the problem, is that there's too many options.
+
+725
+01:44:41,828 --> 01:44:44,828
+Um. Mozilla dome optional.
+
+726
+01:44:46,958 --> 01:44:50,798
+What do you think of that? Maybe if I'm a little more explicit About what I mean.
+
+727
+01:45:10,268 --> 01:45:15,158
+Now it's noting error. Error doesn't know how to.
+
+728
+01:45:15,218 --> 01:45:20,488
+Oh good. That's about icon path. Okay, so that works then.
+
+729
+01:45:20,498 --> 01:45:26,498
+Optional args. Is that so. Can I do this? Let's not worry about icon path for now.
+
+730
+01:45:26,828 --> 01:45:32,138
+If I can do this, I'll be happy. Arguments equals optional args.
+
+731
+01:45:38,948 --> 01:45:43,118
+Can I do that? And then for real, it's over.
+
+732
+01:45:50,298 --> 01:45:54,377
+Oh. Across. You've been way ahead of me. You're talking about namespaces and stuff.
+
+733
+01:45:54,378 --> 01:46:02,478
+And I only catch that now. I should always be paying attention to the chat because one of you has usually solved it faster than I have.
+
+734
+01:46:03,378 --> 01:46:07,378
+Um. Arguments.
+
+735
+01:46:07,408 --> 01:46:11,038
+It doesn't know what I mean by viable overload.
+
+736
+01:46:12,718 --> 01:46:16,377
+No known conversion candidate function plus a caucus are not viable.
+
+737
+01:46:16,378 --> 01:46:20,508
+No. No conversion from optional essay string to nst history char 16 t.
+
+738
+01:46:21,718 --> 01:46:26,068
+So maybe that's what this should be.
+
+739
+01:46:39,908 --> 01:46:43,717
+I can't believe I'm still on this stream.
+
+740
+01:46:43,718 --> 01:46:47,948
+I need to end the stream. Okay. Thank you so much, everybody, for watching episode whatever this was.
+
+741
+01:46:47,948 --> 01:46:53,467
+Episode 339 of The Joy of Coding. Let me know what you thought. There's a link at the end of the form here to rate this episode.
+
+742
+01:46:53,468 --> 01:46:58,508
+I'm actually going to put the link also in the chat, the link to rate this episode.
+
+743
+01:46:58,508 --> 01:47:01,928
+I'm dropping it in the chat right now. You can let me know what you thought of the episode.
+
+744
+01:47:02,078 --> 01:47:06,068
+You can send in questions. I read everything that comes in. I'd love to hear from you.
+
+745
+01:47:06,278 --> 01:47:10,988
+I'll try my best. If you have a question, I'll try and answer it on on screen, on on air.
+
+746
+01:47:12,278 --> 01:47:22,278
+And it's still on happy. No viable overload. I'm going to have to I might have to wrestle with this next week, everybody.
+
+747
+01:47:22,408 --> 01:47:27,088
+I'm not going to touch it. H.G. Amend, Let's move on.
+
+748
+01:47:27,928 --> 01:47:31,618
+But we're going to figure it out. We've made great progress on our match here today.
+
+749
+01:47:31,828 --> 01:47:37,768
+Now we're gaining another skill here, which is learning how to pass optional arguments from C++.
+
+750
+01:47:38,428 --> 01:47:43,018
+I'm looking forward to that. Thanks again for watching and I hope to see you next week.
+
+751
+01:47:43,468 --> 01:47:47,788
+I think I'll be streaming next week. I might have an appointment that overlaps.
+
+752
+01:47:48,028 --> 01:47:54,627
+In which case, just watch my feed on Mastodon and and, you know, hang out in the chat and I'll.
+
+753
+01:47:54,628 --> 01:47:59,038
+I'll inform all of y'all if it turns out I'm skipping next week. Thanks again for watching.
+
+754
+01:47:59,038 --> 01:48:02,818
+Have yourselves a great week. Take care, everybody. Bye bye.
+
+755
+01:48:04,108 --> 01:48:08,398
+The joy. Oh, Dee Dee it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

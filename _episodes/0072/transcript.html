@@ -1,0 +1,3013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 72</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 72</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=fa63e0b2-f1c9-4d07-ac0f-ac1600012f49</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=fa63e0b2-f1c9-4d07-ac0f-ac1600012f49">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:08,570 --> 00:00:13,340
+Hello and welcome to Episode 72 of The Joy of Coding.
+
+2
+00:00:13,340 --> 00:00:22,130
+My name's Mike Connelly. We're gonna be hacking on some Firefox stuff. We're gonna be down in deep in the guts of Gecko using a tool called R R.
+
+3
+00:00:22,130 --> 00:00:27,020
+We're gonna start investigating things at a very low level for a particular type of bug.
+
+4
+00:00:27,020 --> 00:00:35,270
+I'll tell you all about it in just a second. I just want to say hello, and I hope you had a great week since last we saw one another.
+
+5
+00:00:35,270 --> 00:00:40,310
+So what's going on today? What is going on?
+
+6
+00:00:40,310 --> 00:00:46,820
+That's my screen. Here's the agenda. So here's the idea for the folks who are new.
+
+7
+00:00:46,820 --> 00:00:50,760
+I say this every week and I'll say it this week as well.
+
+8
+00:00:50,760 --> 00:00:56,060
+There is no plan really for these episodes of the joy of coding, except that there kinda is a plan.
+
+9
+00:00:56,060 --> 00:01:01,880
+Like there's a vague outline of the sorts of things that I like to do or that I want to do.
+
+10
+00:01:01,880 --> 00:01:05,090
+But nothing ever goes according to plan in my experience.
+
+11
+00:01:05,090 --> 00:01:09,920
+And so I just want to remind you that even though there's kind of a lay for how things might go today,
+
+12
+00:01:09,920 --> 00:01:15,230
+that no plan survives breakfast and it's quite possible that I will go completely off the rails,
+
+13
+00:01:15,230 --> 00:01:21,350
+get distracted by something, we will get involved in some other emergency or some other mess.
+
+14
+00:01:21,350 --> 00:01:25,460
+So just be prepared for that quick self check. Make sure that I'm recording.
+
+15
+00:01:25,460 --> 00:01:31,100
+Yes, I am audible. Yes. Sounds work. Yes.
+
+16
+00:01:31,100 --> 00:01:38,240
+And let's let's get going. So this agenda that we're looking at here, I'll also point out there's some useful stuff in here,
+
+17
+00:01:38,240 --> 00:01:41,210
+some useful links, especially if you want to follow along.
+
+18
+00:01:41,210 --> 00:01:46,430
+And it's probably only useful if you can actually click on those links and you can you can click
+
+19
+00:01:46,430 --> 00:01:51,230
+on those links because this agenda is available to you if you're watching this on air Mazola.
+
+20
+00:01:51,230 --> 00:01:57,770
+You can scroll down. There is any additional links section which should have a link to this agenda that you can follow along with.
+
+21
+00:01:57,770 --> 00:02:03,680
+And if you're watching this on YouTube, that will be in the video description and you can click on the links and you can follow along.
+
+22
+00:02:03,680 --> 00:02:13,490
+So what are we doing today? Well, we actually tried doing this a little bit last week where we were investigating an intermittent Orangi.
+
+23
+00:02:13,490 --> 00:02:19,250
+I explained that last week. I'm going to explain it again kind of this week, where basically we have a type of test.
+
+24
+00:02:19,250 --> 00:02:25,160
+We have these automated tests that run on Firefox every time you push a patch into the repository.
+
+25
+00:02:25,160 --> 00:02:29,840
+We run this humungous battery of tests. Absolutely humungous.
+
+26
+00:02:29,840 --> 00:02:38,010
+And some of those tests will pass sometimes, but fail other times, even though nothing has broken.
+
+27
+00:02:38,010 --> 00:02:44,910
+So, for example, suppose I, I push some empty change set to Firefox and nothing has changed.
+
+28
+00:02:44,910 --> 00:02:51,600
+And I run the tests. Sometimes it tests will pass. But then if I trigger those tests again, sometimes the tests will fail.
+
+29
+00:02:51,600 --> 00:02:55,470
+And so it what we call these are intermittent oranges,
+
+30
+00:02:55,470 --> 00:03:02,710
+because orange is how we as what we refer to as a failure in our for a test in our testing suite is an orange.
+
+31
+00:03:02,710 --> 00:03:08,580
+That's the color code it's given. And so this is an intermittent orange or an intermittent test failure.
+
+32
+00:03:08,580 --> 00:03:10,920
+Now we're talking about here and there. We're plagued with them.
+
+33
+00:03:10,920 --> 00:03:20,070
+I mean, if you look at like Tree Huerter, which is the tool that we use to watch our trees and I'm looking at inbound,
+
+34
+00:03:20,070 --> 00:03:22,200
+which is one of our integration branches,
+
+35
+00:03:22,200 --> 00:03:29,970
+you can see that periodically these oranges will come up and sometimes these oranges are legitimate failures, but sometimes they're not.
+
+36
+00:03:29,970 --> 00:03:35,000
+Sometimes they're intermittent failures like this B.S. five is starred.
+
+37
+00:03:35,000 --> 00:03:40,520
+It's got a star here. And it's because that there is a.
+
+38
+00:03:40,520 --> 00:03:49,670
+There is a intermittent and intermittent has been filed for this particular test, for this particular error.
+
+39
+00:03:49,670 --> 00:03:55,670
+And so, you know, that's that's something that we just have to deal with, unfortunately.
+
+40
+00:03:55,670 --> 00:04:02,210
+And the more we can get rid of these intermittent, the better. And that's what I'm trying to do today, is get rid of one of these intermittent.
+
+41
+00:04:02,210 --> 00:04:06,660
+Not this one, although this one just caught my attention because I wrote this test.
+
+42
+00:04:06,660 --> 00:04:10,460
+And so I'm curious about how frequent this is.
+
+43
+00:04:10,460 --> 00:04:13,220
+So here's his perfect example of me going off the rails.
+
+44
+00:04:13,220 --> 00:04:20,240
+I'm just I want to know what line to 06, because that's the failure that the failure is happening in two oh six.
+
+45
+00:04:20,240 --> 00:04:32,540
+I want to know what is happening in that line for this test. Line two or six.
+
+46
+00:04:32,540 --> 00:04:39,020
+Mine, two oh six. There's nothing in that line.
+
+47
+00:04:39,020 --> 00:04:44,780
+Concord exception to a six node was not found.
+
+48
+00:04:44,780 --> 00:04:52,690
+It's going to take a quick peek at this test log. Test unexpected failure.
+
+49
+00:04:52,690 --> 00:04:57,790
+Node was not found. Oh, it's a notification to 06. But in the test, it's on line four.
+
+50
+00:04:57,790 --> 00:05:02,710
+Ninety nine for ninety nine.
+
+51
+00:05:02,710 --> 00:05:08,080
+Ninety nine. That's right here where we're attempting to remove a notification.
+
+52
+00:05:08,080 --> 00:05:14,940
+And it's not. Assert throws.
+
+53
+00:05:14,940 --> 00:05:21,000
+Was this test to shut down while not showing? So we create pending crash reports.
+
+54
+00:05:21,000 --> 00:05:34,640
+We make sure that notification is showing. We get rid of the notification by closing it.
+
+55
+00:05:34,640 --> 00:05:43,010
+Oh. Yeah, we shouldn't even need to do this. Removing the notification should not be necessary because.
+
+56
+00:05:43,010 --> 00:05:49,070
+Oh, but then we unin it and then we are nit.
+
+57
+00:05:49,070 --> 00:05:58,910
+Then we should also. We should probably add a weight here to make sure that the notification shows up,
+
+58
+00:05:58,910 --> 00:06:04,430
+because there might be a little bit of a race here where the note is not found.
+
+59
+00:06:04,430 --> 00:06:11,240
+The notes not ready. No, it was not found. When we attempt to remove a notification.
+
+60
+00:06:11,240 --> 00:06:18,710
+So I wonder if. Yeah, there's. Some a synchronicity here.
+
+61
+00:06:18,710 --> 00:06:26,480
+And someone's talking about me and I see them. Let me just quickly check what's happening in a.T.M.
+
+62
+00:06:26,480 --> 00:06:31,010
+It's true. It's true. Ted is saying that I'm gonna be debugging an interment with our art.
+
+63
+00:06:31,010 --> 00:06:36,410
+And let me let me get to it. So what? This is a completely unrelated Intiman that I'm looking at right now.
+
+64
+00:06:36,410 --> 00:06:40,730
+But it's fascinating to me. I'm just because I've I've gotten into it.
+
+65
+00:06:40,730 --> 00:06:54,670
+I'm gonna write down my findings and the bug. I think we need to wait for the notification node to show up here and then.
+
+66
+00:06:54,670 --> 00:07:05,180
+Where was that line? It was. After we ignore, ignore.
+
+67
+00:07:05,180 --> 00:07:11,360
+Ignore it was after can ignore his. Oh, man.
+
+68
+00:07:11,360 --> 00:07:18,470
+I had it. Shut down while showing it was right here.
+
+69
+00:07:18,470 --> 00:07:22,190
+Right. That's where it was. Oh, forgot, forgot. What a waste of time.
+
+70
+00:07:22,190 --> 00:07:30,650
+I'm sorry. I'm so sorry. It was in test shutdown while not showing for ninety nine.
+
+71
+00:07:30,650 --> 00:07:34,880
+Yeah, it was down here. But I'll bet you it's the same problem up here.
+
+72
+00:07:34,880 --> 00:07:43,290
+Where. We might end up.
+
+73
+00:07:43,290 --> 00:07:53,810
+It shut down all showing. Oh, that's probably fine, because we don't remove the notification, but this one, we click the notification to go away.
+
+74
+00:07:53,810 --> 00:08:03,620
+So. Let me just quickly write this down the bug.
+
+75
+00:08:03,620 --> 00:08:13,900
+Because the call to unsub minute crash handler in, it kicks off the.
+
+76
+00:08:13,900 --> 00:08:22,150
+Kicks off the. Unsmoked ID check for crash reports, which is a sink.
+
+77
+00:08:22,150 --> 00:08:29,680
+So the note might not be ready by the time the test proceeds.
+
+78
+00:08:29,680 --> 00:08:34,360
+So I need more information for myself. I'm going to fix that up later.
+
+79
+00:08:34,360 --> 00:08:42,210
+Maybe we'll even do this episode. You know what? Let's add it to our to do list for later.
+
+80
+00:08:42,210 --> 00:08:49,020
+And it as a second note here, like sort of a bonus bug.
+
+81
+00:08:49,020 --> 00:08:54,990
+But for now, let's let's get into this other Intiman orange. So we worked on this last week and what was up?
+
+82
+00:08:54,990 --> 00:09:03,510
+Well, we're not sure. I started to do some investigation and I wrote some stuff down that might be interesting to go through again specifically.
+
+83
+00:09:03,510 --> 00:09:07,410
+Well, first of all, I should point out, this is a particularly bad intermittent orange.
+
+84
+00:09:07,410 --> 00:09:14,640
+This is one that's happening. Pause. This is one that's happening.
+
+85
+00:09:14,640 --> 00:09:20,310
+It's like 19 like two days ago was 18 repository or 18 failures.
+
+86
+00:09:20,310 --> 00:09:34,010
+Yesterday it was 19. So it's something like. 18 or 19 or 20 and on the order of like almost 20 failures per day here, it's twenty to fifteen.
+
+87
+00:09:34,010 --> 00:09:38,240
+There's there's so there's there's a bit of a range, but let's say it's about 20 failures per day.
+
+88
+00:09:38,240 --> 00:09:43,940
+And that's something that like that's adding noise to the.
+
+89
+00:09:43,940 --> 00:09:48,410
+It's OK. Ted, I saw that Ted was sorry for interrupting last week. Don't don't worry, Ted.
+
+90
+00:09:48,410 --> 00:09:53,210
+That adds noise, these failures. So let's get into figuring out what this failure is all about.
+
+91
+00:09:53,210 --> 00:10:02,570
+Let's stop delaying. So Beezy, who's one of our outstanding engineers here at Mozilla, looked at the test and he thought he saw where a race was.
+
+92
+00:10:02,570 --> 00:10:16,490
+But whenever I got rid of what? Let's take a look at the test file to do the test file is, oh, I can't believe I don't have a link to it.
+
+93
+00:10:16,490 --> 00:10:22,540
+The test file is here. This one I'll show you.
+
+94
+00:10:22,540 --> 00:10:31,790
+There are two parts to it. There is this main test file and then there's this like H.T. Amelle page that it loads and that's this one.
+
+95
+00:10:31,790 --> 00:10:38,030
+And this is where the races that that that Beezy thought he caught and he probably did catch one,
+
+96
+00:10:38,030 --> 00:10:43,790
+but I don't think that's where where where the problem is. So I'm going to sort of summarize what we're looking at here.
+
+97
+00:10:43,790 --> 00:10:49,010
+Basically what this test does, it is it opens a new tab. It loads up this page.
+
+98
+00:10:49,010 --> 00:10:54,710
+Then this page. What it's going to do is it's going to load some eye frame.
+
+99
+00:10:54,710 --> 00:11:00,830
+And every time the load event fires, it's going to say, like send that eye frame to a new page.
+
+100
+00:11:00,830 --> 00:11:05,630
+And then we wait for that to occur like five times. And that should add new history entries.
+
+101
+00:11:05,630 --> 00:11:10,250
+So after received five new history entries come in, then we're done the test.
+
+102
+00:11:10,250 --> 00:11:17,610
+That's what we're testing for. We're testing that new history entries are being added by this page that's updating an eye frame.
+
+103
+00:11:17,610 --> 00:11:21,870
+And the race that Beezy saw was here, this set time out.
+
+104
+00:11:21,870 --> 00:11:27,920
+Here is what's being used to kick off the.
+
+105
+00:11:27,920 --> 00:11:34,320
+So this in this function next is fired in two places.
+
+106
+00:11:34,320 --> 00:11:40,080
+The first one is here. Whenever we see that, like an onload has occurred.
+
+107
+00:11:40,080 --> 00:11:46,860
+And here we see it whenever.
+
+108
+00:11:46,860 --> 00:11:50,650
+Just like whenever the page is loaded, we do a set time out and we'll run it next.
+
+109
+00:11:50,650 --> 00:12:02,580
+And what this test, this next what this next function does is it will check to see whether or not count is less than five.
+
+110
+00:12:02,580 --> 00:12:07,470
+And if not, then it's going to set the eye frame source to be this data your eye.
+
+111
+00:12:07,470 --> 00:12:12,000
+And then increment the count and make the count part of the eyes. So it's like unique.
+
+112
+00:12:12,000 --> 00:12:17,190
+And the race that Beezy saw was that because an eye frame, whenever it's first injected into the DOM,
+
+113
+00:12:17,190 --> 00:12:22,650
+because that's what happens here, is we create the eye frame dynamically when it's injected into the dorm.
+
+114
+00:12:22,650 --> 00:12:36,390
+There's an about blank that initially loads in that eye frame and that about blank load might end up triggering the load event to fire.
+
+115
+00:12:36,390 --> 00:12:43,140
+Which will call next. But that might also happen that that might happen before the set town set time of fires.
+
+116
+00:12:43,140 --> 00:12:45,870
+Like, there's there's two ways where we might call next.
+
+117
+00:12:45,870 --> 00:12:52,080
+One is in the set time out and the other ones when the onload fires or the load event fires for the about blank than initially load.
+
+118
+00:12:52,080 --> 00:12:55,500
+So we might actually enter this twice when we don't expect to.
+
+119
+00:12:55,500 --> 00:13:02,010
+So that's that's the race that Beezy thought he caught. And what we did was we just got rid of the set time.
+
+120
+00:13:02,010 --> 00:13:10,830
+I've down here and depended on the about blanck load to kick off this sort of like to kick off calling next.
+
+121
+00:13:10,830 --> 00:13:16,920
+But I pushed that to try and it didn't fix it. The the the failure was still there.
+
+122
+00:13:16,920 --> 00:13:23,220
+So the good news is that I was able to capture the failure in r r.
+
+123
+00:13:23,220 --> 00:13:28,780
+I have a recording. And we're going to look at that recording.
+
+124
+00:13:28,780 --> 00:13:38,080
+So this is probably what most people are interested in. I'm sorry, it's taken me like 15 minutes to get there, but we're going to be looking at.
+
+125
+00:13:38,080 --> 00:13:43,450
+We're gonna be looking at ah, again, we did this a little bit last week, going to be doing it again this week.
+
+126
+00:13:43,450 --> 00:13:48,640
+I'm signing into the Linux box where I reproduce the problem.
+
+127
+00:13:48,640 --> 00:13:54,370
+And let's let's check it out. I've got an old screen session here that I'm going to resume.
+
+128
+00:13:54,370 --> 00:14:02,740
+So, yeah, we had our test time out. That's that's the thing we wanted. I've got the entire output is in Rondout log.
+
+129
+00:14:02,740 --> 00:14:14,600
+And that's important because I think what we desperately need is the information about which content processor, what's the process number of the.
+
+130
+00:14:14,600 --> 00:14:22,950
+Of the content, woops, we're open reed only. What is the process number of the content process?
+
+131
+00:14:22,950 --> 00:14:28,200
+Whenever the failure occurs, so let's find our first failure here, the first time we report it.
+
+132
+00:14:28,200 --> 00:14:32,700
+Test timed out right here. This is this big, verbose log.
+
+133
+00:14:32,700 --> 00:14:38,430
+And already I can see that one nine four eight one is one of our process ideas.
+
+134
+00:14:38,430 --> 00:14:46,810
+But I have a feeling that's the main process. I.D. Usually the main process is the one that's like louder, like where we see more spam.
+
+135
+00:14:46,810 --> 00:14:52,620
+And then there's another one here. Now one nine three eight four. And that might be our content process.
+
+136
+00:14:52,620 --> 00:14:59,690
+Let's see if we can prove it. Oh, it actually might be one nine four eight one.
+
+137
+00:14:59,690 --> 00:15:08,180
+It might be one nine four eight one. One nine three eight four.
+
+138
+00:15:08,180 --> 00:15:15,210
+It'd be nice if there was like. Child child one nine four eight one is that is the child process.
+
+139
+00:15:15,210 --> 00:15:25,350
+OK. So that's what we want. We want one nine four eight one. So that's what we're going to look at that process.
+
+140
+00:15:25,350 --> 00:15:38,720
+And there is a command that I've forgotten that is in the documentation for our usage are usage.
+
+141
+00:15:38,720 --> 00:15:56,530
+For making sure that when we replay, we wait for a particular. Process is something like run debugging and child process replay and then dash f P.D.A.
+
+142
+00:15:56,530 --> 00:16:03,280
+To test GDP immediately after the fork replay, to attach TV to a particular process after its first exact location.
+
+143
+00:16:03,280 --> 00:16:08,140
+Do this one hour, our replay dash p, then the PD moleskins start taking notes.
+
+144
+00:16:08,140 --> 00:16:18,290
+So one nine four eight one was the name of the or it was the process I.D. So let's put that in here.
+
+145
+00:16:18,290 --> 00:16:21,320
+So new hour, hour session.
+
+146
+00:16:21,320 --> 00:16:33,110
+Let me bump up the fight, people, palpable, new hour, our session and the child process content process I.D. is one nine four eight one.
+
+147
+00:16:33,110 --> 00:16:39,530
+And that means that the parent process, in case we want it, main process idea is one nine three eight four.
+
+148
+00:16:39,530 --> 00:16:43,820
+And then the command for replaying is this.
+
+149
+00:16:43,820 --> 00:16:48,160
+I mean, I just put that in here. So I don't forget.
+
+150
+00:16:48,160 --> 00:16:56,700
+So it's our hour replay dash P and then the child processor's one nine four eight one Organa and a hook that up.
+
+151
+00:16:56,700 --> 00:17:04,820
+So here we go. That's happening now.
+
+152
+00:17:04,820 --> 00:17:13,760
+It's now a bunch of stuff's happening.
+
+153
+00:17:13,760 --> 00:17:21,710
+OK, so now we're at the point where one nine four eight one was hit or were first spawned at first ran instruction,
+
+154
+00:17:21,710 --> 00:17:25,970
+and this is where I realize now that I've kind of screwed us a little bit.
+
+155
+00:17:25,970 --> 00:17:32,540
+It's not a big deal. But one thing to keep in mind is if we look at the log.
+
+156
+00:17:32,540 --> 00:17:37,040
+I think I had the log open in a different screen here. Yeah.
+
+157
+00:17:37,040 --> 00:17:43,310
+If we look at the log, there were 71 runs of the test or 71 assertions.
+
+158
+00:17:43,310 --> 00:17:49,250
+And that means that the test, because I was running the test a bunch of times and it's only the last time that we care about.
+
+159
+00:17:49,250 --> 00:17:55,190
+So what I really need to do is I need to wait until we reach our timeout.
+
+160
+00:17:55,190 --> 00:18:00,020
+And I wonder if I made it easy to detect the time. I think I did.
+
+161
+00:18:00,020 --> 00:18:08,310
+Let me. Quickly. Where?
+
+162
+00:18:08,310 --> 00:18:20,460
+Yeah, what do we want to do? I want to look at the difference that I've put into the file where if we time out, I think I put in something.
+
+163
+00:18:20,460 --> 00:18:27,130
+I called math dot sign in the parent process.
+
+164
+00:18:27,130 --> 00:18:33,590
+Hmm, that's not so useful. Thinking back, maybe it is.
+
+165
+00:18:33,590 --> 00:18:38,390
+But what I'm going to do is I'm actually going to continue until we are killed.
+
+166
+00:18:38,390 --> 00:18:42,110
+This is kind of a pain in the butt because this might take a couple of minutes.
+
+167
+00:18:42,110 --> 00:18:45,800
+But in the meantime, maybe we can work on a patch for that other that other failure.
+
+168
+00:18:45,800 --> 00:18:56,060
+So I'm going to continue. And so the test is going to be replayed and we're going to eventually reach the point where the test says,
+
+169
+00:18:56,060 --> 00:19:02,960
+we've timed out and we'll kill the content process. And what we're going to do is we're gonna work backwards from there to the last
+
+170
+00:19:02,960 --> 00:19:07,730
+time that the test ran because that last time zone we really super care about,
+
+171
+00:19:07,730 --> 00:19:11,420
+because everything up to that worked fine. It's only the last little window.
+
+172
+00:19:11,420 --> 00:19:17,460
+So I'm sorry, I should've probably had myself prepared in advance to be at the very end of the test run.
+
+173
+00:19:17,460 --> 00:19:22,730
+But hey, joy of coding, nothing goes going to plan. So sorry, Ted.
+
+174
+00:19:22,730 --> 00:19:27,110
+Sorry, Will. I know there are a couple of people who are watching this. We're really hoping we get into the AAAAA stuff right away.
+
+175
+00:19:27,110 --> 00:19:32,630
+And I have to put a pause on that while this thing goes right to the end. Look, it's it's done one run of the test already.
+
+176
+00:19:32,630 --> 00:19:37,820
+So this will this shouldn't take too too long.
+
+177
+00:19:37,820 --> 00:19:45,780
+Mummy, it's going to take a couple of minutes, so I'm going to have this bake in the background over there.
+
+178
+00:19:45,780 --> 00:19:50,790
+And then in the meantime, maybe we can crank out a patch for that other intermittent.
+
+179
+00:19:50,790 --> 00:19:56,640
+And be good citizens for the tree. So the what did I find?
+
+180
+00:19:56,640 --> 00:20:08,710
+Yeah, I have a test that I added here at this path browser module's tests browser and submitted.
+
+181
+00:20:08,710 --> 00:20:16,500
+And submitted crash handler. This is the test, I'm actually gonna open this up and sublime, not them.
+
+182
+00:20:16,500 --> 00:20:21,570
+And the place that I saw the problem was online for 98.
+
+183
+00:20:21,570 --> 00:20:27,810
+That's down here for 98, for 98 right here, because what goes on is.
+
+184
+00:20:27,810 --> 00:20:34,860
+So here's what this test does. I had some documentation that we had this unselected crash notification thing that we show.
+
+185
+00:20:34,860 --> 00:20:39,330
+If we've noticed you've got crash reports hanging around the background that you've never submitted and we go looking for them.
+
+186
+00:20:39,330 --> 00:20:44,310
+We do this off main thread stuff to see them. And then if they exist, we'll show you notification.
+
+187
+00:20:44,310 --> 00:20:47,580
+Give you an opportunity to send them. And I'm testing that.
+
+188
+00:20:47,580 --> 00:20:57,450
+If the handlers unin it after the notification has been closed, then we assume that this press is not set.
+
+189
+00:20:57,450 --> 00:21:02,790
+Right. And the reason we do that is because we wanted to detect the case where it's shut down without being closed,
+
+190
+00:21:02,790 --> 00:21:09,450
+because if the user shuts down the there are Firefox without interacting with that notification more than a couple of times,
+
+191
+00:21:09,450 --> 00:21:13,890
+we'll assume that the user doesn't care and we'll stop showing the notification. That's something that you X asked for.
+
+192
+00:21:13,890 --> 00:21:18,210
+I think it makes a lot of sense. We don't want to show notifications to users that don't care about them.
+
+193
+00:21:18,210 --> 00:21:27,240
+So we think we wait something like if we see the notification over four different days and the user has not interacted with it over those four days,
+
+194
+00:21:27,240 --> 00:21:32,390
+then we just suppress the notification for like a month.
+
+195
+00:21:32,390 --> 00:21:40,310
+So that's what this is testing, the sort of converse of that, where we make sure that if the notification is interacted with, if the user says,
+
+196
+00:21:40,310 --> 00:21:49,910
+like, I don't care or clicks on anything, that the the press for indicating that we shut down while still showing it is not set.
+
+197
+00:21:49,910 --> 00:21:52,940
+So what we do is we create some pending crash reports.
+
+198
+00:21:52,940 --> 00:21:59,210
+We caused the notification to be shown and then we dismiss the notification by choosing the X button.
+
+199
+00:21:59,210 --> 00:22:05,810
+That's the dismiss button. We wait for the reports to be ignored and then we shut unsuspended crash handler.
+
+200
+00:22:05,810 --> 00:22:17,010
+And we kind of. We we simulate shutting down the the browser by shutting down the unsub made crash handler and then turning it back on again,
+
+201
+00:22:17,010 --> 00:22:25,560
+which is our way of my way of simulating a restart of the browser without actually doing it for the purposes of this test.
+
+202
+00:22:25,560 --> 00:22:32,760
+But then when we do this, I also want to make sure that, like. Oh, there should be no notification at this point.
+
+203
+00:22:32,760 --> 00:22:39,050
+That makes sense because we like we dismissed it.
+
+204
+00:22:39,050 --> 00:22:45,420
+And we ignored the ones that we. We should never do this line.
+
+205
+00:22:45,420 --> 00:22:51,870
+That's the thing we should never do that line. That line makes no sense because the notification was removed.
+
+206
+00:22:51,870 --> 00:22:59,760
+I'm actually really surprised that. That this ever worked.
+
+207
+00:22:59,760 --> 00:23:03,480
+But you know what it is, it's because there's a transition whenever you close,
+
+208
+00:23:03,480 --> 00:23:10,800
+when you click on the closed button and there was a race here where the notification is removed after the transition completes.
+
+209
+00:23:10,800 --> 00:23:17,750
+And sometimes that transition would complete before all the stuff was done and sometimes not.
+
+210
+00:23:17,750 --> 00:23:27,410
+And so what we really need to do. Is.
+
+211
+00:23:27,410 --> 00:23:43,170
+We should wait for the notification to go away. Remove notification.
+
+212
+00:23:43,170 --> 00:23:47,130
+Thing is, you don't want the notification to leak if it still exists at this point.
+
+213
+00:23:47,130 --> 00:23:56,160
+You don't want it to leak into the next test that that will tainted Houser are still going.
+
+214
+00:23:56,160 --> 00:24:02,580
+So what I need to do is just make sure that the notification is gone. I mean, I could check to see if the notification has no parent node.
+
+215
+00:24:02,580 --> 00:24:06,450
+That's one way. What else can I do?
+
+216
+00:24:06,450 --> 00:24:16,540
+Is there anything else I could do? I could get rid of the animation.
+
+217
+00:24:16,540 --> 00:24:21,790
+On the notification. I could also wait for the notification.
+
+218
+00:24:21,790 --> 00:24:28,160
+Not only wait for the reports to be ignored, but wait for the notification to be gone.
+
+219
+00:24:28,160 --> 00:24:47,870
+Maybe that's what I should do. OK, maybe that's what I'll do, is I'm going to wait for the notification to go away.
+
+220
+00:24:47,870 --> 00:24:52,380
+So I'm going to add a new new helper.
+
+221
+00:24:52,380 --> 00:24:59,780
+May I say something like let notification go on equal,
+
+222
+00:24:59,780 --> 00:25:22,380
+wait for notification gone and then pass it the notification and then we're going to yield that here.
+
+223
+00:25:22,380 --> 00:25:40,600
+This is also going to trigger the. Like admitting it here is going to trigger the check for on Simit crash reports.
+
+224
+00:25:40,600 --> 00:25:51,960
+Async. Content crash handlers.
+
+225
+00:25:51,960 --> 00:26:02,060
+That's where Onse unsimilar crash reports his. Handled and it's down here, I believe, and cemented crash handling.
+
+226
+00:26:02,060 --> 00:26:08,030
+When we get. Oh.
+
+227
+00:26:08,030 --> 00:26:14,230
+Oh, no. Oh, my. My assumption was wrong. We don't do anything a sink after here.
+
+228
+00:26:14,230 --> 00:26:17,860
+OK, that's good. OK. I'm happy about that.
+
+229
+00:26:17,860 --> 00:26:22,840
+I was worried that after you call a net will immediately like.
+
+230
+00:26:22,840 --> 00:26:26,860
+Like a net would call this a sink function, which thankfully it doesn't.
+
+231
+00:26:26,860 --> 00:26:33,340
+We wait for the first browser window to be displayed to do that.
+
+232
+00:26:33,340 --> 00:26:44,650
+And that is not going to occur here because we don't open the windows. That's good. So I think this will work so long as I provide this.
+
+233
+00:26:44,650 --> 00:26:50,800
+Helper function. So I'm going to add a function here.
+
+234
+00:26:50,800 --> 00:26:59,620
+Function wait for notification gone.
+
+235
+00:26:59,620 --> 00:27:11,920
+So I'm going to return a new promise. Is there like a trying to remember the notification before is destroyed, if it fires like an event or something?
+
+236
+00:27:11,920 --> 00:27:15,440
+Notification and static somehow notification. Excellent.
+
+237
+00:27:15,440 --> 00:27:21,950
+Here we go. Remove notification element.
+
+238
+00:27:21,950 --> 00:27:27,290
+We call this we fire this removed event on it. Maybe that's enough.
+
+239
+00:27:27,290 --> 00:27:34,910
+And then they remove the child. Yeah, that's probably enough.
+
+240
+00:27:34,910 --> 00:27:45,290
+So return. Browser test, utils wait for event.
+
+241
+00:27:45,290 --> 00:27:50,850
+Notification removed. That's what happens, right?
+
+242
+00:27:50,850 --> 00:27:58,060
+Like there's. Oh, wait a second, event callback is slightly different, it's not an actual event.
+
+243
+00:27:58,060 --> 00:28:05,880
+Shoot. It's a thing that like you. Whenever you construct the notification, it's like a callback, the register with it.
+
+244
+00:28:05,880 --> 00:28:11,040
+This is not going to work. This is not going to work. Those are doing.
+
+245
+00:28:11,040 --> 00:28:14,730
+Again, I apologize if you are waiting for our arts. We're gonna get there.
+
+246
+00:28:14,730 --> 00:28:20,270
+We're gonna get there once it reaches the end. Hopefully, I don't have to do this step too many times.
+
+247
+00:28:20,270 --> 00:28:33,840
+That takes forever. I think browser test utils is something like wait for condition.
+
+248
+00:28:33,840 --> 00:28:40,650
+Yeah. Wait for condition. Condition.
+
+249
+00:28:40,650 --> 00:28:51,080
+And then we're going to wait for. Waiting.
+
+250
+00:28:51,080 --> 00:29:02,180
+What's the message? The message. Checked, reject.
+
+251
+00:29:02,180 --> 00:29:10,030
+Timed out. Waiting for the notification to go away.
+
+252
+00:29:10,030 --> 00:29:25,700
+And the test is notification, return notification, the parent node.
+
+253
+00:29:25,700 --> 00:29:36,470
+Cool. So let's have some documentation returns, a promise that resolves once a notification has been removed from the don.
+
+254
+00:29:36,470 --> 00:29:47,950
+Zoar. Notification notification, no, has been removed from the Don.
+
+255
+00:29:47,950 --> 00:29:54,290
+And then it takes a paradigm of notification.
+
+256
+00:29:54,290 --> 00:29:59,650
+Zuhal notification, the notification.
+
+257
+00:29:59,650 --> 00:30:07,650
+That we expect to go away soon and then returns a promise.
+
+258
+00:30:07,650 --> 00:30:14,400
+OK, so now let's run that test, OK, OK, test browser models, test browser on submitted.
+
+259
+00:30:14,400 --> 00:30:25,900
+Crash Handler. Hey.
+
+260
+00:30:25,900 --> 00:30:31,000
+All right, we passed. Oh, I feel pretty good about that.
+
+261
+00:30:31,000 --> 00:30:41,620
+I'm going to just. Re examine the diff that we created, fons probably too small for you.
+
+262
+00:30:41,620 --> 00:30:51,480
+So, yeah, I had that helper function. Cool.
+
+263
+00:30:51,480 --> 00:30:58,170
+Now, are there any other places in this test suite where I dismiss the notification I need to wait for it?
+
+264
+00:30:58,170 --> 00:31:06,070
+Let's quickly check. Do I click on anything, for example? No.
+
+265
+00:31:06,070 --> 00:31:12,340
+Was this test to. No tests, satellite said don't suppress.
+
+266
+00:31:12,340 --> 00:31:32,450
+No. Chooses to dismiss the notification.
+
+267
+00:31:32,450 --> 00:31:40,880
+So we should probably. To that here. Let notification gone.
+
+268
+00:31:40,880 --> 00:31:51,980
+Equals wait for notification gone notification. Yield notification gone.
+
+269
+00:31:51,980 --> 00:32:02,050
+And wait for ignored reports. What is that again? Right.
+
+270
+00:32:02,050 --> 00:32:11,780
+It's going to return a promise. Once. That resolves once all the dot ignore.
+
+271
+00:32:11,780 --> 00:32:19,140
+Files exist. OK. Notification gone. So that's one.
+
+272
+00:32:19,140 --> 00:32:24,940
+Vacation. No notifications displayed.
+
+273
+00:32:24,940 --> 00:32:29,150
+So send. Always. So we check for notifications.
+
+274
+00:32:29,150 --> 00:32:39,630
+Send all the way for ports. We're going to click. Oh, we'll not wait for the notification to finish its transition, we'll just remove it right away.
+
+275
+00:32:39,630 --> 00:32:51,270
+Maybe that's what I should be doing instead. You know what?
+
+276
+00:32:51,270 --> 00:32:54,760
+I think I prefer that that old that other solution.
+
+277
+00:32:54,760 --> 00:33:01,710
+Yeah, I'm just removing it right away when you. Start pulling.
+
+278
+00:33:01,710 --> 00:33:07,260
+Hang around, wait for notification, go on.
+
+279
+00:33:07,260 --> 00:33:32,510
+I think I like the idea of just removing it. So where else do I use a wait for notification gone?
+
+280
+00:33:32,510 --> 00:33:44,710
+I want. Nothing else.
+
+281
+00:33:44,710 --> 00:33:53,230
+OK. So was there anywhere else where we, like, dismissed the notification?
+
+282
+00:33:53,230 --> 00:34:02,480
+No notification, one pending notification, we moving notification here should be notification, we move it occasion.
+
+283
+00:34:02,480 --> 00:34:09,680
+And the. Several can submit.
+
+284
+00:34:09,680 --> 00:34:14,470
+Remove it right away. Move it right away. Move right away.
+
+285
+00:34:14,470 --> 00:34:21,820
+OK, so let's try that. How's Hawke man doing?
+
+286
+00:34:21,820 --> 00:34:29,070
+Still go on. Well, failure.
+
+287
+00:34:29,070 --> 00:34:42,070
+Failures across the board. What happened? Unexpected failure.
+
+288
+00:34:42,070 --> 00:34:51,050
+There should be no notification. We've run out chances. Oh, man, I think I broke something.
+
+289
+00:34:51,050 --> 00:35:03,730
+Let's run that again. OK.
+
+290
+00:35:03,730 --> 00:35:09,450
+I think the problem is that I actually had the wrong window focus when I ran the test.
+
+291
+00:35:09,450 --> 00:35:15,430
+Normally, it's not great to have a test written like that, but. Tombo notifications here.
+
+292
+00:35:15,430 --> 00:35:20,470
+OK. So happy with that. Hopefully ours is going to be done soon.
+
+293
+00:35:20,470 --> 00:35:34,660
+Let's put this up for review. Doug.
+
+294
+00:35:34,660 --> 00:35:42,440
+Remove Zul, no notification.
+
+295
+00:35:42,440 --> 00:35:49,250
+Right away in browser on submitted crash handler.
+
+296
+00:35:49,250 --> 00:36:06,720
+To avoid intermittent. Florian Foreign reviewed the original tests, so I figure he can review this quick thing as well.
+
+297
+00:36:06,720 --> 00:36:15,070
+OK, we'll push that for you. And then let's move on to the next thing.
+
+298
+00:36:15,070 --> 00:36:27,650
+Oh, man, this is taking a lot longer than I expected. Ah, but I mean, that's how the cookie crumbles.
+
+299
+00:36:27,650 --> 00:36:36,760
+And where where even are we in this test run, I wonder?
+
+300
+00:36:36,760 --> 00:36:42,840
+Serial six, seven, three. I wonder if that's like.
+
+301
+00:36:42,840 --> 00:37:04,850
+No, I don't know if that's the number I can count on. Maybe some of these memory addresses, though.
+
+302
+00:37:04,850 --> 00:37:10,070
+Seven oh two. OK. Well, anyway, let's publish this for review.
+
+303
+00:37:10,070 --> 00:37:18,530
+Get it out there so that we can close out the cinnamon orange.
+
+304
+00:37:18,530 --> 00:37:39,120
+Take a quick look at the patch. OK.
+
+305
+00:37:39,120 --> 00:37:46,270
+I'm happy with it. OK.
+
+306
+00:37:46,270 --> 00:37:56,800
+That's up for review that's done. I guess I'll take this bug.
+
+307
+00:37:56,800 --> 00:38:19,590
+I might add myself. I guess this is one of the problems where if you've been using our R to debug a failure,
+
+308
+00:38:19,590 --> 00:38:24,030
+an airman failure in the way you triggered it was by like running a bunch of the test to me.
+
+309
+00:38:24,030 --> 00:38:27,960
+You repeated it a bunch or you had to run the entire suite or something.
+
+310
+00:38:27,960 --> 00:38:38,850
+It's knowing kind of the range or the event time, because I think RR has a notion of event numbers.
+
+311
+00:38:38,850 --> 00:38:46,380
+And so, like, every time either of the processes ticks forward, I believe there's an event number that's recorded.
+
+312
+00:38:46,380 --> 00:38:53,850
+And knowing what that event number is, I think really helps, because you can fast forward to those numbers and you get like it's like fast
+
+313
+00:38:53,850 --> 00:39:00,310
+forwarding into a videotape or a DVD for people who remember what those things are.
+
+314
+00:39:00,310 --> 00:39:07,320
+OK, so while we're waiting on that, we're bup bup bup ba.
+
+315
+00:39:07,320 --> 00:39:14,280
+That's done. Hey, I wrote a patch that was unexpected.
+
+316
+00:39:14,280 --> 00:39:21,500
+I guess we'll work on this other thing, which is the other test failures.
+
+317
+00:39:21,500 --> 00:39:29,090
+This isn't a never mentioned test failure, though. I'm actually gonna rebase this patch on to Central.
+
+318
+00:39:29,090 --> 00:39:49,920
+I think I based it off some of the work that we're about to go into. That doesn't really affect the patch for florins review anyways.
+
+319
+00:39:49,920 --> 00:39:57,840
+So now, yeah, this is. Those patches on Central now, and I'm gonna check this stuff out.
+
+320
+00:39:57,840 --> 00:40:08,910
+Down here. This is the stuff I want to work on, where we're converting the autocomplete pop up to use in a rich Tlas box instead of a Zuhal tree.
+
+321
+00:40:08,910 --> 00:40:16,500
+So let's check that out. Woof, woof, woof, woof, woof.
+
+322
+00:40:16,500 --> 00:40:24,060
+Come on, our. I'm like, as soon as this thing takes over, like we hit our end of process and we have our failure.
+
+323
+00:40:24,060 --> 00:40:28,020
+I'm going right into this are our business. I know that's what some people are interested in.
+
+324
+00:40:28,020 --> 00:40:33,960
+I'm really I apologize if this is what you've been waiting for. And it's just like cooking in the background.
+
+325
+00:40:33,960 --> 00:40:43,660
+I that's what happens. The serial number keeps escalating and keeps going up.
+
+326
+00:40:43,660 --> 00:40:53,440
+I wonder if we can use that as a clue to figure out how far we are from being done.
+
+327
+00:40:53,440 --> 00:41:04,420
+Sir. Run dialog. Open read only test timed out Ciro's at one two five seven.
+
+328
+00:41:04,420 --> 00:41:07,450
+We're in that range one, two, five seven, one, two, six, seven.
+
+329
+00:41:07,450 --> 00:41:13,630
+So my guess is if b if we're at like in the eight hundreds were like maybe another five minutes away,
+
+330
+00:41:13,630 --> 00:41:21,430
+I'd be my guess because that number is escalating quite a bit.
+
+331
+00:41:21,430 --> 00:41:25,530
+We're almost in the night hundreds. And if we need to get into the 12 hundreds.
+
+332
+00:41:25,530 --> 00:41:29,080
+Well, we're almost there. So stay positive. Stay positive.
+
+333
+00:41:29,080 --> 00:41:35,960
+People were almost there. Hi.
+
+334
+00:41:35,960 --> 00:41:45,260
+I'm going to play like us a big victory, a barrage of sounds whenever are hits that point.
+
+335
+00:41:45,260 --> 00:41:57,050
+In the meantime, let's take a look at this test, this other test failure that I'm dealing with, which is which.
+
+336
+00:41:57,050 --> 00:42:10,250
+In here, I've got this. Mokey test chromed test called test auto, complete with composition on input that is failing.
+
+337
+00:42:10,250 --> 00:42:15,640
+Whenever I switched us over to using a rich listbox instead of a Zuhal tree for the autocomplete pop up.
+
+338
+00:42:15,640 --> 00:42:24,200
+Now, why is that? I don't actually know, but I can easily reproduce the failure if I run the test.
+
+339
+00:42:24,200 --> 00:42:37,550
+See? I'm getting an El Hmoud by Ryan Vienne.
+
+340
+00:42:37,550 --> 00:42:43,880
+I should probably turn off notifications whenever whenever I'm live hacking, because anyone could really say anything.
+
+341
+00:42:43,880 --> 00:42:48,170
+And like, it would suddenly show up in the stream, like security stuff could show up.
+
+342
+00:42:48,170 --> 00:43:07,350
+So we I turn those notifications off or temporarily.
+
+343
+00:43:07,350 --> 00:43:16,440
+OK, so we got that failure I was telling you about. So the one thing that I noticed is that when I run this test, if you look at it,
+
+344
+00:43:16,440 --> 00:43:22,670
+is that it takes a while, like it doesn't take too long what it takes.
+
+345
+00:43:22,670 --> 00:43:26,750
+Let's see, one, two. It's been like four seconds, five seconds.
+
+346
+00:43:26,750 --> 00:43:33,340
+Six seconds. Salvaje A.
+
+347
+00:43:33,340 --> 00:43:39,790
+So like 10, 11 seconds to do the job, 10 or 11 seconds to do the job.
+
+348
+00:43:39,790 --> 00:43:49,000
+That is way too long. If we cut that down, I would really help me sort of nail into it, like get a better sense of maybe where the problem is.
+
+349
+00:43:49,000 --> 00:43:56,340
+No, don't do that. What I do. What I do.
+
+350
+00:43:56,340 --> 00:44:04,880
+Amen. What do I do? What I do.
+
+351
+00:44:04,880 --> 00:44:10,410
+What did you do? What? What? What do I do when you stop, Arman?
+
+352
+00:44:10,410 --> 00:44:23,580
+Armin just said in RC, Oh, disabled and notifications, oh, well, I don't I don't want people to all of a sudden dump like the worst case scenario.
+
+353
+00:44:23,580 --> 00:44:27,540
+Almond's complaining that he can't ball the show anymore.
+
+354
+00:44:27,540 --> 00:44:32,580
+I guess what I don't want to happen is for Sony to be like, hey, here's this big security issue.
+
+355
+00:44:32,580 --> 00:44:36,780
+And he said to me over RC that it shows up right during the livestream stream.
+
+356
+00:44:36,780 --> 00:44:40,740
+I'd be terrible. I don't even. That's never happened during a live stream.
+
+357
+00:44:40,740 --> 00:44:47,430
+I just I never want to. I never want that to be the case.
+
+358
+00:44:47,430 --> 00:44:52,260
+Yeah. There there is a lag, Arment. I'm sorry. It's it's live television.
+
+359
+00:44:52,260 --> 00:44:57,040
+Hey, we're at the we're the one thousands now. So if we're trying to get to the twelve hundreds,
+
+360
+00:44:57,040 --> 00:45:07,200
+I'm gonna say the next two or three minutes we're gonna have hit our, our, our thing and we can, we can keep going.
+
+361
+00:45:07,200 --> 00:45:11,730
+So in the meantime, this other test that I was trying to debug.
+
+362
+00:45:11,730 --> 00:45:17,670
+It took 18 seconds to run the sweet. Let's see if we can turn that down a little bit.
+
+363
+00:45:17,670 --> 00:45:24,990
+Let's let's take a look at this test. So the test is using sort of this older mechanism where we're like a sort of
+
+364
+00:45:24,990 --> 00:45:33,360
+a homebrew testing object thing that has like these this test array on it.
+
+365
+00:45:33,360 --> 00:45:42,600
+And so my first thing the first thing I might try and do is get rid of some of these tests, like just comment them out.
+
+366
+00:45:42,600 --> 00:45:50,920
+So we'll keep the housekeeping one. But let's comment out like. That's commented comment out.
+
+367
+00:45:50,920 --> 00:46:08,480
+These. All of those really all we need is any of the ones where the pop up is true, actually.
+
+368
+00:46:08,480 --> 00:46:16,100
+So true here, false here. I guess that's OK. Oh, actually, we can go earlier because there's a true up here.
+
+369
+00:46:16,100 --> 00:46:20,410
+Is that the earliest true? Yes, it is.
+
+370
+00:46:20,410 --> 00:46:25,450
+So let's just save all those tests. So there's just these, like three tests at the beginning.
+
+371
+00:46:25,450 --> 00:46:32,950
+Let's see how much we've shortened our test length down. Oh, almost there.
+
+372
+00:46:32,950 --> 00:46:43,640
+We're in the almost in the eleven hundreds.
+
+373
+00:46:43,640 --> 00:46:50,830
+So I brought it down by seven seconds is still a long time, but let's see if we can bring it down even more.
+
+374
+00:46:50,830 --> 00:46:56,120
+Composition change. Is there any like are there any set time outs here, what?
+
+375
+00:46:56,120 --> 00:46:59,890
+Synthesizing composition changes, dart length.
+
+376
+00:46:59,890 --> 00:47:07,670
+Karen. Costarring composition. I don't see any of like.
+
+377
+00:47:07,670 --> 00:47:16,720
+And he said time outs. There's some wait for condition here.
+
+378
+00:47:16,720 --> 00:47:29,170
+Maybe that's a. Composition Marfin composition strange shouldn't open the pop up composition and should open the pop up.
+
+379
+00:47:29,170 --> 00:47:36,940
+So should I like. That's composition change.
+
+380
+00:47:36,940 --> 00:47:45,080
+Of like, move this. Here.
+
+381
+00:47:45,080 --> 00:47:49,640
+No, you know what? I should just keep it this way. Eleven seconds. I don't want to mess mess around with the test.
+
+382
+00:47:49,640 --> 00:47:54,320
+I don't understand too well. But 11 seconds isn't so bad.
+
+383
+00:47:54,320 --> 00:48:00,470
+We brought down by seven. Let's see if we can work with that. So what is going on in this test?
+
+384
+00:48:00,470 --> 00:48:05,530
+Well. It's weird at the very beginning of the tests.
+
+385
+00:48:05,530 --> 00:48:11,410
+We do this thing where where is it? It's actually in the other testing file.
+
+386
+00:48:11,410 --> 00:48:16,330
+We use the Special Powers API to get the form fill controller.
+
+387
+00:48:16,330 --> 00:48:21,880
+That's this like global form fill. I think it's process wide Singleton.
+
+388
+00:48:21,880 --> 00:48:32,050
+We get it and then we. We query interface that to an input.
+
+389
+00:48:32,050 --> 00:48:36,430
+And then we say, oh, that's all unrelated.
+
+390
+00:48:36,430 --> 00:48:41,080
+This is the important part. We're attaching the form fill controller to something.
+
+391
+00:48:41,080 --> 00:48:47,110
+So the form fill controller is one component. And the autocomplete pop up is another component.
+
+392
+00:48:47,110 --> 00:48:53,080
+And when the form fill controller says, hey, I need an autocomplete pop up or I need to open with some results and a pop up.
+
+393
+00:48:53,080 --> 00:48:57,460
+It will then like hopefully be attached to a pop up.
+
+394
+00:48:57,460 --> 00:49:09,730
+And then the pop up can show the results. And. Attached form fill controller two is the part where we connect the pop up to the form fill controller.
+
+395
+00:49:09,730 --> 00:49:19,400
+So let's take a look at. I think I've done this before. Let's take a look at this. Implementation of attach form for controller to.
+
+396
+00:49:19,400 --> 00:49:23,300
+We do, and we're in, though, we're about to enter the 12 hundreds folks.
+
+397
+00:49:23,300 --> 00:49:28,680
+I wonder if maybe we should just, like, sit back and watch. And see if I was right.
+
+398
+00:49:28,680 --> 00:49:34,470
+Whenever this this test is about to fail or we're just about to time out.
+
+399
+00:49:34,470 --> 00:49:43,730
+We might actually be in the timeout right now. We might be waiting to for the test run or to say, hey, you're taking too long.
+
+400
+00:49:43,730 --> 00:49:52,880
+Now. Yet. But when the twelve hundreds now.
+
+401
+00:49:52,880 --> 00:49:57,260
+And how do you know how long the timeout is like we might have to wait.
+
+402
+00:49:57,260 --> 00:50:05,000
+Even though we're in the 500 or the twelve hundreds, we have to wait like five minutes for the test framework that was running to say,
+
+403
+00:50:05,000 --> 00:50:11,600
+oh, it's taking too long and then kill the process. So many complications.
+
+404
+00:50:11,600 --> 00:50:21,570
+I was hoping to get more done by now. Story of my life. So back to this first test or this other test we attach.
+
+405
+00:50:21,570 --> 00:50:28,680
+We get the form full controller, so we get that Singleton I was telling you about that service thing, the former full controller.
+
+406
+00:50:28,680 --> 00:50:33,980
+And then what we do is we call attached to browser on it.
+
+407
+00:50:33,980 --> 00:50:43,050
+And attached to browser, if we look at the definition of attach to browser.
+
+408
+00:50:43,050 --> 00:50:54,480
+Takes a dark shell and a pop up. And if the dark shell like we'll start paying attention to key presses and stuff in the dark shell.
+
+409
+00:50:54,480 --> 00:51:04,440
+And if we start noticing that some of the form fields have matches in form history, then we'll open the pop up in the pop up that's passed in.
+
+410
+00:51:04,440 --> 00:51:10,420
+And. So that's fine, we're connecting to the windows, Doc Shell in this case.
+
+411
+00:51:10,420 --> 00:51:20,510
+The window is a top level chrome window, I believe. I think I might be wrong about that dog show.
+
+412
+00:51:20,510 --> 00:51:28,880
+No, I think it's actually these sub might be the eye frame that the chrome test run in something like that.
+
+413
+00:51:28,880 --> 00:51:34,490
+But we get the dog show for it and then we connect that to the autocomplete pop up of the window.
+
+414
+00:51:34,490 --> 00:51:39,620
+And if we look at get autocomplete pop up, what it's doing is it's getting the top level chrome window.
+
+415
+00:51:39,620 --> 00:51:45,440
+That's the browser browser window and gets the Pop-Up Autocomplete. And that's the thing that I've been messing around with.
+
+416
+00:51:45,440 --> 00:51:51,080
+If we look inside the patch like, oh, hey, hey, we hit it.
+
+417
+00:51:51,080 --> 00:51:58,200
+Okay. Sound, sound effect time. That's right.
+
+418
+00:51:58,200 --> 00:52:05,880
+Oh, my, oh, my, oh.
+
+419
+00:52:05,880 --> 00:52:12,780
+All right. We hit our sig kill. We've we've reached the point, the test where the test framework said, hey, you've been you've timed out.
+
+420
+00:52:12,780 --> 00:52:20,100
+So off off of your head. And we can work backwards from here to the last round, the one that failed for us.
+
+421
+00:52:20,100 --> 00:52:31,270
+So here we go. Quite pleased that we got here, and I'm glad I didn't take the entire episode, that would've been heartbreaking.
+
+422
+00:52:31,270 --> 00:52:35,290
+OK. So what tools do we have? So I'm in our hour right now.
+
+423
+00:52:35,290 --> 00:52:39,160
+I'm right at the end. I have to. I have to work backwards.
+
+424
+00:52:39,160 --> 00:52:51,470
+And I can do that because I've actually instrumented the patch with some little tricks to make it easier to to detect certain things like.
+
+425
+00:52:51,470 --> 00:53:00,290
+Let's see. I've got like.
+
+426
+00:53:00,290 --> 00:53:04,790
+I've framed out source. When we set this, we set I framed out source.
+
+427
+00:53:04,790 --> 00:53:12,560
+We're gonna be loading a you or I in a dark shell. So I could, like, set a breakpoint for loading you or I in a dark shell.
+
+428
+00:53:12,560 --> 00:53:18,050
+And then. Yes, that's true, Ryan.
+
+429
+00:53:18,050 --> 00:53:25,590
+I can always have those sound effects ready to roll. I could I could always become a wacky morning deejay.
+
+430
+00:53:25,590 --> 00:53:33,990
+I can set a breakpoint on the loading of the RL and then for the I'll just go back to like the last five because that's what we load.
+
+431
+00:53:33,990 --> 00:53:40,500
+We load five, you or else. So let's set a break point. Let's set a breakpoint and a stock shall load you.
+
+432
+00:53:40,500 --> 00:53:45,130
+Are I. Let's reverse continue.
+
+433
+00:53:45,130 --> 00:53:54,630
+So we're going back in time. First continue.
+
+434
+00:53:54,630 --> 00:54:04,280
+First continue. And that like I have, I don't know what our needs to spin up in order to run like backwards,
+
+435
+00:54:04,280 --> 00:54:10,490
+but like it takes a couple of seconds for it to, like, kind of compute.
+
+436
+00:54:10,490 --> 00:54:19,400
+What I'm asking of it. GDP and are working hand-in-hand to make this this amazing wizardry happen.
+
+437
+00:54:19,400 --> 00:54:25,040
+This kind of time travel debugging is something that at least when I was in learning,
+
+438
+00:54:25,040 --> 00:54:30,350
+you know, just beginning to learn C and C++, I would have killed for this.
+
+439
+00:54:30,350 --> 00:54:35,240
+I would have I would have been so happy to have someone just drop R in my lap.
+
+440
+00:54:35,240 --> 00:54:40,610
+But it exists now. Hey. OK, we hit. So we hit the last load, you or I.
+
+441
+00:54:40,610 --> 00:54:47,180
+Which is hopefully the eye frame load so we can actually double check that by inspecting the R.I itself.
+
+442
+00:54:47,180 --> 00:54:53,240
+So let's take a look at it. So it's an NSA, you I and I will reference that.
+
+443
+00:54:53,240 --> 00:54:59,230
+And this is where it gets a little tricky converting all of these like.
+
+444
+00:54:59,230 --> 00:55:07,710
+XP calm things into something I can actually examine. So this is actually an NSA nested about you or I.
+
+445
+00:55:07,710 --> 00:55:13,050
+So this last loaded, you are I might not be one I care about, but let's check it anyways.
+
+446
+00:55:13,050 --> 00:55:18,050
+So let me cast it to nested.
+
+447
+00:55:18,050 --> 00:55:24,940
+You your. You are I digress.
+
+448
+00:55:24,940 --> 00:55:30,340
+So this isn't about blank, is what we're looking at right now.
+
+449
+00:55:30,340 --> 00:55:34,630
+That's interesting. We loaded it about blank. Why we look at the backtrace.
+
+450
+00:55:34,630 --> 00:55:42,950
+Why do we load about blank? We loaded about blank because.
+
+451
+00:55:42,950 --> 00:55:50,040
+We received. We received an instruction to load it.
+
+452
+00:55:50,040 --> 00:55:56,770
+From the parent process. I can see that because, like Tab Child received lowed, you are Al.
+
+453
+00:55:56,770 --> 00:56:03,640
+And you are right. A load was about plank. Interesting. I don't know why that would be, but let's reverse continue.
+
+454
+00:56:03,640 --> 00:56:11,080
+I don't think we're there yet. I don't think read our failure because maybe after the.
+
+455
+00:56:11,080 --> 00:56:21,070
+Uh, here's another about Blanck that were attempting to load. Just to double check.
+
+456
+00:56:21,070 --> 00:56:26,750
+This is the worry is content. Process, Ray.
+
+457
+00:56:26,750 --> 00:56:48,470
+Yes. OK, good. Reverse, continue. Well, you are right.
+
+458
+00:56:48,470 --> 00:56:54,870
+OK. Now, what is this? What is this? You are a business. Weps.
+
+459
+00:56:54,870 --> 00:57:02,190
+This is a simple you or I. This is not about you or I. That's good. So let's cast it as possible that this all is casting business.
+
+460
+00:57:02,190 --> 00:57:07,560
+I could probably do away with if I had, like, a better L.L. D.B. in it or in this case, GDP in it.
+
+461
+00:57:07,560 --> 00:57:14,550
+I don't have that stuff here on Hockman, so I'm having to do all this stuff kind of manually.
+
+462
+00:57:14,550 --> 00:57:21,180
+But I'm going to cast to assemble your eye pointer and then direct. And what we've got is a data you are I pointing it.
+
+463
+00:57:21,180 --> 00:57:28,330
+So this is good. We're at the last load. In the test.
+
+464
+00:57:28,330 --> 00:57:39,600
+The last load. And we kind of I kind of got here before, so we're in a good position where we're at the point where like this.
+
+465
+00:57:39,600 --> 00:57:44,040
+Whereas the. Where's the file?
+
+466
+00:57:44,040 --> 00:57:51,100
+The test file? I guess I opened it in the browser. We're at the point where.
+
+467
+00:57:51,100 --> 00:57:56,880
+And. Count starts at what count starts at zero.
+
+468
+00:57:56,880 --> 00:58:02,300
+Increments. So we're on the last load count was less than five.
+
+469
+00:58:02,300 --> 00:58:09,550
+We do the last Lotuses, the last one. And for some reason.
+
+470
+00:58:09,550 --> 00:58:17,350
+In this last load, we're not calling on history, new entry.
+
+471
+00:58:17,350 --> 00:58:22,850
+Which is very interesting. So why is that?
+
+472
+00:58:22,850 --> 00:58:28,680
+Why do we never reach on history new entry and. I guess excuse me.
+
+473
+00:58:28,680 --> 00:58:33,720
+We had just had lunch, a little Belge working my way backwards.
+
+474
+00:58:33,720 --> 00:58:40,020
+I'd done this before and I had this information. It's because a load type.
+
+475
+00:58:40,020 --> 00:58:44,310
+We say we're still busy when we're when we're not like it. I've kind of jumped ahead.
+
+476
+00:58:44,310 --> 00:58:49,560
+But you should check this out. This this is the comment.
+
+477
+00:58:49,560 --> 00:59:00,180
+I'm going to put my agenda. For you to follow along with side, I've done some of this.
+
+478
+00:59:00,180 --> 00:59:06,270
+I done some of this investigation earlier where basically what's going on is I realized that.
+
+479
+00:59:06,270 --> 00:59:10,640
+We. Attempt to load the page.
+
+480
+00:59:10,640 --> 00:59:15,030
+We're loading this, you are I. And yet we're still busy.
+
+481
+00:59:15,030 --> 00:59:21,810
+We're still busy loading the previous one, which is weird because the load event has fired.
+
+482
+00:59:21,810 --> 00:59:26,220
+So what's the deal? What's the deal with that?
+
+483
+00:59:26,220 --> 00:59:31,830
+Is that still the case with Beazley's set timer thing removed?
+
+484
+00:59:31,830 --> 00:59:36,930
+Well, let's double check. I had put the.
+
+485
+00:59:36,930 --> 00:59:43,670
+The breakpoint. Yeah, this was the important part.
+
+486
+00:59:43,670 --> 00:59:54,410
+We're accidentally setting a load normal replaced when we shouldn't. So, I mean, I set a breakpoint at one for 07 of the dark shell swap swaps swap.
+
+487
+00:59:54,410 --> 01:00:03,770
+So let me just make sure that playstyle makes sense. Stock shelves, CPV one four seven.
+
+488
+01:00:03,770 --> 01:00:12,350
+Oh, we want to go. Yeah. One four seven. That does make sense. So m.b and a stock shell that CVP one for 07 and then we're going to continue forward.
+
+489
+01:00:12,350 --> 01:00:16,100
+So we went backwards before. Now we're going forwards. OK.
+
+490
+01:00:16,100 --> 01:00:21,470
+We hit our break point and we're going to see if we're busy. If we're busy then it's the same problem as before.
+
+491
+01:00:21,470 --> 01:00:27,090
+So we get busy getting busy and we see if parent is busy.
+
+492
+01:00:27,090 --> 01:00:33,220
+No, it is not. Is ourself busy? It is not.
+
+493
+01:00:33,220 --> 01:00:51,420
+So we don't enter that. That's unexpected.
+
+494
+01:00:51,420 --> 01:01:10,230
+In reverse, continue. Is it possible that we were busy for one of them, but not all of them?
+
+495
+01:01:10,230 --> 01:01:25,890
+Load, load. So ignore that the eye frame is inject into the page.
+
+496
+01:01:25,890 --> 01:01:35,410
+We see the about Blanck load. We queue up next to run next runs after a time out of zero.
+
+497
+01:01:35,410 --> 01:01:44,160
+That's that's the source. And then it exits, onload, happens, set time.
+
+498
+01:01:44,160 --> 01:01:51,780
+Should be OK. It's a little weird, but it should be OK.
+
+499
+01:01:51,780 --> 01:01:59,980
+So we weren't busy. Which is interesting. So then how come we don't like.
+
+500
+01:01:59,980 --> 01:02:09,140
+Do we end up firing the on history? The.
+
+501
+01:02:09,140 --> 01:02:17,560
+At entry to a call into an entry then. Child.
+
+502
+01:02:17,560 --> 01:02:28,180
+So, yeah. Do we enter here? Add to session history.
+
+503
+01:02:28,180 --> 01:02:34,080
+We do. OK, so then what happens when you step through, see what's going on?
+
+504
+01:02:34,080 --> 01:02:38,680
+We're on one, two, one. We see if we should persist.
+
+505
+01:02:38,680 --> 01:02:47,570
+Are we going to persist this thing? We're going to see what the load flags are.
+
+506
+01:02:47,570 --> 01:02:55,440
+We got one, two, one one oh. Is what?
+
+507
+01:02:55,440 --> 01:03:00,150
+This stuff, if this is load flags, replace history.
+
+508
+01:03:00,150 --> 01:03:05,280
+Which it's not. It shouldn't be, it should be. This is not a replaces a new entry.
+
+509
+01:03:05,280 --> 01:03:10,500
+So, yeah, we shouldn't be entering this should be creating a new entry.
+
+510
+01:03:10,500 --> 01:03:23,130
+So, yeah, we do create an entry. And then what we really want is to enter.
+
+511
+01:03:23,130 --> 01:03:29,080
+This. So let's see. Let's jump down to one, two, two, six, four.
+
+512
+01:03:29,080 --> 01:03:36,540
+Dark shelves. If you want two, two, six. The Root Dog Show.
+
+513
+01:03:36,540 --> 01:03:42,880
+So let's go back up a little bit. Not. Quite there.
+
+514
+01:03:42,880 --> 01:03:49,040
+Yeah, we're gonna separate point one, two, two, five, four. Which is right here.
+
+515
+01:03:49,040 --> 01:03:54,940
+Just before this big if block, this block, which contains the thing I care about, which is down here.
+
+516
+01:03:54,940 --> 01:04:01,930
+So one, two, two, five, four. I don't know why the line numbers are different between here and and the source.
+
+517
+01:04:01,930 --> 01:04:07,240
+I guess maybe there's been some traffic. But continue.
+
+518
+01:04:07,240 --> 01:04:16,140
+So now we're at one, two, two, five, five. So we should enter this block.
+
+519
+01:04:16,140 --> 01:04:20,020
+Interesting. We did not enter that block.
+
+520
+01:04:20,020 --> 01:04:32,010
+Maybe, maybe I was mistaken. Else.
+
+521
+01:04:32,010 --> 01:04:35,640
+Oh, yay. We are we're in this part. We should be a subframe.
+
+522
+01:04:35,640 --> 01:04:40,480
+Yes, that's correct. Because we OK, we entered the Ellis is what happened, OK?
+
+523
+01:04:40,480 --> 01:04:44,420
+Good. OK. Now we're now we're in business.
+
+524
+01:04:44,420 --> 01:04:49,190
+So add child S.H. entry to parent.
+
+525
+01:04:49,190 --> 01:04:55,390
+That's correct. Should be doing that. Break.
+
+526
+01:04:55,390 --> 01:05:00,820
+Dark shall continue. I hope you can see the stuff I'm writing.
+
+527
+01:05:00,820 --> 01:05:13,120
+I mean, to pump that up a little bit more. It's now where we were an add child siege entry to parent just here.
+
+528
+01:05:13,120 --> 01:05:18,860
+This is a little bit shorter, but ideally what we want to do is want to get there.
+
+529
+01:05:18,860 --> 01:05:24,530
+So let's see if we do that and get group session history, get index.
+
+530
+01:05:24,530 --> 01:05:28,100
+If parent ad child S.H. entry. Yes, that's what we want.
+
+531
+01:05:28,100 --> 01:05:38,910
+So step into that. OK.
+
+532
+01:05:38,910 --> 01:05:48,720
+I add child s age entry, we're in dog shell again. And child, S.H. and Tre.
+
+533
+01:05:48,720 --> 01:05:56,700
+She'll probably call. One of these things.
+
+534
+01:05:56,700 --> 01:06:04,020
+Mode type is push state no clone ref P.A. clone ref, what is that?
+
+535
+01:06:04,020 --> 01:06:13,720
+Nope. So we're going to do. Add child S.H. entry internal.
+
+536
+01:06:13,720 --> 01:06:26,920
+So now we're in that we're in here. Ideally, we need to be like calling an entry somewhere.
+
+537
+01:06:26,920 --> 01:06:37,040
+So what I'll do is all. All set a break point on an entry.
+
+538
+01:06:37,040 --> 01:06:44,230
+Which is in S.H. history. And if we don't hit it, then we'll just work backwards.
+
+539
+01:06:44,230 --> 01:06:48,350
+Go back to where we were just now. So where are we are when?
+
+540
+01:06:48,350 --> 01:06:58,350
+Right. Three, five, seven. That's the event number. Write that down.
+
+541
+01:06:58,350 --> 01:07:09,870
+After having loaded. Page five, I guess, in the eye frame.
+
+542
+01:07:09,870 --> 01:07:16,960
+OK. So continue. We do call ad entry. Transaction can't persist.
+
+543
+01:07:16,960 --> 01:07:22,040
+Current transaction get persist. Do you create instance to ensure to get you.
+
+544
+01:07:22,040 --> 01:07:34,470
+Are I. P.
+
+545
+01:07:34,470 --> 01:07:43,810
+Emrah Pointer P. And S. Mazola net, I remember what was the casting rule?
+
+546
+01:07:43,810 --> 01:07:54,450
+It doesn't matter. I know it's you, the I of the. That last page set persists to something created length.
+
+547
+01:07:54,450 --> 01:08:03,840
+So what's the length? Now? Six. Kay.
+
+548
+01:08:03,840 --> 01:08:15,120
+Whoa. But why didn't we alert anybody? We're in an entry, right?
+
+549
+01:08:15,120 --> 01:08:22,770
+Ad entry. There should be a point where we notify the listeners.
+
+550
+01:08:22,770 --> 01:08:35,160
+So reverse step. What?
+
+551
+01:08:35,160 --> 01:08:43,830
+Where am I? First, continue.
+
+552
+01:08:43,830 --> 01:08:54,960
+OK, let's try this again. So after we get current persist, we get the you or I, we should notify the listeners.
+
+553
+01:08:54,960 --> 01:09:02,750
+Current prices, current transaction. Its current trend.
+
+554
+01:09:02,750 --> 01:09:13,260
+We're up here. Parent current index, if not current, persist.
+
+555
+01:09:13,260 --> 01:09:17,590
+We do create the instance. Sure, true.
+
+556
+01:09:17,590 --> 01:09:23,470
+If you are, I get the added refs, we notify the listeners.
+
+557
+01:09:23,470 --> 01:09:31,120
+Of a new entry. So should have notified the listeners just now.
+
+558
+01:09:31,120 --> 01:09:43,040
+Let's take a look at the log of the time out. Test timed out.
+
+559
+01:09:43,040 --> 01:09:54,520
+When the test timed out, how many? We saw that we were setting the source document states completely set the source to two, three, four, five.
+
+560
+01:09:54,520 --> 01:10:02,170
+Do I? Did I fail to add any logging to.
+
+561
+01:10:02,170 --> 01:10:07,400
+Shoot. On history. All right.
+
+562
+01:10:07,400 --> 01:10:13,280
+Any logging there? Man, I should have added some logging here.
+
+563
+01:10:13,280 --> 01:10:32,510
+So that we knew whether or not it was being hit. That's a bummer.
+
+564
+01:10:32,510 --> 01:10:41,090
+That's too bad. I mean, I guess I could do that and try and capture it again, but I don't think I'll be able to do that in this episode.
+
+565
+01:10:41,090 --> 01:10:46,310
+But we did go through all the loading and like load state.
+
+566
+01:10:46,310 --> 01:10:57,350
+The docking state was complete each one. So we're notifying.
+
+567
+01:10:57,350 --> 01:11:06,380
+One of my breakpoints. Maybe it's one of the previous ones like we have to.
+
+568
+01:11:06,380 --> 01:11:12,320
+I'm going to assume for a second that that alerting like notify worked properly.
+
+569
+01:11:12,320 --> 01:11:18,140
+What is it? The. Note on history, new entry.
+
+570
+01:11:18,140 --> 01:11:24,470
+I mean, I assume that that worked properly, it got dispatched into the test. But maybe one of the earlier ones didn't.
+
+571
+01:11:24,470 --> 01:11:28,130
+And the test is making sure that we get them five times.
+
+572
+01:11:28,130 --> 01:11:36,800
+So if it didn't work for one of the previous ones, then that would explain why the test timed out.
+
+573
+01:11:36,800 --> 01:11:44,000
+So let's look at some of the earlier ones. Let's disable some of these break points and just look at load, you or I.
+
+574
+01:11:44,000 --> 01:11:48,200
+So break disable two to seven or I think so.
+
+575
+01:11:48,200 --> 01:11:51,680
+That's LDP syntax. So those are all the Seybold.
+
+576
+01:11:51,680 --> 01:11:57,950
+So let's reverse continue. So we're at load your eye I.
+
+577
+01:11:57,950 --> 01:12:05,730
+Again, this should still be the same one. Mazola a net.
+
+578
+01:12:05,730 --> 01:12:12,440
+That's what it wants, Mazola. Net simple you are I.
+
+579
+01:12:12,440 --> 01:12:19,250
+Loading. Yeah. Number five two oh five. It's actually space five, not two oh five.
+
+580
+01:12:19,250 --> 01:12:26,690
+And then we're going to reverse continue. Actually, what I'll do is all set a break point.
+
+581
+01:12:26,690 --> 01:12:33,480
+All re-enable the break at ad entry, which was here, enables seven.
+
+582
+01:12:33,480 --> 01:12:41,980
+So we should hit the ad entry of the previous load next.
+
+583
+01:12:41,980 --> 01:12:51,200
+Yes. And it should. Notify.
+
+584
+01:12:51,200 --> 01:13:00,840
+Yes, it does. Um, and then we should hit the next.
+
+585
+01:13:00,840 --> 01:13:07,810
+Load, which should be page load for.
+
+586
+01:13:07,810 --> 01:13:13,670
+Yes. First, continue.
+
+587
+01:13:13,670 --> 01:13:23,170
+At entry, this one should be for three. And that one.
+
+588
+01:13:23,170 --> 01:13:31,420
+We notify the listeners. Three.
+
+589
+01:13:31,420 --> 01:13:38,820
+And here. Yeah, page load three, so reverse continue.
+
+590
+01:13:38,820 --> 01:13:48,070
+Another ad entry. And here we. Notify the list nurse.
+
+591
+01:13:48,070 --> 01:13:52,240
+Oh, oh, yeah. It's the same the same one that we just had reverse continue again.
+
+592
+01:13:52,240 --> 01:13:56,680
+Load your eye and the pages, too.
+
+593
+01:13:56,680 --> 01:14:00,470
+And then reverse. Continue again. And we have had history.
+
+594
+01:14:00,470 --> 01:14:12,870
+So what's the deal? And we alert what's the problem?
+
+595
+01:14:12,870 --> 01:14:25,700
+Reverse, continue. Continue to load your eye and what's the Urai sheep number one?
+
+596
+01:14:25,700 --> 01:14:31,640
+And what's the one before that? Wait.
+
+597
+01:14:31,640 --> 01:14:38,760
+Is it possible that we're getting an all the value?
+
+598
+01:14:38,760 --> 01:14:52,530
+It's not five, but it's six instead. What if it's something else?
+
+599
+01:14:52,530 --> 01:14:59,170
+Maybe we're calling on history, new entry. Too many times.
+
+600
+01:14:59,170 --> 01:15:06,800
+Maybe for that first. About Blanck load.
+
+601
+01:15:06,800 --> 01:15:21,780
+Do we create a history entry for a boat blank? So we've loaded to a one reverse continue.
+
+602
+01:15:21,780 --> 01:15:27,070
+At entry. And this one.
+
+603
+01:15:27,070 --> 01:15:32,150
+Let's take a quick look at what the current indexes zero.
+
+604
+01:15:32,150 --> 01:15:45,670
+We say we're replacing an entry. Interesting.
+
+605
+01:15:45,670 --> 01:15:52,660
+We're loading in your eye again. What's the your eye? Probably about blank standard.
+
+606
+01:15:52,660 --> 01:16:05,250
+You are, Al. Um, so, uh, that standard, you're all.
+
+607
+01:16:05,250 --> 01:16:23,340
+It's loading the full page. The test page itself.
+
+608
+01:16:23,340 --> 01:16:28,600
+So we go to this about blank page. We load.
+
+609
+01:16:28,600 --> 01:16:38,430
+This you are, Al. We at a session history listener.
+
+610
+01:16:38,430 --> 01:16:53,170
+I think I know what's happening. I have an idea about it.
+
+611
+01:16:53,170 --> 01:17:08,220
+There's the initial load of the page itself, which is probably causing on history new entry to fire.
+
+612
+01:17:08,220 --> 01:17:15,620
+Why this so I wonder if sometimes this is six and not five.
+
+613
+01:17:15,620 --> 01:17:37,760
+Let's count on history, new entry. OK, I have a theory.
+
+614
+01:17:37,760 --> 01:17:43,800
+Well, I'm I'm going to try and I'm going to try a theory. Here's what I'm going to do.
+
+615
+01:17:43,800 --> 01:17:51,900
+My theory is that the load of this, you are all the initial, you are all the thing that hosts the eye frame is tainting this value.
+
+616
+01:17:51,900 --> 01:17:58,120
+I need to like. Duplicate history entries, the street index can end up out of range.
+
+617
+01:17:58,120 --> 01:18:04,900
+I need to understand what this bug is attempting to test, what this test is attempting a test to make sure I'm not like breaking in assumption.
+
+618
+01:18:04,900 --> 01:18:13,180
+And then I'm gonna start mucking around with the test because I think I think that might be the reason when using Google.
+
+619
+01:18:13,180 --> 01:18:20,160
+So this is from Jared from way back in the day, the back button occasions, it stops working.
+
+620
+01:18:20,160 --> 01:18:44,190
+Test a short video. Bunch of history stuff.
+
+621
+01:18:44,190 --> 01:18:57,170
+I can reproduce it on demand now. Go to their click last, wait 20 seconds.
+
+622
+01:18:57,170 --> 01:19:19,550
+Schafer. This test case creates two.
+
+623
+01:19:19,550 --> 01:19:29,810
+It's a test case. And this test case, we have an eye frame by frame space to.
+
+624
+01:19:29,810 --> 01:19:45,770
+And then we have. I set to frame one.
+
+625
+01:19:45,770 --> 01:19:55,910
+And then when we onload. We set the eye frame source to be eye frame to.
+
+626
+01:19:55,910 --> 01:20:21,970
+Pended. So the fix was what the fix was what?
+
+627
+01:20:21,970 --> 01:20:29,570
+How did a test. If they're requested, index is greater than.
+
+628
+01:20:29,570 --> 01:20:35,100
+Index requested index. Minus one.
+
+629
+01:20:35,100 --> 01:20:43,350
+OK. Yes, this was the fix.
+
+630
+01:20:43,350 --> 01:20:49,910
+And when we remove a duplicate.
+
+631
+01:20:49,910 --> 01:21:04,670
+When lowed entry is called on, a browser has multiple duplicate history entries, history index can end up out of range.
+
+632
+01:21:04,670 --> 01:21:16,260
+So I think that the original, the initial. The initial load is uninteresting.
+
+633
+01:21:16,260 --> 01:21:21,390
+So I think I can work with this. Here's what I'm gonna do.
+
+634
+01:21:21,390 --> 01:21:30,660
+I'm going to. Load the source for the test.
+
+635
+01:21:30,660 --> 01:21:51,630
+Inside a content task, we change the location to be your al.
+
+636
+01:21:51,630 --> 01:22:02,390
+OK, here's what we do. With new tab at about blank.
+
+637
+01:22:02,390 --> 01:22:23,000
+Have you are I'll go to here instead. You're right, Speck equals you are, Al.
+
+638
+01:22:23,000 --> 01:22:55,410
+Wait. One. New entry.
+
+639
+01:22:55,410 --> 01:23:06,260
+I don't think the initial load of the page is what we care about.
+
+640
+01:23:06,260 --> 01:23:30,360
+Put duplicate history entries. The message more.
+
+641
+01:23:30,360 --> 01:23:35,210
+Of forward. What the original test to.
+
+642
+01:23:35,210 --> 01:23:42,560
+It. And a history listener loaded tab.
+
+643
+01:23:42,560 --> 01:24:10,900
+In the foreground. How this this.
+
+644
+01:24:10,900 --> 01:24:17,630
+Let's load. You are al directly.
+
+645
+01:24:17,630 --> 01:24:27,610
+And the tab that gets created. And then.
+
+646
+01:24:27,610 --> 01:24:37,900
+St. Louis County zero. Or all, or is it because we have to wait?
+
+647
+01:24:37,900 --> 01:24:51,460
+Count zero. History. So that we need to make sure that the initial browser is loaded at about blank.
+
+648
+01:24:51,460 --> 01:24:59,890
+You know, the first one. It should be six.
+
+649
+01:24:59,890 --> 01:25:07,120
+And let me let me just try a thing. I'm just trying some stuff. This is on my own local machine and on the RR, our machine anymore.
+
+650
+01:25:07,120 --> 01:25:14,750
+Dog show. Test browser.
+
+651
+01:25:14,750 --> 01:25:23,530
+Whereas that browser bug. 670.
+
+652
+01:25:23,530 --> 01:25:30,990
+I'm curious to know if this is an. Just a matter of a bad assumption about how many.
+
+653
+01:25:30,990 --> 01:25:38,630
+Well, not enough. That's not good enough.
+
+654
+01:25:38,630 --> 01:25:54,650
+Five, it's eventually going to be five. Apparently. OK.
+
+655
+01:25:54,650 --> 01:26:03,970
+So I guess we have to start out at about playing great. Tab, you are out.
+
+656
+01:26:03,970 --> 01:26:11,350
+Well, there's nothing that says that in here. There is nothing that says that.
+
+657
+01:26:11,350 --> 01:26:22,090
+Stream, new entry. This test was modified.
+
+658
+01:26:22,090 --> 01:26:38,680
+To run. Like that, though, starting out at a blank page.
+
+659
+01:26:38,680 --> 01:26:50,280
+Stimulus spending. They go to the You Are I. Maybe we should like.
+
+660
+01:26:50,280 --> 01:27:02,650
+Go to your URL and then listener. Yield.
+
+661
+01:27:02,650 --> 01:27:10,530
+Content, Hask utils. Wait for event.
+
+662
+01:27:10,530 --> 01:27:21,030
+I think this one. Yeah. Wait for event. Subtract content load.
+
+663
+01:27:21,030 --> 01:27:30,610
+Men do that. That's not going to work. Wait for the page and then we add the listener.
+
+664
+01:27:30,610 --> 01:27:33,760
+Except that we have to tell the page to start doing it.
+
+665
+01:27:33,760 --> 01:27:47,640
+To kick off its thing. That's the difference. Content wrapped J.S. Object start.
+
+666
+01:27:47,640 --> 01:27:59,520
+Kick that off. So, like something like.
+
+667
+01:27:59,520 --> 01:28:09,230
+Here. Function, load on load, load.
+
+668
+01:28:09,230 --> 01:28:37,740
+No. Call it. Calling start on the rap jass object doesn't work.
+
+669
+01:28:37,740 --> 01:28:49,880
+Start. Content. And I'll just send it a message instead.
+
+670
+01:28:49,880 --> 01:29:01,910
+Post message. It's that done before content out post message.
+
+671
+01:29:01,910 --> 01:29:25,570
+Yeah. Uh.
+
+672
+01:29:25,570 --> 01:29:59,130
+Let's start. Cry post message at.
+
+673
+01:29:59,130 --> 01:30:23,470
+Event, listener message. Tool kit components.
+
+674
+01:30:23,470 --> 01:30:26,750
+Compartment script. Stop. OK.
+
+675
+01:30:26,750 --> 01:30:33,000
+Window out. OK, OK, I can do this. When do. So.
+
+676
+01:30:33,000 --> 01:30:36,980
+Function or window?
+
+677
+01:30:36,980 --> 01:30:45,170
+And message listener. Message.
+
+678
+01:30:45,170 --> 01:31:00,470
+And then if. Yeah, if the data equals start and start.
+
+679
+01:31:00,470 --> 01:31:17,580
+Try that. No, doesn't like window ad message listeners, not a function, of course.
+
+680
+01:31:17,580 --> 01:31:31,380
+Because it's an event at Eventless. What?
+
+681
+01:31:31,380 --> 01:31:40,680
+Come on. What's wrong?
+
+682
+01:31:40,680 --> 01:31:51,980
+Why won't you receive the message? Received message.
+
+683
+01:31:51,980 --> 01:32:11,960
+When Doda at Eventless Listener Message, that's how it works, right? It's not receiving a message, why is it receiving the message?
+
+684
+01:32:11,960 --> 01:32:28,120
+Post message. Script.
+
+685
+01:32:28,120 --> 01:32:48,730
+Some kind of. Specialness.
+
+686
+01:32:48,730 --> 01:33:03,180
+Inside a framed script framed script. Should work.
+
+687
+01:33:03,180 --> 01:33:14,580
+Sending message now. Maybe it's because of our never resolve any different promise that could be.
+
+688
+01:33:14,580 --> 01:33:23,620
+Ha, that's true. That the slowed events happening too soon.
+
+689
+01:33:23,620 --> 01:33:27,890
+Lie low. Oh, wait for a load, equal that.
+
+690
+01:33:27,890 --> 01:33:53,510
+And then. Yield or wait for. Wait for event content.
+
+691
+01:33:53,510 --> 01:34:03,990
+Loading your eye. Waiting for a load.
+
+692
+01:34:03,990 --> 01:34:11,820
+I'm done waiting for a load. What's going on here?
+
+693
+01:34:11,820 --> 01:34:17,800
+I want to know. Waiting for load to.
+
+694
+01:34:17,800 --> 01:34:25,920
+Come on. Am I not using wait for event correctly content task utils.
+
+695
+01:34:25,920 --> 01:34:34,100
+Wait for events, subject, event. Name. Content task to wait for event.
+
+696
+01:34:34,100 --> 01:34:42,370
+Utils. Wait for event notification.
+
+697
+01:34:42,370 --> 01:35:10,860
+Wait for event. And what's the third one, false? Falls for capture.
+
+698
+01:35:10,860 --> 01:35:28,430
+Don, content alone instead. Let's OK.
+
+699
+01:35:28,430 --> 01:35:34,890
+Let's do something silly, let's sleep for five seconds before we do anything.
+
+700
+01:35:34,890 --> 01:35:43,140
+And sleep is function. Sleep. Return new prize resolve.
+
+701
+01:35:43,140 --> 01:35:56,240
+Set time out. So after aim at me component's seafood sauce.
+
+702
+01:35:56,240 --> 01:36:06,040
+Tyron Jones, OK? So I've put a little sleep function here to sleep for five seconds and then it will attempt to load.
+
+703
+01:36:06,040 --> 01:36:19,970
+Two, three, four, five. Like what?
+
+704
+01:36:19,970 --> 01:36:31,550
+What's happening? Don't get Don content loaded.
+
+705
+01:36:31,550 --> 01:36:50,580
+I'm going about this all wrong. Test equal.
+
+706
+01:36:50,580 --> 01:37:14,530
+That stuff spohn that. And then.
+
+707
+01:37:14,530 --> 01:37:29,310
+Browser load. You are I. You know, browser test, utils, top browser loaded.
+
+708
+01:37:29,310 --> 01:37:49,610
+I like that. Nope, nope, nope, no reference you or I did not find this, you are Ellen instead, and I also forgot to send the message.
+
+709
+01:37:49,610 --> 01:37:55,020
+Yield content, task content.
+
+710
+01:37:55,020 --> 01:38:06,230
+Tast spon browser. No function. Content post, message start.
+
+711
+01:38:06,230 --> 01:38:13,250
+It's very sloppy, very sloppy. This test. Hey.
+
+712
+01:38:13,250 --> 01:38:24,290
+All right. Past. Somehow.
+
+713
+01:38:24,290 --> 01:38:33,150
+OK, so let's see if this insane thing I've added causes the orange to go away and if it does.
+
+714
+01:38:33,150 --> 01:38:38,840
+Then we have a legitimate theory, like I think we've got a good working theory on what the problem is,
+
+715
+01:38:38,840 --> 01:38:44,750
+and the problem is that the initial load of the page is being counted in the history,
+
+716
+01:38:44,750 --> 01:38:53,130
+like the the list of of history, loads of things that are being added in history.
+
+717
+01:38:53,130 --> 01:38:58,520
+So let's. Oh, yeah. I made these changes earlier.
+
+718
+01:38:58,520 --> 01:39:23,660
+Shelve that for later. This patch, I think basically it needs to have this test needs to be redesigned.
+
+719
+01:39:23,660 --> 01:39:41,920
+Oh, man, I didn't mean to shelve all of that stuff. It's meant to shelve that one directory.
+
+720
+01:39:41,920 --> 01:39:49,670
+OK. So I want to shelve. Tool kit content tests.
+
+721
+01:39:49,670 --> 01:39:54,190
+Then I'm going to push this to try. And then I'm gonna call it a day on this episode.
+
+722
+01:39:54,190 --> 01:40:02,660
+We actually got somewhere. I'm surprised. Ah, ah, Davis, a theory I was able to dig around in our ah.
+
+723
+01:40:02,660 --> 01:40:06,230
+We eventually got to where we needed with it. I got a got me a theory.
+
+724
+01:40:06,230 --> 01:40:10,430
+I've modified the test to test that theory and we're gonna see.
+
+725
+01:40:10,430 --> 01:40:14,840
+I'm pushing into automation and then I'm going to.
+
+726
+01:40:14,840 --> 01:40:21,950
+Stop the episode and we will continue next week and I will update you and let you know whether or not that actually made a difference.
+
+727
+01:40:21,950 --> 01:40:31,640
+It's looking at eight def. Uh, yeah, I think that is what we're gonna push to the tree.
+
+728
+01:40:31,640 --> 01:40:38,140
+Push. So commit. Bug me, give us a.
+
+729
+01:40:38,140 --> 01:40:48,140
+Mm hmm. Fix intermittent. Test.
+
+730
+01:40:48,140 --> 01:40:55,800
+Now, Tim Talbot, maybe. Doesn't matter. Somebody.
+
+731
+01:40:55,800 --> 01:41:13,000
+And then I'm going to rebase this. It's central and I'm going to push using the same syntax I used the other day, which triggered.
+
+732
+01:41:13,000 --> 01:41:25,230
+A bunch of trial runs. In that folder.
+
+733
+01:41:25,230 --> 01:41:38,650
+But not this one, because. Well, maybe this one.
+
+734
+01:41:38,650 --> 01:41:53,730
+And the build only took like eleven minutes. Yeah, let's do this one.
+
+735
+01:41:53,730 --> 01:42:16,380
+And it just reminds me, I want to mention something during the next Firefox meeting about dash dash artifact.
+
+736
+01:42:16,380 --> 01:42:22,050
+All right. That's all I want to do. So that's been pushed to automation.
+
+737
+01:42:22,050 --> 01:42:34,590
+It is two forty three p.m. And I think I'm going to call it Where's Miss Soundboard?
+
+738
+01:42:34,590 --> 01:42:44,670
+Oh, yes. How long it is time to call it.
+
+739
+01:42:44,670 --> 01:42:48,630
+Thank you so much for watching Episode 72 of The Joy of Coding.
+
+740
+01:42:48,630 --> 01:42:53,610
+I hope this was somewhat educational. I hope it was somewhat entertaining. I was kind of all over the map.
+
+741
+01:42:53,610 --> 01:43:00,960
+I got sidetracked a little bit by our but we got there in the end. And I think we have a working theory for what the problem is.
+
+742
+01:43:00,960 --> 01:43:07,860
+I wouldn't have been able to do that. I don't think without are so big thanks to the people working on that rock.
+
+743
+01:43:07,860 --> 01:43:14,510
+I'm looking at you. Thumbs up. So that's where I'm going to call it.
+
+744
+01:43:14,510 --> 01:43:20,800
+Thank you so much, watching Episode 72. If you enjoyed this episode or if you didn't enjoy this episode, take a look at the agenda.
+
+745
+01:43:20,800 --> 01:43:25,520
+There is a link to a form that allows you to give me your feedback on what you thought about the episode.
+
+746
+01:43:25,520 --> 01:43:27,620
+I read every single piece of feedback that comes in.
+
+747
+01:43:27,620 --> 01:43:31,880
+I want to know what you liked, what you didn't like, what I could do better, et cetera, et cetera.
+
+748
+01:43:31,880 --> 01:43:35,780
+So please fill in that form. I want to hear about it again. Thank you so much.
+
+749
+01:43:35,780 --> 01:44:24,022
+I will see you next week for Episode 73 of The Joy of Coding. Take care.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

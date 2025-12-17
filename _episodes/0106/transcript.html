@@ -1,0 +1,3689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 106</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 106</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c809518d-9b49-43e1-a5d2-ac1600012f57</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c809518d-9b49-43e1-a5d2-ac1600012f57">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:15,750 --> 00:00:19,770
+Hello and welcome to Episode one, all six of the joy of coding.
+
+2
+00:00:19,770 --> 00:00:29,730
+My name is Mike Connelly. I am sorry that my camera is a little zoomed out, a little haphazard today, just trying to get a lot done.
+
+3
+00:00:29,730 --> 00:00:34,350
+And and I unfortunately, I didn't get to finish setting up in time.
+
+4
+00:00:34,350 --> 00:00:40,050
+So that's why I'm a little bit late and about two minutes late. And and so I'm a little frazzled.
+
+5
+00:00:40,050 --> 00:00:44,610
+But hey, that's the joy of coding. Hi.
+
+6
+00:00:44,610 --> 00:00:49,500
+Good to see you. I'm Mike Connelly. We're going to be hacking on some Firefox stuff today.
+
+7
+00:00:49,500 --> 00:00:54,650
+Let me share my screen with you. And we go.
+
+8
+00:00:54,650 --> 00:00:59,840
+And why ever note so today is July 19th.
+
+9
+00:00:59,840 --> 00:01:03,860
+A quick reminder that no plan survives breakfast or something.
+
+10
+00:01:03,860 --> 00:01:08,210
+Things could go horribly wrong during this live hacking session. That's totally OK.
+
+11
+00:01:08,210 --> 00:01:17,770
+That's actually kind of the point. I'm trying to capture the real raw experience of hacking on an open source project, a large code base.
+
+12
+00:01:17,770 --> 00:01:22,490
+So not nothing that you're seeing has been preplanned or really thought through.
+
+13
+00:01:22,490 --> 00:01:27,740
+It's just me, you hacking on bugs and thinking aloud as I go.
+
+14
+00:01:27,740 --> 00:01:31,640
+So quick check. Is everything working? Yeah. You can hear me dropping frames?
+
+15
+00:01:31,640 --> 00:01:41,000
+No. And can you hear sounds? Yes, you can. Wonderful. One last reminder before I remove this is that there is an episode guide for the joy of coding.
+
+16
+00:01:41,000 --> 00:01:42,890
+You may be interested in contributing to it.
+
+17
+00:01:42,890 --> 00:01:47,840
+Unfortunately, there haven't been too many contributions, but who knows, maybe, maybe this will eventually grow.
+
+18
+00:01:47,840 --> 00:01:55,580
+This late blooming seed might grow. The episode guide is entirely run by viewers of this show.
+
+19
+00:01:55,580 --> 00:02:02,330
+Feel free to send pull requests. I manage it, but I'm I will happily accept your poller requests,
+
+20
+00:02:02,330 --> 00:02:11,060
+even if they're not like even if they're just your own personal notes or additions or links that you think are handy for a particular episode.
+
+21
+00:02:11,060 --> 00:02:18,650
+I'm happy to take them. So go ahead and send Pullo requests. I'm very liberal about my accepting of full requests for that repository.
+
+22
+00:02:18,650 --> 00:02:27,530
+OK. Finally, I want to update you about something. Last episode we were working on this bug to ensure all page loader tests written with four
+
+23
+00:02:27,530 --> 00:02:33,200
+TALOS can return geko profiles and run with the geko profiler that landed yesterday.
+
+24
+00:02:33,200 --> 00:02:40,760
+That's good. And the second thing I want to update you about is actually.
+
+25
+00:02:40,760 --> 00:02:52,010
+Our location bar test. There is a couple of episodes ago we're working on a better location bar test and.
+
+26
+00:02:52,010 --> 00:02:56,530
+And I got it to work. I was like kind of failing intermittently and I got it to work.
+
+27
+00:02:56,530 --> 00:03:04,820
+And the way I got it to work was, first of all, remember how we had this big stack of big lists of stacks is I simplified things by saying how
+
+28
+00:03:04,820 --> 00:03:09,650
+many times like you call out specifically how many times a particular stack might show up.
+
+29
+00:03:09,650 --> 00:03:14,060
+And that helped sort of crunch the numbers down a little better, crunch the number of stacks.
+
+30
+00:03:14,060 --> 00:03:20,760
+And then finally, the thing I had to do was what did I have to do?
+
+31
+00:03:20,760 --> 00:03:25,970
+I had to add dirty frame, dirty frame.
+
+32
+00:03:25,970 --> 00:03:29,930
+Function calls inside both invalidate and on results added.
+
+33
+00:03:29,930 --> 00:03:33,740
+Originally, I was doing it inside something called set timeout. I don't actually need to do that.
+
+34
+00:03:33,740 --> 00:03:44,120
+I need to do that inside. Invalidate. And on results added. And that is how I was able to fix this and make it sort of run reliably.
+
+35
+00:03:44,120 --> 00:03:45,830
+So that has some of your comments.
+
+36
+00:03:45,830 --> 00:03:52,670
+They still need to deal with but is otherwise ready to go, except it's depending on a bug that I'm hoping to land today.
+
+37
+00:03:52,670 --> 00:03:59,720
+But I want to work on something else today, actually. But first, let me put a link to that bug in the notes.
+
+38
+00:03:59,720 --> 00:04:03,740
+Oh, I should I should mention what you're looking at right now.
+
+39
+00:04:03,740 --> 00:04:07,220
+This Evernote is actually available to you.
+
+40
+00:04:07,220 --> 00:04:17,690
+If you are watching this on air Mozilla, then go to the additional link section down below and you'll be able to find a hand.
+
+41
+00:04:17,690 --> 00:04:26,810
+And now that's I should update this. This is landed in Central and it needs to be exported to my bug notes repository.
+
+42
+00:04:26,810 --> 00:04:33,520
+And the bug is now closed so I can now close this closed.
+
+43
+00:04:33,520 --> 00:04:40,050
+So you just saw how I tracked bugs. Yeah, this, uh.
+
+44
+00:04:40,050 --> 00:04:48,100
+What was I just saying? Yeah, this at this agenda that we're looking at right here is available to you with all the links, et cetera, et cetera.
+
+45
+00:04:48,100 --> 00:04:52,900
+And if you scroll down the additional link section, you can find a link to it.
+
+46
+00:04:52,900 --> 00:04:57,670
+There's also a link to a form that you can fill out to give me a rating on this episode.
+
+47
+00:04:57,670 --> 00:05:06,160
+I love to hear ratings. I love to hear how people are are liking or not liking joy of coding so I can get feedback to help improve things.
+
+48
+00:05:06,160 --> 00:05:12,760
+I read every single review that comes in, every single piece of feedback. So do rate this episode and let me know what you thought.
+
+49
+00:05:12,760 --> 00:05:15,760
+Here's the link. And it's again, it's in the agenda.
+
+50
+00:05:15,760 --> 00:05:20,950
+Now, if you're watching this on Facebook, I actually haven't commented in Facebook with the with the link yet.
+
+51
+00:05:20,950 --> 00:05:25,030
+So I'm actually going to do that right now and do it off screen so I don't share
+
+52
+00:05:25,030 --> 00:05:31,750
+personal Facebook things that my friends and family have posted to the whole world.
+
+53
+00:05:31,750 --> 00:05:39,160
+But let me just. Let me just put a link to the agenda and the rate this episode.
+
+54
+00:05:39,160 --> 00:05:42,670
+I'm sorry I forgot to do this on Facebook. Hold up.
+
+55
+00:05:42,670 --> 00:05:48,520
+Hold up. It's coming. So here's the link to the agenda.
+
+56
+00:05:48,520 --> 00:05:57,960
+Just put that in here comment. Agenda and then rate this episode.
+
+57
+00:05:57,960 --> 00:06:07,740
+That's this link. And comment.
+
+58
+00:06:07,740 --> 00:06:11,260
+Now, why is my machine rings? Oh, you know what? I'm crash planes running.
+
+59
+00:06:11,260 --> 00:06:15,900
+I'm gonna pause. Crash plan for a little while. Is that why I'm so slow?
+
+60
+00:06:15,900 --> 00:06:23,540
+Oh, B.S. is also. Holy smokes. Oh, yes. What are you doing? When we ask crash plan, web content is being a little bit of a pain.
+
+61
+00:06:23,540 --> 00:06:29,750
+It's probably Facebook, but at least I can probably shut down a crash plan for a little bit.
+
+62
+00:06:29,750 --> 00:06:37,170
+Okay. So I've just commented in the Facebook post with the links to the agenda and read this episode.
+
+63
+00:06:37,170 --> 00:06:40,410
+And finally, if you're watching this on YouTube, just check the video description.
+
+64
+00:06:40,410 --> 00:06:47,230
+Oh, and finally, if you're watching this on Twitch, I'm about to drop the link to the Twitch chat.
+
+65
+00:06:47,230 --> 00:06:55,050
+Bam! There's the Evernote. And for the rate this episode link, it's going into the Twitch chat right now.
+
+66
+00:06:55,050 --> 00:07:01,640
+There it is. OK. So what are we working on today? Well.
+
+67
+00:07:01,640 --> 00:07:08,420
+There is a feature that just got turned on and nightly yesterday, actually.
+
+68
+00:07:08,420 --> 00:07:13,650
+You may or may not be already familiar with this project. It's called Activity Stream.
+
+69
+00:07:13,650 --> 00:07:17,310
+And what it is, is sort of a reinvention of the new tab page.
+
+70
+00:07:17,310 --> 00:07:17,990
+And this is it.
+
+71
+00:07:17,990 --> 00:07:26,660
+I mean, I know this looks a lot like the new tab page that you may already know and be familiar with, but there's a lot different under the hood.
+
+72
+00:07:26,660 --> 00:07:32,570
+And one of the things that's different about this is that this page now runs in the content process as opposed to the parent process.
+
+73
+00:07:32,570 --> 00:07:41,330
+And one of the things that the old about New Tab Page did was I ran with a bunch of privileged elevated privileges.
+
+74
+00:07:41,330 --> 00:07:46,130
+And we don't like to do that, especially in the East End, because it ran in the parent process.
+
+75
+00:07:46,130 --> 00:07:53,630
+That meant that any thinking or preloading that it does affects the parent process can jank the parent process.
+
+76
+00:07:53,630 --> 00:08:03,320
+So the activity stream replacement for about new tab runs in the content process, which is good, but there is a problem.
+
+77
+00:08:03,320 --> 00:08:07,010
+And the problem is that it was enabled yesterday.
+
+78
+00:08:07,010 --> 00:08:16,130
+And one of the tests that is that that's run for every or mostly every comment that goes in is something called Are we slim yet?
+
+79
+00:08:16,130 --> 00:08:20,900
+Are we slim yet? Tests and the are we slim yet? Tests.
+
+80
+00:08:20,900 --> 00:08:32,090
+If we read them here, track memory usage builds on the Web site, uses some infrastructure, is about memory to measure memory usage.
+
+81
+00:08:32,090 --> 00:08:36,530
+So are we slim yet? Is now a built in test. Used to be a web page like we used to go to.
+
+82
+00:08:36,530 --> 00:08:47,870
+Are we slim yet? This is like the old archival data from 2016 and this is no longer no longer up to date.
+
+83
+00:08:47,870 --> 00:08:53,360
+What is up to date is the stuff in preferred are here.
+
+84
+00:08:53,360 --> 00:09:07,810
+So if I look at, say, Mazola Central, are we slim yet on Linux 64 for the past 90 or 60 days, slim or wait.
+
+85
+00:09:07,810 --> 00:09:13,070
+Yeah. Just look at it all. Oh, subtests.
+
+86
+00:09:13,070 --> 00:09:17,570
+Yeah, that might actually be more useful to look at individual subtests.
+
+87
+00:09:17,570 --> 00:09:23,450
+But let's take a look. There there's this little bump right here.
+
+88
+00:09:23,450 --> 00:09:28,880
+And I'm pretty sure that's one activity stream has enabled. Hold on, let me zoom out a little bit.
+
+89
+00:09:28,880 --> 00:09:34,130
+Make it easier to read. So there's this bump yesterday.
+
+90
+00:09:34,130 --> 00:09:39,230
+July 18th. That was on Mazola Central. I'm actually going to I'm going to get rid of these graphs.
+
+91
+00:09:39,230 --> 00:09:44,820
+I want to look at auto land instead. Because that's where it was turned on.
+
+92
+00:09:44,820 --> 00:09:51,450
+OK. Are we slim yet? And we're going to look at.
+
+93
+00:09:51,450 --> 00:09:55,940
+All of these. 60 days.
+
+94
+00:09:55,940 --> 00:10:01,740
+So here's the bump. It's already been highlighted by people.
+
+95
+00:10:01,740 --> 00:10:07,300
+Now there's a very strong bump in resident memory. Resident memory being used.
+
+96
+00:10:07,300 --> 00:10:14,030
+So that's what maybe we're going to focus our attention on when we pump up the font size here.
+
+97
+00:10:14,030 --> 00:10:21,300
+You can see that better. Now, resonant memory is sort of a summer, a summary of a bunch of subtests.
+
+98
+00:10:21,300 --> 00:10:27,900
+And are we slim yet? So we're going to include the subtests. And look at resident memory and look at each of the subtests because are we slimming?
+
+99
+00:10:27,900 --> 00:10:35,740
+It actually runs. It has these different checkpoints on.
+
+100
+00:10:35,740 --> 00:10:40,600
+That where it measures memory. And one of these checkpoints might be where the problem is.
+
+101
+00:10:40,600 --> 00:10:46,630
+So I'm going to get rid of that first measurement. I'm actually going to get rid of.
+
+102
+00:10:46,630 --> 00:10:53,040
+I'm going to hide most of these measurements. Let's just hide all of them to start.
+
+103
+00:10:53,040 --> 00:10:57,750
+So here, here's one that's interesting. Resident memory unclosed.
+
+104
+00:10:57,750 --> 00:11:07,400
+That's one of the checkpoints, tabs closed that has regressed quite a bit.
+
+105
+00:11:07,400 --> 00:11:11,930
+That's after 30 seconds. It's also addressed quite a bit.
+
+106
+00:11:11,930 --> 00:11:17,660
+And after a forced G.S. is requite regressed quite a bit.
+
+107
+00:11:17,660 --> 00:11:22,550
+Fresh startup, everything looks fine. No change after 30 seconds.
+
+108
+00:11:22,550 --> 00:11:29,120
+No change after Tab's open is in the wrong level here.
+
+109
+00:11:29,120 --> 00:11:36,810
+Everything looks OK after the tabs have opened. Resonant memory after 30 seconds after the tabs have opened.
+
+110
+00:11:36,810 --> 00:11:41,530
+Everything's OK. And after a forced G.S., everything's okay.
+
+111
+00:11:41,530 --> 00:11:46,660
+So it's really I close all of these ones.
+
+112
+00:11:46,660 --> 00:11:51,150
+It's just the tabs closed ones that we're interested in.
+
+113
+00:11:51,150 --> 00:12:01,050
+Boom. Boom, boom. So when we close, then after 30 seconds and then after a forced G.C.,
+
+114
+00:12:01,050 --> 00:12:05,910
+there's still a bit of a bump in the amount of memory being consumed by the browser.
+
+115
+00:12:05,910 --> 00:12:15,800
+And I'm not super surprised because one of the things that.
+
+116
+00:12:15,800 --> 00:12:22,640
+That running in the. So there. There are some things that we do, some performance, a perceived performance, optimizations that we do,
+
+117
+00:12:22,640 --> 00:12:29,990
+especially with the with the new tab, because the new tab is something that we want to show very quick.
+
+118
+00:12:29,990 --> 00:12:37,140
+We want it to show immediately whenever you ask for it. We want to be there and in your face.
+
+119
+00:12:37,140 --> 00:12:44,800
+Scuse me. And so whenever you click on a new tab like that showed up pretty fast.
+
+120
+00:12:44,800 --> 00:12:54,190
+But one of the things that we do with that, we have this hack that we do, I'd call it, where it's actually been preloaded in the background.
+
+121
+00:12:54,190 --> 00:13:00,220
+All of the calculations to lay it out have already been done. And then when you open new tab, we just show it.
+
+122
+00:13:00,220 --> 00:13:04,820
+We just we've finally just painted. But all the calculations for it have occurred in the background.
+
+123
+00:13:04,820 --> 00:13:12,990
+That's called preloading. Now, we also have this thing called the process pre allocator, that is.
+
+124
+00:13:12,990 --> 00:13:25,020
+Oh, hang on a second. Check this out. This little dip right here in auto land, what is that?
+
+125
+00:13:25,020 --> 00:13:35,170
+Oh, back. I think they backed out. They briefly backed out, enabling see activity stream.
+
+126
+00:13:35,170 --> 00:13:44,680
+OK. So this is the patch that causes the regression and turns on a thing.
+
+127
+00:13:44,680 --> 00:13:51,490
+So a bunch of code then starts to run. And this preloading is, I think, where we're being bitten.
+
+128
+00:13:51,490 --> 00:13:56,410
+And I want to investigate that today. So let's do that.
+
+129
+00:13:56,410 --> 00:14:04,360
+I was able to run the are we slim yet test locally or not really locally, but on beast mode.
+
+130
+00:14:04,360 --> 00:14:09,160
+My Linux box that I have by my desk.
+
+131
+00:14:09,160 --> 00:14:29,090
+Let me sign into beast mode. Yeah, the.
+
+132
+00:14:29,090 --> 00:14:39,850
+It looks like it's still running. I had started it before. And it's just like hanging out.
+
+133
+00:14:39,850 --> 00:14:48,660
+Now it's running it all over again. So I'm interested in trying to reproduce this.
+
+134
+00:14:48,660 --> 00:14:53,130
+It's wacky how I can't click what is going on there?
+
+135
+00:14:53,130 --> 00:15:11,640
+Preferences and input. Why can I click?
+
+136
+00:15:11,640 --> 00:15:17,740
+Normally when I run this, I can click. All right, I'm going to quit the current run.
+
+137
+00:15:17,740 --> 00:15:24,610
+Because it was doing it a couple of iterations. So it just boiling in here.
+
+138
+00:15:24,610 --> 00:15:29,140
+We're going to look at the code for the test. I was already looking at this today.
+
+139
+00:15:29,140 --> 00:15:35,570
+Memory. Usage. And the part that I think that's that's important.
+
+140
+00:15:35,570 --> 00:15:49,070
+So this is the code that runs that are we slummy at test. The code that I think is important is.
+
+141
+00:15:49,070 --> 00:15:58,300
+Actually here. So.
+
+142
+00:15:58,300 --> 00:16:04,150
+After switching between all the tabs, memory has been the same. Then we close all the tabs.
+
+143
+00:16:04,150 --> 00:16:12,070
+And then we navigate to a boat. Blank. When we say signal user active.
+
+144
+00:16:12,070 --> 00:16:25,860
+Since the brother that the users act, a pretty dangerous thing is usually because the activity is detected by looking key in most events.
+
+145
+00:16:25,860 --> 00:16:31,080
+I know why we do this. Instead, we mainly them in Sequenom consequential activity to make the presence of the users active.
+
+146
+00:16:31,080 --> 00:16:34,510
+Then we sleep to allow things to settle the balances, become inactive and trigger appropriate.
+
+147
+00:16:34,510 --> 00:16:44,790
+Jeezy's. As we've happened in real use, a single user active and Tab's close weight, some settling.
+
+148
+00:16:44,790 --> 00:16:52,890
+So between this checkpoint. So whenever we do create checkpoint, that's when we like collect memory reports.
+
+149
+00:16:52,890 --> 00:16:56,130
+So these three memory reports for checkpoint tab, close tab,
+
+150
+00:16:56,130 --> 00:17:05,150
+close settles and tab close forced G.C. are the ones that are we're detecting your aggression on.
+
+151
+00:17:05,150 --> 00:17:17,800
+That's very interesting. Now, there is a there's a GitHub issue.
+
+152
+00:17:17,800 --> 00:17:28,340
+To the street. Congression.
+
+153
+00:17:28,340 --> 00:17:41,770
+Whereas whereas whereas whereas here it is. Moving back to the main process is one thing that Murdoch is suggesting that we do.
+
+154
+00:17:41,770 --> 00:18:02,440
+I'm less keen to do that at. He is able to run it not on his Mac, but on Linux VM.
+
+155
+00:18:02,440 --> 00:18:12,320
+Slim yet entities four iterations one. Let's let's do that, let's do entities for iterations one.
+
+156
+00:18:12,320 --> 00:18:19,120
+We're gonna see what this looks like when we do that and a whole and you can't see the bottom here where I'm typing.
+
+157
+00:18:19,120 --> 00:18:23,730
+So I say, hey, beast mode. And this is on.
+
+158
+00:18:23,730 --> 00:18:30,420
+Current Mazola central, so this has the regression. I'm going to say, Mark.
+
+159
+00:18:30,420 --> 00:18:39,750
+Are we slim yet test entities for iterations one?
+
+160
+00:18:39,750 --> 00:18:47,340
+Uh. Oh, that's interesting.
+
+161
+00:18:47,340 --> 00:18:57,800
+And then he like pretty prints that Jason. Oh, man, I got to run that on display.
+
+162
+00:18:57,800 --> 00:19:07,790
+One. So here's display one.
+
+163
+00:19:07,790 --> 00:19:43,920
+We can see the browser now getting started. It is boiling in here.
+
+164
+00:19:43,920 --> 00:19:52,510
+To. So this is part of the the testing KC Rex.
+
+165
+00:19:52,510 --> 00:19:56,730
+I never even heard of that three by two page these.
+
+166
+00:19:56,730 --> 00:20:04,900
+These are all from the T.P five set, which is a snapshot of the Internet taken a long time ago.
+
+167
+00:20:04,900 --> 00:20:15,680
+So for. Four tabs now open.
+
+168
+00:20:15,680 --> 00:20:40,330
+So the tabs open snapshots taken great.
+
+169
+00:20:40,330 --> 00:20:45,300
+Come on, what are we waiting for? Oh, it does.
+
+170
+00:20:45,300 --> 00:21:18,000
+G.C. now it closes them. And it's here.
+
+171
+00:21:18,000 --> 00:21:24,400
+And the Web servers, and it's done. So here's the result.
+
+172
+00:21:24,400 --> 00:21:31,950
+And it created these about memory reports, which are good.
+
+173
+00:21:31,950 --> 00:21:52,880
+We can actually examine those. If I can somehow get them to a Firefox browser.
+
+174
+00:21:52,880 --> 00:22:38,400
+After Reforest G.C. So here's what I'm my my suspicion is if we examine this, uh.
+
+175
+00:22:38,400 --> 00:22:45,570
+I'll be able to load if I can get it to run. I can maybe load the.
+
+176
+00:22:45,570 --> 00:22:59,730
+Oh, sorry, not display zero wrong display. Display one.
+
+177
+00:22:59,730 --> 00:23:03,980
+Where is the menu button is all wacky. All right.
+
+178
+00:23:03,980 --> 00:23:15,470
+Anyway, no memory load. I'm also going to up the.
+
+179
+00:23:15,470 --> 00:23:22,930
+Yeah. Where are we? They're going to.
+
+180
+00:23:22,930 --> 00:23:31,260
+Try and load default. Tests.
+
+181
+00:23:31,260 --> 00:23:44,140
+You fault. Tests. Are we slim yet results memory report tab closed.
+
+182
+00:23:44,140 --> 00:23:54,030
+Force Chiesi. I've just told that activity stream team them live hacking on this stuff.
+
+183
+00:23:54,030 --> 00:23:59,910
+They might want to follow. I mean, just send them.
+
+184
+00:23:59,910 --> 00:24:09,540
+War, inception. If you folks want.
+
+185
+00:24:09,540 --> 00:24:14,070
+So here's the memory report. We've got the main.
+
+186
+00:24:14,070 --> 00:24:21,560
+So that's after we've closed everything. The main process is still here.
+
+187
+00:24:21,560 --> 00:24:28,210
+We have one content process. And that's it.
+
+188
+00:24:28,210 --> 00:24:33,500
+And the content process. I would not surprise me if it was pointed at about new tab.
+
+189
+00:24:33,500 --> 00:24:50,320
+Yeah, it looks like it. And about blank.
+
+190
+00:24:50,320 --> 00:24:58,760
+So it's actually interesting because after all the tabs have closed, there isn't like another process hanging around with the latest stuff.
+
+191
+00:24:58,760 --> 00:25:11,710
+It's just like about new tab is loaded and hanging around. Which isn't surprising because it's just kind of hanging out there in the background.
+
+192
+00:25:11,710 --> 00:25:22,130
+And where's that memory being used? Well, one thing we can do is we can save this.
+
+193
+00:25:22,130 --> 00:25:28,150
+We're gonna save this memory report. I'm actually. Would be great if I could, like, bring it out here to my Windows machine.
+
+194
+00:25:28,150 --> 00:25:35,930
+So what I'm going to do is quit. I'm going to transfer.
+
+195
+00:25:35,930 --> 00:25:48,790
+This memory report to my X machine and what I want is the after GC one, it's like that's the last one.
+
+196
+00:25:48,790 --> 00:25:58,710
+Tabs closed. Uh. Forced GC, that's the last one, right?
+
+197
+00:25:58,710 --> 00:26:02,100
+Times closed, forced G.C. Yeah.
+
+198
+00:26:02,100 --> 00:26:11,350
+It's the last one. Tab's closed, forced GC. So now I'm going to try and get that onto my OS sex machine.
+
+199
+00:26:11,350 --> 00:26:16,730
+I'm going to SS age into my virtual machine and pull it out so I can create a directory here.
+
+200
+00:26:16,730 --> 00:26:25,680
+Always slim yet. Bug this, pump up the font a little so you can see it and then drag the bottom.
+
+201
+00:26:25,680 --> 00:26:33,580
+You can see it. Hold up. OK, so what is?
+
+202
+00:26:33,580 --> 00:26:38,560
+The IP address of my virtual machine here. Oh, it's beast mode.
+
+203
+00:26:38,560 --> 00:26:47,370
+Oh, OK. It's beast bound. I can work with that beast mode and we're going to take that directory.
+
+204
+00:26:47,370 --> 00:26:54,420
+What was it? Home slash that.
+
+205
+00:26:54,420 --> 00:27:03,150
+That and then tabs closed, forced G.C.
+
+206
+00:27:03,150 --> 00:27:08,540
+Oh, come on. Copy. And we're on it.
+
+207
+00:27:08,540 --> 00:27:13,030
+Copy. Two current directory, Bam!
+
+208
+00:27:13,030 --> 00:27:20,470
+There we go. OK, now I'm going to rename this memory report.
+
+209
+00:27:20,470 --> 00:27:24,780
+Report. Tabs closed. Forest G.C. Dash.
+
+210
+00:27:24,780 --> 00:27:34,450
+Bad dog Jason G.C. So that's the one that has the the leak in it.
+
+211
+00:27:34,450 --> 00:27:38,980
+So now I'm going to on beast mode, run that whole exercise again.
+
+212
+00:27:38,980 --> 00:27:49,020
+But I'm going to back out the activity stream patch, which was.
+
+213
+00:27:49,020 --> 00:27:56,750
+This one. All right. Yes.
+
+214
+00:27:56,750 --> 00:28:07,660
+Yeah. OK. So we're gonna back out that.
+
+215
+00:28:07,660 --> 00:28:15,320
+I'll give it a better name disable activity stream.
+
+216
+00:28:15,320 --> 00:28:24,810
+OK. And now I'm going to build. Now we're going to run it again and I'm going to use a tool that I've never actually used before.
+
+217
+00:28:24,810 --> 00:28:28,950
+But if you look about memory, has this, like, load and deft diff tool.
+
+218
+00:28:28,950 --> 00:28:38,160
+So what I can do is I can load the old one, load the good case, and then load the bad case and do a diff between the two.
+
+219
+00:28:38,160 --> 00:28:52,260
+And that might I mean, there's gonna be obvious. There's going to be the obvious problem of like.
+
+220
+00:28:52,260 --> 00:29:04,150
+The. You know, it's just about new tab is like what parts of a new tab are are hurting us here?
+
+221
+00:29:04,150 --> 00:29:13,860
+So we're gonna run this again. And let's see what happens.
+
+222
+00:29:13,860 --> 00:29:20,630
+Load it up, load it up. Always slim yet. How's the stream going?
+
+223
+00:29:20,630 --> 00:29:26,210
+You see it still seeing me? Yes. Am I dropping packets? No.
+
+224
+00:29:26,210 --> 00:29:32,090
+That's good. So are we slim yet?
+
+225
+00:29:32,090 --> 00:29:41,070
+Does this like a lot of this just sitting around waiting for. Jeezy's take her and stuff, which is kind of annoying.
+
+226
+00:29:41,070 --> 00:29:45,830
+Makes me feel like. Makes me impatient.
+
+227
+00:29:45,830 --> 00:29:51,730
+What happened? What happened? Hey, what happened?
+
+228
+00:29:51,730 --> 00:30:06,550
+Okey dokey, Mommy. Hi. It's me, Mario.
+
+229
+00:30:06,550 --> 00:30:15,860
+All right. Actually, if I play that entire Jeopardy song, I think YouTube gets mad at me.
+
+230
+00:30:15,860 --> 00:30:29,650
+May they? Oh, that's a copyrighted song. Are you mad at me?
+
+231
+00:30:29,650 --> 00:30:36,380
+OK. That's the last test. Or the sorry, the last tab, I should say.
+
+232
+00:30:36,380 --> 00:30:48,330
+So now if you can see in the background here, it's finished storing the tab open checkpoint and then it's going to wait a bunch of time.
+
+233
+00:30:48,330 --> 00:31:03,790
+It's going to close all this stuff. OK, so now we've closed.
+
+234
+00:31:03,790 --> 00:31:24,940
+We've got the tab closed, memory port created. That's good. That's going to wait a while.
+
+235
+00:31:24,940 --> 00:31:26,800
+Come on, come on, come on, come on.
+
+236
+00:31:26,800 --> 00:31:34,150
+I think it's like waiting a bunch of time to be settled and then can do G.C. and then it's going to write out the report again and then we're done.
+
+237
+00:31:34,150 --> 00:31:38,380
+OK. So now I'm going to take the same. It's got the same name.
+
+238
+00:31:38,380 --> 00:31:43,660
+I'm going to SICP that report here. I'm actually going to do two steps.
+
+239
+00:31:43,660 --> 00:31:49,030
+And one, I'm going to rename this too instead.
+
+240
+00:31:49,030 --> 00:31:55,660
+That's your good. And. Here we go.
+
+241
+00:31:55,660 --> 00:32:01,750
+So now I should be able to load. Um.
+
+242
+00:32:01,750 --> 00:32:08,240
+From actually projects, there should be an hour slamming me a bug or in a load.
+
+243
+00:32:08,240 --> 00:32:15,550
+Good. Here's good.
+
+244
+00:32:15,550 --> 00:32:21,180
+And then we're going to load and death with bad. Oh.
+
+245
+00:32:21,180 --> 00:32:25,910
+Loden deaf actually wants to. OK. So low and deaf. I will do good.
+
+246
+00:32:25,910 --> 00:32:39,570
+And then bad. So the difference is in the Web content process, unsurprisingly, and there's some in the main process as well, apparently.
+
+247
+00:32:39,570 --> 00:32:54,750
+But let's let's collapse all this stuff and we'll go through a bit by bit. Poo poo, poo poo.
+
+248
+00:32:54,750 --> 00:33:10,500
+Mm hmm. OK. So we're consuming about six, eight megs more in the content process that exists.
+
+249
+00:33:10,500 --> 00:33:22,800
+There's no like. Mysterious heap like dark matter, detector requiring heap, mysterious, deep, dark matter.
+
+250
+00:33:22,800 --> 00:33:30,670
+That's good. Oh, and apparently the activity stream people are watching now.
+
+251
+00:33:30,670 --> 00:33:38,980
+That's that's cool. Hello, activity stream team. So what I've done just to catch you up is I've run the test locally.
+
+252
+00:33:38,980 --> 00:33:44,660
+The are we slummy at test locally on or rather on my Linux box near my machine.
+
+253
+00:33:44,660 --> 00:33:51,010
+And I've taken to memory reports. I've looked at the graph. So this is the are we slim yet graph.
+
+254
+00:33:51,010 --> 00:33:57,010
+And most of the I might be telling you stuff you already know, but everything about are we slim yet.
+
+255
+00:33:57,010 --> 00:34:04,180
+The two points that the two revisions are the same, except for this part of the test, which is what.
+
+256
+00:34:04,180 --> 00:34:09,490
+How much memory we're consuming after we've closed all of the tabs and we just haven't about blank loaded.
+
+257
+00:34:09,490 --> 00:34:17,290
+And looking at the most late, like the most recent central I pulled, the most recent central I ran the.
+
+258
+00:34:17,290 --> 00:34:18,760
+Are we slim yet? Test.
+
+259
+00:34:18,760 --> 00:34:28,720
+I've dumped the about memory reports and now I'm using load and diff in about memory to examine what's being done, what's being consumed.
+
+260
+00:34:28,720 --> 00:34:41,200
+And so's eight megs abouts. Three mags are just the active about new tab window and some JavaScript stuff like this compartment.
+
+261
+00:34:41,200 --> 00:34:50,800
+There's like a mag's worth of JSC classes and the more required infrastructure there.
+
+262
+00:34:50,800 --> 00:34:59,770
+Some, like the the actual DRM stuff to set up the page is loaded on the server.
+
+263
+00:34:59,770 --> 00:35:09,620
+Like J. S stuff. Some strings.
+
+264
+00:35:09,620 --> 00:35:16,690
+And then there's also I mean, about blank is also being loaded like so when the test ends,
+
+265
+00:35:16,690 --> 00:35:21,700
+it closes all of the other tabs and loads about blank in that first tab.
+
+266
+00:35:21,700 --> 00:35:31,280
+What's interesting is that looking at the original about memory reports with the most recent.
+
+267
+00:35:31,280 --> 00:35:36,840
+With the most recent Mazola central is that there isn't like a spare MHAs content process sticking around,
+
+268
+00:35:36,840 --> 00:35:41,090
+there's still just one content process at the very end, loaded at about blank.
+
+269
+00:35:41,090 --> 00:35:48,710
+That's fine. It's just that the kind of process is now kind of it's got the.
+
+270
+00:35:48,710 --> 00:36:00,690
+About new tab loaded in it as well. What's kind of interesting is that.
+
+271
+00:36:00,690 --> 00:36:11,420
+Or. Moving the about new tab loading from the parent to the child has a huge number of benefits for performance.
+
+272
+00:36:11,420 --> 00:36:20,150
+One of the problems is that it requires us to reload a bunch of stuff in the content process that's already loaded and cashed in the parent.
+
+273
+00:36:20,150 --> 00:36:27,490
+Things like. I don't know, basically the infrastructure to set up a page.
+
+274
+00:36:27,490 --> 00:36:33,580
+If we were just loading about blank, there's not a whole lot that needs to be like constructed to show just about blank.
+
+275
+00:36:33,580 --> 00:36:41,050
+And that's why, like, if we look at the about memory report of the good case.
+
+276
+00:36:41,050 --> 00:36:46,080
+And we look at the content process.
+
+277
+00:36:46,080 --> 00:36:56,250
+The contact process is really not that big, it's it's 20, it's spending like there's 23 megs worth of explicit allocation and most of it's just like.
+
+278
+00:36:56,250 --> 00:37:00,840
+Nothing. How am I able to determine it's nothing?
+
+279
+00:37:00,840 --> 00:37:06,410
+Well, I don't see any pages associated with it. That's why, like, there's.
+
+280
+00:37:06,410 --> 00:37:11,570
+There's nothing loaded and it's just kind of like hanging out and waiting.
+
+281
+00:37:11,570 --> 00:37:24,070
+As far as I can see. Marionette is consuming some memory that's just like test artifact.
+
+282
+00:37:24,070 --> 00:37:31,570
+But it's just it just kind of hangs out at twenty three point three, one mag's. And in the bad case, it's.
+
+283
+00:37:31,570 --> 00:37:35,500
+Sorry, the content process is thirty one point one eight.
+
+284
+00:37:35,500 --> 00:37:42,630
+That's the difference. And that increase is apparently.
+
+285
+00:37:42,630 --> 00:37:51,700
+Mainly coming from this new tab. All this jazz stuff keep overhead.
+
+286
+00:37:51,700 --> 00:38:01,120
+So I'm trying to figure out if there's anything actionable or new here. Cliff, all these ACG glyphs are taking a little bit, not too much.
+
+287
+00:38:01,120 --> 00:38:08,040
+That's precast small potatoes. Farinas.
+
+288
+00:38:08,040 --> 00:38:20,660
+Bunch of eventless news there. Blob, you are all.
+
+289
+00:38:20,660 --> 00:38:25,850
+A blog, Mirelle, and this has not been freed.
+
+290
+00:38:25,850 --> 00:38:33,170
+Just a heads up blob, your cells are great, except that when you create them, you have to explicitly revoke the your cells.
+
+291
+00:38:33,170 --> 00:38:40,880
+If you're done with it. Otherwise, we cannot clear out images or the stuff associated with it.
+
+292
+00:38:40,880 --> 00:38:49,970
+So whatever, if you like, create a blob, your well, it's worth making sure that you're also destroying or revoking those blob your.
+
+293
+00:38:49,970 --> 00:38:54,620
+When you're done with them, with revoke object, you are ill.
+
+294
+00:38:54,620 --> 00:38:58,850
+That's a thing. I'm not sure if that's the problem here.
+
+295
+00:38:58,850 --> 00:39:15,930
+But. Maybe I should ask about that.
+
+296
+00:39:15,930 --> 00:39:29,580
+You are our business. And that's just the loading of the about new tab service.
+
+297
+00:39:29,580 --> 00:39:41,200
+The Observer Service Preference Service. Some window objects.
+
+298
+00:39:41,200 --> 00:39:46,720
+The main process doesn't have too much in the way of like there's a little bit of an increase here as well.
+
+299
+00:39:46,720 --> 00:39:59,740
+In the main process, I wonder what it is. And heap overhead in just been unused, that means unused by it's due to fragmentation in the bins.
+
+300
+00:39:59,740 --> 00:40:05,690
+So there's just a little more fragmentation. Not really much we can do about that.
+
+301
+00:40:05,690 --> 00:40:10,310
+There's like the point eight.
+
+302
+00:40:10,310 --> 00:40:19,100
+I don't think we use blob your eyes, you or else, but we do have data your eyes, says Kate Hudson from the Activity Stream team.
+
+303
+00:40:19,100 --> 00:40:25,630
+What is this? What even is this thing?
+
+304
+00:40:25,630 --> 00:40:41,330
+OK, um. Tutee stream, let's just do a quick check.
+
+305
+00:40:41,330 --> 00:40:45,660
+When you get a blob, you, Earl, just try to remember UPS.
+
+306
+00:40:45,660 --> 00:40:52,080
+That's not what I meant to do. Get blob you, Earl.
+
+307
+00:40:52,080 --> 00:40:58,540
+Create object to or else what's called. I'm Jake.
+
+308
+00:40:58,540 --> 00:41:04,190
+You are all inside. Stream. Nothing.
+
+309
+00:41:04,190 --> 00:41:14,110
+Not there. The main processes feeds that wake up and run every so often, says Dimos.
+
+310
+00:41:14,110 --> 00:41:23,080
+That's weird, then, like. So that's the first mystery then in my mind is what is this?
+
+311
+00:41:23,080 --> 00:41:30,300
+Because about new tab owns it. Unless for some reason.
+
+312
+00:41:30,300 --> 00:41:37,720
+Is it possible that. Hold up.
+
+313
+00:41:37,720 --> 00:41:43,820
+This would be crazy, but create your own.
+
+314
+00:41:43,820 --> 00:41:54,500
+New tab. I was wondering if maybe, like somehow the old new tab was running as well.
+
+315
+00:41:54,500 --> 00:42:02,970
+Had run and hadn't cleaned itself up. Is there anything inside?
+
+316
+00:42:02,970 --> 00:42:07,230
+Browser that creates blob your else. Right.
+
+317
+00:42:07,230 --> 00:42:16,190
+Oh, I've got the I've got the name wrong, this create object, you are l sorry create object you url and then in activity stream.
+
+318
+00:42:16,190 --> 00:42:20,270
+No. How about new tab? No.
+
+319
+00:42:20,270 --> 00:42:26,540
+How about Rouzer, perhaps some other infrastructure creates on behalf of about new tab.
+
+320
+00:42:26,540 --> 00:42:34,230
+Possible, yes. That's true. Two to.
+
+321
+00:42:34,230 --> 00:42:46,130
+You are OK with the context when you ask for it. Search uses blob's, search uses blob's.
+
+322
+00:42:46,130 --> 00:42:53,590
+We use the same as old new tab searches as blobs, so content search UI.
+
+323
+00:42:53,590 --> 00:42:57,820
+First father country Bufferin to a daddy, right? Right here.
+
+324
+00:42:57,820 --> 00:43:04,000
+Creator. Has this ever revoked? We attempt to.
+
+325
+00:43:04,000 --> 00:43:13,460
+Whenever an image is loaded with a particular object, you are I.
+
+326
+00:43:13,460 --> 00:43:26,140
+Frenching. Contents search, create blob or create object your oil.
+
+327
+00:43:26,140 --> 00:43:30,420
+I'm not saying that this is like. Where the leak is, I do.
+
+328
+00:43:30,420 --> 00:43:36,780
+I do think there is something that's hanging around that shouldn't be. We embed the search code and activity stream.
+
+329
+00:43:36,780 --> 00:43:42,480
+I'm guessing you're talking about content search UI. Jeff, havoc, your eye from Buffer.
+
+330
+00:43:42,480 --> 00:43:55,220
+Let's just see how that works. That's whenever we are getting the probably these things.
+
+331
+00:43:55,220 --> 00:44:05,090
+These things. Would be my guess. These icons for search.
+
+332
+00:44:05,090 --> 00:44:14,740
+Was an icon buffer. God, buffer.
+
+333
+00:44:14,740 --> 00:44:22,660
+Icon Buffier was the icon is for. Content search uses a rain buffer from daddy.
+
+334
+00:44:22,660 --> 00:44:30,830
+You or I? So this just named outbound messages.
+
+335
+00:44:30,830 --> 00:44:38,120
+Where does this run content search? Duchesse.
+
+336
+00:44:38,120 --> 00:44:50,270
+His run inside the apparent process. OK, so this is going to.
+
+337
+00:44:50,270 --> 00:44:54,670
+Receive, I guess, an icon buffer is what's it gonna be?
+
+338
+00:44:54,670 --> 00:44:59,530
+I come by four. Get five icon Urai from Buffer.
+
+339
+00:44:59,530 --> 00:45:05,730
+What's the icon buffer going to be? Icon Buffer is.
+
+340
+00:45:05,730 --> 00:45:15,440
+Get icon, you are out by size. See, you are El. Turns a string with your LTE engines icon matched both within height.
+
+341
+00:45:15,440 --> 00:45:22,350
+So we get this, you are el. And then content search says, OK, well.
+
+342
+00:45:22,350 --> 00:45:36,130
+Given that you are ill, give me the five icon you are I.
+
+343
+00:45:36,130 --> 00:45:47,410
+Because that's what we're using to display the fab icons. OK.
+
+344
+00:45:47,410 --> 00:45:54,590
+When we and we do that, when we either set the default engine.
+
+345
+00:45:54,590 --> 00:46:01,020
+Now, what if the image is never loaded? I can't.
+
+346
+00:46:01,020 --> 00:46:09,660
+What do we do with Icon Icon is this is the set, the default engine to be that?
+
+347
+00:46:09,660 --> 00:46:22,140
+If we never. If we never display the image.
+
+348
+00:46:22,140 --> 00:46:38,810
+Because I see that we revoke the you are the Urai here when we set the default engine.
+
+349
+00:46:38,810 --> 00:46:50,200
+With the current one. I don't think that's what's happening here when the image is loaded inside the one off buttons.
+
+350
+00:46:50,200 --> 00:46:56,830
+As soon as the image is loaded, that's when we revoke the object. You are El.
+
+351
+00:46:56,830 --> 00:47:03,250
+But if the image is never loaded, then the object your l like, if we never show the panel.
+
+352
+00:47:03,250 --> 00:47:11,190
+And when is the setup? When is set up one of bundes? He's done.
+
+353
+00:47:11,190 --> 00:47:19,430
+Whenever we receive a message about search suggestions, which I imagine would never happen.
+
+354
+00:47:19,430 --> 00:47:25,840
+So if the default engine is being set.
+
+355
+00:47:25,840 --> 00:47:36,280
+If anything, ever since the default engine and we never show the the the one off buttons, we leak.
+
+356
+00:47:36,280 --> 00:47:43,280
+These blobs, these icon blobs. So that's one thing.
+
+357
+00:47:43,280 --> 00:47:52,890
+I think that's. True. Is there an unload handler?
+
+358
+00:47:52,890 --> 00:48:00,220
+Yikes. There is a before and load. I think this actually got removed recently.
+
+359
+00:48:00,220 --> 00:48:06,720
+But is there an unload because if there was, what I do is I would.
+
+360
+00:48:06,720 --> 00:48:13,900
+So here's a bug. I'm gonna start taking some notes here. I going to call this, uh.
+
+361
+00:48:13,900 --> 00:48:21,150
+Well, there is there an associated bug? It's this one. So I'm going to put this in my notes.
+
+362
+00:48:21,150 --> 00:48:28,420
+I mean, to say. First, finding her findings.
+
+363
+00:48:28,420 --> 00:48:42,590
+Pump up the font here. Findings. Content search UI probably leaks blob your LS, blob your eyes.
+
+364
+00:48:42,590 --> 00:48:53,500
+If the five icon. For the one off, buttons are never shown.
+
+365
+00:48:53,500 --> 00:49:05,050
+I. If the default engine is set.
+
+366
+00:49:05,050 --> 00:49:11,140
+But the user never tries to do a search in a new tab.
+
+367
+00:49:11,140 --> 00:49:16,890
+OK, so that's one thing. Potential resolution.
+
+368
+00:49:16,890 --> 00:49:25,050
+So I'm going to call this a leaking blob. You are I.
+
+369
+00:49:25,050 --> 00:49:31,440
+No, I don't want you to turn that into a no. Stop it.
+
+370
+00:49:31,440 --> 00:49:41,330
+One resolution. Possible resolution.
+
+371
+00:49:41,330 --> 00:49:56,430
+Keep track of the blob, your eyes that are created in content search you wide jass and.
+
+372
+00:49:56,430 --> 00:50:03,710
+On unload. And on revocation.
+
+373
+00:50:03,710 --> 00:50:09,190
+Spell correctly revocation, remove from the list A.
+
+374
+00:50:09,190 --> 00:50:14,230
+Analysts say this hour revocation remove from the list on unload.
+
+375
+00:50:14,230 --> 00:50:21,160
+If there are any remaining blob, your eyes.
+
+376
+00:50:21,160 --> 00:50:26,980
+Oh. But about new tab won't be unloaded.
+
+377
+00:50:26,980 --> 00:50:34,890
+It's going to stick around because it's preloading sticking around the background.
+
+378
+00:50:34,890 --> 00:50:46,880
+Because you don't like a blob, your eye off the owning damn window goes away.
+
+379
+00:50:46,880 --> 00:50:50,450
+OK, here's here's another thing that we could do before.
+
+380
+00:50:50,450 --> 00:51:03,830
+Before I continue, I want to try a test in the background. I've had disabled activity stream in that last test, I'm going to.
+
+381
+00:51:03,830 --> 00:51:11,170
+Do a couple of things. First of all, I want to get the numbers.
+
+382
+00:51:11,170 --> 00:51:20,290
+The sort of gross. PERF herter, Jason Blob here, that's in the good case.
+
+383
+00:51:20,290 --> 00:51:27,210
+So good case. Here's the blob and blow.
+
+384
+00:51:27,210 --> 00:51:36,000
+I'm going to put the bad case. And I've got to find where I put it.
+
+385
+00:51:36,000 --> 00:51:43,630
+There it is. This is the bad case.
+
+386
+00:51:43,630 --> 00:51:49,170
+Let's see if we can find the parts that are useful in all of this mess.
+
+387
+00:51:49,170 --> 00:52:01,750
+Copy that. Jason. And I believe I saw a really cool script that Martok had written in the.
+
+388
+00:52:01,750 --> 00:52:05,320
+You like, take the Jason and then pipe it through Jason P.P.
+
+389
+00:52:05,320 --> 00:52:10,470
+Do I even have that? Jason. I do.
+
+390
+00:52:10,470 --> 00:52:17,790
+It's Pearl. OK. So I'm going to say.
+
+391
+00:52:17,790 --> 00:52:23,270
+Which one do I just copy, good case. I say good case.
+
+392
+00:52:23,270 --> 00:52:32,720
+Jason dumped that in there, and then I'm going to do.
+
+393
+00:52:32,720 --> 00:52:39,850
+Jason P.P. Jason, was it underscore, opt, canonical?
+
+394
+00:52:39,850 --> 00:52:48,700
+Pretty good case. To do that, Ron.
+
+395
+00:52:48,700 --> 00:52:57,250
+You got to pipe it. Oh, do I have to like. Good case, pretty.
+
+396
+00:52:57,250 --> 00:53:00,920
+Jason. Did you wrong to pipe it in?
+
+397
+00:53:00,920 --> 00:53:13,200
+I got a cat into it. That's what I do. Cat.
+
+398
+00:53:13,200 --> 00:53:20,190
+Good case. Pipe into it. I feel like. Feel him can bring in Roxio.
+
+399
+00:53:20,190 --> 00:53:24,400
+OK, good. No such file or directory can. Good case that, Jason.
+
+400
+00:53:24,400 --> 00:53:47,650
+Sorry. Character on offset for some 40 to.
+
+401
+00:53:47,650 --> 00:53:52,290
+I know what I'm doing here. OK? You know what, I'm I'm not going to get distracted.
+
+402
+00:53:52,290 --> 00:53:58,020
+What I would rather do is find the number that I care about. And the one I care about is Tab's closed.
+
+403
+00:53:58,020 --> 00:54:04,610
+Yeah. Forced G.S. This is the one name unit's lower is better is true.
+
+404
+00:54:04,610 --> 00:54:13,110
+And here's the value. That's the value I care about. Alan.
+
+405
+00:54:13,110 --> 00:54:28,650
+It's the shell. It's the show instead stuff cat.
+
+406
+00:54:28,650 --> 00:54:37,050
+Try and remember how to do this. Like this make a good case.
+
+407
+00:54:37,050 --> 00:54:43,990
+Jason. That's not right.
+
+408
+00:54:43,990 --> 00:54:53,220
+Cat. I don't know which town about DIMOS, I'm really bad at Bash.
+
+409
+00:54:53,220 --> 00:54:58,430
+Sorry, but I found the number I care about and that's this one.
+
+410
+00:54:58,430 --> 00:55:06,750
+You know, just kind of summarize. Presumably that's bite's I'm going to convert that into human readable bytes.
+
+411
+00:55:06,750 --> 00:55:15,550
+Is. Megabytes.
+
+412
+00:55:15,550 --> 00:55:23,330
+And then. Much better tab close three seconds, forced GC value.
+
+413
+00:55:23,330 --> 00:55:34,080
+Alan. And that is.
+
+414
+00:55:34,080 --> 00:55:39,060
+302 megabytes. So, yeah, there we go.
+
+415
+00:55:39,060 --> 00:55:39,930
+We've got a regression.
+
+416
+00:55:39,930 --> 00:55:50,710
+What I wanted to do before we continue, I want to try this thing where I disable a keep activity stream enabled, but I disable new tab preloading.
+
+417
+00:55:50,710 --> 00:56:10,780
+So I don't think that was tried. I know that Murdoch was doing some experiments. But I don't think he tried this one.
+
+418
+00:56:10,780 --> 00:56:17,000
+OK. While we're doing that, while we're building, let's take a look at the memory report again.
+
+419
+00:56:17,000 --> 00:56:19,400
+So that's interesting.
+
+420
+00:56:19,400 --> 00:56:29,840
+But I don't know what to do about it, because the blob is going to stick around until we show the fab icon or until the tab closes.
+
+421
+00:56:29,840 --> 00:56:36,640
+Maybe there's a way we could delay that. I'm not sure. DeLay setting the engine.
+
+422
+00:56:36,640 --> 00:57:06,910
+Or until made visible. All this J.S. structure has been created and that's taking a memory.
+
+423
+00:57:06,910 --> 00:57:12,580
+OK. Let me run the test now. Boop, boop, boop, boop.
+
+424
+00:57:12,580 --> 00:57:35,490
+And one iteration. I do it.
+
+425
+00:57:35,490 --> 00:57:38,440
+Still looking.
+
+426
+00:57:38,440 --> 00:57:47,850
+It looks like it's it's just the cost of all of the infrastructure to build the about a new tab page, and because it's in the content process,
+
+427
+00:57:47,850 --> 00:57:57,350
+it it's like it's much fatter than just the old about blank content process that was so much thinner.
+
+428
+00:57:57,350 --> 00:58:02,440
+Because it's slow. It's got two things in it now about New Tabin, about blank.
+
+429
+00:58:02,440 --> 00:58:10,330
+Whereas before about new tab was loaded in the parent process. But I suspect that all of these stuff.
+
+430
+00:58:10,330 --> 00:58:15,730
+Oh, wow. Hold on. Yeah. And the parent process. There's like all this redux stuff.
+
+431
+00:58:15,730 --> 00:58:22,340
+These feeds have been loaded. It's not too much.
+
+432
+00:58:22,340 --> 00:58:31,080
+Tonight, huge. It's a little bit. But a bunch of stuff also went down.
+
+433
+00:58:31,080 --> 00:58:32,340
+And that's, I would imagine,
+
+434
+00:58:32,340 --> 00:58:41,820
+because that's the stuff that about New Tab doesn't need or was loading that the main process doesn't need whenever it's not there.
+
+435
+00:58:41,820 --> 00:58:59,340
+That makes any sense. Like, yeah, the in the parent process, the about new tab, the infrastructure to load it has gone away.
+
+436
+00:58:59,340 --> 00:59:08,530
+And just loading it in the content process fattens up the content process.
+
+437
+00:59:08,530 --> 00:59:27,960
+OK, so we're almost done my next test here.
+
+438
+00:59:27,960 --> 00:59:34,990
+Anything else worth calling out? Oh, the content process was.
+
+439
+00:59:34,990 --> 00:59:42,460
+Loading about blank. But. That went down in the good case.
+
+440
+00:59:42,460 --> 00:59:48,290
+Which one is this? I don't remember the or bad.
+
+441
+00:59:48,290 --> 01:00:13,250
+Good or bad? Whereas the. One seven one 19 in the main process and twenty three point three one and then three.
+
+442
+01:00:13,250 --> 01:00:17,350
+So this is bad on the left. Good. I like to organize things good to bad.
+
+443
+01:00:17,350 --> 01:00:23,750
+Good on the left, bad on the right. So that's how I'm gonna. Keep things organized here.
+
+444
+01:00:23,750 --> 01:00:29,330
+So in good, we have the about Blanck loaded. And that's it in bad.
+
+445
+01:00:29,330 --> 01:00:45,960
+We have about playing and about any time. And there are a lot of vente listeners set up in a new tab.
+
+446
+01:00:45,960 --> 01:00:56,870
+OK. While we're waiting, let's take a look at the disabling of preloading.
+
+447
+01:00:56,870 --> 01:01:09,740
+Disable preloading with but keep activity stream in the content process.
+
+448
+01:01:09,740 --> 01:01:22,970
+So Tab's closed. Forced G.C.
+
+449
+01:01:22,970 --> 01:01:28,450
+Whereas towns close forced G.C. Value.
+
+450
+01:01:28,450 --> 01:01:36,330
+OK. Which is quite a bit less.
+
+451
+01:01:36,330 --> 01:01:43,230
+Uh, what? No. Translated for me, bytes in megabytes.
+
+452
+01:01:43,230 --> 01:01:50,050
+Twenty two hundred eighty eight. Which is closer to what we had before.
+
+453
+01:01:50,050 --> 01:01:58,750
+So, yeah, it's the I think this is a. Why is it good loading about Blanck rather than about new tab, i.e., do we have an apples?
+
+454
+01:01:58,750 --> 01:02:06,970
+So DIMOS has a question. Demos asking why is good loading about Blanck rather than Tilles about new tab?
+
+455
+01:02:06,970 --> 01:02:12,460
+That's because I mean, good is loading tile's about new tab.
+
+456
+01:02:12,460 --> 01:02:18,250
+It's just doing it in the parent process. It's not down here. It's up here.
+
+457
+01:02:18,250 --> 01:02:24,390
+Whereas it's huge. Yeah, right here.
+
+458
+01:02:24,390 --> 01:02:30,210
+And there are 18 event listeners to event targets. There's other stuff.
+
+459
+01:02:30,210 --> 01:02:39,840
+And I would suspect that about new tab, like the the loading of all that stuff, we might be recycling or taking advantage of the fact that,
+
+460
+01:02:39,840 --> 01:02:47,220
+like some of the infrastructure, like the JavaScript infrastructure can be reused some of the memory or the objects.
+
+461
+01:02:47,220 --> 01:03:00,980
+It's possible that we can reuse some of them when we're loading about new tab in a process that has already got a bunch of stuff loaded in it.
+
+462
+01:03:00,980 --> 01:03:11,040
+Is is maybe an idea. I don't know. But it's just it's just the cost of havingness about new tab loaded in the.
+
+463
+01:03:11,040 --> 01:03:19,760
+Content process, along with about blank, as opposed to just about blank.
+
+464
+01:03:19,760 --> 01:03:29,280
+Supposed to just about blink. Let's look at the difference again.
+
+465
+01:03:29,280 --> 01:03:39,310
+Like about Blanck suddenly becomes slightly cheaper. But we have this like a big old new tab showing up.
+
+466
+01:03:39,310 --> 01:03:47,520
+Being unused was that, again, fragmentation. So there's an increase in fragmentation.
+
+467
+01:03:47,520 --> 01:03:56,830
+And heap overhead. An increase in heap unclassified memory not classified by more specific report.
+
+468
+01:03:56,830 --> 01:04:01,040
+Turtle firestation, the heat allocator caused when the Olcay rounds up request sizes.
+
+469
+01:04:01,040 --> 01:04:10,470
+OK. DIMOS wonders, is the problem that we're measuring too early in the life of the content process,
+
+470
+01:04:10,470 --> 01:04:14,280
+i.e. before it has a lot of infrastructure stuff already loaded?
+
+471
+01:04:14,280 --> 01:04:21,520
+I think the problem is that. Worm. This is like not I suspected, an engineering problem.
+
+472
+01:04:21,520 --> 01:04:27,790
+This is a tradeoff as what I'm starting to narrowing on or what I'm starting to suspect.
+
+473
+01:04:27,790 --> 01:04:35,370
+The tradeoff is between. It's like a classic space time.
+
+474
+01:04:35,370 --> 01:04:41,670
+Engineering tradeoff. We can consume less space.
+
+475
+01:04:41,670 --> 01:04:45,900
+And run in the parent process and recycle and reuse a bunch of stuff that's already allocated and
+
+476
+01:04:45,900 --> 01:04:53,640
+like exists in the process with the tradeoff being that activity stream is running in the parent.
+
+477
+01:04:53,640 --> 01:04:55,260
+And so while it's laying itself out,
+
+478
+01:04:55,260 --> 01:05:05,640
+it can jank the main thread in the parent process versus about new tab and activity stream runs in the content process.
+
+479
+01:05:05,640 --> 01:05:09,720
+You don't get all of the main thread, jank. That's possible.
+
+480
+01:05:09,720 --> 01:05:12,780
+I want to run the parent process. It runs the content process instead.
+
+481
+01:05:12,780 --> 01:05:26,160
+But then you end up allocating a bunch of stuff that before when you just had about blank loaded and that one content process you didn't need before.
+
+482
+01:05:26,160 --> 01:05:31,990
+The other thing we could try and do. Is.
+
+483
+01:05:31,990 --> 01:05:41,230
+Think about, well, maybe is there a way that we can be smarter about preloading?
+
+484
+01:05:41,230 --> 01:05:48,220
+We know that turning off the preload, like if we get rid of the preloaded about new tab, the problem goes away.
+
+485
+01:05:48,220 --> 01:05:53,860
+That's the other thing. You can have your pre allocated content process, but preloaded about new tab goes away.
+
+486
+01:05:53,860 --> 01:05:59,560
+And what does that mean? That means that preloading if preloading goes away.
+
+487
+01:05:59,560 --> 01:06:10,880
+Then new tab starts. Doing this instead, where it takes like it it actually has to load the page and whether that's maybe good or bad,
+
+488
+01:06:10,880 --> 01:06:17,590
+but I wonder if that's better than turning off. Like trying to move activity stream into the parent process.
+
+489
+01:06:17,590 --> 01:06:26,420
+I think it is far less drastic to maybe try turning off, preloading instead.
+
+490
+01:06:26,420 --> 01:06:41,360
+Unfortunately, that means you get a little bit of a flash. Because the page renders and we have that flash, whereas with preloading.
+
+491
+01:06:41,360 --> 01:06:45,550
+Ew. It's like, bam, it's there because it's already painted.
+
+492
+01:06:45,550 --> 01:07:27,880
+It's already set itself up.
+
+493
+01:07:27,880 --> 01:07:35,760
+I wonder if there'd be so I have a couple of ideas just kind of floating around in my head, that's why I was quiet just now.
+
+494
+01:07:35,760 --> 01:07:52,380
+Fining to. DeMeo says they're stepping down due to outline case cuts, some react here, ending what is react pretty rendering.
+
+495
+01:07:52,380 --> 01:08:04,710
+About new tab is being loaded in the content, the preloaded about new tab is hanging around in the loan content process.
+
+496
+01:08:04,710 --> 01:08:11,100
+At the end of the test, this is what's where the.
+
+497
+01:08:11,100 --> 01:08:17,830
+Main balance of the regression is. Just the stuff.
+
+498
+01:08:17,830 --> 01:08:28,130
+Required to have about new tab be there.
+
+499
+01:08:28,130 --> 01:08:33,820
+Tried, didn't fix leaks. It didn't make the leaks better when one we know something before they try and fix leaks.
+
+500
+01:08:33,820 --> 01:08:46,360
+I suppose that's just a problem to fix. Parents to each team out ahead of time.
+
+501
+01:08:46,360 --> 01:08:51,420
+Just ahead of time. Mm hmm.
+
+502
+01:08:51,420 --> 01:09:00,360
+OK. It would mean we start with a rendered version of activity, assuming each team our first and attach react later.
+
+503
+01:09:00,360 --> 01:09:08,490
+Right. I mean, you might lose some of the jets overhead then, but you still need to set up all the infrastructure,
+
+504
+01:09:08,490 --> 01:09:13,950
+all the like dom nodes need to be created and allocated and all the like, geko gunk to,
+
+505
+01:09:13,950 --> 01:09:19,560
+like, make those exist and the frame tree, et cetera, needs to all the allocated as well.
+
+506
+01:09:19,560 --> 01:09:24,600
+And you're you're going to always lose vs. not having loaded it.
+
+507
+01:09:24,600 --> 01:09:34,050
+You're not going to make it free. No, that's not possible.
+
+508
+01:09:34,050 --> 01:10:02,230
+But. I wonder if there's. Let's take a look at the way the test works again.
+
+509
+01:10:02,230 --> 01:10:12,200
+Um. We close all of the tabs.
+
+510
+01:10:12,200 --> 01:10:18,900
+We navigate to about Planck. And then we take a measurement.
+
+511
+01:10:18,900 --> 01:10:23,870
+We wait some amount of time, settle a wait time.
+
+512
+01:10:23,870 --> 01:10:33,890
+Which is how long? Wait time. I think it's like 30 seconds.
+
+513
+01:10:33,890 --> 01:10:40,340
+Yeah. We wait 30 seconds. And then we forced the GC.
+
+514
+01:10:40,340 --> 01:10:44,590
+We'll take another measurement.
+
+515
+01:10:44,590 --> 01:10:55,490
+One thing I'm thinking of is that we might be able to notice when a full GC has been run and clear out about new tab during that time.
+
+516
+01:10:55,490 --> 01:11:08,840
+Or like if if we notice that the browser is attempting to compact memory to like flush caches and like try and reduce its footprint.
+
+517
+01:11:08,840 --> 01:11:12,690
+Oh, I understand. I understand. Kate, I know what you're talking about. OK. And it's Hatrick later.
+
+518
+01:11:12,690 --> 01:11:22,070
+So less flashing. Because since then, the search bar would take some time.
+
+519
+01:11:22,070 --> 01:11:28,560
+Right. So what you're saying is that means less flashing if we turn preloading off.
+
+520
+01:11:28,560 --> 01:11:41,400
+OK, got it. Got it. I understand. Before we do all of this, we did we say signaling user active and signaling user active neural.
+
+521
+01:11:41,400 --> 01:11:47,860
+I've been joined by and thinks the user is an active home because he's are activities, sexuality chemos those events.
+
+522
+01:11:47,860 --> 01:11:53,890
+In at the preloaded browser. Yes, that's what I mean, demos like.
+
+523
+01:11:53,890 --> 01:11:57,790
+Instead, we mainly, Cosmin, consequential activity to make the president users active.
+
+524
+01:11:57,790 --> 01:12:05,740
+Then we sleep to allow things to settle the brazel, see the users becoming inactive and trigger appropriate GSD as we have happened in real use.
+
+525
+01:12:05,740 --> 01:12:25,410
+Like make it so that. The preloaded browser is one of the things to go if we decide we're trying to compact.
+
+526
+01:12:25,410 --> 01:12:46,680
+And if we do that. Stare.
+
+527
+01:12:46,680 --> 01:12:57,950
+Or are there better schemes for when we preload? Currently, so here's what I know about preloading currently we preload.
+
+528
+01:12:57,950 --> 01:13:04,430
+We preload about new tab in a Zuhal browser attached to the window.
+
+529
+01:13:04,430 --> 01:13:09,760
+Whenever we have finished opening a tab.
+
+530
+01:13:09,760 --> 01:13:13,810
+It's like one of the first things we do after we open in tabs, we create the preloaded browser.
+
+531
+01:13:13,810 --> 01:13:24,270
+And this test is opening tabs by. Uh, clicking on the new tab button.
+
+532
+01:13:24,270 --> 01:13:28,320
+And that's definitely going to do it. I can see it's doing that right here.
+
+533
+01:13:28,320 --> 01:13:36,510
+It finds the new tab button and it clicks it. And I wish is it rational to make the argument to having this run?
+
+534
+01:13:36,510 --> 01:13:44,550
+The contra process is worth that cost. I think it is.
+
+535
+01:13:44,550 --> 01:13:56,370
+I think it is, but I don't think it's my call.
+
+536
+01:13:56,370 --> 01:14:05,710
+That content process is going to eventually.
+
+537
+01:14:05,710 --> 01:14:27,940
+Yes. Uh, yes, probably with consultation with your.
+
+538
+01:14:27,940 --> 01:14:39,860
+Preloaded only to have the president's hoofprints or tasch the window when we've finished opening a tab.
+
+539
+01:14:39,860 --> 01:14:52,590
+The whole idea. Is that we want to predict when the user is likely going to want to see about new tab.
+
+540
+01:14:52,590 --> 01:15:02,600
+And make sure and have it ready as painted A.S.A.P.
+
+541
+01:15:02,600 --> 01:15:16,380
+Click the button. And then we navigate.
+
+542
+01:15:16,380 --> 01:15:26,940
+Now, we only there's a limited number of tabs that we open as well at the very beginning, we open new tabs and then we like click on are we?
+
+543
+01:15:26,940 --> 01:15:27,780
+Loda you are.
+
+544
+01:15:27,780 --> 01:15:44,780
+And then eventually we've open like some max number of tabs and we loop around to go back to the beginning and go through each one again.
+
+545
+01:15:44,780 --> 01:16:01,920
+I mean. That means that. So there are a number of consequences, some consequences to load preloading by a new tab this way.
+
+546
+01:16:01,920 --> 01:16:15,360
+One, it's likely if. The user has a set of tabs and don't doesn't open a new tab after a while.
+
+547
+01:16:15,360 --> 01:16:20,600
+Then the preloaded one might be out of date.
+
+548
+01:16:20,600 --> 01:16:34,150
+Unless we're keeping the background one up to date somehow. It means we consume that memory.
+
+549
+01:16:34,150 --> 01:16:46,050
+Either in the parent or the content process. It means that we're preloading.
+
+550
+01:16:46,050 --> 01:16:54,720
+When? It's possible the user isn't.
+
+551
+01:16:54,720 --> 01:17:06,430
+Ever going to want to see about a new tab?
+
+552
+01:17:06,430 --> 01:17:15,190
+Possible user isn't ever going to see about new tab because, like, I guess that's kind of related to one and two or it's related to one,
+
+553
+01:17:15,190 --> 01:17:19,600
+because if they have a set of tabs and it's just like I'm never gonna open another tab in a session,
+
+554
+01:17:19,600 --> 01:17:30,530
+then we've got this preloaded just sitting in the background. That's a solid argument.
+
+555
+01:17:30,530 --> 01:17:46,230
+Mark. Also, solid demoulas.
+
+556
+01:17:46,230 --> 01:17:50,030
+Means that we're preloading Wendt's possibly users and never going to see about any tab.
+
+557
+01:17:50,030 --> 01:18:02,410
+So, like. Is there a better time to open about new to preload, about new tab?
+
+558
+01:18:02,410 --> 01:18:08,790
+Perhaps if we see the user. Hit the.
+
+559
+01:18:08,790 --> 01:18:28,110
+Control button or hover the mouse over the new tab button or menu item.
+
+560
+01:18:28,110 --> 01:18:38,390
+Don't we have data that some large number of users when does doing these tabs at all? My knowledge is on that front is probably.
+
+561
+01:18:38,390 --> 01:18:44,370
+Out of date and busted, last I heard. It was like.
+
+562
+01:18:44,370 --> 01:18:56,160
+An average of three Tab's. But I suspect the data that was imperfect.
+
+563
+01:18:56,160 --> 01:19:07,990
+So they're trying to preload the about new tab. Is there a good time to throw out throw out the preloaded about a new tab?
+
+564
+01:19:07,990 --> 01:19:18,720
+Perhaps after some time out where the user hasn't actually.
+
+565
+01:19:18,720 --> 01:19:23,640
+Where the user hasn't actually needed it.
+
+566
+01:19:23,640 --> 01:19:32,720
+I feel this feels like a familiar problem. One of the things this feels like is the decoder shut down.
+
+567
+01:19:32,720 --> 01:19:45,710
+Issue. So we have this thing where we shut down video decoding, but keep audio decoding, working.
+
+568
+01:19:45,710 --> 01:19:55,860
+After some time of a tab running in the background, this means that when we select the tab, sometimes there's a delay.
+
+569
+01:19:55,860 --> 01:20:01,280
+In getting the video to play properly.
+
+570
+01:20:01,280 --> 01:20:09,450
+For some large number of milliseconds. Which isn't a great user experience.
+
+571
+01:20:09,450 --> 01:20:21,870
+The media team is trying to work around this by sending a signal to start video to coding again when the user hovers.
+
+572
+01:20:21,870 --> 01:20:32,920
+The tab. And that's what makes me think of this.
+
+573
+01:20:32,920 --> 01:20:45,860
+Better times to preload about new tab. The hard one would be the the.
+
+574
+01:20:45,860 --> 01:20:55,450
+Well, would it be hard? It's necessary, I think, or I would suspect that it is common.
+
+575
+01:20:55,450 --> 01:21:02,720
+Whenever you. Use the keyboard shortcut to open a new tab that you hit command on OSX anyways.
+
+576
+01:21:02,720 --> 01:21:12,020
+You had command first and then T. Very few people, I would imagine, are going to hit both at the exact same time.
+
+577
+01:21:12,020 --> 01:21:16,640
+Because that's imperfect. I mean, that kind of works.
+
+578
+01:21:16,640 --> 01:21:22,190
+That didn't work, that did that, did that, did that didn't.
+
+579
+01:21:22,190 --> 01:21:31,940
+So I would suspect and maybe you ex has some input on this, that it's oftentimes they hit command first and then T and maybe that amount of time,
+
+580
+01:21:31,940 --> 01:21:40,010
+that lag time, if we like notice whenever there's there are a bunch of different ways, new tabs get open like eight or nine.
+
+581
+01:21:40,010 --> 01:21:47,830
+Absolutely. That is true. There are a bunch of ways that tabs get opened.
+
+582
+01:21:47,830 --> 01:21:52,390
+Demos says eight or nine, I agree.
+
+583
+01:21:52,390 --> 01:22:00,720
+But if we. In the same way that we do speculative connection.
+
+584
+01:22:00,720 --> 01:22:08,070
+For Neco and speculative connection is like we noticed that you're typing in the URL
+
+585
+01:22:08,070 --> 01:22:11,920
+bar and we autocomplete it to Facebook dot com and you're like or Google Maroš,
+
+586
+01:22:11,920 --> 01:22:16,610
+some Web site dot com, and you're continuing to type without auto completion than we know.
+
+587
+01:22:16,610 --> 01:22:22,530
+OK. You're probably going to go to Google dot com or that Web site, whatever it is, we speculatively connect.
+
+588
+01:22:22,530 --> 01:22:30,060
+We warm up the socket and connect Google in the background. So I wonder if we do the same thing.
+
+589
+01:22:30,060 --> 01:22:36,450
+We add some kind of like preloaded about new tabs, speculative preload or.
+
+590
+01:22:36,450 --> 01:22:43,890
+And you can say like. How about new tab preload or like.
+
+591
+01:22:43,890 --> 01:22:52,040
+Warm up. Or like.
+
+592
+01:22:52,040 --> 01:22:58,300
+Trigger whatever you want, wanna call it. And then about new tab freeloader.
+
+593
+01:22:58,300 --> 01:23:03,040
+You do that for like, what would you do it for?
+
+594
+01:23:03,040 --> 01:23:13,100
+You do it for control, slash, command, it only trigger and then maybe a reason.
+
+595
+01:23:13,100 --> 01:23:25,500
+Hovering about new tab, a new tab button hovering new tab menu item.
+
+596
+01:23:25,500 --> 01:23:30,150
+Dimos thinks that it's a good thread to pursue, but there's a more immediate question.
+
+597
+01:23:30,150 --> 01:23:34,860
+Yes, you're right. I'm getting distracted. I'm trying to say you're right.
+
+598
+01:23:34,860 --> 01:23:41,610
+You're right. What are we going to do for fifty six? I think it's time to lawyer up or rather.
+
+599
+01:23:41,610 --> 01:23:44,760
+Let's get our arguments together.
+
+600
+01:23:44,760 --> 01:23:57,180
+Let's argue let's attempt to assemble the argument that preloading the about new tab in the content process is useful.
+
+601
+01:23:57,180 --> 01:24:06,060
+And worth. The memory overhead. That's the argument.
+
+602
+01:24:06,060 --> 01:24:10,150
+Classic hamburger or essay, essay, exercise.
+
+603
+01:24:10,150 --> 01:24:16,140
+Now we have to back this up. Why? Why is this useful and worth the memory overhead?
+
+604
+01:24:16,140 --> 01:24:27,980
+Well, we know that running about new tab in the parent process can cause jank.
+
+605
+01:24:27,980 --> 01:24:39,120
+Even just the. I think there are profiles where we've seen that occur.
+
+606
+01:24:39,120 --> 01:24:51,030
+Prioleau bug preload. Is there a bug on that?
+
+607
+01:24:51,030 --> 01:24:59,790
+A test for news. No motive. It's not preload browser launch.
+
+608
+01:24:59,790 --> 01:25:12,330
+Freeloading at a better time. Let's look at this one.
+
+609
+01:25:12,330 --> 01:25:31,850
+Let's also take a look at. When preloading was actually introduced because I actually remember that.
+
+610
+01:25:31,850 --> 01:25:40,940
+When I was introduced, I think I remember that I was like way back in the day.
+
+611
+01:25:40,940 --> 01:25:47,480
+2013, yeah. Back when I just moved onto the Firefox team.
+
+612
+01:25:47,480 --> 01:26:00,400
+Shor's. Preloading to have pages in the background and swap them and then look at all these analyze cycle collection logs after test Franciszek leaks.
+
+613
+01:26:00,400 --> 01:26:18,910
+It's just crunch. Bring back. Shut down leak detector. There might be an old an old argument that we could reuse.
+
+614
+01:26:18,910 --> 01:26:22,270
+Nava's styles on Twitch wants to know what I'm doing. Good question.
+
+615
+01:26:22,270 --> 01:26:30,220
+I'm trying to explain away here a memory regression with my good friends on the activity stream team.
+
+616
+01:26:30,220 --> 01:26:39,900
+So adds a way, he said, testing runtime leak detection, and then this was added.
+
+617
+01:26:39,900 --> 01:26:43,910
+Preload. Pushed to try estimates.
+
+618
+01:26:43,910 --> 01:26:51,140
+We'll see if it's producing results. Splain test kits and you have the same tests.
+
+619
+01:26:51,140 --> 01:27:03,660
+One intermittent leak. I said lessons like Windows and.
+
+620
+01:27:03,660 --> 01:27:09,200
+Only mentioned that once. I don't think there's an argument here. Let's keep going.
+
+621
+01:27:09,200 --> 01:27:28,770
+Fixed remaining. I think this was just about leaks, not about memory regressions.
+
+622
+01:27:28,770 --> 01:27:42,950
+The quickly good Gleek. There was another bug here and be more intelligent one, start preloading new tab pages.
+
+623
+01:27:42,950 --> 01:27:54,970
+You referenced the aisle service, we know. Only reference come through.
+
+624
+01:27:54,970 --> 01:28:09,540
+TASC. It's multiple windows.
+
+625
+01:28:09,540 --> 01:28:18,180
+Is there like a regression T.P five regressions from new type preloading?
+
+626
+01:28:18,180 --> 01:28:24,450
+Regression. A six point eight one percent increase from what to what?
+
+627
+01:28:24,450 --> 01:28:30,090
+From what? t.P five optimized memory aggression, the trademark R&D investing in respect.
+
+628
+01:28:30,090 --> 01:28:49,450
+Next phase was regression in depriving SPG opacity. Extra payments has been low in the hidden window.
+
+629
+01:28:49,450 --> 01:28:55,640
+Trying to find if there was ever an old argument that was introduced or that was used whenever.
+
+630
+01:28:55,640 --> 01:29:00,520
+We first introduced preloading that we can. Sceptered.
+
+631
+01:29:00,520 --> 01:29:18,680
+Main RSS and PEA bytes, the two percent. That's expected as there is another page, your memory sitting in the background, here it is.
+
+632
+01:29:18,680 --> 01:29:28,670
+It's expected that there's a regression here because Jank, when new tab preloading was first introduced,
+
+633
+01:29:28,670 --> 01:29:42,120
+the memory hit from having an extra about new tab sitting in the background was acceptable.
+
+634
+01:29:42,120 --> 01:29:51,310
+Deemed acceptable. Two, we know that running about only to have the power process can cause Jank.
+
+635
+01:29:51,310 --> 01:30:01,390
+No question. We know that running about new tab in the content process reduces the potential for Jank.
+
+636
+01:30:01,390 --> 01:30:11,870
+No question. We know that preloading about new tab allows us to avoid the flash.
+
+637
+01:30:11,870 --> 01:30:27,900
+Allows us to make new tab. New tab immediately useful on demand.
+
+638
+01:30:27,900 --> 01:30:36,990
+We also know that when that about new tab is displayed.
+
+639
+01:30:36,990 --> 01:30:44,620
+Another about new tab is going to be allocated a loaded up in the background.
+
+640
+01:30:44,620 --> 01:30:53,660
+For another content process. Four.
+
+641
+01:30:53,660 --> 01:31:09,480
+Probably in probably a new content process, unless we've already hit our process count threshold.
+
+642
+01:31:09,480 --> 01:31:13,080
+So we've just it's it's like investing in the future.
+
+643
+01:31:13,080 --> 01:31:21,600
+The memory, the memory being spent here in the content process is an investment.
+
+644
+01:31:21,600 --> 01:31:28,600
+Once the new tab is displayed and goes somewhere.
+
+645
+01:31:28,600 --> 01:31:37,290
+That memory is then freed. And you can be used by.
+
+646
+01:31:37,290 --> 01:31:44,010
+Whatever page is, replace it, we're navigating to.
+
+647
+01:31:44,010 --> 01:31:52,510
+So we're preempting this is the cost of preempting and cashing.
+
+648
+01:31:52,510 --> 01:32:01,780
+It's just costing more in the content process because loading about new tab in the content process,
+
+649
+01:32:01,780 --> 01:32:09,350
+having or I should say having a new tab loaded in the content process.
+
+650
+01:32:09,350 --> 01:32:19,110
+Is strictly more expensive than loading about blank in the content process.
+
+651
+01:32:19,110 --> 01:32:26,380
+About tab, new tab and all of its interest geko requirements.
+
+652
+01:32:26,380 --> 01:32:36,850
+Strictly more expensive than lowering about blank in the content process. Which is what happens.
+
+653
+01:32:36,850 --> 01:32:47,980
+When about. New tab preloading, it's disabled.
+
+654
+01:32:47,980 --> 01:32:55,420
+I suspect with the above facts, we need to approach product.
+
+655
+01:32:55,420 --> 01:33:05,300
+Product team, or perhaps Mossop to make a call here in conjunction with E!
+
+656
+01:33:05,300 --> 01:33:13,090
+My argument, I argue that the cost of preempting.
+
+657
+01:33:13,090 --> 01:33:17,990
+And preloading. About new tab is worth it.
+
+658
+01:33:17,990 --> 01:33:26,610
+For the improved user experience of loading about a new tab.
+
+659
+01:33:26,610 --> 01:33:37,920
+Swiftly. Also note is that also of note.
+
+660
+01:33:37,920 --> 01:33:42,900
+There's oh, there's another fact there's another fact that we need to look at.
+
+661
+01:33:42,900 --> 01:33:49,980
+Another fact, another fact, folks, it is this one.
+
+662
+01:33:49,980 --> 01:33:57,140
+Should we avoid the preloading fixed to load about new tab existing kind of process should avoid the preloaded kind of process, right?
+
+663
+01:33:57,140 --> 01:34:04,910
+There is no preloaded content process after the patch you landed.
+
+664
+01:34:04,910 --> 01:34:17,890
+Well, hang on, that's not true. So and I'm sure there's always confusion between the pre allocated content process and the preloaded about new tab.
+
+665
+01:34:17,890 --> 01:34:23,500
+Fixed a lot about new tab, an existing conter process should avoid the preloaded content process, right?
+
+666
+01:34:23,500 --> 01:34:32,700
+What's interesting is that. Wow.
+
+667
+01:34:32,700 --> 01:34:41,580
+When I run the test locally. On my Linux machine.
+
+668
+01:34:41,580 --> 01:34:51,230
+I open enough tabs such that when the final one, the test finishes.
+
+669
+01:34:51,230 --> 01:34:57,560
+And the tabs all close. The about new tab is loaded.
+
+670
+01:34:57,560 --> 01:35:15,080
+Happens to be running in the same process as the first tab, which is loaded at about blank, which simulates the situation you're describing.
+
+671
+01:35:15,080 --> 01:35:21,740
+Both Tab's loaded in the same content process and there's still a regression.
+
+672
+01:35:21,740 --> 01:35:29,250
+The cost of having loaded that or about a new tab.
+
+673
+01:35:29,250 --> 01:35:48,130
+I would imagine their aggression is less. There's less lessened, though, because you don't have the full blown content process overhead.
+
+674
+01:35:48,130 --> 01:35:58,400
+The other thing I want to point at was what was it? It was.
+
+675
+01:35:58,400 --> 01:36:07,870
+Resident memory after the tabs are all open. And after we force GC that's here, look.
+
+676
+01:36:07,870 --> 01:36:39,090
+Like, we've got a bunch of tabs open and we've got a preloaded about new tab.
+
+677
+01:36:39,090 --> 01:36:51,120
+Yeah, there is an argument here. And the test that I'm running on beast mode, I only use four entries so that the the browser process starts up.
+
+678
+01:36:51,120 --> 01:36:55,380
+I open a tab or I load something in that first tab.
+
+679
+01:36:55,380 --> 01:36:59,420
+I open another tab. I load something there. I've got two content processes and then a third.
+
+680
+01:36:59,420 --> 01:37:07,590
+Like after I open that second tab, the third, the preloaded content process is created because of the preloaded about new tab.
+
+681
+01:37:07,590 --> 01:37:14,640
+But then I use it immediately and then I've got three tabs. And then a preloaded content process is created for the preloaded about new tab.
+
+682
+01:37:14,640 --> 01:37:20,880
+And then I use that one immediately. So now I've got four. I've got my Macs content processors being used.
+
+683
+01:37:20,880 --> 01:37:25,530
+What happens? And then I preload the next about new tab, but it probably goes back.
+
+684
+01:37:25,530 --> 01:37:32,790
+That's what happens. It goes back to the first content process because we've reached our Dom IVC process count limit.
+
+685
+01:37:32,790 --> 01:37:40,290
+So notice that the memory usage after we've loaded all of the tabs and forced GC has not really changed.
+
+686
+01:37:40,290 --> 01:37:45,810
+There's no regression here. Then we close the rest of the tabs.
+
+687
+01:37:45,810 --> 01:37:49,120
+There's still a preloaded content preloaded about new tab.
+
+688
+01:37:49,120 --> 01:37:57,620
+Stay sticking around, but it's loaded in the same. Content process is the first tab.
+
+689
+01:37:57,620 --> 01:38:06,380
+That's what's going on. Then in the.
+
+690
+01:38:06,380 --> 01:38:14,400
+In the case for. You know, running it on an automation we're running, more than four entries were probably running.
+
+691
+01:38:14,400 --> 01:38:21,710
+I don't even know how many entries. How many entries.
+
+692
+01:38:21,710 --> 01:38:29,700
+It wasn't. The number of Tab's.
+
+693
+01:38:29,700 --> 01:38:42,880
+Max Tab's. Backstabs. Max Tab's is.
+
+694
+01:38:42,880 --> 01:38:50,050
+30. Thirty divided by four, right?
+
+695
+01:38:50,050 --> 01:38:55,440
+Basic math and for. You can't divide 30 into four. All right.
+
+696
+01:38:55,440 --> 01:39:02,720
+That you can't do that. Thirty divided by four is not even number. R is not an integer.
+
+697
+01:39:02,720 --> 01:39:10,570
+So that means that we've got like this leftover. Which means that we.
+
+698
+01:39:10,570 --> 01:39:14,560
+End up having to content processes at the end.
+
+699
+01:39:14,560 --> 01:39:22,890
+And that's why we have when we run this on automation, Eric, Rahm has been seeing two content processes.
+
+700
+01:39:22,890 --> 01:39:31,040
+And when I run it with four, I only see one. But even with the one content process, there's the overhead of having loaded it.
+
+701
+01:39:31,040 --> 01:39:43,640
+But there's more here, and that's the thing I want to mention is that I noticed that once we hit our process,
+
+702
+01:39:43,640 --> 01:39:50,330
+limit our process content process, threshold.
+
+703
+01:39:50,330 --> 01:39:59,060
+We do not. We do not consume more memory.
+
+704
+01:39:59,060 --> 01:40:07,050
+Even though. We're still preloading about new tab.
+
+705
+01:40:07,050 --> 01:40:15,540
+And here, I'll take a picture. Take a picture, take a picture.
+
+706
+01:40:15,540 --> 01:40:30,320
+Ron. Take a picture, shrink this down a little.
+
+707
+01:40:30,320 --> 01:40:48,110
+Copy. Clipboard. Consumer wary, even though we're still preloading about new tab this supports, this means that.
+
+708
+01:40:48,110 --> 01:41:07,990
+That the. In the case like this means that we're only going to experience regressions in the wild.
+
+709
+01:41:07,990 --> 01:41:18,490
+Experience regressions in the wild. The user has fewer than the number of.
+
+710
+01:41:18,490 --> 01:41:46,460
+Process. Fewer than enough, fewer tabs. Fewer tabs than our actions say taps fewer remote browsers than the dumb process can limit.
+
+711
+01:41:46,460 --> 01:41:53,930
+Transgressions on wealthy users council don't limit if they if they've exceeded the process count.
+
+712
+01:41:53,930 --> 01:42:02,830
+Limit memory usage is not. It is not different.
+
+713
+01:42:02,830 --> 01:42:11,920
+According to a slim yet. And then.
+
+714
+01:42:11,920 --> 01:42:26,440
+It's only after we close all of the other tabs. And point that initial tab to about blank.
+
+715
+01:42:26,440 --> 01:42:49,510
+And take a measurement where we get hit because we've got that preloaded about new tab probably sitting in a different content process.
+
+716
+01:42:49,510 --> 01:42:57,120
+Well, you're going to use, but you're going to probably use it anyway. You're probably going to use that content process anyway.
+
+717
+01:42:57,120 --> 01:43:05,370
+That's what the pre allocated content process created content process was supposed to do.
+
+718
+01:43:05,370 --> 01:43:17,810
+So really. Complicating the fewer remote browser's calculations that each window can have its own preloaded new tab.
+
+719
+01:43:17,810 --> 01:43:25,830
+That's true. That's true, so, um.
+
+720
+01:43:25,830 --> 01:43:33,510
+Fewer remote browsers, not tabs, remote browsers, not tabs.
+
+721
+01:43:33,510 --> 01:43:47,640
+I shouldn't say remote, but out of process. So was there no, when we turned on the pre allocated.
+
+722
+01:43:47,640 --> 01:43:59,470
+Process manager, was there no regression? Annette.
+
+723
+01:43:59,470 --> 01:44:21,540
+Re-allocated content process. Allocated, allocated.
+
+724
+01:44:21,540 --> 01:44:32,650
+So much for his paint. No, that wasn't it. Where did Gabal work on this simplified process, Miss?
+
+725
+01:44:32,650 --> 01:44:45,440
+And then use it by default. And then they won't fixed this regression.
+
+726
+01:44:45,440 --> 01:44:51,540
+Look. They detected this regression.
+
+727
+01:44:51,540 --> 01:45:01,120
+Twenty five percent of those measures. This is somewhat expected. Eric Rom's says this is somewhat expected.
+
+728
+01:45:01,120 --> 01:45:11,170
+That's what pre-election process was supposed to do and bug one three six one eight oh eight.
+
+729
+01:45:11,170 --> 01:45:16,830
+Iran points at. In essence.
+
+730
+01:45:16,830 --> 01:45:28,380
+And. As arranged with Gábor, the preloaded about new tab for activity stream.
+
+731
+01:45:28,380 --> 01:45:36,020
+Replaces. The pre allocated.
+
+732
+01:45:36,020 --> 01:45:45,220
+Process manager. Since it.
+
+733
+01:45:45,220 --> 01:45:51,860
+Will attempt to allocate a new content process.
+
+734
+01:45:51,860 --> 01:46:07,950
+During preloading. If we haven't hit our process, threshold points out that it's expected for the pre allocated process for a pre allocated process.
+
+735
+01:46:07,950 --> 01:46:17,370
+To. Consume more memory.
+
+736
+01:46:17,370 --> 01:46:25,060
+How much more memory? So thanks for the previous question.
+
+737
+01:46:25,060 --> 01:46:35,190
+Every metric. Compared to this huge number.
+
+738
+01:46:35,190 --> 01:46:46,460
+Are we slim yet? There was this one.
+
+739
+01:46:46,460 --> 01:47:05,440
+Explicit memory. Four B sixt.
+
+740
+01:47:05,440 --> 01:47:33,950
+Like that region. That's their right.
+
+741
+01:47:33,950 --> 01:47:43,450
+Yeah, it's right there. B6, too. So let's let's zoom in.
+
+742
+01:47:43,450 --> 01:48:02,390
+And then let's add. President memory.
+
+743
+01:48:02,390 --> 01:48:08,710
+Interestingly, Resine memory didn't change the process.
+
+744
+01:48:08,710 --> 01:48:17,240
+Uh, resonant memory. After taps closed.
+
+745
+01:48:17,240 --> 01:48:27,130
+Interesting. Wait a second, wait a second, wait a second.
+
+746
+01:48:27,130 --> 01:49:02,450
+Do I have the right thing highlighted? Am I May 11th? There was a big spike here.
+
+747
+01:49:02,450 --> 01:49:10,020
+When was this? Six, four, five three on May 3rd.
+
+748
+01:49:10,020 --> 01:49:18,860
+Right here. Yeah, right there.
+
+749
+01:49:18,860 --> 01:49:26,530
+And look. Slight escalation. Then it went down again.
+
+750
+01:49:26,530 --> 01:50:08,110
+What happened here? Screenshots.
+
+751
+01:50:08,110 --> 01:50:22,320
+Screen shots landed. Why is that related? This is one pre allocated, got turn on.
+
+752
+01:50:22,320 --> 01:50:31,960
+Why was there no overhead? Why? Why did we not see? We did see a little bit of an increase in here, but then it dropped over here.
+
+753
+01:50:31,960 --> 01:50:42,200
+I wonder if something else like this regression existed, but something Aidit, something improved over here.
+
+754
+01:50:42,200 --> 01:51:45,000
+Apparently, screenshots. What else could have improved that?
+
+755
+01:51:45,000 --> 01:51:49,520
+That's expected for a pre allocated process to consume more memory.
+
+756
+01:51:49,520 --> 01:52:00,000
+So how come we didn't see a similar regression occur for what was it, resident memory?
+
+757
+01:52:00,000 --> 01:52:14,750
+Tabs closed. Taps closed.
+
+758
+01:52:14,750 --> 01:52:28,540
+When the pre allocated content process landed. So here's that's actually something I'm very interested in.
+
+759
+01:52:28,540 --> 01:52:35,760
+So what I can do. As I'm going to.
+
+760
+01:52:35,760 --> 01:52:47,590
+Turn activity stream off and turn. The pre allocated content process manager back on.
+
+761
+01:52:47,590 --> 01:53:06,790
+Purposes. Well, preprocess prelaunch, we're in turn it back on time IPC.
+
+762
+01:53:06,790 --> 01:53:19,050
+That's an. Uh, profile Firefox that has.
+
+763
+01:53:19,050 --> 01:53:37,580
+Turn it on. I hope this is helpful, but not just wasting everyone's time.
+
+764
+01:53:37,580 --> 01:53:44,920
+I feel like talking through this, though, is helpful. The.
+
+765
+01:53:44,920 --> 01:53:54,780
+I think it's important that we answer this last question. I want to know if there is a what I'm gonna do is I'm going to run.
+
+766
+01:53:54,780 --> 01:54:02,040
+Are we? Are we. Let me at test again with the same number of tabs with preloading on an activity stream off.
+
+767
+01:54:02,040 --> 01:54:10,440
+And what I'm hoping to see is that there's a content process hanging around, two kind of processes hanging around.
+
+768
+01:54:10,440 --> 01:54:16,090
+So I think we should see. Is that true?
+
+769
+01:54:16,090 --> 01:54:20,300
+One, two, three, four. Clothes, no hand.
+
+770
+01:54:20,300 --> 01:54:25,920
+Maybe five entities that way. One, two, three.
+
+771
+01:54:25,920 --> 01:54:31,500
+Create. Create one, two, three, four.
+
+772
+01:54:31,500 --> 01:54:41,630
+And we close. All the tab's.
+
+773
+01:54:41,630 --> 01:54:46,620
+And we close all the tabs. So we're only for one, two, three, four.
+
+774
+01:54:46,620 --> 01:54:52,110
+We've reached our max kind of process limit when we close all the time and we hang around.
+
+775
+01:54:52,110 --> 01:54:57,190
+I feel like we should probably then allocate a pre allocated content like create a
+
+776
+01:54:57,190 --> 01:55:05,330
+pre allocated gone to process that we've closed all those tabs because we've closed. Like, how does that work pre allocated?
+
+777
+01:55:05,330 --> 01:55:10,690
+Process prelaunch. Enabled.
+
+778
+01:55:10,690 --> 01:55:16,420
+Like, when does it do it? There's an observer. Well.
+
+779
+01:55:16,420 --> 01:55:44,290
+Sir. When we serve a process shutting down. If we reached the max, this count reached after we've changed the pref.
+
+780
+01:55:44,290 --> 01:55:51,350
+And we allocate on Idol. And that's something that should occur.
+
+781
+01:55:51,350 --> 01:56:20,310
+I think I'll it on Idol. Now, PRK process.
+
+782
+01:56:20,310 --> 01:56:34,110
+Blocher's. Well, retrial later.
+
+783
+01:56:34,110 --> 01:56:43,900
+OK, let's see. Because if there is no content process there, I wonder if we can then copy the same scheme,
+
+784
+01:56:43,900 --> 01:56:56,310
+like maybe maybe the pre allocation in the content of the pre Alcaide court process manager is like blocking the pre allocation in certain states.
+
+785
+01:56:56,310 --> 01:57:09,800
+Blocher's was in Blocher's ad blocker. Why would you add a blocker?
+
+786
+01:57:09,800 --> 01:57:26,300
+Ouch, ad blocker. Because you're.
+
+787
+01:57:26,300 --> 01:57:33,610
+And why would you remove a blocker? Content child goes idle.
+
+788
+01:57:33,610 --> 01:57:42,120
+It sends us a first idle message, which we use as a good time, signal the allocate process where they can start allocating processes from now on.
+
+789
+01:57:42,120 --> 01:58:10,950
+Child because Idol. So you'd think during the after the tabs of all closed and it's just sitting there.
+
+790
+01:58:10,950 --> 01:58:18,130
+We'll have pre allocated another one. But maybe not.
+
+791
+01:58:18,130 --> 01:58:32,030
+And maybe that's useful. OK, now, al-Qaeda after delay.
+
+792
+01:58:32,030 --> 01:58:48,400
+Says Captain Blocher, allocate now. Remove Blocher.
+
+793
+01:58:48,400 --> 01:58:52,600
+So there are things that can block reallocating the content process owner,
+
+794
+01:58:52,600 --> 01:59:11,600
+if there are things that should block preload and pre allocating about new tab. So this is with.
+
+795
+01:59:11,600 --> 01:59:26,600
+This is with, um, the pre allocated content with pre allocated content, process enabled activity, stream disabled Paiste.
+
+796
+01:59:26,600 --> 01:59:40,320
+Um. Tabs closed, forced G.C. valued that, that's the value and converting that into bytes, I can tell that's quite low.
+
+797
+01:59:40,320 --> 02:00:00,440
+But it's. 277.
+
+798
+02:00:00,440 --> 02:00:09,800
+Case. Good case. Lower than the good case.
+
+799
+02:00:09,800 --> 02:00:13,370
+I don't know what the noise is, I'm only doing one iteration and this test might be really noisy.
+
+800
+02:00:13,370 --> 02:00:19,770
+I don't know. But let's take a look at the memory report.
+
+801
+02:00:19,770 --> 02:00:38,780
+Uh. Call it pre allocated.
+
+802
+02:00:38,780 --> 02:00:51,750
+There is a content process sticking around. Is it just one? There's just one.
+
+803
+02:00:51,750 --> 02:00:59,720
+That's interesting. There's only one.
+
+804
+02:00:59,720 --> 02:01:08,430
+Huh? Interesting.
+
+805
+02:01:08,430 --> 02:01:18,870
+After we close all of the tabs. And load about blank in the initial tab.
+
+806
+02:01:18,870 --> 02:01:24,320
+We don't seem to pre allocate. Content process.
+
+807
+02:01:24,320 --> 02:01:30,210
+Why not? What's the delay?
+
+808
+02:01:30,210 --> 02:01:46,250
+After delay. The Lamis.
+
+809
+02:01:46,250 --> 02:01:55,730
+Doesn't look like there is a value. So we do the default, which is. After a thousand, so about a second.
+
+810
+02:01:55,730 --> 02:02:05,210
+OK. Oh.
+
+811
+02:02:05,210 --> 02:02:16,480
+The intention is to put off launching another app process until the last one has finished loading its content.
+
+812
+02:02:16,480 --> 02:02:26,320
+Because we loaded about blank. Do we decide that?
+
+813
+02:02:26,320 --> 02:02:31,430
+It's not. That's not good enough.
+
+814
+02:02:31,430 --> 02:02:40,780
+We're not going to allocate a content process. I wonder if we could use a similar scheme for.
+
+815
+02:02:40,780 --> 02:02:50,540
+About new tab. Kate.
+
+816
+02:02:50,540 --> 02:03:06,210
+DeLay time for some good old print debugging allocating half after DeLay called.
+
+817
+02:03:06,210 --> 02:03:34,230
+Kate, after on Idol called. Attempting to allocate now.
+
+818
+02:03:34,230 --> 02:03:47,450
+Um. Print F. Cannot allocate.
+
+819
+02:03:47,450 --> 02:03:56,810
+Can't allocate content process. Delaying until later.
+
+820
+02:03:56,810 --> 02:04:05,860
+Blocher's empty. Blocher's is empty.
+
+821
+02:04:05,860 --> 02:04:15,220
+True, false. And F pre allocating content in process.
+
+822
+02:04:15,220 --> 02:05:02,520
+Now. All right.
+
+823
+02:05:02,520 --> 02:05:07,300
+Linking you might want his F print F since it's unbudgeted.
+
+824
+02:05:07,300 --> 02:05:14,120
+Oh, good call. Shoot. Bailout.
+
+825
+02:05:14,120 --> 02:05:27,750
+Print f, uh. Yep, yep, yep, yep, yep, yep.
+
+826
+02:05:27,750 --> 02:05:51,940
+Yes. Thank you, Dimos. Web site azy.
+
+827
+02:05:51,940 --> 02:05:57,280
+Print f o standard air. I got a pass stand here, WAPs.
+
+828
+02:05:57,280 --> 02:06:03,340
+How does that work? F print f. F print f.
+
+829
+02:06:03,340 --> 02:06:12,470
+Where are we? Have we done this before? Just to standard air, is that some constant I just passing?
+
+830
+02:06:12,470 --> 02:06:23,280
+Yep. Okay, um. S print f, it's F print F.
+
+831
+02:06:23,280 --> 02:06:30,600
+Yo. Standard error. Not as print f, okay, so as print F.
+
+832
+02:06:30,600 --> 02:06:49,420
+We're going to replace that with F. Print F. Standard error.
+
+833
+02:06:49,420 --> 02:06:54,600
+Come out and build. Okie dokie.
+
+834
+02:06:54,600 --> 02:07:02,570
+That's my computer speaking. Who all?
+
+835
+02:07:02,570 --> 02:07:08,150
+Do I have standard IoE? We'll see. Yeah, it likes it.
+
+836
+02:07:08,150 --> 02:07:14,210
+And linking. Let's see if. During the linking phase, it's OK.
+
+837
+02:07:14,210 --> 02:07:23,180
+Hope Standard, Dio's and SKO. Come on. Come on.
+
+838
+02:07:23,180 --> 02:07:57,170
+To me. Mario. Come, uh.
+
+839
+02:07:57,170 --> 02:08:05,870
+This is taking so long. Hey. All right, it's done linking it's going to work well.
+
+840
+02:08:05,870 --> 02:08:19,570
+That's right. Brace yourselves. All right, here we go.
+
+841
+02:08:19,570 --> 02:08:51,860
+When interation. All right.
+
+842
+02:08:51,860 --> 02:08:59,610
+Where is the logging I put in?
+
+843
+02:08:59,610 --> 02:09:20,300
+Standard air. I would expect to have seen it by now.
+
+844
+02:09:20,300 --> 02:09:47,900
+Mark Colvin. Is there like an argument to mock?
+
+845
+02:09:47,900 --> 02:10:16,340
+Logging. Non debug builds their muted.
+
+846
+02:10:16,340 --> 02:10:47,750
+How do we get standard error? Mars log, possibly.
+
+847
+02:10:47,750 --> 02:10:52,230
+OK. Here's the other thing.
+
+848
+02:10:52,230 --> 02:11:00,160
+Maybe, maybe I can. I could probably just read instead of doing that, are we slimy and stuff?
+
+849
+02:11:00,160 --> 02:11:10,900
+How about I, uh. Feel like I just like.
+
+850
+02:11:10,900 --> 02:11:25,530
+Macaron. Cannot allocate content process.
+
+851
+02:11:25,530 --> 02:11:30,930
+Why not? Why?
+
+852
+02:11:30,930 --> 02:11:43,380
+Why can't you? Can allocate.
+
+853
+02:11:43,380 --> 02:11:49,300
+Is true if. It's enabled.
+
+854
+02:11:49,300 --> 02:11:59,430
+Blockers are an empty. There is no precalc process not shut down.
+
+855
+02:11:59,430 --> 02:12:05,420
+Enabled. So this is going to probably.
+
+856
+02:12:05,420 --> 02:12:10,120
+Be built a bit boring. True.
+
+857
+02:12:10,120 --> 02:12:18,900
+False Pranav Blocher's empty.
+
+858
+02:12:18,900 --> 02:12:25,850
+Uh, uh, Aneel, true false friend.
+
+859
+02:12:25,850 --> 02:12:35,050
+F. Existing process. Re-allocated process.
+
+860
+02:12:35,050 --> 02:12:45,180
+Hopefully that will coerce true false indef shutting down.
+
+861
+02:12:45,180 --> 02:12:55,620
+True false print f no limit reached.
+
+862
+02:12:55,620 --> 02:13:03,310
+Content parent is Max. That process count reached.
+
+863
+02:13:03,310 --> 02:13:14,820
+URL, string type. True, false.
+
+864
+02:13:14,820 --> 02:13:21,310
+All right. Mark.
+
+865
+02:13:21,310 --> 02:13:26,900
+Build binaries made me a bit choosier.
+
+866
+02:13:26,900 --> 02:13:36,120
+F print f again. Well, maybe, except that like I'm not running the test anymore, I'm just doing it like normally.
+
+867
+02:13:36,120 --> 02:13:45,280
+Old habits die hard. I'm just like running the browser, so I'm getting all of the print printouts directly to the console.
+
+868
+02:13:45,280 --> 02:13:55,890
+And that's OK. Linking the zoo.
+
+869
+02:13:55,890 --> 02:14:03,690
+Now, if this I think I'm going to cap the stream off, I've gone like forty five minutes overtime, I probably should do other things.
+
+870
+02:14:03,690 --> 02:14:09,240
+But I think we've got a pretty cogent argument here.
+
+871
+02:14:09,240 --> 02:14:42,000
+I really want to understand this last bit. It's on the weather karabo time sensitivity and, uh, naturally, it's true, it's true.
+
+872
+02:14:42,000 --> 02:14:50,930
+Taimur is and. Time has diverse tires.
+
+873
+02:14:50,930 --> 02:14:54,710
+Enabled true Blocher's empty. Yes, there's an existing process.
+
+874
+02:14:54,710 --> 02:14:56,510
+True.
+
+875
+02:14:56,510 --> 02:15:07,930
+Tempting to allocate now enable true Blocher's empty, true existing process, false shutting down, false limit reached false Thame to allocate now.
+
+876
+02:15:07,930 --> 02:15:16,790
+Oh, so there is a pre allocated content process now. OK, now I'm going to send this to some page.
+
+877
+02:15:16,790 --> 02:15:35,210
+So we should have two content processes. Oh, and now we have another con reallocated content process.
+
+878
+02:15:35,210 --> 02:15:43,920
+Let's go to. CBC, WCA. And then Homestar runner dot com.
+
+879
+02:15:43,920 --> 02:15:58,130
+And then Mazola, dawg. And now before I launch this next one to that.
+
+880
+02:15:58,130 --> 02:16:08,360
+Why are we attempting to allocate? Content processes anymore.
+
+881
+02:16:08,360 --> 02:16:20,980
+So we reached some kind of maximum. I'm going to shut that. I'm going to close everything except the initial tab.
+
+882
+02:16:20,980 --> 02:16:26,480
+You browser close. Remove Tab's.
+
+883
+02:16:26,480 --> 02:16:34,880
+Remove all tabs, but she browser does selected tab.
+
+884
+02:16:34,880 --> 02:16:43,120
+Yes. And now I'm going to send this one, too, about blank.
+
+885
+02:16:43,120 --> 02:16:49,190
+And we don't allocate a content process. Notice that this has been silent.
+
+886
+02:16:49,190 --> 02:16:56,130
+I don't know what's triggering it or what we are waiting for. But like, we're done allocating content processes now.
+
+887
+02:16:56,130 --> 02:17:07,610
+Oh. Now we've done it. So we would do that.
+
+888
+02:17:07,610 --> 02:17:12,700
+We do this. Allocating another one.
+
+889
+02:17:12,700 --> 02:17:18,680
+Maybe allocating another one, maybe allocating another one.
+
+890
+02:17:18,680 --> 02:17:26,590
+Maybe even allocating another one. And then. Close all but the selected tabs.
+
+891
+02:17:26,590 --> 02:17:34,650
+And we send this tab to about blank. We don't.
+
+892
+02:17:34,650 --> 02:17:42,110
+Allocate one. Like, if I go to about performance.
+
+893
+02:17:42,110 --> 02:17:54,150
+Or even just a seat top. Or P.S., OG's Firefox Web script.
+
+894
+02:17:54,150 --> 02:18:03,530
+Yeah, only two processes, the main and the content process.
+
+895
+02:18:03,530 --> 02:18:13,490
+So. Interestingly.
+
+896
+02:18:13,490 --> 02:18:18,370
+That just seems to be easy to reproduce.
+
+897
+02:18:18,370 --> 02:18:29,920
+You consume all content processes and clothes, all but one tab and send it to about blank like the A.W. us, why test?
+
+898
+02:18:29,920 --> 02:18:37,270
+And we don't. And we don't pre allocate another content process.
+
+899
+02:18:37,270 --> 02:18:53,460
+That's why we slipped under the radar here or that's why. That's why the pre allocated content process manager slipped under the radar.
+
+900
+02:18:53,460 --> 02:19:12,020
+What can be easily done to reduce aggression, even if accepted? Good question.
+
+901
+02:19:12,020 --> 02:19:19,420
+Let's look at the difficult and. Three of the seven mags.
+
+902
+02:19:19,420 --> 02:19:31,210
+Almost half of it I spent. All these, like jazz classes, like maybe what you were talking about, the preload, the what Kate's working on,
+
+903
+02:19:31,210 --> 02:19:37,930
+actually, you have the HTC smell kind of like laid out, but you don't attach react till the very end.
+
+904
+02:19:37,930 --> 02:19:43,090
+That might save some memory, possibly because you don't create all these JavaScript structures.
+
+905
+02:19:43,090 --> 02:20:03,310
+Possibly. I don't know. OK, so I'm going to call it.
+
+906
+02:20:03,310 --> 02:20:07,150
+Hey, thanks so much, watching the joy of Coding Episode one of six. I hope that was useful.
+
+907
+02:20:07,150 --> 02:20:12,130
+I hope that was interesting and entertaining. I enjoyed it.
+
+908
+02:20:12,130 --> 02:20:18,550
+If you're interested in following along with this bug that we were hacking on, what were the arguments for trying to pose?
+
+909
+02:20:18,550 --> 02:20:22,810
+Let me just put a link to that in the in my agenda for today.
+
+910
+02:20:22,810 --> 02:20:31,210
+And then folks who are watching you can follow along in this bug. There's also an GitHub issue that.
+
+911
+02:20:31,210 --> 02:20:35,420
+Oh, shoot. Hang on. Active. This is the name of the bug.
+
+912
+02:20:35,420 --> 02:20:40,820
+Gonna put that in here. I'm going to.
+
+913
+02:20:40,820 --> 02:20:51,270
+Copy the link to the bug. Now, I'm going to do this.
+
+914
+02:20:51,270 --> 02:21:01,690
+And then my notes go here, sorry, I'm schedule book keeping my notes, copy, public link, and that goes here.
+
+915
+02:21:01,690 --> 02:21:07,400
+OK, there you go. And then to get Habis issue real quick to get her issue is.
+
+916
+02:21:07,400 --> 02:21:11,150
+Here and that's it. OK.
+
+917
+02:21:11,150 --> 02:21:17,870
+Thanks so much for watching. I hope you enjoyed the episode and I will see you hopefully twerps waps.
+
+918
+02:21:17,870 --> 02:21:38,454
+I will hopefully see you next week. Take care.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

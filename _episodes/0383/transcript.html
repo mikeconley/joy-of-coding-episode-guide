@@ -1,0 +1,2618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 383 - November 13, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 383 - November 13, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5889092d-f825-45c2-8f62-b213013e769e</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5889092d-f825-45c2-8f62-b213013e769e">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,552 --> 00:00:09,012
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy of coding.
+
+2
+00:00:09,342 --> 00:00:13,072
+Hello and welcome to episode 383 of the Joy of coding.
+
+3
+00:00:13,092 --> 00:00:17,652
+My name is Mike Conley. It's so good to have you here. Can be live hacking on some Firefox stuff.
+
+4
+00:00:18,132 --> 00:00:21,282
+Uh, I haven't even. You know what I. Oh, fantastic.
+
+5
+00:00:21,462 --> 00:00:25,272
+Chris, I really appreciate you, uh, saying something in the message and saying hello or, uh,
+
+6
+00:00:25,602 --> 00:00:29,832
+saying something in the chat because you helped me just now test that the bridge is working.
+
+7
+00:00:29,832 --> 00:00:33,132
+And it is. So thank goodness for that. Uh, that's a thumbs up.
+
+8
+00:00:33,612 --> 00:00:37,842
+Uh, five points for Chris. I'm going to go ahead and share my screen.
+
+9
+00:00:39,882 --> 00:00:45,642
+All right. It's November 13th, 2024, episode 300 383 A reminder.
+
+10
+00:00:45,672 --> 00:00:51,842
+No plan survives breakfast. I think I know what I want to do today. I think I know how things are going to go forward, but they might not.
+
+11
+00:00:51,852 --> 00:00:57,492
+We might get stuck. We might get sidelined. And that's okay. You're watching me do work that is kind of unplanned.
+
+12
+00:00:57,492 --> 00:01:02,862
+It's just me hacking on stuff. And so that means we might get we might get sidelined or who knows.
+
+13
+00:01:03,192 --> 00:01:06,642
+And that's all right. Or we might make great progress. Anything could happen.
+
+14
+00:01:07,362 --> 00:01:11,502
+Uh, that's the first thing. Second thing is that the agenda that we're looking at is available to you,
+
+15
+00:01:11,502 --> 00:01:14,291
+depending on where you're watching this, the link to it is going to be in a couple of different places.
+
+16
+00:01:14,292 --> 00:01:16,962
+If you're watching this on YouTube, scroll down. It'll be in the video description.
+
+17
+00:01:17,322 --> 00:01:20,441
+If you're watching this on air Mozilla, it's over there in the details section.
+
+18
+00:01:20,442 --> 00:01:22,662
+And if you're watching this on Twitch, it's down in the channel details.
+
+19
+00:01:23,172 --> 00:01:30,701
+Uh, but in any of those places, um, any time I update the documentation in this little spinny spins, if you reload the page, you'll see the updates.
+
+20
+00:01:30,702 --> 00:01:34,122
+So there you go. Let's get going.
+
+21
+00:01:34,122 --> 00:01:42,642
+So what we were doing last time we were working on, uh, we have been working for the past couple of weeks on documentation,
+
+22
+00:01:43,242 --> 00:01:50,022
+uh, specifically documentation for a rattler, the rather fiddly part of the codebase called customizable UI.
+
+23
+00:01:50,412 --> 00:01:55,992
+There's a whole bunch of different parts to it. I'm going to rebase my changes onto Bookmarks Central.
+
+24
+00:01:58,092 --> 00:02:04,092
+Make sure it's all up to date. We're going to. We've got seven patches in our, uh, in our stack here, I think.
+
+25
+00:02:04,302 --> 00:02:12,822
+Yeah. Last, uh, last time we worked on documentation for drag position manager, I believe we finished off toolbar context menu.
+
+26
+00:02:13,062 --> 00:02:17,112
+We're going to be going into some, um, murkier waters today.
+
+27
+00:02:17,652 --> 00:02:24,702
+Uh, I'll go ahead and build this, but, uh, the place that we're going to go next, if I remember correctly.
+
+28
+00:02:25,422 --> 00:02:31,992
+Let's close some of these up because there like what's the keyboard shortcut to collapse everything?
+
+29
+00:02:32,982 --> 00:02:38,022
+I don't know it. So there's some deep, deep folders here.
+
+30
+00:02:38,862 --> 00:02:45,402
+Um, collapse, collapse I want customizable UI.
+
+31
+00:02:45,702 --> 00:02:48,882
+Here we go. The uh we've done toolbar context main.
+
+32
+00:02:49,122 --> 00:02:57,782
+We did search widget tracker. Um we've done panel multi-view.
+
+33
+00:02:57,882 --> 00:03:01,092
+It's done. Uh, I'm pretty sure it's done.
+
+34
+00:03:01,092 --> 00:03:12,161
+Did we get everything? I'm pretty sure we did. Um, I mean, certainly passing all of the JS doc linting tests.
+
+35
+00:03:12,162 --> 00:03:15,402
+And from a visual inspection, it looks like we got all of it.
+
+36
+00:03:17,592 --> 00:03:21,521
+Um. We got most of it.
+
+37
+00:03:21,522 --> 00:03:27,672
+Anyways, track position manager is done. Oh, there is a complaint here that we're going to have to fix real quick,
+
+38
+00:03:28,572 --> 00:03:35,442
+which is that we expect a new line here so we can do that and then oh, oh there's.
+
+39
+00:03:35,802 --> 00:03:40,572
+So we weren't done with drag position manager. We were still working on drag position manager.
+
+40
+00:03:40,572 --> 00:03:44,742
+That's where we were last week. We're still working on drag. Yeah there's some missing stuff here.
+
+41
+00:03:45,042 --> 00:03:50,892
+We got to finish off drag position manager. It looks like we'd gotten about it about this far and we were still going.
+
+42
+00:03:52,002 --> 00:03:55,632
+So we're going to finish off drag position manager. That's going to be our first step.
+
+43
+00:03:58,062 --> 00:04:00,492
+Uh, yeah. It looks like we got about this far.
+
+44
+00:04:00,492 --> 00:04:06,582
+Uh, we're here in this function called find a bump up the font so you can, uh, see what's going on here.
+
+45
+00:04:07,932 --> 00:04:12,972
+Find. So find the closest node in the container given the coordinates.
+
+46
+00:04:13,482 --> 00:04:16,961
+Closest is defined in a somewhat strange manage manner.
+
+47
+00:04:16,962 --> 00:04:22,032
+We prefer nodes which are in the same row over nodes that are in a different row.
+
+48
+00:04:25,142 --> 00:04:29,582
+So there's a weighted Cartesian distance. Let's quickly define what that is.
+
+49
+00:04:30,032 --> 00:04:33,512
+I mean I know what a Cartesian plane is. Um.
+
+50
+00:04:36,452 --> 00:04:41,732
+A weighted distance, uh, weighted an unweighted.
+
+51
+00:04:42,362 --> 00:04:49,742
+Uh, so here's like, I think I understand the theory of a weighted Cartesian distance.
+
+52
+00:04:49,742 --> 00:04:59,822
+Basically what you're saying is, um, there are like, if you get two pixel coordinates, um, you can apply different weights depending.
+
+53
+00:05:00,152 --> 00:05:08,521
+Like basically change the, the interpretation of distance on the Cartesian plane, depending on various rules.
+
+54
+00:05:08,522 --> 00:05:14,912
+You can apply weights so that like something that's close actually seems further because it it hits some specific rules.
+
+55
+00:05:14,912 --> 00:05:22,952
+So it sounds like what's going on here is this method is given some coordinates.
+
+56
+00:05:23,342 --> 00:05:33,152
+Uh, if an element is on a different row in this grid, it's given a greater distance than its actual distance.
+
+57
+00:05:33,242 --> 00:05:39,782
+That's my interpretation based on what I know of, of geometry in the Cartesian plane.
+
+58
+00:05:40,442 --> 00:05:47,762
+Um, let's see if that bears out. Uh, we use weighted Cartesian distance where d is more heavily weighted.
+
+59
+00:05:48,452 --> 00:05:56,822
+So d the distance and y that's, that's not the, uh, you know, change in the, the vertical, uh,
+
+60
+00:05:57,092 --> 00:06:05,371
+axis is more heavily weighted by a factor corresponding to the ratio between the containers width and the height of its elements.
+
+61
+00:06:05,372 --> 00:06:12,762
+Oh. That's complicated. A factor corresponding to the ratio between the containers width and the height of its.
+
+62
+00:06:12,982 --> 00:06:21,582
+Oh, oh. That's interesting. So that in the event that you have a very thin column, maybe it's just a column then.
+
+63
+00:06:22,912 --> 00:06:27,082
+Uh. Then that changed.
+
+64
+00:06:27,112 --> 00:06:31,702
+Oh I see. If you have a very if you're grid, it's just a single column.
+
+65
+00:06:32,032 --> 00:06:39,322
+Then that weighting kind of goes away. Then you don't need this this preference for things in the same row.
+
+66
+00:06:39,352 --> 00:06:42,352
+There's only one row, I guess. All right.
+
+67
+00:06:42,362 --> 00:06:47,812
+Let's see what it does. So we set up, uh, some variables for ourselves.
+
+68
+00:06:49,342 --> 00:06:55,462
+The minimum Cartesian. I don't know what's going to do with that, but it starts out at the maximum possible value for a number.
+
+69
+00:06:56,572 --> 00:07:01,162
+And then we get the left and top position.
+
+70
+00:07:01,702 --> 00:07:05,572
+Okay. So we get the, the ah. I'm presuming this is what we're going to consider.
+
+71
+00:07:05,572 --> 00:07:10,192
+The origin the our container in this case is the customization palette.
+
+72
+00:07:10,432 --> 00:07:15,612
+And we're getting the top and the left coordinates uh of the customization palette.
+
+73
+00:07:15,622 --> 00:07:19,282
+So that's, that's going to maybe be our zero zero.
+
+74
+00:07:19,732 --> 00:07:29,782
+Uh and interestingly enough it will like increase um, going down as opposed to increase going up.
+
+75
+00:07:30,382 --> 00:07:34,832
+So it'll increase like the, the value. Um, vertical values increases.
+
+76
+00:07:34,852 --> 00:07:40,672
+You work your way further down the screen and then, uh, from left to right will increase.
+
+77
+00:07:41,482 --> 00:07:45,682
+Uh, strange how that I've kind of internalized that, but it is bizarre.
+
+78
+00:07:47,002 --> 00:07:55,432
+Uh, okay. So the first thing we do is we iterate through all of the children, we see whether or not we have any lazy stored coordinates.
+
+79
+00:07:57,292 --> 00:08:01,702
+And it looks like we always assume we get something back from this. So I'm going to assume lazy store get.
+
+80
+00:08:03,802 --> 00:08:10,191
+I see if we have it already in in the node position store, we'll just return that value immediately.
+
+81
+00:08:10,192 --> 00:08:19,882
+Otherwise we will get the bounding client rect for the node and uh convert that.
+
+82
+00:08:23,712 --> 00:08:29,201
+Yeah, well, we'll store that. You know what we really should be using here is, uh, get balance without flushing.
+
+83
+00:08:29,202 --> 00:08:34,332
+That is a power we could use here rather than bound and get bound and client rect.
+
+84
+00:08:34,332 --> 00:08:37,692
+We'll do a layout flush. Um.
+
+85
+00:08:42,142 --> 00:08:47,422
+Okay. And we store that. Let's go back up to find.
+
+86
+00:08:47,422 --> 00:08:51,411
+So we've gone through each child. We're going through each child.
+
+87
+00:08:51,412 --> 00:08:57,412
+And for each child we get its position. We get its offset based on the origin.
+
+88
+00:08:59,452 --> 00:09:07,512
+Then we get the. Distance from our target.
+
+89
+00:09:08,262 --> 00:09:14,321
+X value in our target y value. This is some pixel coordinate that we're trying to find the closest one.
+
+90
+00:09:14,322 --> 00:09:20,022
+So we're getting the difference between our offset for this child and the target's.
+
+91
+00:09:21,072 --> 00:09:26,202
+And then we divide the difference horizontally by the height to width factor.
+
+92
+00:09:27,132 --> 00:09:30,302
+So we prefer items which are in the same row. So that's interesting.
+
+93
+00:09:30,312 --> 00:09:38,232
+So we reduce the difference in uh the horizontal difference instead of what I said before,
+
+94
+00:09:38,232 --> 00:09:43,572
+which is like increasing the distance because of some rule or heuristic.
+
+95
+00:09:43,572 --> 00:09:51,852
+What we're doing is we're reducing the horizontal distance, um, by some factor, we're dividing it by this height to width factor.
+
+96
+00:09:52,602 --> 00:09:59,502
+And then we are calculating the Cartesian distance or the Cartesian difference.
+
+97
+00:09:59,502 --> 00:10:08,412
+So we multiply the difference in height we square it height squared plus um oh yeah.
+
+98
+00:10:08,442 --> 00:10:11,802
+This is, this is, this is Pythagoras.
+
+99
+00:10:13,272 --> 00:10:27,222
+Right. Hang on Cartesian distance. We're gonna get the, the distance horizontally squared by the vertical distance squared and the Cartesian distance.
+
+100
+00:10:28,182 --> 00:10:31,662
+I guess you don't necessarily need to do the square root of it.
+
+101
+00:10:31,992 --> 00:10:35,592
+You don't need the exact distance. You just need to know which one is closest.
+
+102
+00:10:35,592 --> 00:10:46,061
+So, um, you don't need to do the square root if it's less than the max value, which it will be, then we hold on to that.
+
+103
+00:10:46,062 --> 00:10:54,402
+And then closest node is the node. And we get we're going to loop through until we find the one that is uh the closest based on this.
+
+104
+00:10:54,732 --> 00:10:58,482
+Okay. Okay. That makes sense.
+
+105
+00:11:00,852 --> 00:11:04,182
+Next. Correct this node based on what we're dragging.
+
+106
+00:11:04,512 --> 00:11:08,742
+So if we found the closest node we're going to get its.
+
+107
+00:11:09,762 --> 00:11:16,992
+Uh, bounce, which we would have already got up here like so it's stored in the in the lazy store.
+
+108
+00:11:19,582 --> 00:11:23,392
+And if we're, we're going to find the far side of.
+
+109
+00:11:26,352 --> 00:11:32,022
+The far side if we're on the right to left, or if we're doing right to left, on the far side is the left.
+
+110
+00:11:32,022 --> 00:11:43,152
+Otherwise it's the right. So we get the outside, X is the right coordinate check if we're closer to the next target to this one,
+
+111
+00:11:43,152 --> 00:11:48,072
+only move if we're not targeting a node in a different row.
+
+112
+00:11:48,072 --> 00:11:54,192
+Wow okay. So if the coordinate the y coordinate.
+
+113
+00:11:57,792 --> 00:12:15,851
+Is greater than. So if we're, we're if we're with, we're past the top of the target and we're less than the bottom of the target.
+
+114
+00:12:15,852 --> 00:12:20,592
+So if we're within the target, then we check to see whether or not.
+
+115
+00:12:24,562 --> 00:12:39,922
+Where. Oh I see. We checked to see whether or not we are outside decks to the right or the left of it, to figure out where we're going to apply.
+
+116
+00:12:40,132 --> 00:12:46,942
+So what this is being used for, just to be abundantly clear, because this is all very complicated.
+
+117
+00:12:47,872 --> 00:13:01,642
+But to be abundantly clear why we're jumping through all these hoops is so that we can know, like, if I'm it's this, it's this.
+
+118
+00:13:01,642 --> 00:13:10,732
+Like what I imagine imagine that this bookmarks menu isn't, uh, isn't moving.
+
+119
+00:13:11,212 --> 00:13:16,192
+I'm to the right of its center. And as my mouse coordinate moves closer to its center,
+
+120
+00:13:16,462 --> 00:13:22,521
+I'm eventually going to cross over to the point where I'm closer to its left side, and then it moves the item to the left.
+
+121
+00:13:22,522 --> 00:13:26,632
+That's that's basically what's being calculated here. Um.
+
+122
+00:13:28,932 --> 00:13:31,932
+It's. This is really sophisticated. Um.
+
+123
+00:13:34,122 --> 00:13:39,202
+All right. I think I understand. Find the closest.
+
+124
+00:13:39,222 --> 00:13:43,302
+So we're going to fill out some of these, uh, parameters.
+
+125
+00:13:44,562 --> 00:13:49,632
+Uh, Dom node, a container, the container element.
+
+126
+00:13:51,252 --> 00:14:08,082
+Uh, that, uh, contains ro one or more, uh, one or more rows of child elements in some kind of grid formation.
+
+127
+00:14:10,212 --> 00:14:18,942
+Uh, param number a x, the, uh, x coordinate x horizontal coordinate.
+
+128
+00:14:21,282 --> 00:14:36,582
+That we're finding the closest child node for gram number a y the y vertical coordinate that we're finding the closest child node for.
+
+129
+00:14:38,322 --> 00:14:41,852
+And then we'll return an element. All right.
+
+130
+00:14:41,862 --> 00:14:45,552
+Sorry a Dom node. And why is this.
+
+131
+00:14:46,922 --> 00:14:56,652
+Oh for a lowercase n for number. Okeydokey. Um, so I'm going to describe what's happening here.
+
+132
+00:14:56,672 --> 00:15:02,222
+First, iterate through all children and find the closest.
+
+133
+00:15:04,532 --> 00:15:13,802
+One preferring closest, uh, closest child to the, uh, a X and a Y coordinates,
+
+134
+00:15:14,402 --> 00:15:25,262
+preferring children in the same row, uh, as the a x and a y coordinates.
+
+135
+00:15:29,492 --> 00:15:36,002
+Um. Now, correct this node based on what we're dragging.
+
+136
+00:15:44,682 --> 00:15:51,812
+Kerry Brown started Brown's. Now.
+
+137
+00:15:53,912 --> 00:16:14,592
+Not what we're dragging. It's. Now determine, now refine our result based on whether or not we're closer to the outside edge.
+
+138
+00:16:18,132 --> 00:16:27,192
+The. Outside edge of the closest node.
+
+139
+00:16:28,212 --> 00:16:37,152
+If we are, we actually want to return the closest node's sibling.
+
+140
+00:16:42,692 --> 00:16:48,182
+Closest node's sibling. Because why?
+
+141
+00:16:49,382 --> 00:16:57,732
+Uh, find. Customize mode.
+
+142
+00:17:07,012 --> 00:17:12,832
+Um. We want to return the closest node's sibling.
+
+143
+00:17:15,172 --> 00:17:18,172
+Because this is the one will style.
+
+144
+00:17:19,282 --> 00:17:28,002
+Uh. Uh, to indicate drop position.
+
+145
+00:17:30,882 --> 00:17:32,322
+Indicate the drop position.
+
+146
+00:17:39,042 --> 00:17:54,192
+The, uh, returns Dom node, the closest node to the a x and a y coordinates, preferring, uh, child nodes in the same row of the grid.
+
+147
+00:17:54,912 --> 00:18:00,822
+Uh. It may also return null.
+
+148
+00:18:04,592 --> 00:18:10,412
+And if there's no, um. If this is the last, uh.
+
+149
+00:18:12,102 --> 00:18:16,352
+Uh, this may also return the container itself.
+
+150
+00:18:17,432 --> 00:18:21,422
+If the closest node is the.
+
+151
+00:18:24,842 --> 00:18:28,982
+Uh, if the coordinates.
+
+152
+00:18:31,172 --> 00:18:34,382
+Are on the outside edge of the last node.
+
+153
+00:18:36,902 --> 00:18:40,592
+Node in that container? Yeah.
+
+154
+00:18:42,782 --> 00:18:50,162
+Okay. Next up, insert a placeholder by shifting the subsequent children out of the way.
+
+155
+00:18:50,162 --> 00:18:53,522
+We go through all the children and shift them based on the position they would have had.
+
+156
+00:18:53,672 --> 00:18:59,402
+They would have have if we inserted something before a before we use CSS transforms for this, which are CSS transitioned?
+
+157
+00:19:01,352 --> 00:19:06,672
+Excellent. I'm getting buzzed. I'm getting beeped.
+
+158
+00:19:10,372 --> 00:19:19,302
+Who could this be? Yeah.
+
+159
+00:19:19,632 --> 00:19:23,712
+Uh, sorry, I just, um. A message. A message that can wait.
+
+160
+00:19:24,112 --> 00:19:33,642
+That's a good message. Insert placeholder. Okay, so param dom node a container param a.
+
+161
+00:19:33,672 --> 00:19:36,672
+What is a before. Presumably that's another Dom node.
+
+162
+00:19:38,952 --> 00:19:43,452
+Okay. Before param size.
+
+163
+00:19:51,712 --> 00:20:00,632
+It's going to be a rectangle. Looks like it's a rect. Dom react any size.
+
+164
+00:20:00,902 --> 00:20:04,112
+Dom maybe. Dom. Read only react.
+
+165
+00:20:06,542 --> 00:20:11,522
+Or Dom. React. Read only. Yeah.
+
+166
+00:20:14,582 --> 00:20:18,602
+And then A is from this area. That's got to be a boolean.
+
+167
+00:20:23,342 --> 00:20:35,492
+Okay. So container to the container to uh that can container of the nodes for which we are inserting the placeholders.
+
+168
+00:20:37,502 --> 00:20:48,392
+For placeholder. And shifting the uh child nodes Dom node before the.
+
+169
+00:20:51,762 --> 00:21:00,882
+The node. Before which the child node before which we are inserting the placeholder.
+
+170
+00:21:02,892 --> 00:21:07,932
+Size Hmhm to calls this probably customize mode again.
+
+171
+00:21:13,592 --> 00:21:20,582
+Get item drag size. Oh, the size of the the size of the placeholder.
+
+172
+00:21:23,462 --> 00:21:28,592
+To create. Is from this area.
+
+173
+00:21:32,772 --> 00:21:39,942
+Uh, true. If the source node happens to be true.
+
+174
+00:21:39,942 --> 00:21:51,012
+If the node being dragged. Happens to be from this container as opposed to some other container.
+
+175
+00:21:51,582 --> 00:21:59,292
+Like a toolbar. For instance.
+
+176
+00:22:02,162 --> 00:22:09,362
+Okay. So what we do is we go through each of the children of the container.
+
+177
+00:22:10,022 --> 00:22:17,402
+We skip over hidden ones. If we find the one that we're inserting.
+
+178
+00:22:19,172 --> 00:22:22,081
+The placeholder before start shifting.
+
+179
+00:22:22,082 --> 00:22:27,482
+Everything that comes after one exception is inserting at the end of the menu panel, in which case we do not shift the placeholders.
+
+180
+00:22:29,592 --> 00:22:39,462
+Okay. Well we don't. Okay. So we we set this to suddenly we've switched modes to where we're shifted.
+
+181
+00:22:40,242 --> 00:22:45,012
+And if the note is from this area and we're not in the last position, then we're going to set.
+
+182
+00:22:48,522 --> 00:22:56,712
+No transition to true. And then we're going to set a transform a CSS transform.
+
+183
+00:22:59,532 --> 00:23:05,732
+To move the child. Based on the next node.
+
+184
+00:23:06,692 --> 00:23:12,112
+Otherwise, we reset the transform. Oh, wow.
+
+185
+00:23:12,122 --> 00:23:15,722
+And then we intentionally flush layout here.
+
+186
+00:23:17,882 --> 00:23:20,312
+And then after we've inserted the placeholder.
+
+187
+00:23:25,012 --> 00:23:31,402
+If there's a if we have an item in here and the item that we were dragging happens to be from this area.
+
+188
+00:23:32,452 --> 00:23:37,192
+And what is last placeholder insertion, that feels like a thing.
+
+189
+00:23:38,902 --> 00:23:43,942
+This is a private member that we should have here.
+
+190
+00:23:43,972 --> 00:23:54,382
+Last placeholder insertion equals null. This is of type uh Dom node or null.
+
+191
+00:24:00,972 --> 00:24:06,252
+Is the last, um. The, uh.
+
+192
+00:24:06,252 --> 00:24:11,372
+Last. Uh.
+
+193
+00:24:15,202 --> 00:24:22,732
+The item. The child node immediately after the most recently placed placeholder.
+
+194
+00:24:23,602 --> 00:24:36,802
+Presuming that uh placed placeholder for um since this area position manager was constructed.
+
+195
+00:24:39,592 --> 00:24:42,802
+The child node immediately after the most recently placed placeholder.
+
+196
+00:24:44,032 --> 00:24:48,472
+Maybe that's enough. Um.
+
+197
+00:24:49,282 --> 00:24:55,702
+Maybe. No. If, uh, no placeholder has been.
+
+198
+00:24:58,522 --> 00:25:05,002
+Inserted yet? Or if the placeholder is.
+
+199
+00:25:07,192 --> 00:25:10,252
+Uh, at the end of that container.
+
+200
+00:25:13,252 --> 00:25:18,952
+Right. And we'll set, uh, to use the head.
+
+201
+00:25:37,852 --> 00:25:53,722
+If there is one more child and we are from this area and there isn't yet a last placeholder position, we will get the last child's layout information.
+
+202
+00:25:55,152 --> 00:26:01,732
+And then. Remove all of the no transition attributes.
+
+203
+00:26:02,872 --> 00:26:10,562
+Why? Why would we do that? I'm guessing this is so that we can, like, make sure that the.
+
+204
+00:26:13,392 --> 00:26:19,122
+Animation occurs. I have to believe.
+
+205
+00:26:23,142 --> 00:26:29,572
+It seems pretty old school. You could. I think what you could do these days is you could like requestanimationframe and
+
+206
+00:26:29,572 --> 00:26:35,452
+then maybe two nested request animation frames and then remove the attributes.
+
+207
+00:26:37,842 --> 00:26:45,402
+That way you don't have to flush layout. Okay.
+
+208
+00:26:46,692 --> 00:26:52,902
+Um. Is there anything in here to.
+
+209
+00:26:55,742 --> 00:26:59,072
+That next node and apply it.
+
+210
+00:27:02,402 --> 00:27:06,212
+Uh, what? Yeah. What is this? I wish I knew what this was.
+
+211
+00:27:06,782 --> 00:27:11,372
+Maybe we can see when this was inserted. I'm going to be worried that it was inserted all at the same time.
+
+212
+00:27:18,022 --> 00:27:25,522
+Hmhm. Okay, here we go.
+
+213
+00:27:27,562 --> 00:27:40,202
+Uh, show the change set. Why was this inserted? Causes some unwanted movement.
+
+214
+00:27:57,662 --> 00:28:00,481
+When picking up an item, the customization view, and moving the mouse,
+
+215
+00:28:00,482 --> 00:28:05,432
+the other items jump to a state that ignores the dragged icon and then jumps back into the right position.
+
+216
+00:28:06,552 --> 00:28:11,412
+Cause a lot of jarring motion when picking up an item is especially confusing when reordering things inside the panel menu.
+
+217
+00:28:11,952 --> 00:28:17,172
+The space of the drive time should remain free until it is moved enough, so that would land in a different place when dropped.
+
+218
+00:28:18,222 --> 00:28:28,722
+I see. So the issue is that before when you start your drag, we would have moved everything by now.
+
+219
+00:28:30,132 --> 00:28:34,302
+And what we want to do is only begin.
+
+220
+00:28:36,782 --> 00:28:41,162
+Accommodate like filling in that. Like, let's let's remove this rule and see what happens.
+
+221
+00:28:43,202 --> 00:28:46,412
+Um, let's see what happens.
+
+222
+00:29:07,782 --> 00:29:11,082
+Dang the stache. Oh. The mustache. Yeah.
+
+223
+00:29:11,092 --> 00:29:15,372
+Sorry. I'm growing. I'm growing some facial hair gang here.
+
+224
+00:29:15,792 --> 00:29:19,362
+Um. Can I. Let me let me see if I can zoom in.
+
+225
+00:29:22,092 --> 00:29:25,542
+Um, can I do better? That's about as zoomed as it gets.
+
+226
+00:29:26,682 --> 00:29:33,642
+But there's the mustache. Um, okay, so if I pick this up.
+
+227
+00:29:34,302 --> 00:29:43,962
+Yeah. Okay, so there's, like, this initial frame where the find button in this case is positioning itself behind print,
+
+228
+00:29:44,502 --> 00:29:50,412
+because this element goes away as soon as I start dragging it. So that's what.
+
+229
+00:29:52,192 --> 00:29:58,822
+That's what this bit of code does. So I'm going to add a comment.
+
+230
+00:29:59,832 --> 00:30:02,962
+This this is to fix.
+
+231
+00:30:05,122 --> 00:30:08,122
+Um bug. Such and such.
+
+232
+00:30:09,202 --> 00:30:15,522
+Um, which, uh. Um.
+
+233
+00:30:20,672 --> 00:30:29,402
+Without this, uh, this routine when dragging, when we start the drag.
+
+234
+00:30:31,652 --> 00:30:36,302
+Uh, of an item in the customization palette.
+
+235
+00:30:38,852 --> 00:30:56,852
+We'd, uh, take the drag item out of the flow of the document, and then and only then, and then insert the placeholder, creating a lot of motion.
+
+236
+00:31:00,062 --> 00:31:05,702
+On the initial drag. Um, and so.
+
+237
+00:31:08,652 --> 00:31:17,052
+So the. So we mask this by removing the item and inserting the placeholder.
+
+238
+00:31:19,392 --> 00:31:25,182
+The placeholder for the dragged item in a single shot without animation.
+
+239
+00:31:28,762 --> 00:31:38,202
+We mask this case. Okay.
+
+240
+00:31:43,942 --> 00:31:48,352
+And we have to fleshly it to do this. What happens if we don't flush layout to do this?
+
+241
+00:31:51,202 --> 00:31:56,982
+I'm guessing we have to flush layout to do this. Does customizable UI work on touch screen?
+
+242
+00:31:57,072 --> 00:32:02,382
+I believe it does. I think we were when when sort of windows touch screens became more popular.
+
+243
+00:32:02,742 --> 00:32:07,272
+Uh, we got some in our, our, uh, in the lab we could test.
+
+244
+00:32:07,842 --> 00:32:11,471
+We were astonished at how well it worked. You know, touch screens.
+
+245
+00:32:11,472 --> 00:32:16,031
+I think we're, um, the web platform for touch, uh, was using.
+
+246
+00:32:16,032 --> 00:32:19,602
+They were. We were using pointer events already. Like, we kind of saw touch screens coming.
+
+247
+00:32:19,992 --> 00:32:28,242
+And so the platform itself was kind of already ready to transition what it thought of as traditional mouse events to pointer events.
+
+248
+00:32:28,242 --> 00:32:33,852
+And so this stuff all kind of worked, which was astonishing. Yeah, we do need that flush.
+
+249
+00:32:35,712 --> 00:32:39,672
+Um, presumably to get the position of.
+
+250
+00:32:41,742 --> 00:32:45,222
+Uh. Yeah.
+
+251
+00:32:48,302 --> 00:32:54,582
+Flush layout. Uh, to force.
+
+252
+00:32:56,532 --> 00:33:02,082
+Uh. The snap transition.
+
+253
+00:33:06,102 --> 00:33:10,182
+Okay. Done.
+
+254
+00:33:10,632 --> 00:33:12,962
+So that's interesting. We like we learned something there. All right.
+
+255
+00:33:12,972 --> 00:33:16,932
+Next reset all the transforms this container optionally without transitioning them.
+
+256
+00:33:17,652 --> 00:33:21,042
+Okay. Dom node a container.
+
+257
+00:33:23,412 --> 00:33:27,552
+To reset the transforms Boolean.
+
+258
+00:33:28,782 --> 00:33:35,292
+Um, if truthy as a node transition attribute to the node while resetting the transform.
+
+259
+00:33:38,972 --> 00:33:52,982
+It is assumed that a CSS rule will interpret the node transition attribute as a directive to skip and transition animations.
+
+260
+00:33:57,932 --> 00:34:03,992
+Um, so we, uh, we reset the transforms.
+
+261
+00:34:04,022 --> 00:34:07,772
+Need to force, uh, reflow. Otherwise this won't work.
+
+262
+00:34:12,192 --> 00:34:16,212
+Oh, this is unfortunate because we're doing this in a loop.
+
+263
+00:34:20,382 --> 00:34:25,932
+Um, so we're flushing layout a lot here, which is really unfortunate.
+
+264
+00:34:27,372 --> 00:34:31,122
+We snap actually. Soon. There's no more last placeholder insertion point to keep track of.
+
+265
+00:34:32,202 --> 00:34:35,412
+Okay, we're getting there.
+
+266
+00:34:35,652 --> 00:34:39,582
+We're almost. We're almost done. Diff with next.
+
+267
+00:34:48,502 --> 00:34:54,872
+What are we doing? We get the position of some node.
+
+268
+00:34:55,382 --> 00:35:01,412
+We see which side. Is considered next.
+
+269
+00:35:02,472 --> 00:35:07,962
+I guess get invisible sibling for direction. Next side.
+
+270
+00:35:10,002 --> 00:35:14,021
+First we determine the transform along the x axis. Usually there will be a next node a basis on.
+
+271
+00:35:14,022 --> 00:35:20,952
+So if there is a next node, then we get the bounds of the other of the next node.
+
+272
+00:35:20,952 --> 00:35:26,232
+And then we subtract the distance of the side.
+
+273
+00:35:27,342 --> 00:35:34,632
+In this case is oh I see that the origin side, which in RTL is the right side and LTR is the left side,
+
+274
+00:35:35,712 --> 00:35:42,101
+and we get the difference there in the actual this between line keeps and messes with, with alignments.
+
+275
+00:35:42,102 --> 00:35:47,072
+So. Okay.
+
+276
+00:35:50,352 --> 00:35:52,472
+Else. We don't have a sibling in this position we can use.
+
+277
+00:35:52,482 --> 00:35:59,712
+Let's see if we're also the first time, which complicates things if we're the first and if we're the first in row,
+
+278
+00:36:01,392 --> 00:36:07,632
+maybe we store the horizontal distance between nodes. If not, we'll use the width of the incoming node as a proxy.
+
+279
+00:36:14,672 --> 00:36:17,521
+Okay. If not the first note,
+
+280
+00:36:17,522 --> 00:36:23,702
+we should be able to get the distance to the previous note and use the inverse unless there's no room for another node where the last note,
+
+281
+00:36:23,702 --> 00:36:30,812
+there's no room for another one. Okay, if we've not determined the vertical difference yet, check it here.
+
+282
+00:36:32,672 --> 00:36:38,821
+And then we translate. Because where ultimately what we're doing is we're returning a translation rule.
+
+283
+00:36:38,822 --> 00:36:44,762
+So we're returns. We're returning a string. We're giving a translation rule.
+
+284
+00:36:53,292 --> 00:37:02,712
+Note and what size. We just use that to figure out the difference for some rect.
+
+285
+00:37:03,372 --> 00:37:07,872
+What is this used for? Again when we're inserting the placeholder.
+
+286
+00:37:11,942 --> 00:37:18,782
+We're going through each of the children and then based on the size of the placeholder.
+
+287
+00:37:22,222 --> 00:37:44,112
+We figure out. The transform to apply to it okay determines the transform rule to apply to a node to insert.
+
+288
+00:37:48,032 --> 00:37:52,692
+Um. Translate.
+
+289
+00:37:54,362 --> 00:38:03,962
+Know that if with next. Not terms to transform rule to apply to a node.
+
+290
+00:38:03,962 --> 00:38:18,542
+To reposition it. To accommodate a placeholder for a placeholder drop target or a dragged node of a size.
+
+291
+00:38:22,452 --> 00:38:29,192
+Uh Dom node. The node to calculate the transform rule.
+
+292
+00:38:31,202 --> 00:38:37,682
+Trans form rule for um rect read only.
+
+293
+00:38:41,522 --> 00:38:54,692
+Size of the placeholder, uh placeholder drop target that was inserted causing the uh which which required.
+
+294
+00:38:54,822 --> 00:39:00,962
+Which then requires us to reposition this node.
+
+295
+00:39:01,952 --> 00:39:11,042
+String the transform uh, the CSS transform rule to apply to a node.
+
+296
+00:39:21,922 --> 00:39:25,941
+Okay. Helper function.
+
+297
+00:39:25,942 --> 00:39:30,982
+To find the transform node, find the transform for a node.
+
+298
+00:39:31,492 --> 00:39:36,262
+If there isn't a next node to base that on okay.
+
+299
+00:39:39,202 --> 00:39:46,762
+The node to be to have the transform applied to node bounds.
+
+300
+00:39:48,412 --> 00:39:54,682
+Um move based on next based on previous node bounds is.
+
+301
+00:39:56,752 --> 00:40:03,442
+Uh Dom react read only. Dom read react to read only.
+
+302
+00:40:04,072 --> 00:40:12,472
+The bounding rect. The bounding rect info of a node.
+
+303
+00:40:15,412 --> 00:40:23,392
+A first node in row. First node in a node's row in the container grid.
+
+304
+00:40:25,612 --> 00:40:29,242
+And container grid. And then what does this do?
+
+305
+00:40:29,242 --> 00:40:32,512
+It returns some numeric value.
+
+306
+00:40:33,592 --> 00:40:38,512
+Returns number. Turns the.
+
+307
+00:40:43,772 --> 00:40:49,922
+It's only returning. Find the horizontal transform value.
+
+308
+00:40:51,842 --> 00:41:02,762
+There is a next node based on the horizontal distance to transform a node.
+
+309
+00:41:09,512 --> 00:41:11,072
+Let's list or get next.
+
+310
+00:41:12,162 --> 00:41:17,562
+If, however, this means we move outside the contiguous blocks rather, which is why we should move it along the either side of the next row instead.
+
+311
+00:41:21,042 --> 00:41:24,552
+Story. Get the side minus.
+
+312
+00:41:24,792 --> 00:41:30,642
+Okay. Uh, a first node in row is a dark mode.
+
+313
+00:41:33,222 --> 00:41:38,982
+Okay. Here, then we're in less complicated territory here.
+
+314
+00:41:40,422 --> 00:41:49,792
+Get, uh. The Dom rect read only for a node from, uh, from our cache.
+
+315
+00:41:49,802 --> 00:41:57,182
+If the node if the rect is not yet cached at its position information.
+
+316
+00:41:58,382 --> 00:42:03,842
+Um. Calculate. Calculate that rect and cache it now.
+
+317
+00:42:08,052 --> 00:42:13,782
+Okay. Uh, download the node disposition info.
+
+318
+00:42:13,992 --> 00:42:17,502
+Uh, whose Dom rect read only. Uh. You want.
+
+319
+00:42:21,072 --> 00:42:25,372
+Return. Um, right.
+
+320
+00:42:25,492 --> 00:42:40,662
+Read only. The, uh, latest, uh, the the size and position of a node that was either just calculated or previously calculated.
+
+321
+00:42:42,132 --> 00:42:45,611
+Calculated during the lifetime of this area.
+
+322
+00:42:45,612 --> 00:42:53,472
+Position manager and cached. Turns.
+
+323
+00:42:54,132 --> 00:42:57,882
+Here we go. First in row.
+
+324
+00:43:02,562 --> 00:43:08,332
+Hey. It's me. Did I write this? I'm not entirely sure why we need to take the floor of these values.
+
+325
+00:43:08,352 --> 00:43:13,092
+It looks like periodically we're getting fractional pixels back from the store. Get a file this bug to investigate.
+
+326
+00:43:16,652 --> 00:43:27,842
+Okay. Uh, returns the first, uh, node in a node's row in the grid.
+
+327
+00:43:28,592 --> 00:43:32,221
+Container grid. Container.
+
+328
+00:43:32,222 --> 00:43:35,552
+Grid. Grid. Container. Okay.
+
+329
+00:43:35,612 --> 00:43:38,941
+Container. Grid. Just using that consistently.
+
+330
+00:43:38,942 --> 00:43:56,072
+Okay. Uh, Dom node in the node to find the first, the node in the row for which we want to find the first, uh, node.
+
+331
+00:43:58,562 --> 00:44:11,202
+Turns Dom node. So we.
+
+332
+00:44:15,072 --> 00:44:28,812
+Get the top, the bound but the top bound and then give visible sibling for direction if the latest or previous bottom is less than bound.
+
+333
+00:44:29,052 --> 00:44:35,362
+So if as soon as we exceed, we wrap around and go to the next row, then we go like nope.
+
+334
+00:44:35,382 --> 00:44:40,212
+Then we return the node. Otherwise we go to the previous, uh, previous element.
+
+335
+00:44:40,812 --> 00:44:44,912
+Okay. And get visible sibling for direction.
+
+336
+00:44:46,382 --> 00:45:02,552
+Okay. Um, returns the next, uh, visible sibling Dom node to a node, uh, in the direction a direction.
+
+337
+00:45:04,562 --> 00:45:10,201
+Uh, a, uh, Dom node. The node to get the next sibling.
+
+338
+00:45:10,202 --> 00:45:14,412
+Invisible sibling for. Direction.
+
+339
+00:45:14,492 --> 00:45:21,272
+Uh, I think this is a string. Um, one of either previous.
+
+340
+00:45:24,992 --> 00:45:33,182
+Or next. Uh, no other values are accepted.
+
+341
+00:45:34,052 --> 00:45:37,112
+Any other value may throw. Throw?
+
+342
+00:45:37,172 --> 00:45:41,522
+We'll probably throw. Turns.
+
+343
+00:45:43,892 --> 00:45:49,412
+Um. There we go.
+
+344
+00:45:50,672 --> 00:46:00,991
+We're almost. We're almost through. Uh, now we, uh, need to document drag position manager, which is a very small sort of singleton,
+
+345
+00:46:00,992 --> 00:46:05,882
+which I think is managing multiple instances of area position manager.
+
+346
+00:46:07,472 --> 00:46:14,552
+Okay. Uh, drag position manager, uh, manages a, um.
+
+347
+00:46:18,332 --> 00:46:28,022
+The area physician managers for all of the, um.
+
+348
+00:46:28,712 --> 00:46:37,002
+Customizable areas. Carry is equals.
+
+349
+00:46:37,032 --> 00:46:42,702
+We just get the pallet. What did this used to be?
+
+350
+00:46:42,702 --> 00:46:48,612
+Other. Why does this need to be a loop? I don't think this needs to be a loop anymore.
+
+351
+00:46:52,172 --> 00:46:55,292
+When did this need to be other stuff tracked with this manager?
+
+352
+00:46:55,482 --> 00:47:06,752
+Was there something else in this list at some point? Remove old panel code.
+
+353
+00:47:08,552 --> 00:47:14,402
+Right? Right. It used to be a grid. The panel used to be a grid.
+
+354
+00:47:15,992 --> 00:47:27,452
+Okay. For all the cars, all of the grid like customization areas these days, that's just the customization palette.
+
+355
+00:47:30,542 --> 00:47:34,172
+Start. So areas this.
+
+356
+00:47:37,512 --> 00:47:41,472
+Let me just say like let pallet area equal.
+
+357
+00:47:42,642 --> 00:47:47,802
+That position manager equals.
+
+358
+00:47:51,672 --> 00:47:57,132
+Uh. If position manager update.
+
+359
+00:48:00,182 --> 00:48:03,582
+Else. Managers.
+
+360
+00:48:03,672 --> 00:48:20,481
+Set. Palette area. And track position manager stop tear down pallet dragging and or on drag.
+
+361
+00:48:20,482 --> 00:48:26,842
+And it's really seems like it only makes sense if we had multiple grids, but we don't anymore.
+
+362
+00:48:29,822 --> 00:48:33,572
+So I don't know why we need this key manager's weak map anymore.
+
+363
+00:48:34,872 --> 00:48:39,532
+I guess. Yeah.
+
+364
+00:48:42,472 --> 00:48:59,092
+Uh. These days, um, this G manager's week set week map may have made more sense when we had the menu panel also acting as a grid.
+
+365
+00:49:00,802 --> 00:49:06,712
+It's maybe a bit. It's maybe superfluous at this point.
+
+366
+00:49:11,122 --> 00:49:24,172
+Um, start. Uh, starts drag position management for a pack starts.
+
+367
+00:49:24,202 --> 00:49:29,902
+Customize mode. Drag position management for a window A window.
+
+368
+00:49:37,032 --> 00:49:43,692
+Window. Browser window to start.
+
+369
+00:49:44,652 --> 00:49:48,442
+Uh. Start. Drag.
+
+370
+00:49:48,462 --> 00:49:54,382
+Position management. Does not have a return value.
+
+371
+00:49:56,332 --> 00:49:59,932
+Stops. Customize mode. Drag. Position management.
+
+372
+00:50:02,342 --> 00:50:15,752
+Uh, for all windows. Get manager for area returns.
+
+373
+00:50:16,082 --> 00:50:25,742
+So tell no. Returns the area of position manager for a particular area.
+
+374
+00:50:25,912 --> 00:50:32,582
+Uh, a area Dom node. Uh, position.
+
+375
+00:50:34,892 --> 00:50:38,432
+Turns area. Position. Manager instance for a particular area.
+
+376
+00:50:39,182 --> 00:50:45,542
+Uh Dom node F1 has been created because this could be null.
+
+377
+00:50:48,272 --> 00:50:57,232
+Done. We're done here. Gang. That's documented.
+
+378
+00:51:00,232 --> 00:51:04,522
+Uh. Uh, Danny Colon, I hope you don't mind.
+
+379
+00:51:04,582 --> 00:51:08,811
+Uh, I, I know you have a tremendous beard, tremendous facial hair.
+
+380
+00:51:08,812 --> 00:51:14,842
+I don't know if that's still the case, but the last time I saw you, you had a tremendous set of facial hairs.
+
+381
+00:51:15,832 --> 00:51:19,611
+I'm curious if you have any tips for the people in the chat or for myself.
+
+382
+00:51:19,612 --> 00:51:23,542
+Who who are in the market for facial hair?
+
+383
+00:51:23,842 --> 00:51:27,262
+Um, what do you, uh, what are your tips for?
+
+384
+00:51:27,262 --> 00:51:32,722
+As someone who's probably professionally grown facial hair for a number of years would be my guess.
+
+385
+00:51:35,222 --> 00:51:42,752
+Let's hear your tips. That's so cool.
+
+386
+00:51:49,302 --> 00:51:52,752
+Hmm. All right. All done.
+
+387
+00:51:56,352 --> 00:52:01,872
+Okay. This. Looks great.
+
+388
+00:52:02,082 --> 00:52:08,642
+Um, so we're going to commit amend. I'm going to look at the status here.
+
+389
+00:52:08,652 --> 00:52:17,892
+I think it's just the one file that was changed. Um, first, we'll see if there's any linting stuff to fix.
+
+390
+00:52:18,132 --> 00:52:22,392
+Just let it grow, says Danny Colon. Great tip.
+
+391
+00:52:23,472 --> 00:52:30,632
+Great tip. Do you do any, like, oils or special treatment or brushing or like.
+
+392
+00:52:30,642 --> 00:52:34,242
+Okay. Tell me how you eat soup, poutine and spaghetti.
+
+393
+00:52:34,242 --> 00:52:38,252
+I need to know because, you know, this is not my first rodeo.
+
+394
+00:52:38,262 --> 00:52:46,091
+I've had facial hair before, but I'm being reminded of the challenges of having, you know, of eating.
+
+395
+00:52:46,092 --> 00:52:52,992
+Eating with facial hair. Um, so if you've got any tips, that'd be great.
+
+396
+00:52:58,482 --> 00:53:02,142
+Eating tips. Management tips.
+
+397
+00:53:03,372 --> 00:53:06,452
+Just, you know. Help us.
+
+398
+00:53:06,482 --> 00:53:14,132
+Why is one. Um.
+
+399
+00:53:14,552 --> 00:53:22,572
+Okay, so that's done. That's drag position manager. Now we're going into the the real hairy stuff.
+
+400
+00:53:22,622 --> 00:53:25,712
+This is going to take us a while. All right.
+
+401
+00:53:25,712 --> 00:53:30,662
+So so strap in. Actually, before we do that, let's try and build the docs here.
+
+402
+00:53:32,132 --> 00:53:35,222
+Um, what was it? Disable warnings.
+
+403
+00:53:40,072 --> 00:53:48,682
+If you want a sense of, uh, Danny Collins facial hair. Uh, I don't know if you're, um, um, you get a little bit of it from your matrix.
+
+404
+00:53:49,402 --> 00:53:56,722
+Your matrix avatar. I think when I saw you last, though, it was much, much longer.
+
+405
+00:54:00,232 --> 00:54:04,221
+Like it's been a while since I've seen you.
+
+406
+00:54:04,222 --> 00:54:10,622
+I think it was in August. I'm just trying to like what was the impression I got, like.
+
+407
+00:54:24,072 --> 00:54:27,942
+See here and now. I'm not looking at faces here. I'm looking at beards.
+
+408
+00:54:28,122 --> 00:54:31,932
+Just. These are the epic beards that came to mind. Or any that's like, maybe.
+
+409
+00:54:32,202 --> 00:54:37,452
+Well, no, that's not quite right. It's not quite right.
+
+410
+00:54:37,962 --> 00:54:43,542
+This this is close. That's the vibe I remember getting.
+
+411
+00:54:43,812 --> 00:54:49,211
+Um. Now, he didn't have it all braided out like this, but it was pretty.
+
+412
+00:54:49,212 --> 00:54:53,682
+It was like immense. Uh, what's Gimli beard look like?
+
+413
+00:54:53,682 --> 00:55:02,102
+Gimli. Kimberly.
+
+414
+00:55:05,432 --> 00:55:11,282
+This is pretty close again. I don't think you had them braid it out, but it was this intense.
+
+415
+00:55:11,312 --> 00:55:18,812
+That's what I remember. That's like the impression that I have in my head. I'm probably exaggerating a bit in my mind.
+
+416
+00:55:19,562 --> 00:55:23,552
+It's been a little built out, but that's.
+
+417
+00:55:24,332 --> 00:55:29,371
+That's the beard I remember. Not the armor, not the stature, not the helmet.
+
+418
+00:55:29,372 --> 00:55:35,582
+Just the beard. Just the beard. Okay.
+
+419
+00:55:35,592 --> 00:55:39,252
+Area position manager. Look at all of this. This is brilliant.
+
+420
+00:55:39,582 --> 00:55:45,042
+I'm really happy with that. And then, uh oh, we need to get, uh.
+
+421
+00:55:45,072 --> 00:55:50,682
+Right. We need to get dragged. Position manager. Add to that as well. Drag position manager.
+
+422
+00:56:02,262 --> 00:56:07,672
+So let that do its rebuild. So Danny Cohen says I brush it and that's pretty much it.
+
+423
+00:56:07,692 --> 00:56:11,052
+It's curly. So it doesn't grow in a way that prevents me from easily eating soup.
+
+424
+00:56:11,442 --> 00:56:15,372
+You're so lucky. Uh, here we go.
+
+425
+00:56:15,552 --> 00:56:23,922
+There we go. Showed up. Uh, I think we can add some commentary here.
+
+426
+00:56:24,222 --> 00:56:41,412
+Uh, these classes, uh, manage the drag and, uh, the drag animations and transitions that are used by the customization customize mode, palette grid.
+
+427
+00:56:42,132 --> 00:56:47,472
+For example, this powers the, uh, animation that moves.
+
+428
+00:56:49,632 --> 00:56:52,662
+How would you describe it? Um.
+
+429
+00:56:58,492 --> 00:57:11,812
+That, uh. That moves the powers, the animation that moves items from row to row and inserts the placeholders.
+
+430
+00:57:13,402 --> 00:57:17,272
+The draw, the drop. Target the plate placeholder. Drop targets.
+
+431
+00:57:19,522 --> 00:57:27,322
+Um. Uh, specifically, I'll say not, for example, specifically this part of the animations.
+
+432
+00:57:28,642 --> 00:57:35,002
+Uh, that. Move items from row to row.
+
+433
+00:57:36,382 --> 00:57:42,912
+Row row row. And inserts the placeholder drop targets.
+
+434
+00:57:44,472 --> 00:57:51,422
+Yeah, that's probably enough. Both.
+
+435
+00:57:53,732 --> 00:58:04,212
+All right, let's commit. Amend and let's move on to the next one.
+
+436
+00:58:10,932 --> 00:58:15,221
+All right, customize mode. Ooh.
+
+437
+00:58:15,222 --> 00:58:20,562
+Not looking forward to this. Not looking forward to this customize mode or rest.
+
+438
+00:58:22,662 --> 00:58:38,562
+Or maybe it should be customize dash mode. And this should be panel dash multi dash for you.
+
+439
+00:58:38,722 --> 00:58:43,542
+Maybe I don't know. I'm being very inconsistent here.
+
+440
+00:58:44,262 --> 00:58:47,472
+I feel bad. Oh, well. Customize mode.
+
+441
+00:58:51,072 --> 00:59:01,182
+Um. Uh, okay.
+
+442
+00:59:02,232 --> 00:59:11,742
+This module is responsible for the mode of the browser window that lets for, uh,
+
+443
+00:59:12,162 --> 00:59:19,182
+the mode of the browser window that lets users drag items around in customizable areas.
+
+444
+00:59:19,512 --> 00:59:24,072
+Customizable toolbars and panels. Uh.
+
+445
+00:59:25,092 --> 00:59:29,322
+As well as the customization palette grid.
+
+446
+00:59:32,882 --> 00:59:40,502
+Okay. Then we are going to insert our auto class because I think it's a class.
+
+447
+00:59:42,092 --> 00:59:48,602
+How many classes do we have in here? Yeah we have.
+
+448
+00:59:49,142 --> 00:59:57,362
+We have a an old, old school prototype class and wow, there's a lot going on in here.
+
+449
+00:59:57,842 --> 01:00:01,322
+This is this is not something we're going to be able to complete in a single episode.
+
+450
+01:00:05,802 --> 01:00:11,392
+This seems like needless and indirection. Okay.
+
+451
+01:00:14,032 --> 01:00:17,032
+Well. Here goes. Here goes nothing.
+
+452
+01:00:17,692 --> 01:00:25,282
+Um. So much going on.
+
+453
+01:00:25,522 --> 01:00:39,742
+Maybe we'll start by converting this into a proper ES6 class and, uh, doing what we did before with really, like, private members and whatnot.
+
+454
+01:00:40,732 --> 01:00:49,132
+I think that's probably a healthy thing to do. Presuming that there's nothing in our tests that are relying on some of these private members.
+
+455
+01:00:49,792 --> 01:00:54,922
+Um, so, for example, let's just let's just do a quick check. Yeah.
+
+456
+01:00:56,632 --> 01:01:04,492
+That's that seems okay. Stowed palate. No tests, skipped sauce.
+
+457
+01:01:04,492 --> 01:01:07,762
+No check. So far. Doesn't smell too bad.
+
+458
+01:01:07,792 --> 01:01:11,902
+All right, let's let's turn this into an Essex class.
+
+459
+01:01:12,622 --> 01:01:16,762
+Export class. Customize mode.
+
+460
+01:01:19,792 --> 01:01:25,042
+Constructor window. And then.
+
+461
+01:01:32,272 --> 01:01:38,692
+Uh. Then we have to change a bunch of this stuff.
+
+462
+01:01:41,422 --> 01:01:47,422
+So. I won't do the private member thing just yet.
+
+463
+01:01:47,722 --> 01:01:51,682
+I have to go do each of these. Um.
+
+464
+01:01:56,422 --> 01:02:03,322
+One by one. Huh?
+
+465
+01:02:03,472 --> 01:02:09,322
+I'll bet you there's a, uh, a mechanical, like, a script way I could do this, but I don't know it.
+
+466
+01:02:10,072 --> 01:02:17,672
+Um. But certainly this feels very automatable.
+
+467
+01:02:18,032 --> 01:02:23,611
+Oh, well. Oh, that's. Look at this. I don't even know if you need that, but.
+
+468
+01:02:23,612 --> 01:02:34,412
+Okay. This reminds me of like jQuery, jQuery and prototype, which is, you know, this is one of the first things I worked on.
+
+469
+01:02:34,412 --> 01:02:39,802
+This would have been back in 2013, 2014. jQuery and prototype were still big deals back then.
+
+470
+01:02:39,812 --> 01:02:52,122
+This is pre react. Um, you know, browser web compat across cross-browser development was even more of a nightmare than it is now.
+
+471
+01:02:54,192 --> 01:02:58,722
+And so, you know, we're looking at code from an earlier an earlier time.
+
+472
+01:03:01,002 --> 01:03:07,512
+Wow. And there's a bunch of async stuff that probably got added after the fact.
+
+473
+01:03:10,842 --> 01:03:14,892
+All of this needs documentation. I'm not looking forward to this.
+
+474
+01:03:29,472 --> 01:03:53,422
+Some of it has some documentation, but not all of it. Boop boop boop boop boop boop boop boop boop boop boop.
+
+475
+01:03:58,192 --> 01:04:01,672
+And when anyone here on Skype. Still we doing this on Skype?
+
+476
+01:04:02,752 --> 01:04:05,902
+Boop boop boop boop boop.
+
+477
+01:04:07,072 --> 01:04:14,332
+We're talking about 2013, 2014. That was cutting edge, cutting edge web conferencing stuff back then.
+
+478
+01:04:15,232 --> 01:04:18,382
+Skype, it was a verb.
+
+479
+01:04:19,132 --> 01:04:22,552
+There's a pretty good, uh, College Humor slash dropout sketch.
+
+480
+01:04:23,392 --> 01:04:28,442
+The CEO of Skype. It's not the real CEO of Skype, it's Brendan Lee Mulligan.
+
+481
+01:04:28,462 --> 01:04:34,972
+If that name sounds familiar at all. Um, Brendan Lee Mulligan is in a pretty funny video.
+
+482
+01:04:37,372 --> 01:04:41,572
+Which is like an interview, an ad from the CEO of Skype.
+
+483
+01:04:41,572 --> 01:04:52,342
+During the sudden, like surging popularity of zoom and during like the Covid lockdowns for work and for communicating with,
+
+484
+01:04:52,342 --> 01:04:57,952
+like, friends and family, uh, and how Skype and Microsoft completely dropped the ball.
+
+485
+01:05:00,842 --> 01:05:07,012
+And had their lunch eaten. Boop boop boop boop boop.
+
+486
+01:05:14,862 --> 01:05:19,452
+Wow. So many methods. So many methods.
+
+487
+01:05:22,392 --> 01:05:26,652
+This is complicated stuff. Did you ever imagine that customize mode?
+
+488
+01:05:26,652 --> 01:05:31,712
+Was this complicated? Uh, but battle hardened.
+
+489
+01:05:31,722 --> 01:05:38,202
+It's been like this probably since 2020 13 or 14, when Firefox 27, I think, first went out.
+
+490
+01:05:40,632 --> 01:05:46,002
+Um, so just because it's being complicated doesn't mean it doesn't work,
+
+491
+01:05:46,002 --> 01:05:55,782
+just means it's probably hard to work on, hard to make changes to, uh oh, oh, you see in this stuff.
+
+492
+01:05:56,172 --> 01:06:00,012
+Well, Easter egg there. I'm not going to say anymore.
+
+493
+01:06:01,902 --> 01:06:07,542
+All right. Done. And then there's like a debug method here.
+
+494
+01:06:09,762 --> 01:06:13,842
+There's like a warning. This.
+
+495
+01:06:16,292 --> 01:06:19,762
+All right. Does it still work?
+
+496
+01:06:19,772 --> 01:06:27,422
+Having refactor that random desk escape only reminds me of the website is down video now, I don't know that video.
+
+497
+01:06:28,742 --> 01:06:34,092
+I don't know that video. Boo boo boo boo boo boo boo.
+
+498
+01:06:37,022 --> 01:06:40,712
+All right, I'll stop making that noise. All right. This all works.
+
+499
+01:06:44,252 --> 01:06:52,262
+Uh, so now we are going to, uh, try and document our class.
+
+500
+01:06:52,322 --> 01:06:59,312
+Um, this class manages the customize mode.
+
+501
+01:07:01,412 --> 01:07:14,162
+Badges. The lifetime of the customize mode UI in a particular in a single browser window.
+
+502
+01:07:16,732 --> 01:07:20,032
+Browser window. There is 1 in 1 instance.
+
+503
+01:07:22,402 --> 01:07:26,032
+Of customized load per browser window.
+
+504
+01:07:27,952 --> 01:07:32,002
+Um. When do we create one of these things? In customize mode.
+
+505
+01:07:35,222 --> 01:07:48,362
+Yeah G customize mode. It's a meme ish video of an admin wanting to just play Halo and having people call them on Skype to solve issues.
+
+506
+01:07:48,652 --> 01:07:52,052
+Uh uh, such as life.
+
+507
+01:07:52,682 --> 01:07:58,802
+Okay, so, uh, let's take a look and see whether or not we've got our documentation there built out.
+
+508
+01:08:09,172 --> 01:08:14,332
+Customize mode. Hey. All right. And we've got some things already kind of showing up in here.
+
+509
+01:08:15,412 --> 01:08:20,932
+This is nice. This is nice. Um.
+
+510
+01:08:24,162 --> 01:08:29,722
+What's there to say? You know what? I think it's I think it's fine.
+
+511
+01:08:29,742 --> 01:08:36,012
+I'm going to show you all the Easter egg, because we're going to be looking at the source code anyways, so don't tell anyone, all right?
+
+512
+01:08:36,372 --> 01:08:40,002
+This is from back in the day. Some of you might already know this.
+
+513
+01:08:40,002 --> 01:08:44,232
+Like this is fairly well publicized at this point, but some of you might not have heard of this.
+
+514
+01:08:45,762 --> 01:08:50,342
+Um, we introduced. I'm trying to remember when we introduced this long, long, long ago.
+
+515
+01:08:50,352 --> 01:08:56,672
+But here's what happens if you take everything out of, uh, the palette.
+
+516
+01:08:56,682 --> 01:08:58,122
+You take everything out.
+
+517
+01:08:58,992 --> 01:09:07,781
+So this is something like you've got, uh, you've got to really be like, uh, powerful, like a power user customization, like you want it all.
+
+518
+01:09:07,782 --> 01:09:17,232
+Every single feature. One of the things you'll notice is that there's an item inside the customize mode called flexible space.
+
+519
+01:09:17,592 --> 01:09:22,412
+Flexible space you like is a special one in that you can't actually remove it.
+
+520
+01:09:22,422 --> 01:09:28,932
+You it just spawns more of them. And notice that having moved everything except flexible space out, like,
+
+521
+01:09:28,932 --> 01:09:32,562
+if I put this back in here, I'm going to move the last one I want you to watch down here.
+
+522
+01:09:32,982 --> 01:09:38,772
+I'm going to take the last item out. We got a little button, the old button down here.
+
+523
+01:09:39,702 --> 01:09:43,002
+I click that button. Oh, hello. Hello.
+
+524
+01:09:43,122 --> 01:09:48,611
+I can use a keyboard. Play me some pong. This is a little, uh, whimsy.
+
+525
+01:09:48,612 --> 01:09:52,662
+Corn pong here is actually, the AI is pretty good.
+
+526
+01:09:52,692 --> 01:09:56,352
+Um, I think I've beaten this pong once.
+
+527
+01:09:57,072 --> 01:10:02,562
+Um, you kind of really have to skip it off the edge to confuse the AI.
+
+528
+01:10:02,592 --> 01:10:06,191
+There we go, I got it. Um, and it speeds up pretty quick.
+
+529
+01:10:06,192 --> 01:10:11,592
+And, like, the where exactly the edges are, uh, is can be misleading of the paddles.
+
+530
+01:10:12,462 --> 01:10:15,882
+Uh, but there you go. There. Now, you know about one of the Easter eggs.
+
+531
+01:10:16,572 --> 01:10:21,281
+It's been a while since we've done an Easter egg. Mainly because Easter eggs are like.
+
+532
+01:10:21,282 --> 01:10:28,242
+It's a great way of actually introducing bugs. You don't want to, uh, you don't want to do too many,
+
+533
+01:10:28,242 --> 01:10:35,651
+and you only want to do them in places where users aren't going to accidentally stumble into them without it being delightful.
+
+534
+01:10:35,652 --> 01:10:41,832
+If your Easter egg is going to horrify people or confuse them or make them feel unsafe, it's a bad Easter egg.
+
+535
+01:10:43,302 --> 01:10:46,912
+Um, and this one seems pretty obscure.
+
+536
+01:10:46,932 --> 01:10:51,432
+It's obscure enough that we think it's just kind of fun. It's a fun little delight moment.
+
+537
+01:10:54,102 --> 01:10:57,582
+Don't tell anyone. Don't tell anyone.
+
+538
+01:10:59,922 --> 01:11:07,782
+Uh, remove everything and open the overflow menu. I mean, I don't know if this is, uh, an Easter egg so much as it's a pun.
+
+539
+01:11:09,462 --> 01:11:13,442
+The overflow menu. I mean, you may wonder, like, what is this little thing?
+
+540
+01:11:13,452 --> 01:11:23,172
+This is, like, a leftover from an era where we had a lot of critters in the UI, and, uh, uh, this is one of the remaining critters.
+
+541
+01:11:23,622 --> 01:11:27,132
+And you might be like, what is this? What is this thing?
+
+542
+01:11:27,282 --> 01:11:35,902
+That's like. I mean, this thing is telling you that you can drop items in here, but, like, why?
+
+543
+01:11:36,022 --> 01:11:39,982
+What is this creature? Well guess what? Kai looks like a dragon, right?
+
+544
+01:11:40,432 --> 01:11:44,482
+A drag and drop. Oh.
+
+545
+01:11:45,132 --> 01:11:49,611
+Oh. The, um, outside cast, you get a whimsy bouncing around.
+
+546
+01:11:49,612 --> 01:11:52,802
+That used to be the case when you could remove everything.
+
+547
+01:11:52,822 --> 01:11:59,542
+So this panel, this app menu panel used to be able to take everything out, and then we'd have, like, a whimsical horn bouncing around inside of it.
+
+548
+01:11:59,752 --> 01:12:05,032
+But you can't. You can't, uh, you can't remove items from the app menu anymore.
+
+549
+01:12:05,752 --> 01:12:08,212
+Uh, we started stuffing too much stuff in here for that.
+
+550
+01:12:09,562 --> 01:12:18,531
+So that's back from when we had it like pre photon era, when we had the grid in the app menu, you could remove all the items.
+
+551
+01:12:18,532 --> 01:12:23,482
+And then there was like a whimsy core that would show up in the panel if you removed all the items, which is kind of fun.
+
+552
+01:12:25,522 --> 01:12:29,002
+All right. Let's we've got ten or so minutes remaining.
+
+553
+01:12:29,012 --> 01:12:32,842
+Let's see if we can start documenting some of this stuff.
+
+554
+01:12:35,302 --> 01:12:40,012
+So we have our constructor here and we're it looks like we're setting up.
+
+555
+01:12:42,622 --> 01:12:49,732
+Some. References. And some variables.
+
+556
+01:12:52,092 --> 01:12:58,392
+Translation observer. Oh translations.
+
+557
+01:12:59,112 --> 01:13:04,632
+Things get translated interesting. Ensure customization panels.
+
+558
+01:13:06,102 --> 01:13:09,552
+We get the customization content container.
+
+559
+01:13:13,412 --> 01:13:19,412
+If then we'll create. We'll insert the fluent.
+
+560
+01:13:19,412 --> 01:13:27,332
+If we need, it will create. The customization container will replace it with.
+
+561
+01:13:29,352 --> 01:13:34,302
+Oh, I see there's like a lazy. So we lazily create.
+
+562
+01:13:36,972 --> 01:13:43,362
+Uh, the customize mode. Uh, dom stuff in here.
+
+563
+01:13:48,062 --> 01:13:51,842
+And we'll only insert it on the very first time that you.
+
+564
+01:13:56,022 --> 01:13:59,742
+Need to access customize mode, which I believe.
+
+565
+01:14:02,112 --> 01:14:14,372
+Only occurs. Uh, anytime things are moving around in the toolbars or you enter customize mode.
+
+566
+01:14:17,452 --> 01:14:28,262
+Okay. I guess the first thing I want to do now is start converting a bunch of these into private members.
+
+567
+01:14:31,052 --> 01:14:36,572
+Um, so let's let's do that next. Uh, window is null.
+
+568
+01:14:36,962 --> 01:14:41,432
+Does anything ever use G customize mode window? That would be very surprising.
+
+569
+01:14:41,912 --> 01:14:46,742
+So no. So we're going to make this a private. Member.
+
+570
+01:14:55,282 --> 01:14:58,352
+Mhm. Mhm. Mhm mhm.
+
+571
+01:14:58,412 --> 01:15:05,022
+Mhm. Find place this time window.
+
+572
+01:15:08,382 --> 01:15:12,612
+All right. Uh, save.
+
+573
+01:15:12,672 --> 01:15:16,932
+Yeah. What? Why did it close? Okay.
+
+574
+01:15:17,112 --> 01:15:21,852
+Um. Next up. Document.
+
+575
+01:15:23,772 --> 01:15:27,522
+This is another shortcut document.
+
+576
+01:15:29,532 --> 01:15:32,562
+So we're going to say the start document.
+
+577
+01:15:33,402 --> 01:15:39,102
+The start document. Oh, sorry.
+
+578
+01:15:42,012 --> 01:15:46,901
+And then. Yeah. I didn't check, but no one's using that.
+
+579
+01:15:46,902 --> 01:15:51,072
+Right? Nope. Uh. Customizable mode.
+
+580
+01:15:51,522 --> 01:15:56,712
+Customize mode areas. Uh hmm.
+
+581
+01:15:58,032 --> 01:16:06,072
+This one's used. Okay, so this is public.
+
+582
+01:16:08,232 --> 01:16:18,762
+Uh, we might want to add an accessor rather than or, like, not an accessor, but a method to customize mode rather than making this, um, public.
+
+583
+01:16:19,242 --> 01:16:26,232
+That seems like a bad idea. Um, but for now, uh.
+
+584
+01:16:28,272 --> 01:16:37,512
+Public use by. Accessed by such and such.
+
+585
+01:16:43,662 --> 01:16:56,022
+Um. Changed. I little changed.
+
+586
+01:17:00,422 --> 01:17:13,222
+Okay. Changed. Its values never read.
+
+587
+01:17:19,282 --> 01:17:24,592
+This seems useless. Well, change is never read from.
+
+588
+01:17:24,982 --> 01:17:31,132
+Uh, we might have ourselves. Something vestigial.
+
+589
+01:17:37,972 --> 01:17:51,752
+I wrote this 11 years ago. Changed this change.
+
+590
+01:17:51,762 --> 01:17:56,982
+We dispatch toolbox events and we change toolbox event.
+
+591
+01:17:59,742 --> 01:18:02,772
+And we used to say what changed. But now we don't.
+
+592
+01:18:04,122 --> 01:18:10,062
+So we don't need change anymore. And get rid of it.
+
+593
+01:18:15,072 --> 01:18:20,502
+Nice transitioning. Okay.
+
+594
+01:18:20,532 --> 01:18:29,932
+That one at least has access. No one uses it outside.
+
+595
+01:18:37,732 --> 01:18:56,861
+Good. Stowed pallet. It's out there to live.
+
+596
+01:18:56,862 --> 01:19:02,412
+It's full pallets to the house reference the old invisible pallets. We can restore pallet its original stay after X and customize my.
+
+597
+01:19:02,442 --> 01:19:06,432
+Okay, that's very complicated but I already drag over items.
+
+598
+01:19:10,632 --> 01:19:14,052
+Our job is not to judge but to document.
+
+599
+01:19:14,412 --> 01:19:22,812
+We are like documentarians. We have their ethical ethics, the ethics of the documentarian.
+
+600
+01:19:24,372 --> 01:19:30,942
+You do not judge. You simply document. Document what is.
+
+601
+01:19:38,862 --> 01:19:54,392
+Source. No check. Maybe the context.
+
+602
+01:20:02,242 --> 01:20:05,362
+Hmhm doesn't look like anyone ever uses that.
+
+603
+01:20:12,272 --> 01:20:15,512
+Never used. Never used.
+
+604
+01:20:15,552 --> 01:20:20,502
+We can just get rid of it. Incredible. Incredible.
+
+605
+01:20:20,552 --> 01:20:24,602
+Lot of vestigial stuff we're discovering in this transition to ES6 classes.
+
+606
+01:20:25,652 --> 01:20:31,592
+It's kind of nice. Uh, okay.
+
+607
+01:20:31,952 --> 01:20:34,972
+Um, these are the comments we continue to leave and able to own customize mode.
+
+608
+01:20:34,982 --> 01:20:43,652
+All the commands disable. We remove the disable when leaving customize mode. Uh, okay.
+
+609
+01:20:43,682 --> 01:20:49,802
+You enabled commands. Okay.
+
+610
+01:20:50,612 --> 01:20:54,332
+Get handler. Good.
+
+611
+01:20:58,532 --> 01:21:09,712
+Uh, this dog handler. Hmhm.
+
+612
+01:21:14,372 --> 01:21:21,962
+Right. See that one as well? What am I seeing in red down here?
+
+613
+01:21:25,222 --> 01:21:29,802
+What is it worried about? And UI change.
+
+614
+01:21:29,812 --> 01:21:34,632
+What are you worried about here? What does this red line mean?
+
+615
+01:21:37,052 --> 01:21:41,041
+This red. What is this on you? I change removed lines.
+
+616
+01:21:41,042 --> 01:21:45,842
+I had removed line. All right. I don't know what that means.
+
+617
+01:21:46,712 --> 01:21:58,262
+I don't know what it means. On an IT dollar sign toggle set tab.
+
+618
+01:21:58,262 --> 01:22:04,292
+These, I think, are all public. Uh, g customize mode on it.
+
+619
+01:22:06,392 --> 01:22:16,142
+Oh, really? Interesting.
+
+620
+01:22:16,142 --> 01:22:35,462
+So this is private. Toggle.
+
+621
+01:22:44,872 --> 01:22:56,192
+Does no one calls toggle? Today when used to call toggle.
+
+622
+01:22:58,172 --> 01:23:05,762
+Let's look at an ESR from back in the day. Yes.
+
+623
+01:23:07,442 --> 01:23:14,402
+Yes. We used to have a button that would call toggle at the bottom of the pool of the panel, and we don't anymore.
+
+624
+01:23:15,422 --> 01:23:25,182
+This is no longer used. She customize mode.
+
+625
+01:23:27,312 --> 01:23:32,962
+Set tab that is used publicly in customize mode.
+
+626
+01:23:32,972 --> 01:23:39,332
+Enter is definitely used. Yes, she customize mode.
+
+627
+01:23:41,492 --> 01:23:46,262
+Exit is also used. You know.
+
+628
+01:23:49,232 --> 01:23:52,291
+Uh, update. There's no way. Uh, that's.
+
+629
+01:23:52,292 --> 01:23:58,592
+Yeah, that will be set side. So we're gonna replace that.
+
+630
+01:24:04,532 --> 01:24:12,152
+Here get customized for child for node. Please.
+
+631
+01:24:12,152 --> 01:24:18,061
+All. Times of 231.
+
+632
+01:24:18,062 --> 01:24:23,131
+Okay. I think we're going to stop here. We're doing, uh, we're making good headway.
+
+633
+01:24:23,132 --> 01:24:32,701
+I'm getting up to speed and familiarize with customize mode, and we're finding old vestigial things that we can just rip out, which is nice.
+
+634
+01:24:32,702 --> 01:24:35,792
+Now, that is that is low hanging fruit. It's like, oh, this is dead code.
+
+635
+01:24:35,792 --> 01:24:44,342
+Remove dead code. Uh, but every time you remove dead code, you're, you're making things easier for future hackers, future, um, developers.
+
+636
+01:24:44,342 --> 01:24:49,562
+Because it's just like one less thing for them to have to consider. So dead code removal is good.
+
+637
+01:24:49,892 --> 01:24:54,842
+Um, and documentation is good. All right, well, I think I'm going to end it here.
+
+638
+01:24:54,842 --> 01:24:58,981
+Thank you so much for watching episode 383 of the Joy of coding. Next week we're going to keep going.
+
+639
+01:24:58,982 --> 01:25:05,582
+Um, I think we're going to be hanging around in customize mode for at least another couple of episodes, so strap in.
+
+640
+01:25:06,062 --> 01:25:10,531
+But, um, let me know what you think. There's a rate this episode link here.
+
+641
+01:25:10,532 --> 01:25:14,732
+Um, link to rate this episode and I read everything that comes in.
+
+642
+01:25:14,732 --> 01:25:20,732
+This is a great opportunity if you are bored stiff by all of this documentation stuff,
+
+643
+01:25:20,732 --> 01:25:23,762
+uh, and you want me to do something else, maybe take a break and come back to this,
+
+644
+01:25:23,762 --> 01:25:30,331
+or you have other feedback, things you want to see more of, uh, or questions that you want to try and have me answer, uh, on the stream.
+
+645
+01:25:30,332 --> 01:25:32,852
+Go ahead and send them in. I read everything that comes in on this form.
+
+646
+01:25:33,692 --> 01:25:38,402
+It's a great opportunity to to, uh, to get get your voice heard and I'll check it out.
+
+647
+01:25:38,882 --> 01:25:45,722
+And with that, I think I'm going to stop here. Thank you so much again for watching episode 383 of the Joy of coding.
+
+648
+01:25:46,022 --> 01:25:49,052
+Have yourselves a great week. Take care everybody.
+
+649
+01:25:49,352 --> 01:25:52,712
+Bye bye. The joy.
+
+650
+01:25:53,562 --> 01:25:56,012
+O d c.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,3486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 367 - June 5, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 367 - June 5, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b7e12a3b-00c5-4f37-94df-b1540138357a</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b7e12a3b-00c5-4f37-94df-b1540138357a">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,600 --> 00:00:10,120
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy of coding.
+
+2
+00:00:10,960 --> 00:00:14,860
+Hello and welcome to episode 367 of the Joy of coding.
+
+3
+00:00:14,890 --> 00:00:18,520
+My name is Mike Conley. It's so good to have you here. I'm back.
+
+4
+00:00:18,940 --> 00:00:25,240
+I'm back from two weeks off. Um. Uh, I was traveling and wasn't able to stream, but I'm back.
+
+5
+00:00:25,500 --> 00:00:31,840
+Last episode was on May 15th, so, you know, that's almost, uh, you know, ten days and we'd be at a month,
+
+6
+00:00:31,840 --> 00:00:35,799
+so it's like 20, uh, like almost a month, let's say about half a month.
+
+7
+00:00:35,800 --> 00:00:39,510
+I've been away. So it's good to be back with episode 367.
+
+8
+00:00:39,550 --> 00:00:43,120
+Let's get to it. Uh, we're going to be live hacking on some Firefox stuff today.
+
+9
+00:00:43,600 --> 00:00:48,460
+Why wait? Let's talk about it. Okay, so today's June 5th, 2024.
+
+10
+00:00:48,760 --> 00:00:52,410
+It's episode 367. A reminder. No plan survives breakfast.
+
+11
+00:00:52,420 --> 00:00:56,799
+I think I know what I'm going to be doing today. I think I know what I'm going to be focusing on, but I might be wrong.
+
+12
+00:00:56,800 --> 00:00:59,890
+And, you know, I'm just going to kind of deal with things as they come.
+
+13
+00:00:59,890 --> 00:01:06,370
+None of the software that I write and the code I write or anything as has been, right, like pre-planned or anything,
+
+14
+00:01:06,370 --> 00:01:12,969
+I'm going to try and tackle it as it comes and try and think out loud so you can write along with me well while we figure stuff out.
+
+15
+00:01:12,970 --> 00:01:17,080
+And that might mean getting sidelined, um, distracted.
+
+16
+00:01:17,080 --> 00:01:20,559
+That might mean we get stuck. We have to try a bunch of different things.
+
+17
+00:01:20,560 --> 00:01:23,740
+Who knows what'll happen? Uh, but that's that's the name of the game.
+
+18
+00:01:23,740 --> 00:01:28,390
+That's the first thing. The second thing is that the agenda that we're looking at is, uh, something you have access to.
+
+19
+00:01:28,870 --> 00:01:35,139
+Uh, and you can follow along and click on handy links and stuff. Uh, depending on where you are, it's going to be in a different place.
+
+20
+00:01:35,140 --> 00:01:38,620
+If you're watching this on YouTube, it's down in the video description.
+
+21
+00:01:38,650 --> 00:01:44,440
+Um, if you're watching this on air, Mozilla, it's over there in the, uh, the details, the video details.
+
+22
+00:01:44,440 --> 00:01:48,040
+And if you're watching this on, uh, on Twitch, it's down in the channel details.
+
+23
+00:01:48,190 --> 00:01:51,969
+You'll note that unlike past streams, I didn't mention diode dot zone.
+
+24
+00:01:51,970 --> 00:01:55,150
+I'm actually going to skip down so I can mention, um, what's going on there.
+
+25
+00:01:55,150 --> 00:01:58,389
+So yeah, I already mentioned I'm back. Actually, this back. Uh.
+
+26
+00:01:58,390 --> 00:02:01,690
+I'm back. Yeah, I already mentioned that diode dot zone.
+
+27
+00:02:01,690 --> 00:02:04,419
+I used to restream to diode dot zone, but I'm not doing that today.
+
+28
+00:02:04,420 --> 00:02:11,080
+And the reason for that is if you go to diode zone, which is if you're not familiar with diode dot zone, it's a pure tube instance.
+
+29
+00:02:11,530 --> 00:02:20,500
+Uh, peer tube is like a federated video, um, video application, video hosting application.
+
+30
+00:02:20,630 --> 00:02:28,570
+You can think of it as almost like, um, where Twitter is to Mastodon, what YouTube is to Peer Tube like.
+
+31
+00:02:28,570 --> 00:02:33,040
+That's a rough analogy. So it allows people to post videos.
+
+32
+00:02:33,280 --> 00:02:40,810
+Um, but it also has some interesting, um, differences from like, well, first of all, you can host your own, you can host your own peer tube instance.
+
+33
+00:02:41,260 --> 00:02:46,089
+Um, you can, uh, you know, have your multiple channels on.
+
+34
+00:02:46,090 --> 00:02:48,400
+You can have other people have channels on your peer tube instance.
+
+35
+00:02:48,610 --> 00:02:56,530
+I was using someone else's peer tube instance diode dot zone, which is predominantly for, I think, electronics and sort of software development.
+
+36
+00:02:56,950 --> 00:03:05,760
+Uh, but the owner of that instance is like, he's not, I don't know, um, uh, what they do for full time, but it's not diodes.
+
+37
+00:03:05,770 --> 00:03:12,610
+Um, that was like a side gig. And it was like something that they had been volunteering resources to maintain and whatnot.
+
+38
+00:03:12,610 --> 00:03:16,959
+And I didn't realize this. Uh, and so there's this big banner at the top of diodes on.
+
+39
+00:03:16,960 --> 00:03:18,970
+It's like, hey, we're trying to downscale this a little bit.
+
+40
+00:03:19,120 --> 00:03:29,350
+Um, we're, uh, we're trying not to, uh, you know, have so many videos like, we've got something like 15TB of videos.
+
+41
+00:03:29,380 --> 00:03:33,190
+This is expensive. Uh, this is, you know, network is expensive.
+
+42
+00:03:33,190 --> 00:03:37,240
+Please. Please help. Please. Well, it's not like they asked for, um, money.
+
+43
+00:03:37,540 --> 00:03:42,700
+Uh, even though I think there's a Patreon. Although I don't think they accept money through it anymore.
+
+44
+00:03:42,730 --> 00:03:47,500
+Like, I think they're just looking to downscale. Anyways, long story short, I'm not streaming this to diodes zone.
+
+45
+00:03:47,710 --> 00:03:52,090
+If you have a peer to binge, it's because I'd love to also have this exist.
+
+46
+00:03:52,090 --> 00:03:57,880
+The series exist on the metaverse somewhere, uh, via an application like Peer Tube.
+
+47
+00:03:58,150 --> 00:04:02,620
+If you have a peer tube instance that you know of, that might make sense for me to go to,
+
+48
+00:04:02,620 --> 00:04:05,920
+and I'm happy to contribute, you know, monetarily to support it.
+
+49
+00:04:06,310 --> 00:04:10,090
+Um, you know, let me know. Let me know what instances make sense.
+
+50
+00:04:10,480 --> 00:04:18,950
+Um, you know, I don't want to join an instance that is full of, like, kind of scummy, like gross stuff, like anything that's just like, hey,
+
+51
+00:04:19,420 --> 00:04:23,350
+here's a bunch of programmers hanging out and here's, here's like, I don't want to,
+
+52
+00:04:23,350 --> 00:04:25,930
+like, go to a place where it's full of adult content or anything like that.
+
+53
+00:04:26,140 --> 00:04:32,920
+I'd rather, um, it'd be like a peer tube instance that is mostly like, hey, people, programing software, that sort of thing.
+
+54
+00:04:33,160 --> 00:04:37,479
+So if you have any recommendations, let me know, he says. Welcome back. Check out odyssey.com.
+
+55
+00:04:37,480 --> 00:04:41,350
+Is this a peer tube instance? odyssey.com.
+
+56
+00:04:41,350 --> 00:04:45,580
+Ooh. Uh, I am not familiar with this.
+
+57
+00:04:46,720 --> 00:04:51,910
+Uh, is this peer tube? What is this about?
+
+58
+00:04:51,910 --> 00:04:56,830
+About fake. I am lady fungus.
+
+59
+00:04:57,190 --> 00:05:00,910
+What? Odyssey. Basics. Welcome to Odyssey.
+
+60
+00:05:01,510 --> 00:05:04,910
+What is? Odyssey. What is it? I don't really want Odyssey.
+
+61
+00:05:04,920 --> 00:05:09,630
+Oh, it's a blockchain based media platform. See? Not the biggest fan of blockchain.
+
+62
+00:05:10,740 --> 00:05:15,870
+Um, so maybe there's. Oh. Referring to Odyssey as blockchain based isn't just sloganeering,
+
+63
+00:05:15,870 --> 00:05:20,640
+it's hosted on the Lbry network, which Odyssey pulls from for those interested in blockchain.
+
+64
+00:05:20,730 --> 00:05:21,959
+This is really cool.
+
+65
+00:05:21,960 --> 00:05:26,880
+For those of us who don't know a thing about blockchain, that's totally fine because Odyssey requires zero blockchain knowledge to use.
+
+66
+00:05:27,150 --> 00:05:30,480
+I'd rather not prop up blockchain stuff if I can avoid it.
+
+67
+00:05:30,600 --> 00:05:33,720
+Um, so if you've got other suggestions, please let me know.
+
+68
+00:05:35,370 --> 00:05:42,479
+All right, so, uh, moving on. I want to mention something else, actually, which is, uh, something I discovered for myself,
+
+69
+00:05:42,480 --> 00:05:46,770
+like just before the stream started, like, not that long ago, maybe 15 minutes ago.
+
+70
+00:05:47,250 --> 00:05:55,810
+Um, so you're probably already familiar with the, uh, uh, uh, freed up helm.
+
+71
+00:05:56,130 --> 00:06:00,600
+This this is my classic example. You're probably already familiar with the translation feature in Firefox.
+
+72
+00:06:00,600 --> 00:06:06,329
+This is the, like, built in translations, uh, language translation, and it does it all client side.
+
+73
+00:06:06,330 --> 00:06:13,710
+So nothing gets sent to Mozilla or anything. Um, uh, whenever you do the translation, it's all done locally on your machine, which is really cool.
+
+74
+00:06:14,070 --> 00:06:21,030
+Um, well, one thing I just found out is that you can also make a selection, like if I select some text here and right click,
+
+75
+00:06:21,120 --> 00:06:26,360
+you can translate the selection and then you'll get this thing to come up and uh,
+
+76
+00:06:26,370 --> 00:06:30,270
+and it, it shows you the selection translated, uh, which I think is pretty neat.
+
+77
+00:06:30,900 --> 00:06:38,220
+Pretty neat. And then from here you can like copy the text or close it out or choose a different like I maybe I could choose to translate to French,
+
+78
+00:06:38,910 --> 00:06:42,360
+um, which is kind of neat. And then I can just be done with it. I think that's neat.
+
+79
+00:06:42,600 --> 00:06:45,950
+Cool stuff. Good job. Uh, translations team.
+
+80
+00:06:45,960 --> 00:06:47,250
+The other thing that's, uh, neat.
+
+81
+00:06:47,250 --> 00:06:55,409
+Uh, you know, the if you're a follower of the stream, if you've watched it before, you've probably already noticed that, like, we have, like,
+
+82
+00:06:55,410 --> 00:07:03,360
+new, richer tooltips, uh, that I've, you know, had kind of like, uh, aren't enabled for a while, but that now they're enabled by default.
+
+83
+00:07:03,630 --> 00:07:11,820
+So these tooltips show you not only the, the tab title in the domain, but also like a thumbnail of the page, which is nice.
+
+84
+00:07:12,150 --> 00:07:17,490
+And if you're on nightly, it'll also show you the process IDs for the processes that are running, um,
+
+85
+00:07:17,490 --> 00:07:23,220
+for that particular tab, which is helpful for like nightly software, like the software developers working on Firefox.
+
+86
+00:07:23,550 --> 00:07:28,830
+So anyways, that's all just kind of news on cool stuff that's inside of Firefox Nightly.
+
+87
+00:07:29,460 --> 00:07:32,820
+All right. Uh, let's get down to work. What do we want to do today?
+
+88
+00:07:35,340 --> 00:07:41,100
+Well, uh, I was hoping to do a windows jump list denouement because we're almost done.
+
+89
+00:07:41,340 --> 00:07:49,860
+Remember, uh, I think I mentioned during the last stream where, uh, we had, um, we'd gotten all the reviews that we needed to,
+
+90
+00:07:50,520 --> 00:07:57,270
+um, to fix the favicon thing to get the fab icon caching mechanism off of the main thread.
+
+91
+00:07:58,470 --> 00:08:02,710
+Um, and then there was patches to, like, remove the legacy backend.
+
+92
+00:08:02,730 --> 00:08:05,639
+Well, I didn't make much progress on those after the,
+
+93
+00:08:05,640 --> 00:08:11,830
+uh uh oh says this translation features needs to download the translated translation data to work.
+
+94
+00:08:11,850 --> 00:08:15,540
+Yes it does. So sorry. Going back to translations for section second.
+
+95
+00:08:15,810 --> 00:08:26,960
+So there's a trade off. Uh. Excuse me. So all the translation occurs locally, but in order to do that, Firefox needs to download quite a bit of data.
+
+96
+00:08:26,970 --> 00:08:30,090
+Basically the translation engine from Mozilla.
+
+97
+00:08:30,870 --> 00:08:35,250
+And that translation engine is, um, several megabytes large.
+
+98
+00:08:35,280 --> 00:08:38,790
+I don't actually know how big they are, but you can manage this if you go to settings.
+
+99
+00:08:39,180 --> 00:08:45,149
+I believe there's, uh, a section in here about translations. Uh, translations.
+
+100
+00:08:45,150 --> 00:08:52,370
+Yeah. And, uh, you can download you can choose to, like, manage, um, what what engines you have downloaded.
+
+101
+00:08:52,380 --> 00:08:57,600
+Like, clearly, I've downloaded a lot of them. I've got almost all of them, but looks like I'm missing Catalan and Czech.
+
+102
+00:08:57,600 --> 00:09:02,039
+So let me get those. Uh, but you can also remove if you need to, like, reclaim disk space.
+
+103
+00:09:02,040 --> 00:09:05,820
+You can remove the engines. And I believe these engines will update over time.
+
+104
+00:09:06,960 --> 00:09:16,590
+Um, and oh, this is interesting. So you can actually, like, uh, I don't know how to, how this management works, but presumably you can.
+
+105
+00:09:16,980 --> 00:09:24,750
+Oh, if like I choose to not translate a certain page, um, like, never translate this site.
+
+106
+00:09:24,750 --> 00:09:27,990
+I guess I can manage that over here. Uh, okay.
+
+107
+00:09:28,020 --> 00:09:35,070
+Well, interesting. Anyways, uh, yeah, you have to download these, uh, translation engines to do the translation locally,
+
+108
+00:09:35,190 --> 00:09:40,230
+but once that's done, nothing leaves your machine. So now I can translate probably translate this to check.
+
+109
+00:09:40,620 --> 00:09:45,920
+Um, translate it to check there.
+
+110
+00:09:45,930 --> 00:09:49,830
+I cannot like, verify. Oh, I don't read check.
+
+111
+00:09:50,490 --> 00:09:54,720
+Uh, but apparently this is the German translation.
+
+112
+00:09:55,110 --> 00:09:59,159
+This text translated to check. Uh, maybe.
+
+113
+00:09:59,160 --> 00:10:01,890
+Maybe. I can't say for certain. I can't even say for.
+
+114
+00:10:01,910 --> 00:10:06,320
+Certain whether or not this is translated properly into English, but it certainly makes sense as English.
+
+115
+00:10:06,660 --> 00:10:12,110
+Uh, and it matches what I know about Gottfried Leibniz, um, who has an interesting character.
+
+116
+00:10:13,100 --> 00:10:17,390
+All right. Uh, let's move on. Uh, so, yeah, jump list stuff.
+
+117
+00:10:17,900 --> 00:10:25,550
+Uh, so we've gotten to the point where we had, uh, written the patch to do the favicon thing.
+
+118
+00:10:25,610 --> 00:10:31,670
+Those were all reviewed, and then patches to remove the old, uh, back end, the legacy back end.
+
+119
+00:10:31,940 --> 00:10:36,180
+I pushed it up to try. It came back green. So I think we're actually good to post that up for review.
+
+120
+00:10:36,200 --> 00:10:42,830
+I'm hoping to do that today. But the favicon thing, there's like one last review comment that came in that I was hoping we could look at.
+
+121
+00:10:44,150 --> 00:10:48,920
+And uh, that has to do with, uh, favicon.
+
+122
+00:10:52,510 --> 00:11:02,040
+It's, uh. So this one was accepted. There's a comment here from persons about how we could split out.
+
+123
+00:11:02,400 --> 00:11:07,770
+There's, like, a conversation in here about, um, uh, you know,
+
+124
+00:11:07,770 --> 00:11:13,739
+splitting out a lambda from this large function here because this is a fairly it's not a huge function,
+
+125
+00:11:13,740 --> 00:11:19,920
+but it's got some nested lambdas and, uh, uh, Pearsons had suggested in like,
+
+126
+00:11:19,950 --> 00:11:24,240
+an earlier patch, like, hey, you could split that out into a separate, um, method.
+
+127
+00:11:24,450 --> 00:11:30,990
+And I was like, oh, I can't figure out how to do that. And he said, oh, well, uh, are you looking for this version of.
+
+128
+00:11:31,290 --> 00:11:36,270
+Yeah, this ends up being a lot harder to do because such and such as the stack method, the invoke async method,
+
+129
+00:11:36,270 --> 00:11:41,249
+you suggested that use excuse me and pass this type when I try to forward a separate method that works,
+
+130
+00:11:41,250 --> 00:11:44,729
+for instance methods, but not for stacking this. So I think I'll stick with my nested loops for now.
+
+131
+00:11:44,730 --> 00:11:53,910
+And he says, are you looking for the lambda function version? And then he pointed me at this, so presumably I can actually do that split out.
+
+132
+00:11:54,150 --> 00:11:59,580
+And I was hoping we could try that today. And if that works, then I've got all the reviews I need.
+
+133
+00:11:59,580 --> 00:12:03,180
+I can probably, uh, queue this for landing.
+
+134
+00:12:04,260 --> 00:12:11,130
+Um, and I'll go ahead and try and do that today. Uh, all right, let's try it.
+
+135
+00:12:12,540 --> 00:12:18,480
+So over here, I got my windows machine. It rebooted while I was, um, while I was traveling.
+
+136
+00:12:18,480 --> 00:12:23,610
+So I've got to reopen everything up here. Uh, win utils.
+
+137
+00:12:25,830 --> 00:12:30,900
+Uh, I think we're looking at the right place here, which was.
+
+138
+00:12:33,480 --> 00:12:38,940
+Yeah. It's kind of hard to read because of all this gunk, but basically, he was saying that I could split out.
+
+139
+00:12:47,930 --> 00:12:51,800
+Split out like this lambda right here.
+
+140
+00:12:54,800 --> 00:12:58,190
+So that we don't have a lambda nested within yet another lambda.
+
+141
+00:12:59,870 --> 00:13:00,770
+So let's try and do that.
+
+142
+00:13:01,220 --> 00:13:13,280
+Um, so he says that I can use this form of invoke async, which takes an event target a static string, and then the function uh,
+
+143
+00:13:13,280 --> 00:13:21,440
+a function pointer invoke a function object asynchronously return a promise that the function should eventually resolve or reject.
+
+144
+00:13:21,980 --> 00:13:30,920
+Okay, let's try it. So what we need is a a function that accepts these same arguments that are being captured in this lambda.
+
+145
+00:13:31,790 --> 00:13:35,060
+So uh, let's create a static method. Another one.
+
+146
+00:13:35,300 --> 00:13:45,210
+Um, oops. Static. Uh, sure.
+
+147
+00:13:45,250 --> 00:13:48,280
+Auto fab icon.
+
+148
+00:13:48,600 --> 00:13:51,690
+What is this is doing? Obtain called promise. Okay, sure.
+
+149
+00:13:53,250 --> 00:14:00,620
+Um. What is this going to do?
+
+150
+00:14:01,310 --> 00:14:08,230
+We get the current thread that will call. Right.
+
+151
+00:14:08,830 --> 00:14:16,480
+Um, so this this method actually does the work of sending the lambda to run a function back on the main thread.
+
+152
+00:14:17,140 --> 00:14:23,320
+Um. Obtain.
+
+153
+00:14:23,330 --> 00:14:27,620
+So, uh, what would be a good name for this method?
+
+154
+00:14:29,270 --> 00:14:32,750
+So this one was called obtain cached favicon async.
+
+155
+00:14:35,340 --> 00:14:40,590
+You could the cheap and easy way, as you call it, like obtain cached favicon async helper.
+
+156
+00:14:41,790 --> 00:14:51,440
+Um. And that's maybe not a bad, uh, not a bad idea.
+
+157
+00:14:54,890 --> 00:15:01,940
+And it's going to take a boolean a used shortcut cache to.
+
+158
+00:15:07,100 --> 00:15:18,920
+A you or I, and I see you or I page you or I and I seo file and it's I file, okay I seo file.
+
+159
+00:15:23,670 --> 00:15:27,480
+And a thread. Um.
+
+160
+00:15:29,790 --> 00:15:35,510
+And I think it's just like. Oh, sorry.
+
+161
+00:15:35,520 --> 00:15:45,800
+Ref point at ref point. Not not raw pointers. And then for thread is serial event target.
+
+162
+00:15:49,830 --> 00:15:53,670
+So Brett Poynter and see you are I.
+
+163
+00:15:57,680 --> 00:16:02,210
+Or really this. These should be like as complainers.
+
+164
+00:16:02,230 --> 00:16:07,059
+Maybe. Because I think the complainers coming through.
+
+165
+00:16:07,060 --> 00:16:10,370
+Right. Com pointer here.
+
+166
+00:16:11,060 --> 00:16:16,250
+Com pointer for the file. Yeah. Uh as com pointer.
+
+167
+00:16:17,480 --> 00:16:20,930
+I c o file. And then what was the last part.
+
+168
+00:16:20,930 --> 00:16:30,080
+It was the thread. So, uh, that's a ref pointer to a size serial and to target a thread.
+
+169
+00:16:31,880 --> 00:16:38,270
+Don't worry about the formatting. We'll deal with it later. Um, and then this is all the stuff that happened inside of the.
+
+170
+00:16:40,600 --> 00:16:45,080
+Help her. Now, this thing should ensure that it's running on the main thread.
+
+171
+00:16:45,090 --> 00:16:50,890
+So, uh, let's do that. Uh, assert.
+
+172
+00:16:55,570 --> 00:17:05,920
+Sir. Um. There's like a main threat assertion to classical, and it's like Mars cert is main threat, but I can't remember what it is.
+
+173
+00:17:05,980 --> 00:17:11,920
+Um, uh, the cert main thread.
+
+174
+00:17:12,610 --> 00:17:30,190
+NSA's main thread. Yeah. It creates a holder and then a promise, and then calls that, and then it returns the promise.
+
+175
+00:17:32,320 --> 00:17:41,530
+And now can I, instead of doing this, I'm going to keep it just because I'm paranoid that this isn't going to work.
+
+176
+00:17:43,060 --> 00:17:53,980
+So I'll just do that for now. Can I? Do this return invoke async.
+
+177
+00:17:55,690 --> 00:18:03,460
+And then what's the format? What's the. The signature.
+
+178
+00:18:14,840 --> 00:18:18,800
+Call her name. Function. Okay. Target.
+
+179
+00:18:22,540 --> 00:18:28,220
+Um. Target.
+
+180
+00:18:30,860 --> 00:18:35,480
+Caller name? Uh, I think that's this.
+
+181
+00:18:41,470 --> 00:18:45,970
+And then the function. Can I just do like fab icon helper?
+
+182
+00:18:46,690 --> 00:18:50,740
+Obtain cached icon file async helper.
+
+183
+00:18:50,950 --> 00:18:56,289
+Apps do that. And I don't have high hopes.
+
+184
+00:18:56,290 --> 00:19:03,150
+But let's see what happens. Don't worry about the formatting.
+
+185
+00:19:03,540 --> 00:19:07,080
+The linter will take care of it. It's gross.
+
+186
+00:19:07,080 --> 00:19:13,440
+The current formatting. One of the things I like about, um,
+
+187
+00:19:13,680 --> 00:19:21,090
+working in JavaScript lately with VS code is that when I hit save it like automatically prettier is it for me, which is very nice.
+
+188
+00:19:28,030 --> 00:19:30,759
+And I think it's been a while since I've thought about this, but I think,
+
+189
+00:19:30,760 --> 00:19:35,050
+did we add some tests for this so that I can make sure that this is still working?
+
+190
+00:19:38,650 --> 00:19:43,120
+Yeah, we added some tests so we can run those tests and make sure we got it right.
+
+191
+00:19:43,840 --> 00:19:48,220
+Um, if this builds, it doesn't build.
+
+192
+00:19:50,050 --> 00:19:57,030
+Uh. Uh, November named such and such because I didn't declare it properly.
+
+193
+00:19:57,840 --> 00:20:01,200
+Static can only be specified by the class definition.
+
+194
+00:20:09,640 --> 00:20:13,150
+Okay. Fine.
+
+195
+00:20:13,570 --> 00:20:18,360
+So maybe I need to. Declare this.
+
+196
+00:20:18,360 --> 00:20:26,000
+Over here. Static. Auto.
+
+197
+00:20:40,840 --> 00:20:45,550
+What do you think of that? Danny Collins says there isn't a plugin in sublime for that.
+
+198
+00:20:45,700 --> 00:20:49,749
+Probably. But I don't know if, um, like that's for JavaScript.
+
+199
+00:20:49,750 --> 00:20:52,900
+For C plus. Plus we use like the clang plug in for formatting and.
+
+200
+00:20:55,480 --> 00:20:59,200
+I don't know if that works as quickly. Oh geez.
+
+201
+00:20:59,350 --> 00:21:02,740
+Because I change the header. I've got to go and rebuild all these things.
+
+202
+00:21:02,800 --> 00:21:13,240
+That's fun. Well, while we're waiting on this, uh, to see if it worked, maybe we can review a patch.
+
+203
+00:21:13,250 --> 00:21:18,559
+Let's do some, uh, let's do some work in parallel. So, uh, I'm going to go back over here.
+
+204
+00:21:18,560 --> 00:21:24,590
+I'm going to open up my review queue of screen and find a patch to review.
+
+205
+00:21:24,950 --> 00:21:28,730
+Okay. So I have a couple to review. I'm just going to queue them up.
+
+206
+00:21:30,830 --> 00:21:36,380
+Here. So, uh, I have a colleague, Shane, who is cleaning up a bunch of stuff.
+
+207
+00:21:36,710 --> 00:21:46,160
+He's basically carrying the torch. Um, some work I was doing late last year, which was to split off, um, ace router, which is, um,
+
+208
+00:21:47,330 --> 00:21:57,680
+kind of a complicated piece of machinery for showing onboarding messages to people from the new tab code base where it was originally born out from.
+
+209
+00:21:57,680 --> 00:22:02,840
+But now it is involved like more. It does more than just show things on the new tab page.
+
+210
+00:22:03,650 --> 00:22:11,090
+Um, and so. Oh, hey, hey, we're, uh, we finished building widgets, so maybe this is going to work.
+
+211
+00:22:12,170 --> 00:22:19,730
+We'll see at the linking time. No.
+
+212
+00:22:21,050 --> 00:22:24,410
+Oh! Whoops. Whoopsie daisy.
+
+213
+00:22:24,440 --> 00:22:29,239
+Uh, I forgot to update all of my argument. Uh oh.
+
+214
+00:22:29,240 --> 00:22:35,600
+My argument. So, page you are I. I see your file.
+
+215
+00:22:38,560 --> 00:22:42,670
+Uh, io threat. I also forgot to move everything. Um.
+
+216
+00:22:47,170 --> 00:22:51,930
+You sure get Castor. How does. How did the arguments get moved over?
+
+217
+00:22:51,940 --> 00:22:58,460
+I just realized, um. Where are the arguments?
+
+218
+00:22:58,480 --> 00:23:01,480
+Arguments. Arguments. Function.
+
+219
+00:23:01,480 --> 00:23:08,500
+Function. Minecraft. Pointer. Function is.
+
+220
+00:23:12,400 --> 00:23:20,150
+Function. That might be sort of taken care of here.
+
+221
+00:23:23,000 --> 00:23:29,540
+It'd be great if I could find more examples of this particular form of invoke async.
+
+222
+00:23:48,200 --> 00:23:54,410
+Lambda lambda. Lambda. Lambda lambda. Should you get more context?
+
+223
+00:23:56,600 --> 00:24:07,580
+Lambda. Lamb to lambda Lambda.
+
+224
+00:24:16,590 --> 00:24:23,220
+Lambda. Or lambdas.
+
+225
+00:24:24,960 --> 00:24:29,460
+So here's one kind of a sink.
+
+226
+00:24:31,300 --> 00:24:35,240
+The thread. Which one is this?
+
+227
+00:24:38,260 --> 00:24:41,600
+This, Val? Yeah. Um.
+
+228
+00:24:45,610 --> 00:24:48,880
+Lambda Lambda.
+
+229
+00:24:51,410 --> 00:25:02,020
+The fist fell. Like, what is this?
+
+230
+00:25:02,470 --> 00:25:06,010
+It doesn't take any arguments. Be really nice.
+
+231
+00:25:06,280 --> 00:25:09,640
+If there was one that. Oh, here we go. And then arguments.
+
+232
+00:25:10,030 --> 00:25:13,630
+Uh. Invoke async. Oh, this.
+
+233
+00:25:14,140 --> 00:25:17,920
+Then func, then this, then arguments. That's no good.
+
+234
+00:25:18,460 --> 00:25:36,330
+I need just like the bear. Lambda lambda Lambda.
+
+235
+00:25:36,330 --> 00:25:43,170
+Lambda lambda. Like, what happens if I just.
+
+236
+00:25:46,680 --> 00:25:49,919
+Pass in the arguments here?
+
+237
+00:25:49,920 --> 00:25:54,440
+Like I have a feeling it won't match. Like there's some templating magic happening here.
+
+238
+00:25:54,450 --> 00:26:02,160
+I don't know if you can tell, but there's like this template function magic is here.
+
+239
+00:26:02,670 --> 00:26:11,270
+Um. And it's possible that like the way you can use arguments.
+
+240
+00:26:14,480 --> 00:26:20,120
+Is included as part of this magic, but I can't actually tell.
+
+241
+00:26:23,670 --> 00:26:28,560
+Function object must return a ref pointer must promise.
+
+242
+00:26:33,760 --> 00:26:38,610
+And then. Forward function.
+
+243
+00:26:44,050 --> 00:26:51,410
+No idea. Proxy. Renewable. Gene to function.
+
+244
+00:26:51,440 --> 00:26:57,290
+Yeah. Look, look. The function never. The function never takes any arguments.
+
+245
+00:26:58,010 --> 00:27:03,050
+I think I'm going to push back. I don't think this works. I don't think this works.
+
+246
+00:27:10,540 --> 00:27:15,460
+Um, yes. But um, yes, that looks closer.
+
+247
+00:27:15,970 --> 00:27:26,590
+But as far as I can tell, it doesn't allow me to pass arguments to the static method.
+
+248
+00:27:30,580 --> 00:27:37,870
+Okay. So I'm just going to put this to bed. If it turns out we want to actually there should be a template version with
+
+249
+00:27:38,170 --> 00:27:41,320
+dot dot dot in the template arguments which should allow passing arguments.
+
+250
+00:27:41,560 --> 00:27:46,510
+Where are you seeing that. So here are all the invoke asynchronous.
+
+251
+00:27:49,850 --> 00:27:52,850
+Here's the one that uses the this type. No good.
+
+252
+00:27:55,040 --> 00:27:58,250
+This is the one that also requires this type. No.
+
+253
+00:27:58,250 --> 00:28:03,170
+Good. This one also requires this type.
+
+254
+00:28:03,350 --> 00:28:07,789
+No good. Type name.
+
+255
+00:28:07,790 --> 00:28:12,890
+Where you seeing this? Tell me more. This one.
+
+256
+00:28:14,360 --> 00:28:17,990
+Type name. Be.
+
+257
+00:28:18,020 --> 00:28:21,200
+Please. Please tell me more. Uh.
+
+258
+00:28:21,200 --> 00:28:28,370
+Across. I'm not entirely certain what you're saying,
+
+259
+00:28:28,880 --> 00:28:34,430
+but because part of the issue that we were dealing with is because there is no this were inside of static methods,
+
+260
+00:28:34,430 --> 00:28:39,020
+there is no this and I so I don't know what to pass. I can't just pass null pointer for the this type.
+
+261
+00:28:39,680 --> 00:28:46,220
+What argument to I want to pass uh, all of all of these all of these.
+
+262
+00:28:49,390 --> 00:28:52,540
+But we're inside of static methods. There's no notion of this.
+
+263
+00:28:53,290 --> 00:29:10,710
+And I think that's where we're falling over. Um, so I'm going to I'm just going to skip this part and I'm just going to land these.
+
+264
+00:29:11,880 --> 00:29:15,930
+Uh, I hope they rebase cleanly. We're about to find out.
+
+265
+00:29:16,830 --> 00:29:23,070
+Let's, uh, go ahead and trigger the landing. That was a little, uh.
+
+266
+00:29:23,700 --> 00:29:27,090
+Um, what's. Can't you use Lambda, then?
+
+267
+00:29:29,170 --> 00:29:33,870
+I that's what I am using. I am using a lambda. Originally we were using a lambda.
+
+268
+00:29:34,320 --> 00:29:40,860
+So to be clear, to be clear, what I was replacing was a lambda.
+
+269
+00:29:43,110 --> 00:29:51,210
+And the only reason I was trying to use this other method was because Pearson suggested it as a way of not having a nested lambda within a lambda.
+
+270
+00:29:53,910 --> 00:29:57,389
+I don't know if there's if there's something I'm missing across. I'm going to wait until here.
+
+271
+00:29:57,390 --> 00:30:04,560
+I'm going to hide the done inline so we can look at this more cleanly. But uh cached copy icon file async.
+
+272
+00:30:05,520 --> 00:30:11,890
+So. Let me see if I can show you what I'm talking about.
+
+273
+00:30:11,900 --> 00:30:15,650
+So in this method. This is the method.
+
+274
+00:30:15,950 --> 00:30:23,780
+This runs this outer scope. Main thread. Invoke async lambda, not main thread.
+
+275
+00:30:24,140 --> 00:30:28,070
+Now we're inside worker thread or IO thread. Great.
+
+276
+00:30:28,490 --> 00:30:30,380
+Now we need to do work back on the main thread.
+
+277
+00:30:31,010 --> 00:30:39,230
+So we were nesting another lambda that dispatches this lambda to the main thread and Pearsons was like, hey, why don't you do?
+
+278
+00:30:39,530 --> 00:30:49,579
+Why don't you pull that nested the innermost lambda out into a helper method and then use it this form of invoke async,
+
+279
+00:30:49,580 --> 00:30:51,800
+because that doesn't that one doesn't require this.
+
+280
+00:30:52,010 --> 00:31:03,740
+Unfortunately, while it doesn't require this, it also doesn't let me pass arguments and I need to pass arguments, um, from this scope to this scope.
+
+281
+00:31:05,680 --> 00:31:12,760
+So that's what's up. I mean, I just check to see if if I missed anything across.
+
+282
+00:31:12,770 --> 00:31:16,450
+If there's anything I missed, please let me know. Okay.
+
+283
+00:31:17,170 --> 00:31:24,400
+Cool. So yes, let's go ahead and uh, go ahead and, uh, land these patches.
+
+284
+00:31:25,330 --> 00:31:34,170
+Um. We'll see if they land cleanly.
+
+285
+00:31:34,170 --> 00:31:39,390
+It's been two weeks or so since they were written, so we'll see.
+
+286
+00:31:40,620 --> 00:31:44,160
+Uh, missing a test policy tag. I need to add those.
+
+287
+00:31:45,630 --> 00:31:54,080
+Um. Uh, so I'm going to say change project tags.
+
+288
+00:31:54,090 --> 00:31:57,780
+Testing, uh, exception.
+
+289
+00:32:01,050 --> 00:32:13,260
+Other, um, testing the actual um, uh, windows jump list, uh, mechanism is fairly difficult because,
+
+290
+00:32:14,130 --> 00:32:27,600
+uh, mechanism end to end is fairly difficult because, um, part of it is controlled by the OS.
+
+291
+00:32:28,830 --> 00:32:33,120
+We do have unit tests by windows OS.
+
+292
+00:32:33,120 --> 00:32:37,410
+We do have unit tests however, for the jump list builder.
+
+293
+00:32:39,600 --> 00:32:51,570
+Um, in the future we may also stub out jump list builder, mock out jump list builder,
+
+294
+00:32:51,750 --> 00:33:00,240
+the up the jump list builder to write unit tests for windows jump lists dot system Mjs.
+
+295
+00:33:03,330 --> 00:33:10,370
+But not today. Okay.
+
+296
+00:33:12,550 --> 00:33:16,540
+And the other one. Amazing version.
+
+297
+00:33:16,570 --> 00:33:21,100
+Uh, yeah. This one does have tests. Uh, so change project tags.
+
+298
+00:33:21,100 --> 00:33:24,640
+Testing. Uh, it's actually testing elsewhere.
+
+299
+00:33:25,780 --> 00:33:32,890
+Uh, the tests. For these changes are in.
+
+300
+00:33:34,750 --> 00:33:39,630
+What was the name of the. Is this revision? Such and such.
+
+301
+00:33:40,110 --> 00:33:43,710
+Done. Okay. Reload.
+
+302
+00:33:47,810 --> 00:33:51,410
+Who needs tests? Anonymous C developer Danny Colon.
+
+303
+00:33:51,910 --> 00:33:55,910
+Oh, who needs tests? Everyone needs tests.
+
+304
+00:33:56,750 --> 00:34:01,160
+All right, let's go ahead and see what happens. Putting the spaghetti in the machine, y'all.
+
+305
+00:34:02,870 --> 00:34:05,910
+Bum bum bum bum bum bum bum bum.
+
+306
+00:34:06,950 --> 00:34:14,590
+I might get back to it. We'll see. Oh, I might tell me that it won't apply cleanly.
+
+307
+00:34:14,620 --> 00:34:22,060
+That could happen. Is autoland open right now? Um.
+
+308
+00:34:23,260 --> 00:34:29,230
+No autoland is currently closed waiting for coverage. So when it opens, we'll see what happens.
+
+309
+00:34:30,430 --> 00:34:34,990
+All right, so that's, uh, that's jump list stuff.
+
+310
+00:34:35,140 --> 00:34:38,469
+I think we can also post the removal patches for review.
+
+311
+00:34:38,470 --> 00:34:42,430
+So let's do that. Let's, um, revert these changes.
+
+312
+00:34:47,650 --> 00:34:53,800
+Actually, you know what I'll do. I'm going to pull central and rebase.
+
+313
+00:34:54,340 --> 00:34:58,270
+Actually, we're actually going to see if the rebase will occur cleanly.
+
+314
+00:35:06,080 --> 00:35:14,780
+And if not, then we can cancel the autoland. Mhm.
+
+315
+00:35:14,780 --> 00:35:17,800
+Mhm. Mhm. Mhm. Mhm.
+
+316
+00:35:17,810 --> 00:35:20,960
+Mhm. Mhm. Mhm. Mhm. Mhm.
+
+317
+00:35:20,990 --> 00:35:41,000
+Wow. It's been a while since I pulled. Come on now.
+
+318
+00:35:42,350 --> 00:35:47,000
+Good I might. 10s.
+
+319
+00:35:53,250 --> 00:35:57,450
+Anyone here? Uh, from France.
+
+320
+00:35:57,510 --> 00:36:01,530
+I was just in France. What a what a lovely country.
+
+321
+00:36:02,100 --> 00:36:07,250
+Um, your food is. Is very good.
+
+322
+00:36:07,430 --> 00:36:11,130
+Can you link to the bug report with the invoke async suggestion?
+
+323
+00:36:11,150 --> 00:36:15,200
+I don't see it in the agenda. Sure I can. I can link to the fabric later.
+
+324
+00:36:15,210 --> 00:36:22,820
+Uh, comment. See here. Uh, the comments are.
+
+325
+00:36:27,350 --> 00:36:32,530
+Uh. Static. It's this one.
+
+326
+00:36:33,910 --> 00:36:40,149
+So windows jumpers, uh, windows jumpers.
+
+327
+00:36:40,150 --> 00:36:49,480
+De Newmar. I'll add, uh, our paired persons suggestion for using invoke async.
+
+328
+00:36:51,970 --> 00:36:57,070
+Okay, so if you reload the agenda, that should, uh, that should work.
+
+329
+00:37:00,760 --> 00:37:05,320
+Okay. This rebase underway. Underway.
+
+330
+00:37:10,780 --> 00:37:14,860
+So. Yeah, I was just in France. What a delightful country.
+
+331
+00:37:15,610 --> 00:37:21,190
+You've got great food. Your transit system seems to be really, really nice.
+
+332
+00:37:21,850 --> 00:37:30,820
+Um, like, I was able to get basically everywhere we need to be just by bike train, which was, uh, very efficient, very, very fast, very efficient.
+
+333
+00:37:31,780 --> 00:37:39,100
+Uh, at least from my perspective. Uh, I traveled great distances, uh, when they aren't on strike.
+
+334
+00:37:39,130 --> 00:37:42,340
+Yeah, that is true. I've heard that that can occur.
+
+335
+00:37:42,790 --> 00:37:50,140
+Uh, and, you know, it happens. But, yeah, the transit system was really smooth for me.
+
+336
+00:37:50,170 --> 00:37:54,760
+Luckily, they weren't on strike when I was there. Uh, so the rebase occurred smoothly.
+
+337
+00:37:54,880 --> 00:38:05,410
+That's good. So now what I'm going to do is I'm going to rebase the legacy, uh, the legacy removal stuff.
+
+338
+00:38:07,260 --> 00:38:10,320
+Toot toot toot. Where is all that?
+
+339
+00:38:12,630 --> 00:38:15,990
+Move. You know what?
+
+340
+00:38:16,020 --> 00:38:22,020
+I think I may have. I seem to recall this. I think I didn't actually do that work on my windows machine.
+
+341
+00:38:22,020 --> 00:38:25,560
+I did it on my macOS machine. So let me find it.
+
+342
+00:38:25,800 --> 00:38:31,260
+Just give me a second. Let me find the fabricate a revision.
+
+343
+00:38:31,910 --> 00:38:38,460
+Come. Got it. It's this one.
+
+344
+00:38:40,710 --> 00:38:46,980
+Uh, so we're going to pull these ones in. Uh, let's pull in all the children.
+
+345
+00:38:46,980 --> 00:38:55,230
+James. That's two. So I should be rebased on top of that, and we're going to go mass fat patch boom.
+
+346
+00:38:55,950 --> 00:39:02,069
+Apply to here. And this I don't know if this is going to apply cleanly.
+
+347
+00:39:02,070 --> 00:39:06,870
+It might. Oh the other place I was in Belgium.
+
+348
+00:39:09,240 --> 00:39:13,440
+Belgium. Uh the chocolate and waffle game in Belgium.
+
+349
+00:39:14,460 --> 00:39:18,510
+Whew. They know what they're doing when it comes to chocolate and waffles.
+
+350
+00:39:19,350 --> 00:39:22,620
+Uh, you know, it's if the rumors are true.
+
+351
+00:39:22,620 --> 00:39:30,209
+If if you've never been and you like waffles or chocolate, you could go to worse places than Belgium.
+
+352
+00:39:30,210 --> 00:39:37,590
+Or at least where I was in Belgium, I really, uh, I really enjoyed where we were at in Belgium.
+
+353
+00:39:37,800 --> 00:39:43,770
+There's a city called Ghent. Ghent. But we didn't go to Brugge or Bruja.
+
+354
+00:39:43,770 --> 00:39:50,550
+I've. I heard that that's actually how you pronounce it, but anglophones pronounce it Brugge and, uh.
+
+355
+00:39:51,720 --> 00:39:56,700
+Yeah, I, I really enjoyed Ghent. Okay, so that applied cleanly as well.
+
+356
+00:39:57,060 --> 00:40:00,300
+So what I'm going to do is I'm going to.
+
+357
+00:40:02,730 --> 00:40:08,580
+Um, here's what I'm going to do. I'm going to cancel the autoland request here.
+
+358
+00:40:16,830 --> 00:40:24,690
+Okay. And then I'm going to. So luckily the tree was closed and then I'm going to uh mas fab submit.
+
+359
+00:40:26,400 --> 00:40:33,730
+Right here. What I'm going to do is. Yeah.
+
+360
+00:40:33,760 --> 00:40:41,080
+Mas fab. Submit. Rebase and no whip.
+
+361
+00:40:52,320 --> 00:40:57,810
+And then I'll do a mars fab reorg. No.
+
+362
+00:40:57,820 --> 00:41:00,880
+As work in progress. No, I said no. Whip.
+
+363
+00:41:08,020 --> 00:41:14,740
+Has five patches. Work in progress. All right, I'm canceling out of that.
+
+364
+00:41:15,940 --> 00:41:21,160
+I need to have those be not work in progress. So I'm going to do a hist edit.
+
+365
+00:41:41,690 --> 00:41:45,710
+We're going to get rid of. The whip.
+
+366
+00:41:47,030 --> 00:41:51,859
+Check out the whip. I'm gonna get rid of the whip. You went there for worker for vacation.
+
+367
+00:41:51,860 --> 00:41:55,580
+I went there for vacation. I was working the first week, so this is what I did.
+
+368
+00:41:56,570 --> 00:42:03,680
+One of the nice things about working remotely is that every now and then, you get to work remotely.
+
+369
+00:42:03,830 --> 00:42:16,790
+And so, um, during the first week of travels, I was working, but that was intentional so that we could take the opportunity to explore in the morning.
+
+370
+00:42:17,000 --> 00:42:20,960
+So we I was working eastern hours while I was over in France.
+
+371
+00:42:21,440 --> 00:42:29,599
+And so I worked, um, from like 3 p.m. until like, I guess 10 or 11 p.m. at night, uh,
+
+372
+00:42:29,600 --> 00:42:33,620
+which is a long day, except that our bodies were still on Eastern time, so it was fine.
+
+373
+00:42:33,620 --> 00:42:39,919
+But we tried to get up really early in France so that we could take the opportunity to,
+
+374
+00:42:39,920 --> 00:42:43,550
+like, explore the area that we were in, which is a really nice area.
+
+375
+00:42:44,630 --> 00:42:49,250
+And then our workday started. So it was almost like we were half on vacation.
+
+376
+00:42:49,250 --> 00:42:54,920
+And then we would like work from 3 p.m. until nighttime, and then we'd go to bed like immediately we would fall asleep.
+
+377
+00:42:55,430 --> 00:43:00,260
+And so the advantage of doing that is that by the time our workweek was done and we were actually on vacation,
+
+378
+00:43:00,590 --> 00:43:02,750
+uh, we were more or less adjusted to the time zone,
+
+379
+00:43:03,140 --> 00:43:10,039
+which was, uh, very nice, because one of the things I don't like about traveling so far is like the first week or so.
+
+380
+00:43:10,040 --> 00:43:16,370
+I'm just ruined time zone wise. Like I'm just jet. So I'm, I'm napping in the middle of the day when I'd rather be out exploring.
+
+381
+00:43:17,270 --> 00:43:20,960
+So this way I was able to get all of that jet lag kind of out of the way.
+
+382
+00:43:22,100 --> 00:43:26,180
+Uh, at the beginning, it didn't really have to affect us when we were on vacation.
+
+383
+00:43:26,810 --> 00:43:32,900
+I'm still dealing with it now, coming back home, though, so, like, I'm going to crash probably right after work or.
+
+384
+00:43:32,960 --> 00:43:38,000
+We'll see. We'll see. Um, okay.
+
+385
+00:43:38,000 --> 00:43:41,360
+So I think that's done. Let's try that. Submit again. Miles.
+
+386
+00:43:41,360 --> 00:43:45,560
+Fab. Submit rebase. No whip.
+
+387
+00:43:46,280 --> 00:43:54,750
+Maybe I'll just not include that whatsoever. Um or hang on but submit rebase.
+
+388
+00:43:56,580 --> 00:44:02,250
+Don't mark fearless commits with the script as a stealth whip will continue to be flagged as work in progress.
+
+389
+00:44:03,180 --> 00:44:08,100
+Okay. So I'm just going to say submit rebase.
+
+390
+00:44:13,020 --> 00:44:32,700
+Go go go. So yeah.
+
+391
+00:44:32,710 --> 00:44:35,740
+Will be change to request review. That's very nice.
+
+392
+00:44:48,470 --> 00:45:17,670
+Mhm. Mhm. Mhm mhm mhm. What's going on here?
+
+393
+00:45:18,840 --> 00:45:23,910
+This is this is just going to take a while. So while we're waiting for this, maybe we can do those some reviews.
+
+394
+00:45:24,330 --> 00:45:32,250
+Um, so, like I said, my colleague Shane has been working on helping to split off new tab and ass writer even further.
+
+395
+00:45:32,370 --> 00:45:36,029
+There's a whole stack of patches that that do this. I reviewed one of them already.
+
+396
+00:45:36,030 --> 00:45:40,200
+I reviewed this one. Um, I'm going to review some of these other ones.
+
+397
+00:45:40,800 --> 00:45:43,800
+Uh, so move remote text component to Ace router.
+
+398
+00:45:44,340 --> 00:45:53,069
+So I'll try to refresh my memory. So the remote text component, it's called remote text as a custom element.
+
+399
+00:45:53,070 --> 00:45:55,559
+But the class is called like Moore's text paragraph.
+
+400
+00:45:55,560 --> 00:46:03,840
+So it looks like that's the first thing that is being, um, fixed here is that the file is being renamed and the class has been renamed.
+
+401
+00:46:04,590 --> 00:46:07,650
+Let's just make sure that there's nothing else in here that needs to be updated.
+
+402
+00:46:09,660 --> 00:46:11,280
+Yeah, it's a fairly simple.
+
+403
+00:46:14,160 --> 00:46:27,360
+I don't I don't know what this thing does, but it just it's an HTML element that lets you use some fluent variables and then uses remote l10n I,
+
+404
+00:46:27,360 --> 00:46:32,580
+CIC remote l10n remote localization, I understand.
+
+405
+00:46:34,110 --> 00:46:42,569
+Okay. Uh, and that is getting moved over into as routers packaging.
+
+406
+00:46:42,570 --> 00:46:51,150
+That's fine. And then yeah CFR page actions load the subscript.
+
+407
+00:46:52,930 --> 00:46:58,180
+This from a text. Yeah. That looks good. Yes.
+
+408
+00:46:58,690 --> 00:47:02,100
+Yes. Very nice. No longer bound to activity stream.
+
+409
+00:47:02,110 --> 00:47:07,240
+Yeah. And then the test is being moved from new Tab to here.
+
+410
+00:47:07,270 --> 00:47:16,840
+That's great. And then that's the only custom element I think under custom elements.
+
+411
+00:47:19,150 --> 00:47:22,210
+It's just the one. So we can stop packaging that. That's great.
+
+412
+00:47:22,690 --> 00:47:26,560
+Yeah. Really happy with this. Woo! Great.
+
+413
+00:47:27,070 --> 00:47:36,090
+Thanks. That makes a lot of sense. How's our rebase or submission going?
+
+414
+00:47:36,100 --> 00:47:45,570
+Still going. Um, okay.
+
+415
+00:47:45,840 --> 00:47:49,560
+Next one to find the onboarding provider profit side of new tab.
+
+416
+00:47:49,680 --> 00:47:56,350
+We onboarding provider pref. Uh.
+
+417
+00:48:02,890 --> 00:48:10,820
+Providers on boarding. Onboarding provider.
+
+418
+00:48:16,940 --> 00:48:19,940
+Instructor provider configuration. So the new tab page.
+
+419
+00:48:22,100 --> 00:48:26,750
+Oh this I don't fully understand. So Activity Stream has this thing.
+
+420
+00:48:28,220 --> 00:48:33,690
+This is like a mapping of I think prefs. And then it like automatically translates them to objects.
+
+421
+00:48:33,710 --> 00:48:41,120
+I don't fully understand this other ace or they must be defined there to enable rollouts.
+
+422
+00:48:44,680 --> 00:48:49,930
+Oh I see it's being. Okay. Instead of encoding it here it's being encoded here.
+
+423
+00:48:49,930 --> 00:48:56,080
+So let's see if what we have is a match. Um ID onboarding.
+
+424
+00:48:56,320 --> 00:49:00,490
+Yes. Type. Local. Yes.
+
+425
+00:49:00,490 --> 00:49:04,510
+Local provider. Onboarding. Message provider. Yes.
+
+426
+00:49:04,510 --> 00:49:08,560
+Enabled. True. Yes. Exclude. Empty array.
+
+427
+00:49:09,280 --> 00:49:17,890
+Beautiful. Yeah. That makes sense to me. Makes sense.
+
+428
+00:49:18,220 --> 00:49:24,250
+Um, this one has already been reviewed by someone else, but I will take a look at it as well.
+
+429
+00:49:25,180 --> 00:49:28,310
+Um, okay. Hang on.
+
+430
+00:49:28,570 --> 00:49:31,870
+Am going to put a pause on that for a second because these have been posted up for review.
+
+431
+00:49:32,980 --> 00:49:36,730
+Um, and now I can do mas fab reorg.
+
+432
+00:49:42,450 --> 00:49:47,590
+Is her reorg necessary here? It's non-linear, multiple heads.
+
+433
+00:49:47,740 --> 00:49:50,740
+Uh oh. Let's see what our.
+
+434
+00:49:52,920 --> 00:49:57,030
+The story is here. For me.
+
+435
+00:49:57,250 --> 00:50:01,000
+So I need to make the parent revision.
+
+436
+00:50:02,470 --> 00:50:10,380
+Um. Such as this one.
+
+437
+00:50:11,760 --> 00:50:27,410
+Add tests. Okay, now we can try and actually remove or land these three.
+
+438
+00:50:27,950 --> 00:50:32,540
+So let's read in. Um reorg is new for most fab.
+
+439
+00:50:32,930 --> 00:50:36,110
+It is. It's been around for a little while and it doesn't always work.
+
+440
+00:50:36,560 --> 00:50:41,660
+Um, but if you ever change the order of patches, uh,
+
+441
+00:50:41,660 --> 00:50:48,560
+it can help communicate to fabricator how you want things arranged, but it doesn't always work nicely.
+
+442
+00:50:50,470 --> 00:50:54,680
+Uh oh. I've already got a review here. That's nice. Uh, okay.
+
+443
+00:50:54,680 --> 00:51:02,600
+So let's go ahead and. Just try and autoland these first three again.
+
+444
+00:51:05,500 --> 00:51:14,090
+And we'll go back to our reviewing. So what's happening?
+
+445
+00:51:14,250 --> 00:51:18,360
+Part four remove unused Ace router button import. So it wasn't using it.
+
+446
+00:51:18,600 --> 00:51:22,860
+So it was importing this button. So this is.
+
+447
+00:51:25,530 --> 00:51:30,540
+Some button stuff that's not used. This is the Mac equivalent.
+
+448
+00:51:30,570 --> 00:51:34,710
+Oh, I think these are. Are these generated? They're not generated. It's just unused altogether.
+
+449
+00:51:35,370 --> 00:51:41,249
+I'm going to go ahead. I don't think I need to review that. This is already been reviewed by other new tech people, so I don't need to review that.
+
+450
+00:51:41,250 --> 00:51:44,900
+So I'm going to review this stuff instead. Define the on boarding prep outside.
+
+451
+00:51:44,910 --> 00:51:48,000
+Oh this one I already did. So then it's just this last one.
+
+452
+00:51:48,000 --> 00:51:52,140
+Remove miscellaneous unused ass writer code from new tab.
+
+453
+00:51:52,470 --> 00:52:00,360
+That sounds great. Um. So ass writer preferences.
+
+454
+00:52:01,500 --> 00:52:10,860
+A silent rollouts. I don't know what that means. I don't think frontend code style reviewers that this is something that Mark just looked at.
+
+455
+00:52:10,860 --> 00:52:13,890
+So I don't need to review this. Um.
+
+456
+00:52:15,930 --> 00:52:25,310
+For new tab, we don't. One is being removed. We don't need.
+
+457
+00:52:27,800 --> 00:52:30,940
+These fake outs anymore.
+
+458
+00:52:30,950 --> 00:52:39,620
+These fake, fake objects. That's good. We don't need to alias a red or anymore.
+
+459
+00:52:40,340 --> 00:52:43,910
+That's good. And then we don't need to check.
+
+460
+00:52:46,390 --> 00:52:55,660
+I guess all of these. The karma rule doesn't apply anymore because content source Ace router presumably will have gone away.
+
+461
+00:52:57,490 --> 00:53:04,690
+Um. Onboarding.
+
+462
+00:53:05,670 --> 00:53:08,760
+So, are these still around? Are these?
+
+463
+00:53:12,120 --> 00:53:18,600
+Yeah. They don't exist anymore. They've been moved over to Ace Router, so yeah, we can get rid of that.
+
+464
+00:53:19,140 --> 00:53:22,560
+And content source ace router.
+
+465
+00:53:24,690 --> 00:53:27,820
+You tab. Conrad.
+
+466
+00:53:27,840 --> 00:53:34,610
+Source. Um, there is no ace router.
+
+467
+00:53:35,630 --> 00:53:39,440
+Um, so. Yeah, we can remove that. That's all good.
+
+468
+00:53:40,460 --> 00:53:46,970
+I like it. I like it. Thank you for the clean ups.
+
+469
+00:53:48,320 --> 00:53:55,730
+I like it. And that's it for my reviews for for this particular.
+
+470
+00:53:57,950 --> 00:54:02,450
+Project the clean ups, but I'm glad to see Shane pick up the torch cleaning.
+
+471
+00:54:02,450 --> 00:54:05,780
+Continuing to clean up and separate as router from new tab.
+
+472
+00:54:06,470 --> 00:54:11,840
+Um, I think that's just good for everybody. All right.
+
+473
+00:54:11,930 --> 00:54:15,380
+Where are we? Um. This stuff.
+
+474
+00:54:19,040 --> 00:54:30,620
+This stuff is queued for landing. Right.
+
+475
+00:54:32,210 --> 00:54:38,300
+Landing skewed. Autoland still closed. All right, let's do something else.
+
+476
+00:54:39,080 --> 00:54:45,229
+So I've done some reviews. Let's talk about backup. This is something I've been working on with a couple of other people.
+
+477
+00:54:45,230 --> 00:54:51,210
+Maybe you've heard me mention it. You may have seen updates about it, like the the the nightly blog.
+
+478
+00:54:51,230 --> 00:54:59,210
+So if you go to the nightly blog periodically, you'll see like the these weeks and Firefox issues and like you'll see under migration improvements.
+
+479
+00:54:59,510 --> 00:55:04,220
+Um, this is where this, um, this work is kind of documented.
+
+480
+00:55:04,520 --> 00:55:10,540
+You know, we we've got, um, some of it already landed in, in the source code tree.
+
+481
+00:55:10,550 --> 00:55:20,270
+It's not doing anything um, yet, but, uh, a bunch of stuff has been, uh, landed to enable us to do some interesting things.
+
+482
+00:55:20,270 --> 00:55:33,709
+So, what is it? What are we talking about? Okay, we want to make it possible for your Firefox to backup your profile.
+
+483
+00:55:33,710 --> 00:55:37,160
+State to a local file on the file system.
+
+484
+00:55:38,820 --> 00:55:48,090
+Um, and you can turn it on and it will put it somewhere, and it's a, like, compressed archive of your profile at a particular moment in time.
+
+485
+00:55:49,500 --> 00:55:52,590
+And it's we're hoping to do that in the background.
+
+486
+00:55:52,590 --> 00:55:55,830
+Like, you don't have to like, hey, create a snapshot for me.
+
+487
+00:55:55,860 --> 00:56:02,730
+Hey, create a snapshot for me. Like it'll do it, um, like maybe once every hour.
+
+488
+00:56:03,210 --> 00:56:07,770
+It's not that it's not super expensive. At least we need to test it on more hardware.
+
+489
+00:56:07,770 --> 00:56:11,310
+We haven't turned it on yet. We haven't reached the point yet where the whole thing works yet.
+
+490
+00:56:11,820 --> 00:56:16,170
+But we've got the point where we can. We've gotten to the point where we can copy all of the data.
+
+491
+00:56:18,150 --> 00:56:24,940
+Um. And. Let's see how it works.
+
+492
+00:56:24,940 --> 00:56:31,919
+Is. I mean, when you're this for people who have done this kind of thing before,
+
+493
+00:56:31,920 --> 00:56:40,860
+what they normally do is they shut Firefox down and copy their profile folder to another machine or something, and that might work to some degree,
+
+494
+00:56:40,860 --> 00:56:50,290
+but there are every now and then some things that like some post-processing that you need to do that, um, if you don't do it can lead you,
+
+495
+00:56:50,310 --> 00:56:58,139
+put you in a kind of a broken state for, for example, uh, search custom search engine configuration will not survive.
+
+496
+00:56:58,140 --> 00:57:01,469
+Just a, uh, a copy of the profile folder from one or the other.
+
+497
+00:57:01,470 --> 00:57:05,820
+And that's because of some security mechanism.
+
+498
+00:57:06,210 --> 00:57:13,230
+Um, I can't remember exactly how it works, but, um, it's to prevent malware from hijacking your search engines.
+
+499
+00:57:14,100 --> 00:57:17,639
+And, uh, so there's some post-processing that needs to be done.
+
+500
+00:57:17,640 --> 00:57:20,969
+And this is all to try and make it easier for you to have a backup,
+
+501
+00:57:20,970 --> 00:57:26,330
+but also to move your stuff between machines in the event that you need to migrate to a new computer,
+
+502
+00:57:26,340 --> 00:57:30,450
+you can take your backup, move it to another machine, and restore from it.
+
+503
+00:57:30,960 --> 00:57:37,410
+Um, now, one of the things that we need to do with this backup is we all we don't want to put anything really,
+
+504
+00:57:37,410 --> 00:57:40,500
+really sensitive in there unless it's been encrypted.
+
+505
+00:57:41,340 --> 00:57:46,950
+Um, because we want people to feel relatively safe, like sending it.
+
+506
+00:57:47,430 --> 00:57:51,510
+Um, I don't know, you could put it into an email attachment or something.
+
+507
+00:57:51,570 --> 00:57:57,960
+Um, or you could upload it to a server and then, like, put it in Dropbox or put it on Google Drive or something.
+
+508
+00:57:58,290 --> 00:58:04,650
+You probably wouldn't, wouldn't want to put your passwords database up on Dropbox.
+
+509
+00:58:04,980 --> 00:58:12,510
+Uh, maybe you would, maybe you wouldn't. But we're hoping to do, um, uh, client side encryption so we can encrypt it, the backup into,
+
+510
+00:58:12,540 --> 00:58:17,040
+like, this big old ball, and then you can upload it somewhere or send it to yourself.
+
+511
+00:58:17,040 --> 00:58:22,890
+And then whenever you want to recover from that backup on the same machine or from a different machine,
+
+512
+00:58:23,160 --> 00:58:30,069
+you can decrypt it and then recover from the backup. Uh, Oscar says, will Firefox detect that?
+
+513
+00:58:30,070 --> 00:58:35,140
+I copy the profile and do post-processing automatically for or ask for it?
+
+514
+00:58:36,600 --> 00:58:44,650
+Uh. So if you're doing the old the thing that I mentioned, which is like you copied the folder to a new machine.
+
+515
+00:58:45,070 --> 00:58:53,170
+Um, no. No. Like in order to do this mechanism, in order to use this mechanism, you're going to want to use the the backup.
+
+516
+00:58:54,120 --> 00:58:59,850
+Thing that we're using, not just like copying folders around. Let me let me actually show you, uh, what we've got so far.
+
+517
+00:59:00,150 --> 00:59:04,350
+This may or may not interest you. Um, but let me show you what we've got so far.
+
+518
+00:59:06,510 --> 00:59:09,630
+Uh, I think I've got a local build ready to go.
+
+519
+00:59:12,950 --> 00:59:20,420
+I think this is. Yeah. It's done. So there's not we've got a little bit of UI already built out, but it's not wired up to anything.
+
+520
+00:59:20,570 --> 00:59:27,740
+I'll show you that first, and then I'll show you the sort of the debug UI that we do have.
+
+521
+00:59:28,460 --> 00:59:34,430
+So if you watch. So now, right now, this is this.
+
+522
+00:59:34,490 --> 00:59:38,300
+This isn't even alpha software yet. This is stuff that is prerelease.
+
+523
+00:59:38,330 --> 00:59:43,070
+We haven't thrown QA added. Do not use this. Do not do anything.
+
+524
+00:59:43,100 --> 00:59:47,780
+Uh, with this, like, um, create a backup and hope that it's going to work in the future.
+
+525
+00:59:47,780 --> 00:59:51,760
+Like, all of this is subject to change. None of this is is ready to go yet.
+
+526
+00:59:51,770 --> 00:59:55,700
+So just keep in mind, all right? This is very, very early days.
+
+527
+00:59:56,060 --> 01:00:06,710
+But if you turn this on, this UI on, um, like, we've got a little bit of, uh, fiddly UI here to, like, turn on backup.
+
+528
+01:00:07,430 --> 01:00:11,209
+And I moved a profile from Windows to Linux, and so far it worked perfectly.
+
+529
+01:00:11,210 --> 01:00:14,420
+So I was wondering if this feature will do something to that profile. It will not.
+
+530
+01:00:14,780 --> 01:00:18,649
+And, uh, you might be fine if you moved it from Windows to Linux.
+
+531
+01:00:18,650 --> 01:00:25,640
+And if you didn't have a custom search provider or a custom search engine setup, then you're probably okay.
+
+532
+01:00:26,030 --> 01:00:36,200
+But in certain situations, uh, with certain user configurations, um, hard coded paths are used to do certain things.
+
+533
+01:00:36,200 --> 01:00:39,260
+I don't really have much of the detail here, but, uh,
+
+534
+01:00:39,590 --> 01:00:45,830
+it can you can have a functional Firefox after you've done the move, but certain things may not work as you expect.
+
+535
+01:00:46,310 --> 01:00:53,180
+And so we're trying to, like, make it easier so that users we don't want to have your every day average user like across.
+
+536
+01:00:53,180 --> 01:00:56,989
+You're probably fine going into like your file system and moving folders around.
+
+537
+01:00:56,990 --> 01:01:03,050
+But just finding the profile folder for your average user is is asking kind of a lot.
+
+538
+01:01:03,380 --> 01:01:07,520
+You know, like getting a user to go to about support and saying like, okay,
+
+539
+01:01:07,520 --> 01:01:14,360
+now show finder and then find the folder and now make sure Firefox isn't running and then copy the folder.
+
+540
+01:01:14,360 --> 01:01:16,880
+Yes, it's multiple megabytes, one hundreds of megabytes.
+
+541
+01:01:17,180 --> 01:01:22,580
+Move it over there like this is and then like to restore it, you have to like create a profile in the new machine.
+
+542
+01:01:22,790 --> 01:01:26,810
+Copy the contents of the old profile into that. It's like it's a mess.
+
+543
+01:01:26,810 --> 01:01:30,380
+It's a mess. It's really, really hard. And we're trying to make that a lot easier.
+
+544
+01:01:31,070 --> 01:01:36,740
+Um, and so, uh, yeah, like, this is some of the UI.
+
+545
+01:01:36,740 --> 01:01:39,920
+It doesn't do anything just yet, but this is some of the UI.
+
+546
+01:01:40,370 --> 01:01:49,099
+Uh, and here's the debug UI, and this actually does some stuff, uh, if you go to browser content backup, debug dot HTML.
+
+547
+01:01:49,100 --> 01:01:52,610
+So reminder this is not production ready.
+
+548
+01:01:52,610 --> 01:01:56,509
+Do not use this stuff for anything. Um, but I'm going to create a backup now.
+
+549
+01:01:56,510 --> 01:01:59,750
+But what's interesting, uh, about this is that it can occur at runtime.
+
+550
+01:01:59,960 --> 01:02:07,250
+So it can happen in the background. Now whenever you're um, if you're like copying folders, you don't want to do that while Firefox is still running,
+
+551
+01:02:07,370 --> 01:02:16,370
+because sometimes Firefox reads files off of the disk and then reads them into memory and then removes the file, like your sessions, for example.
+
+552
+01:02:16,700 --> 01:02:20,839
+Um, your current session is not always on disk. It's usually in memory.
+
+553
+01:02:20,840 --> 01:02:26,750
+It's only written to disk on shutdown or, you know, periodically as a like, um.
+
+554
+01:02:28,190 --> 01:02:34,280
+A snapshot might be written now that's several minutes old as a backup in the event that you crash or something.
+
+555
+01:02:34,580 --> 01:02:39,770
+But your most recent session, for example, and that's all your tabs and windows is not on disk at all time.
+
+556
+01:02:39,780 --> 01:02:42,320
+So just like copying the folder at runtime doesn't work.
+
+557
+01:02:43,190 --> 01:02:47,959
+And that's where the backup feature that we're working on kind of excels, because it knows that.
+
+558
+01:02:47,960 --> 01:02:52,400
+And it can flush the session to disk and then make the copy.
+
+559
+01:02:52,490 --> 01:03:00,020
+It can flush everything that's in memory that you'd want to be in your backup to disk, uh, into into the archive.
+
+560
+01:03:00,230 --> 01:03:09,140
+And that includes SQLite databases. Um, so one of the things that you shouldn't do is if you're attached to an SQLite database is to copy it.
+
+561
+01:03:09,410 --> 01:03:12,320
+Um, that's what I learned. Uh, you don't want to do that.
+
+562
+01:03:12,380 --> 01:03:24,350
+Um, even though SQL databases are, like, really, really resilient, they are not designed to, uh, kind of survive that kind of, um, uh, manipulation.
+
+563
+01:03:25,280 --> 01:03:33,710
+Uh, the, the it might work, but the database that is copied may or may not be corrupt after you've pasted it.
+
+564
+01:03:34,070 --> 01:03:39,289
+Um, and so what you want to do when you're copying an SQLite database is to use something completely,
+
+565
+01:03:39,290 --> 01:03:43,640
+uh, like a built in mechanism of the SQLite database called the online backup API.
+
+566
+01:03:43,850 --> 01:03:50,510
+This is something that I, uh, found very interesting, uh, in that, um,
+
+567
+01:03:51,110 --> 01:03:57,290
+SQLite supports doing like runtime copying of databases while you have open connections to them.
+
+568
+01:03:58,460 --> 01:04:05,660
+It's very interesting. And it makes sure that whenever the, uh, the backup is completed, that both databases are, um,
+
+569
+01:04:06,350 --> 01:04:11,300
+at least at the point of completion, they're consistent with one or they're copies of one another.
+
+570
+01:04:11,840 --> 01:04:18,559
+And the way it does that is like and that can occur even if clients are like writing to the database,
+
+571
+01:04:18,560 --> 01:04:24,379
+it might slow the backup down, like it might roll back part of the copy and then have to do more of the copying.
+
+572
+01:04:24,380 --> 01:04:31,220
+Like it might might take more time if like a bunch of stuff is writing to the database while you're doing the backup, but it will eventually occur.
+
+573
+01:04:32,000 --> 01:04:37,039
+Uh, and so let's, uh, the Firefox, the we don't have a name for it yet.
+
+574
+01:04:37,040 --> 01:04:44,270
+We just called the profile backup tool. Um, it takes advantage of that and the advantage of the fact that some things are written to disk,
+
+575
+01:04:44,270 --> 01:04:49,729
+flush to disk atomically, like Json, certain Json files, and that we can just copy those files.
+
+576
+01:04:49,730 --> 01:04:53,300
+That's fine. So, um, let's create a backup right now.
+
+577
+01:04:57,550 --> 01:05:05,080
+Dunn created it in about three seconds. And if I go here, you can see, uh, a zip was created.
+
+578
+01:05:06,040 --> 01:05:16,930
+In this case, it's only, uh, 70kB. Uh, my personal, uh, profile, actually, if I can do it on my my developer profile, it will be quite a bit larger.
+
+579
+01:05:16,960 --> 01:05:19,960
+Um. The backup. Let's create a backup.
+
+580
+01:05:26,130 --> 01:05:29,310
+Mhm. Mhm mhm mhm mhm.
+
+581
+01:05:29,820 --> 01:05:34,500
+Eight seconds. Uh. And this one is 86MB.
+
+582
+01:05:35,310 --> 01:05:39,930
+That's that's. And from our telemetry we've been landing some telemetry to get a sense of
+
+583
+01:05:39,930 --> 01:05:43,409
+how big people's profile directories are and how much disk space they've got.
+
+584
+01:05:43,410 --> 01:05:46,710
+Because we don't when we create these backups, we don't want to like fill people's hard drives.
+
+585
+01:05:47,460 --> 01:05:53,850
+Um, my this like, my developer profile is, is like, I've been using it for a long, long time.
+
+586
+01:05:54,240 --> 01:05:59,459
+Uh, and this is probably fairly typical tens or the low hundreds of megabytes.
+
+587
+01:05:59,460 --> 01:06:04,170
+And then after compression. Yeah, about tens or low hundreds of megabytes.
+
+588
+01:06:04,890 --> 01:06:12,060
+And, uh, this zip file, I could move this to another machine, and then I could recover,
+
+589
+01:06:12,510 --> 01:06:16,739
+I could unzip it, and then I could recover from that staging folder and relaunch.
+
+590
+01:06:16,740 --> 01:06:23,640
+So that actually works right now. Um, now the part that I'm currently working on is the encryption bit.
+
+591
+01:06:24,720 --> 01:06:29,910
+Just today I landed patches to, uh, to.
+
+592
+01:06:31,070 --> 01:06:35,090
+Add the encryption configuration. The local encryption configuration.
+
+593
+01:06:35,690 --> 01:06:39,200
+And now I'm working on the actual encryption of the backup.
+
+594
+01:06:39,500 --> 01:06:45,950
+And now this is not a thing that I myself am, uh, an expert in is like cryptography.
+
+595
+01:06:46,220 --> 01:06:51,830
+But we at Mozilla have like, world class experts in this particular problem space.
+
+596
+01:06:52,160 --> 01:06:58,670
+And they have helped me design. They help my team rather design an encryption scheme for these backups.
+
+597
+01:06:59,180 --> 01:07:13,969
+Uh, and what's nice about it is that Firefox can create these backups, but without your key, unless you, um, uh, like, unless you provide the,
+
+598
+01:07:13,970 --> 01:07:19,010
+the recovery code, the passphrase or whatnot, like malware on the machine,
+
+599
+01:07:19,010 --> 01:07:24,049
+for example, couldn't just find this file somewhere and read the contents out of it.
+
+600
+01:07:24,050 --> 01:07:29,180
+It would be. It'd be, um, it'd be encrypted. So that's that's the hope.
+
+601
+01:07:29,870 --> 01:07:33,560
+Um, even Firefox, like, I'm pretty sure, uh.
+
+602
+01:07:34,610 --> 01:07:37,150
+The way the scheme works is Firefox itself.
+
+603
+01:07:37,160 --> 01:07:43,220
+Unless you provide it, the recovery code is not going to be able to like reach into these things even though it has access to all of the data anyways.
+
+604
+01:07:43,790 --> 01:07:50,900
+To be clear, the the the encryption isn't to protect the, um, backup from the machine.
+
+605
+01:07:51,800 --> 01:07:56,570
+The machine, because presumably all of the data that was backed up is already on the machine.
+
+606
+01:07:56,870 --> 01:08:01,670
+So the threat model isn't like we're trying to keep it safe from the malware on the machine.
+
+607
+01:08:01,910 --> 01:08:06,260
+What we're trying to keep the backup safe from is attackers.
+
+608
+01:08:06,260 --> 01:08:15,740
+While it's that that file is traveling through on trusted channels, like if you post it to Google Drive or if you email it to someone,
+
+609
+01:08:16,040 --> 01:08:23,060
+or if you upload it to a server somewhere or, I don't know, use some file transfer mechanism.
+
+610
+01:08:23,210 --> 01:08:30,800
+We want to make sure that that thing is, um, if it contains sensitive information like passwords or cookies or payment methods or anything like that,
+
+611
+01:08:31,100 --> 01:08:35,570
+that is um, um, as as safe as we can make it.
+
+612
+01:08:36,020 --> 01:08:41,150
+And at the same time, we want to make sure that you can open it. So that involves having a like a strong passphrase.
+
+613
+01:08:41,780 --> 01:08:45,979
+So that's that's the idea. Um, does it use a yes.
+
+614
+01:08:45,980 --> 01:08:49,219
+Yes, it does use a yes. But it's more than just that.
+
+615
+01:08:49,220 --> 01:08:57,830
+Like, I, uh, I don't have a document like I, I'm we'll eventually we'll have the documentation for the encryption posted on source docs.
+
+616
+01:08:57,980 --> 01:09:02,510
+Like, right now, the the whole mechanism, the source code is documented.
+
+617
+01:09:02,540 --> 01:09:09,020
+Uh, you can find the, um. The backup mechanism.
+
+618
+01:09:09,020 --> 01:09:14,330
+It's documented here. So you can read about how the service works.
+
+619
+01:09:14,810 --> 01:09:24,050
+Uh, but it's it's like source code documentation. Uh, the encryption scheme isn't yet documented.
+
+620
+01:09:24,350 --> 01:09:30,259
+Um, but this document will eventually describe in minutes detail the scheme that we use to encrypt and decrypt backups.
+
+621
+01:09:30,260 --> 01:09:32,749
+So we haven't gotten to that part yet, but we will soon.
+
+622
+01:09:32,750 --> 01:09:42,710
+And yeah, there is an A.S. Jkm key that is used to authenticate the owner of the backup, as well as being able to, uh, encrypt the backup, um, using.
+
+623
+01:09:42,890 --> 01:09:48,380
+How does it work? A key derived from, uh, a public key.
+
+624
+01:09:48,710 --> 01:09:58,610
+An RSA key. It's very Byzantine, but the security engineers and Mozilla cryptography engineers promise me that it has some very strong,
+
+625
+01:09:59,030 --> 01:10:02,599
+uh, security characteristics. It's not skip encryption.
+
+626
+01:10:02,600 --> 01:10:15,080
+No. Um, what we do is we will compact the zip, the the the, um, the profile, what we call the a snapshot or the the state of your profile folder.
+
+627
+01:10:15,320 --> 01:10:20,030
+We'll we'll copy all those things, then we'll zip it up and compress them.
+
+628
+01:10:20,810 --> 01:10:24,290
+And then we will compress the zip file. Oh sorry. Not compress the zip file.
+
+629
+01:10:24,500 --> 01:10:32,450
+We will encrypt the zip file. Um, and then create a single file archive that you can move between machines.
+
+630
+01:10:33,080 --> 01:10:36,860
+That's the idea. Whoo!
+
+631
+01:10:37,070 --> 01:10:41,059
+So again, this I'm giving you, like, a sneak peek here. None of this is real.
+
+632
+01:10:41,060 --> 01:10:44,810
+Is ready to use, like I showed you. Like the debug interface. Don't use it yet.
+
+633
+01:10:44,840 --> 01:10:50,090
+Do not use it. You can follow along if you care. There is a bugzilla, a meta bug.
+
+634
+01:10:50,150 --> 01:10:53,760
+Um, for a profile backup.
+
+635
+01:10:53,780 --> 01:11:01,549
+There's the meta bug here if you want to follow along. Um, and it's broken down into, like, a bunch of other meta bugs.
+
+636
+01:11:01,550 --> 01:11:06,210
+But you can you can follow along in here. Um, and you can kind of see us work.
+
+637
+01:11:06,230 --> 01:11:09,500
+It's not just me. I'm working with some other people as well, and some designers.
+
+638
+01:11:09,500 --> 01:11:14,000
+And, uh, to be determined when this thing will be ready.
+
+639
+01:11:14,210 --> 01:11:17,600
+Like, there's more parts to it. Like we want people to be able to do this thing.
+
+640
+01:11:17,630 --> 01:11:25,180
+We also want to encourage people to use sync as well as like yet another way of having your stuff backed up so that,
+
+641
+01:11:25,430 --> 01:11:31,850
+you know, this file backup is is an option for people who maybe don't want to have an account.
+
+642
+01:11:31,850 --> 01:11:35,330
+But we also want to encourage people to create an account. So we want to give people options.
+
+643
+01:11:36,020 --> 01:11:40,700
+Um, so at the very least you can like have a local file system copy.
+
+644
+01:11:41,180 --> 01:11:44,780
+Um, anyways, so there's more to come.
+
+645
+01:11:44,960 --> 01:11:51,410
+Um, and who knows, maybe I'll work on some more of this during the stream, but I thought maybe we could, uh, attack some of the cryptography stuff.
+
+646
+01:11:51,710 --> 01:11:57,410
+Uh, I'm currently working on, um, some tests right now for the cryptography.
+
+647
+01:11:58,130 --> 01:12:01,940
+Uh, and I thought maybe we could flesh out some more of those tests. So let's do that.
+
+648
+01:12:04,280 --> 01:12:07,939
+Um. Those.
+
+649
+01:12:07,940 --> 01:12:15,170
+The source code is under browser components backup, and there's already a lot of tests.
+
+650
+01:12:15,440 --> 01:12:18,950
+We've been doing a pretty good job of of making sure our stuff is well tested.
+
+651
+01:12:19,910 --> 01:12:24,980
+And, uh, let's see here what did I want to do?
+
+652
+01:12:29,000 --> 01:12:33,650
+This is the stuff that's in my work in progress patch. That's why it says to do, um.
+
+653
+01:12:36,160 --> 01:12:39,250
+Let's see. What did I want to do first? Tests. I want to write tests.
+
+654
+01:12:40,210 --> 01:12:43,420
+So that's backup service encryption.
+
+655
+01:12:43,420 --> 01:12:46,990
+Encryptor. So I wrote these tests yesterday.
+
+656
+01:12:48,100 --> 01:12:51,610
+Uh, this test here, uh, let's see what it does and then we'll add to it.
+
+657
+01:12:56,620 --> 01:12:59,720
+Uh, Jonathan Lindsey says Sky is resilient for such events.
+
+658
+01:12:59,740 --> 01:13:04,000
+The data that's being written might get lost, but data already in the database should be untouched.
+
+659
+01:13:04,720 --> 01:13:11,440
+Um, Jonathan Lindsey says, well, if you are running to an SQLite database in a computer blue screen, there is a sudden power failure, right?
+
+660
+01:13:11,440 --> 01:13:16,630
+So, um, SQLite does what's called write ahead logging like journaling.
+
+661
+01:13:17,080 --> 01:13:26,980
+It's very resilient to crashes. Um, and yeah, as always says, the data that was being written may be lost, but the database should still be, um,
+
+662
+01:13:27,400 --> 01:13:35,110
+in a workable state like the SQLite people have done a really good job of making up like a pretty rock solid database.
+
+663
+01:13:35,530 --> 01:13:40,630
+Um, and, you know, I don't exactly know how they test that scenario.
+
+664
+01:13:40,960 --> 01:13:50,410
+Um, but they do test the sort of like the sudden, sudden drop, the sudden, um, shut down unexpected crashes.
+
+665
+01:13:50,800 --> 01:13:53,830
+Uh, they test that, and it's quite resilient.
+
+666
+01:13:53,840 --> 01:14:00,010
+There's a reason why SCT is like, kind of the industry standard for, uh, for a local SQLite database.
+
+667
+01:14:00,220 --> 01:14:04,090
+Like, it's it's just what people use because it's just it's solid.
+
+668
+01:14:04,090 --> 01:14:06,669
+It's a solid piece of software. Okay.
+
+669
+01:14:06,670 --> 01:14:13,720
+So this test tests that we can construct in archive Encryptor by way of the properties of an archive encryption state.
+
+670
+01:14:16,130 --> 01:14:19,200
+Says. As far as I know, they maintain 100% code coverage by tests.
+
+671
+01:14:19,560 --> 01:14:27,810
+Yes, that sounds laudable, but I don't want anyone to get the false impression that 100% code coverage is something to chase,
+
+672
+01:14:27,810 --> 01:14:36,450
+or that it means that, like your code is perfectly tested, 100% code coverage does not mean that your code is like bug free or anything.
+
+673
+01:14:36,780 --> 01:14:42,990
+Um, it just means that every single line of code was involved during testing.
+
+674
+01:14:43,470 --> 01:14:52,470
+Um, and sometimes to get people who chase 100% code coverage, you end up getting really brittle tests.
+
+675
+01:14:52,470 --> 01:14:56,850
+And so I just want to advise people out there who like, look at code coverage is like the thing to chase.
+
+676
+01:14:57,270 --> 01:15:02,879
+It's not a thing to chase. It's not a thing you should chase. Code coverage is an interesting smell if you realize it.
+
+677
+01:15:02,880 --> 01:15:06,720
+Like, oh, I've only got 12% code coverage here. You should probably write more tests.
+
+678
+01:15:07,050 --> 01:15:10,470
+But if something has like 80 to 90% coverage, that's pretty good.
+
+679
+01:15:10,620 --> 01:15:17,940
+And and you shouldn't necessarily spend a lot of effort trying to get that last 10%, you should look to see what the last 10% is.
+
+680
+01:15:18,120 --> 01:15:23,580
+You should find out what's not been tested, because that there might be stuff that you do want to test,
+
+681
+01:15:23,820 --> 01:15:29,220
+but just trying to hit 100% for 100% sake is usually not worth it, in my experience.
+
+682
+01:15:29,730 --> 01:15:34,709
+And it's not necessarily meaningful. It doesn't mean that you considered all of the cases.
+
+683
+01:15:34,710 --> 01:15:43,170
+It doesn't mean that the code is bug free. Okay, um, test archive encryption state enable.
+
+684
+01:15:43,170 --> 01:15:46,709
+That's not what this is doing. This is not the right name.
+
+685
+01:15:46,710 --> 01:15:52,180
+Archive Encryptor. Constructor.
+
+686
+01:15:53,530 --> 01:15:56,560
+Uh initializer rather.
+
+687
+01:15:58,300 --> 01:16:05,050
+Uh, was successfully constructed. Uh, we're doing I'm doing something kind of interesting here.
+
+688
+01:16:05,050 --> 01:16:14,920
+So, uh, we want to make sure that this thing can only be constructed if internally the state is acceptable.
+
+689
+01:16:15,250 --> 01:16:20,080
+And sometimes that can only be validated asynchronously.
+
+690
+01:16:20,350 --> 01:16:24,610
+But constructors of classes are not asynchronous.
+
+691
+01:16:24,610 --> 01:16:31,960
+They are synchronous functions. And so the pattern that we've been, uh, using for this sort of thing is to have a static method,
+
+692
+01:16:32,140 --> 01:16:36,340
+a static initializer method, and uh, kind of a hack here.
+
+693
+01:16:36,580 --> 01:16:44,110
+This is a hack, but this hack is actually documented, um, in mSDN as how to simulate private constructors,
+
+694
+01:16:44,320 --> 01:16:49,719
+because normally what you do is you'd have like your initial async initializer method,
+
+695
+01:16:49,720 --> 01:16:56,470
+use, um, your static async initializer method will have access to the private constructor.
+
+696
+01:16:57,400 --> 01:17:02,050
+And then so it can construct things and you can do your async stuff in here.
+
+697
+01:17:02,440 --> 01:17:06,100
+Uh, but there's no such thing as a private constructor in JavaScript.
+
+698
+01:17:06,460 --> 01:17:14,830
+So you can kind of simulate it in a kind of a gross way by having a static, private, um, boolean that only,
+
+699
+01:17:15,220 --> 01:17:22,990
+um, gets set to true inside of your, um, your initializer method, your static async initializer method.
+
+700
+01:17:23,410 --> 01:17:27,970
+And then you have your constructor check that static, um, property.
+
+701
+01:17:28,510 --> 01:17:31,720
+And if it's not been set, then to like throw an exception.
+
+702
+01:17:32,230 --> 01:17:37,450
+It's pretty gross, but this seems to be how you do it. This is how you do private methods in JavaScript right now.
+
+703
+01:17:37,630 --> 01:17:44,530
+Maybe someday. Um, test to encrypt decrypt with a mismatched public key to the private key.
+
+704
+01:17:46,080 --> 01:17:50,460
+Critical to the mismatch. Public key to the private key.
+
+705
+01:17:51,270 --> 01:17:59,190
+Oh, you mean to make sure that, like, someone with a different key is not able to, um, uh, decrypt things?
+
+706
+01:17:59,220 --> 01:18:02,550
+Yeah. We could. Let's let's see if we can see if we can test that.
+
+707
+01:18:05,200 --> 01:18:11,520
+Uh, let's go back to our test for a second. Um, well, let's let's keep walking through this, uh, test that we can encrypt a single block of bytes.
+
+708
+01:18:11,530 --> 01:18:15,789
+That's that was the next thing. So it was a test archive.
+
+709
+01:18:15,790 --> 01:18:21,780
+Encryptor. Single block.
+
+710
+01:18:22,980 --> 01:18:27,060
+And in order to test that, we're actually encrypting. We decrypt afterwards.
+
+711
+01:18:27,510 --> 01:18:33,150
+Like we we encrypt. We make sure that the bytes that come out are not the same as the bytes that went in.
+
+712
+01:18:33,450 --> 01:18:41,490
+And then we test that we can decrypt the bytes that came out, and that they turn back into the bytes that initially went in.
+
+713
+01:18:42,000 --> 01:18:46,770
+Um, and uh, let's see how this works.
+
+714
+01:18:46,770 --> 01:18:53,550
+So we initialize, uh, our archive encryption state with our test recovery code, we initialize an Encryptor.
+
+715
+01:18:53,760 --> 01:18:57,840
+We come up with some fake data. Right now I'm just doing something really silly.
+
+716
+01:18:57,850 --> 01:19:00,180
+I don't know why I call it fib. I think I should call it like.
+
+717
+01:19:00,450 --> 01:19:06,030
+I think it's because I used to generate the Fibonacci sequence, um, as just like deterministic fake data.
+
+718
+01:19:06,420 --> 01:19:16,560
+But, um, I'm going to call it gen. Um, so we create a bunch of fake bytes and then uh.
+
+719
+01:19:24,580 --> 01:19:29,890
+And then what do we do? And then we encrypt the bytes.
+
+720
+01:19:29,920 --> 01:19:33,880
+The second argument is like whether or not is last block.
+
+721
+01:19:35,980 --> 01:19:40,240
+Because we want to be able to do this, the way the encryption scheme works is it works in blocks.
+
+722
+01:19:40,510 --> 01:19:46,630
+You don't want to read the entire like 86MB zip file into memory and then encrypt the whole thing.
+
+723
+01:19:47,080 --> 01:19:52,990
+Because, like, you know, we don't want to suddenly, just in the background, suddenly consume a bunch of memory.
+
+724
+01:19:53,110 --> 01:20:00,010
+So we're doing it in blocks where we'll get a read in, like about a megabyte, encrypt that block, read in another bank a byte, and then flush to disk.
+
+725
+01:20:00,160 --> 01:20:04,360
+So when you trade a little bit of time for memory, that's that's how this works.
+
+726
+01:20:05,500 --> 01:20:10,450
+So, uh, and the encrypted bytes will be slightly bigger than the, the, the bytes that we put in.
+
+727
+01:20:10,720 --> 01:20:14,110
+That's because of something called the tag length.
+
+728
+01:20:14,110 --> 01:20:16,360
+The tag that goes on the ends 128 bytes.
+
+729
+01:20:16,990 --> 01:20:21,639
+Um, we don't really want to be testing the web crypto API here, but we want to be sure that we use it correctly.
+
+730
+01:20:21,640 --> 01:20:24,730
+We iterate both sets of bytes, ensure that we hit some difference between the two is our smoke test.
+
+731
+01:20:24,730 --> 01:20:31,420
+So this is we. I do this twice, and I think I'm going to actually split this out into a helper method is basically just like a hey,
+
+732
+01:20:31,450 --> 01:20:36,280
+take two uint eight arrays and test to see if they're the same or test that they're different.
+
+733
+01:20:37,240 --> 01:20:40,390
+So um, I'm going to add a helper method here.
+
+734
+01:20:40,450 --> 01:20:46,960
+Um, uh function uh test.
+
+735
+01:20:47,050 --> 01:20:50,980
+Um, arrays are similar.
+
+736
+01:20:51,910 --> 01:21:01,870
+Assert arrays are similar. Um raid a raid be expect similar.
+
+737
+01:21:03,760 --> 01:21:11,760
+Now, um, normally you do like, uh, you could do a deep equal, uh, or um, like that.
+
+738
+01:21:11,770 --> 01:21:17,860
+That's one way of doing it. But the problem of deep equal is that deep equal will log assert.
+
+739
+01:21:18,280 --> 01:21:23,410
+Equal will log the entire contents of what was just equivalent, uh, like checked with one another.
+
+740
+01:21:23,920 --> 01:21:27,430
+And that results in a ton of console spam,
+
+741
+01:21:27,820 --> 01:21:34,690
+like and like the test will take forever because the terminal is taking a long time printing out all the stuff that it just compared.
+
+742
+01:21:34,930 --> 01:21:42,580
+So, um, like, I don't think there's a way of bypassing that sort of typical, um.
+
+743
+01:21:45,430 --> 01:21:57,920
+But let's just double check before I do this. Yeah.
+
+744
+01:21:58,530 --> 01:22:10,530
+Um. Throws rejects.
+
+745
+01:22:10,800 --> 01:22:20,490
+Greater equal. Less than string matches. Yeah okay. So I'm just going to do a very simple um, if uh array.
+
+746
+01:22:23,160 --> 01:22:29,220
+Um. For a beat, sir.
+
+747
+01:22:29,610 --> 01:22:51,330
+You int8 arrays are similar. You add a array, a u and ate array b if you in eight array a dot byte length uh is not equal to you in eight array b.
+
+748
+01:22:53,370 --> 01:22:57,510
+Uh byte length. Um.
+
+749
+01:23:00,770 --> 01:23:07,150
+Or how about this? Assert equal. Um.
+
+750
+01:23:11,110 --> 01:23:16,450
+By length. Expect similar.
+
+751
+01:23:18,910 --> 01:23:24,670
+Um. That seems a little too smart.
+
+752
+01:23:24,790 --> 01:23:29,110
+I'm going to opt for readability. Expect similar.
+
+753
+01:23:31,990 --> 01:23:44,040
+Assert that they are equal. Uh, you and eight arrays have the same byte length.
+
+754
+01:23:47,010 --> 01:23:53,070
+Okay. Um, else. It's not equal.
+
+755
+01:23:54,090 --> 01:23:58,110
+Have differing bite length.
+
+756
+01:23:59,460 --> 01:24:16,520
+Um, and then. If they don't have the same bite length, uh, let uh, length to check equal.
+
+757
+01:24:19,080 --> 01:24:24,170
+Um, let's say length two check equals you and eight array to byte length.
+
+758
+01:24:24,950 --> 01:24:30,080
+And then otherwise we'll choose the minimum of the two masked men length to check.
+
+759
+01:24:30,530 --> 01:24:33,770
+This is in the event that there just happens to be a tag of bytes.
+
+760
+01:24:33,920 --> 01:24:39,830
+But the first block of bytes are the same. Which seems really unlikely, but, uh, I want to test that as well.
+
+761
+01:24:40,010 --> 01:24:45,830
+Um, by playing, um, eight array beat up byte length.
+
+762
+01:24:49,100 --> 01:25:00,860
+Okay. Uh, for let equals zero, I is less than length to check plus plus I then uh let found difference equals false.
+
+763
+01:25:01,970 --> 01:25:13,460
+Um, if uh u and eight array a I is not equal to u and eight array b I.
+
+764
+01:25:15,650 --> 01:25:23,570
+Found difference is true break. Um so found difference.
+
+765
+01:25:26,060 --> 01:25:30,320
+If expect similar assert.
+
+766
+01:25:30,740 --> 01:25:37,560
+Okay. Um. Not found difference.
+
+767
+01:25:38,310 --> 01:25:42,570
+Um, arrays contain the same bytes.
+
+768
+01:25:43,590 --> 01:25:47,370
+Else assert okay. Found difference.
+
+769
+01:25:47,370 --> 01:25:52,420
+Arrays contain. Different bites.
+
+770
+01:25:54,370 --> 01:26:02,410
+Now it's not testing that like, ooh, they are like, uh, you know, it's not testing that.
+
+771
+01:26:02,560 --> 01:26:08,170
+Like, oh wow. It's cryptographically different. Like it just makes sure that they're, they're different enough.
+
+772
+01:26:08,800 --> 01:26:12,820
+Um, like, we just make sure that the bites are different.
+
+773
+01:26:12,850 --> 01:26:18,580
+We're not testing the web crypto API. Um, okay.
+
+774
+01:26:18,910 --> 01:26:22,810
+So now we can use. What's it complaining about here? You an eight or a.
+
+775
+01:26:25,610 --> 01:26:28,790
+Oh. Um. Okay.
+
+776
+01:26:31,130 --> 01:26:40,980
+Now I think we can replace. Uh.
+
+777
+01:26:43,860 --> 01:26:48,870
+To do. Document.
+
+778
+01:26:58,270 --> 01:27:04,570
+Oh, yeah. And? Um.
+
+779
+01:27:11,420 --> 01:27:15,050
+Uh, you know, something like that. Like. Well, I'll fill that out later.
+
+780
+01:27:15,110 --> 01:27:19,940
+Um. Found difference.
+
+781
+01:27:20,480 --> 01:27:26,600
+So we're going to do this, assert our similar, uh.
+
+782
+01:27:34,550 --> 01:27:41,629
+Are similar is also not a certain race similarity as well.
+
+783
+01:27:41,630 --> 01:27:50,540
+Do similarity encrypted bytes fake bytes false.
+
+784
+01:27:50,900 --> 01:27:58,000
+Expect similar. Um.
+
+785
+01:28:02,420 --> 01:28:08,110
+And then. Decrypted bytes.
+
+786
+01:28:12,130 --> 01:28:15,760
+Cert. Decrypted bytes.
+
+787
+01:28:16,270 --> 01:28:21,610
+Fake bytes. Expect similar. All right.
+
+788
+01:28:21,640 --> 01:28:39,280
+Let's see if this test still works. Archive in Crypt, dir.
+
+789
+01:28:51,460 --> 01:28:54,700
+All right. It likes it. Um.
+
+790
+01:28:55,090 --> 01:28:58,390
+Let's now, uh.
+
+791
+01:29:01,260 --> 01:29:05,270
+Try. So you wanted to try one with a mismatch public key.
+
+792
+01:29:05,290 --> 01:29:09,420
+So like, we're gonna try a different, uh, a wrong passphrase.
+
+793
+01:29:10,830 --> 01:29:18,930
+So, um. Uh.
+
+794
+01:29:18,930 --> 01:29:22,310
+Assert. Wrong pass.
+
+795
+01:29:22,580 --> 01:29:32,000
+Uh, wrong recovery code is the parlance test that, uh uh, we cannot decrypt with the wrong recovery code.
+
+796
+01:29:36,940 --> 01:29:41,739
+This is going to get fairly repetitive. Um fake bites.
+
+797
+01:29:41,740 --> 01:29:46,060
+So I'm going to just generate this the first time.
+
+798
+01:29:49,870 --> 01:29:53,220
+Let fake bytes equals null.
+
+799
+01:29:53,860 --> 01:30:05,610
+And then. Um.
+
+800
+01:30:09,150 --> 01:30:25,910
+So we don't need to do that. Then we're going to encrypt. And confirm.
+
+801
+01:30:25,910 --> 01:30:32,960
+And then we can start to decryptor. And then we're going to use wrong recovery code.
+
+802
+01:30:35,700 --> 01:30:43,380
+I think this is going to throw. I think as soon as we attempt to initialize it, it's going to throw and it won't let us do a decryption.
+
+803
+01:30:45,000 --> 01:30:50,580
+So let's test this. Um, like it just won't let us do it.
+
+804
+01:30:51,930 --> 01:30:58,020
+Um. I think this will be a cert throws.
+
+805
+01:31:02,430 --> 01:31:08,159
+And I can't remember what the. What it'll say.
+
+806
+01:31:08,160 --> 01:31:14,730
+It'll be something like, um. Probably on a unauthenticated.
+
+807
+01:31:26,370 --> 01:31:30,090
+Uh, block is not a function at 48448.
+
+808
+01:31:30,560 --> 01:31:37,200
+Point. Assert. Uh oh.
+
+809
+01:31:37,200 --> 01:31:40,380
+Sorry. Rejects. Rejects. Assert. Rejects.
+
+810
+01:31:41,490 --> 01:31:45,230
+And why are you complaining? Assert. Rejects. Needs to be practical.
+
+811
+01:31:45,270 --> 01:31:52,490
+Yeah. Wait. Thank you. Yeah.
+
+812
+01:31:52,520 --> 01:32:01,520
+Good. So, uh, it this rejected. We couldn't even initialize the decryptor because the recovery code failed.
+
+813
+01:32:02,390 --> 01:32:05,720
+Um, so we couldn't decrypt. There's nothing that would allow us to decrypt.
+
+814
+01:32:08,600 --> 01:32:11,720
+Um, the mechanism won't let us do it.
+
+815
+01:32:20,450 --> 01:32:41,140
+Um. We don't actually care about the encrypted bytes.
+
+816
+01:32:44,870 --> 01:32:54,100
+Um. Since we're just testing that our kind of decrypter will accept.
+
+817
+01:32:55,300 --> 01:32:58,840
+Uh, an incorrect recovery code.
+
+818
+01:33:04,050 --> 01:33:07,980
+This one's more like I. You know what? I'm gonna call this?
+
+819
+01:33:07,980 --> 01:33:14,850
+Archive cryptography. Because I'm thinking of moving these out of, like, um.
+
+820
+01:33:19,420 --> 01:33:23,830
+Or maybe archive encryption. That's why I should call them archive.
+
+821
+01:33:25,240 --> 01:33:28,450
+Archive encryption right now. Both of them. Um.
+
+822
+01:33:31,470 --> 01:33:38,789
+Both of the classes exist within archive utils. I'm going to move them over to, uh, their own module and I'll call it archive encryption.
+
+823
+01:33:38,790 --> 01:33:41,880
+That's probably easier.
+
+824
+01:33:42,690 --> 01:33:46,950
+Archive Encryptor initializer. Um.
+
+825
+01:33:49,270 --> 01:33:57,040
+We'll need one for, uh, two to, uh, test the archive decryptor initializer.
+
+826
+01:33:59,620 --> 01:34:03,280
+Uh, tests that we cannot decrypt from the wrong recovery code.
+
+827
+01:34:03,310 --> 01:34:14,650
+What was the other one? Um. Mismatch.
+
+828
+01:34:14,650 --> 01:34:20,050
+Public key. Private key. Faulty recovery code. Yeah.
+
+829
+01:34:20,270 --> 01:34:26,470
+Let's do it. Mismatched keys.
+
+830
+01:34:29,050 --> 01:34:30,310
+I'm not sure how we test that.
+
+831
+01:34:30,310 --> 01:34:44,530
+Like, the mechanism will not allow us to supply a different like the archive Decrypter will not construct without the right recovery code.
+
+832
+01:34:46,090 --> 01:34:52,830
+Um. So I'm not sure how we test that.
+
+833
+01:34:57,090 --> 01:35:04,320
+Hmhm. Uh, let's see here.
+
+834
+01:35:05,100 --> 01:35:11,129
+But do you supply the key pair? I like the archive.
+
+835
+01:35:11,130 --> 01:35:15,360
+Encryptor does the archive Encryptor does here.
+
+836
+01:35:15,570 --> 01:35:18,630
+Um. Let's see. It's very Byzantine.
+
+837
+01:35:19,500 --> 01:35:24,450
+The archive Encryptor will take the, uh.
+
+838
+01:35:25,000 --> 01:35:30,970
+Uh, so when you create, when you enable encryption.
+
+839
+01:35:33,340 --> 01:35:39,729
+You supply a recovery code or one is generated for you will generate will key stretch.
+
+840
+01:35:39,730 --> 01:35:43,300
+It will generate it will generate a random key pair.
+
+841
+01:35:45,160 --> 01:35:57,130
+We will stretch your, um, your recovery code with some PVC df2 I believe, uh, will generate a salt.
+
+842
+01:35:58,150 --> 01:36:09,940
+Yeah. Here's the stretching. The stretching happens here. We'll do 600,000 iterations of PVC data, um, from the key material.
+
+843
+01:36:10,600 --> 01:36:14,500
+We derive keys from that.
+
+844
+01:36:16,690 --> 01:36:21,250
+That allow you to authenticate the backup.
+
+845
+01:36:24,010 --> 01:36:33,970
+And authenticate the metadata. But the actual encryption key for the backup is generated at backup creation time.
+
+846
+01:36:34,540 --> 01:36:38,740
+So every backup will have a unique encryption key.
+
+847
+01:36:40,090 --> 01:36:44,650
+And then, uh, encryption key is stored with the backup.
+
+848
+01:36:44,890 --> 01:36:49,660
+And that key is encrypted with oh, geez.
+
+849
+01:36:49,660 --> 01:36:56,740
+Has it work? Um, it's so Byzantine, but like, the security team makes it very clear that this is the best way of doing it.
+
+850
+01:36:57,850 --> 01:37:03,669
+The, uh, when we encrypt, we encrypt using the archive encryption key.
+
+851
+01:37:03,670 --> 01:37:12,820
+The archive encryption key is derived from the archive key using the backup off key as the salt.
+
+852
+01:37:13,420 --> 01:37:27,790
+The archive key is. A randomly generated hk df key.
+
+853
+01:37:28,930 --> 01:37:32,470
+Basically all of this ni it's all created automatically.
+
+854
+01:37:32,650 --> 01:37:37,180
+This is the sort of stuff that our security in cryptography engineers are going to review.
+
+855
+01:37:37,190 --> 01:37:43,270
+Like I've written it. They're going to review it and make sure I did this right. Um, also, I just realized I'm way over time.
+
+856
+01:37:43,480 --> 01:37:48,520
+So you got a little sneak peek into the stuff I'm doing. Uh, and maybe we'll continue with it next week.
+
+857
+01:37:48,790 --> 01:37:52,480
+We'll see. Um, let me know if you have any questions.
+
+858
+01:37:52,510 --> 01:37:59,770
+Uh, about anything I did today or anything that's going on in Firefox or Mozilla or something, you can send those in to the Rate this episode form.
+
+859
+01:38:00,760 --> 01:38:03,879
+Check it out. There's a form in this in this agenda.
+
+860
+01:38:03,880 --> 01:38:07,180
+And you can send me questions or comments or let me know what you thought of the stream.
+
+861
+01:38:07,190 --> 01:38:10,780
+I love hearing everything that comes in. I'm just going to paste the link here.
+
+862
+01:38:11,110 --> 01:38:15,850
+Uh, link to rate this episode and ask questions.
+
+863
+01:38:16,720 --> 01:38:19,870
+There you go. I read everything that comes in. I'd love to hear from you.
+
+864
+01:38:20,200 --> 01:38:23,470
+And with that, I'm going to call the stream. Done. Thanks for watching, everybody.
+
+865
+01:38:23,710 --> 01:38:28,630
+I hope that was interesting. Um, and I'll hopefully I'll see you next week.
+
+866
+01:38:29,620 --> 01:38:33,940
+Take care everybody. Bye bye. The joy.
+
+867
+01:38:34,720 --> 01:38:37,210
+Oh, dang. See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

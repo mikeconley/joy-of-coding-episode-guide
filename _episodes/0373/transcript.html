@@ -1,0 +1,2498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 373 - July 17, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 373 - July 17, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c0ee1fb9-ec40-4847-9ba6-b18d014212ce</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c0ee1fb9-ec40-4847-9ba6-b18d014212ce">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,260 --> 00:00:08,730
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:09,150 --> 00:00:13,139
+Hello and welcome to episode 373 of the Joy of coding.
+
+3
+00:00:13,140 --> 00:00:17,999
+My name is Mike Conley. It's so good to have you here. We're going to be live hacking on some Firefox stuff today.
+
+4
+00:00:18,000 --> 00:00:27,210
+I've got a really interesting bug. Um, it's it's one of those bugs where it's like interesting bookkeeping.
+
+5
+00:00:27,960 --> 00:00:34,620
+And I'm very eager to dive into it with you and explain what's what I think is going on, verifying that assumption and then finding a solution.
+
+6
+00:00:36,090 --> 00:00:39,480
+But we'll get into that shortly. Uh, let's start by sharing my screen.
+
+7
+00:00:40,530 --> 00:00:45,120
+Yeah. It's, uh, it's July 17th, 2024, episode 373 reminder.
+
+8
+00:00:45,120 --> 00:00:47,880
+No plan survives breakfast. I think I'm going to fix that bug.
+
+9
+00:00:47,880 --> 00:00:54,600
+I think I know what's going on, or I have a a sense of it, but maybe I'm way, way wrong and we end up going completely off the rails.
+
+10
+00:00:54,630 --> 00:01:04,320
+Um, that could happen. And that's okay. Uh, this is me doing software development without a net, you know, as I would normally do at my desk.
+
+11
+00:01:04,440 --> 00:01:07,560
+And, uh, I'm just inviting you to come along for the ride.
+
+12
+00:01:07,560 --> 00:01:10,650
+So that means we might get stuck, sidelined, distracted.
+
+13
+00:01:11,070 --> 00:01:15,090
+Um, who knows? An emergency might crop up that I have to jump into.
+
+14
+00:01:15,120 --> 00:01:18,240
+Well, we'll we'll deal with it as it comes. That's the first thing.
+
+15
+00:01:18,300 --> 00:01:20,730
+The second thing is, uh, the agenda that we're looking at,
+
+16
+00:01:20,730 --> 00:01:26,670
+which is all these handy dandy links and that I'm going to be updating, uh, has, uh, there are links to it.
+
+17
+00:01:26,970 --> 00:01:31,289
+Um, depending on where you're watching this video, you'll find a link to the agenda inside on YouTube,
+
+18
+00:01:31,290 --> 00:01:36,540
+for example, the video description, uh, on Mozilla, it's in the details, uh, section, uh, on the left.
+
+19
+00:01:36,540 --> 00:01:39,360
+And if you're watching this on Twitch, it's down in the channel details.
+
+20
+00:01:39,600 --> 00:01:49,680
+And as I update the, um, as I excuse me for a second as I update the, uh, the agenda, you'll see this little spinny spin in the corner.
+
+21
+00:01:50,190 --> 00:01:55,410
+Uh, let me actually add a couple of things to the agenda, because we might have some time to do some reviews.
+
+22
+00:01:55,440 --> 00:01:58,890
+There's one and or it's another one.
+
+23
+00:01:59,700 --> 00:02:06,270
+Let's do this one. Um, we might do some reviews.
+
+24
+00:02:06,290 --> 00:02:11,150
+Oh, maybe this one too. If we have time. Okay.
+
+25
+00:02:11,990 --> 00:02:17,150
+Um, that's presuming we we, uh, we figure out this nasty bug.
+
+26
+00:02:17,180 --> 00:02:23,680
+Now, let me talk about this bug a little bit, because I think, uh, it, um, it may interest you.
+
+27
+00:02:23,690 --> 00:02:31,020
+So the. The actual presentation of this bug was a bit of a surprise.
+
+28
+00:02:31,040 --> 00:02:35,940
+It's kind of a that's not what's the term of data?
+
+29
+00:02:35,960 --> 00:02:41,869
+Where is this? Yeah, I got tagged on this a week or so ago.
+
+30
+00:02:41,870 --> 00:02:44,060
+Eight days ago? Yeah, about eight days ago.
+
+31
+00:02:44,450 --> 00:02:52,910
+This is after we'd landed some patches in Mozilla Central to change some of the formatting of the backup file that we create.
+
+32
+00:02:53,240 --> 00:02:58,460
+When, you know, a backup gets created. If you're not familiar with what I mean by a backup file or what the backup thing is,
+
+33
+00:02:58,460 --> 00:03:03,169
+the project, the Tldr is I'm working on a project with some people to make it possible to,
+
+34
+00:03:03,170 --> 00:03:10,760
+at runtime, take a like a snapshot of your user profile, pack it all up into a single file that can be moved between machines.
+
+35
+00:03:11,600 --> 00:03:14,780
+Or, you know, you can throw it into, uh, a thumb drive or whatever.
+
+36
+00:03:14,780 --> 00:03:18,380
+And just as like a backup of your user profile data and, uh,
+
+37
+00:03:19,370 --> 00:03:24,440
+you know that that single file is a specially crafted HTML document that's got like a big Ole,
+
+38
+00:03:24,830 --> 00:03:30,080
+uh, mime, uh, multipart my message at the end of it, inside of a document comment.
+
+39
+00:03:30,530 --> 00:03:35,710
+Um, we're hacking a little bit into the the format of an HTML document,
+
+40
+00:03:35,720 --> 00:03:39,440
+but there's nothing wrong with having a very large comment at the end of an HTML document.
+
+41
+00:03:39,770 --> 00:03:44,960
+And we just happened to be, uh, taking advantage of that to stick a giant mine message in there.
+
+42
+00:03:45,740 --> 00:03:52,940
+And that allows us to have structured data inside of this, uh, the UTF eight encoded document.
+
+43
+00:03:55,100 --> 00:03:59,450
+Uh, let me just check to see if anyone's talking about it in the chat when you think you know the bug.
+
+44
+00:03:59,450 --> 00:04:02,450
+But it was not that. Uh, yeah.
+
+45
+00:04:02,450 --> 00:04:05,510
+Sorry. If you if you, uh, thought I knew what the. You.
+
+46
+00:04:05,810 --> 00:04:11,360
+If this is not the bug you were thinking of. I'm curious. Murphy, if you've got, uh, if you got another sense of what the bug is.
+
+47
+00:04:11,510 --> 00:04:18,890
+So the way this bug presented is we landed that patch and it landed in central, and everything was fine, and it passed, and automation emerged.
+
+48
+00:04:19,490 --> 00:04:22,880
+And then we do this thing every couple of days are sheriffs.
+
+49
+00:04:23,120 --> 00:04:26,480
+We'll simulate the beta uplift for nightly.
+
+50
+00:04:26,480 --> 00:04:30,710
+So what that means is the contents of Mozilla Central are.
+
+51
+00:04:32,220 --> 00:04:40,799
+Tweaked in the same way that they'd be tweaked if we were uplifting central to beta, like if we were doing the sort of the four every four weeks.
+
+52
+00:04:40,800 --> 00:04:42,330
+Everything in Mozilla Central goes to beta.
+
+53
+00:04:42,840 --> 00:04:50,220
+It's it's simulates that to see if anything breaks or anything is going to break whenever we merge to beta.
+
+54
+00:04:50,220 --> 00:04:56,490
+And that's so that we don't get any big surprises. Like the worst thing is, if you've been working on central for four weeks, you've merged to beta,
+
+55
+00:04:56,730 --> 00:05:02,400
+and beta is horribly broken because, I don't know, there could be a number of things that could could happen.
+
+56
+00:05:02,410 --> 00:05:10,110
+Like there might be some, um, flags that are only set in nightly because we have nightly, uh, if devs or uh, you know,
+
+57
+00:05:10,590 --> 00:05:16,380
+there are certain configuration patterns that only exist in nightly and different ones in beta,
+
+58
+00:05:16,770 --> 00:05:20,030
+and so a bunch of tests might suddenly start failing inside of beta.
+
+59
+00:05:20,040 --> 00:05:23,609
+And so our sheriffs do these simulations to alert us very quickly, like, hey,
+
+60
+00:05:23,610 --> 00:05:27,390
+your thing is going to fail whenever we do the uplift to beta in a couple of weeks,
+
+61
+00:05:27,540 --> 00:05:33,599
+so that we can not be surprised so that whenever the uplift does occur, it's fairly straightforward.
+
+62
+00:05:33,600 --> 00:05:39,090
+Like it's been simulated, it uplifts. Beta is got all its tests passing as much as they pass.
+
+63
+00:05:39,330 --> 00:05:45,120
+And then, um, you know, we all move on with their lives. Uh oh.
+
+64
+00:05:45,150 --> 00:05:48,150
+Uh, sort of. Do you saying. No, I meant just in general when you think you know the solution.
+
+65
+00:05:48,150 --> 00:05:56,309
+But it is not that, but something else completely that is wrong. Well, that is kind of the story with this bug in in a ways like.
+
+66
+00:05:56,310 --> 00:06:01,349
+So this thing was failing on beta only during beta simulations.
+
+67
+00:06:01,350 --> 00:06:06,749
+It not only on certain platforms. And and it was very, very difficult for me to figure out what was happening.
+
+68
+00:06:06,750 --> 00:06:13,890
+And it required a bunch of tweaking and logging and sending messages, sending stuff to try and running a bunch of jobs.
+
+69
+00:06:13,890 --> 00:06:17,760
+But eventually I was able to produce a test case.
+
+70
+00:06:18,870 --> 00:06:26,610
+Um, what's going on? Is this test test, backup service archive is failing at a particular moment.
+
+71
+00:06:26,620 --> 00:06:29,670
+Let me shut down this nightly and I'll show you.
+
+72
+00:06:34,130 --> 00:06:37,880
+Hey, central. Wait. What do I have here? I'm a bunch of logging.
+
+73
+00:06:37,880 --> 00:06:41,780
+Just sloppy logging inside of this, uh, commit.
+
+74
+00:06:43,160 --> 00:06:47,509
+Yeah. I'm going to just say get rid of all of those changes.
+
+75
+00:06:47,510 --> 00:06:54,320
+None of those are helpful. And we are going to check out central.
+
+76
+00:06:55,610 --> 00:06:59,930
+And I'm going to build do an artifact build.
+
+77
+00:07:02,510 --> 00:07:07,310
+And I'm going to show you this file.
+
+78
+00:07:07,310 --> 00:07:18,290
+So this is a specially crafted, um, simulations like something uh, our backup files are going to look a little bit like.
+
+79
+00:07:18,800 --> 00:07:24,830
+Let me see if I can show you one. Actually, um, it'll look something like this.
+
+80
+00:07:27,180 --> 00:07:30,330
+Where there's like a dog type at the top. There's.
+
+81
+00:07:30,420 --> 00:07:38,010
+Uh, a version number inside of, uh, the document in a comment right after the HTML doctype tag.
+
+82
+00:07:38,430 --> 00:07:41,669
+And then there's a bunch of HTML, you know, standard stuff.
+
+83
+00:07:41,670 --> 00:07:44,790
+Nothing unusual except the fact that everything is inline.
+
+84
+00:07:44,790 --> 00:07:49,079
+We don't have any external sources, no CSS, no script or anything that's running externally.
+
+85
+00:07:49,080 --> 00:07:56,310
+It all has to be inline. And then, uh, afterwards we have this block that says begin inline mime, and then we,
+
+86
+00:07:56,310 --> 00:08:00,180
+uh, start with a preamble that says like, okay, this is uh, multipart mixed.
+
+87
+00:08:00,810 --> 00:08:08,519
+Uh, my message this is that the boundary, this is the format of a multipart, um, uh, mixed multipart, my message.
+
+88
+00:08:08,520 --> 00:08:11,999
+And then you've got the boundary and then you've got like your, your data.
+
+89
+00:08:12,000 --> 00:08:15,150
+And that data is in this case, this data is in UTF eight.
+
+90
+00:08:15,180 --> 00:08:25,140
+It's just a Json block. And then this is binary data. This is the actual compressed contents of the uh the backed up profile that are base64 encoded.
+
+91
+00:08:25,620 --> 00:08:31,439
+And I think in this case encrypted. And uh, and so that's what it looks like.
+
+92
+00:08:31,440 --> 00:08:35,130
+And eventually you reach the bottom, there's another uh, boundary.
+
+93
+00:08:35,130 --> 00:08:38,459
+And then you, uh, end the in line, my message.
+
+94
+00:08:38,460 --> 00:08:43,800
+And that's the file. Um, so it's a little strange, but it gets the job done.
+
+95
+00:08:44,190 --> 00:08:50,310
+You know, we ran it, we ran it by a couple of, um, people, and there are pros and cons to it.
+
+96
+00:08:50,310 --> 00:08:58,560
+But the main benefit of doing it this way is that the HTML file can be interpreted by any browser, uh,
+
+97
+00:08:58,560 --> 00:09:04,769
+and present itself as either instructions on how to recover from it and with like a download link to
+
+98
+00:09:04,770 --> 00:09:09,120
+Firefox or instructions on how to recover from it because it knows it's running inside of Firefox.
+
+99
+00:09:09,120 --> 00:09:14,220
+Because like we do include a little bit of script, I believe in the default case,
+
+100
+00:09:14,670 --> 00:09:20,880
+there's like a little bit of script, and that script doesn't do much. It just like, um, what does it do?
+
+101
+00:09:22,140 --> 00:09:32,280
+Archived JS it'll just check to see whether or not Firefox is the user agent, and if it is, then it flips this, uh, attribute on the document body.
+
+102
+00:09:32,550 --> 00:09:43,590
+And that attribute, um, just changes the, the document structure so that we show this list of instructions rather than this list of instructions.
+
+103
+00:09:46,080 --> 00:09:50,339
+Um, so there's some people talking about the Twitch stream.
+
+104
+00:09:50,340 --> 00:09:53,430
+Hopefully the the is the stream stable? Are we okay here?
+
+105
+00:09:53,970 --> 00:09:56,819
+Am I sending packets? I'm sending packets. I'm not dropping frames.
+
+106
+00:09:56,820 --> 00:10:03,659
+So, uh, Chris, if the, uh, if the Twitch stream isn't doing it for you, there are alternatives.
+
+107
+00:10:03,660 --> 00:10:09,630
+You could check out the YouTube one or the, um, I guess you can't hear me if you're not able to get the stream.
+
+108
+00:10:10,200 --> 00:10:16,920
+Uh, but just in case, Chris, I will give you the, uh, links to alternative streams.
+
+109
+00:10:18,720 --> 00:10:26,370
+Um. Uh, Chris, here are, uh, some alternative stream options.
+
+110
+00:10:30,020 --> 00:10:33,170
+Oh, you can hear me. I'm just wondering if it's Twitch or a nightly issue.
+
+111
+00:10:33,210 --> 00:10:45,980
+Oh good question. Okay, so, uh, yeah, the the the issue is that this test runs it loads up, uh, sort of a generated one of those HTML files.
+
+112
+00:10:46,340 --> 00:10:52,570
+And one of the first things it tries to do is it tries to read out the, the Json block,
+
+113
+00:10:52,580 --> 00:10:55,880
+this thing right here, it tries to read it out because it needs to know some information.
+
+114
+00:10:55,880 --> 00:10:59,329
+It wants to know. First of all, is this an encrypted archive.
+
+115
+00:10:59,330 --> 00:11:01,220
+Because that information is encoded in there.
+
+116
+00:11:01,790 --> 00:11:12,769
+And uh, there is information like what was the name of the machine that, um, uh, created the backup and what was the date of the backup?
+
+117
+00:11:12,770 --> 00:11:15,530
+And that information is presented to the user.
+
+118
+00:11:16,070 --> 00:11:23,660
+Um, it's also if the backup is encrypted, that information over here is also, uh, signed, like, there's a,
+
+119
+00:11:24,350 --> 00:11:31,340
+uh, it's signed by a key that is derived from the passphrase that the user used to encrypt the backup.
+
+120
+00:11:32,330 --> 00:11:35,960
+So that way, um, we can try to prevent tampering.
+
+121
+00:11:38,770 --> 00:11:45,730
+Okay, so what's the problem? Well, the problem is that, um, we have this.
+
+122
+00:11:46,120 --> 00:11:52,900
+The, um, we have this worker script, and its job is to try and like, none of the information, um,
+
+123
+00:11:52,900 --> 00:12:00,610
+beyond the version number here between the HTML tags is of any interest to, um, the actual back end.
+
+124
+00:12:00,910 --> 00:12:06,670
+All of the stuff that's displayed inside of here is really just for the user to see if they load it up inside of a web browser.
+
+125
+00:12:07,540 --> 00:12:10,840
+All that the backup service is interested in is this stuff down here.
+
+126
+00:12:11,140 --> 00:12:17,380
+And so we need to get to this stuff. We need to stream it in and read it, but we don't want to read the whole file into memory.
+
+127
+00:12:17,800 --> 00:12:23,019
+So, uh, part of the, um, thing that you have to realize that some of these backups are going to be pretty big,
+
+128
+00:12:23,020 --> 00:12:26,400
+like my personal profile, the one I use in this machine.
+
+129
+00:12:26,410 --> 00:12:33,220
+Uh, so sorry, my developer profile is quite old, and the HTML file like it's generated is just over 100 megs.
+
+130
+00:12:33,220 --> 00:12:40,419
+I think it's like 115 Meg. It's a large HTML file, and we don't want to have to read the whole thing into memory at one time.
+
+131
+00:12:40,420 --> 00:12:48,640
+And we definitely don't want to do like string operations that might create copies or, uh, you know,
+
+132
+00:12:48,640 --> 00:12:56,830
+we're searching through a gigantic file, hundreds of megabyte, 100MB of of, uh, text to, like, look for strings or stuff like that.
+
+133
+00:12:57,010 --> 00:13:03,670
+We don't want to do that, uh, because we don't want to risk, you know, putting strain on the machine's resources.
+
+134
+00:13:03,760 --> 00:13:06,669
+Um, we want to kind of do it in parts.
+
+135
+00:13:06,670 --> 00:13:16,000
+And so the way it works is we have a worker, and the worker gets access, it gets a pointer, a handle to the file on the file system.
+
+136
+00:13:16,540 --> 00:13:20,710
+And then the first thing it does is it reads the first like reads in some fixed number of bytes.
+
+137
+00:13:20,710 --> 00:13:27,039
+I think it reads in like 256 bytes or something. And then it scans those bytes for, uh, this string.
+
+138
+00:13:27,040 --> 00:13:33,250
+It makes sure that we start with the right version, an expected version, and then it throws out that buffer.
+
+139
+00:13:34,150 --> 00:13:43,900
+Um, or rather, after doing that, it scans, it continues to do like blocks of 256, uh, bytes.
+
+140
+00:13:44,350 --> 00:13:56,080
+And um, it actually creates it's like double buffering where it reads in 256 bytes, and then it concatenates it to the previous read of 256 bytes.
+
+141
+00:13:56,440 --> 00:13:59,589
+And then it scans that for a particular phrase.
+
+142
+00:13:59,590 --> 00:14:05,499
+And the reason we have to do this in two blocks is because we have to deal with the possibility,
+
+143
+00:14:05,500 --> 00:14:08,680
+like the phrase it's looking for is this begin in line mine.
+
+144
+00:14:08,680 --> 00:14:13,659
+That's what it's searching for. Begin in line mime. And then in particular this stuff down here.
+
+145
+00:14:13,660 --> 00:14:16,390
+So it's actually this whole phrase is what it's looking for.
+
+146
+00:14:16,660 --> 00:14:22,720
+And it does it in parts because the file itself, the the preamble is not necessarily fixed.
+
+147
+00:14:22,720 --> 00:14:29,109
+There's like user defined stuff in here, like, um, the name of the machine is not a thing that is static.
+
+148
+00:14:29,110 --> 00:14:34,450
+There's a thing that we get from the operating system. Um, the date may change slightly.
+
+149
+00:14:34,450 --> 00:14:40,179
+The string, the number of bytes in the date. Um, the rest of this is somewhat static, but, you know,
+
+150
+00:14:40,180 --> 00:14:45,880
+it will be different depending on what locale the user is using because we've got like interpolated strings whenever we do this,
+
+151
+00:14:45,880 --> 00:14:49,870
+uh, when we generate this file. So it's not consistent.
+
+152
+00:14:50,740 --> 00:14:54,180
+Um, HTML encoded Mime content.
+
+153
+00:14:54,190 --> 00:14:55,930
+Yeah, kinda. Yeah. Basically.
+
+154
+00:14:56,170 --> 00:15:06,370
+And there was an attempt somewhere to, to make this like I think Chrome has something called HTML, which is basically this.
+
+155
+00:15:08,650 --> 00:15:11,910
+Mime encapsulation of aggregated HTML documents.
+
+156
+00:15:11,920 --> 00:15:16,270
+I who supports this? I think it's I think it's Safari and Blink.
+
+157
+00:15:17,200 --> 00:15:22,030
+Uh, I was the first browser do it edge does it.
+
+158
+00:15:23,020 --> 00:15:27,340
+Opera does it. Chrome I think it's for Firefox that does not do it.
+
+159
+00:15:28,210 --> 00:15:32,650
+And. Oh uh, no.
+
+160
+00:15:32,650 --> 00:15:37,959
+Safari also does not do it. Safari and uh, Firefox do not do it.
+
+161
+00:15:37,960 --> 00:15:42,970
+And that's because this is not I don't believe it's a standard like or at least it wasn't a ratified standard.
+
+162
+00:15:42,970 --> 00:15:52,960
+There's like someone has put forward a standard, but it's not like a standard that I think is, um, been ratified or anything or made part of the web.
+
+163
+00:15:53,470 --> 00:16:01,570
+Uh, Mozilla had something called the Mozilla Archive format, like there were a bunch of, um, different people trying to find a way of,
+
+164
+00:16:02,230 --> 00:16:08,740
+um, encapsulating a whole bunch of information into a single file, uh, that can be represented on the web.
+
+165
+00:16:09,100 --> 00:16:15,640
+And Mozilla's contribution back in, I don't know, 2004, uh, was the Mozilla archive format.
+
+166
+00:16:16,600 --> 00:16:23,020
+I don't think that really went anywhere. Um, so we've got kind of we don't have a great situation here.
+
+167
+00:16:23,680 --> 00:16:29,260
+Um, anyways, so we're scanning for this block in particular.
+
+168
+00:16:29,560 --> 00:16:35,949
+And because we don't have, uh, consistent size, it is very possible that part of our scanning will,
+
+169
+00:16:35,950 --> 00:16:40,720
+like, grab this block and we'll have only part of the message selected.
+
+170
+00:16:41,560 --> 00:16:48,159
+Um, and so that's why we do the, uh, the two buffers we, like, combine the buffers is.
+
+171
+00:16:48,160 --> 00:16:56,020
+So in the event that we've, like, one buffer might contain the whole thing, in which case you found it, or one buffer contains part of it,
+
+172
+00:16:56,260 --> 00:17:02,590
+the other buffer, because we know the size of what this boundary will be, we know that the buffer is greater than that size.
+
+173
+00:17:02,920 --> 00:17:07,810
+Um, if you can can't need them, then you can be sure that you're not going to accidentally slice it in half.
+
+174
+00:17:08,980 --> 00:17:15,730
+Uh, or if you do say the second buffer, uh, is concatenated to the first and, uh,
+
+175
+00:17:15,760 --> 00:17:20,410
+you slice in half, well, then the one after that is going to be like something like this.
+
+176
+00:17:21,340 --> 00:17:27,909
+It'll so there's like a little bit of repeat work, but that way you'll, you'll never because we know the size of this marker that we're looking for.
+
+177
+00:17:27,910 --> 00:17:33,069
+We'll never miss it. Now the problem is,
+
+178
+00:17:33,070 --> 00:17:46,090
+in the event that our I believe this is the case is in the event that our scanning causes us to break over a Unicode string or a Unicode character.
+
+179
+00:17:47,800 --> 00:17:53,289
+Uh, so what are Unicode characters? Uh, that's a great question.
+
+180
+00:17:53,290 --> 00:17:54,999
+And I'm one I don't think I can answer.
+
+181
+00:17:55,000 --> 00:18:01,989
+During the stream, there's this old document that I remember reading a long time ago that, uh, I remember being somewhat helpful.
+
+182
+00:18:01,990 --> 00:18:06,010
+I don't know if it's still helpful, but I remember reading this a long time ago,
+
+183
+00:18:06,430 --> 00:18:12,610
+and this kind of goes into, um, Unicode characters and character encoding in general.
+
+184
+00:18:13,540 --> 00:18:20,700
+But basically you can't it's with Ascii and, you know, maybe, uh,
+
+185
+00:18:21,130 --> 00:18:25,330
+like a fairly significant number of characters can be represented using a single byte.
+
+186
+00:18:26,410 --> 00:18:33,190
+You can you can represent 256 characters with, um, like, and they're not necessarily like glyphs.
+
+187
+00:18:33,190 --> 00:18:40,930
+They're also maybe control characters. That's what like the Ascii table, uh, contained both glyphs and control characters like the Bel character.
+
+188
+00:18:41,060 --> 00:18:48,040
+And there's like new line that's, well, that's that's like a whitespace character, but, uh, end of file, that's another character.
+
+189
+00:18:48,490 --> 00:18:55,179
+Um, and that's not enough for all of the different things that need to be represented with characters with glyphs.
+
+190
+00:18:55,180 --> 00:19:04,330
+And so Unicode is a standard that, uh, says that if you've got some bytes,
+
+191
+00:19:04,750 --> 00:19:16,750
+you can represent a much larger set of glyphs using multiple bytes when they're given, when they're put in a particular order.
+
+192
+00:19:17,560 --> 00:19:28,780
+So, um, you know, if you're ever, if you've ever wondered like if we go to like the is there a Unicode, um, map or a list of Unicode characters?
+
+193
+00:19:29,350 --> 00:19:35,050
+So there's a lot of Unicode characters. But if we go to like, um, let's go to uh.
+
+194
+00:19:37,970 --> 00:19:43,730
+These ones, these Unicode characters. So this is Unicode, some Unicode character here.
+
+195
+00:19:44,690 --> 00:19:48,919
+Um I could like I don't know what word that is but that's some Unicode character.
+
+196
+00:19:48,920 --> 00:19:53,480
+This is represented by not one byte but several in fact.
+
+197
+00:19:53,750 --> 00:20:01,580
+Let's take a look at that. Uh, I'm going to put this character right between the letters U and M in document.
+
+198
+00:20:02,150 --> 00:20:05,690
+And now I'm going to open this up in a hex editor so we can take a look.
+
+199
+00:20:09,110 --> 00:20:13,909
+Um, okay. So here we've got our decoded text on the right side.
+
+200
+00:20:13,910 --> 00:20:20,150
+Here you can see our version number. And then eventually we're going to get to the word document doc.
+
+201
+00:20:20,480 --> 00:20:25,070
+Oh I may have needed to save. Sorry. Um let me try that again.
+
+202
+00:20:27,110 --> 00:20:30,919
+Uh, okay. So we finally get to we get to the word this is a specially crafted document.
+
+203
+00:20:30,920 --> 00:20:39,290
+And then notice there are four dots in here. And those dots represent, um, bytes like each byte is represented in here.
+
+204
+00:20:39,290 --> 00:20:45,170
+And these bytes start with f0. This is in hex f0 8888584.
+
+205
+00:20:45,980 --> 00:20:51,140
+And those four bytes represent this character in UTF eight.
+
+206
+00:20:51,860 --> 00:20:54,020
+Uh, did we get that right? Yes, that looks right.
+
+207
+00:20:55,850 --> 00:21:07,040
+Um, and like some like the Latin characters, the classic Latin character, like M is, um, just a single unsigned integer 109.
+
+208
+00:21:07,040 --> 00:21:15,259
+That's within our first 256. You can just do a one byte is uh, is uh, um, like an with eight bits.
+
+209
+00:21:15,260 --> 00:21:18,110
+You can represent all of like the, your classic Latin characters.
+
+210
+00:21:18,110 --> 00:21:26,810
+But as soon as you start getting into like the um, non Latin characters, um, outside of like the Ascii table, then you need more bytes.
+
+211
+00:21:26,810 --> 00:21:31,129
+And this is an example of that and it's start. I think there's like a particular preamble.
+
+212
+00:21:31,130 --> 00:21:39,619
+The f0 I think might be how it sort of initial like prepares whatever is interpreting the bytes is saying like,
+
+213
+00:21:39,620 --> 00:21:41,480
+hey, I've got a Unicode character coming.
+
+214
+00:21:41,780 --> 00:21:47,929
+Like whenever you have a piece of software that's interpreting the bytes, the software needs to know what the byte encoding is.
+
+215
+00:21:47,930 --> 00:21:51,110
+And in this case, this this document is in UTF eight.
+
+216
+00:21:51,470 --> 00:21:58,970
+Like it says it right here that we are in UTF eight. There's a particular character encoding which allows us to represent some of the Latin,
+
+217
+00:21:59,150 --> 00:22:06,530
+some of the characters using um, uh, like single bytes and then other characters using multiple bytes.
+
+218
+00:22:07,190 --> 00:22:19,610
+And I think that is the root of our problem is that our worker is scanning using blocks of bytes, fixed size blocks of bytes.
+
+219
+00:22:19,970 --> 00:22:24,679
+And so in theory, depending on the layout and the order and the position of certain characters,
+
+220
+00:22:24,680 --> 00:22:30,350
+it is possible for one of those blocks to slice a Unicode character in half.
+
+221
+00:22:31,010 --> 00:22:37,400
+So, like this one Unicode character, you'd maybe end your first block with half the Unicode character,
+
+222
+00:22:37,760 --> 00:22:46,909
+um, uh, represented at the very beginning, like because you've got the double block.
+
+223
+00:22:46,910 --> 00:22:53,900
+So you might have like half the Unicode character shows up at the end of one block, and then the beginning of it shows up at the second block.
+
+224
+00:22:53,900 --> 00:22:55,669
+So they concatenate together. No problem.
+
+225
+00:22:55,670 --> 00:23:01,930
+You've got your character and then you shift and then you've only got these first two characters of the unit,
+
+226
+00:23:02,090 --> 00:23:06,980
+uh, or these last two characters of the Unicode block or the Unicode character.
+
+227
+00:23:07,400 --> 00:23:12,230
+These first, these last two bytes of the Unicode character are in the first block,
+
+228
+00:23:12,470 --> 00:23:15,530
+and then the second block might have any arbitrary number of things.
+
+229
+00:23:16,460 --> 00:23:21,230
+And that's a problem because of how our worker scans I like.
+
+230
+00:23:21,350 --> 00:23:29,900
+We're starting to go into theory here because I haven't verified this. This is what I want to verify with you today, is that this is the problem.
+
+231
+00:23:30,800 --> 00:23:38,810
+So the way that the worker works. Is yeah, we have this fixed buffer size.
+
+232
+00:23:39,560 --> 00:23:44,480
+Um, it's either that many bytes or however many bytes there are left in the file.
+
+233
+00:23:44,690 --> 00:23:50,720
+We create our buffer, we read bytes into it, uh, we decode them into a string.
+
+234
+00:23:51,140 --> 00:23:55,580
+We do decode those bytes into a string uh, utf8 string.
+
+235
+00:23:55,970 --> 00:24:02,330
+And then we look we use regular a regular expression to look for, um, the version at the top.
+
+236
+00:24:03,230 --> 00:24:10,160
+And then uh, we make sure that the version matches what we expect, and then we keep scanning.
+
+237
+00:24:11,450 --> 00:24:14,939
+Uh. Yeah.
+
+238
+00:24:14,940 --> 00:24:21,239
+This is where we talk about the, uh. We're using our double buffering here, the front half and the back half of the buffer.
+
+239
+00:24:21,240 --> 00:24:25,320
+And then we have this while loop. And what does it reads in another block of bytes.
+
+240
+00:24:26,070 --> 00:24:31,079
+And then eventually the decoded string will contain the expected marker.
+
+241
+00:24:31,080 --> 00:24:35,460
+And the expected marker is the uh, uh begin.
+
+242
+00:24:36,120 --> 00:24:42,010
+It's this thing. It'll contain this. This is.
+
+243
+00:24:42,190 --> 00:24:45,970
+This is our, uh, expected marker, and our regular expression will match.
+
+244
+00:24:46,900 --> 00:24:50,950
+And then what it does is we try and work.
+
+245
+00:24:50,960 --> 00:24:58,510
+So there's this big comment in here that tries to explain what we're doing, but it tries to get the index of the match that it found.
+
+246
+00:25:00,860 --> 00:25:05,120
+Akira says, you don't want to load everything in memory because it might be a huge file. Exactly, exactly.
+
+247
+00:25:05,330 --> 00:25:13,040
+I don't want to load, um, uh, the entire, like, 100 or so megabytes into memory at once.
+
+248
+00:25:13,670 --> 00:25:21,410
+We want to stream it. That was one of the sort of design directives is to make sure that we don't blow out the memory on the on the machine.
+
+249
+00:25:23,780 --> 00:25:26,960
+Um, because, yeah, this could be arbitrary. It could be hundreds of megabytes.
+
+250
+00:25:27,980 --> 00:25:33,020
+Um. Why is it HTML then?
+
+251
+00:25:33,500 --> 00:25:42,830
+Yeah, that's a great question. Because like the we lose our ability to compress a little bit like we've compressed the, the, the,
+
+252
+00:25:43,310 --> 00:25:51,830
+the cloned data stores into a zip and then we base64 encode them, which inflates it again in order to just stick it inside of an HTML file.
+
+253
+00:25:51,860 --> 00:25:59,450
+Why would we do such a thing? And the answer is we want this file to be, um, portable.
+
+254
+00:25:59,900 --> 00:26:07,130
+We didn't want it to be binary. We didn't want to worry about it being like a thing that has to be signed or executed.
+
+255
+00:26:07,580 --> 00:26:17,210
+But we wanted it. It we wanted it to be a combined single file that includes both the backup as well as the capability of restoring from that backup,
+
+256
+00:26:17,390 --> 00:26:20,929
+so that if you are a user and you just have that one file,
+
+257
+00:26:20,930 --> 00:26:27,810
+it has all of the information it needs to guide you through both getting Firefox and recovering from the file.
+
+258
+00:26:27,830 --> 00:26:30,980
+We want that to all be in the one file. That's why.
+
+259
+00:26:32,240 --> 00:26:37,610
+And you know, originally we tinkered with having it be uh, self extracting executable.
+
+260
+00:26:38,420 --> 00:26:40,850
+But the problem with that is that it needs to be signed.
+
+261
+00:26:40,850 --> 00:26:46,700
+Then otherwise users are going to see like their operating system be like, hey, what's this binary that you're trying to run?
+
+262
+00:26:47,060 --> 00:26:56,209
+Um, it's not signed. And the reason we can't sign it is because, uh, in order to sign it with Mozilla's, like, um,
+
+263
+00:26:56,210 --> 00:27:02,060
+application signing infrastructure, it needs the data that's inside the binary, and it's a self extracting binary.
+
+264
+00:27:02,060 --> 00:27:06,020
+That means your backup. We would need your backup in order to sign the binary.
+
+265
+00:27:06,170 --> 00:27:09,590
+And we don't want your backup. Don't send it to us, please.
+
+266
+00:27:09,710 --> 00:27:13,650
+We don't want your data. Uh, and also, it's not portable. That's exactly right.
+
+267
+00:27:13,670 --> 00:27:20,120
+It would only work on a I mean, there are ways around this. Uh, cosmopolitan is a really interesting project that you may have heard of.
+
+268
+00:27:20,540 --> 00:27:24,470
+Um. Fall item.
+
+269
+00:27:26,870 --> 00:27:31,840
+Uh, which is, uh, uh, I need to update my recovery codes.
+
+270
+00:27:31,850 --> 00:27:35,810
+So this allows us to create binaries that will run on most platforms,
+
+271
+00:27:35,810 --> 00:27:42,289
+but not like I don't I don't think gooey applications like simple C programs, maybe.
+
+272
+00:27:42,290 --> 00:27:49,910
+But, um, I'm not certain that it would allow you to run one, um, like a Win32.
+
+273
+00:27:50,000 --> 00:27:53,150
+Like, I don't know how that would work. Maybe. Could it use SDL?
+
+274
+00:27:53,600 --> 00:27:59,330
+I have no idea. Actually, I'm actually really interested in that. Could you could you use.
+
+275
+00:28:03,220 --> 00:28:06,430
+Could you write like a gooey application with cosmopolitan?
+
+276
+00:28:06,670 --> 00:28:10,760
+I'd be very interesting. Um, that might be an interesting project.
+
+277
+00:28:10,780 --> 00:28:16,689
+Anyways, uh, I haven't looked into that, and we discarded that idea fairly quickly because of how complicated it was,
+
+278
+00:28:16,690 --> 00:28:21,040
+and particularly because of the signing issue. Um, you know, there's really not a way around that.
+
+279
+00:28:21,040 --> 00:28:24,570
+As soon as you have a binary, uh, you have the signing problem,
+
+280
+00:28:24,580 --> 00:28:28,000
+as soon as you have a binary that's not being run from the terminal, you have the signing problem.
+
+281
+00:28:29,230 --> 00:28:37,780
+Um, and, uh, and, you know, there are some ways around that you can pack some information.
+
+282
+00:28:38,260 --> 00:28:40,450
+It's different from operating system to operating system.
+
+283
+00:28:40,750 --> 00:28:46,990
+Um, but you can pack some information inside of a binary that is signed that is not part of what is signed.
+
+284
+00:28:47,320 --> 00:28:54,129
+That's how like the signature, for example, is in a region of the executable that is not signed because that would that's recursive.
+
+285
+00:28:54,130 --> 00:28:57,820
+Like you can't sign the signature and have that be part of the signature.
+
+286
+00:28:58,000 --> 00:29:01,030
+So obviously it's held in part of the binary that is not signed,
+
+287
+00:29:01,300 --> 00:29:07,990
+but that region of space inside of the binary that is not part of the signature is not large enough to contain the backup.
+
+288
+00:29:08,650 --> 00:29:14,289
+At least on on windows. So, you know, we we juggle a lot of of options.
+
+289
+00:29:14,290 --> 00:29:17,170
+And the HTML one seemed to tick all of the boxes.
+
+290
+00:29:17,470 --> 00:29:25,539
+The trade there being, you know, it's a little more complicated for us to have to, like, scan and, uh,
+
+291
+00:29:25,540 --> 00:29:30,009
+it's you lose some of the advantages of compressing so heavily, um,
+
+292
+00:29:30,010 --> 00:29:34,150
+because you have to re inflate everything because it needs to be utf8, uh, encoded.
+
+293
+00:29:34,540 --> 00:29:44,140
+And you can't just put binary like arbitrary binary bits from the compressed and encrypted file inside of a UTF eight file,
+
+294
+00:29:44,140 --> 00:29:47,830
+like, because it browsers wouldn't interpret it correctly.
+
+295
+00:29:48,340 --> 00:29:54,840
+Um, I mean, you could put it in there, but as soon as you try to load that file, every browser would just go like, what is this?
+
+296
+00:29:54,850 --> 00:29:58,380
+This is not UTF eight encoded. This is not correctly encoded.
+
+297
+00:29:58,390 --> 00:30:05,170
+I'm going to explode if you're interested in, um, there was another option that we looked at that was maybe a little too complicated,
+
+298
+00:30:05,500 --> 00:30:10,120
+but there's this, um, add on that I really admire called Single File,
+
+299
+00:30:11,230 --> 00:30:18,939
+and it will if you install this add on in Firefox, it can create snapshots of a web page that you're on,
+
+300
+00:30:18,940 --> 00:30:25,810
+including all the image and style and script assets, and it puts it into a single HTML file.
+
+301
+00:30:26,170 --> 00:30:38,680
+And that single HTML file is, um, specially crafted, uh, in the same, in the same way that, um, how do I describe it?
+
+302
+00:30:39,340 --> 00:30:44,350
+It's like, uh, where where does it talk about it?
+
+303
+00:30:45,000 --> 00:30:48,580
+It's single file. Frequently asked questions.
+
+304
+00:30:55,200 --> 00:31:01,470
+The self extracting zip files are essentially regular zip files that take advantage of the flexibility in the ZIP specification,
+
+305
+00:31:01,680 --> 00:31:05,100
+which allow for additional data to be included before and after the zip payload.
+
+306
+00:31:05,490 --> 00:31:11,190
+Right. So what's interesting about it is that the zip file masquerades as an HTML file.
+
+307
+00:31:13,200 --> 00:31:17,730
+So, um, this this is.
+
+308
+00:31:17,730 --> 00:31:23,070
+Oh, uh, hang on a second. Yeah. This HTML file, if I load it.
+
+309
+00:31:24,990 --> 00:31:32,580
+Hooray! It's like an HTML file. Except that it's also pretty sure a zip file.
+
+310
+00:31:32,880 --> 00:31:40,690
+Uh, like, if I rename this to zip. Oh.
+
+311
+00:31:41,170 --> 00:31:45,460
+Um. Well, I don't know.
+
+312
+00:31:45,520 --> 00:31:52,470
+There's there's information about how, like, uh, the the file can masquerade as different things.
+
+313
+00:31:52,480 --> 00:31:57,010
+It can be a zip file and an HTML file. And we considered, uh, tinkering with that.
+
+314
+00:31:57,790 --> 00:32:01,210
+Uh, did you also consider XML and not using comments?
+
+315
+00:32:01,900 --> 00:32:05,170
+Uh, no, we did not. We did not.
+
+316
+00:32:05,770 --> 00:32:11,290
+Okay. Anyways, I think that's the problem is that Unicode characters can get sliced in half.
+
+317
+00:32:11,740 --> 00:32:17,500
+And then our calculation of where the starting byte is for streaming in the main message, uh, breaks.
+
+318
+00:32:17,950 --> 00:32:21,580
+I think that's what's going on. I want to now verify that.
+
+319
+00:32:21,700 --> 00:32:27,930
+I'm going to start by writing a test. I've got I've got our, um, this is a, uh.
+
+320
+00:32:27,970 --> 00:32:31,780
+Well, first of all, how does this, uh, how does this bug sort of present itself?
+
+321
+00:32:33,940 --> 00:32:37,860
+I'm going to go into the, uh, the debug interface.
+
+322
+00:32:37,870 --> 00:32:46,500
+Debug interface? Of a backup component.
+
+323
+00:32:47,660 --> 00:32:52,850
+I'm just going to try and extract from the archive. Now there's there's actually if you look inside of here, there's no binary block.
+
+324
+00:32:53,300 --> 00:32:59,480
+But part of what it wants to do whenever it extracts is it's going to try and pull in the Json, excuse me,
+
+325
+00:32:59,480 --> 00:33:07,940
+the Json block to determine whether or not the, um, file is encrypted, the backup is encrypted, and it's going to fail.
+
+326
+00:33:08,270 --> 00:33:12,710
+Uh, check it out. So I try and open it up and it just sticks.
+
+327
+00:33:13,370 --> 00:33:19,190
+It just like, hangs it. I mean, the browser is still responsive, but it is never going to resolve.
+
+328
+00:33:19,430 --> 00:33:23,660
+And the reason for that is because it finds the wrong position.
+
+329
+00:33:23,900 --> 00:33:25,790
+The starting byte is miscalculated.
+
+330
+00:33:25,940 --> 00:33:33,440
+For some reason, it's calculated for my testing to be about here, which is not the beginning of the my message boundary.
+
+331
+00:33:33,710 --> 00:33:38,090
+And so it starts looking for this mine message boundary and it never finds it.
+
+332
+00:33:38,690 --> 00:33:45,410
+And so it never finds the Json block. And ah, you know, our, um, uh, our, uh.
+
+333
+00:33:47,930 --> 00:33:54,530
+Uh, there our routine does not exit. So that's the first bug actually, is we need to make it so that if we cannot find the Json block that we reject
+
+334
+00:33:55,400 --> 00:33:59,360
+so that we're no longer just like sitting and waiting for a thing to happen.
+
+335
+00:33:59,450 --> 00:34:07,070
+That's the first piece of work. And then we're going to write a test that uses this file to ensure that we reject when,
+
+336
+00:34:07,100 --> 00:34:13,490
+uh, when we load it, um, or like that rejects because it still has the bug and then like,
+
+337
+00:34:13,640 --> 00:34:19,310
+there's going to be little test driven, we're going to try and fix the bug, um, and make it to the test passes.
+
+338
+00:34:19,670 --> 00:34:23,060
+That's the ball game. So let's see. Let's do it.
+
+339
+00:34:23,600 --> 00:34:29,480
+Uh, we're going to start by. Taking this file.
+
+340
+00:34:30,230 --> 00:34:35,810
+I'm going to shut down this. I'm going to I think I had a different copy of this under backup test.
+
+341
+00:34:35,840 --> 00:34:45,210
+Ex-bbc shall data break over Unicode? I'm going to copy browser compose backup copy downloads break over unit is it.
+
+342
+00:34:45,210 --> 00:34:48,430
+Did documents break over Unicode.
+
+343
+00:34:48,440 --> 00:34:52,160
+We're going to copy that to browser equivalents back up as XP shell data.
+
+344
+00:34:52,850 --> 00:35:05,000
+We're going to add that file to um the test manifest for uh test backup archive.
+
+345
+00:35:07,790 --> 00:35:11,980
+Data slash break over Unicode HTML.
+
+346
+00:35:14,330 --> 00:35:18,770
+Um, we're going to add that to tracking material.
+
+347
+00:35:24,550 --> 00:35:31,360
+And we are going to commit. Uh, and the bug number for all of this is this.
+
+348
+00:35:32,620 --> 00:35:36,910
+Uh, bug such and such, um, reject.
+
+349
+00:35:38,800 --> 00:35:43,530
+No. Uh. Correct.
+
+350
+00:35:44,870 --> 00:35:50,190
+To make. Was the routine.
+
+351
+00:35:54,140 --> 00:36:02,210
+They pass archive header resilient to partially Unicode characters in the buffer.
+
+352
+00:36:08,010 --> 00:36:18,489
+Okay. Just realize I've got my email open.
+
+353
+00:36:18,490 --> 00:36:23,830
+I'm going to quit that real quick. Uh.
+
+354
+00:36:24,070 --> 00:36:31,659
+Uh, okay. And then we need to, uh, I'm going to make this reject, uh, actually, not here,
+
+355
+00:36:31,660 --> 00:36:37,240
+because this is while this is the part that's I think the problem and the fix is going to be in here,
+
+356
+00:36:37,450 --> 00:36:45,310
+the actual, um, exception should probably be thrown at the thing that tries to parse the Json.
+
+357
+00:36:45,970 --> 00:36:50,850
+Um, so extract Json from archive.
+
+358
+00:36:50,860 --> 00:36:57,160
+This is the thing that should reject in the event that it never found it.
+
+359
+00:36:58,300 --> 00:37:09,410
+Um. Stop requests. Uh, I'm pretty sure.
+
+360
+00:37:14,460 --> 00:37:20,550
+We get something that's like is the last part.
+
+361
+00:37:22,020 --> 00:37:29,030
+Multipart channel on the. It's received from the base challenge.
+
+362
+00:37:29,390 --> 00:37:33,140
+It's true whether more data can be expected. Okay, so in on stop request.
+
+363
+00:37:36,110 --> 00:37:42,790
+Uh, I believe on stop request will get. The channel.
+
+364
+00:37:44,350 --> 00:37:47,530
+No gets an NSI request, but do we get.
+
+365
+00:37:52,350 --> 00:38:01,700
+Yeah. We can shift into a channel. Uh, if enabled and not done, then do this.
+
+366
+00:38:03,470 --> 00:38:11,510
+Else if. Or no.
+
+367
+00:38:11,780 --> 00:38:15,430
+Or like this. Resolve.
+
+368
+00:38:21,650 --> 00:38:27,110
+If not, request uh, expect it on stop request.
+
+369
+00:38:29,540 --> 00:38:35,090
+And then we're going to, uh. If request is the last part.
+
+370
+00:38:41,230 --> 00:38:53,469
+And not done. Uh, throw components.
+
+371
+00:38:53,470 --> 00:38:57,160
+That exception. Uh.
+
+372
+00:39:08,992 --> 00:39:27,282
+We should reject. Actually, I don't know if we even need to throw.
+
+373
+00:39:27,442 --> 00:39:34,552
+I think we just rejected you back there. Could not find. Um, Jason Block.
+
+374
+00:39:40,052 --> 00:39:53,562
+Okay. Now, when we run our test or manually test, we should expect that, uh, we will now get a rejection rather than just having it sit there.
+
+375
+00:39:53,592 --> 00:39:57,312
+That's my hope. And then we can write our automated test.
+
+376
+00:40:18,552 --> 00:40:23,532
+Hmhm. No. Did not. Did not do the thing.
+
+377
+00:40:25,622 --> 00:40:38,342
+So let's see if we can figure out why. We are going to look.
+
+378
+00:40:48,282 --> 00:40:55,352
+Oh, because? If this enabled was false.
+
+379
+00:40:56,162 --> 00:40:59,782
+True. Once we found an attachment matching expected content type.
+
+380
+00:40:59,792 --> 00:41:04,982
+So actually we need to change this. And else if.
+
+381
+00:41:07,602 --> 00:41:18,382
+Not enabled. Um.
+
+382
+00:41:18,862 --> 00:41:21,892
+Not done. Yeah. That's what you need to do.
+
+383
+00:41:23,462 --> 00:41:31,422
+All right, let's try that again. I'm still here.
+
+384
+00:41:32,022 --> 00:41:35,232
+Okay. Hold on. Let's, uh.
+
+385
+00:41:36,582 --> 00:41:40,352
+Break point here. See what goes on.
+
+386
+00:41:47,592 --> 00:41:51,822
+Nothing. Oh.
+
+387
+00:42:00,932 --> 00:42:06,122
+Hmhm. Is there a.
+
+388
+00:42:08,352 --> 00:42:11,472
+On data available on start request.
+
+389
+00:42:14,332 --> 00:42:21,682
+Let's see if we hit any of these. We don't hit any of them.
+
+390
+00:42:26,892 --> 00:42:31,852
+Convert data. Stream listener.
+
+391
+00:42:44,802 --> 00:42:51,542
+It doesn't hit any. Hmhm.
+
+392
+00:42:57,612 --> 00:43:01,271
+Why aren't we hitting any of those? I can take a fix on that.
+
+393
+00:43:01,272 --> 00:43:04,962
+If you have not started that files, new bag or worked on the existing test failure bug.
+
+394
+00:43:07,672 --> 00:43:12,652
+Um, sorry. I'm, uh, I'm talking with a colleague who's also very interested in this bug.
+
+395
+00:43:25,802 --> 00:43:32,402
+Yeah. So this is. This is also not good. Like we never find.
+
+396
+00:43:42,532 --> 00:43:49,042
+There. Find it. However, the stream converter eventually.
+
+397
+00:43:50,942 --> 00:43:54,842
+Stream listener. What's. What's implemented on stream listener.
+
+398
+00:43:57,622 --> 00:44:04,042
+On data available to all such as request observer, start request, stop request.
+
+399
+00:44:05,242 --> 00:44:09,412
+And we're not doing either start or stop. That's sounds that's wild to me.
+
+400
+00:44:12,762 --> 00:44:18,612
+Um. Starting request. Stopping and data available.
+
+401
+00:44:25,442 --> 00:44:30,442
+Don't stop in your quest. This is very strange.
+
+402
+00:44:30,452 --> 00:44:40,952
+I would have expected at least stop requests to be called, but we might need to look inside of how exactly the multipart my message thing.
+
+403
+00:44:41,282 --> 00:44:47,802
+Um. Hmhm.
+
+404
+00:44:50,172 --> 00:45:03,942
+Doo doo doo doo doo. Um. Yeah.
+
+405
+00:45:03,952 --> 00:45:07,161
+We never hit any of those. Okay, let's take a look at the multipart.
+
+406
+00:45:07,162 --> 00:45:12,202
+My message. Um. Uh.
+
+407
+00:45:13,842 --> 00:45:24,442
+Stream comes. Know the part.
+
+408
+00:45:26,702 --> 00:45:30,122
+What's it called? Multi-part.
+
+409
+00:45:33,892 --> 00:45:39,052
+Image network. Multipart channel stream.
+
+410
+00:45:41,392 --> 00:45:44,652
+Like I said. Yeah. I can never find it when I need.
+
+411
+00:45:44,672 --> 00:45:54,351
+It's multi mixed con for some reason. So pass.
+
+412
+00:45:54,352 --> 00:46:00,472
+We start parsing. We consume tokens when we hit the end of file.
+
+413
+00:46:09,002 --> 00:46:28,402
+EOF. What do we. On stop request if part channel set is last part and has failed status and request no final listener otherwise on after last part.
+
+414
+00:46:31,172 --> 00:46:34,172
+Multipart. There's something called a multipart channel listener.
+
+415
+00:46:37,372 --> 00:46:54,601
+Do I want that on after last part? And there's you know, I know that's part of the membrane.
+
+416
+00:46:54,602 --> 00:46:58,952
+And the final on stop request has been sent. Hmhm.
+
+417
+00:47:00,082 --> 00:47:03,312
+But that's only presuming, like, I don't know if I'll actually hit that.
+
+418
+00:47:03,322 --> 00:47:10,372
+Let's let's try something here. Uh, I'm going to build with debug.
+
+419
+00:47:10,642 --> 00:47:15,472
+I think I have a preexisting debug build. How far do you get with reading?
+
+420
+00:47:15,482 --> 00:47:20,352
+Also, do you read binary? How far do you get with reading?
+
+421
+00:47:20,362 --> 00:47:24,052
+Do you read the binary? I don't I don't think I know what you mean.
+
+422
+00:47:24,052 --> 00:47:31,782
+Smurfd0. Do I know the binary language of moisture evaporators?
+
+423
+00:47:41,462 --> 00:47:48,992
+What I'm going to do is I'm going to attach. LDV.
+
+424
+00:47:51,482 --> 00:47:54,572
+Boop boop boop boop boop boop boop boop boop boop boop boop boop boop.
+
+425
+00:47:55,922 --> 00:47:59,972
+Okay, so I've got a debug build here.
+
+426
+00:48:00,392 --> 00:48:10,542
+I'm gonna. Um, figure out what process this is.
+
+427
+00:48:20,392 --> 00:48:28,192
+46028. And now I'm going to load of symbols.
+
+428
+00:48:37,972 --> 00:48:42,082
+And now I'm going to set a breakpoint inside of my tie.
+
+429
+00:48:46,882 --> 00:48:52,362
+This thing. Um. On data finished.
+
+430
+00:48:55,692 --> 00:49:07,232
+There's that and out of finished. We know from listeners about desktop personal data check listener chain.
+
+431
+00:49:10,572 --> 00:49:19,472
+Hmhm. I just finished chick listener chain.
+
+432
+00:49:19,712 --> 00:49:24,662
+Okay. I don't actually do anything. So I'm going to set breakpoint here.
+
+433
+00:49:27,002 --> 00:49:32,972
+I'm going to set a breakpoint. Mhm.
+
+434
+00:49:33,442 --> 00:49:41,902
+I said break point and consume token. That might take a while. Um, just by passing.
+
+435
+00:49:43,992 --> 00:49:47,472
+Here's the sense. Start. Let's.
+
+436
+00:49:53,882 --> 00:50:03,932
+Send. Stop. Um.
+
+437
+00:50:07,672 --> 00:50:17,452
+Send data. Send.
+
+438
+00:50:17,492 --> 00:50:24,102
+Stop. Only happens in on stop request, and I already have a breakpoint on stop request I did.
+
+439
+00:50:24,822 --> 00:50:28,152
+Let's also add one to add a small time. Next.
+
+440
+00:50:30,312 --> 00:50:37,212
+Come on start request. Okay, now we will load our file.
+
+441
+00:50:41,912 --> 00:50:48,442
+Okay, so OnStar request. Good. We get our channel.
+
+442
+00:50:48,452 --> 00:50:52,862
+So we I've seen all this before. We like, pull in all of the necessary information.
+
+443
+00:50:53,402 --> 00:50:59,822
+Bah bah bah bah bah bah bah bah. We start parsing the the bytes and some data.
+
+444
+00:51:01,292 --> 00:51:05,942
+Um, we have some data, but we don't have any raw data.
+
+445
+00:51:06,272 --> 00:51:09,362
+Um, where are we being called?
+
+446
+00:51:09,362 --> 00:51:16,212
+Send data from. Who's calling us? Send data.
+
+447
+00:51:17,172 --> 00:51:27,402
+Send data. And on data available.
+
+448
+00:51:29,522 --> 00:51:33,642
+Um. Frame one.
+
+449
+00:51:36,012 --> 00:51:39,612
+Must do this every time, regardless of anything else. Fail during the parsing process.
+
+450
+00:51:40,452 --> 00:51:46,872
+Okay, so we know that there is no raw data.
+
+451
+00:51:48,042 --> 00:51:51,552
+Um, well when is M raw data set?
+
+452
+00:51:53,352 --> 00:52:01,612
+When we accumulate some data from a token. So there's no data.
+
+453
+00:52:01,642 --> 00:52:04,821
+So then nothing happens.
+
+454
+00:52:04,822 --> 00:52:08,811
+And that's okay on send data, then stop requests.
+
+455
+00:52:08,812 --> 00:52:13,582
+So we've stopped parsing stuff. Do we have a part channel?
+
+456
+00:52:13,612 --> 00:52:19,312
+I don't think so. Null pointer. Uh, do we have NSA failed?
+
+457
+00:52:21,262 --> 00:52:24,772
+No. Do we have request. Listener notified.
+
+458
+00:52:25,642 --> 00:52:29,032
+Last listener notified? No.
+
+459
+00:52:29,062 --> 00:52:34,462
+So, underlying data production problem. We should not be in the middle of sending data. If we were and part channel above would have been non-null.
+
+460
+00:52:35,212 --> 00:52:41,332
+So, um, here we say hey.
+
+461
+00:52:43,742 --> 00:52:48,622
+Listener. Do you implement.
+
+462
+00:52:51,532 --> 00:52:59,332
+Oh multi listener is. Oh I haven't finished trying to keep it up.
+
+463
+00:52:59,602 --> 00:53:08,482
+Do I have a final listener. I do. And the final listener I'm pretty sure this is the thing that we implemented.
+
+464
+00:53:15,462 --> 00:53:25,132
+Implemented in JavaScript. So I have a feeling what I need to do is implement.
+
+465
+00:53:27,892 --> 00:53:32,482
+This interface multi-part channel listener on this thing.
+
+466
+00:53:36,042 --> 00:53:40,422
+And put this routine out here.
+
+467
+00:53:43,622 --> 00:53:46,982
+Okay. We crashed trying to to print that.
+
+468
+00:53:47,192 --> 00:53:52,662
+Dereference that. Okay. Never mind. Relax, relax.
+
+469
+00:53:54,062 --> 00:53:59,042
+Okay, so let's try that then. So I'm going to get rid of this thing that I just added.
+
+470
+00:54:03,562 --> 00:54:07,852
+Instead we are going to update this to have a NSI.
+
+471
+00:54:14,232 --> 00:54:18,701
+Um on after the NSA multi-part channel.
+
+472
+00:54:18,702 --> 00:54:25,662
+Listener insight multi-part. Also part channel listener.
+
+473
+00:54:28,002 --> 00:54:37,242
+And we'll put her implementation of on after last part here on after last part.
+
+474
+00:54:41,492 --> 00:54:45,932
+Accepts just a status. Status.
+
+475
+00:54:49,022 --> 00:54:52,352
+Um, did we scan to see what the status was?
+
+476
+00:54:52,442 --> 00:55:05,252
+Uh, when we. Before we crashed. Status was not okay at the time.
+
+477
+00:55:05,882 --> 00:55:14,432
+So I think. What we'll do is we'll just see if not done.
+
+478
+00:55:16,202 --> 00:55:22,802
+Done is supposed to be. She once wants listeners enabled.
+
+479
+00:55:23,882 --> 00:55:29,672
+So if we're not done by the time the last one goes. If not, this dot done.
+
+480
+00:55:31,292 --> 00:55:36,782
+Uh, we finished reading the parts before, um.
+
+481
+00:55:39,362 --> 00:55:47,072
+We and we found the Json block, so the Json block is missing.
+
+482
+00:55:49,962 --> 00:55:54,122
+Uh, we don't need this part. We'll just reject.
+
+483
+00:56:01,652 --> 00:56:09,442
+So this was this. This looks awkwardly formatted.
+
+484
+00:56:13,562 --> 00:56:20,612
+Um. I think that's something that's horribly broken here.
+
+485
+00:56:20,642 --> 00:56:24,062
+What is it? What are you worried about? I think I've got my brackets wrong.
+
+486
+00:56:25,472 --> 00:56:31,352
+Yeah, my brackets are wrong. Here we go.
+
+487
+00:56:33,682 --> 00:56:37,642
+Let's now do go back to our artifact build.
+
+488
+00:56:42,632 --> 00:56:48,542
+I'm also going to, uh, on after last part.
+
+489
+00:56:51,482 --> 00:57:18,962
+Up here. Yeah.
+
+490
+00:57:18,992 --> 00:57:23,792
+Could not find Jason Block. Good, good good, good. Uh, here's what I'm going to do, actually.
+
+491
+00:57:25,832 --> 00:57:30,242
+About halfway. Uh. Uh, writing and.
+
+492
+00:57:31,122 --> 00:57:35,352
+That's the case for this year. Take over for me with.
+
+493
+00:57:37,652 --> 00:57:47,002
+Six. Okay.
+
+494
+00:57:52,302 --> 00:57:55,692
+So let's add our test. Um.
+
+495
+00:58:06,322 --> 00:58:13,462
+Uh, tests that. If the, uh, archive file.
+
+496
+00:58:16,352 --> 00:58:20,112
+Um. Um.
+
+497
+00:58:26,822 --> 00:58:30,222
+It does not contain a Json block.
+
+498
+00:58:31,672 --> 00:58:37,122
+That. Um. Get rid of these dumb statements now.
+
+499
+00:58:50,602 --> 00:59:02,612
+Sample archive will reject. Uh, test missing Jason.
+
+500
+00:59:03,442 --> 00:59:09,022
+So that's one. And then. Test that if.
+
+501
+00:59:09,562 --> 00:59:19,492
+Um. The archive file is constructed in such a way that, uh.
+
+502
+00:59:22,342 --> 00:59:30,502
+And the worker ends up breaking Unicode characters in half.
+
+503
+00:59:33,502 --> 00:59:38,002
+When finding the Jason block that we can still.
+
+504
+00:59:39,192 --> 00:59:43,222
+Uh, extract that Json block. Um.
+
+505
+00:59:43,822 --> 00:59:47,722
+See? Bug. This.
+
+506
+00:59:54,002 --> 00:59:59,642
+Com bro. Broken Unicode characters.
+
+507
+01:00:02,562 --> 01:00:19,232
+Okay. So missing Jason Block. We're going to. Create one that just doesn't have one.
+
+508
+01:00:22,682 --> 01:00:28,482
+Let's create a very simple archive. This is a.
+
+509
+01:01:01,012 --> 01:01:17,982
+I think we can probably really simplify this. Um. And then we're just going to put something in here that doesn't belong.
+
+510
+01:01:18,492 --> 01:01:25,572
+Um. I'm.
+
+511
+01:01:26,232 --> 01:01:32,772
+Let's let's pull something from, uh. Uh, good old friends on Thunderbird because they work with my messages.
+
+512
+01:01:49,222 --> 01:01:55,082
+It's, uh. These are meeting invites, single events. Attached message sample.
+
+513
+01:02:10,452 --> 01:02:15,962
+What? But the world.
+
+514
+01:02:18,772 --> 01:02:24,982
+Okay. And we'll call this. Uh.
+
+515
+01:02:31,302 --> 01:02:43,492
+Put it under. Browser fonts, back up tests and special data.
+
+516
+01:02:44,212 --> 01:02:59,032
+Call missing Jason Block. I guess we should do one for the missing a, uh, binary block to.
+
+517
+01:03:03,652 --> 01:03:09,082
+Okay, so let's add another bag of tests to show data.
+
+518
+01:03:09,082 --> 01:03:17,312
+Missing Json block. And.
+
+519
+01:03:24,142 --> 01:03:33,612
+Her test. You need to update this to also include that in missing Json block dot HTML.
+
+520
+01:03:34,702 --> 01:03:38,472
+I might break this up over lines.
+
+521
+01:03:43,312 --> 01:03:47,682
+Okay, Bill. And.
+
+522
+01:03:57,232 --> 01:04:08,561
+Let. Uh, missing Json log file equals data.
+
+523
+01:04:08,562 --> 01:04:11,852
+Uh, let's say Json block dot HTML.
+
+524
+01:04:16,032 --> 01:04:23,322
+And then we'll say let's uh, a way cert rejects.
+
+525
+01:04:23,352 --> 01:04:27,312
+Is that how it works? A cert rejects.
+
+526
+01:04:29,272 --> 01:04:35,842
+We assert rejects, then you pass it. The thing that will reject BST.
+
+527
+01:04:35,872 --> 01:04:44,182
+Uh, it. Um. Sample archive this single Json block file path.
+
+528
+01:04:46,872 --> 01:05:09,242
+And it should reject with. Cannot find Jason Block.
+
+529
+01:05:14,672 --> 01:05:23,382
+Let's see if that works. Tests SPC show test backup service aka.
+
+530
+01:05:26,802 --> 01:05:35,062
+How are we doing on time's 210? I'd like to finish this test, these tests, and then I'm going to hand this with the work off.
+
+531
+01:05:35,082 --> 01:05:39,252
+I have a colleague who has volunteered to try and rate the fix. So, um.
+
+532
+01:05:39,432 --> 01:05:45,492
+That's great. So that does, uh, reject. That's good. We should also add a test for missing binary block.
+
+533
+01:05:46,692 --> 01:05:55,142
+Missing binary block. There's actually a binary block that, um.
+
+534
+01:05:58,372 --> 01:06:03,662
+Recover from archive. Is that the one? Number.
+
+535
+01:06:06,812 --> 01:06:10,352
+Or extract compressed snapshot from archive will fail.
+
+536
+01:06:17,962 --> 01:06:22,222
+So we're going to create one called the missing binary block as well.
+
+537
+01:06:25,792 --> 01:06:45,042
+Uh. See my area blocked the.
+
+538
+01:06:49,272 --> 01:06:53,502
+Uh, h g can't be pronounced that his expression.
+
+539
+01:06:54,862 --> 01:07:03,402
+Uh, I'm sing to. Missing binary lock, you know.
+
+540
+01:07:06,862 --> 01:07:13,122
+Okay. Missing binary block.
+
+541
+01:07:13,812 --> 01:07:18,652
+So we actually want to put our Json block here. Um.
+
+542
+01:07:25,712 --> 01:07:33,342
+Um, it's a binary. But I'm going to get rid of ink config.
+
+543
+01:07:34,302 --> 01:07:40,902
+Or set it to nil. So it's not encrypted.
+
+544
+01:07:52,622 --> 01:07:55,892
+Uh. What is the length of this line?
+
+545
+01:07:57,242 --> 01:08:12,942
+The 42. Okay, so missing binary block.
+
+546
+01:08:15,642 --> 01:08:26,142
+Pretty sure this is not going to fail. Ready? And we actually need to update backup service to use.
+
+547
+01:08:27,012 --> 01:08:35,082
+So the other part that's scanning the multipart listener for the binary block needs to also implement multi-part channel listener.
+
+548
+01:08:39,352 --> 01:08:48,312
+Um, yeah. This one. On the last part.
+
+549
+01:08:51,892 --> 01:08:57,032
+If not this time. Done. Uh.
+
+550
+01:08:57,042 --> 01:09:02,392
+Or reject. Uh, we should also close the controller.
+
+551
+01:09:13,282 --> 01:09:17,722
+We're not close rejects. Um.
+
+552
+01:09:21,452 --> 01:09:43,181
+The back of error. Forgetting the password.
+
+553
+01:09:43,182 --> 01:09:47,932
+I found the binary block. So the binary block is missing.
+
+554
+01:09:54,152 --> 01:09:57,782
+In binary block. Okay.
+
+555
+01:10:01,012 --> 01:10:04,232
+This backup service archive cannot find binary blob. Okay.
+
+556
+01:10:04,242 --> 01:10:07,762
+So let's make sure that that one also test. Uh. Passes.
+
+557
+01:10:09,782 --> 01:10:12,822
+And then we'll write our last test. And that one we expect to fail.
+
+558
+01:10:13,512 --> 01:10:17,952
+And then I will hand this off to my colleague.
+
+559
+01:10:30,602 --> 01:10:33,692
+Cannot remove. Undefined. Cannot parse. Path.
+
+560
+01:10:33,872 --> 01:10:38,942
+Unrecognized path. Missing binary block.
+
+561
+01:10:51,172 --> 01:10:55,012
+Extract compressed snapshots from archives at the right.
+
+562
+01:10:56,812 --> 01:11:02,071
+Wasn't expecting. The path.
+
+563
+01:11:02,072 --> 01:11:17,612
+The dest path. Um.
+
+564
+01:11:18,302 --> 01:11:24,272
+Destination path needs to be like some dummy fake recovery path.
+
+565
+01:11:37,212 --> 01:11:42,992
+Uh. Missing.
+
+566
+01:11:48,162 --> 01:11:52,622
+Yes. Little.
+
+567
+01:12:00,752 --> 01:12:07,041
+All right. Missing.
+
+568
+01:12:07,042 --> 01:12:13,522
+Expected exception. Uh, 15457.
+
+569
+01:12:17,712 --> 01:12:23,662
+So it got. Reject is not defined in line 296.
+
+570
+01:12:25,982 --> 01:12:30,252
+Are we not inside of a. Oh, we're not inside of a promise.
+
+571
+01:12:33,602 --> 01:12:39,842
+How does this work? Then? How do you reject start from a binary readable stream?
+
+572
+01:12:41,522 --> 01:12:44,582
+I think what we need to do is like we need to error.
+
+573
+01:12:48,542 --> 01:12:53,581
+Binary readable stream, so I need to. Equal stream default controller.
+
+574
+01:12:53,582 --> 01:12:58,772
+Tell it that we're airing. Error.
+
+575
+01:13:04,952 --> 01:13:10,332
+Trial error. Error, actually. Um.
+
+576
+01:13:17,202 --> 01:13:22,902
+Yeah. There we go. And then let's do the last one.
+
+577
+01:13:23,112 --> 01:13:26,592
+And that should do it I think, for this episode. That's actually pretty good.
+
+578
+01:13:26,712 --> 01:13:32,382
+Um. So we're going to go, um.
+
+579
+01:13:37,082 --> 01:13:41,852
+We expect this to pass. Um.
+
+580
+01:13:54,952 --> 01:13:58,972
+What is the name of it? It's break over.
+
+581
+01:13:58,972 --> 01:14:04,382
+Unicode. Um.
+
+582
+01:14:06,722 --> 01:14:17,952
+Special Unicode file. And then we expect this to not reject.
+
+583
+01:14:21,182 --> 01:14:24,452
+Let's, uh, sample archive returns and see what.
+
+584
+01:14:28,052 --> 01:14:34,422
+Turns up the sample archive result, which should include this stuff and at the very least should include the archive Json.
+
+585
+01:14:36,922 --> 01:14:40,192
+Archive Json. Well, yes.
+
+586
+01:14:47,482 --> 01:14:58,662
+Assert. Okay. Archive of Jason. Uh, was able to extract Json from the specially crafted.
+
+587
+01:15:00,972 --> 01:15:07,222
+File with Unicode characters. What's broken here.
+
+588
+01:15:10,592 --> 01:15:18,022
+It's broken. Okay. All right, so this should fail.
+
+589
+01:15:20,302 --> 01:15:33,732
+Uh, okay. Posting. Just. Let's take a quick peek.
+
+590
+01:15:46,362 --> 01:15:50,712
+Now, uh, what I'd like to do is make sure that I haven't accidentally broken any other tests.
+
+591
+01:15:50,712 --> 01:15:57,472
+So I'm going to run our entire suite. You know, skip that one that is currently broken.
+
+592
+01:15:58,012 --> 01:16:01,492
+You know, run the entire suite and I'm going to run.
+
+593
+01:16:06,262 --> 01:16:10,792
+Good. Uh, the marionette tests.
+
+594
+01:16:20,732 --> 01:16:23,732
+Good and the UI has for good measure.
+
+595
+01:16:49,502 --> 01:16:54,261
+Okay. Um. Was fab.
+
+596
+01:16:54,262 --> 01:17:00,322
+Submit tip. Single. Uh, whip.
+
+597
+01:17:11,152 --> 01:17:23,592
+Okay. Posted at. Such and such.
+
+598
+01:17:26,542 --> 01:17:29,841
+Uh oh. Uncommitted change was included.
+
+599
+01:17:29,842 --> 01:17:35,472
+Change. Oh, great.
+
+600
+01:17:35,492 --> 01:17:44,901
+I want to, um, skip that test. So there shouldn't be any diff.
+
+601
+01:17:44,902 --> 01:17:51,172
+No. No diff. Okay.
+
+602
+01:17:54,252 --> 01:17:58,271
+Well, gang, that's that's pretty much it. Uh.
+
+603
+01:17:58,272 --> 01:18:06,812
+Baa baa baa baa baa baa. Uh, let me see here.
+
+604
+01:18:07,832 --> 01:18:11,152
+Oh, I'm getting lit up on various communications channels.
+
+605
+01:18:11,162 --> 01:18:16,262
+I need to answer a bunch of questions for people. So we have to probably end the stream in just a second.
+
+606
+01:18:16,442 --> 01:18:20,312
+But I want to let you know, uh, we didn't get to the reviews. I'm gonna have to review those.
+
+607
+01:18:20,342 --> 01:18:23,672
+Uh, outside of the stream, there is no stream next week.
+
+608
+01:18:24,032 --> 01:18:31,402
+So I got to say, uh, didn't get this. Didn't get tickets.
+
+609
+01:18:33,022 --> 01:18:37,592
+There is no stream next week because I'm on vacation.
+
+610
+01:18:39,232 --> 01:18:44,451
+Um, I'm going to go to the beach for a while so I will not be here next, uh, next Wednesday.
+
+611
+01:18:44,452 --> 01:18:52,852
+But I will hopefully be back the Wednesday after. And so, uh, until then, I hope you have yourselves a great couple of weeks.
+
+612
+01:18:53,002 --> 01:19:00,532
+Great couple of days. And, uh, and I'll see you when I'm back. Hey, thank you so much for watching episode 373 of the Joy of coding.
+
+613
+01:19:00,542 --> 01:19:04,552
+Let me know what you thought. There's a link to wrap up this episode here in the agenda.
+
+614
+01:19:04,552 --> 01:19:07,972
+I'll drop, uh, link to that in the chat.
+
+615
+01:19:08,632 --> 01:19:11,692
+Um, right. This episode link.
+
+616
+01:19:13,732 --> 01:19:18,712
+Uh, thank you so much for all the people who are wishing me a, uh, happy vacation or enjoying my vacation.
+
+617
+01:19:18,722 --> 01:19:21,892
+I appreciate that, and I will see you all in a couple of weeks.
+
+618
+01:19:22,312 --> 01:19:26,542
+Take care everybody. Oh, hold on a second. I gotta transition to this.
+
+619
+01:19:26,752 --> 01:19:35,162
+Take care everybody. Bye bye. The joy of coding.
+
+620
+01:19:35,222 --> 01:19:35,582
+See it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

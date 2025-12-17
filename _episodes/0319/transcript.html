@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 319 - March 22, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 319 - March 22, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=188140d3-9c7b-4ed0-acb5-afc400fa3d6c</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=188140d3-9c7b-4ed0-acb5-afc400fa3d6c">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:05,463 --> 00:00:13,523
+Through the joy. Oh, hello and welcome to Episode 319 of The Joy of Coding.
+
+2
+00:00:13,553 --> 00:00:18,653
+How's it going? My name is Mike Connelly. It's so good to have you here. We're going to be hacking on some Firefox stuff today.
+
+3
+00:00:18,693 --> 00:00:22,133
+I'm sorry. I'm starting a little bit late today. I apologize for that.
+
+4
+00:00:22,763 --> 00:00:26,993
+Dealing with some minor technical foul ups. But I think I've come out the other side of that.
+
+5
+00:00:27,263 --> 00:00:33,533
+Hopefully you can see and or hear me wherever the stream is being broadcast to which I think should still be Air Mozilla,
+
+6
+00:00:33,533 --> 00:00:37,313
+YouTube and Twitch and Diode Dots Zone.
+
+7
+00:00:38,063 --> 00:00:41,633
+Let me start by sharing my screen. One moment.
+
+8
+00:00:43,283 --> 00:00:47,302
+Here we go first. Yeah, let's look at the agenda.
+
+9
+00:00:47,303 --> 00:00:51,113
+Today is March 22nd, 2023. It's episode 319.
+
+10
+00:00:51,443 --> 00:00:58,043
+A reminder, no plan survives breakfast. As you can tell, I'm kind of doing this on, you know, flying by the seat of my pants here.
+
+11
+00:00:58,043 --> 00:01:02,543
+I'm doing my best to capture software development in the role, which means that things might go wrong,
+
+12
+00:01:02,543 --> 00:01:08,543
+the stream might fall over, might have some technical challenges. I might have cables on the way, but that's okay.
+
+13
+00:01:08,543 --> 00:01:12,773
+We're just going to figure it out as we go. That's the name of the game here.
+
+14
+00:01:13,133 --> 00:01:16,853
+The second thing is that the agenda that we're looking at is something that you have access to.
+
+15
+00:01:16,853 --> 00:01:23,842
+So it's got lots of like handy links and stuff that you might want to click on or as I like fill out what's going on during the episode,
+
+16
+00:01:23,843 --> 00:01:28,283
+you might want to, you know, follow along and click things and whatnot.
+
+17
+00:01:28,283 --> 00:01:33,293
+And that happens pretty regularly as the episode progresses.
+
+18
+00:01:33,293 --> 00:01:36,833
+This will synchronize. And then if you go to the joy of coding website,
+
+19
+00:01:37,763 --> 00:01:46,433
+you can see that there is the episode agenda here that's also available depending on where you're watching this, the stream.
+
+20
+00:01:46,583 --> 00:01:50,003
+If you're watching us on YouTube, it's in the video description. Same with dial up zone.
+
+21
+00:01:50,303 --> 00:01:55,283
+If you're on air Mozilla, it'll be over in the details section and if you're on Twitch, it's down in the channel details.
+
+22
+00:01:55,523 --> 00:01:59,003
+You can find the link to the agenda and there's lots of good stuff in there.
+
+23
+00:01:59,183 --> 00:02:06,652
+Okay. Wow, that's a lot of preamble. And is my microphone like really hot or am I peeking?
+
+24
+00:02:06,653 --> 00:02:09,653
+I'm noticing some red lines. Do I sound okay to people?
+
+25
+00:02:10,013 --> 00:02:14,873
+Let me know. Let me know if if it's coming in a little too hot, I'll adjust.
+
+26
+00:02:16,193 --> 00:02:20,422
+So what are we working on today? It's been a couple of episodes or like it's been a couple of weeks.
+
+27
+00:02:20,423 --> 00:02:24,683
+I've had like various things get in the way preventing me from streaming.
+
+28
+00:02:25,133 --> 00:02:34,193
+We're back and we're still working on these windows jump lists, although I will mention that next week I am traveling and won't be able to stream.
+
+29
+00:02:35,483 --> 00:02:41,103
+Sorry. So one more week of an absence. But where were we with this windows jump list stuff?
+
+30
+00:02:41,123 --> 00:02:49,703
+Well, as you recall, we had been building out a like a shipping layer for media pull.
+
+31
+00:02:49,913 --> 00:02:54,052
+And my editor, we had this shipping layer.
+
+32
+00:02:54,053 --> 00:02:59,333
+Oh, wow. The I've changed the display resolution and this is like completely unreadable.
+
+33
+00:02:59,333 --> 00:03:10,283
+So just give me a quick sec here to try and improve this situation. Let me change this to be what was it before 1920?
+
+34
+00:03:10,283 --> 00:03:15,543
+By 1200. That sounds reasonable. Uh.
+
+35
+00:03:19,783 --> 00:03:24,583
+Yeah. This is more like it. Um, so we were working on these.
+
+36
+00:03:25,183 --> 00:03:28,183
+Not the chrome utils, the chrome profile, much greater stuff.
+
+37
+00:03:28,183 --> 00:03:33,193
+We were working on jump list stuff, and we had built out this sort of interface.
+
+38
+00:03:33,673 --> 00:03:41,383
+And jump list builder and jump list builder, dot h here, there, down here.
+
+39
+00:03:41,983 --> 00:03:50,382
+We built out this interface called jump list manager base which implemented or had like the,
+
+40
+00:03:50,383 --> 00:03:57,193
+the interface for a series of methods that we need from the is sort of the com mechanism that we use to populate the jump list.
+
+41
+00:03:57,463 --> 00:04:05,083
+And then we implemented jump list manager effectively wrapping the MSC com mechanism and you know,
+
+42
+00:04:05,113 --> 00:04:09,313
+calling into it just basically passing arguments through to it.
+
+43
+00:04:09,643 --> 00:04:16,213
+And the other thing we wanted to do was eventually to replace this in the testing scenario with a different jumbles manager,
+
+44
+00:04:16,213 --> 00:04:21,252
+one that instead of wrapping the MSC com mechanism wraps something that we
+
+45
+00:04:21,253 --> 00:04:26,083
+can interrogate for information during a unit test in what's called a G test.
+
+46
+00:04:26,803 --> 00:04:30,223
+So that was the plan. And last I checked,
+
+47
+00:04:30,223 --> 00:04:40,543
+the problem we were having was that the build was failing during the linking step and I apologize in my in my rush to get everything ready.
+
+48
+00:04:40,543 --> 00:04:42,883
+I didn't run. I didn't end up running a build.
+
+49
+00:04:43,663 --> 00:04:50,653
+So we actually have to wait to get to that building step before we can actually see the error and in action.
+
+50
+00:04:50,923 --> 00:05:02,713
+But as I recall, the problem was that the linker was complaining that for some reason, you know, this jump list manager wasn't correctly defined.
+
+51
+00:05:04,453 --> 00:05:08,532
+You know, like some, some part of it didn't exist during the linking step.
+
+52
+00:05:08,533 --> 00:05:16,393
+And the C++ compiler, LLVM or a sorry l once called Clang was not very happy with that.
+
+53
+00:05:16,423 --> 00:05:24,913
+It gave us a rather cryptic error message. And so we'll probably end up seeing that again once we end up building building that part.
+
+54
+00:05:25,183 --> 00:05:30,943
+But we're not there yet. So while we're waiting, let's come up with something more useful to do.
+
+55
+00:05:34,933 --> 00:05:42,193
+Yes, I have something else we can do while we wait. So I apologize if you came here for jump loss stuff.
+
+56
+00:05:42,613 --> 00:05:50,443
+We're going to we're going to work on something slightly different while we wait for on wait for that build to complete.
+
+57
+00:05:50,473 --> 00:05:54,133
+Let me pump up the font and I will introduce you to the thing that we're working on instead.
+
+58
+00:05:54,823 --> 00:06:04,302
+Oops. So the thing we're going to be working on instead is part of a, a series of changes that we're making to the migration dialog.
+
+59
+00:06:04,303 --> 00:06:10,303
+Maybe you've heard me talking about the migration dialog, maybe you've heard me, maybe you've seen me working on it in past episodes.
+
+60
+00:06:10,633 --> 00:06:16,453
+I know I've certainly like I think reviewed some patches from the migration dialog in past episodes.
+
+61
+00:06:16,813 --> 00:06:21,373
+What we're doing is we're trying to revamp the migration dialog to look a bit more modern.
+
+62
+00:06:21,373 --> 00:06:24,402
+The existing one, if you look at it, is very old school.
+
+63
+00:06:24,403 --> 00:06:28,213
+In fact, let's, let's show it to you. Let's, let's show you the old one and then the new one.
+
+64
+00:06:31,473 --> 00:06:37,683
+So if you're not familiar with the old migration dialog, I have to flip a pref to turn off the new one.
+
+65
+00:06:37,683 --> 00:06:44,133
+Hold on. Migrate. The old migration dialog looks like this.
+
+66
+00:06:44,703 --> 00:06:49,083
+It's just like top level zwolle native looking window.
+
+67
+00:06:49,383 --> 00:06:53,343
+There's like some checkboxes you can choose. Hey, I want to import from Vivaldi.
+
+68
+00:06:53,643 --> 00:06:58,473
+And then you can choose the items they want to import from. And then you run through some steps and gives you some status updates.
+
+69
+00:06:59,373 --> 00:07:08,342
+Then improved to the new and improved migration dialog is embedded in about preferences for now and it kind of looks like this where you can choose,
+
+70
+00:07:08,343 --> 00:07:12,873
+hey, I want to import from Vivaldi and these are the things I want to import from.
+
+71
+00:07:12,873 --> 00:07:18,783
+And then you press the button and it's done. And it also allows you to choose which profile from which browser, which is nice.
+
+72
+00:07:19,623 --> 00:07:25,383
+I'm going to just use the internal testing my grader, which doesn't actually migrate anything, but you'll get to see the sort of the effect.
+
+73
+00:07:25,773 --> 00:07:30,843
+So we we choose the internal testing, my grader. I choose these things as the the things that I want to migrate.
+
+74
+00:07:31,143 --> 00:07:34,693
+I press import and and then it's done.
+
+75
+00:07:34,713 --> 00:07:38,013
+Although in this case, because it was the testing, my grader, nothing actually got migrated.
+
+76
+00:07:38,433 --> 00:07:41,162
+And that's the idea of the new migrate or UI.
+
+77
+00:07:41,163 --> 00:07:46,353
+And we've been working on this with some students from Cal State, L.A. They've been working really hard on it.
+
+78
+00:07:47,253 --> 00:07:55,052
+And the thing I wanted to do with it was related to part of the specification.
+
+79
+00:07:55,053 --> 00:07:58,803
+Let's pull up part of the specification here.
+
+80
+00:08:01,973 --> 00:08:09,533
+Part of the specification involves showing a particular message whenever the the history has been imported.
+
+81
+00:08:09,533 --> 00:08:17,843
+In particular, we want to say, instead of saying how many visits are imported, we want to say the time range from which we've imported things.
+
+82
+00:08:18,203 --> 00:08:25,223
+And a recent patch made it so that we will attempt to import at most the last 180 days of history.
+
+83
+00:08:26,273 --> 00:08:32,543
+And so we want to update the UI, which currently, if you look at it, we're using the the internal testing one.
+
+84
+00:08:32,783 --> 00:08:36,262
+It just says like zero visits. We don't want to say the number of visits anymore.
+
+85
+00:08:36,263 --> 00:08:39,683
+We want to say, you know, from the last such and such days.
+
+86
+00:08:40,253 --> 00:08:46,133
+So that is what I'm hoping to do right now. So let's let's do that.
+
+87
+00:08:46,163 --> 00:08:54,323
+First of all, I think I need to file a bug for it because I don't think one has been filed for this particular part.
+
+88
+00:08:56,093 --> 00:09:02,123
+A lot of closed bugs, a lot of hard work from our students and contributors working on this.
+
+89
+00:09:02,903 --> 00:09:16,043
+So these are the blocking bugs and a new bug here, which is like update progress strings for history and form.
+
+90
+00:09:16,133 --> 00:09:21,143
+Was it form data? What were the resource types?
+
+91
+00:09:21,893 --> 00:09:25,073
+Wizard constants form data.
+
+92
+00:09:25,103 --> 00:09:28,103
+Yeah. For and form data.
+
+93
+00:09:30,023 --> 00:09:33,623
+Resource types in the new migration wizard.
+
+94
+00:09:33,893 --> 00:09:49,163
+Okay. Currently we show a show x visits and an empty string and show x visits as the success
+
+95
+00:09:49,583 --> 00:10:01,253
+message for importing history and the empty string as status for importing form data.
+
+96
+00:10:02,453 --> 00:10:13,433
+These strings should instead be let's just copy from them spec here from the last 180 days.
+
+97
+00:10:14,243 --> 00:10:17,153
+Uh, let's just copy that.
+
+98
+00:10:24,243 --> 00:10:38,523
+For history where 180 needs to be replaced with the value from and then the preference is like max aged days not quite that pref.
+
+99
+00:10:38,643 --> 00:10:43,173
+It's the age days.
+
+100
+00:10:43,173 --> 00:11:01,723
+This build is a little behind. Max Page, is this also behind?
+
+101
+00:11:01,903 --> 00:11:06,703
+This might be behind by a little bit. Yeah. 180 day history import limit.
+
+102
+00:11:07,183 --> 00:11:11,412
+So search box is a little interesting because it only indexes, I think once or twice a day.
+
+103
+00:11:11,413 --> 00:11:19,443
+So it can sometimes be a little bit behind if you're. If you're looking for changes that just landed and these just landed.
+
+104
+00:11:20,553 --> 00:11:27,313
+So value from this press. And then we need.
+
+105
+00:11:27,463 --> 00:11:30,703
+What's the string for? Form data. Just form history.
+
+106
+00:11:38,843 --> 00:11:42,503
+For the form. Data form. Win data.
+
+107
+00:11:42,833 --> 00:11:51,173
+Progress message. Okay. So we're going to take this to task and let's get started.
+
+108
+00:11:58,713 --> 00:12:09,213
+So, you know, I shut this down and I'm going to check out a revision that's less fluid because right now I'm on like kind of a fluid revision.
+
+109
+00:12:11,503 --> 00:12:17,293
+Let's check out Central. No, actually, because these things have recently landed in auto land.
+
+110
+00:12:17,613 --> 00:12:21,113
+Like they landed yesterday and they're about to merge to Central.
+
+111
+00:12:21,133 --> 00:12:36,333
+I'm going to base my work off of these. And what we'll do is we need to update the migration wizard parent.
+
+112
+00:12:36,343 --> 00:12:45,373
+This is where the strings are selected for the different the different things being imported in this particular case for history.
+
+113
+00:12:45,373 --> 00:12:49,573
+We want to instead of get the imported count, we're going to get the preference.
+
+114
+00:12:51,763 --> 00:12:54,843
+From was it migration utils?
+
+115
+00:12:57,493 --> 00:13:01,823
+Age. History, Mac's age and days.
+
+116
+00:13:04,253 --> 00:13:08,513
+Migration utils. Max age and days.
+
+117
+00:13:08,543 --> 00:13:12,893
+But max age and days.
+
+118
+00:13:15,603 --> 00:13:19,082
+Max history. Agent days equals migration.
+
+119
+00:13:19,083 --> 00:13:23,163
+You max age in days.
+
+120
+00:13:25,533 --> 00:13:29,703
+We can probably make that more consistent history max age in days.
+
+121
+00:13:30,933 --> 00:13:36,402
+I don't even know if we're going to need that. Like. Utility variable.
+
+122
+00:13:36,403 --> 00:13:46,663
+Their brand is we're going to replace progress, access history side of migration wizard, not FTL.
+
+123
+00:13:47,383 --> 00:13:56,923
+Instead of it being the number of visits, the string is from the last.
+
+124
+00:14:00,333 --> 00:14:07,783
+Max age in days. From the last day.
+
+125
+00:14:07,903 --> 00:14:17,303
+And then other. From the last X page in days.
+
+126
+00:14:18,443 --> 00:14:31,213
+Days. And then here we're going to pass in max age in days.
+
+127
+00:14:31,223 --> 00:14:36,623
+And instead of having this utility variable, we can just pass that in directly like that.
+
+128
+00:14:37,283 --> 00:14:45,673
+I think that'll do it. So how do we test that?
+
+129
+00:14:46,723 --> 00:14:52,333
+Well, the good news is we can build and we can put our UI.
+
+130
+00:14:52,483 --> 00:14:59,683
+The way that this UI has been designed is actually really nice for testing because we made the migration wizard a reusable component,
+
+131
+00:15:00,283 --> 00:15:04,903
+which means that it can be hosted in something called Storybook, which maybe you've heard me talk about in the past.
+
+132
+00:15:05,293 --> 00:15:20,113
+I have a storybook running here, and so we can put the component into the state where it thinks it has succeeded in importing history.
+
+133
+00:15:24,573 --> 00:15:31,253
+Oh, except that that's not the case because like the sorry, the the string is still coming from the parent.
+
+134
+00:15:31,263 --> 00:15:36,453
+This is like. Yeah. This is being provided from the parent.
+
+135
+00:15:36,463 --> 00:15:40,243
+I apologize. So what we're going to do is we're going to do it like this.
+
+136
+00:15:40,933 --> 00:15:47,443
+Internal testing, my grader just browsing history import from the last 180 days.
+
+137
+00:15:47,443 --> 00:15:56,293
+There it is. And then we're going to let's change that preference to max age in days we're going to make it one day.
+
+138
+00:16:02,773 --> 00:16:07,663
+Sure. From the last one day. Maybe instead of.
+
+139
+00:16:08,023 --> 00:16:16,423
+Then that's. That's kind of awkward. Like, I can't imagine this number will ever be one.
+
+140
+00:16:17,173 --> 00:16:20,203
+But from the I guess we can say from the last day.
+
+141
+00:16:23,413 --> 00:16:25,753
+Showing the migration for extreme variables.
+
+142
+00:16:25,753 --> 00:16:41,473
+Max Agent Day is the number of the number of days, the maximum number of days of history that might be imported.
+
+143
+00:16:43,893 --> 00:16:47,613
+This. This is a preference value.
+
+144
+00:16:51,283 --> 00:16:59,863
+That, uh. Well, maybe that's just enough.
+
+145
+00:17:04,453 --> 00:17:10,163
+And when we do multiple lines, how does that work? Variables.
+
+146
+00:17:13,283 --> 00:17:18,993
+They would just keep it all on the same line. Okay.
+
+147
+00:17:19,893 --> 00:17:23,673
+And then form out of field data. We're going to do one here.
+
+148
+00:17:23,673 --> 00:17:33,573
+Success. Form data equals.
+
+149
+00:17:33,583 --> 00:17:46,763
+And then the string was form history. So we will return that the migration was apparent in case your case.
+
+150
+00:17:46,763 --> 00:18:02,523
+Lazy migration wizard Constance. Displayed resource types form data internally e.g. fonts, strings, format value.
+
+151
+00:18:08,073 --> 00:18:11,133
+Uh. Uh. All right.
+
+152
+00:18:12,273 --> 00:18:22,573
+Reload. Yeah.
+
+153
+00:18:23,563 --> 00:18:28,213
+Looking good for mystery from the last day. Let's reset this preference.
+
+154
+00:18:33,543 --> 00:18:37,563
+Yeah. It looks good. Okay.
+
+155
+00:18:38,283 --> 00:18:42,603
+I feel pretty good about that. Let's see what we've got, test wise.
+
+156
+00:18:43,143 --> 00:18:55,123
+Um. We don't normally test strings, so this might be okay to just let slide, but let's just see what happens when we run our tests.
+
+157
+00:19:36,653 --> 00:19:43,823
+We expected the empty string of the resource type is in resource types of quantities.
+
+158
+00:19:43,823 --> 00:19:49,243
+I see. So there was a test for this. Can browser do migration?
+
+159
+00:19:51,653 --> 00:20:03,693
+We have to update our expectations here. Cert quantities shown 2012 resource types with quantities of.
+
+160
+00:20:09,733 --> 00:20:15,923
+Was this message with a quantity. So we're going to add while history is in there, that's fine.
+
+161
+00:20:17,783 --> 00:20:41,503
+If we fail to. Found expected quality and success string from the last 180 days are the expected quantity is different in this case expected quantity.
+
+162
+00:20:43,533 --> 00:20:54,423
+Um. So we need to special case.
+
+163
+00:20:58,233 --> 00:21:09,423
+History is a special case that doesn't show the imported the number of imported history entries.
+
+164
+00:21:13,583 --> 00:21:25,743
+Instead shows. How the maximum number of days of history that might have been imported.
+
+165
+00:21:26,103 --> 00:21:37,533
+So if progress group data set resource type equals migration was a constant was displayed resource types history.
+
+166
+00:21:43,603 --> 00:21:53,673
+But. Then assert.
+
+167
+00:21:56,033 --> 00:22:02,843
+Not equal success. Text Index of Migration, utils.
+
+168
+00:22:03,893 --> 00:22:14,783
+History, Max Age and days. Minus one found expected.
+
+169
+00:22:15,683 --> 00:22:22,583
+Uh, history. Uh, maximum number of days of history.
+
+170
+00:22:24,573 --> 00:22:28,533
+Success text. All right.
+
+171
+00:22:28,593 --> 00:22:32,313
+Let's take a look. See if that solves that one.
+
+172
+00:22:34,143 --> 00:22:37,533
+Error. Then we'll do the next one. How are we doing? Our bill, by the way.
+
+173
+00:22:38,853 --> 00:22:43,983
+It's still building, but we are in parser.
+
+174
+00:22:44,193 --> 00:22:51,673
+That's good. Okay.
+
+175
+00:22:52,063 --> 00:22:56,983
+Now we just have the one failure to 19.
+
+176
+00:22:59,973 --> 00:23:03,213
+Or I'll right, comma. Let's try that again.
+
+177
+00:23:19,193 --> 00:23:22,853
+Now we've just had this one failure where form history is not the empty string.
+
+178
+00:23:31,043 --> 00:23:34,893
+So. We're going to put in another condition.
+
+179
+00:23:47,043 --> 00:23:50,943
+Restrain for restatements non restating. You'll need to modify the function to check for that string.
+
+180
+00:23:51,033 --> 00:24:23,383
+Okay. So else, if progress group data set resource time by patients or constants displayed or resource types form data.
+
+181
+00:24:28,953 --> 00:24:37,743
+Else, then we're going to assert, instead of showing the quantity, we're just going to show that the success assert equal.
+
+182
+00:24:39,103 --> 00:24:43,402
+Success text. His form.
+
+183
+00:24:43,403 --> 00:24:49,913
+History found expected for history string.
+
+184
+00:24:53,573 --> 00:25:00,893
+Form data string. It's kind of weird to test strings like that, but.
+
+185
+00:25:03,473 --> 00:25:14,673
+Uh. We're going to document the special cases here.
+
+186
+00:25:15,303 --> 00:25:34,963
+Form data. Is another special case because we simply show form history as the success string or then a particular quantity.
+
+187
+00:25:40,213 --> 00:25:58,063
+All right. All right, let's run the whole suite again.
+
+188
+00:26:02,653 --> 00:26:05,973
+Okay. We're at the point where we're doing XP calm.
+
+189
+00:26:05,983 --> 00:26:10,153
+That's good. That means we're close to linking, which means we're close to our error.
+
+190
+00:26:29,523 --> 00:26:37,493
+All past. Very good. You know, link to the spec.
+
+191
+00:26:40,073 --> 00:26:53,823
+Here. Basing this work on this part of the spec.
+
+192
+00:26:56,823 --> 00:27:00,093
+Copy that. Comment.
+
+193
+00:27:01,233 --> 00:27:05,283
+Update Success strangles for history and form data.
+
+194
+00:27:08,733 --> 00:27:13,383
+Our resource imports and the new migration wizard.
+
+195
+00:27:15,523 --> 00:27:18,882
+Let's get. I think.
+
+196
+00:27:18,883 --> 00:27:24,673
+Catherine, let's get Catherine to review this. Actually, no, let's get Nick to review this.
+
+197
+00:27:25,933 --> 00:27:29,203
+Or even I've been hounding Catherine to review things.
+
+198
+00:27:29,203 --> 00:27:34,243
+So maybe. Maybe it's time to give. Time to give Nick a chance to review this.
+
+199
+00:27:43,313 --> 00:27:51,853
+Let's take a quick peek. All right.
+
+200
+00:28:02,633 --> 00:28:10,583
+Let's go. So did we get our area on Moore's memory and FBT?
+
+201
+00:28:10,583 --> 00:28:15,323
+That's really close to the end too. We're building tests.
+
+202
+00:28:24,873 --> 00:28:32,983
+Various G tests. At some point we're going to try and link lives war.
+
+203
+00:28:33,073 --> 00:28:38,303
+And that's where things go sideways. Okay.
+
+204
+00:28:38,373 --> 00:28:41,823
+Here we go. Building the EMC labs or labs? A little. Where is it?
+
+205
+00:28:44,343 --> 00:29:08,073
+Where is this big, scary air? So we're waiting for an.
+
+206
+00:29:16,733 --> 00:29:30,453
+This end of landing? Yes, it did. That's good. If.
+
+207
+00:29:30,733 --> 00:29:39,893
+If you're interested in testing out the new migration wizard, now's an excellent time to get a sneak preview of it.
+
+208
+00:29:39,913 --> 00:29:46,903
+You can do that by going to, um, here, uh, new migration wizard.
+
+209
+00:29:48,193 --> 00:29:52,033
+You can sneak peek by setting.
+
+210
+00:29:52,813 --> 00:29:58,383
+What's the preference? That.
+
+211
+00:30:00,683 --> 00:30:05,033
+To true. In a bad config.
+
+212
+00:30:05,043 --> 00:30:10,502
+No need to restart. Do that in a nightly and you should be able to get it.
+
+213
+00:30:10,503 --> 00:30:13,843
+And yeah, it's, uh.
+
+214
+00:30:14,523 --> 00:30:18,723
+It's coming along. It's posted.
+
+215
+00:30:20,463 --> 00:30:23,493
+Come on, build. What's happening here? Where are you?
+
+216
+00:30:23,823 --> 00:30:27,213
+I mean, what would be miraculous if this actually built successfully?
+
+217
+00:30:28,443 --> 00:30:32,552
+Is that even possible? I'm pretty certain it failed for as last time.
+
+218
+00:30:32,553 --> 00:30:35,973
+We could watch the tape if we were if we wanted a double check.
+
+219
+00:30:36,303 --> 00:30:44,633
+But if this somehow builds, I'd be incredible. It's like the problem solved itself, which is very unsatisfying.
+
+220
+00:30:44,643 --> 00:30:49,563
+And yet it means we get to work on more interesting things like actually writing the test.
+
+221
+00:30:53,623 --> 00:31:00,303
+Oh. Danny Collins typing. What's he typing?
+
+222
+00:31:02,643 --> 00:31:06,453
+I wish we were using more.
+
+223
+00:31:06,993 --> 00:31:10,773
+I wish we were using more consistently about preferences. Experimental.
+
+224
+00:31:11,493 --> 00:31:22,893
+Yeah, that's true. Although I will say if we were not sure about this new My Grader, we'd probably put it under experimental,
+
+225
+00:31:23,283 --> 00:31:26,943
+but we're reasonably certain that this is an improvement over the existing one.
+
+226
+00:31:28,353 --> 00:31:31,443
+And so it's going to help the plan.
+
+227
+00:31:31,703 --> 00:31:39,512
+Like, don't quote me on this exactly. But like the current rough plan is to have the new migration wizard go out in 114.
+
+228
+00:31:39,513 --> 00:31:49,383
+So that's there's not going to be much time to do a whole lot of experimentation beyond a couple of smaller things.
+
+229
+00:31:50,703 --> 00:31:57,812
+One of the things we are experimenting with, I can actually show you. So there are two different variations.
+
+230
+00:31:57,813 --> 00:32:03,483
+O hello. And the stack 97. I'm happy to have you here.
+
+231
+00:32:03,483 --> 00:32:09,183
+If this is your first time, I am going to show you two variations we're testing on the main selection screen.
+
+232
+00:32:09,183 --> 00:32:13,413
+This is one variation where you get the big list of things that you want to import.
+
+233
+00:32:14,013 --> 00:32:18,723
+And then the second variation is you don't see the big list by default.
+
+234
+00:32:19,023 --> 00:32:25,403
+We we have them all checked by default. But you can expand this and then customize which ones you want to import.
+
+235
+00:32:27,093 --> 00:32:35,763
+So we're going to try both. We're going to like do some experiments on the while and see if if one seems to be preferred to the other by users.
+
+236
+00:32:37,833 --> 00:32:41,863
+What's nice about this one is it's kind of less noisy, but it's still customizable.
+
+237
+00:32:42,253 --> 00:32:45,273
+If I were to choose like all projects, like, yeah, import everything.
+
+238
+00:32:45,573 --> 00:32:53,533
+And it's really only whenever this gets like if this gets like very long, then all these checkboxes might be kind of exhausting for users.
+
+239
+00:32:53,533 --> 00:33:00,413
+So there's some thinking ahead there that maybe it's, it's best to do something like this, but we're going to run that as an experiment.
+
+240
+00:33:02,343 --> 00:33:07,413
+So you can say like, okay, well, I'll just save lines. Please go about like that sort of thing.
+
+241
+00:33:10,483 --> 00:33:14,113
+All right. Had our build go. Okay, we got our bill there.
+
+242
+00:33:14,563 --> 00:33:19,963
+This is what I was looking for. And the problem.
+
+243
+00:33:23,153 --> 00:33:32,793
+Is that there's an undefined symbol. That's what I was complaining about.
+
+244
+00:33:33,693 --> 00:33:37,923
+And I just saw part of it fly by and I think it might be relevant.
+
+245
+00:33:39,693 --> 00:33:52,173
+The undefined symbol. Is the destructor of jump loss manager base.
+
+246
+00:34:20,103 --> 00:34:25,183
+Do I need to be saying that I'm overriding. The destructor.
+
+247
+00:34:37,423 --> 00:34:46,403
+Maybe. It calls for.
+
+248
+00:34:56,653 --> 00:35:10,713
+Hmm. You know, it happens. Mike, what do you think of that and how will you let that build?
+
+249
+00:35:15,433 --> 00:35:23,313
+If I say build the widget. What do you think of that?
+
+250
+00:35:36,673 --> 00:35:40,363
+So Amos Stack asked what we are working on. Well, it's so good to have you here.
+
+251
+00:35:40,363 --> 00:35:42,793
+Emma Stack, 97. What are we working on?
+
+252
+00:35:43,243 --> 00:35:59,563
+We are working on an improvement to the API for the junk list in Windows so that so that we don't have to do any work on the main thread.
+
+253
+00:36:00,733 --> 00:36:03,493
+You can do it all off of the main thread and that's good for performance.
+
+254
+00:36:05,373 --> 00:36:12,392
+And now I just I built the widget, built the widget folder, which is good, but now we have to actually build the libs,
+
+255
+00:36:12,393 --> 00:36:17,553
+all which happens when you build the toolkit library folder and we're going to see if this succeeds.
+
+256
+00:36:19,023 --> 00:36:28,303
+I am not hopeful here. Undefined symbol.
+
+257
+00:36:28,723 --> 00:36:32,263
+Once again, it is not happy with the.
+
+258
+00:36:36,143 --> 00:36:52,863
+Reference from line 164. Well, what we can do is we can take a look at some previous examples.
+
+259
+00:36:55,143 --> 00:36:59,763
+Let's look at MRU Cash Base. What does it do for Destructor?
+
+260
+00:37:08,773 --> 00:37:15,353
+I don't know if it even has one. Oh, yes, it does.
+
+261
+00:37:15,563 --> 00:37:20,933
+It does. And it just has it be empty. So maybe that's what we want to do to.
+
+262
+00:37:23,803 --> 00:37:37,063
+Um. Here I think we can do.
+
+263
+00:37:40,533 --> 00:37:42,602
+But Danny Cohen writes,
+
+264
+00:37:42,603 --> 00:37:48,753
+I guess I'd like experimental to be a place to manage new features developers are working on instead of flipping a bunch of press in about config.
+
+265
+00:37:51,933 --> 00:38:00,373
+Fair enough. Fair enough. Yeah.
+
+266
+00:38:00,943 --> 00:38:04,733
+We've had a couple of things inside of the experimental section. We've made some good use of it.
+
+267
+00:38:04,753 --> 00:38:09,132
+Like, what's the sort of stuff that's here? Like the accessibility cache is a big one.
+
+268
+00:38:09,133 --> 00:38:12,823
+The about home startup cache is another one. Oftentimes it's like platform.
+
+269
+00:38:13,213 --> 00:38:20,473
+We'll use this stuff so you can, for example, to run Jack Excel or the web GPU Web API.
+
+270
+00:38:20,953 --> 00:38:26,953
+This is another one I worked on that I have owned by default is the global mute toggles for camera and microphone feeds.
+
+271
+00:38:28,243 --> 00:38:38,463
+It's worth checking these out. Um. Building.
+
+272
+00:38:47,273 --> 00:38:53,672
+So still not happy. Undefined symbol.
+
+273
+00:38:53,673 --> 00:38:59,463
+Now it's different. It's a different, undefined symbol. If they can't find a board list.
+
+274
+00:39:04,223 --> 00:39:10,063
+So does it actually want? Oh, did I not implement a board list?
+
+275
+00:39:10,073 --> 00:39:13,222
+I didn't implement a board list. Did I not implement delete?
+
+276
+00:39:13,223 --> 00:39:16,423
+I did implement delete list opinion category.
+
+277
+00:39:16,433 --> 00:39:27,563
+That's why it's complaining. I failed to implement one of the functions here, a board list so that we can fix that happens after comment list.
+
+278
+00:39:33,303 --> 00:39:42,803
+Abort list. Just list manager, more like jump list manager.
+
+279
+00:39:44,963 --> 00:39:48,383
+And then we're going to call a board list.
+
+280
+00:39:48,713 --> 00:40:01,453
+What's what sort of source? All right.
+
+281
+00:40:01,633 --> 00:40:15,663
+What do you think of that? Yeah.
+
+282
+00:40:15,663 --> 00:40:21,603
+If you're not familiar with the experimental section, I will take the opportunity to plug these global mute toggles.
+
+283
+00:40:21,933 --> 00:40:22,562
+They're pretty neat.
+
+284
+00:40:22,563 --> 00:40:31,263
+What they allow you to do is if you go to permissioned out site and you like share your camera and microphone, let's share my camera and microphone.
+
+285
+00:40:31,953 --> 00:40:38,912
+I have the like gives you the ability to like have Firefox wide cut off switches for sharing your camera microphones.
+
+286
+00:40:38,913 --> 00:40:45,363
+This will like cut all of the mic feeds for every tab or anything that's using the microphone in Firefox.
+
+287
+00:40:45,753 --> 00:40:52,293
+And this will do the same thing for camera. And the only reason we don't ship that by default is because during our user testing,
+
+288
+00:40:52,293 --> 00:40:56,852
+we found that users would quickly get confused about having multiple layers of
+
+289
+00:40:56,853 --> 00:41:02,073
+mute where if they muted their camera in like Google Meet and then muted it here,
+
+290
+00:41:02,343 --> 00:41:07,143
+they would be surprised. Or when they looked here, they'd be surprised that they didn't mirror one another.
+
+291
+00:41:07,623 --> 00:41:15,573
+You know, they would expect this to be they would expect this to be in the same state as the mute button for Google Meet.
+
+292
+00:41:16,233 --> 00:41:23,583
+And yeah, so we had to this is sort of been left to languish, but the powers are still there so you can use them.
+
+293
+00:41:30,933 --> 00:41:35,373
+Still no good. Now, what are you complaining about? We are making progress.
+
+294
+00:41:36,483 --> 00:41:41,963
+Set out by DH is now missing. I missed it.
+
+295
+00:41:42,393 --> 00:41:49,063
+No, it's right here. I do find it wrong.
+
+296
+00:41:55,593 --> 00:42:00,483
+I.D. referenced by C.F. table and defined symbol.
+
+297
+00:42:03,343 --> 00:42:12,563
+All right. All of these are undefined symbols. So it's just complaining about all of them.
+
+298
+00:42:19,283 --> 00:42:34,613
+It just don't know how to do a virtual class. C++ interface virtual.
+
+299
+00:42:41,423 --> 00:42:44,993
+Okay. This is a pure virtual function.
+
+300
+00:42:52,383 --> 00:42:56,553
+This is not a virtual function. This is a virtual function.
+
+301
+00:42:56,913 --> 00:43:00,883
+Oh, notice that it like says like equals zero.
+
+302
+00:43:00,903 --> 00:43:09,143
+I wonder if that's what we need. Virtual. Uh.
+
+303
+00:43:09,923 --> 00:43:27,553
+Well, let me do this. I'm just kind of guessing here.
+
+304
+00:43:29,293 --> 00:43:36,793
+And I wonder if this is what it wants. Sometimes programing is just trying to give the compiler what it wants.
+
+305
+00:43:39,313 --> 00:43:43,633
+It's Murphy coming in with the truth. With great power comes great responsibility.
+
+306
+00:43:43,663 --> 00:43:53,652
+It's true. I mean, I completely sympathize with you, Danny Coen, because the more we can get users to not use about config, the better.
+
+307
+00:43:53,653 --> 00:43:57,132
+Because these are just things that some of these are not for playing with.
+
+308
+00:43:57,133 --> 00:44:02,053
+Some of these are like internal state that were you to flip or change one of these.
+
+309
+00:44:02,473 --> 00:44:06,163
+Unexpectedly, Firefox might just like stop working properly.
+
+310
+00:44:06,613 --> 00:44:16,903
+That's one of the reasons, for example, why we don't make about config available for users on Android because the the recovery scenario for,
+
+311
+00:44:17,323 --> 00:44:24,253
+you know, messing with about config on Android is just brutal because I think you have to do a basically a full reinstall.
+
+312
+00:44:24,823 --> 00:44:32,643
+We don't want people to have to do that. Still not happy.
+
+313
+00:44:33,843 --> 00:44:38,943
+Only special members can be defaulted. Okay, so how about zero?
+
+314
+00:44:52,673 --> 00:45:00,153
+And I think there's a faster way. Right.
+
+315
+00:45:00,523 --> 00:45:12,713
+We think that. Yeah.
+
+316
+00:45:12,723 --> 00:45:18,383
+Often times whenever like I've seen people complain about not having access to about config
+
+317
+00:45:18,413 --> 00:45:23,063
+on Android and I understand that there are some things that people want to tweak there.
+
+318
+00:45:23,483 --> 00:45:28,493
+But the, the error, the sort of the failure case is just a disaster.
+
+319
+00:45:41,423 --> 00:45:45,503
+Holy smokes. I think it compiled. I think it linked everybody.
+
+320
+00:45:53,713 --> 00:45:58,983
+If that's the case we're committing. And then we can start, you know,
+
+321
+00:45:59,003 --> 00:46:04,853
+laying the groundwork for this test that we're trying to write and that we've been trying to write for, like what feels like months.
+
+322
+00:46:36,413 --> 00:46:40,893
+Come on. Parking lot.
+
+323
+00:46:42,093 --> 00:46:51,183
+What are these things? Okay.
+
+324
+00:46:51,663 --> 00:46:57,633
+It, Bill, amend. H g amend.
+
+325
+00:47:01,243 --> 00:47:04,603
+And now we can start thinking about our.
+
+326
+00:47:04,963 --> 00:47:10,753
+Well, first of all, does it still work? Because we've effectively put this skimming layer in between.
+
+327
+00:47:18,463 --> 00:47:25,123
+Yeah. In between us and like with the jump list manager and jump list manager is now.
+
+328
+00:47:28,353 --> 00:47:46,903
+One of these things. A new jump list manager. We always pass in our proof of lock.
+
+329
+00:47:48,923 --> 00:47:52,263
+So there's like a bunch of dead code in here. I guess we can eventually get rid of.
+
+330
+00:47:52,283 --> 00:47:58,023
+That's nice. All right.
+
+331
+00:47:58,503 --> 00:48:05,003
+Let's see what happens when we run it. Let's see if it even like what happens.
+
+332
+00:48:09,633 --> 00:48:14,103
+Yeah. I caa from fire glow ac couldn't low speak, huh?
+
+333
+00:48:15,003 --> 00:48:18,863
+That's not good. Oh, no.
+
+334
+00:48:19,383 --> 00:48:23,193
+All right, let's try. What? Let's see what happens if we just run a straight mock build.
+
+335
+00:48:24,153 --> 00:48:27,693
+Why wouldn't it be able to load XP? That's a bad sign.
+
+336
+00:48:28,233 --> 00:48:43,913
+You definitely need XP. Reverting your hurray.
+
+337
+00:48:43,933 --> 00:48:48,603
+Well, give us a second. Give us a second. Give us a second.
+
+338
+00:48:48,613 --> 00:48:55,783
+I was doing like my new builds and I just built the dial, but I didn't do a full, like, mock build.
+
+339
+00:48:55,783 --> 00:48:59,023
+So maybe this is all we need to do.
+
+340
+00:49:03,273 --> 00:49:08,793
+And if this works, then yeah, we can start building our G test, which I've never I've never written G test before.
+
+341
+00:49:08,793 --> 00:49:18,573
+I don't know how that's going to go, but we can start by trying to construct our special implementation of jump list manager base,
+
+342
+00:49:19,203 --> 00:49:27,243
+which we can instrument, um, you know, to do various things.
+
+343
+00:49:29,103 --> 00:49:40,092
+Yeah. And I think last episode we also saw some techniques that we can use to spin the event loop to await promises in our tests,
+
+344
+00:49:40,093 --> 00:49:50,082
+which I think by default our test mechanism like the Google Test G test stuff doesn't have like a an a weight sort of thing.
+
+345
+00:49:50,083 --> 00:49:53,893
+But we can spin the event loop while we await a promise for to resolve.
+
+346
+00:49:56,883 --> 00:50:00,213
+We figured out how to do that a couple of weeks ago. So I think we have everything we need.
+
+347
+00:50:16,433 --> 00:50:23,283
+It's curiosity. Lock is a monitor.
+
+348
+00:50:23,613 --> 00:50:26,613
+So that's probably a private, you know, private.
+
+349
+00:50:46,083 --> 00:50:49,533
+Wow. Waiting for this build to finish.
+
+350
+00:50:50,853 --> 00:50:54,573
+Not my favorite. Not my favorite.
+
+351
+00:50:58,103 --> 00:51:05,503
+But it sure thinks that my metrics are gleam and the OP codes are okay.
+
+352
+00:51:07,613 --> 00:51:11,003
+So I'm hoping that this is going to fix our ex because I'm not loading problem.
+
+353
+00:51:12,023 --> 00:51:15,472
+Once it figure out what it's trying to do. Do I have my you know what?
+
+354
+00:51:15,473 --> 00:51:23,903
+I could probably speed things up by shutting off this virtual machine. Power off or let's let's suspend suspend this virtual machine.
+
+355
+00:51:26,383 --> 00:51:30,763
+I'll probably help. Okay. Now let's try and run.
+
+356
+00:51:31,693 --> 00:51:47,463
+Is it still complain about XP? Come. No, but we don't have a window yet.
+
+357
+00:51:47,463 --> 00:51:49,503
+But that's okay. I think we're still starting out.
+
+358
+00:51:49,533 --> 00:51:55,153
+It's a debug builds is going to take a couple of minutes, not minutes, but take a couple of seconds to get.
+
+359
+00:51:56,403 --> 00:52:00,392
+It's not optimized. We've got to get to the point where we can draw a browser window.
+
+360
+00:52:00,393 --> 00:52:03,803
+Let's go here to boot.
+
+361
+00:52:16,843 --> 00:52:20,943
+All right. Well, while we're waiting for that, is there something else we can do with the migration wizard?
+
+362
+00:52:23,433 --> 00:52:29,313
+Some other stuff just landed. What else do they want us to do?
+
+363
+00:52:31,253 --> 00:52:35,893
+Migration wizard. God, get these icons filled.
+
+364
+00:52:36,013 --> 00:52:43,273
+We've got to fix that icon now. Maybe I'll do that. Okay, here is our browser window we got there.
+
+365
+00:52:49,343 --> 00:52:53,093
+Super slow. Okay.
+
+366
+00:52:53,183 --> 00:52:57,592
+Now, let's see if we can populate the jump list. So, hooray!
+
+367
+00:52:57,593 --> 00:53:10,043
+Hooray! It's running. This is good. We can. You can unravel your hurray smurf d you can re reverted her and revert unrevealed.
+
+368
+00:53:12,713 --> 00:53:16,973
+Yay! Yeah. All right, let's see.
+
+369
+00:53:17,003 --> 00:53:20,393
+Do I have any history that I can use here?
+
+370
+00:53:20,483 --> 00:53:23,883
+No, it's blown away. Okay, so we're going to need to.
+
+371
+00:53:24,503 --> 00:53:28,073
+I think I had this stuff in my clipboard.
+
+372
+00:53:28,493 --> 00:53:38,593
+We're going to get this. Build their populate jump list.
+
+373
+00:53:41,393 --> 00:53:47,003
+And then once the. API.
+
+374
+00:53:49,393 --> 00:53:59,253
+Um. Some descriptions, custom title and some other descriptions.
+
+375
+00:54:01,023 --> 00:54:05,843
+Okay. Test.
+
+376
+00:54:08,533 --> 00:54:14,343
+Okay. Um.
+
+377
+00:54:17,283 --> 00:54:24,183
+You know, it's just passi empty some empty arrays and see what happens.
+
+378
+00:54:24,693 --> 00:54:27,693
+I'm guessing nothing will happen. This should probably just air out.
+
+379
+00:54:28,123 --> 00:54:36,833
+I. Pending.
+
+380
+00:54:37,823 --> 00:54:48,803
+So we didn't crash. That's good. We have a resolve.
+
+381
+00:54:49,023 --> 00:54:54,113
+Yeah, we got back. Nothing. Okay, how about.
+
+382
+00:54:55,613 --> 00:55:00,263
+So we've got nothing here. Now, if I go into.
+
+383
+00:55:03,143 --> 00:55:07,373
+Was it windows jump start jsm.
+
+384
+00:55:07,373 --> 00:55:23,763
+I want to import that. Bill there.
+
+385
+00:55:28,913 --> 00:55:34,223
+Sort of like an update. Oh, you know what?
+
+386
+00:55:34,763 --> 00:55:38,573
+I need to make sure that we're not using the legacy back end. That's the other thing.
+
+387
+00:55:38,603 --> 00:55:45,463
+That's why this thing might be working already. Legacy.
+
+388
+00:55:52,563 --> 00:56:01,623
+Yeah. It's using the legacy back end. Okay, so now that we're not using the legacy back end, I'm going to restart using the new back end.
+
+389
+00:56:12,823 --> 00:56:20,473
+And what I really want to do is I want to load up windows, jump lists and call our way home.
+
+390
+00:56:20,503 --> 00:56:27,893
+Let's look inside. Source code in here. I want to call Bill Bliss.
+
+391
+00:56:30,993 --> 00:56:38,503
+And that you get that from update on Windows Taskbar jump list now.
+
+392
+00:56:38,523 --> 00:56:44,563
+Did we crash just now? We did. It was crash.
+
+393
+00:56:46,643 --> 00:56:53,883
+When we tried to release. So there's something Mars hit crash jumbles manager not thread safe.
+
+394
+00:56:55,883 --> 00:57:14,323
+That's not good. Not threads save as I supports and poll 43.
+
+395
+00:57:22,163 --> 00:57:37,093
+Current thread owns me. We release widget from.
+
+396
+00:57:39,913 --> 00:57:50,593
+Observer. The problem is that John Bliss manager thinks that is not owned by the main thread.
+
+397
+00:57:52,453 --> 00:58:00,793
+General Manager release. Hmm.
+
+398
+00:58:01,003 --> 00:58:09,393
+That might be a problem. I have to look at that later. Uh, in the meantime, let's just see if we can get.
+
+399
+00:58:09,403 --> 00:58:14,893
+Let's let's not worry about the crash just yet for the ownership.
+
+400
+00:58:16,213 --> 00:58:20,713
+Let's just get the new backend to work.
+
+401
+00:58:20,893 --> 00:58:24,193
+Let's just make sure that we are passing stuff through properly.
+
+402
+00:58:26,083 --> 00:58:29,543
+So actually, yeah, I'm seeing items here.
+
+403
+00:58:29,563 --> 00:58:38,552
+That's good. And that this definitely went through the new the new mechanism.
+
+404
+00:58:38,553 --> 00:58:48,993
+So that's actually really good. We can actually up the wrong key combo.
+
+405
+00:58:49,503 --> 00:58:53,583
+I was thinking we could open up the debugger and step through and just double check and ensure.
+
+406
+00:59:25,703 --> 00:59:30,913
+You. Crawling forward here.
+
+407
+00:59:33,963 --> 00:59:37,052
+Oh boy. Yeah. Debug builds. What a pain.
+
+408
+00:59:37,053 --> 00:59:43,143
+And yet we need them so that we can get information like this crash which is still bothering me.
+
+409
+00:59:44,553 --> 00:59:49,843
+Not thread safe. What a winning thread.
+
+410
+00:59:49,843 --> 00:59:58,593
+A certain current thread owns me. Who owns me.
+
+411
+01:00:00,813 --> 01:00:27,293
+This current threat owns me. Assert ownership.
+
+412
+01:00:34,873 --> 01:00:41,853
+Hunting event targeted. Is that where we got this?
+
+413
+01:00:44,293 --> 01:00:48,613
+Crash. I'll have to look at it later.
+
+414
+01:00:50,473 --> 01:00:54,183
+Okay. Windows.
+
+415
+01:00:55,173 --> 01:00:58,683
+Oh. I've got, like, the wrong context. This is the worker.
+
+416
+01:01:02,433 --> 01:01:07,723
+I need to be on the main thread. Not the worker.
+
+417
+01:01:08,833 --> 01:01:17,553
+Put me on the main thread. This is intolerable.
+
+418
+01:01:41,803 --> 01:01:45,053
+No line. We want this one.
+
+419
+01:02:12,323 --> 01:02:15,373
+Okay. The fact that these are getting written to is pretty good.
+
+420
+01:02:15,493 --> 01:02:20,683
+Like, pretty happy about that. That does mean that I think we're going through the right stuff.
+
+421
+01:02:43,983 --> 01:02:54,722
+All right. Well, you know what? Unless I'm going to give ourselves one minute to confirm that we are actually
+
+422
+01:02:54,723 --> 01:03:00,873
+using the right back end and then we're going to start investigating this crash.
+
+423
+01:03:01,533 --> 01:03:14,633
+I want to get that sorted. Okay.
+
+424
+01:03:17,033 --> 01:03:26,443
+So tasks. No, that's the old one.
+
+425
+01:03:35,553 --> 01:03:43,903
+Popularly. Here we go.
+
+426
+01:03:47,783 --> 01:03:50,903
+Build list. All right. Here we go.
+
+427
+01:03:51,473 --> 01:03:57,163
+Setting a breakpoint there. One 181.
+
+428
+01:03:57,163 --> 01:04:01,803
+Let's go. Come on.
+
+429
+01:04:02,233 --> 01:04:39,683
+Don't do this to me. Thank you. The.
+
+430
+01:04:41,463 --> 01:04:47,793
+Okay. Here we go.
+
+431
+01:04:47,823 --> 01:04:51,783
+We entered it just by hitting the timer. This is good.
+
+432
+01:04:57,993 --> 01:05:10,703
+I really just want to know if we get down to here. So set a break point there and here.
+
+433
+01:05:14,673 --> 01:05:25,753
+I wish you'd stop jumping me around. Okay.
+
+434
+01:05:25,813 --> 01:05:32,363
+Play. Where are we?
+
+435
+01:05:32,783 --> 01:05:38,533
+201. Can I play?
+
+436
+01:05:47,893 --> 01:05:53,113
+181 again play.
+
+437
+01:06:03,993 --> 01:06:12,433
+242. All right, we did it. All right.
+
+438
+01:06:12,443 --> 01:06:16,433
+I'm convinced now that we are properly using. Oh, geez, this took forever.
+
+439
+01:06:16,673 --> 01:06:21,893
+I'm convinced that we're using the right back end. That's good.
+
+440
+01:06:22,043 --> 01:06:25,762
+It works. It works where we're actually making stuff show up.
+
+441
+01:06:25,763 --> 01:06:29,482
+We're passing through stuff directly to the underlying msn.com thing.
+
+442
+01:06:29,483 --> 01:06:37,433
+We've got our shim in place. The problem is that there's an ownership issue where we are causing a crash on shutdown.
+
+443
+01:06:37,433 --> 01:06:39,763
+So we're going to remove all the break points,
+
+444
+01:06:39,773 --> 01:06:49,672
+we're going to shut down the debugger or we're going to shut down Firefox and hopefully we're going to see this crashing in and then we can.
+
+445
+01:06:49,673 --> 01:06:53,763
+Yeah, here we go. Chambliss Manager Not thread safe.
+
+446
+01:06:55,043 --> 01:06:58,533
+So who owns the jump list manager?
+
+447
+01:06:58,553 --> 01:07:02,183
+Am I constructing it on a different thread?
+
+448
+01:07:04,193 --> 01:07:07,823
+Chambliss Manager. New jump list manager.
+
+449
+01:07:08,693 --> 01:07:12,483
+Is this running inside this?
+
+450
+01:07:12,503 --> 01:07:18,902
+This is running on the main thread. Is this a different thread?
+
+451
+01:07:18,903 --> 01:07:27,453
+A lambda on a different thread. Jimbo's manager.
+
+452
+01:07:27,463 --> 01:07:32,713
+That would make sense to me that what's happening in here is that we're off of the main thread.
+
+453
+01:07:58,843 --> 01:08:13,953
+Ensure MTA. Yeah.
+
+454
+01:08:14,433 --> 01:08:18,273
+Yeah, this is on. That's why we're running it off of a different thread.
+
+455
+01:08:19,623 --> 01:08:25,473
+Since I'm still in the Multi-threaded departments, that proxy calls on that object do not need to interact the main threads message pump.
+
+456
+01:08:46,743 --> 01:08:51,393
+So how is this getting destroyed before the old and jobless manager?
+
+457
+01:09:19,253 --> 01:09:24,563
+So you were at the interface. Andrew has the Andrew reference as your unwrap agile reference resolve.
+
+458
+01:09:25,673 --> 01:09:28,913
+Multithreaded Department Fu is an eye fu.
+
+459
+01:09:31,853 --> 01:09:35,483
+My Agile ref has passed for our main thread, which runs in a single threaded department.
+
+460
+01:09:43,943 --> 01:09:47,363
+Now through. Maybe call from the main thread. I see.
+
+461
+01:09:48,923 --> 01:10:07,533
+Maybe I have to do that. So it looks like we were very intentionally instantiating this.
+
+462
+01:10:09,713 --> 01:10:29,973
+So we don't have to interact with the main threads. Message pump. Hmm.
+
+463
+01:10:52,233 --> 01:11:00,893
+Yeah. This is a problem. There's a problem because we still got the old mechanism around which I think which still does some,
+
+464
+01:11:01,073 --> 01:11:05,783
+some work on the main thread and takes locks and stuff.
+
+465
+01:11:09,673 --> 01:11:14,443
+I didn't realize that this is happening in a different apartment, in a different thread.
+
+466
+01:11:17,533 --> 01:12:03,963
+Okay, so what do we want to do? What we might want to do.
+
+467
+01:12:04,983 --> 01:12:11,523
+This is not amazing. This is not amazing what we could do for now.
+
+468
+01:12:13,503 --> 01:12:19,913
+So you have a new method. Uh.
+
+469
+01:12:25,303 --> 01:12:43,063
+This manager. So instead of doing this in the construction, we we create a new method.
+
+470
+01:12:48,193 --> 01:12:51,233
+Um. Hang on.
+
+471
+01:12:54,703 --> 01:12:58,093
+Void set jump list manager.
+
+472
+01:13:03,493 --> 01:13:08,413
+And then what we could potentially do. I'm not super happy with this, but we can like.
+
+473
+01:13:17,793 --> 01:13:24,293
+Uh. Say that.
+
+474
+01:13:26,483 --> 01:13:37,673
+And then. Said John, the manager.
+
+475
+01:13:41,843 --> 01:13:46,063
+Like set. Uh.
+
+476
+01:13:48,903 --> 01:13:52,443
+Max. Calm. List manager.
+
+477
+01:14:01,563 --> 01:14:04,623
+Or maybe I'll call it setting native.
+
+478
+01:14:08,573 --> 01:14:17,593
+Destination list. Ismail Khan set native destination list.
+
+479
+01:14:22,333 --> 01:14:27,493
+And we'll just have, like, an integer empty constructor.
+
+480
+01:14:32,583 --> 01:14:37,343
+Then. This might.
+
+481
+01:14:37,413 --> 01:15:10,803
+We might also want a proof of lock here. Okay.
+
+482
+01:15:11,613 --> 01:15:19,713
+Let's see what it thinks of that. Let's see if we fixed the crash.
+
+483
+01:15:20,523 --> 01:15:23,703
+And if we have, we'll call it there.
+
+484
+01:15:27,333 --> 01:15:32,013
+This is very awkward. I have a feeling that my reviewers are not going to be happy with this design
+
+485
+01:15:32,793 --> 01:15:36,243
+and that I might want to put up a work in progress and get some feedback early.
+
+486
+01:15:38,733 --> 01:15:43,533
+Missing a gap before I go to too deep on this.
+
+487
+01:15:43,953 --> 01:15:48,573
+It might be worth getting some feedback from some people who actually know what they're doing.
+
+488
+01:15:52,433 --> 01:16:01,933
+So we might be at that point now. Which is good.
+
+489
+01:16:02,473 --> 01:16:06,893
+I don't want to invest too much more time into, like, going down this route.
+
+490
+01:16:06,913 --> 01:16:11,563
+If it turns out that I'm I'm doing the wrong things.
+
+491
+01:16:11,713 --> 01:16:18,703
+So the good news is that, like, I never, you know, remember names set native destination list by not update the.
+
+492
+01:16:30,743 --> 01:16:43,203
+You, Chambliss, manager. All right.
+
+493
+01:16:43,213 --> 01:16:46,213
+Well, I'll make that a virtual method as well.
+
+494
+01:16:54,163 --> 01:16:58,993
+Whatever. I think this whole thing needs some rethinking.
+
+495
+01:17:02,423 --> 01:17:16,363
+Player. Threads.
+
+496
+01:17:16,393 --> 01:17:22,363
+Am I right? What a pain. How do I best detangle this?
+
+497
+01:17:24,623 --> 01:17:29,023
+And keep both mechanisms. My.
+
+498
+01:17:43,793 --> 01:17:51,773
+From. All right, well, let's just see if this fixes the crash will start her up or shut her down if we don't crash.
+
+499
+01:17:52,253 --> 01:17:56,843
+I'll feel pretty good about that. If we do crash, we have something to investigate.
+
+500
+01:18:02,693 --> 01:18:18,713
+The week after next. Let's go.
+
+501
+01:18:18,713 --> 01:18:29,393
+Let's go. Deep on balance.
+
+502
+01:18:32,623 --> 01:18:42,463
+Debug builds are nice because they are very verbose and so the logging is very helpful
+
+503
+01:18:42,463 --> 01:18:49,813
+or much more helpful than in an OP to build their performance characteristics are.
+
+504
+01:18:50,833 --> 01:19:00,493
+Just hot garbage. That is not a good time both for building and for running.
+
+505
+01:19:01,093 --> 01:19:07,663
+Okay, so we're just going to run. We're going to make sure that our jump lists get constructed.
+
+506
+01:19:22,583 --> 01:19:29,603
+And then we are going to quit. And then we will see if we crash.
+
+507
+01:19:46,973 --> 01:20:06,803
+Okay. Okay.
+
+508
+01:20:08,703 --> 01:20:14,243
+Done here. Are things going to shut this down?
+
+509
+01:20:15,293 --> 01:20:28,293
+Do we crash? No crash.
+
+510
+01:20:30,583 --> 01:20:36,703
+Sometimes we leak stuff and shut down. Okay, well, we didn't crash, and that's good.
+
+511
+01:20:37,003 --> 01:20:44,503
+I can work with that. So I'm going to amend what I'm going to do to start cleaning this up and getting it ready to go to up for review just
+
+512
+01:20:44,503 --> 01:20:53,533
+for some some initial feedback from some of our calm experts and platform threatening people who know this stuff.
+
+513
+01:20:54,013 --> 01:20:59,773
+And hopefully by the time we have our next episode, we'll have that feedback and we'll have a way forward.
+
+514
+01:21:00,253 --> 01:21:05,562
+That's the plan. Hey, thank you so much for watching. Episode 319 of The Joy of Coding.
+
+515
+01:21:05,563 --> 01:21:14,653
+We got that thing to build. We got we got it to show that it was working and we fixed a crash all in one episode pretty good.
+
+516
+01:21:14,653 --> 01:21:19,003
+And I also showed how to check out the new migration wizard.
+
+517
+01:21:19,003 --> 01:21:22,693
+We even wrote a patch for it real quickly, so I feel pretty good about that.
+
+518
+01:21:22,693 --> 01:21:28,623
+Pretty decent progress for an hour and a half. Thank you again so much for watching Episode three and let me know what you thought.
+
+519
+01:21:28,633 --> 01:21:33,253
+There's a link to rate the episode here in the agenda. I read everything that comes in.
+
+520
+01:21:33,253 --> 01:21:39,582
+I love reading everything that comes in. Ask me questions, you know, I'll try and answer them during the next stream.
+
+521
+01:21:39,583 --> 01:21:46,003
+And just a reminder, there is no stream next week because I am traveling, so I will see you sometime in April.
+
+522
+01:21:46,213 --> 01:21:50,083
+Have yourselves a great couple of weeks and I will see you soon.
+
+523
+01:21:50,293 --> 01:21:53,763
+Take care, everybody. Bye bye.
+
+524
+01:21:55,513 --> 01:21:59,083
+Hang on. Got to give this music the joy.
+
+525
+01:22:00,013 --> 01:22:02,593
+Oh, did you see it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

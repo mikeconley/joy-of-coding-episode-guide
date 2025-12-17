@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 252 - June 16, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 252 - June 16, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5471ecae-96cc-4a94-926f-ad3b00f14311</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5471ecae-96cc-4a94-926f-ad3b00f14311">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,811 --> 00:00:15,341
+Welcome. To the Joy cuckolding, hello and welcome to Episode 252 of The Joy of Cotting.
+
+2
+00:00:15,341 --> 00:00:19,541
+My name is Mike Conley. It's so good to have you here. How are you?
+
+3
+00:00:19,541 --> 00:00:26,351
+We're going to be live hacking on Firefox today. Pardon me. I just finished some lunch, like just a bite of it.
+
+4
+00:00:26,351 --> 00:00:34,871
+So my mouth's a little I probably should have brushed my teeth or something, but there's apologies if there are mouth sounds.
+
+5
+00:00:34,871 --> 00:00:43,511
+I've got the microphone, the high density microphone working again. So, you know, you're getting this like high quality mouth sound stuff.
+
+6
+00:00:43,511 --> 00:00:48,341
+So I hope that's OK. Let me switch.
+
+7
+00:00:48,341 --> 00:00:57,821
+To my desktop, all right, so it's June 16th, twenty twenty one episode 252, classic reminder, no plan survives breakfast.
+
+8
+00:00:57,821 --> 00:01:03,431
+I think I know what I want to do today. I think I know what what the plan is.
+
+9
+00:01:03,431 --> 00:01:07,001
+I think I know what I'm going to work on. But it might not go according to plan.
+
+10
+00:01:07,001 --> 00:01:13,361
+Things happen, you know, things get in the way. Things might interrupt things, Mike, you know, I might get stuck or things might go wrong.
+
+11
+00:01:13,361 --> 00:01:17,951
+The software I'm working with might suddenly lock up or decide to update itself and stop working.
+
+12
+00:01:17,951 --> 00:01:23,291
+That's all. OK, you will get to watch me struggle through that and deal with it.
+
+13
+00:01:23,291 --> 00:01:27,611
+And that's kind of how it goes. Like there's it's not prerecorded.
+
+14
+00:01:27,611 --> 00:01:31,511
+There's no script, really. I just I'm going to capture software development as I do it.
+
+15
+00:01:31,511 --> 00:01:34,301
+And sometimes that includes things going wrong. That's the first thing.
+
+16
+00:01:34,301 --> 00:01:38,801
+The second thing is the agenda that we're looking at is something that you have access to.
+
+17
+00:01:38,801 --> 00:01:42,851
+If you're watching this on air MAZZILLI, check out the details for the video.
+
+18
+00:01:42,851 --> 00:01:47,981
+It's somewhere around the video. If you're in YouTube, it's in the video description.
+
+19
+00:01:47,981 --> 00:01:50,861
+And for the people who are watching on Twitch,
+
+20
+00:01:50,861 --> 00:01:57,671
+I will give you a link right now through the Twitch chat episode two hundred and fifty two, which is a palindrome.
+
+21
+00:01:57,671 --> 00:02:01,901
+Hmm. Very nice. So there you go. There's the agenda link.
+
+22
+00:02:01,901 --> 00:02:09,251
+I just dropped it in the twitch chat. All right, so what are we doing today?
+
+23
+00:02:09,251 --> 00:02:14,471
+There is a bug that I'm working on that I was thinking we could try and finish off.
+
+24
+00:02:14,471 --> 00:02:18,621
+So this is bug one seven one two seven five zero.
+
+25
+00:02:18,621 --> 00:02:24,171
+The clear recent history. Motal has the old UI. So let's take a look at this bug.
+
+26
+00:02:24,171 --> 00:02:29,411
+I've actually done a bunch of work on it already. It was actually a lot simpler than I thought.
+
+27
+00:02:29,411 --> 00:02:33,701
+The all clear recent history model has the old UI. What is the clear recent history?
+
+28
+00:02:33,701 --> 00:02:40,661
+Motal What is happening? Well, thankfully the person who filed this bug was 22 days ago, included a screenshot.
+
+29
+00:02:40,661 --> 00:02:43,091
+Maybe you're familiar with this dialog.
+
+30
+00:02:43,091 --> 00:02:50,021
+This dialog is something you can access if you have the the menu here, you go to history and you say clear recent history.
+
+31
+00:02:50,021 --> 00:02:59,801
+You get this dialog and it's using the sort of the old native widget style like this looks like a separate window.
+
+32
+00:02:59,801 --> 00:03:04,901
+These look like the native checkboxes, a native list, and these are native buttons.
+
+33
+00:03:04,901 --> 00:03:14,891
+And what we're supposed to make it look like is more like what's in the settings, like if I say clear recent history.
+
+34
+00:03:14,891 --> 00:03:22,841
+So this is this is the style. It's supposed to look like this is what we call the like M1 or proton styling with with these button shapes,
+
+35
+00:03:22,841 --> 00:03:30,101
+non-native buttons, mentalists and checkboxes man can't work today.
+
+36
+00:03:30,101 --> 00:03:37,541
+What's going on? So doing that was actually pretty straightforward because we've done that to a number of our existing models.
+
+37
+00:03:37,541 --> 00:03:44,771
+And I, I wrote this very small patch to do it and it does the job and we can actually
+
+38
+00:03:44,771 --> 00:03:53,951
+see that in action right now if I can just see where I am and my source Tre.
+
+39
+00:03:53,951 --> 00:03:57,161
+Yeah, it's this one, so let's check out this change.
+
+40
+00:03:57,161 --> 00:04:05,721
+Oh, it looks like I accidentally based this change off of this other clean up patch that I don't want to do that I'm going to rebase this for.
+
+41
+00:04:05,721 --> 00:04:13,541
+So I'm going rebase this revision on top of Central. So let me pump up my phone so you can see what I'm doing.
+
+42
+00:04:13,541 --> 00:04:18,431
+So I'm going to rebase this change right here, which is accidentally based on this one.
+
+43
+00:04:18,431 --> 00:04:22,001
+You can see the light sorry, the the line, the dependency here.
+
+44
+00:04:22,001 --> 00:04:32,131
+I'm going to base it on top of central. So rebase that one on top of Central.
+
+45
+00:04:32,131 --> 00:04:37,861
+Think about that for a second, and once I demonstrate that this is working,
+
+46
+00:04:37,861 --> 00:04:42,181
+the real work for today I think isn't, you know, going to be a lot of style work.
+
+47
+00:04:42,181 --> 00:04:51,541
+It's about updating tests so that it exercises. There was a preexisting test suite that exercised the old school dialog that no
+
+48
+00:04:51,541 --> 00:04:57,211
+longer works with the new school dialog like it continues to old open the old one.
+
+49
+00:04:57,211 --> 00:05:08,221
+And we should probably make it use the actual dialog rather than, you know, or make it use the actual one that ships to users with this change.
+
+50
+00:05:08,221 --> 00:05:17,791
+So let's build this and let's take a look at the at at the change.
+
+51
+00:05:17,791 --> 00:05:30,001
+It does look like I did add this fallback in the event that the dialog box doesn't exist and I'd seen that in a couple of different places.
+
+52
+00:05:30,001 --> 00:05:42,561
+So I kind of defensively added that in like there's one here. We don't have a suitable parent.
+
+53
+00:05:42,561 --> 00:05:48,861
+But maybe that's not possible and maybe I should just get rid of that condition because I don't
+
+54
+00:05:48,861 --> 00:05:53,991
+want to be able to like I don't think it's useful to be able to do this old thing anymore.
+
+55
+00:05:53,991 --> 00:06:02,391
+So maybe I'll just remove that. So let's start by looking at the change will run.
+
+56
+00:06:02,391 --> 00:06:16,531
+Or looking at the behavior, rather. OK, so history clear recent history, so this is the old style, we don't want this.
+
+57
+00:06:16,531 --> 00:06:21,181
+Did I accidentally? Yeah, I forgot to check out the thing I just replaced.
+
+58
+00:06:21,181 --> 00:06:32,581
+That's why. Her update to it. OK, so we'll build it, sorry for the wasted time there.
+
+59
+00:06:32,581 --> 00:06:48,111
+We're going to run it again. OK, so we go to history, clear recent history, and this is what it's supposed to look like, this looks correct.
+
+60
+00:06:48,111 --> 00:06:51,561
+You know, it's Window Motal, it's attached to this window.
+
+61
+00:06:51,561 --> 00:06:56,301
+It prevents you from doing anything until like you've made a decision. That's the that's the goal.
+
+62
+00:06:56,301 --> 00:07:04,981
+But, you know, it has the new style. OK. If we run the tests, however, it opens up the old window.
+
+63
+00:07:04,981 --> 00:07:12,721
+So that's the thing I want to change. But I also, before I forget, I'm going to update the code here was sublime.
+
+64
+00:07:12,721 --> 00:07:20,781
+Speaking of update, I updated Sublime recently. This is sublime texts.
+
+65
+00:07:20,781 --> 00:07:27,471
+Four is this where's the build for 107, but where's the version number?
+
+66
+00:07:27,471 --> 00:07:36,691
+Um. Changelog, yeah, this is billed for our version four, and I updated it today,
+
+67
+00:07:36,691 --> 00:07:43,241
+and it's OK so far, nothing that, you know, nothing that has surprised me.
+
+68
+00:07:43,241 --> 00:07:47,401
+No unpleasant surprises, which is, you know, that's that's good.
+
+69
+00:07:47,401 --> 00:07:51,031
+So let's see. Here's what I want to update shows.
+
+70
+00:07:51,031 --> 00:08:01,341
+A Santé sanitization dialog to the user. If the parent window is president, has a dialog box that will be used to show the dialog otherwise.
+
+71
+00:08:01,341 --> 00:08:07,161
+A new top level window will be created to show the dialog now.
+
+72
+00:08:07,161 --> 00:08:09,771
+Originally, I was planning on removing this condition,
+
+73
+00:08:09,771 --> 00:08:16,141
+but it looks like there is an optional argument and if there's an optional argument, that's when it opens up its own separate window.
+
+74
+00:08:16,141 --> 00:08:19,791
+Do we need to support that still? Let's take a look.
+
+75
+00:08:19,791 --> 00:08:26,181
+Who calls this function sanitizer? We'll show you why.
+
+76
+00:08:26,181 --> 00:08:35,631
+Who calls that? There are two places, it's called one here, and that will definitely include a window,
+
+77
+00:08:35,631 --> 00:08:43,211
+because this is part of the browser window code and then there's one here.
+
+78
+00:08:43,211 --> 00:08:50,881
+Where we get a top window, this is if we're in the early bar, so I really think.
+
+79
+00:08:50,881 --> 00:08:58,691
+Um, you're always going to get a window here, uh, I'm curious to know about the history of this function.
+
+80
+00:08:58,691 --> 00:09:05,711
+Maybe there used to be a case where we wanted to show it on its own. So let's see if we can get some history here.
+
+81
+00:09:05,711 --> 00:09:16,481
+And ATI's or some who added this documentation convert sanitized to a module that was back in twenty eighteen.
+
+82
+00:09:16,481 --> 00:09:28,421
+Um. UI.
+
+83
+00:09:28,421 --> 00:09:33,661
+And. Let's see.
+
+84
+00:09:33,661 --> 00:09:45,731
+And who is calling to show you why back then? Uh, sanitizer show you I.
+
+85
+00:09:45,731 --> 00:09:54,731
+Oh, sorry that it doesn't allow me to look at that particular snapshot within within search FOX so.
+
+86
+00:09:54,731 --> 00:10:03,591
+Um, maybe what I can do is look to see whenever this line was first added.
+
+87
+00:10:03,591 --> 00:10:26,101
+When we convert it to a module, right, OK, let's look at the the rod diff here.
+
+88
+00:10:26,101 --> 00:10:38,521
+So who was calling it? His call from sanitizers sanitize.
+
+89
+00:10:38,521 --> 00:10:54,921
+And that oh, I see over here, it was once called with no and is that still a does that's still a method sanitize.
+
+90
+00:10:54,921 --> 00:11:03,491
+Well, it is, but that doesn't that, like the sanitized function, actually does the sanitization, it doesn't show the.
+
+91
+00:11:03,491 --> 00:11:15,751
+UI for it. Well.
+
+92
+00:11:15,751 --> 00:11:19,531
+So the dialog itself calls sanitized or sanitized now,
+
+93
+00:11:19,531 --> 00:11:30,261
+so I got a feeling that it's OK to assume that the window will have to be included, like I'm not seeing any.
+
+94
+00:11:30,261 --> 00:11:38,001
+I'm not seeing any callers that I am concerned with that might ever supply a window like it, we're here in the early bar.
+
+95
+00:11:38,001 --> 00:11:43,461
+You have to have a window in order to have the URL bar. We were checking the window here.
+
+96
+00:11:43,461 --> 00:11:50,441
+Like whoever calls open clear history dialog is from the URL bar provider.
+
+97
+00:11:50,441 --> 00:11:57,941
+Like, you have a you are albar, you have a browser window, and same with the other one here in this command element,
+
+98
+00:11:57,941 --> 00:12:02,961
+when you call sanitizer, show you why you're passing a window, you're in a browser window.
+
+99
+00:12:02,961 --> 00:12:12,291
+That's what this included file runs inside of browser. So I think we can actually remove this optional.
+
+100
+00:12:12,291 --> 00:12:19,881
+Will make it so that is not optional. You have to include it.
+
+101
+00:12:19,881 --> 00:12:25,641
+And we're going to fix some of the wrapping there.
+
+102
+00:12:25,641 --> 00:12:38,031
+If parent window. And what we'll do instead is if you don't have a dialog box.
+
+103
+00:12:38,031 --> 00:13:02,621
+Oh, new air, um. Expected, uh, sanitizer show you I expected a browser window argument.
+
+104
+00:13:02,621 --> 00:13:12,551
+And then we just do this chunk and we don't need to do this anymore, the admiral thing, we can get rid of that like boom.
+
+105
+00:13:12,551 --> 00:13:17,971
+In fact, I wonder, is it still useful to have this be a.
+
+106
+00:13:17,971 --> 00:13:26,101
+A concert, probably not, because we only use it in the one place, so.
+
+107
+00:13:26,101 --> 00:13:33,611
+We can do this.
+
+108
+00:13:33,611 --> 00:13:43,921
+Much simpler. OK. Uh.
+
+109
+00:13:43,921 --> 00:13:56,041
+Shows sanitization dialoged, the user, the browser window.
+
+110
+00:13:56,041 --> 00:14:03,561
+Um. Throws.
+
+111
+00:14:03,561 --> 00:14:13,241
+I think that's something we use now throws. If.
+
+112
+00:14:13,241 --> 00:14:28,041
+Um, a parent, if parent window is undefined or doesn't have a dialog box.
+
+113
+00:14:28,041 --> 00:14:32,961
+Dileep. Well, OK, so it's fine with that.
+
+114
+00:14:32,961 --> 00:14:49,981
+Uh, returns after the dialog box has closed.
+
+115
+00:14:49,981 --> 00:14:58,851
+Think that's it? And now for the tests, so the test.
+
+116
+00:14:58,851 --> 00:15:11,281
+Is. Here, Browsr underscore sanitized dialog.
+
+117
+00:15:11,281 --> 00:15:21,951
+And if you watch as this test runs, you'll notice that it's opening the old school window.
+
+118
+00:15:21,951 --> 00:15:27,341
+Let's just wait for this to run.
+
+119
+00:15:27,341 --> 00:15:37,481
+Yeah, see how it's holding this old school window and we don't want that anymore, so we have to modify it to do the new thing.
+
+120
+00:15:37,481 --> 00:15:42,111
+The purpose of this test is not to fully flex the sanitized timespan code.
+
+121
+00:15:42,111 --> 00:15:47,421
+This test checks the UI of the dialog, make sure it's correctly connected to the sanitized timespan code,
+
+122
+00:15:47,421 --> 00:15:57,381
+some of the code was taken from browser sanitized time spans. So one of the things that I learned while briefly examining this file before,
+
+123
+00:15:57,381 --> 00:16:05,071
+like when I was working on the other part, is that there's this class called a window helper.
+
+124
+00:16:05,071 --> 00:16:12,111
+And when they do hear Window Helper, it's right here at the bottom.
+
+125
+00:16:12,111 --> 00:16:16,611
+And its job is to like kind of wrap the dialog and provide convenience methods.
+
+126
+00:16:16,611 --> 00:16:22,741
+And I think we want to update this to. You know,
+
+127
+00:16:22,741 --> 00:16:29,161
+rename it and update it like it's I guess it's it's handy to have this thing that knows how to talk to the
+
+128
+00:16:29,161 --> 00:16:38,601
+underlying dialog will just update it so it knows how to both spawn and update and manipulate the new window model.
+
+129
+00:16:38,601 --> 00:16:50,661
+Um. And I don't think there are any cases where, like window helper.
+
+130
+00:16:50,661 --> 00:17:02,641
+Is past an argument, so. Um, the dialogs and the side window, we don't, I think, need that anymore,
+
+131
+00:17:02,641 --> 00:17:11,431
+what we do need is the ability to respond to the dialog and then the ability to manipulate it while it is open.
+
+132
+00:17:11,431 --> 00:17:20,281
+And that's a little tricky because it spins a nested event loop. So you have to, um, open up the modal.
+
+133
+00:17:20,281 --> 00:17:30,001
+What does it do? And then as soon as the window model is open, then it calls the OnLoad event handler.
+
+134
+00:17:30,001 --> 00:17:35,041
+It like cues an event to do that and unloads it does these things.
+
+135
+00:17:35,041 --> 00:17:40,741
+Now we also have a bunch of prompt test utilities that we can probably reuse here,
+
+136
+00:17:40,741 --> 00:17:50,271
+because these test utils are exactly for these kinds of dialogs, I think.
+
+137
+00:17:50,271 --> 00:17:56,501
+Well, are they these are for prompts, wait for prompt.
+
+138
+00:17:56,501 --> 00:18:04,411
+Well, maybe I'm wrong. Maybe we can't use this.
+
+139
+00:18:04,411 --> 00:18:17,211
+Dialog test. Handled prompt.
+
+140
+00:18:17,211 --> 00:18:28,101
+Let's just quickly see how this is used from test utils handle prompt.
+
+141
+00:18:28,101 --> 00:18:34,041
+So it might also be possible to use this with the dialog.
+
+142
+00:18:34,041 --> 00:18:43,371
+We're check dialog was the dialog. Prompt promised wait for prompt modal type model type content.
+
+143
+00:18:43,371 --> 00:18:55,171
+I got a feeling we can use this thing. An open, OK, so here's what we'll do.
+
+144
+00:18:55,171 --> 00:19:01,921
+We're going to update this class, first of all, I want to call it since and said window help here, we're going to call it dialog helper.
+
+145
+00:19:01,921 --> 00:19:07,481
+So let's find and replace all of the instances of window helper.
+
+146
+00:19:07,481 --> 00:19:17,621
+Because it's not going to be a window anymore, window holper, dialog helper or Hamburger Helper replace all OK?
+
+147
+00:19:17,621 --> 00:19:29,801
+I don't think we need this argument anymore so we can get rid of that promise closed.
+
+148
+00:19:29,801 --> 00:19:44,091
+Um. I don't really want to spend a whole lot of time like updating these tests, so I might try and keep the interface the same.
+
+149
+00:19:44,091 --> 00:19:53,901
+Um. A dialog.
+
+150
+00:19:53,901 --> 00:20:11,041
+You say this dialog. No.
+
+151
+00:20:11,041 --> 00:20:19,211
+And what we'll do is let's start with the open function opens the clear recent history dialog for Congress set the onload to a function
+
+152
+00:20:19,211 --> 00:20:27,361
+to execute onload it should close the dialog windows that the test may continue to function to execute on and load the load is optional.
+
+153
+00:20:27,361 --> 00:20:30,821
+If it returns true, the car is expected to call promising updates at this point.
+
+154
+00:20:30,821 --> 00:20:43,971
+False. OK. This looks pretty old school, this stuff, but we're going to try and keep the same interface, so we're going to like.
+
+155
+00:20:43,971 --> 00:20:53,121
+Execute an onload function. And then make sure that on unload we.
+
+156
+00:20:53,121 --> 00:21:00,581
+If possible, unload called the on and load function if one exists, so how do we open the dialog?
+
+157
+00:21:00,581 --> 00:21:07,341
+I believe what we're going to do is we're going to directly interact with sanitizer.
+
+158
+00:21:07,341 --> 00:21:18,491
+Like, do we do we have sanitizer in here, we do sanitizer, timespan, everything, so we can just call like sanitizer, show you I.
+
+159
+00:21:18,491 --> 00:21:26,101
+Parent window and we'll pass. Window in the context of the test.
+
+160
+00:21:26,101 --> 00:21:33,031
+I think that works. Um.
+
+161
+00:21:33,031 --> 00:21:38,701
+Unless we want to construct this thing, if you want to associate it with a different window,
+
+162
+00:21:38,701 --> 00:21:47,251
+maybe that would be handy when, um, this dot when equals when.
+
+163
+00:21:47,251 --> 00:22:01,581
+Uh, so. To do document.
+
+164
+00:22:01,581 --> 00:22:13,631
+Show you why this stunt, when, uh, I am noticing with the new sublime, like some responsiveness issues.
+
+165
+00:22:13,631 --> 00:22:20,711
+I'm scrolling and stuff, I wonder what that's all about.
+
+166
+00:22:20,711 --> 00:22:31,111
+So that's actually going to spin a nested event loop when you do this, and that's not going to allow the test to continue.
+
+167
+00:22:31,111 --> 00:22:41,221
+Unless what we do is we cue up some things so with the prompt test utils.
+
+168
+00:22:41,221 --> 00:22:46,531
+Was it test utils, we need to make sure prompt test utils is something we have in here.
+
+169
+00:22:46,531 --> 00:23:06,221
+Um, so. We'll bring those in.
+
+170
+00:23:06,221 --> 00:23:32,031
+Um, then. I believe there is a handle next from wait for the prompt, interact with it and click the specified button to close it.
+
+171
+00:23:32,031 --> 00:23:39,601
+Can we just wait for the prompt yet as we wait for the prompt to open, that's what we want.
+
+172
+00:23:39,601 --> 00:23:43,171
+Wait for prompt parent is the browser window parent to the problem,
+
+173
+00:23:43,171 --> 00:23:49,381
+this can be either the parent window or the browser, the prompt attributes to filter for the type.
+
+174
+00:23:49,381 --> 00:23:58,061
+This is very handy. Um, so what we'll do is we'll like, say, wait for prompt.
+
+175
+00:23:58,061 --> 00:24:10,571
+Um. And then we're going to have to pass the browser window, this stuff, when.
+
+176
+00:24:10,571 --> 00:24:17,481
+And then there are probably a bunch of other things to pass, but for now it's like like, uh.
+
+177
+00:24:17,481 --> 00:24:19,691
+Prompt.
+
+178
+00:24:19,691 --> 00:24:35,741
+Promise equal that, and then we're going to need to do this part inside of a nest egg or a its own function because it runs a nested event loop.
+
+179
+00:24:35,741 --> 00:24:41,291
+So we don't want to be blocked by sanitizer, show you why we want to be able to, like, continue.
+
+180
+00:24:41,291 --> 00:24:46,571
+So then we, like, let dialog equal a weight prompt promise.
+
+181
+00:24:46,571 --> 00:24:54,951
+And then maybe there should actually be like dialog, promise, promise equal.
+
+182
+00:24:54,951 --> 00:24:57,951
+OK, let's see if that let's see where that gets us.
+
+183
+00:24:57,951 --> 00:25:07,231
+Actually, I'm going to comment the rest of this out and then we're going to just run a single one of these tasks.
+
+184
+00:25:07,231 --> 00:25:25,171
+Um. We'll run only I think we can do to right only see what happens if we do this way.
+
+185
+00:25:25,171 --> 00:25:32,071
+Smurf demanders, whether or not Sublime is busy indexing, that could be could be OK.
+
+186
+00:25:32,071 --> 00:25:37,241
+So, yeah, I've got to wait in a wait inside of a non async function. That's that's an issue.
+
+187
+00:25:37,241 --> 00:25:58,501
+OK, I'm one. Um.
+
+188
+00:25:58,501 --> 00:26:09,151
+OK, modal type is mandatory, so I actually I need to supply the correct for prompt modal type,
+
+189
+00:26:09,151 --> 00:26:16,921
+I believe what we're working with here is something called a.
+
+190
+00:26:16,921 --> 00:26:24,151
+This is a window model, so model type of services, model type tab, I think it should be model type window.
+
+191
+00:26:24,151 --> 00:26:34,181
+I could be wrong, but. Model type to model type of window.
+
+192
+00:26:34,181 --> 00:26:42,011
+You know, we probably want modal type internal window, because that's the new kind, right?
+
+193
+00:26:42,011 --> 00:26:56,941
+Let's see what it does now. Show me dialog, no, show you I expected a browser window argument.
+
+194
+00:26:56,941 --> 00:27:10,161
+Uh, um, more, uh.
+
+195
+00:27:10,161 --> 00:27:24,761
+It's an arrow function was the start, but. I know do I need, like, a closure?
+
+196
+00:27:24,761 --> 00:27:34,981
+Or does it not yet have it's like. Browser window argument, that's interesting, but does it still does it open and do it this way?
+
+197
+00:27:34,981 --> 00:27:41,311
+It does. So what's the deal, yo, when a very pass show UI?
+
+198
+00:27:41,311 --> 00:27:46,441
+Oh, because I am not constructing this properly in the first test.
+
+199
+00:27:46,441 --> 00:28:00,541
+Yeah. Uh, window. Yes. Cool.
+
+200
+00:28:00,541 --> 00:28:06,031
+All right. It shows up now, one of the things I want to do, actually, now that I think about it,
+
+201
+00:28:06,031 --> 00:28:14,281
+is function dialog helper is to default this to window if it's not supply, because I think most of them are going to do that.
+
+202
+00:28:14,281 --> 00:28:16,891
+They're just going they're not going to supply any things will fall back,
+
+203
+00:28:16,891 --> 00:28:20,191
+but it allows the flexibility where we could, in theory, open a second window.
+
+204
+00:28:20,191 --> 00:28:24,671
+And this doesn't have to assume that it's going to be like you can override.
+
+205
+00:28:24,671 --> 00:28:31,901
+And I think that's handy. Maybe one could one could argue that you don't need it.
+
+206
+00:28:31,901 --> 00:28:38,641
+If there's no test in here that doesn't need a second window, and so maybe I'll remove it, but we'll see.
+
+207
+00:28:38,641 --> 00:28:53,731
+Let's see if we get past this 08 dump, done a waiting.
+
+208
+00:28:53,731 --> 00:29:00,451
+No. Um.
+
+209
+00:29:00,451 --> 00:29:09,541
+And we didn't run the Annet one, but entering test round default state and we do not actually get the the dialog promised to resolve.
+
+210
+00:29:09,541 --> 00:29:15,631
+So I wonder if this. Wait for dialog.
+
+211
+00:29:15,631 --> 00:29:26,071
+What how does that work? Wait for prompt, rather, is it ever seeing anything test topic?
+
+212
+00:29:26,071 --> 00:29:31,231
+All right, let's dump saw the topic.
+
+213
+00:29:31,231 --> 00:29:43,131
+Let's at least see whether or not it sees the topic. And then if it does, then we can step through and see where it falls over.
+
+214
+00:29:43,131 --> 00:29:52,521
+Does not see the topic. Oh. Oh, because the model type that I passed.
+
+215
+00:29:52,521 --> 00:30:03,321
+Maybe weather a tab or window prompt. Maybe I need to supply actually this not internal window, but type window,
+
+216
+00:30:03,321 --> 00:30:08,351
+I wonder if type internal window is an internal enum that I shouldn't be using.
+
+217
+00:30:08,351 --> 00:30:14,841
+That makes sense. Still not liking it.
+
+218
+00:30:14,841 --> 00:30:30,951
+All right, let's step through this wait for prom stuff.
+
+219
+00:30:30,951 --> 00:30:53,861
+Test utils, dodgiest. Oh, man, all right, well, that did not work, let us start by putting into buggier statement there.
+
+220
+00:30:53,861 --> 00:30:59,021
+Problem of laziness, the thing I want to set a breakpoint in hadn't been loaded yet, so I couldn't set a break in it.
+
+221
+00:30:59,021 --> 00:31:05,221
+And by the time in order to kick it off, like I kicked it off in order to, like, lazily load the module, I want to celebrate point in.
+
+222
+00:31:05,221 --> 00:31:10,841
+And we were already past the point where I wanted to celebrate point so far.
+
+223
+00:31:10,841 --> 00:31:18,081
+All right, here we go. Let us step through.
+
+224
+00:31:18,081 --> 00:31:25,221
+So we're going to set up this wait for businessman to step into this, there is a model type.
+
+225
+00:31:25,221 --> 00:31:31,561
+The parent is this. It's not yet.
+
+226
+00:31:31,561 --> 00:31:36,861
+Yeah, parent is a window parent browser. There is a selected browser.
+
+227
+00:31:36,861 --> 00:31:43,081
+OK, we're going to look at the model type. Is it a common dialog?
+
+228
+00:31:43,081 --> 00:31:50,901
+Let's find out if moral type is window.
+
+229
+00:31:50,901 --> 00:31:59,711
+It is then we have the topic being common dialog loaded and we're going to.
+
+230
+00:31:59,711 --> 00:32:06,101
+Instead of breakpoint there. We're going to wait for.
+
+231
+00:32:06,101 --> 00:32:15,471
+This topic to be observed. So I know that a weight topic observed is going to register a.
+
+232
+00:32:15,471 --> 00:32:21,791
+An observer, which is good. That's what you want.
+
+233
+00:32:21,791 --> 00:32:34,361
+Opens the thing and no dice, no dice, we do not have that observer notification firing, so that's the wrong topic.
+
+234
+00:32:34,361 --> 00:32:39,551
+Maybe we're listening to the wrong topic. So maybe instead of modal type window, it's supposed to be something else.
+
+235
+00:32:39,551 --> 00:32:54,851
+What was, uh, if moral type is Monotype window or Tabram, some dialog and Monotype is Monotype tab or like maybe I can return false here.
+
+236
+00:32:54,851 --> 00:33:00,731
+It's not a common dialog. What happens because we return true before.
+
+237
+00:33:00,731 --> 00:33:16,771
+So now return false and let's see if that's better. No, not better.
+
+238
+00:33:16,771 --> 00:33:23,591
+All right. Um.
+
+239
+00:33:23,591 --> 00:33:35,901
+Common dialog loaded is fired by notify common dialog that JSM.
+
+240
+00:33:35,901 --> 00:33:41,821
+Which is fired by, uh, OnLoad of common dialog prototypes.
+
+241
+00:33:41,821 --> 00:34:07,741
+So let's do that next. Common dialog is, um, we're going to put a break point right at the top.
+
+242
+00:34:07,741 --> 00:34:15,631
+Do I? Oh, I didn't even open just about her. Come on, come on, I'm I'm getting out of practice here.
+
+243
+00:34:15,631 --> 00:34:22,481
+I should have known better. No.
+
+244
+00:34:22,481 --> 00:34:31,121
+OK, so we're at the beginning of our test function actually, or within our test code, so I'm going to say like, OK, set that stuff up.
+
+245
+00:34:31,121 --> 00:34:34,781
+OK, that's interesting. We never actually reach this part of common dialog.
+
+246
+00:34:34,781 --> 00:34:41,971
+OnLoad. I should double check that it's.
+
+247
+00:34:41,971 --> 00:34:49,891
+No, it's never been loaded. How does this thing work?
+
+248
+00:34:49,891 --> 00:35:08,301
+Gee, dialog box, dot open, what is that, Brownsburg, yes.
+
+249
+00:35:08,301 --> 00:35:25,351
+This open. It's a sub dialog.
+
+250
+00:35:25,351 --> 00:35:34,171
+Interesting, what I think I want to do is see if I can find an example of maybe test utils is very much not the right tool,
+
+251
+00:35:34,171 --> 00:35:42,371
+maybe I'm completely misunderstanding how I'm supposed to test this thing. So let's see if there are other things that use dialog box that are tested.
+
+252
+00:35:42,371 --> 00:35:59,531
+I hope so. So there's one here for upgrade dialog that I suspect is tested, um, show up, great dialog.
+
+253
+00:35:59,531 --> 00:36:05,431
+Who calls that? Here's some tests. Wait for dialog.
+
+254
+00:36:05,431 --> 00:36:11,361
+Browser's has Tilse promise alert dialog now we're talking. OK, OK.
+
+255
+00:36:11,361 --> 00:36:29,891
+That's what I want. I want promise alert dialog waits for a dialog to open clicks a specified button, waits for dialog close.
+
+256
+00:36:29,891 --> 00:36:43,271
+Wait for condition. Button action now.
+
+257
+00:36:43,271 --> 00:36:47,451
+Wait for dialog to open and click specified button.
+
+258
+00:36:47,451 --> 00:37:00,851
+This one doesn't actually have it close, it just opens it, which I think maybe we I think we want this one Promis Alert dialog open.
+
+259
+00:37:00,851 --> 00:37:07,701
+And then we choose what button we want. To click.
+
+260
+00:37:07,701 --> 00:37:26,101
+Hmm. Well, that might be at odds with what we want to do in here.
+
+261
+00:37:26,101 --> 00:37:30,661
+Hmmm, how does this thing work, promised the dialog open.
+
+262
+00:37:30,661 --> 00:37:42,901
+It's really just waiting for. Some dialog loaded and then.
+
+263
+00:37:42,901 --> 00:37:52,941
+Oh, and it looks like button action is optional. If there's a button action, then we'll do it so we can still use this call back.
+
+264
+00:37:52,941 --> 00:37:57,771
+Oh, there's a bunch of stuff in here that's useful options call back, OK?
+
+265
+00:37:57,771 --> 00:38:08,041
+OK, I think we can use this. Promise, alert dial so we don't need prompt prompts utils anymore.
+
+266
+00:38:08,041 --> 00:38:21,591
+That was the wrong thing to use. What we want is browser test utils promise alert dialog open.
+
+267
+00:38:21,591 --> 00:38:31,271
+And then no, no button action.
+
+268
+00:38:31,271 --> 00:38:45,631
+Um. The other eye that we're going to be waiting for in this case, it's the sanitize.
+
+269
+00:38:45,631 --> 00:39:07,951
+Dialog, you are I. And then an object that is called back and is sub dialog, um, I believe this is a sub dialog.
+
+270
+00:39:07,951 --> 00:39:14,191
+So is some dialog.
+
+271
+00:39:14,191 --> 00:39:18,091
+True, uh, something prettify this.
+
+272
+00:39:18,091 --> 00:39:25,681
+Come on. OK, and then I don't think we actually have to do this part anymore.
+
+273
+00:39:25,681 --> 00:39:33,741
+That was because I wasn't passing it. So we do this and then.
+
+274
+00:39:33,741 --> 00:39:37,851
+It should be a dialog promise. Wait for the dialog now,
+
+275
+00:39:37,851 --> 00:39:43,341
+was it resolved with it returns with the promised results for dialog and fire in the
+
+276
+00:39:43,341 --> 00:39:47,781
+specified button is clicked and it resolves with the actual window object itself.
+
+277
+00:39:47,781 --> 00:40:05,321
+OK, that I can work with. All right. Let's see what happens. Done, all right, good, good, good, good.
+
+278
+00:40:05,321 --> 00:40:23,891
+I can work with that. So that is we are correctly we're at the point where, like, we can do stuff, so it's it's loaded and then we want to call the.
+
+279
+00:40:23,891 --> 00:40:32,181
+Has the rest of this work loaded is true if wives unload fire before it loaded?
+
+280
+00:40:32,181 --> 00:40:42,921
+OK, what we want to do is, um, add and unload event listener dialog at Event Listener.
+
+281
+00:40:42,921 --> 00:40:58,301
+We probably just copy this. Um.
+
+282
+00:40:58,301 --> 00:41:05,061
+If when your name is not equal, sanitized dialog, why would that be the case?
+
+283
+00:41:05,061 --> 00:41:10,681
+Um, we made sure that it was the one that we care about, so we're not going to care about that.
+
+284
+00:41:10,681 --> 00:41:27,531
+Uh, no. Um. We can make this a once event listener, so we don't need to do the removal again once true.
+
+285
+00:41:27,531 --> 00:41:39,161
+Win equals win. Why would we do that, some exceptions that reach you don't reach the terrorists, but OK, is do.
+
+286
+00:41:39,161 --> 00:41:56,701
+A async function if. W.H on Unallowed.
+
+287
+00:41:56,701 --> 00:42:13,301
+Uh. Here's what I'm going to do, arrow function time, arrow function time, I don't even think we use the event arrow function, time, async.
+
+288
+00:42:13,301 --> 00:42:29,791
+Boop. If this. On and word, then this start on onload and then this resolve closed.
+
+289
+00:42:29,791 --> 00:42:42,991
+Now, pretty all of this up. I think we can get rid of a lot of this now.
+
+290
+00:42:42,991 --> 00:42:52,751
+We need to do the onload. Event handler.
+
+291
+00:42:52,751 --> 00:43:07,661
+Um. So we'll do that here now that the unload event handler is, uh.
+
+292
+00:43:07,661 --> 00:43:19,391
+Why do we have to do that inside of a execute soon, I'm not sure, but we'll do it anyways just to not mess with it on load.
+
+293
+00:43:19,391 --> 00:43:27,341
+And then this, like Mako's specific thing is no longer relevant.
+
+294
+00:43:27,341 --> 00:43:31,001
+So I think we can get rid of that. All right.
+
+295
+00:43:31,001 --> 00:43:36,461
+I think this will work. Um.
+
+296
+00:43:36,461 --> 00:43:45,721
+And then. This dialog is what I guess so.
+
+297
+00:43:45,721 --> 00:43:57,981
+We'll do it. This dialog onload, um.
+
+298
+00:43:57,981 --> 00:44:07,861
+So I've closed this dialog, you know, probably a good idea.
+
+299
+00:44:07,861 --> 00:44:17,541
+OK. Now, let's go through the rest of the functions here, except dialog presses the dialogs, OK, button.
+
+300
+00:44:17,541 --> 00:44:27,031
+Um, now, in this case, I think.
+
+301
+00:44:27,031 --> 00:44:34,091
+Promise the dialog open. Let's see who uses this. Promise?
+
+302
+00:44:34,091 --> 00:44:44,741
+No, let's see, some of this is the return value. Yeah.
+
+303
+00:44:44,741 --> 00:44:53,591
+When she added item overlay. So it's actually the.
+
+304
+00:44:53,591 --> 00:45:11,231
+Window scope of the dialog, OK? So in that case, sanitizer, dialog or sanitize or TotEx, the HMO, is it sanitized about the scope of this thing?
+
+305
+00:45:11,231 --> 00:45:20,731
+Is where we're at. Dialog equals this.
+
+306
+00:45:20,731 --> 00:45:31,321
+Accept dialog, dialog. Is this not a dialog, document, query, selector dialog?
+
+307
+00:45:31,321 --> 00:45:42,751
+I think that'll work, cancel dialog. Um, this dialog.
+
+308
+00:45:42,751 --> 00:45:53,151
+Document query, selector dialog, canceled dialog.
+
+309
+00:45:53,151 --> 00:46:05,551
+Let's see if that's far enough along to give us the first test, select duration, let's also see what that does like duration.
+
+310
+00:46:05,551 --> 00:46:14,201
+This ticket duration value this this is warning panel visible, turn this, give warning panels not hidden.
+
+311
+00:46:14,201 --> 00:46:21,701
+OK, dialog, dialog.
+
+312
+00:46:21,701 --> 00:46:27,161
+Uh, I might as well update all of these to be using.
+
+313
+00:46:27,161 --> 00:46:42,661
+That. OK, let's see if that's enough to pass the first test.
+
+314
+00:46:42,661 --> 00:46:48,621
+Fingers crossed, I got a good feeling about this.
+
+315
+00:46:48,621 --> 00:46:56,911
+Nope, warning people should not be visible. Not true, expected false, interesting.
+
+316
+00:46:56,911 --> 00:47:11,751
+Warning panel should not be visible for everything. Uh, warning panel.
+
+317
+00:47:11,751 --> 00:47:16,861
+Let's go to the very first test, that's what we're running here.
+
+318
+00:47:16,861 --> 00:47:37,881
+Um. So debugger there.
+
+319
+00:47:37,881 --> 00:47:50,171
+OK. Select duration.
+
+320
+00:47:50,171 --> 00:48:03,201
+So we expect the warning panel to be visible. Is that true, is warning panel of visible?
+
+321
+00:48:03,201 --> 00:48:12,081
+Is false, right? We passed that time.
+
+322
+00:48:12,081 --> 00:48:21,021
+OK, so I think what's going wrong here is that we're running the OnLoad event to early.
+
+323
+00:48:21,021 --> 00:48:30,831
+No, because it past that time, it's probably because the onload event handlers, for some reason happening way too soon.
+
+324
+00:48:30,831 --> 00:48:42,551
+Dialog Promis alert. Dialog open. Wait for condition.
+
+325
+00:48:42,551 --> 00:48:49,031
+Yeah, we should probably make sure that everything is fully loaded.
+
+326
+00:48:49,031 --> 00:49:03,191
+Promise alert dialog open. Does this thing work again? A weight dorm window.
+
+327
+00:49:03,191 --> 00:49:16,821
+For a lot of kids in the classroom. Uh. Hmm.
+
+328
+00:49:16,821 --> 00:49:34,331
+What happens if I don't use is some dialog? Just out of curiosity.
+
+329
+00:49:34,331 --> 00:49:43,781
+OK, not not the right move. OK, it is a sub dialog, we wait for the dialog to load.
+
+330
+00:49:43,781 --> 00:49:54,921
+Now what's the thing that does the hiding I guess, is the next step sanitize Digest's.
+
+331
+00:49:54,921 --> 00:50:11,601
+Um. Sanitize everything, warning panel is warning panel visible is get warning.
+
+332
+00:50:11,601 --> 00:50:23,861
+OK, so what's the thing that manipulates this thing? Is insanities dialog, J.S.?
+
+333
+00:50:23,861 --> 00:50:38,211
+Warning boxed in is true, that's in sanitized dialog when Jesus prompt dialog and fires.
+
+334
+00:50:38,211 --> 00:50:52,591
+And that occurs when Gesang sanitize who calls and knit.
+
+335
+00:50:52,591 --> 00:51:09,171
+She's a sanitized dialog, that jass. Here.
+
+336
+00:51:09,171 --> 00:51:22,511
+OK. Well, that's as Margaret.
+
+337
+00:51:22,511 --> 00:51:39,171
+Sanitize prompt dialog it. And then the hiding.
+
+338
+00:51:39,171 --> 00:51:48,071
+Hiding the warning box. So this should fail,
+
+339
+00:51:48,071 --> 00:52:01,881
+but the logging will tell us if the order is what we expect it to be based on the hypothesis so should fail should not be visible.
+
+340
+00:52:01,881 --> 00:52:07,311
+Entering, skipping bounden and skipping test back.
+
+341
+00:52:07,311 --> 00:52:25,121
+What? It's important that this thing does its job was blank slate.
+
+342
+00:52:25,121 --> 00:52:32,841
+So history visits the form entries. Oh, OK, that's not that important.
+
+343
+00:52:32,841 --> 00:52:44,981
+Um. It never runs to.
+
+344
+00:52:44,981 --> 00:52:58,091
+Function. Sanitized e-mail.
+
+345
+00:52:58,091 --> 00:53:03,611
+OnLoad net. There's G.
+
+346
+00:53:03,611 --> 00:53:15,071
+Santo's dialog. And who called, what's the difference, being sanitized and sanitized dialog that James?
+
+347
+00:53:15,071 --> 00:53:20,971
+Sanitized, such as sanitized dialog that J.S.
+
+348
+00:53:20,971 --> 00:53:36,761
+Where are those used, sanitized, notorious? Is used in preferences, just preferences, OK?
+
+349
+00:53:36,761 --> 00:53:44,981
+So this is not relevant. It's sanitized dialog, dodgiest, that is relevant.
+
+350
+00:53:44,981 --> 00:53:54,841
+And this Annet functions not being called, is this script being executed?
+
+351
+00:53:54,841 --> 00:54:08,991
+Running sanitize dialog. Uh, I'm done running.
+
+352
+00:54:08,991 --> 00:54:16,301
+I think we might want to do actually is Mark faster.
+
+353
+00:54:16,301 --> 00:54:22,211
+Fizz equals fart in Swedish, thank you, Smurf, that is that is interesting.
+
+354
+00:54:22,211 --> 00:54:29,861
+Interesting knowledge. I bet you're bringing that up because you're seeing fish feces everywhere as short form for vision.
+
+355
+00:54:29,861 --> 00:54:37,501
+What is vision in Swedish? OK.
+
+356
+00:54:37,501 --> 00:54:44,751
+Tests start Santo's dialog running Santo's done wrong sanitized dialog.
+
+357
+00:54:44,751 --> 00:54:54,171
+I don't think we ever run that, um. We never run.
+
+358
+00:54:54,171 --> 00:55:05,261
+The dialog prompt and it prompt dialog init function.
+
+359
+00:55:05,261 --> 00:55:14,241
+Window on the road. I wonder what if we were to let the.
+
+360
+00:55:14,241 --> 00:55:24,771
+Like, if we were to spin the event loop a few times. Excuse to show you why, if we were to, like, await new promise, resolve,
+
+361
+00:55:24,771 --> 00:55:31,641
+set time out now supposed to do this, but this will just allow us to prove our case.
+
+362
+00:55:31,641 --> 00:55:43,161
+We wait five seconds. Does it ever run?
+
+363
+00:55:43,161 --> 00:55:54,011
+Yes, it does run eventually. OK, so.
+
+364
+00:55:54,011 --> 00:56:20,601
+Um. Promise the alert dialog is open dialog promise.
+
+365
+00:56:20,601 --> 00:56:29,571
+Start dialog at event listener load.
+
+366
+00:56:29,571 --> 00:56:58,051
+Loaded, sad thing that could occur.
+
+367
+00:56:58,051 --> 00:57:22,691
+Hmm, no. Unless we just not are not giving it enough time, hold on.
+
+368
+00:57:22,691 --> 00:57:36,721
+There we go, right. OK, so we do have to wait for this load of end up run onload on next text so that.
+
+369
+00:57:36,721 --> 00:57:58,181
+Um, gee, Satie's prompt dialog, it can run first.
+
+370
+00:57:58,181 --> 00:58:07,111
+Um. Right, verify.
+
+371
+00:58:07,111 --> 00:58:19,011
+Let's run that a few times, just make sure it doesn't there's nothing event like event orders, like sensitive in here.
+
+372
+00:58:19,011 --> 00:58:24,321
+This is going to be a little flashy, so if you have, like, light sensitivity or like maybe epilepsy or something,
+
+373
+00:58:24,321 --> 00:58:30,541
+maybe look away because we're going to be a lot bright flashing lights for a second.
+
+374
+00:58:30,541 --> 00:58:34,831
+What's the reasoning that you need to wait for it to work so Smurf?
+
+375
+00:58:34,831 --> 00:58:42,481
+The reason I need to wait is I need to wait for the initialization function of the dialog to run before I do any of the checks,
+
+376
+00:58:42,481 --> 00:58:53,131
+because that's where a lot of the logic that we're trying to test is. So I needed to get the right sort of loading semantics, loading behavior.
+
+377
+00:58:53,131 --> 00:58:58,021
+There's like waiting for the dialog part to load and then there's waiting for the content to load.
+
+378
+00:58:58,021 --> 00:59:05,541
+And I think I was only doing the first and not the second. And, um.
+
+379
+00:59:05,541 --> 00:59:10,161
+The second is what keys off that initialization function, which is what we're trying to test,
+
+380
+00:59:10,161 --> 00:59:20,011
+so I had to keep waiting for that second part, which is why I need to add the new load event listener.
+
+381
+00:59:20,011 --> 00:59:25,561
+Hopefully that answers your question and, you know, if this is working as I think it is working,
+
+382
+00:59:25,561 --> 00:59:28,831
+then we might be able to start turning on a bunch of other tests.
+
+383
+00:59:28,831 --> 00:59:35,371
+We might almost be done here, actually, and that might be a very successful joy of coding episode where we'll walk out.
+
+384
+00:59:35,371 --> 00:59:40,751
+All these tests will pass. We can put up the patch for review and call it a day.
+
+385
+00:59:40,751 --> 00:59:44,941
+I'm just writing this in chaos mode. It worked. So we're all good.
+
+386
+00:59:44,941 --> 00:59:57,921
+Let's try turning on a bunch of the other tests now. So instead of doing only run them all.
+
+387
+00:59:57,921 --> 01:00:14,101
+Well, not with verify, just straight up. OK, that one's broken, can't access document this.
+
+388
+01:00:14,101 --> 01:00:24,381
+OK, so I think I missed something. Three eighty seven, three eighty seven in here.
+
+389
+01:00:24,381 --> 01:00:42,521
+Uh, dialog. There any other this stuff wins, yeah, a few.
+
+390
+01:00:42,521 --> 01:00:48,731
+I wonder if underscore dialog should actually just become a dialog or maybe it should become when again,
+
+391
+01:00:48,731 --> 01:00:59,011
+um, that kind of makes some sense now that I think about it.
+
+392
+01:00:59,011 --> 01:01:16,821
+They stop when they start dialog, so maybe it's like Browsr when equals window runs or when.
+
+393
+01:01:16,821 --> 01:01:41,111
+And then this stop when equals no. And then I'm going to change all of the underscore dialogs to be win again.
+
+394
+01:01:41,111 --> 01:01:53,421
+So let's see what happens now. Pupi.
+
+395
+01:01:53,421 --> 01:02:04,361
+Uh, except the browser window argument waps.
+
+396
+01:02:04,361 --> 01:02:23,801
+Just to show you why, oh, browsr, when, of course.
+
+397
+01:02:23,801 --> 01:02:29,681
+We did it, we got it, folks, let's get rid of our logging.
+
+398
+01:02:29,681 --> 01:02:44,091
+We don't need that anymore. Looks like we were able to leave the test mostly untouched.
+
+399
+01:02:44,091 --> 01:03:04,491
+We just need to update some documentation there, uh, and get rid of this change and this change.
+
+400
+01:03:04,491 --> 01:03:11,311
+It's. Any other dump's.
+
+401
+01:03:11,311 --> 01:03:29,541
+Nope. The other debuggers. OK, so let's snapshot this, um.
+
+402
+01:03:29,541 --> 01:03:36,141
+Amend, there is a to do in here to update some documentation.
+
+403
+01:03:36,141 --> 01:03:44,491
+Uh, so Perram browser when.
+
+404
+01:03:44,491 --> 01:03:54,971
+We should use the same convention comment and convention throughout here, so, OK, Browsr, when?
+
+405
+01:03:54,971 --> 01:04:08,511
+And then, um, the, uh, um, the browser window that the dialog is expected to open in, uh.
+
+406
+01:04:08,511 --> 01:04:18,281
+And this is optional, uh, if not supplied.
+
+407
+01:04:18,281 --> 01:04:29,681
+The original browser window. Well, the initial browser window.
+
+408
+01:04:29,681 --> 01:04:37,721
+Is used. Uh, of the test run.
+
+409
+01:04:37,721 --> 01:04:46,861
+The initial browser window of the test room is used, yeah. That's right, and the other two dudes in here, no.
+
+410
+01:04:46,861 --> 01:04:57,931
+All right, Ammend, let's take a look at the patch. Oh, my my microphone is slowly sinking lower and lower.
+
+411
+01:04:57,931 --> 01:05:20,111
+There you go. OK, um, so here's our patch, it's pretty straightforward, actually, uh, let us put it up on.
+
+412
+01:05:20,111 --> 01:05:31,281
+Fabricator. Without the whip, we'll take a quick look at it ourselves.
+
+413
+01:05:31,281 --> 01:05:38,181
+What was the trick to fix the mic? Well, there was a oh, you mean like to make it so that my operating system could recognize it?
+
+414
+01:05:38,181 --> 01:05:46,221
+Or just now, whenever I was, like, fiddling with the knobs because it's really just like loosening, adjusting and tightening.
+
+415
+01:05:46,221 --> 01:05:50,851
+That's how I was able to adjust the mic just now. But I assume you're asking about the operating system.
+
+416
+01:05:50,851 --> 01:05:58,761
+That's a great question. So what I have is a role and my USB microphone, my my microphone interface.
+
+417
+01:05:58,761 --> 01:06:08,571
+So, OK, I have a road and one condenser microphone y diaphragm condenser microphone that plugs into a pretty old interface.
+
+418
+01:06:08,571 --> 01:06:18,101
+It's called a you a twenty five X from roll and you see if I can find you a photo of it.
+
+419
+01:06:18,101 --> 01:06:23,561
+Yeah, it's one of these things, and it's been a long time since that was released,
+
+420
+01:06:23,561 --> 01:06:37,991
+the last drive, a release for Mac OS was I think for let's see, Mac was 10, 11.
+
+421
+01:06:37,991 --> 01:06:44,891
+So, you know, it's not it's not that of the driver.
+
+422
+01:06:44,891 --> 01:06:49,691
+One on one for Yosemite. Yeah. And for 10, 11. So just after you samadhi, whatever was after Yosemite,
+
+423
+01:06:49,691 --> 01:06:55,751
+that is the latest version that they had for Mac OS and they've stopped releasing like drivers for it.
+
+424
+01:06:55,751 --> 01:07:04,241
+They haven't update the drivers for this in a long time. And after I updated to Big Sur, my microphone wouldn't work.
+
+425
+01:07:04,241 --> 01:07:12,791
+Now, if I installed the driver, this driver, the one for 10 11, it would work until I restarted the machine and then it would stop working,
+
+426
+01:07:12,791 --> 01:07:22,091
+which was very frustrating and turned out that the solution was to disable something called system integrity protection temporarily.
+
+427
+01:07:22,091 --> 01:07:27,731
+So I uninstalled the driver on, you know, for my ordering system, rebooted,
+
+428
+01:07:27,731 --> 01:07:40,961
+and then I rebooted into Mac OS recovery mode and then in recovery mode, I was able to open up a terminal system, integrity protection.
+
+429
+01:07:40,961 --> 01:07:45,341
+I found this like I spelled that wrong. But you get the idea.
+
+430
+01:07:45,341 --> 01:07:49,261
+I was able to find these instructions. You go into utilities.
+
+431
+01:07:49,261 --> 01:07:54,671
+When you find a terminal and you type in seats, are you still disable, then restart the machine.
+
+432
+01:07:54,671 --> 01:08:01,421
+And then in that mode, you don't have a bunch of like the protections that Mac OS,
+
+433
+01:08:01,421 --> 01:08:06,791
+I think runs by default to protect you from malicious code, which is, you know, it's not a state you really want to be in.
+
+434
+01:08:06,791 --> 01:08:12,491
+But I was only in there for a little bit. So I turned it off, restarted my machine, then I installed the driver.
+
+435
+01:08:12,491 --> 01:08:18,821
+Then I restarted the machine enabled system integrity, protection after the fact.
+
+436
+01:08:18,821 --> 01:08:22,351
+And now my microphone works and it seems to persist after restart.
+
+437
+01:08:22,351 --> 01:08:29,831
+So that was the trick. Disable like only install the driver, whatever system, integrity protection is disabled.
+
+438
+01:08:29,831 --> 01:08:37,451
+And that was that was what I needed to do. So hopefully I've got a couple of years left on this, on this USB interface.
+
+439
+01:08:37,451 --> 01:08:42,281
+It works perfectly. You know, the microphone works well, the the interface works well.
+
+440
+01:08:42,281 --> 01:08:47,081
+I'm happy I didn't have to buy anything new. I'm happy I didn't like.
+
+441
+01:08:47,081 --> 01:08:57,281
+It's a perfectly decent piece of hardware and it would have been very frustrating if, you know, the Mac OS update rendered it unusable.
+
+442
+01:08:57,281 --> 01:09:00,011
+But, you know, things move on. I get I get it.
+
+443
+01:09:00,011 --> 01:09:06,551
+You know, I shouldn't expect Roeland to support this thing for the rest of my rest of my life for the rest of its life.
+
+444
+01:09:06,551 --> 01:09:11,441
+You know, they probably have I wouldn't be surprised if they've lost the source code.
+
+445
+01:09:11,441 --> 01:09:18,311
+And maybe that's one of the reasons why they have an update or maybe who knows, maybe maybe they just don't even have the specs anymore.
+
+446
+01:09:18,311 --> 01:09:26,201
+Maybe the entire team is probably like attrition out of Roland, who knows?
+
+447
+01:09:26,201 --> 01:09:32,171
+But I was able to make it work for a little while. And and that that feels good.
+
+448
+01:09:32,171 --> 01:09:37,571
+OK, so we posted our patch. Let's take a look, a quick look.
+
+449
+01:09:37,571 --> 01:09:42,751
+See, I've asked Mika to review it.
+
+450
+01:09:42,751 --> 01:09:51,601
+Um, so, yeah, I'm renaming this thing to Dialog Helper.
+
+451
+01:09:51,601 --> 01:10:02,291
+And. That's it.
+
+452
+01:10:02,291 --> 01:10:05,801
+Let's let's see how that goes, it's up for review, I'm ready to rock.
+
+453
+01:10:05,801 --> 01:10:10,541
+So I think I'm going to call the stream there.
+
+454
+01:10:10,541 --> 01:10:15,491
+It's not a full length stream again this time, but I feel like this is a good bookend.
+
+455
+01:10:15,491 --> 01:10:20,861
+So I'm going to stop here. We we started had a nice beginning, middle and end.
+
+456
+01:10:20,861 --> 01:10:28,371
+Before I close out, though, we have a couple of minutes. Are there any questions about what I did today or maybe anything that you want to ask me?
+
+457
+01:10:28,371 --> 01:10:30,161
+I'm happy to try and field questions.
+
+458
+01:10:30,161 --> 01:10:38,761
+If you're curious about stuff, I'll open the floor for a couple of minutes and see if there's anything I can answer.
+
+459
+01:10:38,761 --> 01:10:43,101
+Um, I'll do it with a cool backbeat.
+
+460
+01:10:43,101 --> 01:10:56,201
+I'll answer your questions with. I said, wait, no free music archive.
+
+461
+01:10:56,201 --> 01:11:02,641
+Back beat. All right, Paddington Bear, lime beat.
+
+462
+01:11:02,641 --> 01:11:12,521
+What else you got? Jump to the back, B. Just how about just like, um, background?
+
+463
+01:11:12,521 --> 01:11:21,041
+Background radiation album genre, I want like some good background music, sunset stroll, that sounds good.
+
+464
+01:11:21,041 --> 01:11:40,611
+Let's listen to this. Wow, I don't control second.
+
+465
+01:11:40,611 --> 01:11:55,161
+Hold on. Oh, man, where's this audio coming from here?
+
+466
+01:11:55,161 --> 01:11:59,481
+All right, I'm just going to pop music. The background music was not a good idea. I apologize.
+
+467
+01:11:59,481 --> 01:12:08,821
+It's not a good idea. I wish there was a way I could control the volume. Why was there no, like, audio element that I could, um.
+
+468
+01:12:08,821 --> 01:12:13,641
+Is it a video like is there are there multiple frames in here?
+
+469
+01:12:13,641 --> 01:12:25,111
+Why couldn't I control it? We're OK, I have to know, I have to know, um.
+
+470
+01:12:25,111 --> 01:12:32,281
+There's got to be an audio element in here, right? No, where is this music coming from?
+
+471
+01:12:32,281 --> 01:12:44,151
+How are they doing that? I'm very curious. Maybe it's the just using the audio API instead of the DOM, although that could be.
+
+472
+01:12:44,151 --> 01:12:48,111
+That could be all right, well, let's not worry about it.
+
+473
+01:12:48,111 --> 01:12:55,191
+The questions are, do you think your toolbar icons will take more space than your your URL bar by the end of the year?
+
+474
+01:12:55,191 --> 01:12:59,121
+Good question. I have so many in here. What do I have?
+
+475
+01:12:59,121 --> 01:13:05,301
+I've got privacy. Badger, the profiler, Facebook container relay Coyle's sidebar.
+
+476
+01:13:05,301 --> 01:13:12,141
+That's a really good question. I've just I've never really thought about this is kind of becoming like a a little sort of junk drawer of stuff.
+
+477
+01:13:12,141 --> 01:13:19,131
+And there's a bunch of stuff I don't use here often, like the history menu. And I could, like, remove from my toolbar very easily.
+
+478
+01:13:19,131 --> 01:13:24,621
+What else do I not use often? I like I use the Facebook container. Why I rarely ever go to Facebook.
+
+479
+01:13:24,621 --> 01:13:29,871
+But if I have happened to have to go to a Facebook site, I like that it's contained, but I don't need that toolbar there.
+
+480
+01:13:29,871 --> 01:13:36,411
+So I can like, remove from the toolbar and I don't use the relay.
+
+481
+01:13:36,411 --> 01:13:49,321
+Like, I use relay for for certain things, but I don't need to interact with it, um, anything else, I don't think I ever use the sidebar, but neither.
+
+482
+01:13:49,321 --> 01:13:58,891
+I do interact with privacy, badger, the profiler coil, yeah, OK, the library now.
+
+483
+01:13:58,891 --> 01:14:04,441
+I use these two for kind of like a heads up display, I use pocket, I don't really use the bookmarks button.
+
+484
+01:14:04,441 --> 01:14:09,361
+So to answer your question, Danny Colon, I got a little distracted doing some cleanup of my junk drawer.
+
+485
+01:14:09,361 --> 01:14:15,721
+But no, I don't think it will take up more space by the end of the year because I will periodically do this kind of cleaning.
+
+486
+01:14:15,721 --> 01:14:20,221
+But thank you, Smurfette.
+
+487
+01:14:20,221 --> 01:14:28,771
+If you press the Berger audio button, the Berger audio book, like this one, like this button, so I can definitely mute,
+
+488
+01:14:28,771 --> 01:14:36,001
+not mute the tap, but like, I would have thought that there would be like an underlying audio element that I could then manipulate.
+
+489
+01:14:36,001 --> 01:14:40,201
+But I don't think I can, which is really interesting. I like I wonder.
+
+490
+01:14:40,201 --> 01:14:45,271
+All right. In the last couple of minutes, let's see how this thing works, because I'm very curious.
+
+491
+01:14:45,271 --> 01:14:51,241
+So this is the icon. There's an event handler here. Let's see what the event handler does.
+
+492
+01:14:51,241 --> 01:15:00,861
+Um, let's go to it in the debugger. Oh, this all this obfuscated stuff.
+
+493
+01:15:00,861 --> 01:15:08,311
+Well. And what was the oh, man, um.
+
+494
+01:15:08,311 --> 01:15:15,311
+What did it look like? It's like. If target like.
+
+495
+01:15:15,311 --> 01:15:23,971
+So this thing, yeah. Function upper target ona document PLI, is that the only.
+
+496
+01:15:23,971 --> 01:15:31,901
+Yeah, OK, it's here. So I mean instead of breakpoint here.
+
+497
+01:15:31,901 --> 01:15:38,111
+OK, and we're going to step in, we're in some kind of like view application.
+
+498
+01:15:38,111 --> 01:15:47,621
+Uh. OK. This could be super painful.
+
+499
+01:15:47,621 --> 01:16:02,951
+If is Arae are. I think I want to step into it.
+
+500
+01:16:02,951 --> 01:16:15,331
+It's happening. Some kind of view thing, and then we're going to call a function.
+
+501
+01:16:15,331 --> 01:16:31,441
+Oh, play, that's what I want whenever oh is oh, it's function type of oh.
+
+502
+01:16:31,441 --> 01:16:41,721
+Play. Play.
+
+503
+01:16:41,721 --> 01:16:47,731
+An event. And.
+
+504
+01:16:47,731 --> 01:16:56,711
+It's also obvious gaited. OK, what is Arnau payload?
+
+505
+01:16:56,711 --> 01:17:03,941
+That's the event we have this play type now we're going to look at this list of actions.
+
+506
+01:17:03,941 --> 01:17:14,941
+Hi, this is what I want to play. Let's let's look at that, this does underscore actions.
+
+507
+01:17:14,941 --> 01:17:35,341
+Uplay. Play our sound, don't play.
+
+508
+01:17:35,341 --> 01:17:50,961
+New audio, yeah, so here's what they're doing, they're doing. Uh, new audio, they're using the audio API, um.
+
+509
+01:17:50,961 --> 01:17:58,011
+Has new audio with either be attached to the document for the user to interact with or listen to her can be used off screen.
+
+510
+01:17:58,011 --> 01:18:05,361
+So that's what's happening. And so if I really wanted to adjust the the sound, I don't think there's anything I can do.
+
+511
+01:18:05,361 --> 01:18:10,251
+Like, it's not a DOM element I can touch within this context.
+
+512
+01:18:10,251 --> 01:18:31,371
+I might be able to. Um, if I can get access to the underlying if I can get if I get access to the underlying audio element or the audio, um.
+
+513
+01:18:31,371 --> 01:18:41,571
+Instance, I could manipulate it, but I can't just too bad, um.
+
+514
+01:18:41,571 --> 01:18:52,881
+All right, well, that's how that works. You know, there might be a way for me to get access to the active, like audio.
+
+515
+01:18:52,881 --> 01:18:58,291
+Is does the audio class give me? No.
+
+516
+01:18:58,291 --> 01:19:05,401
+OK. It would be cool if there was like a stack of us, like give me all the active audio instances,
+
+517
+01:19:05,401 --> 01:19:12,091
+but oh well, hey dude, so there's some questions or there's some commentary.
+
+518
+01:19:12,091 --> 01:19:23,071
+Hey, dude, what's up? These functions are so easy, man. Yop, I'm not sure if that's sarcasm, those those obfuscated functions.
+
+519
+01:19:23,071 --> 01:19:29,491
+Yeah, this is all garbage, but it's not meant for human like human consumption.
+
+520
+01:19:29,491 --> 01:19:34,411
+It's sarcasm. OK, good. OK, yeah.
+
+521
+01:19:34,411 --> 01:19:39,091
+It's just this is just garbage readability wise.
+
+522
+01:19:39,091 --> 01:19:43,291
+Who knows what's going on here. Oh my man.
+
+523
+01:19:43,291 --> 01:19:51,091
+Do you know C++. C++. I'm not familiar with C plus plus plus plus.
+
+524
+01:19:51,091 --> 01:20:00,901
+I'm familiar with C++ and less by C++. C++ you mean C++ 11 like the newer versions of it and are like the newer standards on the language.
+
+525
+01:20:00,901 --> 01:20:11,671
+And I'm, I am more used to like C++ ninety nine I think is what it was called C++ ninety nine like.
+
+526
+01:20:11,671 --> 01:20:18,871
+Yeah. What was it called. C++ Standard C ninety nine or C ninety eight.
+
+527
+01:20:18,871 --> 01:20:22,051
+Whatever it was there was like a version of it that I was really used to.
+
+528
+01:20:22,051 --> 01:20:27,211
+And then there's something called C++ 11 which has some things that I have I can read,
+
+529
+01:20:27,211 --> 01:20:32,731
+but I have never really felt comfortable using like auto pointers.
+
+530
+01:20:32,731 --> 01:20:40,381
+And there's like all this interesting stuff with like l prams in our prams and move constructors and like I'm still learning.
+
+531
+01:20:40,381 --> 01:20:46,471
+I need to kind of review that stuff. When will the next so crushed?
+
+532
+01:20:46,471 --> 01:20:51,451
+Optimist's writes, When will the next Firefox Code, MSU capstone term start?
+
+533
+01:20:51,451 --> 01:20:56,311
+Great questions over the people who didn't who don't know.
+
+534
+01:20:56,311 --> 01:21:04,141
+Mozilla and the Firefox team participate in a program run by a school in the United States called Michigan State.
+
+535
+01:21:04,141 --> 01:21:10,411
+Michigan State has a computer science and engineering program that we participate in and you can actually find more about it.
+
+536
+01:21:10,411 --> 01:21:16,171
+There's this website, MSU, Capstone and CSC.
+
+537
+01:21:16,171 --> 01:21:26,341
+I guess that I don't think they've got an SSL cert, but Capstone Dot, CSC, MSU, edu, and you can find out more about it.
+
+538
+01:21:26,341 --> 01:21:31,121
+There's an upcoming semester. Twenty twenty.
+
+539
+01:21:31,121 --> 01:21:45,281
+One, I guess next semester will probably be in the fall, like if we look at the projects and schedules, let's take a look at the major milestones.
+
+540
+01:21:45,281 --> 01:21:49,991
+Yeah, like the most recent one ended in April.
+
+541
+01:21:49,991 --> 01:21:54,041
+So it was just a couple of months ago. So it lasted January, March for months.
+
+542
+01:21:54,041 --> 01:21:58,841
+So it bookends like it exists and runs during an entire school semester.
+
+543
+01:21:58,841 --> 01:22:03,221
+So you can expect another one to start sometime in September when school starts.
+
+544
+01:22:03,221 --> 01:22:09,211
+I believe hope that helps crush the optimist.
+
+545
+01:22:09,211 --> 01:22:15,401
+All right. Unless there are any other questions. That website is definitely a table based layout.
+
+546
+01:22:15,401 --> 01:22:24,511
+Yes, this is a blast from the past. The good news is, is that if you were to boot up an old browser from like the late 90s or the early 2000s,
+
+547
+01:22:24,511 --> 01:22:28,861
+this website would probably render just fine. I'll bet you.
+
+548
+01:22:28,861 --> 01:22:38,581
+Yeah, I bet you it's all tables, see? Oh, actually, it's device it's device meant to look like tables.
+
+549
+01:22:38,581 --> 01:22:44,971
+Is there a table in here, query, selector table?
+
+550
+01:22:44,971 --> 01:22:51,641
+No, there are no tables, but it is it is designed to look like tables.
+
+551
+01:22:51,641 --> 01:22:57,151
+Amazing. Anyway, I'm big I'm a big fan of this program.
+
+552
+01:22:57,151 --> 01:23:04,561
+We've had some really great success with it. Most recently, we've had a number of students work on various picture and picture improvements.
+
+553
+01:23:04,561 --> 01:23:12,091
+And it's the students that come out of this program are really, really diligent, really capable.
+
+554
+01:23:12,091 --> 01:23:16,321
+And I think they get a lot out of it, too. Like we work with them. They learn about open source,
+
+555
+01:23:16,321 --> 01:23:22,591
+they learn about working on real software that ships are like hundreds of millions of people and code quality, all sorts of things.
+
+556
+01:23:22,591 --> 01:23:30,361
+So it's a it's a good program. And if people who are watching this are at school, at a school, maybe you're at Michigan State, but maybe you're not.
+
+557
+01:23:30,361 --> 01:23:36,241
+Maybe you're at a different school. It's worth checking to see if you have, like, project courses available.
+
+558
+01:23:36,241 --> 01:23:44,281
+When I was in school, I went to a school in Toronto and it wasn't like highly publicized.
+
+559
+01:23:44,281 --> 01:23:50,761
+I had to find it in the course calendar and it was pretty deep in there. It was an upper year project course where you, the student,
+
+560
+01:23:50,761 --> 01:23:56,761
+get to sort of work with the professor to define a project that lasts a semester and you can get credit for it.
+
+561
+01:23:56,761 --> 01:23:58,201
+It's almost like a research project.
+
+562
+01:23:58,201 --> 01:24:08,761
+But I ended up writing a bunch of or contributing to open source software for part of my undergrad in my final year using that capstone course.
+
+563
+01:24:08,761 --> 01:24:16,801
+And I learned so much. And it if you're lucky enough to have a program like the capstone program at MSU, that's great.
+
+564
+01:24:16,801 --> 01:24:21,061
+But sometimes you can do it yourself by talking to a professor,
+
+565
+01:24:21,061 --> 01:24:31,261
+talking to a course instructor or something to see if there's something like sort of roll your own course credit by contributing to open source thing.
+
+566
+01:24:31,261 --> 01:24:35,731
+Project courses are where you can learn a whole lot. That's my experience anyways.
+
+567
+01:24:35,731 --> 01:24:43,431
+That's where I learned just the vast majority of my practical skill was from my was from my project courses.
+
+568
+01:24:43,431 --> 01:24:46,861
+That's not to say that the theoretical courses weren't handy.
+
+569
+01:24:46,861 --> 01:24:52,501
+For example, I learned a lot of discrete math and matrix stuff that ends up making graphics code.
+
+570
+01:24:52,501 --> 01:24:56,041
+Really sort of like that really helps.
+
+571
+01:24:56,041 --> 01:25:00,931
+If you're in graphics land, you're doing like matrix transforms and stuff or writing shaders.
+
+572
+01:25:00,931 --> 01:25:05,641
+Suddenly discrete math is is really practical.
+
+573
+01:25:05,641 --> 01:25:14,551
+But I got to say, a lot of what I learned in those project courses ended up being what I use every day in my work.
+
+574
+01:25:14,551 --> 01:25:20,971
+So, yeah, I'm going to call it there. Thank you so much for watching. Episode two hundred and fifty two of the joy of Coding.
+
+575
+01:25:20,971 --> 01:25:25,321
+I really appreciated you being here. It was a palindrome episode. I don't know what that means.
+
+576
+01:25:25,321 --> 01:25:30,841
+It's just that the number is the same forwards and backwards. They happen periodically.
+
+577
+01:25:30,841 --> 01:25:38,431
+I think the last one that happened was probably two hundred and forty.
+
+578
+01:25:38,431 --> 01:25:41,821
+Well, I guess. What was the last time you were at?
+
+579
+01:25:41,821 --> 01:25:47,851
+Two hundred and forty two, I guess. Yeah, the last time it ended in two and there was another number in the middle was two hundred and forty two.
+
+580
+01:25:47,851 --> 01:25:53,551
+So it was only ten episodes ago and we'll probably have another palindrome in ten episodes will be my guess I predict.
+
+581
+01:25:53,551 --> 01:25:59,911
+So not as special as you'd think, but as we get higher and higher episodes it'll probably become a little less comic.
+
+582
+01:25:59,911 --> 01:26:06,061
+Who knows, maybe we'll crack a thousand someday and then palindromes will be like really rare.
+
+583
+01:26:06,061 --> 01:26:10,051
+How rare? Well, write a Python script and tell me. Let me know.
+
+584
+01:26:10,051 --> 01:26:14,671
+OK, again, I will see you next week for episode two hundred fifty three.
+
+585
+01:26:14,671 --> 01:26:20,071
+Thank you so much for watching. The joy of coding. Have yourselves a great week. Take care.
+
+586
+01:26:20,071 --> 01:27:41,101
+Bye bye. The.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

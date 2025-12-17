@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Profiling - Episode 4</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Profiling - Episode 4</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=2be982e9-c0af-4b03-ad3b-ac1600012f57</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=2be982e9-c0af-4b03-ad3b-ac1600012f57">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,240 --> 00:00:08,310
+Hello and welcome to Episode four of The Joy of Profiling.
+
+2
+00:00:08,310 --> 00:00:17,790
+My name is Mike Conley. I'm currently alone. There's no one else in this room with me, although other people, other engineers might join me shortly.
+
+3
+00:00:17,790 --> 00:00:21,660
+It may or may not happen. Everyone's really busy, so we'll see.
+
+4
+00:00:21,660 --> 00:00:27,150
+But for now, I'm going to be looking at some profiles that have been submitted through the form.
+
+5
+00:00:27,150 --> 00:00:32,040
+If you're watching this and you want to submit a profile, by the way, if you scroll down to the additional link section,
+
+6
+00:00:32,040 --> 00:00:40,080
+there is a link to a form and some instructions on how you can submit a performance profile to help us make Firefox smoother,
+
+7
+00:00:40,080 --> 00:00:44,280
+better, faster, stronger. So there you go.
+
+8
+00:00:44,280 --> 00:00:49,950
+So here's my screen and there's me in the corner.
+
+9
+00:00:49,950 --> 00:00:54,360
+So this is this is the document that I use to sort of track the profile work.
+
+10
+00:00:54,360 --> 00:01:02,970
+That's also an the additional link section below. And the first profile that was submitted is from someone named Smurf D, who is a Firefox end user.
+
+11
+00:01:02,970 --> 00:01:08,520
+And what they were doing was they were trying to go to dot Diablo three dot com.
+
+12
+00:01:08,520 --> 00:01:14,100
+And they're under a page called Rankings, which would land you at this.
+
+13
+00:01:14,100 --> 00:01:18,780
+And that takes for ever. Sometimes this can go quickly, go into the rankings page.
+
+14
+00:01:18,780 --> 00:01:24,150
+But then when you choose and the drop down menu on the top of the page, same hand can happen.
+
+15
+00:01:24,150 --> 00:01:31,020
+Other browsers, this goes instantly. Is it somehow still my network or Blitzers pages overloaded or interrobang?
+
+16
+00:01:31,020 --> 00:01:35,790
+So loading some page took a while apparently is the message.
+
+17
+00:01:35,790 --> 00:01:42,100
+So let's take a look. Open the profile and see what's in here.
+
+18
+00:01:42,100 --> 00:01:48,190
+OK. So we have a symbolic dated profile, looks like this user when we pump up the font a little, actually.
+
+19
+00:01:48,190 --> 00:01:54,610
+It looks like this user. Unfortunately, when I do that, really sort of like squashes the call stack here.
+
+20
+00:01:54,610 --> 00:02:00,230
+But the user is using this as Linux.
+
+21
+00:02:00,230 --> 00:02:04,910
+This is a Linux bill Lipsey Lip Jilib. This is a users on Linux.
+
+22
+00:02:04,910 --> 00:02:11,230
+They are using this as a GTC build. And so that's a piece of information.
+
+23
+00:02:11,230 --> 00:02:15,550
+A. A. Everybody, this is Marcus.
+
+24
+00:02:15,550 --> 00:02:20,040
+Maybe the camera's right there. That's Marcus.
+
+25
+00:02:20,040 --> 00:02:24,090
+Marcus is joining me. Welcome, Marcus. So let me catch you up.
+
+26
+00:02:24,090 --> 00:02:31,750
+OK. So this is what we're looking at. This user submitted a profile where they're trying to go to like this Diablo three page.
+
+27
+00:02:31,750 --> 00:02:36,220
+And sometimes it works. Sometimes it hangs other browsers. This goes instantly.
+
+28
+00:02:36,220 --> 00:02:40,420
+So what's the deal? Not much more than that.
+
+29
+00:02:40,420 --> 00:02:44,710
+But let's take a look at the profile now. So.
+
+30
+00:02:44,710 --> 00:02:50,440
+Oh, demon power. You're good, though. The first thing we can do, actually, is get rid of some of this noise.
+
+31
+00:02:50,440 --> 00:02:54,000
+You've got some content processes that are just not doing anything like this one here.
+
+32
+00:02:54,000 --> 00:02:59,650
+Number one. And number two. So I'm going to get rid of those. You can go away.
+
+33
+00:02:59,650 --> 00:03:03,370
+So now we have more room here. We've got the main thread in the parent process.
+
+34
+00:03:03,370 --> 00:03:08,890
+We have content process three, which is doing some stuff, and we've got the compositor, which is doing a lot.
+
+35
+00:03:08,890 --> 00:03:13,930
+But one thing I want to point out right away is that looking at the top here, I'm not seeing a whole lot of Jinkx.
+
+36
+00:03:13,930 --> 00:03:19,540
+And this is something that kind of the gecko profiler's really good at finding is jank.
+
+37
+00:03:19,540 --> 00:03:24,310
+So if this, for example, ends up being some kind of networking problem or like the networking thread
+
+38
+00:03:24,310 --> 00:03:29,590
+is taking a while to do stuff that we might not be able to detect from this.
+
+39
+00:03:29,590 --> 00:03:33,910
+But we'll do our best. And I'm now joined by Jeff from the graphics team.
+
+40
+00:03:33,910 --> 00:03:39,910
+Welcome, Jeff. Welcome to the room. I'm going to quickly repeat and catch you up.
+
+41
+00:03:39,910 --> 00:03:47,230
+This user was going to some page and it was slow. Is this like Diablo three dot com page on Linux?
+
+42
+00:03:47,230 --> 00:03:52,670
+Yeah, it's amazing. I can absolutely send you links. So I'm going to send you a link.
+
+43
+00:03:52,670 --> 00:04:02,140
+I'll send you both this in the hash graphics room. Oh, just going to join that chat room in a sec.
+
+44
+00:04:02,140 --> 00:04:06,880
+That's cool. Not so cool.
+
+45
+00:04:06,880 --> 00:04:11,040
+All right. So there's the link.
+
+46
+00:04:11,040 --> 00:04:17,070
+Though I'm a little bit worried that we're not going to get much out of it simply because I'm not seeing a whole lot of jank,
+
+47
+00:04:17,070 --> 00:04:24,230
+which makes me worry that this is like me, like networking or something.
+
+48
+00:04:24,230 --> 00:04:28,450
+Like, I'm just going to zoom in on this morning or just love the power of the prophet.
+
+49
+00:04:28,450 --> 00:04:34,770
+Maybe the user waited for more than 25 seconds to see the light of Trump's.
+
+50
+00:04:34,770 --> 00:04:41,100
+After the problem happens, yeah, it's possible it's gone off screen, although I, I think, like, if we look at this,
+
+51
+00:04:41,100 --> 00:04:46,450
+we'll see what was being it, what we were attempting to paint, probably like what page was being loaded.
+
+52
+00:04:46,450 --> 00:04:53,910
+[INAUDIBLE], [INAUDIBLE]. That was all. The giant bug was your only present in the current process, so nothing in the content was hanging.
+
+53
+00:04:53,910 --> 00:05:01,840
+That's true. It looks like we were painting this like you do battle dot net thing, which is,
+
+54
+00:05:01,840 --> 00:05:06,400
+if I remember correctly, from my Starcraft days, that's blizzard stuff.
+
+55
+00:05:06,400 --> 00:05:11,620
+Probably has to do with Diablo three, but yeah, there is no jank in here.
+
+56
+00:05:11,620 --> 00:05:15,610
+So to reiterate, one of two things have happened, has happened.
+
+57
+00:05:15,610 --> 00:05:23,800
+Either the information is long gone because we fell off the end of the circular buffer here and we didn't dump the profile on time
+
+58
+00:05:23,800 --> 00:05:32,260
+or we're the problem is in another thread that we're not capturing or it's just not something that can be seen using the profiler.
+
+59
+00:05:32,260 --> 00:05:36,580
+Is the all this activity on the compositor worth worth looking at?
+
+60
+00:05:36,580 --> 00:05:42,760
+Or is that not the point where compositing all of the all.
+
+61
+00:05:42,760 --> 00:05:54,730
+Yeah. There's no time where compositing. Go to the Web page and see if it has an animation.
+
+62
+00:05:54,730 --> 00:06:04,780
+OK. So let me pull up the link. This time we're working on.
+
+63
+00:06:04,780 --> 00:06:13,870
+Tom. OK, we're positing that 60 is four oh.
+
+64
+00:06:13,870 --> 00:06:19,360
+Let me reread what the reporter said. Trying to go to the altitude, to come there under a page of rankings which would blanket this.
+
+65
+00:06:19,360 --> 00:06:23,150
+That takes forever. So maybe going here is actually the problem, not there.
+
+66
+00:06:23,150 --> 00:06:36,790
+Are these media fringing. But they're all very low.
+
+67
+00:06:36,790 --> 00:06:42,600
+OK, so. You.
+
+68
+00:06:42,600 --> 00:06:49,850
+Rankings. So I just click on rankings and we're waiting for the network.
+
+69
+00:06:49,850 --> 00:06:58,020
+I wonder if this is the animation that was causing the composites of reality. It is just like the video.
+
+70
+00:06:58,020 --> 00:07:01,790
+Oh, yeah. This is taking a while. Like, I just clicked on that. Oh.
+
+71
+00:07:01,790 --> 00:07:04,730
+And then it showed up eventually after I clicked on it again.
+
+72
+00:07:04,730 --> 00:07:11,680
+So maybe this that's starting to smell like maybe a networking problem that might be on their side, might be on our side.
+
+73
+00:07:11,680 --> 00:07:17,150
+But I clicked it once. Now it shows up for the first time. It took a while. I don't think we're going to get much.
+
+74
+00:07:17,150 --> 00:07:22,100
+You said in this profile. Hey, how's it going, boss?
+
+75
+00:07:22,100 --> 00:07:27,890
+All right. We're joined by boss, who is going to also be looking at profiles with us.
+
+76
+00:07:27,890 --> 00:07:35,130
+If you want, it's optional. Sure. All right. Come on in. Pull up a chair. We're not all that.
+
+77
+00:07:35,130 --> 00:07:38,450
+We'll look at that. It's 10 cookies. Everyone does the next. Oh, yeah.
+
+78
+00:07:38,450 --> 00:07:42,500
+Let's look at the next one. OK. So thank you very much.
+
+79
+00:07:42,500 --> 00:07:50,750
+We're going to be looking at this next profile where I submitted this one where we were I was switching between tabs.
+
+80
+00:07:50,750 --> 00:07:55,220
+I went back to this other tab and it took a while. So, boom, big profile here.
+
+81
+00:07:55,220 --> 00:08:00,830
+You know, we're doing. Need me required to be synchronous with the story.
+
+82
+00:08:00,830 --> 00:08:04,910
+I think someone is currently working on making cookies.
+
+83
+00:08:04,910 --> 00:08:11,840
+A depressing one. Yeah, that's one hundred and twenty one milliseconds.
+
+84
+00:08:11,840 --> 00:08:17,630
+Right. Here is this. This is on OSX. OK. Let me get rid of some stuff here.
+
+85
+00:08:17,630 --> 00:08:21,330
+Here is one. OK.
+
+86
+00:08:21,330 --> 00:08:28,050
+So this was a long rast rise and SPG stuff is probably yeah.
+
+87
+00:08:28,050 --> 00:08:33,210
+I'm painting maybe the all those graphs on the health dashboard.
+
+88
+00:08:33,210 --> 00:08:38,210
+I still. So long as Fiji there.
+
+89
+00:08:38,210 --> 00:08:44,470
+I don't know if that's. A lot of us, Fiji looks pretty healthy.
+
+90
+00:08:44,470 --> 00:08:49,630
+OK. Well, it's only part of it.
+
+91
+00:08:49,630 --> 00:08:52,750
+Remember, own home web ranter will help us. OK.
+
+92
+00:08:52,750 --> 00:09:00,920
+Can you check where maybe we go into basically a manager, Bill Gates, here, and once you take the helm parallel.
+
+93
+00:09:00,920 --> 00:09:05,340
+Sure. It's just that this is a painted layer.
+
+94
+00:09:05,340 --> 00:09:13,430
+Yeah. And then in the content of it, you've got to draw something that requires a basic management and then off major thing.
+
+95
+00:09:13,430 --> 00:09:19,390
+Well, what is it? Not necessarily. It doesn't tell us.
+
+96
+00:09:19,390 --> 00:09:26,890
+I was expecting there. We're not, you know. Oh. On some kind of inactive natural.
+
+97
+00:09:26,890 --> 00:09:32,650
+Right, yeah, not I know how much could be in the city.
+
+98
+00:09:32,650 --> 00:09:37,570
+Would it help if we went to the page itself right now with that? Do we have any tools that would help you find one?
+
+99
+00:09:37,570 --> 00:09:41,950
+The thing is, we do. We have displayed this dumping. But it might not be responsible.
+
+100
+00:09:41,950 --> 00:09:47,080
+Probably. Maybe it's just a lot of things to wait. OK.
+
+101
+00:09:47,080 --> 00:09:51,460
+There's also a long compositor here. Eighty six milliseconds on time.
+
+102
+00:09:51,460 --> 00:09:59,110
+It is texture, texture, a butcher's just waiting that can be texture.
+
+103
+00:09:59,110 --> 00:10:03,050
+Just submitting data. Buffalo can be anything. OK.
+
+104
+00:10:03,050 --> 00:10:10,190
+Is this swashbucklers? Are you saying that's extra above 80?
+
+105
+00:10:10,190 --> 00:10:14,610
+So soft buffers will basically just do vital work?
+
+106
+00:10:14,610 --> 00:10:25,030
+Hard to say exactly what it is. OK, there's Emily, texture for flavor, texture of later on, OK?
+
+107
+00:10:25,030 --> 00:10:32,130
+But that's the user. Does the user portion them copy for attention texture?
+
+108
+00:10:32,130 --> 00:10:43,240
+No was. Telson.
+
+109
+00:10:43,240 --> 00:10:54,920
+But just copy it into. And efficient thing is that the page does this like big paint right here.
+
+110
+00:10:54,920 --> 00:10:59,750
+And then, like not long after a couple of milliseconds later goes to other paints.
+
+111
+00:10:59,750 --> 00:11:03,800
+One right after the other. This one's also super long.
+
+112
+00:11:03,800 --> 00:11:09,100
+But that raspberries, that long raspberries does not respond to it.
+
+113
+00:11:09,100 --> 00:11:14,450
+Yeah. No, not like this. Next line is like a super diner.
+
+114
+00:11:14,450 --> 00:11:19,180
+The restoration finishes here. All right, so is not.
+
+115
+00:11:19,180 --> 00:11:25,830
+What's that second restaurant that just this one man. Now the one you just like this one.
+
+116
+00:11:25,830 --> 00:11:45,780
+That's just political. The. The parent was also busy doing stuff during this time as well.
+
+117
+00:11:45,780 --> 00:11:51,850
+You were painting in the parent and waiting for.
+
+118
+00:11:51,850 --> 00:12:06,260
+Nothing from App Kid. As sexy as as slick as being must be, Natasa.
+
+119
+00:12:06,260 --> 00:12:16,330
+For how long? One hundred and eight milliseconds asking for the over's.
+
+120
+00:12:16,330 --> 00:12:27,850
+That's interesting. That part is a lot more.
+
+121
+00:12:27,850 --> 00:12:35,970
+Two recent Ryong Murchison's one was. And we know right over my message.
+
+122
+00:12:35,970 --> 00:12:39,540
+Isn't that beautiful? That's the whole point this way.
+
+123
+00:12:39,540 --> 00:12:49,070
+You know, it's not like do a system cause what message Travis does when it wasn't people was a little process.
+
+124
+00:12:49,070 --> 00:12:58,560
+Yeah. So this is a call to the Windows Server. So what happens here is we prekop you, which areas in the window are Dragonball?
+
+125
+00:12:58,560 --> 00:13:07,320
+So that even if the crop freezes, you can still drag the window in exactly the right regions and don't for example, if you want to move to the.
+
+126
+00:13:07,320 --> 00:13:14,870
+I think you're asking, Marcus. Is it possible that this blocks some sort of message getting no response from our own contact process?
+
+127
+00:13:14,870 --> 00:13:22,500
+No, I don't think so. I think this just waits for the windows over to finish whatever it's doing.
+
+128
+00:13:22,500 --> 00:13:26,690
+That's a long time. It's an old I would agree.
+
+129
+00:13:26,690 --> 00:13:32,470
+So for something like this, we'd probably want something more like instruments to tell us what the rest of the operating system was doing.
+
+130
+00:13:32,470 --> 00:13:38,220
+Call him. It's also stopping right at the time where we stop compositing.
+
+131
+00:13:38,220 --> 00:13:42,990
+That's is it. That's what the reason I ask, is it possible for.
+
+132
+00:13:42,990 --> 00:13:47,420
+Yeah. Yeah. It's waiting for something from the windows or one of the windows servers.
+
+133
+00:13:47,420 --> 00:13:57,530
+Busy compositing. And that's what this us. This is.
+
+134
+00:13:57,530 --> 00:14:01,490
+There anything actionable there? It's like me.
+
+135
+00:14:01,490 --> 00:14:10,570
+The view is. Like, well, like the dashboard, the web,
+
+136
+00:14:10,570 --> 00:14:18,760
+the quantum dashboard you make to keep us busy or just like the we need to we are screwing yourselves in one place, catching yourselves another.
+
+137
+00:14:18,760 --> 00:14:25,550
+Yeah. The question is, what are we you get me up here.
+
+138
+00:14:25,550 --> 00:14:41,930
+Super busy. It's not it's not. Your intelligence is blocking both the main threat and it is the content process also waiting.
+
+139
+00:14:41,930 --> 00:14:47,170
+I. We're waiting for cookies, which is being blocked by the parent.
+
+140
+00:14:47,170 --> 00:14:52,180
+Oh, by. So it's like, yeah, that's not the one where the decimal.
+
+141
+00:14:52,180 --> 00:14:57,700
+That is correct. That is correct. This one is just doing long paints. That's kind of nice.
+
+142
+00:14:57,700 --> 00:15:04,940
+We do have some heroism. Yeah. Stupid photo of the second.
+
+143
+00:15:04,940 --> 00:15:12,360
+So there is. Than they thread doing a system call.
+
+144
+00:15:12,360 --> 00:15:27,020
+So called long pains in the content process. We don't know for sure whether it's the GOP blocking the main threat or just the fact that the.
+
+145
+00:15:27,020 --> 00:15:36,240
+That bothers writers. It's possible that. On their threat, it's actually doing something else.
+
+146
+00:15:36,240 --> 00:15:41,880
+I mean, we can look at the composer's clothes, right? Yeah.
+
+147
+00:15:41,880 --> 00:15:46,860
+We won't be able to see anything that happens on the tube. That's right. OK, so we can sense the interest.
+
+148
+00:15:46,860 --> 00:15:52,450
+What is the Jeep you doing? I might be waiting for text to upload art, but you're going to be like your intro.
+
+149
+00:15:52,450 --> 00:15:56,490
+But it shouldn't be like, yeah, but it could be working.
+
+150
+00:15:56,490 --> 00:16:02,550
+So it could be waiting for something else different.
+
+151
+00:16:02,550 --> 00:16:08,930
+That is also. Right. It doesn't, you know, RGV.
+
+152
+00:16:08,930 --> 00:16:14,810
+Yes, it probably is true.
+
+153
+00:16:14,810 --> 00:16:18,770
+Mary. Do we have anything?
+
+154
+00:16:18,770 --> 00:16:27,870
+Do we have anything at all? Is X like we have a windows where we say, how much time are you up for Chip, Jim?
+
+155
+00:16:27,870 --> 00:16:31,250
+So how much like you? Yeah, yeah.
+
+156
+00:16:31,250 --> 00:16:39,490
+Yeah. But like, I mean, with two kids are the type of free time to kind of.
+
+157
+00:16:39,490 --> 00:16:43,650
+I know what I meant was doing like on windows you it if you just turn on the air.
+
+158
+00:16:43,650 --> 00:16:52,340
+Yes. Oh I see. Whether that was implemented format or not.
+
+159
+00:16:52,340 --> 00:16:59,690
+But. No, not at all, Daddy.
+
+160
+00:16:59,690 --> 00:17:07,020
+So here's another like another composite that's blocking the main thread in the parent process.
+
+161
+00:17:07,020 --> 00:17:19,030
+This is not. This is asking for. That is something that curser, despite suffering with setting the Kosovo, OK?
+
+162
+00:17:19,030 --> 00:17:25,360
+Why does this. The main threat, does this anything, any EU?
+
+163
+00:17:25,360 --> 00:17:29,530
+Does any. Is X like window manager cold?
+
+164
+00:17:29,530 --> 00:17:38,380
+Just walk on the window managers composition. But it isn't necessarily.
+
+165
+00:17:38,380 --> 00:17:46,410
+I don't feel like there's a I don't know why said Curser would block for our competition.
+
+166
+00:17:46,410 --> 00:17:53,180
+There is there's like a thread in the winner's circle with exercise.
+
+167
+00:17:53,180 --> 00:18:02,300
+For whatever reason. Elizabeth.
+
+168
+00:18:02,300 --> 00:18:05,000
+That would.
+
+169
+00:18:05,000 --> 00:18:14,900
+Well, basically means that the Kambala basically means you lost your thread like that, the main threat becomes pretty easily posing a threat.
+
+170
+00:18:14,900 --> 00:18:20,470
+It sort of depends what's blocking Windows Server.
+
+171
+00:18:20,470 --> 00:18:26,340
+Well, in this case, what we're getting here is sending real message that if for some reason that's blocking the number,
+
+172
+00:18:26,340 --> 00:18:33,320
+we don't know what's blocking or. I don't know why the Indus River isn't serious.
+
+173
+00:18:33,320 --> 00:18:40,160
+But it serves it right after our observations. We don't know why, though, isn't it?
+
+174
+00:18:40,160 --> 00:18:49,750
+Well, we don't know in what order, like the composite could be waiting for the same thing.
+
+175
+00:18:49,750 --> 00:18:55,660
+They didn't the samples. It wasn't Greenbay inside.
+
+176
+00:18:55,660 --> 00:19:02,920
+But inside the dispatch. There is a positive trend for this year, and it was.
+
+177
+00:19:02,920 --> 00:19:10,960
+Over cheap use now. The battle also putting them in a sermon.
+
+178
+00:19:10,960 --> 00:19:16,930
+So that might not even say anything about how busy, busy news. OK, so we might.
+
+179
+00:19:16,930 --> 00:19:32,060
+No. Or both the compositor red and the main red and the parent process, Martin, are waiting for something pleasingly lately different.
+
+180
+00:19:32,060 --> 00:19:48,740
+If. Different waiting for the Windows Server to service their requests, their work, whatever.
+
+181
+00:19:48,740 --> 00:20:00,190
+And it's hard for us to figure out what the Windows Server is.
+
+182
+00:20:00,190 --> 00:20:08,610
+Windows Server is doing here with just the geko profile, but instruments would help.
+
+183
+00:20:08,610 --> 00:20:13,160
+And it's just hard to imagine what else could do the windows.
+
+184
+00:20:13,160 --> 00:20:21,060
+Yeah. Or a great idea that always said, if you were blocks is saying.
+
+185
+00:20:21,060 --> 00:20:36,790
+Look, it doesn't seem with those two things. I find that hard if the general assumption is still that the window server, a compositing was lost, then.
+
+186
+00:20:36,790 --> 00:20:40,860
+We find in most cases. They were Mary's mother.
+
+187
+00:20:40,860 --> 00:20:48,520
+Are you suggesting that when a video game, for example, is running at a frame rate of 30, SBX 20?
+
+188
+00:20:48,520 --> 00:20:53,220
+Yes. Which isn't that exceptional that it now also delays mass event.
+
+189
+00:20:53,220 --> 00:20:59,130
+Naples only handles mass events once every three milliseconds.
+
+190
+00:20:59,130 --> 00:21:10,260
+That seems unlikely. Well, I'm not handling most of it, but updating or setting stays that the window of set it becomes.
+
+191
+00:21:10,260 --> 00:21:19,910
+I want to test. Maybe, maybe not changing her story. Yeah, anybody is going to draw your parenting.
+
+192
+00:21:19,910 --> 00:21:23,460
+Most video games actually have to go to the person directly.
+
+193
+00:21:23,460 --> 00:21:35,830
+Here's something. After three, use James.
+
+194
+00:21:35,830 --> 00:21:42,510
+If you came in 20 FBI, you they wanted you to move your detectors around with 60.
+
+195
+00:21:42,510 --> 00:21:48,000
+By switching off games. So I guess the machine was busy.
+
+196
+00:21:48,000 --> 00:21:55,110
+And the information that like the key here is that all the key information that we need is actually on the profile.
+
+197
+00:21:55,110 --> 00:22:00,690
+That's what I'm getting from all this, because the key information is what was the window server waiting on?
+
+198
+00:22:00,690 --> 00:22:06,910
+We can't get that from. As far as the blockages to the means and process me.
+
+199
+00:22:06,910 --> 00:22:11,570
+Yeah, OK. Is there anything else we want to look at in this profile before we move out of the last one?
+
+200
+00:22:11,570 --> 00:22:18,090
+No. OK. Who do you think Kleinsorge will improve this year?
+
+201
+00:22:18,090 --> 00:22:24,840
+Oh yeah. Our current theory is that the Jitu is waiting for the texture of blood to complete and text texture.
+
+202
+00:22:24,840 --> 00:22:30,250
+Upload something that you can buy like copy this.
+
+203
+00:22:30,250 --> 00:22:40,390
+And that's often. And by having this through this, by finishing was a client storage work.
+
+204
+00:22:40,390 --> 00:22:47,410
+But I'll put the bug in later.
+
+205
+00:22:47,410 --> 00:22:51,280
+Feel free to edit that and insert above. OK.
+
+206
+00:22:51,280 --> 00:22:55,830
+Trying to. Oh, I might need to ask you as an editor and we'll do it later.
+
+207
+00:22:55,830 --> 00:23:00,310
+OK. So last profile also from me. I think no.
+
+208
+00:23:00,310 --> 00:23:04,840
+That was the only two. I thought I had a third one. I don't think we're done here, folks,
+
+209
+00:23:04,840 --> 00:23:18,110
+unless there's a profile that either anyone here that they've got kicking around that they want to look at or call it is not.
+
+210
+00:23:18,110 --> 00:23:22,260
+All right, then, we're done here. That was a short one. OK, well, I want to thank my guests.
+
+211
+00:23:22,260 --> 00:23:26,040
+They very much Marga's they very much was welcome. Thank you, Jeff.
+
+212
+00:23:26,040 --> 00:23:30,450
+And that's it. So no upset next week traveling or as all of us are traveling.
+
+213
+00:23:30,450 --> 00:23:36,683
+And and we'll try to again, we gather to think about.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

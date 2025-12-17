@@ -1,0 +1,2705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding (mconley livehacks on Firefox) - Episode 25</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding (mconley livehacks on Firefox) - Episode 25</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=db619ba7-8e41-446a-ab29-ac1600012f3b</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=db619ba7-8e41-446a-ab29-ac1600012f3b">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:11,690 --> 00:00:22,410
+Welcome. Hello and welcome to Episode 25 of The Joy of Coding.
+
+2
+00:00:22,410 --> 00:00:27,420
+I'm Mike Conley. We're going to be hacking on Firefox stuff today.
+
+3
+00:00:27,420 --> 00:00:32,040
+It's going to be a great day. So let's get down to business.
+
+4
+00:00:32,040 --> 00:00:36,480
+Let me just switch you to my screen. There we go.
+
+5
+00:00:36,480 --> 00:00:41,220
+So let me show you the agenda for today. Today is August 12th.
+
+6
+00:00:41,220 --> 00:00:45,090
+OK. First thing I should point out is that I'm giving you advanced warning.
+
+7
+00:00:45,090 --> 00:00:50,640
+Next week's episode will probably be the last episode for a couple of weeks.
+
+8
+00:00:50,640 --> 00:00:57,450
+I'm going away. I'm going on vacation. And so there are a couple of weeks there where there just won't be any weekly episodes.
+
+9
+00:00:57,450 --> 00:01:05,790
+I'm sorry, but I will be back for the 16th of September, so I'll be gone for August one, 6th, September 2nd and September 9th.
+
+10
+00:01:05,790 --> 00:01:11,370
+But I will be back with Episode 27 on the 16th of September.
+
+11
+00:01:11,370 --> 00:01:12,960
+So that's what's going on.
+
+12
+00:01:12,960 --> 00:01:19,620
+So if the week after next you like, where is the episode and you think that maybe the show's been canceled, there's something.
+
+13
+00:01:19,620 --> 00:01:26,610
+Not the case. Just a minor hiatus. So that's what's going on for today.
+
+14
+00:01:26,610 --> 00:01:32,370
+What are we working on? So I had two things, two things I wanted to potentially work on today.
+
+15
+00:01:32,370 --> 00:01:38,310
+And I kind of shouted out both options on Twitter. And one person like said, I'd rather you worked on this.
+
+16
+00:01:38,310 --> 00:01:42,600
+So I will well, I will follow. Like I said, it's basically a coin toss.
+
+17
+00:01:42,600 --> 00:01:46,950
+And that fellow on Twitter helped me lean in one direction.
+
+18
+00:01:46,950 --> 00:01:55,260
+So it's not much of a coin to us, but it's where I'm going to make it so that whenever we're profiling and by profiling,
+
+19
+00:01:55,260 --> 00:02:04,650
+I mean gathering a performance profile which is useful for like determining what's making Geko and Firefox be slow when we're gathering profiles.
+
+20
+00:02:04,650 --> 00:02:10,680
+When we when we have profiling turn on if a process starts or ends before we've actually gathered the profile.
+
+21
+00:02:10,680 --> 00:02:15,870
+Currently, we lose any profile data from that process when it ends.
+
+22
+00:02:15,870 --> 00:02:24,060
+What I want to do is make it so that if the content process or plug in process ends before the parent can request the profiles
+
+23
+00:02:24,060 --> 00:02:31,830
+that on exit the process will like cough up a profile for the parent to hold on to until the user requests the profile.
+
+24
+00:02:31,830 --> 00:02:39,330
+So that way we don't actually lose any data because right now we have this like performance test called Tepes s.
+
+25
+00:02:39,330 --> 00:02:48,030
+We get T.P s reports. It was intentionally called CBS. We have this test that measures how long it takes to switch between tabs.
+
+26
+00:02:48,030 --> 00:02:51,410
+That's very useful for perhaps switching performance, especially with ETN.
+
+27
+00:02:51,410 --> 00:02:58,110
+Ask for types. Switching performance is a thing we're working on and we want to be able to gather profiles from our
+
+28
+00:02:58,110 --> 00:03:03,120
+testing machines to figure out ways of making it faster and and getting rid of the bottlenecks.
+
+29
+00:03:03,120 --> 00:03:08,910
+But we can't gather the profiles because after the test is finished and we tell the content process,
+
+30
+00:03:08,910 --> 00:03:12,180
+OK, or we tell Geko, go get a performance profile.
+
+31
+00:03:12,180 --> 00:03:20,440
+The content process that was being run has closed out because we closed the last remote browser or remote process browser.
+
+32
+00:03:20,440 --> 00:03:23,790
+And when the last remote process browser goes away, Geko shuts down.
+
+33
+00:03:23,790 --> 00:03:31,440
+The content process naturally doesn't just keep it around. So that's that's the thing I want to fix with this bugs.
+
+34
+00:03:31,440 --> 00:03:40,260
+This is bug one one oh three oh nine four. It's actually so I was I made a mistake.
+
+35
+00:03:40,260 --> 00:03:48,290
+I originally thought that we weren't getting these profiles from the content process for TPM because when we started profiling,
+
+36
+00:03:48,290 --> 00:03:55,230
+a different content process was starting up and we weren't getting profiles from it because currently
+
+37
+00:03:55,230 --> 00:04:00,330
+if you start profiling and then another content process starts up or a plugin process starts up,
+
+38
+00:04:00,330 --> 00:04:04,590
+those new processes don't know that they need to start profiling. I thought that's what I need to fix.
+
+39
+00:04:04,590 --> 00:04:08,280
+And so I spent a couple hours and I wrote a couple of patches to fix it.
+
+40
+00:04:08,280 --> 00:04:13,470
+But it turns out it's more about the processes ending before they can cough up the profiles.
+
+41
+00:04:13,470 --> 00:04:19,260
+So this the initial work that I did is not going to solve the problem.
+
+42
+00:04:19,260 --> 00:04:27,120
+It's still useful and I'm going to build on top of it. And that's. So I should probably change the title of the bug to be more accurate.
+
+43
+00:04:27,120 --> 00:04:37,920
+Of what? Like what the work is going on here. So it was start profiling subprocesses if the parent process is already running.
+
+44
+00:04:37,920 --> 00:04:46,250
+So, I mean, change that to, like get profiles from subprocesses that.
+
+45
+00:04:46,250 --> 00:05:01,040
+That have run or will run during. Profiling that will or will run while profiling.
+
+46
+00:05:01,040 --> 00:05:10,850
+Now instead. Get, get. Gather. Because we'll be using the profile gather. So I'm going to be modifying this bug somewhat.
+
+47
+00:05:10,850 --> 00:05:18,840
+Oh, I have a feeling that this. I don't know.
+
+48
+00:05:18,840 --> 00:05:24,820
+Oh. Mm hmm, maybe I should do this in a separate bag.
+
+49
+00:05:24,820 --> 00:05:31,580
+That depends on this. That might be a better idea.
+
+50
+00:05:31,580 --> 00:05:42,620
+Profile dumping. So I might open up a new bug or.
+
+51
+00:05:42,620 --> 00:05:52,180
+The problem is dependencies with it be good if Mom's review allowed me to, like, push and then have a review requests open on different bugs.
+
+52
+00:05:52,180 --> 00:05:58,720
+But as it stands, I think it currently puts it on the same bug feed like the the oldest commit in the in the push.
+
+53
+00:05:58,720 --> 00:06:09,880
+So I might just keep it all in here for simplicity's sake instead of splitting it all out.
+
+54
+00:06:09,880 --> 00:06:19,390
+No. No, I'm just I'm gonna do it the right way. I'm gonna clone this bug and I'm going to create a new bug.
+
+55
+00:06:19,390 --> 00:06:27,060
+And I'm going to make it a dependency, this other one. Cloning should already hook up that dependency, I think.
+
+56
+00:06:27,060 --> 00:06:42,370
+I gather profiles make it possible to gather profiles from processes that have exited.
+
+57
+00:06:42,370 --> 00:06:52,060
+When a sub process exits before the parent process, while profiling, while profiling, when a sub process exists,
+
+58
+00:06:52,060 --> 00:07:00,400
+before the parent process requests the profiles, we lose the profile data from that process, sub process.
+
+59
+00:07:00,400 --> 00:07:03,260
+We should make sure we can continue.
+
+60
+00:07:03,260 --> 00:07:22,450
+We the sub process should cough up its perform performance profile data before it exits if it detects that the parent is currently profiling.
+
+61
+00:07:22,450 --> 00:07:25,810
+So it blocks now. It doesn't block. That depends on that.
+
+62
+00:07:25,810 --> 00:07:41,640
+That's true. Block same bugs. That's actually exactly what I want. I'm going to make tracking questionmark and I will take this one.
+
+63
+00:07:41,640 --> 00:07:59,490
+Cor. Uh. So I've just live hacking for the next hour and a half, someone in Iasi has asked if I can help them with something.
+
+64
+00:07:59,490 --> 00:08:04,560
+It's printing related. Maybe I don't really want to get distracted.
+
+65
+00:08:04,560 --> 00:08:12,420
+But, I mean, that's reality. I mean, so jail. He says if anyone has any advice on how to reproduce this bug locally, that'd be nice.
+
+66
+00:08:12,420 --> 00:08:17,670
+Otherwise, I'll be beating my head against the printing code for a while looking.
+
+67
+00:08:17,670 --> 00:08:25,840
+Although. Hope it's cool that I'm alive.
+
+68
+00:08:25,840 --> 00:08:32,540
+Hacking, looking, I'm sure it's fine. So this is what Jed's mentioning.
+
+69
+00:08:32,540 --> 00:08:37,750
+So I've completely shifted gears for a second guess. Someone's asking for help, and I want to see if I can help them real quick.
+
+70
+00:08:37,750 --> 00:08:46,000
+So I'm the developer of the printed add on. So Jael D, who is working on this particular bug, has this pointing to this comment from someone else.
+
+71
+00:08:46,000 --> 00:08:50,290
+J.D. Jed. So Jed, I'm the developer that printed add on. I'm currently migrating to EA Tennis.
+
+72
+00:08:50,290 --> 00:08:55,630
+That's great. We feature in printhead. There's no work me to ask. Is saving the dome as web page complete?
+
+73
+00:08:55,630 --> 00:09:01,460
+I've tried using the new save browser function, but it hangs that throwing and exceptions are logging in the error messages that dawn.
+
+74
+00:09:01,460 --> 00:09:09,490
+The slightly unusual cause is the stack cloned print preview done generally by crate's that static clone and Stockmann,
+
+75
+00:09:09,490 --> 00:09:11,980
+which is called from an IT in its print object,
+
+76
+00:09:11,980 --> 00:09:17,500
+which is called from for preview and its print engine using save document to save this print preview down.
+
+77
+00:09:17,500 --> 00:09:23,620
+Waterfind early version of Firefox. Gellatly wants to reproduce.
+
+78
+00:09:23,620 --> 00:09:31,800
+So are you testing this with t w devs add on?
+
+79
+00:09:31,800 --> 00:09:55,010
+Print at it. Because that's what D.W. Dev works on, is printed at.
+
+80
+00:09:55,010 --> 00:10:16,240
+Um. You might find it easiest to ask D.W. Dev to post the.
+
+81
+00:10:16,240 --> 00:10:21,250
+It sounds like it won't work with tennis currently. All right.
+
+82
+00:10:21,250 --> 00:10:31,220
+But if he can get you to install a development version of the add on that hangs.
+
+83
+00:10:31,220 --> 00:10:48,280
+And you got us here. OK, so back to what I was doing before.
+
+84
+00:10:48,280 --> 00:10:55,690
+So what's the what's the plan? I say that there is no plan and yet I have been thinking about this, but just a little bit.
+
+85
+00:10:55,690 --> 00:11:02,890
+So I should actually actually I've opened a new blog to do this work.
+
+86
+00:11:02,890 --> 00:11:11,200
+This is Bug. What's the bug? This bug.
+
+87
+00:11:11,200 --> 00:11:14,280
+Quickly linked that.
+
+88
+00:11:14,280 --> 00:11:21,870
+So if you're following along, if you're watching this video and you're following along down in the additional link section of Air Musila,
+
+89
+00:11:21,870 --> 00:11:25,860
+there should be a link to this, to the agenda, and that should have a link to these notes.
+
+90
+00:11:25,860 --> 00:11:31,440
+And you should be able to link to like this, this bug as well. In fact, I will put this link to this bug in the notes.
+
+91
+00:11:31,440 --> 00:11:36,320
+I'll create some new notes. Here.
+
+92
+00:11:36,320 --> 00:11:41,020
+Boom. So when they replaced that with this.
+
+93
+00:11:41,020 --> 00:11:53,320
+And let's create some new notes, so new bug, our new notes.
+
+94
+00:11:53,320 --> 00:12:01,710
+Copy. Public link. And put it in the agenda. There you go.
+
+95
+00:12:01,710 --> 00:12:03,960
+And if you're watching this on, like my blog or on YouTube or something,
+
+96
+00:12:03,960 --> 00:12:07,710
+a link to this agenda should be in the description or just below the video or something.
+
+97
+00:12:07,710 --> 00:12:14,470
+I've done my job right. So what I want to do is copy a lot of this.
+
+98
+00:12:14,470 --> 00:12:23,590
+All right here. OK.
+
+99
+00:12:23,590 --> 00:12:30,440
+So this is the job expose profile. So there's this thing called the profile gatherer.
+
+100
+00:12:30,440 --> 00:12:35,740
+I had originally done some work with the profilers so that we can gather profiles from subprocesses asynchronously,
+
+101
+00:12:35,740 --> 00:12:40,270
+because before you could get into like Dedlock deadlocks if he tried to get them synchronously.
+
+102
+00:12:40,270 --> 00:12:46,000
+Now do it asynchronously using this tool called profile gather. And that profile gather only exists during the time.
+
+103
+00:12:46,000 --> 00:12:51,460
+Whenever you want to, like, get the profile. We like, instantiate it. Get the profile on and kill it.
+
+104
+00:12:51,460 --> 00:12:56,470
+And jael these back. What does he say. Says I guess I can just answer the NESA info with an.
+
+105
+00:12:56,470 --> 00:13:07,880
+I was hoping though so I could do something with the info we have from.
+
+106
+00:13:07,880 --> 00:13:30,780
+Well. Start sharing by Creese and Star, who is called from a print object, was called from Print Preview and as print engine.
+
+107
+00:13:30,780 --> 00:13:34,500
+Perhaps you can get the hang.
+
+108
+00:13:34,500 --> 00:13:46,490
+By attempting to save. Browser print preview.
+
+109
+00:13:46,490 --> 00:14:02,750
+But I'm really not sure what dad is doing here.
+
+110
+00:14:02,750 --> 00:14:16,910
+Remind me again which os you're on. Sex, there is a way you can trigger the full blown.
+
+111
+00:14:16,910 --> 00:14:29,460
+Print preview mode. That's not a fish I supported or exposed for OSX because there is a way of doing it anyway.
+
+112
+00:14:29,460 --> 00:14:36,190
+So back to here, context, which context, which got to be good at context, would you?
+
+113
+00:14:36,190 --> 00:14:40,400
+OK. So what I want to do is I want to tie the lifetime of the profile,
+
+114
+00:14:40,400 --> 00:14:48,650
+gather to the window of time that we're actually profiling instead of just instantiating and destroying it when we want to get a profile.
+
+115
+00:14:48,650 --> 00:14:51,690
+There's like, well, because there's two phases. There's the recording window.
+
+116
+00:14:51,690 --> 00:14:56,780
+Wherever you are, like recording, you've got like your stopwatch out and you're recording things.
+
+117
+00:14:56,780 --> 00:14:59,180
+And then there's the like getting the actual report.
+
+118
+00:14:59,180 --> 00:15:04,040
+And we are creating the profile gather at that latter stage where we just want to get the report from everybody.
+
+119
+00:15:04,040 --> 00:15:09,080
+But I'm saying we need to get the profile, gather, instantiate and running for the entire recording window,
+
+120
+00:15:09,080 --> 00:15:15,320
+because if a if A subprocess dies during during the profiling window,
+
+121
+00:15:15,320 --> 00:15:23,180
+we want to use the profile, gather to like get the last breath profile from the content process before it shuts down.
+
+122
+00:15:23,180 --> 00:15:27,800
+Jail, he says usually Lennix bails have OSX here.
+
+123
+00:15:27,800 --> 00:15:34,010
+Linux, you don't need to do anything special for getting into print.
+
+124
+00:15:34,010 --> 00:15:42,620
+Preview should be available to you. So maybe try that.
+
+125
+00:15:42,620 --> 00:15:48,820
+Try. Print previewing document.
+
+126
+00:15:48,820 --> 00:15:53,800
+And then in the browser console.
+
+127
+00:15:53,800 --> 00:15:58,030
+Try using save browser on G browser.
+
+128
+00:15:58,030 --> 00:16:03,400
+Selected browser. To see if it causes a Hangu.
+
+129
+00:16:03,400 --> 00:16:08,500
+This is all just guesswork. OK.
+
+130
+00:16:08,500 --> 00:16:21,250
+Let's get out of way. OK? And then we want to expose that profile, gather so that like because we have like a couple of a couple of cases to consider.
+
+131
+00:16:21,250 --> 00:16:26,720
+One is we start profiling and we already have a number of sub processes running.
+
+132
+00:16:26,720 --> 00:16:33,340
+And in that case, we need to alert all of the parent actors for those subprocesses and those Parran actors around in the main process to
+
+133
+00:16:33,340 --> 00:16:40,900
+alert all of those parent actors about the profile gather because they all hold references to the gatherer and like,
+
+134
+00:16:40,900 --> 00:16:48,610
+use it to like. Stuff profiles in once the content processes return the profiles.
+
+135
+00:16:48,610 --> 00:16:58,330
+But why else? So that's like preexisting profiles when we are preexisting content, parent actors, whenever the profiling window starts.
+
+136
+00:16:58,330 --> 00:17:09,610
+Then there's the other case of we're profiling and we open a new process and it needs to know to get a handle, get a reference to the profile, gather.
+
+137
+00:17:09,610 --> 00:17:16,210
+And I think that's the only cases we have to care about where either profiling or not profiling.
+
+138
+00:17:16,210 --> 00:17:21,280
+Nah, sorry. We either a preexisting content process or we are not a preexisting presence.
+
+139
+00:17:21,280 --> 00:17:29,120
+Those are the two cases. And then what we want to do is.
+
+140
+00:17:29,120 --> 00:17:34,110
+Notices that we've stopped profiling have dropped the reference to the profile, gather content,
+
+141
+00:17:34,110 --> 00:17:38,460
+parent notices that we've started profiling, have it grab a reference, the profile, gather at the other case.
+
+142
+00:17:38,460 --> 00:17:43,500
+If content child is shutting down and he knows we're profiling, have it send up a profile of the parent,
+
+143
+00:17:43,500 --> 00:17:47,970
+have the content parent, notify the profile, gather, then make it to the profile, gather.
+
+144
+00:17:47,970 --> 00:17:53,850
+Can hear about those profiles and hold on to them even though we haven't actually asked for it to gather them yet.
+
+145
+00:17:53,850 --> 00:17:58,290
+Just hold onto them. Maybe have a five profile cap on this as is possible.
+
+146
+00:17:58,290 --> 00:18:05,220
+Who knows, maybe in our testing infrastructure or something, we might open and close a thousand subprocesses, which is crazy,
+
+147
+00:18:05,220 --> 00:18:10,980
+but who knows, it could happen if you like, open one remote browser and then shut it down and another and shut it down.
+
+148
+00:18:10,980 --> 00:18:14,820
+You could end up with like a many, many profiles if you're profiling.
+
+149
+00:18:14,820 --> 00:18:20,460
+So we'll probably have a cap of like five. Magic number five. And we can tune that as needs be.
+
+150
+00:18:20,460 --> 00:18:26,550
+And when the actual gabbing starts, have the profile gatherer go and get the profiles from the currently running processes, but also jam in.
+
+151
+00:18:26,550 --> 00:18:30,540
+The ones from the profiles are the subprocesses that have exited.
+
+152
+00:18:30,540 --> 00:18:37,800
+And then we might want to think about like when we drop those gathered profiles right now,
+
+153
+00:18:37,800 --> 00:18:40,830
+I'll probably just like drop them as soon as we gather them.
+
+154
+00:18:40,830 --> 00:18:53,460
+But in the future we might want to like hold onto those dead content process or sub process profiles and hold onto them until the sliding
+
+155
+00:18:53,460 --> 00:19:00,210
+profiling window because it's a circular buffer like as it's like a blackbox profiling performance profiles are like a black box.
+
+156
+00:19:00,210 --> 00:19:06,180
+It's exactly like a black box inside an airplane, which like records what's going on at all times.
+
+157
+00:19:06,180 --> 00:19:10,800
+And a black box is like we'll tape over itself when it reaches the end of it's like storage.
+
+158
+00:19:10,800 --> 00:19:17,520
+It goes right back to the beginning. And that way you've got like a window, sort of a constant window of recorded activity.
+
+159
+00:19:17,520 --> 00:19:24,390
+And when we reach the, like, end of the tape and loop back around, we start racing stuff, the the oldest stuff.
+
+160
+00:19:24,390 --> 00:19:26,190
+And then we we go over it again.
+
+161
+00:19:26,190 --> 00:19:33,570
+And I want to make it so that if we eventually go over that, the top block of time where we'd gotten the the dead subprocess profile.
+
+162
+00:19:33,570 --> 00:19:39,060
+So we just check out those profiles. But I'm probably we'll probably do that later.
+
+163
+00:19:39,060 --> 00:19:42,660
+Oh, it sounds like Jail D has got his STF. Yes.
+
+164
+00:19:42,660 --> 00:19:47,480
+Yes, it does. Plus minus one in this year will hang in terms there's no you. Response card is since Ironside.
+
+165
+00:19:47,480 --> 00:19:51,150
+Thanks. Thanks. I think I know what's going on. OK, great.
+
+166
+00:19:51,150 --> 00:19:56,280
+I was able to help Jayati. Cool. All right. Moving along.
+
+167
+00:19:56,280 --> 00:20:00,120
+Let's see if we can do this stuff. So where are we. What do we got.
+
+168
+00:20:00,120 --> 00:20:05,250
+So I've currently got this patch that like makes it so that if we're,
+
+169
+00:20:05,250 --> 00:20:13,560
+if we start up a content process while we're already profiling content or a plug and process while we're already profiling,
+
+170
+00:20:13,560 --> 00:20:17,160
+then it starts profiling those processes. And that's a good base to build off of.
+
+171
+00:20:17,160 --> 00:20:26,130
+And now it's this stuff. So let's. I've spent a good 20 minutes or so on exposition, so let's let's get down to business.
+
+172
+00:20:26,130 --> 00:20:32,190
+So the first step, let's expose. No, I'm going to change the order here.
+
+173
+00:20:32,190 --> 00:20:37,560
+I'm going to make profile, gather, be alive during the profiling window.
+
+174
+00:20:37,560 --> 00:20:42,810
+So profile gather. Let's change. That's this thing.
+
+175
+00:20:42,810 --> 00:20:54,030
+It's currently created in, whereas it created. Who creates a profile together?
+
+176
+00:20:54,030 --> 00:21:10,480
+This is where DSR comes in very handy. Profile, gather.
+
+177
+00:21:10,480 --> 00:21:20,460
+Gather acing profile. Who creates a profile?
+
+178
+00:21:20,460 --> 00:21:24,560
+Gather? Somewhere, someone. Here we go.
+
+179
+00:21:24,560 --> 00:21:35,910
+When we create a new one. The Gecko sampler.
+
+180
+00:21:35,910 --> 00:21:46,990
+Sampler. The sampler holds a reference to the profile gather.
+
+181
+00:21:46,990 --> 00:21:58,680
+Now, I want to be able to get a reference to the sampler. I profiler is like how XP come exposes.
+
+182
+00:21:58,680 --> 00:22:04,710
+The profiler to other bits of the gecko.
+
+183
+00:22:04,710 --> 00:22:13,280
+And I want to like. Check out this profile that CVP.
+
+184
+00:22:13,280 --> 00:22:19,860
+Sampler. Mm hmm.
+
+185
+00:22:19,860 --> 00:22:32,630
+We might have to, like, drill a hole in order to get this gatherer. Or we make the gatherer thing that the NSA profiler holds on to.
+
+186
+00:22:32,630 --> 00:22:48,230
+So currently. Currently, profile gather is held on to by Geko Sampler.
+
+187
+00:22:48,230 --> 00:22:54,750
+There is no direct access to. Geko Sampler.
+
+188
+00:22:54,750 --> 00:23:03,280
+I don't think. Sticker could pick.
+
+189
+00:23:03,280 --> 00:23:20,720
+Sampler. It's like platform that CBP under Tool's profiler.
+
+190
+00:23:20,720 --> 00:23:32,390
+Yeah, huh? Come on, find it platform. Is.
+
+191
+00:23:32,390 --> 00:23:58,390
+Keko sampler. Mazola sampler.
+
+192
+00:23:58,390 --> 00:24:06,370
+Sampler start there, all these like Mazola specific things in here.
+
+193
+00:24:06,370 --> 00:24:22,600
+We can make Geko Sampler at age.
+
+194
+00:24:22,600 --> 00:24:29,250
+Right now is a private. SRF point her.
+
+195
+00:24:29,250 --> 00:24:46,890
+Maybe I can make it. Return it.
+
+196
+00:24:46,890 --> 00:24:58,270
+Turn it, OK? So plan. Plan of attack, add an access or two or wait.
+
+197
+00:24:58,270 --> 00:25:06,580
+We have to think of it, the creation lifetime as well, because it's the profile gathers only created during two J.S. object, a sink.
+
+198
+00:25:06,580 --> 00:25:14,280
+And when is Gecko's sampler created? Gecko's sampler.
+
+199
+00:25:14,280 --> 00:25:24,900
+Who instantiates a gecko's sampler. Here under a platform, under sampler start.
+
+200
+00:25:24,900 --> 00:25:34,220
+We create a new sampler. So this is would be an excellent opportunity to also create a gather.
+
+201
+00:25:34,220 --> 00:25:39,740
+I wonder if we can combine the sampling, the gather, having these, like individual objects seems a bit silly.
+
+202
+00:25:39,740 --> 00:25:46,360
+Woops. New Gekko's player. Sampler.
+
+203
+00:25:46,360 --> 00:25:50,690
+Does it implement any NSI gunk? It does not.
+
+204
+00:25:50,690 --> 00:25:56,380
+Maybe we wanna keep it that way, in which case having the profile gather be its own class isn't too bad.
+
+205
+00:25:56,380 --> 00:26:01,570
+But basically what we're doing is creating a one to one relationship between the gecko sampler and the profile gatherer,
+
+206
+00:26:01,570 --> 00:26:07,000
+which I don't know if that's useful. So I maybe I will take a note.
+
+207
+00:26:07,000 --> 00:26:13,000
+Consider follow ups. Consider combining profile.
+
+208
+00:26:13,000 --> 00:26:23,820
+Gather with Gecko Sampler. So.
+
+209
+00:26:23,820 --> 00:26:38,580
+Have Keko sampler instantiate and hold a reference to a profile gather on construction.
+
+210
+00:26:38,580 --> 00:27:03,100
+Hold a ref counted reference.
+
+211
+00:27:03,100 --> 00:27:14,190
+Kay. So far, so good. So we have the gecko sampler.
+
+212
+00:27:14,190 --> 00:27:24,670
+Hanging around, I hope we don't leak it somehow. It's probably know all these different classes.
+
+213
+00:27:24,670 --> 00:27:35,330
+OK. Instantiate hold the ref counter reference, then we want to, um.
+
+214
+00:27:35,330 --> 00:27:42,260
+That's probably it, actually. Oh. And then the next step is to expose it through NSA profiler,
+
+215
+00:27:42,260 --> 00:27:54,490
+which so NSA profiler will need to like call into the profiler internals and get that reference and expose it back, because that's how things like.
+
+216
+00:27:54,490 --> 00:28:00,080
+I believe the content parent needs to talk to the profilers through NSI profiler.
+
+217
+00:28:00,080 --> 00:28:08,420
+OK. Let's do it. Gecko's sampler.
+
+218
+00:28:08,420 --> 00:28:14,880
+So originally we're saying new profile. Gather.
+
+219
+00:28:14,880 --> 00:28:25,620
+We're doing that here, too. J.S. object a sync. And then.
+
+220
+00:28:25,620 --> 00:28:40,370
+We start with profile gather. Darte.
+
+221
+00:28:40,370 --> 00:28:51,840
+This all probably have to change, like we might have to pass the since time and the promise to gatherers dard.
+
+222
+00:28:51,840 --> 00:28:59,140
+As gather working in. What's it do with since time, since time, since time?
+
+223
+00:28:59,140 --> 00:29:03,310
+Does it actually does it do nothing with since time? OK.
+
+224
+00:29:03,310 --> 00:29:14,590
+Is it here? And ticker.
+
+225
+00:29:14,590 --> 00:29:24,290
+Sampler. I see. All right.
+
+226
+00:29:24,290 --> 00:29:35,180
+All right. So what we'll do is under the constructor, we will do this construction instead.
+
+227
+00:29:35,180 --> 00:29:40,820
+But I'm also going to change the signature here so that, yes, it takes a ticker.
+
+228
+00:29:40,820 --> 00:29:57,500
+It does not take a since time. Or a promise.
+
+229
+00:29:57,500 --> 00:30:13,300
+Start. It start will take a since time and a promise.
+
+230
+00:30:13,300 --> 00:30:26,450
+And since time say since, time and promise equals a promise.
+
+231
+00:30:26,450 --> 00:30:34,170
+And then because this thing will exist.
+
+232
+00:30:34,170 --> 00:30:46,630
+Like throughout the sampling and might do, several gatherers gathers will probably need to hold some state on whether or not it's gathering there.
+
+233
+00:30:46,630 --> 00:30:53,980
+H. Ball gathering.
+
+234
+00:30:53,980 --> 00:31:05,110
+So what? OK, start.
+
+235
+00:31:05,110 --> 00:31:25,740
+And gathering true. If.
+
+236
+00:31:25,740 --> 00:31:40,130
+And gathering, if we're already gathering, reject the promise this isn't going to end well.
+
+237
+00:31:40,130 --> 00:32:04,810
+To do. It'd be nice if there was a way I could reject some kind of specific message.
+
+238
+00:32:04,810 --> 00:32:17,070
+Maybe reject. So I can, like, pass some string out.
+
+239
+00:32:17,070 --> 00:32:26,260
+It creates a Daumier. Air value.
+
+240
+00:32:26,260 --> 00:32:45,970
+Invalid state. Well, like busy or something for no access.
+
+241
+00:32:45,970 --> 00:32:58,830
+May reject, well, maybe we'll reject right now, it's like a. Air not available.
+
+242
+00:32:58,830 --> 00:33:07,400
+Gathering. If a promise.
+
+243
+00:33:07,400 --> 00:33:17,380
+Maybe reject. Maybe reject US air.
+
+244
+00:33:17,380 --> 00:33:28,120
+And available. And in return, we're done.
+
+245
+00:33:28,120 --> 00:33:38,800
+Otherwise, we're good to go. Then when we're finished, we need to like, say that we're done and we need to clear out.
+
+246
+00:33:38,800 --> 00:33:49,820
+It's time equals zero. And promise equals no appointer and gathering was false.
+
+247
+00:33:49,820 --> 00:33:57,840
+So now this thing. We should also.
+
+248
+00:33:57,840 --> 00:34:36,160
+And pending profiles. Profiles equals zero.
+
+249
+00:34:36,160 --> 00:34:47,340
+I don't know if that's necessary, actually. Certain.
+
+250
+00:34:47,340 --> 00:35:01,390
+OK. Anyway, we'll leave that for now. OK, so now the Gecko sampler doesn't need to be created here.
+
+251
+00:35:01,390 --> 00:35:10,450
+And we don't necessarily need to clear this out. To do.
+
+252
+00:35:10,450 --> 00:35:28,460
+Remove. OK, so then. During construction.
+
+253
+00:35:28,460 --> 00:35:39,240
+And gather and then we pass it. This. They are bound to one another.
+
+254
+00:35:39,240 --> 00:35:51,910
+And then we don't have to clear it out or anything on destruction, that should be enough.
+
+255
+00:35:51,910 --> 00:35:59,750
+There, start, start. We have to pass a time and the promise.
+
+256
+00:35:59,750 --> 00:36:06,080
+So if I'm right, this should both compile and still allow us to gather acing profiles from the child.
+
+257
+00:36:06,080 --> 00:36:15,120
+So let's find out. So let's build profiling directory.
+
+258
+00:36:15,120 --> 00:36:21,180
+Let's see. Oh. What Wall doesn't like?
+
+259
+00:36:21,180 --> 00:36:31,230
+No matching constructor. Oh, I've got to change the signature here.
+
+260
+00:36:31,230 --> 00:36:38,570
+Right. Let's try that again. Is that going to work?
+
+261
+00:36:38,570 --> 00:36:43,470
+Doesn't like it, Mommy. Yeah.
+
+262
+00:36:43,470 --> 00:36:48,860
+That's what I would start. Starts being called incorrectly. Profile gather.
+
+263
+00:36:48,860 --> 00:36:55,140
+I've changed the signature start. That's why change the scene should start.
+
+264
+00:36:55,140 --> 00:37:12,480
+Start. Now it takes these things. Still doesn't like it.
+
+265
+00:37:12,480 --> 00:37:17,210
+Oh. Unknown type promise, did you mean Domme promise?
+
+266
+00:37:17,210 --> 00:37:24,110
+I most certainly did. Is that how I used to refer to it here?
+
+267
+00:37:24,110 --> 00:37:39,060
+And profile gathered at each. Me.
+
+268
+00:37:39,060 --> 00:37:48,390
+Watch. Where's the header? Well, uh, it's.
+
+269
+00:37:48,390 --> 00:37:57,580
+There it is. Yeah. Mazola Don promises used.
+
+270
+00:37:57,580 --> 00:38:03,760
+Come on. Doesn't like it.
+
+271
+00:38:03,760 --> 00:38:09,170
+Oh, I don't think so, out of line.
+
+272
+00:38:09,170 --> 00:38:13,160
+Declaration of a member must be a definition. So what does that mean?
+
+273
+00:38:13,160 --> 00:38:20,780
+Unknown type. Name a ticker. Oh, I'm still being silly.
+
+274
+00:38:20,780 --> 00:38:30,280
+A ticker. Line 18.
+
+275
+00:38:30,280 --> 00:38:39,190
+Right. Spetz and tax. That should be like that calling. Still doesn't like it.
+
+276
+00:38:39,190 --> 00:38:46,150
+And as air the air not available. That's right. Thank you, Compiler. I had the wrong error message.
+
+277
+00:38:46,150 --> 00:39:03,070
+And it's air unavailable. Doesn't exist. It's unavailable. A oh oh.
+
+278
+00:39:03,070 --> 00:39:09,850
+That's right. We got ourselves built. That's nice. Let's see.
+
+279
+00:39:09,850 --> 00:39:18,400
+By the way, if you're interested in like it, maybe you see problems in what I'm doing or like have ideas on how I can do it better.
+
+280
+00:39:18,400 --> 00:39:23,200
+I'm in the hash line hacking IRS channel and I would love to hear feedback on,
+
+281
+00:39:23,200 --> 00:39:29,380
+like if you can find ways or have ideas that I could do my job faster or better like Mike.
+
+282
+00:39:29,380 --> 00:39:34,690
+You should use do this instead. You should combine profile, gather with Geko Sampler and that sort of thing.
+
+283
+00:39:34,690 --> 00:39:39,310
+Send me a message Niazi. I would love to hear about it. We can chat it out.
+
+284
+00:39:39,310 --> 00:39:46,030
+I'm hoping this can be more interactive. If you are interested in talking but you don't know how to connect to Iasi,
+
+285
+00:39:46,030 --> 00:39:53,770
+there's a link in the additional link section below that like connects you to a web based IAC client call using a service called Minute,
+
+286
+00:39:53,770 --> 00:39:59,110
+which should let you get into the light hacking channel.
+
+287
+00:39:59,110 --> 00:40:03,820
+And you can talk to me. I'm m currently and you can, you can chat with me.
+
+288
+00:40:03,820 --> 00:40:10,390
+It's not the most user friendly chat in the world, but just a thing to think about.
+
+289
+00:40:10,390 --> 00:40:18,310
+Just an offer to you. OK.
+
+290
+00:40:18,310 --> 00:40:26,530
+So now that's built. Does it work? I think I actually have to like, build binaries in order for this to like.
+
+291
+00:40:26,530 --> 00:40:36,510
+Actually manifest, we can test. Guy to the old linking thing.
+
+292
+00:40:36,510 --> 00:40:38,490
+Meanwhile, assuming that this works,
+
+293
+00:40:38,490 --> 00:40:50,790
+what it would be next next would be to somehow expose that now constantly existing profile, gather VNS, ice ports.
+
+294
+00:40:50,790 --> 00:41:01,320
+There's the other step of like make it so that new content parents and plug in module parents get a reference.
+
+295
+00:41:01,320 --> 00:41:07,790
+Oh, yeah. I need to do this first. Oh, and I make.
+
+296
+00:41:07,790 --> 00:41:19,520
+I was already going to write down a new kind of parenting blog module. Parents get a reference to the profile gather.
+
+297
+00:41:19,520 --> 00:41:29,220
+On instantiation. Or when they.
+
+298
+00:41:29,220 --> 00:41:41,040
+And then when that's done, then I need to, like, fill boss, know if there's a way to watch the livestream without flash.
+
+299
+00:41:41,040 --> 00:41:52,070
+I don't know, man. I like the person I would ask is Richard. Richard is basically my behind the scenes like Wizard who connects me with Air Mozilla.
+
+300
+00:41:52,070 --> 00:41:58,620
+And I believe they've been working on trying to migrate us off of flash. Richard, actually, I don't believe it is on piracy right now.
+
+301
+00:41:58,620 --> 00:42:01,800
+Like he's in is in the room, but I think he's away from keyboard.
+
+302
+00:42:01,800 --> 00:42:16,620
+So I will what I will do when Richard comes back, I will you know, he will hopefully see that message from Phillip and and hopefully answer.
+
+303
+00:42:16,620 --> 00:42:21,590
+So there you go. Oh, right.
+
+304
+00:42:21,590 --> 00:42:25,050
+So we won't make new contemporize or you get a reference profile, gather on instantiation.
+
+305
+00:42:25,050 --> 00:42:37,190
+Now we want to modify, profile, gather to accept profiles from dying prose subprocesses.
+
+306
+00:42:37,190 --> 00:42:50,280
+Now modify, profile, gather to hold on to five profiles from dying sub processes.
+
+307
+00:42:50,280 --> 00:43:02,840
+Five is just some magic number that we chose Ben and I and then modify profile gather so that when gathering starts,
+
+308
+00:43:02,840 --> 00:43:17,780
+gathering finishes, we can then sue together of the dead process profiles in as well as the main content.
+
+309
+00:43:17,780 --> 00:43:21,540
+As well as the other main what.
+
+310
+00:43:21,540 --> 00:43:32,570
+Whenever I try I say as well as the other subprocess profiles.
+
+311
+00:43:32,570 --> 00:43:51,050
+And that might involve us like registering. This might involve registering to gather as an NSI observer for the profiles of process gather.
+
+312
+00:43:51,050 --> 00:44:02,430
+Observation or observer notification? Webster, an open system, preferences.
+
+313
+00:44:02,430 --> 00:44:07,330
+Huh? Wait, wait, wait, wait.
+
+314
+00:44:07,330 --> 00:44:19,970
+We notify profilers that process gather and then.
+
+315
+00:44:19,970 --> 00:44:26,640
+What do we do? How does this try to remember how this works?
+
+316
+00:44:26,640 --> 00:44:38,030
+Golay Singh profiles, now it's time to finish out the profile and resolve the promise. So what do we do is we put the profiles past at all.
+
+317
+00:44:38,030 --> 00:44:47,040
+When do we actually like. So it all together. Really hope we can't give the jazz context.
+
+318
+00:44:47,040 --> 00:44:53,710
+So what do we do? From the buffer, what's the buffer?
+
+319
+00:44:53,710 --> 00:45:04,840
+Again? Oh, this is gonna go and get all of the profiles right?
+
+320
+00:45:04,840 --> 00:45:19,490
+I understand. And that's going to use profile subprocess.
+
+321
+00:45:19,490 --> 00:45:25,900
+So not subprocess gather, but profiles some process observer notification so that whenever we do this,
+
+322
+00:45:25,900 --> 00:45:34,630
+something in here is going to get notified that allow us to like in our dead subprocess profiles.
+
+323
+00:45:34,630 --> 00:45:41,500
+Ridded doo doo doo. Now would be alive.
+
+324
+00:45:41,500 --> 00:45:48,760
+So there's this thing finished. It has. Let's test it. So the test will be.
+
+325
+00:45:48,760 --> 00:45:52,160
+I'll attached GDP or not, I'll attach X code.
+
+326
+00:45:52,160 --> 00:46:01,380
+I'll use LDV, and what I'll do is I'll make sure that the profile gathered destructor is there.
+
+327
+00:46:01,380 --> 00:46:05,570
+There is no destructor. There's an implicit destructor.
+
+328
+00:46:05,570 --> 00:46:13,970
+I should probably have put in some kind of destructor so I could make sure it's being destroyed.
+
+329
+00:46:13,970 --> 00:46:24,940
+Oh. Oh. What happened here? Assertion failure.
+
+330
+00:46:24,940 --> 00:46:34,080
+Crash on startup. What happened there?
+
+331
+00:46:34,080 --> 00:46:38,760
+Hard, hard to say. I have no idea what that was. Not my problem.
+
+332
+00:46:38,760 --> 00:46:46,420
+That's down in networking and someone will hopefully be looking at that right now.
+
+333
+00:46:46,420 --> 00:46:54,500
+Mm mm mm mm mm mm mm mm mm mm. Gonna place some sounds while I wait for this stuff.
+
+334
+00:46:54,500 --> 00:47:01,970
+Yeah. I can't do my work, at least not until, uh.
+
+335
+00:47:01,970 --> 00:47:06,630
+Browsers start to finish starting up here.
+
+336
+00:47:06,630 --> 00:47:25,990
+I hope I will attached the parent process. Hi.
+
+337
+00:47:25,990 --> 00:47:48,330
+Hurry up, come on. Load a page, undo it.
+
+338
+00:47:48,330 --> 00:47:55,690
+Byron. My drum roll ran out.
+
+339
+00:47:55,690 --> 00:48:01,760
+Let's try again. Oh, here we go. And the pages loaded. Right.
+
+340
+00:48:01,760 --> 00:48:08,210
+I need to make that drumroll longer. Hit some kind of breakpoint.
+
+341
+00:48:08,210 --> 00:48:25,330
+Oh. Turn off that point.
+
+342
+00:48:25,330 --> 00:48:38,680
+OK, so what do I want do is I want to gather profiles. This might actually take a long time to do.
+
+343
+00:48:38,680 --> 00:48:44,910
+I seem to recall gathering profiles from debug builds like takes five ever.
+
+344
+00:48:44,910 --> 00:48:49,270
+I guess I just wanna make sure we don't crash and gather. Warning.
+
+345
+00:48:49,270 --> 00:48:58,190
+Warning. And gather line for 21.
+
+346
+00:48:58,190 --> 00:49:06,950
+Keko sampler. For 21. Oh, shoot.
+
+347
+00:49:06,950 --> 00:49:13,760
+That's not what we want to do. We should warn, if not and gather, this promise will never resolve.
+
+348
+00:49:13,760 --> 00:49:25,330
+Let's get out of here. We're done. So that we learned a lot there.
+
+349
+00:49:25,330 --> 00:49:45,420
+So here's one thing. I mean, do a just the normal opt build. Aaron, Remis just mentioned in I.R.S. that this bug says something about how.
+
+350
+00:49:45,420 --> 00:49:51,930
+Live streams are requiring flash. Air Missoula's record V is use a team of five video.
+
+351
+00:49:51,930 --> 00:49:58,030
+The livestream video streams require flash.
+
+352
+00:49:58,030 --> 00:50:06,520
+We're in the process of moving to HLS, says Richard, as of a couple of months ago, and we'll be able to do mpeg dash from the same infrastructure.
+
+353
+00:50:06,520 --> 00:50:11,140
+However, GW player uses Flash Trent or HLS not yet identified an impact.
+
+354
+00:50:11,140 --> 00:50:15,850
+Dasch player about to start does testing with the dash if reference code.
+
+355
+00:50:15,850 --> 00:50:22,990
+If anyone out there knows of a decent MPEG dash player that is not flash based, maybe talk to Richard and comment in this bug.
+
+356
+00:50:22,990 --> 00:50:31,780
+That's one one oh two seven one seven. I'd be great if we could get everybody off of Flash because Flash is a [INAUDIBLE] show.
+
+357
+00:50:31,780 --> 00:50:39,120
+Pardon my language. So hopefully this build won't take too, too long.
+
+358
+00:50:39,120 --> 00:50:43,380
+In the meantime, let's think about what we're going to do next. Let's assume that this is down.
+
+359
+00:50:43,380 --> 00:50:51,330
+I won't check it out until I verify. So the next step will be to expose the profile, gather on an aside, profile it,
+
+360
+00:50:51,330 --> 00:50:54,840
+because that's how other parts of gecko that are not under the profile directory.
+
+361
+00:50:54,840 --> 00:50:59,430
+Talk to the profilers through this interface and decide profiler.
+
+362
+00:50:59,430 --> 00:51:03,480
+Let's check that out. That's this thing.
+
+363
+00:51:03,480 --> 00:51:18,950
+And I think what we basically want is like an NSI supports. Get profile, gather.
+
+364
+00:51:18,950 --> 00:51:40,240
+So that, like the content parent, which let's show you the content parent.
+
+365
+00:51:40,240 --> 00:51:51,840
+Here, maybe we can do some kind of like check to see whether or not.
+
+366
+00:51:51,840 --> 00:51:56,680
+IPC content created. That's interesting.
+
+367
+00:51:56,680 --> 00:52:03,740
+Notification goes around any time a content parent is created. Maybe I'd be a better way of doing it.
+
+368
+00:52:03,740 --> 00:52:12,730
+And what about plug in module parent? Flash plugin hang.
+
+369
+00:52:12,730 --> 00:52:27,850
+That's a 20 minute. Content parent.
+
+370
+00:52:27,850 --> 00:52:45,320
+Chrom parent is what I want. Plug in module chrom parent. Plug in time.
+
+371
+00:52:45,320 --> 00:52:49,570
+I hate these things. Initialize injector.
+
+372
+00:52:49,570 --> 00:52:57,590
+Do injection on crash. In plugin profiling.
+
+373
+00:52:57,590 --> 00:53:08,360
+Where is that? That would occur in plugin module Chrome parent.
+
+374
+00:53:08,360 --> 00:53:24,800
+That's where I would do it here. Is.
+
+375
+00:53:24,800 --> 00:53:30,390
+And we hold a reference. I would get a reference to the gather.
+
+376
+00:53:30,390 --> 00:53:49,820
+No holy here. Well, that's taking longer to build than I thought I would.
+
+377
+00:53:49,820 --> 00:53:56,740
+Story of my life. Hi.
+
+378
+00:53:56,740 --> 00:54:05,310
+Well, and still taking a while to build. In the meantime.
+
+379
+00:54:05,310 --> 00:54:13,160
+OK. Reference the profile, gather on Instantiations, so we will expose it like.
+
+380
+00:54:13,160 --> 00:54:19,090
+This and then in content parent probably in.
+
+381
+00:54:19,090 --> 00:54:26,300
+We'll go ahead and just if we have to like if deaf, this whole thing around whether or not profiling has been unable to build.
+
+382
+00:54:26,300 --> 00:54:34,800
+Time to go get a reference to the profiler. Gatherer and then hold onto it.
+
+383
+00:54:34,800 --> 00:54:41,490
+And let's see only if profiling is enabled otherwise.
+
+384
+00:54:41,490 --> 00:55:01,370
+Profiling, getting the. Profilers start, we'll do the job of giving us a reference to.
+
+385
+00:55:01,370 --> 00:55:37,250
+Shoot, shoot. That's not good. Start prams is what gets passed around, doing profiler's started.
+
+386
+00:55:37,250 --> 00:55:43,850
+So I guess I mean, you just get a reference. You wouldn't instead of passing it around, you just profiler's started.
+
+387
+00:55:43,850 --> 00:55:50,330
+You go get a handle. You like you talk to the profiler. You get you get the profile gather.
+
+388
+00:55:50,330 --> 00:55:56,940
+And you hold the reference here. Here, you would drop the reference.
+
+389
+00:55:56,940 --> 00:56:04,590
+And here you add profiles profiler's subprocess gather no longer needs to pass around the gather because
+
+390
+00:56:04,590 --> 00:56:12,510
+everyone who's going to hold onto it or everyone is going to respond to it should already have the gatherer.
+
+391
+00:56:12,510 --> 00:56:28,090
+And then you say, yes, I will gather and out of process profile. Philip says, our NRC.
+
+392
+00:56:28,090 --> 00:56:32,800
+Times it it's 156. OK. So how are we doing here?
+
+393
+00:56:32,800 --> 00:56:35,370
+This is a seven. This is like.
+
+394
+00:56:35,370 --> 00:56:43,620
+Probably a full build, hopefully won't take too much longer as their own parent, it's hard to tell how long a build like where you are in the build.
+
+395
+00:56:43,620 --> 00:56:54,690
+This all happens in parallel, but I have a feeling we're pretty close to the end here. So I know how that's more or less going to work.
+
+396
+00:56:54,690 --> 00:57:02,830
+Let me write down what I found, though. On profiler's start.
+
+397
+00:57:02,830 --> 00:57:10,050
+Started. Have content parent.
+
+398
+00:57:10,050 --> 00:57:20,070
+And plug in. Module parent.
+
+399
+00:57:20,070 --> 00:57:28,270
+Get a reference to the profile gather. Get hold.
+
+400
+00:57:28,270 --> 00:57:30,990
+A reference to the profile gather.
+
+401
+00:57:30,990 --> 00:57:50,330
+On profiler's stopped have content parents and plug in module parents dropped the reference to profile profile gatherer.
+
+402
+00:57:50,330 --> 00:57:59,440
+And then. Yeah, that's the game plan.
+
+403
+00:57:59,440 --> 00:58:05,120
+That's the map. Go, go, go.
+
+404
+00:58:05,120 --> 00:58:09,610
+Come on. Wow. Robyn, why aren't you.
+
+405
+00:58:09,610 --> 00:58:17,230
+I can't do my work. Not until not until this builds that I can't do my work.
+
+406
+00:58:17,230 --> 00:58:23,980
+Philip says, really sad. I know he's probably talking about Flash and I agree.
+
+407
+00:58:23,980 --> 00:58:31,450
+We need like a good open source team, L5 dash player.
+
+408
+00:58:31,450 --> 00:58:38,310
+And Peg Dasch player and who knows, if we can't find one, we might just build one an open source.
+
+409
+00:58:38,310 --> 00:58:50,890
+It helped the Web. So actually, I'm we're still we need to verify this step.
+
+410
+00:58:50,890 --> 00:58:56,680
+And we can't do any of these things really until Tila's builds done.
+
+411
+00:58:56,680 --> 00:59:02,780
+So while I'm waiting, I don't like waiting. So what I'm gonna do is take a look at my review.
+
+412
+00:59:02,780 --> 00:59:08,750
+Q. Maybe there's something I can review.
+
+413
+00:59:08,750 --> 00:59:14,630
+There are a number of things that are in my queue that are not high priority, so I have not yet reviewed them, which blows.
+
+414
+00:59:14,630 --> 00:59:18,500
+And some of them are like really old and that's bad.
+
+415
+00:59:18,500 --> 00:59:27,530
+I'm guilty. But that's because, like during the day, they're very low priority time in my evenings when I would normally review them.
+
+416
+00:59:27,530 --> 00:59:34,450
+They've been consumed by like of. I'm full disclosure, I'm getting married soon, so I'm doing all our wedding planning and my evenings,
+
+417
+00:59:34,450 --> 00:59:42,820
+so I don't have like a whole lot of free cycles to work on and stuff so that I might be able to review some of this.
+
+418
+00:59:42,820 --> 00:59:49,640
+Let me just pull one up. Yes, some of those review requests are pretty old, and I feel bad about that.
+
+419
+00:59:49,640 --> 00:59:54,980
+I should I should do something about it. I should do something.
+
+420
+00:59:54,980 --> 01:00:05,240
+But hopefully once this wedding stuff gets sorted out, I don't have to delay on them anymore.
+
+421
+01:00:05,240 --> 01:00:09,680
+Tell a child the UI resolution change for the containing window to avoid some signets just the child.
+
+422
+01:00:09,680 --> 01:00:18,800
+The Panelli also send. So what. Gabbar is working on here is making it so that when the parent tells the child that the UI resolution is changed,
+
+423
+01:00:18,800 --> 01:00:21,530
+that the that it also supplies some informations,
+
+424
+01:00:21,530 --> 01:00:29,660
+that the child doesn't have to go and ask the parent for it in the same like take whenever it processes this message that the resolution is changed.
+
+425
+01:00:29,660 --> 01:00:34,400
+So what was happening was the parent was saying you resolution was changed to all of these like remote browsers,
+
+426
+01:00:34,400 --> 01:00:43,700
+and all of them were synchronously asking the parent, well, what's my DP I now, which is you don't want to cause a sync message to occur?
+
+427
+01:00:43,700 --> 01:00:47,060
+Well, like immediately on post, like, it's just as bad. It's bad.
+
+428
+01:00:47,060 --> 01:00:52,340
+We could have told the child in that first message without it having to ask.
+
+429
+01:00:52,340 --> 01:00:57,450
+So here's the information is trying to supply. We also send the DTI default scale with the notification.
+
+430
+01:00:57,450 --> 01:00:59,780
+We don't know the DPR defaults. We just pass a negative value.
+
+431
+01:00:59,780 --> 01:01:08,040
+But the majority of cases, this saves us from two sync requests in the child of the parent. That's good.
+
+432
+01:01:08,040 --> 01:01:15,390
+So we received the DPA and the scale. We cast the puppet widget.
+
+433
+01:01:15,390 --> 01:01:38,930
+We update the backing scale cash. So anyone else use clear backing, skill, cash?
+
+434
+01:01:38,930 --> 01:01:51,560
+Show our results. So I think that's the only consumer backing scale cash, we can probably remove it.
+
+435
+01:01:51,560 --> 01:02:02,330
+As this was the only consumer of consumer of clear backing scale cash, we can probably remove that method.
+
+436
+01:02:02,330 --> 01:02:15,790
+Now. Pass the DPR, the scale.
+
+437
+01:02:15,790 --> 01:02:22,130
+CPI was set to. Minus one.
+
+438
+01:02:22,130 --> 01:02:28,450
+Half empty, Powerset, minus one to value and then try cash, the scale fails to cash 2000 and default scale scale might be invalid.
+
+439
+01:02:28,450 --> 01:02:33,250
+Dorson that value to content just in my eyes. One for two in that case.
+
+440
+01:02:33,250 --> 01:02:56,550
+So they'd be. And DCI. It's less than zero, then return the minus 1.0.
+
+441
+01:02:56,550 --> 01:03:10,210
+Default scale. What is em, default scale puppet widget?
+
+442
+01:03:10,210 --> 01:03:16,750
+How are we doing? Still building. Holy smokes, that's a slow build.
+
+443
+01:03:16,750 --> 01:03:25,160
+Puppet widget. There it is.
+
+444
+01:03:25,160 --> 01:03:37,820
+Default scale is a double. What am I doing?
+
+445
+01:03:37,820 --> 01:03:45,670
+So wait, hold on. Default scale, a double.
+
+446
+01:03:45,670 --> 01:03:54,330
+To double. And why are we sending down?
+
+447
+01:03:54,330 --> 01:04:04,050
+Minus 1.0. Try to imagine what it does to me, a float is something that has like floating point like.
+
+448
+01:04:04,050 --> 01:04:10,740
+A decimal and then some stuff. What's a double? I'm trying to remember. I thought it was just like a really big integer.
+
+449
+01:04:10,740 --> 01:04:21,960
+Maybe I'm wrong. Double. See, this is like I feel like this is basic knowledge I should have as a as someone who's dabbled in.
+
+450
+01:04:21,960 --> 01:04:34,660
+See. Um. But I don't have forgotten a long double first row of floating point data type, a high double precision.
+
+451
+01:04:34,660 --> 01:04:40,120
+So it's a double precision and double is a floating point.
+
+452
+01:04:40,120 --> 01:04:58,200
+No. Double, I think, see data types.
+
+453
+01:04:58,200 --> 01:05:07,370
+Just double check, double check, double. This is like basic stuff that I feel like I should definitely have known already, but I don't.
+
+454
+01:05:07,370 --> 01:05:13,970
+And that's what happens. Sometimes you forget things. So it is a floating point value.
+
+455
+01:05:13,970 --> 01:05:27,090
+OK. So feels weird that we weren't saying it to Mice 1.0.
+
+456
+01:05:27,090 --> 01:05:42,400
+That seems a reasonable. Thanks so much, Gower.
+
+457
+01:05:42,400 --> 01:05:56,910
+I feel I feel reasonably confident reviewing this code.
+
+458
+01:05:56,910 --> 01:06:01,340
+Thanks so much, guys, we're always thank your patch submitter.
+
+459
+01:06:01,340 --> 01:06:06,780
+Oh. Richard's back. Richard says, Happy to test any flashy HLS player, you know.
+
+460
+01:06:06,780 --> 01:06:10,470
+Though we've almost got a contract from FEO player through legal battle.
+
+461
+01:06:10,470 --> 01:06:15,420
+Fix the problem. Getting the rest of MSE implemented would do it as well.
+
+462
+01:06:15,420 --> 01:06:23,230
+So there's some MFC work. Media, media.
+
+463
+01:06:23,230 --> 01:06:28,110
+All right. Houses built going, still going.
+
+464
+01:06:28,110 --> 01:06:34,780
+Sixteen minutes in what the Delio where's all my C.P.U?
+
+465
+01:06:34,780 --> 01:06:43,250
+Uh, I don't have a virtual machine. Do I know it's probably OBSS, to be completely honest.
+
+466
+01:06:43,250 --> 01:07:00,830
+Yes, Dave. Well, I guess I can review another patch while I wait for this thing to finish off.
+
+467
+01:07:00,830 --> 01:07:04,690
+So I reviewed one. Let's review another, all right. I already have a dashboard.
+
+468
+01:07:04,690 --> 01:07:10,200
+Open. Spend, spend, spend. Refresh.
+
+469
+01:07:10,200 --> 01:07:14,160
+Let's see Ursula's patches, humungous.
+
+470
+01:07:14,160 --> 01:07:19,650
+So I'm not going I don't want to get down that rabbit hole. This is sort of us.
+
+471
+01:07:19,650 --> 01:07:23,610
+This is a performance patch that will hopefully make tab switching with tennis faster.
+
+472
+01:07:23,610 --> 01:07:31,200
+And it's pretty peculiarly exciting. I'll explain how it works while I wait.
+
+473
+01:07:31,200 --> 01:07:35,610
+I'll try and explain how it works. I guess part of viewing it is understanding how it works.
+
+474
+01:07:35,610 --> 01:07:43,560
+I don't know if I fully do yet, but one of the problems with ETN s is tab switching can be slow sometimes.
+
+475
+01:07:43,560 --> 01:07:48,690
+And one of the reasons that seems to be, according to our performance profiles, is that like,
+
+476
+01:07:48,690 --> 01:07:52,900
+it's nice that we've, like, separated the content process from Perram process.
+
+477
+01:07:52,900 --> 01:08:00,690
+That means the parent process is usually is not being blocked up by things that the content process is normally doing that is now doing normally.
+
+478
+01:08:00,690 --> 01:08:05,850
+Would've been Buchan's running in the same process. And that separation is you'd think would be great.
+
+479
+01:08:05,850 --> 01:08:09,150
+It'll free up the parent process. And yes, it does for the parent process.
+
+480
+01:08:09,150 --> 01:08:15,810
+But the problem is sometimes the parent process in that free time decides to go do like expensive things.
+
+481
+01:08:15,810 --> 01:08:20,370
+So, like, you haven't reduced the amount of work. You've just given it more opportunities to other work.
+
+482
+01:08:20,370 --> 01:08:26,490
+And then the content process says, like, I have a framed paint, show this tab now and the parrot goes, well, hold on.
+
+483
+01:08:26,490 --> 01:08:30,780
+I was free to I was doing some other stuff. So I'm going to I'm going to wait.
+
+484
+01:08:30,780 --> 01:08:35,850
+OK, now I'm ready. Now I will paint frame. And what that results in is like slow tab switching sometimes.
+
+485
+01:08:35,850 --> 01:08:45,510
+So Brad Lassy worked on this patch. His idea is when you're in the midst of a frame switch, we're sorry, our midst in the midst of a tab switch.
+
+486
+01:08:45,510 --> 01:08:51,600
+We tell Geko don't paint anything new until this Tab's this this frame is ready.
+
+487
+01:08:51,600 --> 01:09:00,810
+So that light because painting will do things like we'll paint the tab bar and we'll like we'll update the toolbar and all of these things.
+
+488
+01:09:00,810 --> 01:09:06,600
+And those paints and the layout, et cetera. It can be expensive.
+
+489
+01:09:06,600 --> 01:09:15,210
+And when the frame from the child is ready, it's possible that, like, we're busy painting other stuff in the in the parent process.
+
+490
+01:09:15,210 --> 01:09:20,510
+So this is one way of sidestepping that is this patch.
+
+491
+01:09:20,510 --> 01:09:27,970
+So what he does is. Loing tab can be non here if we Taino during the current tab case.
+
+492
+01:09:27,970 --> 01:09:45,420
+So very well they don't have it has chance. If flowing to have his No.
+
+493
+01:09:45,420 --> 01:09:52,900
+So he's added something to dorm window utils called suppress painting globally.
+
+494
+01:09:52,900 --> 01:10:03,070
+And what it does is after suppress painting globally, when it's sure that whoever's calling it is the in the Crome context, it gets the prize context.
+
+495
+01:10:03,070 --> 01:10:09,390
+That's the thing that does a lot of like it manages like layout and painting.
+
+496
+01:10:09,390 --> 01:10:15,720
+Gets the prize context and tells it to freeze the refresh driver, the refresh drivers, the thing that's like, OK, now.
+
+497
+01:10:15,720 --> 01:10:22,450
+Now draw again. Now draw again when we unsuppressed.
+
+498
+01:10:22,450 --> 01:10:30,820
+We thought the refresh driver. We expose these things.
+
+499
+01:10:30,820 --> 01:10:43,610
+So. And suppress painting globally.
+
+500
+01:10:43,610 --> 01:10:52,090
+Worried, I really hope that, like.
+
+501
+01:10:52,090 --> 01:11:26,350
+We don't get into a case where we've suppressed painting and we fail to unsuppressed and nothing's painting in it, that feels dangerous.
+
+502
+01:11:26,350 --> 01:11:47,690
+Now, what are these like freeze and thaw methods do on pres context, refresh driver?
+
+503
+01:11:47,690 --> 01:12:01,660
+Is this like this count? We freeze.
+
+504
+01:12:01,660 --> 01:12:22,450
+We stop. The refreshed driver, the refreshed driver is probably the thing that's like, OK, now paint now, paint now, paint now paint on the timer.
+
+505
+01:12:22,450 --> 01:12:30,300
+And that caused us to stop the timer so we don't paint.
+
+506
+01:12:30,300 --> 01:12:44,660
+The freeze count. What is the freeze? Can. You don't expose it.
+
+507
+01:12:44,660 --> 01:12:51,350
+Hey, we're almost done building. That's good. You finally test this thing and get back to the profiling work.
+
+508
+01:12:51,350 --> 01:12:56,930
+We've got like 17 minutes and I'm going to call it.
+
+509
+01:12:56,930 --> 01:13:02,120
+People watching this if you're into design. Let me tell you about my friend Ricardo Ricardo.
+
+510
+01:13:02,120 --> 01:13:09,170
+He's sitting over there looking at you, buddy. He has the hour of design coming up at 3:00 p.m. Eastern.
+
+511
+01:13:09,170 --> 01:13:14,870
+He's doing this right now. This guy's arms in the air is doing this because he knows he's getting himself pumped.
+
+512
+01:13:14,870 --> 01:13:21,020
+If you're interested in seeing a designer, Mazola do their job much the same way that you're seeing me do my job.
+
+513
+01:13:21,020 --> 01:13:24,200
+You won't see a designer like what they have to go through in order to, like,
+
+514
+01:13:24,200 --> 01:13:29,420
+work with specs or like figure out colors and make things look beautiful and feel good.
+
+515
+01:13:29,420 --> 01:13:33,240
+Check out the hour of design that I've got a link to it. My agenda for his next episode.
+
+516
+01:13:33,240 --> 01:13:38,180
+He'll be streaming live in about 45 minutes. So that's pretty cool.
+
+517
+01:13:38,180 --> 01:13:50,120
+OK. So I'm going to abandon that code review and get back to this. Other bug of the profile gatherer.
+
+518
+01:13:50,120 --> 01:14:11,760
+And so now what should be possible is I should still be able to like gather profiles from these subprocesses.
+
+519
+01:14:11,760 --> 01:14:19,290
+Yes, I have the profile from the subprocess, and now I want to make sure that the lifetime is right.
+
+520
+01:14:19,290 --> 01:14:30,640
+So like. What I'll do is I'll add a destructor.
+
+521
+01:14:30,640 --> 01:14:38,520
+And I'd be like, gather destroyed. And the reason I'm not going to use, like.
+
+522
+01:14:38,520 --> 01:14:52,510
+GDP or something is. Gather created is because gathering a profile in debug build slough is balls.
+
+523
+01:14:52,510 --> 01:15:09,060
+So I'm not going to do that. No good.
+
+524
+01:15:09,060 --> 01:15:13,430
+I got a. Uh, what do I do?
+
+525
+01:15:13,430 --> 01:15:28,370
+What do I do? Oh, I would just print.
+
+526
+01:15:28,370 --> 01:15:34,310
+Just a quick hackery. I had a destructor before, it wasn't implicit, I'd created it myself.
+
+527
+01:15:34,310 --> 01:15:44,040
+It was just empty. How are we doing on time?
+
+528
+01:15:44,040 --> 01:15:54,130
+It's 215. Any male I should know about related to any of the bugs I'm working on.
+
+529
+01:15:54,130 --> 01:16:08,330
+Checking. Checking. Oh, maybe.
+
+530
+01:16:08,330 --> 01:16:14,880
+All right, here we go again. So we should see, like, oh, whoa.
+
+531
+01:16:14,880 --> 01:16:20,150
+I gather was create another gather was created. So now.
+
+532
+01:16:20,150 --> 01:16:34,200
+And then, I gather, was destroyed. So I gather was created in a second gather, it was created.
+
+533
+01:16:34,200 --> 01:16:39,910
+Now, why would that be? Why are there two?
+
+534
+01:16:39,910 --> 01:16:48,210
+Gathers created. Because there's probably a sampler in the child process.
+
+535
+01:16:48,210 --> 01:16:55,640
+So there's also a gather in the child process. That's why.
+
+536
+01:16:55,640 --> 01:17:02,650
+So that's probably OK. And then a gather was destroyed.
+
+537
+01:17:02,650 --> 01:17:06,840
+And I gather was created again. Now we have to gathers.
+
+538
+01:17:06,840 --> 01:17:16,270
+So if I stop profiling. We had two destroyed, so the books have balanced three created, three destroyed.
+
+539
+01:17:16,270 --> 01:17:25,310
+If I start to gather are created, I stop to gathers are destroyed.
+
+540
+01:17:25,310 --> 01:17:34,120
+OK. So I feel pretty good about that. One thing to keep in mind is that there is now gatherer on the in the content process as well.
+
+541
+01:17:34,120 --> 01:17:38,500
+I mean, that was always the potential is always there.
+
+542
+01:17:38,500 --> 01:17:46,700
+It's just now we're like actually instantiating one in the content process, which.
+
+543
+01:17:46,700 --> 01:17:55,050
+Maybe. We don't need to do.
+
+544
+01:17:55,050 --> 01:18:07,970
+Only instantiate a profile, gather in the parent process Geko Sampler.
+
+545
+01:18:07,970 --> 01:18:15,650
+Next. So we've done this during the profiling window.
+
+546
+01:18:15,650 --> 01:18:19,370
+That's done. Now we want to expose the profile gather.
+
+547
+01:18:19,370 --> 01:18:28,920
+Through this interface, and when we change it and it's our next become interface, we need a new utilize the wood.
+
+548
+01:18:28,920 --> 01:18:37,050
+So will this. When?
+
+549
+01:18:37,050 --> 01:18:41,330
+Actually, we can do this in multiple commits. That's usually best.
+
+550
+01:18:41,330 --> 01:19:00,960
+So what I will do. Let's take a look at the deaths so far.
+
+551
+01:19:00,960 --> 01:19:07,300
+Right. Right.
+
+552
+01:19:07,300 --> 01:19:12,370
+So I think I want to keep most of that the things in here.
+
+553
+01:19:12,370 --> 01:19:16,280
+I don't want to commit. I do want that stuff.
+
+554
+01:19:16,280 --> 01:19:20,970
+I'm going to have to get it. There was a to do I saw in there. I'll have to clear that out before a request review.
+
+555
+01:19:20,970 --> 01:19:27,170
+Was down here the removal of your father. That thing like profile gathered.
+
+556
+01:19:27,170 --> 01:19:34,900
+Probably don't need that anymore. But I'll commit this stuff.
+
+557
+01:19:34,900 --> 01:19:51,060
+So, Bug. Her make profile gather exist during the lifetime of a gecko's sampler.
+
+558
+01:19:51,060 --> 01:20:01,920
+Next part is expose. Profile gather through.
+
+559
+01:20:01,920 --> 01:20:18,810
+As an aside, supports through A.I. profiler.
+
+560
+01:20:18,810 --> 01:20:27,600
+Kay. So. How will I do that?
+
+561
+01:20:27,600 --> 01:20:32,660
+So I've. I want to bump that you you I.D. Where was that?
+
+562
+01:20:32,660 --> 01:20:44,460
+You asked me anyone. Mark Eweida. So.
+
+563
+01:20:44,460 --> 01:20:49,870
+Get profile, gather. Some of these are capitalized.
+
+564
+01:20:49,870 --> 01:21:16,420
+And some of them are not good profile data. Know what I should do? Profile, gather.
+
+565
+01:21:16,420 --> 01:21:26,620
+OK, so then it's profiler. Needs to have.
+
+566
+01:21:26,620 --> 01:21:35,640
+Yes. My method and I get.
+
+567
+01:21:35,640 --> 01:21:44,250
+Profile, gather. And then it takes and supports.
+
+568
+01:21:44,250 --> 01:21:54,620
+It's an out paran. And then what we're going to do is ask comity are.
+
+569
+01:21:54,620 --> 01:22:14,870
+Supports. Gatherer equals then like profiler, get gatherer.
+
+570
+01:22:14,870 --> 01:22:20,770
+Then pass it like get her Graff's. Right.
+
+571
+01:22:20,770 --> 01:22:25,000
+Maybe that's it. I mean, that's all I need to do. No, no.
+
+572
+01:22:25,000 --> 01:22:33,160
+It's what I won't do. Could gather. It's probably a shorthand for this, but I don't know what it is.
+
+573
+01:22:33,160 --> 01:22:40,340
+Khattar. And then I can do, like, gather, dot, forget.
+
+574
+01:22:40,340 --> 01:22:49,810
+They right now return this. OK? We also want to if we're not profiling.
+
+575
+01:22:49,810 --> 01:22:58,620
+Uh. Getting together is not going to work.
+
+576
+01:22:58,620 --> 01:23:12,520
+I found out profiling, there will be no gather. So how do we find it for profile and get his active?
+
+577
+01:23:12,520 --> 01:23:21,040
+Not profiler is active. Here at Valley Close, no point her.
+
+578
+01:23:21,040 --> 01:23:43,650
+Chern. Else. This can be no, if this will be no.
+
+579
+01:23:43,650 --> 01:23:50,880
+Profile gather will be no if the profile is not currently.
+
+580
+01:23:50,880 --> 01:24:04,190
+Active. It's gonna work.
+
+581
+01:24:04,190 --> 01:24:20,970
+Just do that for now. Let's see spells. Switch back to debug builds now.
+
+582
+01:24:20,970 --> 01:24:38,010
+It's two twenty four running at a time. He played the wrong thing, uh, is on marriage a declaration get profile gather.
+
+583
+01:24:38,010 --> 01:24:43,200
+Profiler. Well, I made it part of NSI profiler that IDL.
+
+584
+01:24:43,200 --> 01:24:57,310
+So what are you talking about? Start Perens.
+
+585
+01:24:57,310 --> 01:25:02,430
+So maybe there's something missing and that's profiling at age.
+
+586
+01:25:02,430 --> 01:25:12,690
+Know what you're talking about, Willis? So maybe I have to do a straight up mock bill Tools profiler.
+
+587
+01:25:12,690 --> 01:25:19,360
+To create the expertize that's the thing, that's like the conversion of.
+
+588
+01:25:19,360 --> 01:25:28,480
+Like when that's the binary representation of these X become IDL Files XP, IDL.
+
+589
+01:25:28,480 --> 01:25:45,000
+So that should satisfy it. Building hard, man.
+
+590
+01:25:45,000 --> 01:25:50,930
+Mommy, why are we at.
+
+591
+01:25:50,930 --> 01:25:59,730
+So that's linking. Great. So now we need to, like, somehow get the gatherer.
+
+592
+01:25:59,730 --> 01:26:14,610
+So there are a couple of places we have to go. Geko profiler. Funk geko, profiler, empl platform, not C.p.
+
+593
+01:26:14,610 --> 01:26:23,160
+This is sort of the path that things take, there's like this sort of strange abstraction between the profiler and the rest of Yako
+
+594
+01:26:23,160 --> 01:26:32,830
+because the profiler is actually a separate project that is integrated into Geko.
+
+595
+01:26:32,830 --> 01:26:43,400
+Start Purim's. No, no. Start in.
+
+596
+01:26:43,400 --> 01:26:48,800
+Static in line, void profile or get gather.
+
+597
+01:26:48,800 --> 01:27:02,350
+And then we're going to say. We get to gather.
+
+598
+01:27:02,350 --> 01:27:07,360
+ISIS supporters and ISIS supporters seized it elsewhere in here.
+
+599
+01:27:07,360 --> 01:27:13,800
+Well, it's imported. So that's good. ISIS supports Val.
+
+600
+01:27:13,800 --> 01:27:29,670
+So a sampler. Get gather a bell.
+
+601
+01:27:29,670 --> 01:27:39,580
+So. For Mozilla Sampler.
+
+602
+01:27:39,580 --> 01:27:51,860
+Get Cather. Supports.
+
+603
+01:27:51,860 --> 01:28:16,520
+All right. I have to forward, declare and assess reports.
+
+604
+01:28:16,520 --> 01:28:26,920
+Right now. And then the actual implementation.
+
+605
+01:28:26,920 --> 01:28:34,030
+Stand here. Lloyd Mazola sampler. Gather.
+
+606
+01:28:34,030 --> 01:28:40,320
+Furber. This supports me right now.
+
+607
+01:28:40,320 --> 01:28:44,700
+And then I'm just going to say, like a rat, Val equals no pointer.
+
+608
+01:28:44,700 --> 01:28:48,630
+And that's it. So right now it'll only ever return.
+
+609
+01:28:48,630 --> 01:28:55,200
+No. But that. Should work in that it will return.
+
+610
+01:28:55,200 --> 01:29:09,610
+No. So I make sure the infrastructure is there. Mikey likes it.
+
+611
+01:29:09,610 --> 01:29:24,300
+Demonstrate. Linking, linking, linking.
+
+612
+01:29:24,300 --> 01:29:27,920
+Building, building, building. You know what?
+
+613
+01:29:27,920 --> 01:29:32,150
+Because the profiler touches so many things, I probably have to do binaries.
+
+614
+01:29:32,150 --> 01:29:40,040
+And like, smites alone because especially because I've only got, like, 10 seconds ago, you know.
+
+615
+01:29:40,040 --> 01:29:43,730
+I'm going to here's my plan. I mean, to see if this builds.
+
+616
+01:29:43,730 --> 01:29:49,010
+If it does and if I am going to open the browser, I mean, to see if I can get the null point of the like,
+
+617
+01:29:49,010 --> 01:29:52,580
+get the profile gatherer off of the profiler when it's running.
+
+618
+01:29:52,580 --> 01:30:00,860
+It should be. No. Because I'm actually gonna add and then I will have gotten the infrastructure set up to do this part and then the rest of this.
+
+619
+01:30:00,860 --> 01:30:05,930
+Maybe I can do that next episode. I might also do it on my own time.
+
+620
+01:30:05,930 --> 01:30:10,990
+If you're interested in following along, this note is where I will be like.
+
+621
+01:30:10,990 --> 01:30:16,270
+Putting my progress in see me, check things off and add notes and like when things are going wrong.
+
+622
+01:30:16,270 --> 01:30:21,850
+So there is a there's a link to this note. I should I believe I put it in the agenda here.
+
+623
+01:30:21,850 --> 01:30:27,630
+Yes. Click that and then you'll see where I got to. OK.
+
+624
+01:30:27,630 --> 01:30:33,180
+So. This thing is probably just going to like.
+
+625
+01:30:33,180 --> 01:30:39,990
+It's a thing because like Geko Profiler Funk is this header that's basically used everywhere.
+
+626
+01:30:39,990 --> 01:30:48,200
+And when you modify it. You kind of have to, like, rebuild the world, which blows.
+
+627
+01:30:48,200 --> 01:30:54,790
+So I try not to touch too often. Look at all the stuff that I have to rebuild because I touch that header.
+
+628
+01:30:54,790 --> 01:31:04,430
+It's probably take like six minutes. So I that's that's about average any time I touch geko profile or funk.
+
+629
+01:31:04,430 --> 01:31:09,300
+So what we can do is. I think I mean to cap it here.
+
+630
+01:31:09,300 --> 01:31:14,840
+We got an okay distance, I thought I'd get more done today.
+
+631
+01:31:14,840 --> 01:31:19,430
+I spent quite a bit of time on exposition and then I had to wait for that build.
+
+632
+01:31:19,430 --> 01:31:22,760
+And then so a couple of things got in my way.
+
+633
+01:31:22,760 --> 01:31:31,190
+But we got a review done. We started another review that that prompted the unplanned review I did.
+
+634
+01:31:31,190 --> 01:31:35,540
+I can put that in the agenda as well, if you want to check it out. What did I do?
+
+635
+01:31:35,540 --> 01:31:44,550
+I did reviewed. And then it was like the UI resolution one.
+
+636
+01:31:44,550 --> 01:31:55,040
+Yeah. Rezo. Cite my history.
+
+637
+01:31:55,040 --> 01:32:10,900
+Come on. I saw fit by. There it is. So here I will put a link to this in my notes, and that is probably where I'm going to call it.
+
+638
+01:32:10,900 --> 01:32:14,440
+So not bad.
+
+639
+01:32:14,440 --> 01:32:21,220
+Not bad. Could it could have gone a bit further today if I moved a little bit faster, if my machine was a little faster.
+
+640
+01:32:21,220 --> 01:32:25,650
+I don't know why building took so long at one time. Usually doesn't take that long.
+
+641
+01:32:25,650 --> 01:32:32,920
+It was probably because I hadn't built an An arm to build in a couple of days and I had to do clobbers something that is my bad.
+
+642
+01:32:32,920 --> 01:32:37,750
+Normally I like to do all these like prep builds in advance so that you don't have to wait that long.
+
+643
+01:32:37,750 --> 01:32:42,070
+But then I go ahead and touch geko profile funk and I have to rebuild the world.
+
+644
+01:32:42,070 --> 01:32:49,930
+So that's that's not amazing. Anyway, well, there you go.
+
+645
+01:32:49,930 --> 01:32:56,950
+Thank you so much for watching. This was episode 25 and we did OK.
+
+646
+01:32:56,950 --> 01:33:03,460
+I want to remind you that the episode seven of the Hour of Design is coming up next in about 27 minutes.
+
+647
+01:33:03,460 --> 01:33:08,020
+Ricardo will be sitting in this seat that I'm sitting in right now. And he will be.
+
+648
+01:33:08,020 --> 01:33:12,250
+He's like doing. I should I should point my Camerata. He's over there and he's like doing.
+
+649
+01:33:12,250 --> 01:33:18,250
+He's like Rocky. He's getting himself pumped up. It's great. So I highly recommend checking that out.
+
+650
+01:33:18,250 --> 01:33:21,940
+Click the link here. It's a great show.
+
+651
+01:33:21,940 --> 01:33:26,680
+And you get to see what a real designer does. I'm always unhatched live hacking.
+
+652
+01:33:26,680 --> 01:33:30,850
+I'm not just in there when I'm live hacking. I'm always like, I'm in there all the times have you on talk to me.
+
+653
+01:33:30,850 --> 01:33:38,050
+And it's like if you're watching the the recording or something after the fact, you can still ping me and live hacking and talk to me if I'm online.
+
+654
+01:33:38,050 --> 01:33:43,810
+I'm always kind of online, but I might not get back to you until I met a keyboard.
+
+655
+01:33:43,810 --> 01:33:46,870
+And I want to point out that there's this I.R.S. is Niazi.
+
+656
+01:33:46,870 --> 01:33:52,210
+There's this Air Mazola channel that has like every live hacking event that's occurring on Air Mazola.
+
+657
+01:33:52,210 --> 01:33:56,230
+So it's not just joy of coding. There's other stuff like Joel Mar's Loston data.
+
+658
+01:33:56,230 --> 01:33:58,300
+We've got some episodes there.
+
+659
+01:33:58,300 --> 01:34:03,790
+Actually, I think those are the two shows we've got going on, but we're hoping to get some more live hacking stuff going on.
+
+660
+01:34:03,790 --> 01:34:13,390
+Which leads me to my final point. If you are in the Muslim community, maybe you're hacking on who knows any sorts of things Mozilla wise.
+
+661
+01:34:13,390 --> 01:34:17,860
+Maybe you're doing web development, maybe you're doing keyway, maybe you're doing like it doesn't actually have to be coding.
+
+662
+01:34:17,860 --> 01:34:24,040
+It could be like what Joel does, which is I mean, he does some hacking around in the python is EPSO Python.
+
+663
+01:34:24,040 --> 01:34:28,450
+He does some hacking around it, python tools in his Loston data show.
+
+664
+01:34:28,450 --> 01:34:34,120
+But he's I, I actually like working on Firefox bugs. That's totally fine. That's a great show and I highly recommend you watch it.
+
+665
+01:34:34,120 --> 01:34:40,140
+And if you're out there and you do things that people would probably be interested in watching and I'm gathering,
+
+666
+01:34:40,140 --> 01:34:46,180
+I like I think everyone would be interested in seeing what everybody here at Mozilla is doing because we all work on pretty cool stuff.
+
+667
+01:34:46,180 --> 01:34:51,460
+I highly recommend putting a show together, talk to myself or Richard in I.R.S. and hash live hacking,
+
+668
+01:34:51,460 --> 01:34:57,520
+and we can connect you with the software that you need and and everything you need to do in order to get a show going.
+
+669
+01:34:57,520 --> 01:35:05,170
+And so a lot of fun. I highly recommend it. We need more content on air Mazola. So that's all I think I have to say here.
+
+670
+01:35:05,170 --> 01:35:09,820
+Thanks so much for watching next week. Episode 27.
+
+671
+01:35:09,820 --> 01:35:13,720
+And then I'm gone for a couple of weeks, so it's gonna be a good one.
+
+672
+01:35:13,720 --> 01:35:41,312
+Maybe I'll wear a funny hat. We'll find out anyhow.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

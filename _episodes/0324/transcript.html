@@ -1,0 +1,2397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 324 - May 10, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 324 - May 10, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6e9b45de-61ec-4552-9e75-aff600ee9a64</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6e9b45de-61ec-4552-9e75-aff600ee9a64">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,017 --> 00:00:09,547
+Welcome. Through the joy of color coding.
+
+2
+00:00:09,877 --> 00:00:14,827
+Hello and welcome to Episode 324 of The Joy of Coding.
+
+3
+00:00:15,227 --> 00:00:18,547
+My, my pleasure. My name is Mike Conley. It's so good to have you here.
+
+4
+00:00:19,327 --> 00:00:23,907
+We're going to be doing some interesting hacking today on Mozilla e things.
+
+5
+00:00:23,917 --> 00:00:27,487
+Some of it may be on Firefox, some of it on maybe not Firefox,
+
+6
+00:00:27,497 --> 00:00:37,717
+some of it might be on a website actually called support dot Mozilla dot org that if you've ever tried to get information about how to use some part
+
+7
+00:00:37,717 --> 00:00:48,186
+of Firefox or maybe you wanted to like examine other people's conversations about how to change parts of Firefox or maybe you've helped other people,
+
+8
+00:00:48,187 --> 00:00:50,496
+maybe even contributed to support Mozilla dot org.
+
+9
+00:00:50,497 --> 00:00:59,767
+That's kind of like the the hub for learning how to use the browser and getting your questions answered for just end users.
+
+10
+00:01:00,637 --> 00:01:05,016
+And we might be working on some of that today. I'll dive into details shortly.
+
+11
+00:01:05,017 --> 00:01:08,047
+But first, welcome. Let me share my screen.
+
+12
+00:01:09,247 --> 00:01:16,177
+Yes, it's May 10th, 2023. Episode 324 A reminder No plan survives breakfast.
+
+13
+00:01:16,177 --> 00:01:20,857
+I think I know what I want to do today. I think I have a vague sense of how things will go down.
+
+14
+00:01:20,857 --> 00:01:25,656
+But I could be wrong. I've been wrong before and things could go completely sideways.
+
+15
+00:01:25,657 --> 00:01:32,977
+I might just before the stream started. Wacky Morning DJ, which is the tool that I used to to play.
+
+16
+00:01:32,977 --> 00:01:40,536
+Sounds like the opening and closing music. It's broken because I updated Node and so like, that was a surprise.
+
+17
+00:01:40,537 --> 00:01:45,486
+That's why I'm starting a little bit late, and so I might have to work around that sort of problem.
+
+18
+00:01:45,487 --> 00:01:50,737
+And that's okay. That's, that's kind of how all this thing works is like you're capturing software development.
+
+19
+00:01:50,737 --> 00:01:57,607
+Well, how does I say it in the raw, you know, all warts and all, all the problems I hit and you get to join me as I go through them.
+
+20
+00:01:58,057 --> 00:02:02,856
+So who knows how things will go down, but I'll will be we'll go through it together.
+
+21
+00:02:02,857 --> 00:02:08,077
+That's the fun part. And the second thing I'll say is that the agenda that we're looking at is something
+
+22
+00:02:08,227 --> 00:02:11,107
+that you have access to if you want to click on links and follow stuff around,
+
+23
+00:02:11,557 --> 00:02:16,656
+if you go to the video description on Diodes Own or YouTube, there's a link down there.
+
+24
+00:02:16,657 --> 00:02:20,197
+It's over there on our Mozilla, there's a link in the details section.
+
+25
+00:02:20,197 --> 00:02:23,977
+And if you're watching this on Twitch, it's down in the channel details the link to the agenda.
+
+26
+00:02:23,977 --> 00:02:34,267
+And as I update the agenda, the the agenda will synchronize in the background and you can reload and hopefully it will all look okay.
+
+27
+00:02:34,297 --> 00:02:38,017
+Let's actually just double check and see how it looks. Yeah, it looks okay.
+
+28
+00:02:39,157 --> 00:02:45,757
+All right. So what do I want to do today? Well, first of all, I want to let you know that there wasn't I didn't live hack last week.
+
+29
+00:02:45,757 --> 00:02:53,737
+I didn't stream last week because I was on a podcast. So the Thunderbird team, the people who are working on the Thunderbird email client,
+
+30
+00:02:54,697 --> 00:03:04,117
+they have a podcast called the Thunder Cast and they were kind enough to offer me a guest sort of slot to talk to me during episode two their,
+
+31
+00:03:04,327 --> 00:03:10,207
+their second episode. And if you're interested in listening to me yammer on with Jason and Ryan,
+
+32
+00:03:10,477 --> 00:03:14,886
+two people who work on Thunderbird as well, there's a link in the agenda and you can listen to it.
+
+33
+00:03:14,887 --> 00:03:17,497
+I thought it was a pretty decent conversation. We covered a lot of ground.
+
+34
+00:03:18,517 --> 00:03:25,387
+We talked about like naturally we talked about Thunderbird because I used to work on Thunderbird before I started working on Firefox,
+
+35
+00:03:25,387 --> 00:03:26,557
+I worked on Thunderbird.
+
+36
+00:03:26,767 --> 00:03:32,197
+We talked a bit about Thunderbird, the recent changes there, but we also talked about Firefox, which might interest you and what,
+
+37
+00:03:32,437 --> 00:03:37,416
+you know, the device migration stuff that we're working on today and some of the migration was stuff we've worked on the past.
+
+38
+00:03:37,417 --> 00:03:47,197
+I referenced it and I also talked a little bit about, you know, product things, but we also like dove in and measurement and experimentation,
+
+39
+00:03:47,197 --> 00:03:55,086
+but we also dove into like just retro computing stuff and how the Internet used to be and how the Internet is now and all the pipes and tubes.
+
+40
+00:03:55,087 --> 00:03:58,837
+And if you're interested in all, you can check it out. It's an hour and 18.
+
+41
+00:03:59,227 --> 00:04:06,276
+If you listen to it it at twice speed, it's 40 minutes, roughly, and it's a good conversation.
+
+42
+00:04:06,277 --> 00:04:10,506
+So there you go. Check out the Thunder cast and subscribe.
+
+43
+00:04:10,507 --> 00:04:14,826
+Subscribe to that thing. It's a good it's a good crew. I'm going to be listening to the next episode as well.
+
+44
+00:04:14,827 --> 00:04:16,297
+They're going to have some interesting guests.
+
+45
+00:04:16,567 --> 00:04:23,077
+I think they're getting some guests from like the Document Foundation and the Matrix community and like all sorts of interesting stuff.
+
+46
+00:04:23,077 --> 00:04:26,767
+So go go check that out. Okay.
+
+47
+00:04:26,767 --> 00:04:33,517
+So what are we working on today? Well, let's talk about Sumo for a quick second here.
+
+48
+00:04:33,937 --> 00:04:40,537
+I mentioned this during the introduction. This is this is sumo.
+
+49
+00:04:40,537 --> 00:04:43,867
+If you've never been this assuming you go to support dot mozilla dot org.
+
+50
+00:04:44,137 --> 00:04:53,406
+It's a web page, you know, it's a web application. You can visit it right now and it has support documentation like a knowledge base for a
+
+51
+00:04:53,407 --> 00:05:00,127
+bunch of Mozilla products from Firefox all the way to Thunderbird and the private network.
+
+52
+00:05:00,127 --> 00:05:04,147
+Add on and relay and monitor and hubs and VPN and all these sorts of things.
+
+53
+00:05:04,447 --> 00:05:10,346
+It's got support. Articles and forums, support forums for all of these things.
+
+54
+00:05:10,347 --> 00:05:15,086
+And so, for example, if you go to Firefox, you can learn, okay,
+
+55
+00:05:15,087 --> 00:05:21,656
+well here are some frequent topics that people visit and here are some featured articles and you can like learn about,
+
+56
+00:05:21,657 --> 00:05:25,347
+oh, Firefox for families and how to use parental controls or something.
+
+57
+00:05:25,347 --> 00:05:37,107
+And it gives you guidance on how to do that. And, and there's also, I think forums, support forums in here like, uh, let's see here,
+
+58
+00:05:37,107 --> 00:05:42,416
+get help, ask a question so you can actually ask a question in here about like,
+
+59
+00:05:42,417 --> 00:05:53,517
+hey, how do I do X or Y, how do I get, you know, it, we'll try and find you a, an answer to your question basically.
+
+60
+00:05:54,027 --> 00:06:03,176
+And if you can't figure out your answer, then you can ask a question directly here and someone might answer it, you know.
+
+61
+00:06:03,177 --> 00:06:15,387
+So if you're like, how do I do? I deal with, you know, I don't know where, how, how can I make it so that my, um, what's,
+
+62
+00:06:15,477 --> 00:06:20,666
+what's a good question that one might ask how do I migrate data from another browser into Firefox?
+
+63
+00:06:20,667 --> 00:06:24,837
+That's a question someone might ask. And if they can't find the information, you can ask for it here.
+
+64
+00:06:25,317 --> 00:06:31,347
+And you might be interested in like if you're watching the stream, chances are you know your way around Firefox,
+
+65
+00:06:31,827 --> 00:06:35,906
+in which case you might be interested in helping people out and you can do that.
+
+66
+00:06:35,907 --> 00:06:40,257
+There's a whole community of awesome people who help new contributors,
+
+67
+00:06:40,257 --> 00:06:44,697
+but also people who are just using Firefox and want to know how to use it better.
+
+68
+00:06:45,057 --> 00:06:49,767
+And you can help out in the support forums and you know, that's great.
+
+69
+00:06:50,127 --> 00:06:53,756
+You can you can learn, you can teach and you can learn.
+
+70
+00:06:53,757 --> 00:06:59,607
+And it's a pretty great platform. And I will say as well that it's unsurprisingly open source.
+
+71
+00:06:59,607 --> 00:07:04,887
+The sumo web application is open source. It's actually called kid Sunni or kid Sunni.
+
+72
+00:07:04,887 --> 00:07:13,286
+I don't know actually how to pronounce it, but it is a Django application and it is an open source Django application.
+
+73
+00:07:13,287 --> 00:07:18,987
+You can check it out. You can you can pull it down. There's a whole document on how you can run it locally.
+
+74
+00:07:20,407 --> 00:07:24,127
+You know how you can get started and you can fix bugs in the sumo platform.
+
+75
+00:07:25,327 --> 00:07:29,467
+And one of the things that we're working on. Like, why am I talking about Sumo right now?
+
+76
+00:07:29,497 --> 00:07:31,267
+Well, one of the things that we're working on,
+
+77
+00:07:31,267 --> 00:07:39,156
+and I mentioned this during the podcast actually is trying to make it easier for people to realize that they can use a Firefox account
+
+78
+00:07:39,157 --> 00:07:47,197
+and sync to move from an old computer to a new computer or to move like to transfer the data from from an old device to a new device.
+
+79
+00:07:47,407 --> 00:07:51,427
+Now, if you're watching this, chances are you know this. So what I'm saying is probably not a surprise.
+
+80
+00:07:51,937 --> 00:07:55,657
+But if you didn't know this, if you.
+
+81
+00:07:55,897 --> 00:07:58,897
+Let's let me let me just pick an example out of the year.
+
+82
+00:07:59,107 --> 00:08:06,967
+Let's say you're getting one of your parents a computer for a gift for, you know, a birthday.
+
+83
+00:08:06,967 --> 00:08:10,087
+It's a big gift. Wow. New computer. Holy smokes.
+
+84
+00:08:10,567 --> 00:08:15,277
+Because they've got this old, like, Windows seven laptop from 2014 lying around.
+
+85
+00:08:15,277 --> 00:08:18,667
+And it's like, it's time. It's time. Your computer's too slow.
+
+86
+00:08:18,937 --> 00:08:24,067
+We got you a new laptop. You know, we bought it at Best Buy, something like that.
+
+87
+00:08:25,417 --> 00:08:29,107
+How do you get their data, their precious data, their bookmarks,
+
+88
+00:08:29,107 --> 00:08:33,846
+all the stuff that they've they've accumulated over the years on that trusty Windows seven computer?
+
+89
+00:08:33,847 --> 00:08:39,097
+How do you get it onto the new computer? And, you know, you've got a couple of options.
+
+90
+00:08:39,307 --> 00:08:49,446
+If you're, you know, feeling adventurous, you could like open up the profile folder and copy all of the profile contents into a jump drive and then
+
+91
+00:08:49,447 --> 00:08:58,267
+like create a new profile on the new computer and like dump in the profile contents into that profile.
+
+92
+00:08:58,537 --> 00:09:04,896
+You could do that, but that's a pretty heavy weight way of doing a profile.
+
+93
+00:09:04,897 --> 00:09:13,297
+Transfer involves doing a bunch of like, you know, using a key like a jump drive or external hard drive or,
+
+94
+00:09:14,137 --> 00:09:16,686
+you know, sending stuff over the network that I wouldn't do.
+
+95
+00:09:16,687 --> 00:09:21,277
+I wouldn't send your profile over the network because it's got all your bookmarks and history and passwords and stuff in it.
+
+96
+00:09:21,907 --> 00:09:28,687
+But, you know, there's there's a challenge here, especially because this is could be multiple this could be multiple gigabytes of data
+
+97
+00:09:29,227 --> 00:09:32,286
+and most of which you're probably not interested in transferring in the first place.
+
+98
+00:09:32,287 --> 00:09:39,127
+Like there are there are certain things that a profile, especially a profile that's old,
+
+99
+00:09:39,127 --> 00:09:44,617
+will accumulate over time that you probably don't want to take with you to a new a new computer,
+
+100
+00:09:45,577 --> 00:09:50,707
+old directories from old school style add ons that dumped a bunch of stuff in there like that.
+
+101
+00:09:50,707 --> 00:09:59,076
+You can leave that behind. And so the solution we're trying to to sort of promote is to have users create a Firefox account if they don't have one.
+
+102
+00:09:59,077 --> 00:10:05,617
+And if they do have want to make sure they're signed into it and make sure they're syncing and then sign into that account on the new computer.
+
+103
+00:10:05,917 --> 00:10:08,977
+That's what we're trying to do. Like that is the flow.
+
+104
+00:10:08,977 --> 00:10:12,096
+And the reason we're we're trying to promote that.
+
+105
+00:10:12,097 --> 00:10:18,697
+Trying to encourage that is because it's secure this is a secure transfer of data end to end encrypted
+
+106
+00:10:18,697 --> 00:10:22,656
+where Mozilla doesn't get to see the contents because it's using sync and client side encryption.
+
+107
+00:10:22,657 --> 00:10:26,947
+We don't get to see the bookmarks or history or passwords or add on information or anything like that.
+
+108
+00:10:26,947 --> 00:10:29,737
+It's just transferred seamlessly.
+
+109
+00:10:31,387 --> 00:10:41,407
+It is backwards and forwards compatible even if that computer that's from 2014 area, our theoretical example is running like Firefox ESR,
+
+110
+00:10:41,737 --> 00:10:48,697
+it is still possible for it to like sign into an account sync and then sync to a newer version of Firefox.
+
+111
+00:10:48,907 --> 00:10:53,497
+Like that'll still work. It's nicely forwards compatible and backwards compatible though.
+
+112
+00:10:53,497 --> 00:10:57,277
+I don't imagine one would download an older version of Firefox on the new computer.
+
+113
+00:10:58,057 --> 00:10:59,916
+And the last step is,
+
+114
+00:10:59,917 --> 00:11:07,357
+or the last reason why we're trying to promote this is because you don't need both computers to be accessible in order for this to work.
+
+115
+00:11:07,687 --> 00:11:16,957
+Like once your old computer is signed into a Firefox account and syncing, once it's done sinking, you can shut off that computer and put it away.
+
+116
+00:11:17,257 --> 00:11:22,447
+Because all you like when you sign into your account in sync on the new computer,
+
+117
+00:11:22,447 --> 00:11:26,917
+it's pulling the encrypted blobs down from Mozilla's servers and setting stuff up.
+
+118
+00:11:27,337 --> 00:11:31,447
+So that's useful in the event that, for example, your old computer,
+
+119
+00:11:31,657 --> 00:11:38,137
+maybe you want you got a new computer or your family member got a new computer because it's the old went broke, maybe it stopped working.
+
+120
+00:11:38,407 --> 00:11:42,457
+Maybe, you know, the hard drive finally failed on it, that sort of thing.
+
+121
+00:11:43,387 --> 00:11:47,586
+So we're really trying to encourage people, especially on older hardware, hey, create an account, start sinking.
+
+122
+00:11:47,587 --> 00:11:53,197
+Now in the event that like your hardware starts breaking down, you want to make sure that your data is backed up,
+
+123
+00:11:53,467 --> 00:11:56,167
+your precious browsing history and all that stuff is backed up.
+
+124
+00:11:56,467 --> 00:12:02,316
+So that if that happens and your computer breaks and maybe your hard drive fails, you get a new hard drive, keep the old computer.
+
+125
+00:12:02,317 --> 00:12:06,037
+But again, new hard drive, you have to reinstall everything you download Firefox.
+
+126
+00:12:06,037 --> 00:12:09,877
+You, you signed your account and then all your stuff's back.
+
+127
+00:12:09,877 --> 00:12:13,356
+Like, that's what we want. Yeah, the old computer.
+
+128
+00:12:13,357 --> 00:12:17,586
+My diary is just it's no longer usable. Or maybe it got lost or stolen.
+
+129
+00:12:17,587 --> 00:12:21,146
+Like, there's so many different ways that you. Things could go wrong here.
+
+130
+00:12:21,147 --> 00:12:26,957
+And so a Firefox account that is sinking allows you the sort of the peace of mind to know that, okay,
+
+131
+00:12:26,967 --> 00:12:35,727
+at least all of that stuff is being held securely on the sink servers so that on a new computer I can pull that stuff down.
+
+132
+00:12:35,907 --> 00:12:38,427
+And this is also really useful if you also have multiple computers,
+
+133
+00:12:38,427 --> 00:12:41,967
+maybe you're keeping the old computer around, but you're also getting a new computer.
+
+134
+00:12:42,237 --> 00:12:47,037
+Sync definitely supports that. You can have both computers sinking at the same time.
+
+135
+00:12:47,457 --> 00:12:51,207
+And like, that's a nice way of of being able to pass tabs back and forth.
+
+136
+00:12:52,977 --> 00:12:58,826
+So that's that's also helpful. So anyway, that, that is the, the, the memo memo.
+
+137
+00:12:58,827 --> 00:13:02,067
+That is the whole purpose of what we're trying to do here.
+
+138
+00:13:02,817 --> 00:13:05,457
+And so what we're hoping to do, we've added in nightly,
+
+139
+00:13:05,457 --> 00:13:10,076
+it's in beta right now actually two we've added a new help menu called switching to a new device.
+
+140
+00:13:10,077 --> 00:13:13,407
+It doesn't send you to a working sumo page yet. We're still building it out.
+
+141
+00:13:15,027 --> 00:13:20,367
+But what we're hoping to do is to walk the user through creating an account, signing into it,
+
+142
+00:13:21,447 --> 00:13:25,527
+starting sinking, and then instructions on how to download Firefox onto the new computer.
+
+143
+00:13:26,217 --> 00:13:39,537
+And that doesn't sound too difficult except that a sumo a sumo document where just less steps is fine, but we can do better.
+
+144
+00:13:39,987 --> 00:13:43,917
+One of the things that we're hoping to do is make use of something called UI tours,
+
+145
+00:13:43,917 --> 00:13:53,187
+which is a library that Mozilla website's Mozilla dot org websites can use to sort of have privileged communications with the browser.
+
+146
+00:13:53,907 --> 00:14:01,017
+So for example, sumo dot mozilla talks support of mozilla dot org can ask the browser am I signed into an account right now?
+
+147
+00:14:01,947 --> 00:14:09,267
+It can ask is the user syncing and it will get an answer and only support dot mozilla dot org and mozilla org.
+
+148
+00:14:09,327 --> 00:14:12,537
+Websites can do that. Like we definitely don't allow other websites to do that,
+
+149
+00:14:13,407 --> 00:14:17,157
+but that's something that UI tours allows Mozilla dot org websites to do and there's a bunch of
+
+150
+00:14:17,157 --> 00:14:22,467
+security layers in place to to make sure that okay only Mozilla dot org websites can do this
+
+151
+00:14:23,637 --> 00:14:29,667
+and we want to make use of that mechanism to walk the user through a what we're calling the
+
+152
+00:14:29,907 --> 00:14:35,967
+like what I'm what I'm calling the switching devices wizard which will step the user through.
+
+153
+00:14:35,967 --> 00:14:39,027
+Okay. Step one, are you not signed in? Okay, great.
+
+154
+00:14:39,177 --> 00:14:45,656
+What sign you in or create an account. Step two is are you thinking no.
+
+155
+00:14:45,657 --> 00:14:51,027
+Okay, we'll start thinking that's important. Step three And then like, are you thinking the right things?
+
+156
+00:14:51,027 --> 00:14:55,137
+Because you can choose there's a bunch of different stuff you can choose to sync. Are you thinking the things that you care about?
+
+157
+00:14:55,647 --> 00:15:05,277
+And then step three is okay. Now that you've signed in and thinking, go download this, build a Firefox on your new computer.
+
+158
+00:15:05,277 --> 00:15:11,756
+Like here's a short link. And what we're doing kind of especially with that short link, is we're sending the user a build.
+
+159
+00:15:11,757 --> 00:15:16,137
+That is when the user downloads it and installs it on the new computer,
+
+160
+00:15:16,137 --> 00:15:22,587
+it should at least on Windows after it installs the onboarding screen will say like, welcome back.
+
+161
+00:15:22,917 --> 00:15:26,066
+You know, we know that you were transferring to a new computer. Welcome back.
+
+162
+00:15:26,067 --> 00:15:32,247
+Sign into your new account here, the one that you created as opposed to sort of the more generic onboarding.
+
+163
+00:15:33,027 --> 00:15:38,637
+And we'll know that because of the special the special link, we're going to give people to download from the sumo page.
+
+164
+00:15:39,177 --> 00:15:43,316
+So that is the idea. And what have we got so far?
+
+165
+00:15:43,317 --> 00:15:45,717
+Well, I'm working on this with another person.
+
+166
+00:15:45,717 --> 00:15:56,667
+I'm working on this with a colleague, Hannah Jones, who is working on the the markup and the logic of the wizard, like the UI components.
+
+167
+00:15:57,027 --> 00:16:02,997
+And what I am working on is the state machine that walks the user through the different steps.
+
+168
+00:16:03,567 --> 00:16:07,407
+And I've got this, this patch.
+
+169
+00:16:07,407 --> 00:16:15,267
+Well, I mean a bunch of this stuff is actually already in tree if you look at could soon see this stuff merged just this morning you can see the
+
+170
+00:16:15,267 --> 00:16:31,377
+switching devices wizard manager thing under kid suni sumo static sumo J.S. And then there's a thing called the switching devices wizard manager.
+
+171
+00:16:31,377 --> 00:16:35,157
+And this is what I've been working on so far. This is like my domain.
+
+172
+00:16:35,187 --> 00:16:39,987
+You can check that out. And this is also my first time working on Sumo, so I'm learning a lot.
+
+173
+00:16:40,017 --> 00:16:42,177
+I've worked with Django applications before.
+
+174
+00:16:43,257 --> 00:16:48,467
+There's a code review tool that I contribute to periodically called Review Board that's written in Django.
+
+175
+00:16:48,477 --> 00:16:56,247
+So I have some familiarity with Django. But, you know, ostensibly for Mozilla, I work on like the desktop client.
+
+176
+00:16:56,787 --> 00:17:06,117
+I work on Firefox as opposed to like websites for Mozilla. So this is all well, the language and some of the mechanisms are familiar to me.
+
+177
+00:17:06,387 --> 00:17:10,157
+I'm also learning a lot about web development within like the whole ecosystem.
+
+178
+00:17:10,167 --> 00:17:14,996
+Like, for example, I'm using Docker to like host the world effectively.
+
+179
+00:17:14,997 --> 00:17:23,217
+Like I've got all of the bits and pieces that you need in order to like host Docker or a host sumo and run it locally.
+
+180
+00:17:23,217 --> 00:17:30,837
+And I also was running the Firefox accounts ecosystem locally, which was really interesting.
+
+181
+00:17:33,477 --> 00:17:39,837
+Yeah. So that's, that's how all this stuff's working. I have a patch that I want to clean up and put up for review.
+
+182
+00:17:40,887 --> 00:17:47,637
+That's what I'm hoping to do first. This is what I was working on this morning, and I'm hoping you can stick with me while I finish the job with that.
+
+183
+00:17:48,257 --> 00:17:52,077
+Um, and what I need to do is clean up the patch.
+
+184
+00:17:52,557 --> 00:17:57,477
+If we take a look at the patch as it is, let me find a terminal.
+
+185
+00:17:58,407 --> 00:18:03,236
+Let me find an unused terminal. This one? Yeah.
+
+186
+00:18:03,237 --> 00:18:08,127
+I need a better commit message, but effectively what I'm doing is like one of the first thing,
+
+187
+00:18:08,127 --> 00:18:15,027
+the things that the wizard needs to do is detect whether or not the user is using desktop Firefox because that's that's the target for this.
+
+188
+00:18:15,147 --> 00:18:20,157
+The sumo page is for desktop users on their old computer switching to their new computer.
+
+189
+00:18:20,577 --> 00:18:25,557
+And if a sign if they're on like a mobile device or they're using like Safari or Chrome or something,
+
+190
+00:18:25,887 --> 00:18:30,647
+then the wizard is not going to be able to help them because it can't use UI.
+
+191
+00:18:30,657 --> 00:18:37,407
+Toure or UI tour isn't available. It doesn't work on non Mozilla browsers, probably unsurprisingly.
+
+192
+00:18:37,737 --> 00:18:46,377
+And so we need to like disqualify. There's a method that we're going to call on the wizard that's like you're this is a disqualified user agent.
+
+193
+00:18:46,377 --> 00:18:48,956
+So we'll put the wizard into the state where it says like, okay,
+
+194
+00:18:48,957 --> 00:18:53,757
+well you need to be on Firefox desktop on the old device in order for us to go through this wizard.
+
+195
+00:18:55,227 --> 00:19:00,867
+So I'm adding that in right now. And the whole design of the, you know, let me,
+
+196
+00:19:01,137 --> 00:19:07,317
+let me like make this window a little bit bigger and maybe talk a little bit through how this whole thing works.
+
+197
+00:19:07,677 --> 00:19:11,937
+It's a state machine effectively, and I don't want you to freak out and be like a state machines.
+
+198
+00:19:12,627 --> 00:19:27,057
+Oh, now, like, it's not like from theory of computing and finite state automata and like, what's this face like?
+
+199
+00:19:27,837 --> 00:19:30,837
+I studied I studied this stuff in school.
+
+200
+00:19:30,837 --> 00:19:36,837
+Who's the fellow I studied? I studied with? Um, finite state automata.
+
+201
+00:19:37,137 --> 00:19:47,337
+You, Toronto. There is a fellow named Cook, Steven Cook, who I had a course with at one point.
+
+202
+00:19:48,507 --> 00:19:54,117
+He talks about, like, Turing machines and finds that time don't get freaked out, that we're not going into deep theory here.
+
+203
+00:19:54,117 --> 00:19:58,766
+All it is is it's we have a bunch of state variables that we're going to be getting
+
+204
+00:19:58,767 --> 00:20:02,907
+information in from various sources like UI tours and user input events and,
+
+205
+00:20:03,387 --> 00:20:06,177
+you know, asking for the user agent and like doing all this stuff.
+
+206
+00:20:07,107 --> 00:20:15,717
+And then we're going to update these internal state variables and then we will compute which step of the wizard the user is supposed to be in.
+
+207
+00:20:16,107 --> 00:20:24,117
+That's the name of the game. And that's what my, my patch is hoping to do is we're going to have these we have these three steps.
+
+208
+00:20:24,117 --> 00:20:27,177
+Effectively, the first step is like, okay, sign into FSA.
+
+209
+00:20:27,597 --> 00:20:31,977
+And then the next step is like, okay, configure sync, make sure you're thinking.
+
+210
+00:20:32,337 --> 00:20:37,227
+And then the final step is, okay, well let's set up your new device and there's no exiting that condition.
+
+211
+00:20:37,617 --> 00:20:47,727
+And the way I'm framing it is like, um, we're going to have these functions that say that we'll examine the current state and,
+
+212
+00:20:48,267 --> 00:20:52,137
+uh, you know, determine whether or not we can skip the step.
+
+213
+00:20:52,527 --> 00:20:55,197
+Like if the user hits the wizard and they're already signed in,
+
+214
+00:20:55,407 --> 00:21:03,267
+we can skip this first step and go straight to configuring sync and making sure that the user has everything that they need sync.
+
+215
+00:21:03,717 --> 00:21:08,336
+And once they're done that, then we just follow to this last step and there's no exiting that last step.
+
+216
+00:21:08,337 --> 00:21:13,047
+That step is okay, now that you're done, you're thinking, go get Firefox on that new computer.
+
+217
+00:21:14,877 --> 00:21:22,616
+So that that is the name of the game. There's not much to look at right now because the actual UI isn't built out.
+
+218
+00:21:22,617 --> 00:21:27,867
+That's still coming. But if you look, there's a custom element called a form wizard.
+
+219
+00:21:28,287 --> 00:21:31,887
+That is what we're talking to at our as our front end.
+
+220
+00:21:32,217 --> 00:21:39,557
+And we have. This sort of contract, I guess, is what I'll say.
+
+221
+00:21:42,677 --> 00:21:47,787
+Let me find the documentation and support.
+
+222
+00:21:51,797 --> 00:22:08,017
+Is there? Um. The.
+
+223
+00:22:10,557 --> 00:22:19,937
+See here. Um.
+
+224
+00:22:24,987 --> 00:22:32,447
+Hold on just one moment. What am I doing?
+
+225
+00:22:32,457 --> 00:22:36,287
+What am I doing? What am I doing? I just want to show you this documentation or just to find it.
+
+226
+00:22:38,477 --> 00:22:42,157
+Um. Okay.
+
+227
+00:22:43,087 --> 00:22:46,087
+Here is the documentation. Okay.
+
+228
+00:22:46,807 --> 00:22:58,617
+So we have this design here where we're trying to like have the flow of data and we're trying to document all of the different things.
+
+229
+00:22:58,657 --> 00:23:07,447
+This is like the contract between what the switching devices wizard manager is going to call on the form wizard.
+
+230
+00:23:07,927 --> 00:23:12,637
+And there's like some state machine logic here that we've documented.
+
+231
+00:23:12,637 --> 00:23:15,727
+And then there's the components of the, the form wizard itself.
+
+232
+00:23:16,477 --> 00:23:23,827
+And this is, this is kind of our template for what it is that we're building and.
+
+233
+00:23:28,477 --> 00:23:33,907
+Uh, I'm going to now go over here.
+
+234
+00:23:34,597 --> 00:23:43,567
+And what I want to do is clean up this patch that I've written and, uh, fill in some of these to dos,
+
+235
+00:23:44,587 --> 00:23:52,597
+because some of the things I've done are like, I've added new methods or I've added various arguments, and I need to just start documenting stuff.
+
+236
+00:23:52,837 --> 00:23:56,887
+I also have written a bunch of tests and I need to document a bunch of stuff in here.
+
+237
+00:23:56,887 --> 00:24:00,127
+So that's what you're going to be following me with doing today.
+
+238
+00:24:00,367 --> 00:24:04,877
+We're going to start going through the to dos and flesh, fleshing out these these comments.
+
+239
+00:24:05,317 --> 00:24:19,357
+So the first thing is the constructor, uh, and what I'm going to do is document the form, the, the arguments, the parameters here form wizard.
+
+240
+00:24:20,107 --> 00:24:23,257
+The form wizard element to.
+
+241
+00:24:25,337 --> 00:24:34,337
+Send state change sends to set deps and the active step.
+
+242
+00:24:37,087 --> 00:24:42,807
+Two set steps. Set. Which step? The user is.
+
+243
+00:24:43,847 --> 00:24:47,117
+Users should be viewing on.
+
+244
+00:24:48,587 --> 00:24:52,577
+And then string fake you a.
+
+245
+00:24:54,397 --> 00:24:58,957
+Uh, I think that we do under unders the lower case, therefore.
+
+246
+00:24:59,437 --> 00:25:03,277
+And this is optional, uh, undefined.
+
+247
+00:25:04,747 --> 00:25:13,467
+An optional fake. User agent string to construct the uh.
+
+248
+00:25:15,397 --> 00:25:20,077
+For an optional fake user agent string.
+
+249
+00:25:22,217 --> 00:25:28,447
+To supply for testing. This is forwarded to.
+
+250
+00:25:31,957 --> 00:25:49,177
+If this is if this is not supplied. The actual navigator user agent string is used params string or this is an object actually.
+
+251
+00:25:52,687 --> 00:26:01,997
+Fake troubleshooting. Undefined and optional.
+
+252
+00:26:04,937 --> 00:26:11,067
+Fake objects. To. Passed to the.
+
+253
+00:26:11,907 --> 00:26:24,607
+What's it called the. Browser detect library to simulate reading from.
+
+254
+00:26:25,587 --> 00:26:34,497
+The UI tours troubleshooting data. So how it works troubleshooting data browser detect is like troubleshooting detector.
+
+255
+00:26:34,507 --> 00:26:44,097
+How does that work? Troubleshooting detector uses. Remote Troubleshooting Remote Troubleshooting.
+
+256
+00:26:45,417 --> 00:26:49,377
+Sumo JS Remote Sumo JSC Remote Access.
+
+257
+00:26:49,677 --> 00:27:01,177
+Remote Troubleshooting. Troubleshooting message to Chrome Web Channel.
+
+258
+00:27:01,777 --> 00:27:08,637
+Interesting. Yeah.
+
+259
+00:27:09,567 --> 00:27:19,647
+Reading from is to simulate reading from, uh, simulate what is returned from a web channel.
+
+260
+00:27:22,127 --> 00:27:37,807
+On a Firefox browser. Or a for a request for troubleshooting data and that's used to pre populate the like.
+
+261
+00:27:37,807 --> 00:27:45,036
+If you're asking a question, it will make it easier for the user to like for for sumo to know like, okay,
+
+262
+00:27:45,037 --> 00:27:51,547
+this is the exact version of Firefox that the user is on and stuff like there's additional detail that the user agent string doesn't supply.
+
+263
+00:27:52,027 --> 00:28:02,707
+And instead of using all of that machinery during our automated testing, we just supply a fake one and.
+
+264
+00:28:05,747 --> 00:28:21,527
+Initial Does user agent does the work of scanning the user agent to determine if this is one that can actually use the wizard?
+
+265
+00:28:22,607 --> 00:28:30,167
+If not, the form wizard is told to show the disqualified state.
+
+266
+00:28:32,147 --> 00:28:39,747
+And then we're going to copy. Uh.
+
+267
+00:28:41,517 --> 00:28:46,917
+Yeah. Yep.
+
+268
+00:28:47,127 --> 00:28:52,227
+There we go. Then. Disqualify, we should document this.
+
+269
+00:28:55,047 --> 00:29:00,117
+Actually, we don't need this at all because we were just calling directly on to disqualify.
+
+270
+00:29:01,657 --> 00:29:06,117
+Um. We need documentation here.
+
+271
+00:29:07,617 --> 00:29:12,357
+Computes which step should be shown to the user in.
+
+272
+00:29:14,507 --> 00:29:18,137
+Form Wizard. Based on the current state.
+
+273
+00:29:20,987 --> 00:29:24,197
+Once that step is calculated.
+
+274
+00:29:26,417 --> 00:29:34,487
+The set step method is called on the form wizard passing the name of the step.
+
+275
+00:29:36,207 --> 00:29:45,487
+And the and a payload. Of settings to configure that step.
+
+276
+00:29:50,527 --> 00:29:57,486
+And the two news. And here I have to you know, what I need to do is replace that tutu with an issue number.
+
+277
+00:29:57,487 --> 00:30:00,517
+So I'm going to file an issue. It's interesting.
+
+278
+00:30:00,517 --> 00:30:10,627
+One of the things about Cassini is that all of the issue tracking happens under Mozilla Sumo and but the project is under Mozilla Suni.
+
+279
+00:30:10,627 --> 00:30:14,977
+So like if I file a ticket, I have to do it under here. I'm going to file a ticket.
+
+280
+00:30:17,357 --> 00:30:22,117
+Replace placeholder string despite qualification.
+
+281
+00:30:24,057 --> 00:30:27,977
+Strings in. Uh, switching devices.
+
+282
+00:30:27,977 --> 00:30:31,277
+Wizard manager with final copy.
+
+283
+00:30:32,227 --> 00:30:41,467
+And I'm going to put the right label on it and put it in the right board and the right milestone.
+
+284
+00:30:42,547 --> 00:30:50,367
+I've got some placeholder text in. I'll be putting some placeholder text inside of.
+
+285
+00:30:53,157 --> 00:31:10,167
+Switching devices was a measure to show client clients that don't match our requirements for for showing the wizard steps once the actual copy.
+
+286
+00:31:11,547 --> 00:31:15,027
+Is settled.
+
+287
+00:31:15,447 --> 00:31:20,277
+We should replace that placeholder text. Okay.
+
+288
+00:31:23,267 --> 00:31:26,387
+So we'll link to that here.
+
+289
+00:31:28,937 --> 00:31:38,367
+Uh. From Brazil.
+
+290
+00:31:38,547 --> 00:31:44,247
+Sumo. 1270.
+
+291
+00:31:46,837 --> 00:31:53,497
+Replace with replace this. Placeholder text with final copy.
+
+292
+00:31:55,827 --> 00:32:00,816
+Uh, all right. Now, there were. There was another to do in here regarding tests.
+
+293
+00:32:00,817 --> 00:32:10,747
+I need to, like, document some of the stuff here in our tests. The sign on stub for form wizard.
+
+294
+00:32:12,407 --> 00:32:18,787
+A set step. This is set up.
+
+295
+00:32:19,757 --> 00:32:28,557
+And reset. In for each and after each, respectively.
+
+296
+00:32:32,087 --> 00:32:43,477
+We do the same thing with. And we sat in before each and after each respective.
+
+297
+00:32:50,437 --> 00:33:02,887
+Helper function to return a switching devices wizard manager that is constructed with testing
+
+298
+00:33:03,397 --> 00:33:18,967
+strings that are result in the manager evaluating the user agent as qualified to use the wizard.
+
+299
+00:33:25,627 --> 00:33:42,037
+And then to do here I can. To do down here.
+
+300
+00:33:43,897 --> 00:33:52,467
+Fetch Stubbs. Yeah. Okay. We can just replace these. A sign on stub.
+
+301
+00:33:53,827 --> 00:33:56,827
+Four Form Wizard Disqualify.
+
+302
+00:33:57,807 --> 00:34:01,557
+It is. Set up and reset.
+
+303
+00:34:04,727 --> 00:34:08,686
+She don't know if fetch stub is used is not.
+
+304
+00:34:08,687 --> 00:34:14,727
+We can just remove that. Uh.
+
+305
+00:34:14,727 --> 00:34:19,197
+Okay, then to do document this is similar to.
+
+306
+00:34:24,987 --> 00:34:30,207
+To return that is constructed some testing result in the manager value of the user is not qualified.
+
+307
+00:34:32,347 --> 00:34:37,407
+He's the wizard. All right.
+
+308
+00:34:37,617 --> 00:34:42,836
+What is? Sign on. Just to make it simple.
+
+309
+00:34:42,837 --> 00:34:47,637
+Sumo Tatsumi could Sunni.
+
+310
+00:34:47,847 --> 00:34:53,007
+Sumo Sunni. Not sure what you mean there.
+
+311
+00:34:57,297 --> 00:35:00,957
+Uh, sumo. Mozilla slash sumo.
+
+312
+00:35:03,947 --> 00:35:15,287
+I'm not sure what you mean. What is? Sign on. Well, I can answer that. Sign on is a this is a third party library for doing stubbing.
+
+313
+00:35:15,707 --> 00:35:21,047
+It's like a utility testing utility with like stubbing and spies and marks and JavaScript.
+
+314
+00:35:22,067 --> 00:35:24,257
+It's really excellent. So basically allows you to,
+
+315
+00:35:24,257 --> 00:35:32,537
+like override certain methods on things and then monitor what they're called with or to see if they were
+
+316
+00:35:32,537 --> 00:35:37,396
+ever called or make sure that they were never called and checked to see what they were called with.
+
+317
+00:35:37,397 --> 00:35:46,727
+And that helps to do unit testing because it allows us to instead of doing maybe doing dependency injection,
+
+318
+00:35:48,017 --> 00:36:01,727
+we can just sort of poke into the existing set of dependencies around the thing that we're testing to put them into easier,
+
+319
+00:36:02,967 --> 00:36:07,757
+a more controlled, steady state or a controllable lab environment.
+
+320
+00:36:08,177 --> 00:36:13,066
+I don't know if I'm explaining this correctly or clearly, but it allows us to like override certain things.
+
+321
+00:36:13,067 --> 00:36:24,197
+So for example, you can set up a stub and then you can say, okay, well hey, the next time that disqualify method is called,
+
+322
+00:36:24,197 --> 00:36:28,397
+make sure it calls this function, which is actually going to resolve this promise.
+
+323
+00:36:29,507 --> 00:36:36,107
+And that's helpful for, you know, if you need to wait for a function to be called, this is helpful, this pattern.
+
+324
+00:36:37,067 --> 00:36:47,857
+Maybe there's an existing sign in. The first comment was that you filed the bug on sumo not consuming.
+
+325
+00:36:48,097 --> 00:36:55,087
+Yeah, that's. That's intentional. We're supposed to only file tickets under Missoula Sumo and not kid Suni,
+
+326
+00:36:55,717 --> 00:37:04,067
+which is kind of strange, FYI to hear Simon pronounce like it was an English word.
+
+327
+00:37:04,127 --> 00:37:08,676
+Well, how is it supposed to be? No. Is it French? Is it French?
+
+328
+00:37:08,677 --> 00:37:12,907
+Cinnamon. What is this, a pun? I don't understand. I've always just called it Simon.
+
+329
+00:37:13,957 --> 00:37:18,007
+Like Simon. But if it's a pun, let me know.
+
+330
+00:37:18,427 --> 00:37:19,127
+Anyway, this.
+
+331
+00:37:19,147 --> 00:37:28,837
+This allows us to sort of do some avoiding of dependency injection and write tests that, for example, when they're called, they should all run.
+
+332
+00:37:28,837 --> 00:37:35,197
+And, you know, and that's with constructing like a fake form wizard.
+
+333
+00:37:35,677 --> 00:37:40,927
+So it's for unit testing, so I'm pretty happy with that.
+
+334
+00:37:40,957 --> 00:37:47,887
+Are there any other tutus in here? No, there are not. Let us take stock where I'm going to add.
+
+335
+00:37:49,447 --> 00:37:54,207
+These changes. I'm using git now so I'm not the greatest to get.
+
+336
+00:37:54,217 --> 00:37:58,897
+But I have some some capability.
+
+337
+00:37:59,617 --> 00:38:05,406
+And let's take a look at the patch. So is it using UI too, or yet I'm importing it.
+
+338
+00:38:05,407 --> 00:38:11,857
+But am I using it? Maybe I can skip that part. Yeah, I'm not actually using that yet, so I'm going to skip that part.
+
+339
+00:38:15,307 --> 00:38:22,297
+Uh, and I'm going to put this part back because I didn't need to take it out just yet.
+
+340
+00:38:25,607 --> 00:38:28,907
+It's under device migration was heard as.
+
+341
+00:38:37,917 --> 00:38:45,867
+And then, uh, um, you know, what I need to do, actually, is document the steps.
+
+342
+00:38:47,187 --> 00:38:58,697
+Steps? Construction here. An object, an array of objects representing steps.
+
+343
+00:39:00,437 --> 00:39:03,767
+Actually I can use like a typedef array of.
+
+344
+00:39:07,277 --> 00:39:11,297
+Switching devices, wizard steps.
+
+345
+00:39:13,727 --> 00:39:20,387
+That can, uh, can be used to that that.
+
+346
+00:39:21,887 --> 00:39:39,797
+Our evaluated during each state change to determine which debt we should put the user in with the form wizard.
+
+347
+00:39:43,737 --> 00:39:46,847
+And then we're going to do a typedef.
+
+348
+00:39:47,987 --> 00:39:52,117
+TypeDef. Switching devices. Wizard steps.
+
+349
+00:39:57,197 --> 00:40:11,947
+Um. Object.
+
+350
+00:40:15,177 --> 00:40:21,217
+It's a good example. Property. Property.
+
+351
+00:40:24,537 --> 00:40:35,527
+String. Name.
+
+352
+00:40:36,427 --> 00:40:43,317
+The name of the step. The name of the step to.
+
+353
+00:40:44,967 --> 00:40:48,357
+Set the form wizard.
+
+354
+00:40:50,557 --> 00:40:55,717
+Said Step. To pass.
+
+355
+00:40:56,947 --> 00:41:01,567
+Who? Is that past form wizard set step.
+
+356
+00:41:02,107 --> 00:41:06,397
+If this switching device wizards step.
+
+357
+00:41:07,637 --> 00:41:14,307
+Devices wizards step. Is the one we're entering.
+
+358
+00:41:15,567 --> 00:41:19,437
+Property. This is a function.
+
+359
+00:41:19,647 --> 00:41:24,687
+There's exit conditions met at property.
+
+360
+00:41:37,517 --> 00:41:43,037
+Property function. Exit condition.
+
+361
+00:41:43,037 --> 00:42:00,937
+Exit conditions met. A call, a function that accepts the state object from.
+
+362
+00:42:03,037 --> 00:42:19,757
+Switching devices. Wizard manager. And determines if the uh if the switching devices wizards step.
+
+363
+00:42:22,797 --> 00:42:37,937
+Can be skipped over. Uh, returns true if the switching devices step can be skipped over because the conditions are met.
+
+364
+00:42:40,777 --> 00:42:45,517
+Completing it are met. Property function.
+
+365
+00:42:46,927 --> 00:42:53,527
+Enter a function that. Accepts the state object from.
+
+366
+00:42:56,737 --> 00:43:06,127
+Uh, have it returns a another object that is passed to the form.
+
+367
+00:43:06,697 --> 00:43:12,397
+Wizard sets that method as the payload.
+
+368
+00:43:13,767 --> 00:43:18,627
+For configuring the step, the displayed step.
+
+369
+00:43:22,657 --> 00:43:33,517
+Okay. I think that's all I wanted to hear.
+
+370
+00:43:36,497 --> 00:43:40,607
+And then this is intentionally public.
+
+371
+00:43:42,097 --> 00:43:45,727
+So that the steps can be tested.
+
+372
+00:43:57,807 --> 00:44:05,877
+Hmm. Individually.
+
+373
+00:44:07,927 --> 00:44:16,187
+And it tested individually. Okay.
+
+374
+00:44:17,547 --> 00:44:20,997
+And maybe let's write a couple of those steps or those unit tests.
+
+375
+00:44:24,097 --> 00:44:29,737
+Describe. Um.
+
+376
+00:44:33,777 --> 00:44:40,117
+We're just going to take all this out. Switching device and manager steps.
+
+377
+00:44:40,917 --> 00:44:52,177
+Uh. Expected exit conditions and terror behaviors.
+
+378
+00:44:57,517 --> 00:45:01,867
+Okay. We're going to construct one of these things.
+
+379
+00:45:07,307 --> 00:45:11,617
+Maybe this should be a. For general help or method.
+
+380
+00:45:18,837 --> 00:45:22,257
+Um. It.
+
+381
+00:45:23,337 --> 00:45:31,717
+She should. Show the.
+
+382
+00:45:35,377 --> 00:45:41,767
+Should not let the user exert the FSA sign in step.
+
+383
+00:45:46,507 --> 00:45:53,477
+To sign into FSA step. Unless signed in.
+
+384
+00:45:55,537 --> 00:46:01,077
+Signed in. Yeah. Um.
+
+385
+00:46:06,587 --> 00:46:11,857
+Go see if. No else.
+
+386
+00:46:12,887 --> 00:46:16,097
+Interesting. So it's French wordplay.
+
+387
+00:46:16,657 --> 00:46:21,587
+Okay, let's step equal.
+
+388
+00:46:22,097 --> 00:46:27,437
+Well, first of all, let manager equal. Struct valid manager.
+
+389
+00:46:38,477 --> 00:46:42,487
+Oh, you know what? I should actually. No, no, no, no, no, no, I.
+
+390
+00:46:43,477 --> 00:46:50,417
+I know what I want to do, because there are some helpers and, like, some, some gunk that I want to reuse from that first bank of tests.
+
+391
+00:46:51,467 --> 00:46:56,357
+So what I'm going to do is I'm not going to move that and I'm not going to have this down here.
+
+392
+00:47:03,817 --> 00:47:19,607
+Instead, I'm going to add it to this list. Um.
+
+393
+00:47:23,037 --> 00:47:36,177
+And then let's step because manager steps find as start name equals sign in to say.
+
+394
+00:47:46,007 --> 00:47:51,527
+Uh, expect stepped out.
+
+395
+00:47:54,617 --> 00:48:04,677
+Uh, exit conditions. All right, let I expect stepped exit conditions.
+
+396
+00:48:05,487 --> 00:48:13,377
+FSA signed in. False. To be false.
+
+397
+00:48:16,317 --> 00:48:20,037
+True. Feature.
+
+398
+00:48:20,927 --> 00:48:28,547
+Let's see if it likes that. Let's run those tests. No.
+
+399
+00:48:32,007 --> 00:48:37,316
+Exit conditions is not a function. Conditions met.
+
+400
+00:48:37,317 --> 00:48:48,147
+Sorry. Exact conditions met. Yeah.
+
+401
+00:48:48,167 --> 00:48:52,347
+Okay. Um.
+
+402
+00:48:55,077 --> 00:48:59,486
+In a way, this is almost just like testing that the code is the way that the code is,
+
+403
+00:48:59,487 --> 00:49:06,867
+which is just kind of makes it so that I it's harder for me to make like logic errors accidentally,
+
+404
+00:49:07,887 --> 00:49:12,627
+but I realize that this is almost just testing that like this code is this code
+
+405
+00:49:15,957 --> 00:49:23,847
+should now the user exit the configure set sync step unless sync enabled and.
+
+406
+00:49:24,757 --> 00:49:29,377
+Configured. You're saying?
+
+407
+00:49:34,067 --> 00:49:44,627
+Uh, and was that sink enabled in confirm sink choices confirmed sink choices sink enabled false.
+
+408
+00:49:45,667 --> 00:49:54,347
+FSA signed in. True. Well, it doesn't even use that second abled false.
+
+409
+00:49:54,367 --> 00:50:01,896
+We expect that to be false. We expect sync, enabled, but confirmed choices to be false.
+
+410
+00:50:01,897 --> 00:50:11,317
+To be false. We expect if somehow the user has confirmed the choices, despite having not had sync enabled, that should also be false.
+
+411
+00:50:11,967 --> 00:50:16,357
+Then we expect. Only when they are both true should that be true.
+
+412
+00:50:22,297 --> 00:50:28,687
+Not sure how the user might have confirmed sync choices when.
+
+413
+00:50:32,617 --> 00:50:38,767
+Yeah. If sync is not enabled. If the user. I suppose this could occur.
+
+414
+00:50:40,487 --> 00:50:49,547
+If the user confirms their choices and at the same instant.
+
+415
+00:50:53,117 --> 00:50:57,107
+Sink gets disabled. Seems unlikely.
+
+416
+00:50:58,957 --> 00:51:08,417
+But testing it anyway. Okay.
+
+417
+00:51:13,947 --> 00:51:20,447
+Good. And then the last one is, uh.
+
+418
+00:51:22,997 --> 00:51:35,236
+It should. If once those are all satisfied, then no matter what you pass to set up new device, it will that should return false.
+
+419
+00:51:35,237 --> 00:51:41,667
+So I'm just going to make sure that just returns false. It should return false.
+
+420
+00:51:45,177 --> 00:51:48,326
+Exit the, uh. What's it called?
+
+421
+00:51:48,327 --> 00:52:02,337
+Sign it set up new device step. Uh, conditions met.
+
+422
+00:52:13,527 --> 00:52:16,987
+True sync, enabled, confirms and choices are.
+
+423
+00:52:19,067 --> 00:52:31,927
+To be false. Oh, that should be false.
+
+424
+00:52:33,307 --> 00:52:37,417
+Okay. Now, what about entering? Um.
+
+425
+00:52:47,997 --> 00:52:54,857
+And during. Should echo back these.
+
+426
+00:52:56,507 --> 00:52:59,897
+Yeah, it should.
+
+427
+00:53:02,577 --> 00:53:08,797
+Echo back should have the. Sign into a step.
+
+428
+00:53:10,237 --> 00:53:14,117
+Echo back. Right.
+
+429
+00:53:17,767 --> 00:53:23,657
+Parameter. Right, payload. If entering.
+
+430
+00:53:27,177 --> 00:53:31,017
+Now echo back. Emit emit the right payload if entering.
+
+431
+00:53:35,617 --> 00:53:44,587
+Um. Maybe all I could do is, like, describe.
+
+432
+00:53:46,357 --> 00:53:49,387
+He signed into ethics a step.
+
+433
+00:54:02,677 --> 00:54:12,967
+And we'll put these out or scope. User exit.
+
+434
+00:54:15,107 --> 00:54:19,727
+Step in less. I should have the step in the right payload if entering.
+
+435
+00:54:22,557 --> 00:54:27,897
+Step. And ter. We're going to pass it this payload.
+
+436
+00:54:31,177 --> 00:54:34,297
+Uh. Konst Uh, state.
+
+437
+00:54:35,167 --> 00:54:48,057
+Test State. People's cost expected payload equals that and we're going to say enter.
+
+438
+00:54:49,947 --> 00:54:59,907
+Tests state. To DB equal expected payload and the test state will be.
+
+439
+00:55:02,417 --> 00:55:19,297
+Um. Experiment.
+
+440
+00:55:22,267 --> 00:55:27,656
+Variation. Flo fake FSA.
+
+441
+00:55:27,657 --> 00:55:32,937
+Flo edy fake FSA. Flo begin. Time context sink.
+
+442
+00:55:33,907 --> 00:55:43,737
+Say route. Fake FSA rule FSA signed in true sumo email test added sample ecom sync enabled true.
+
+443
+00:55:47,767 --> 00:55:51,367
+They cited false email confirms and choice is false.
+
+444
+00:55:51,397 --> 00:55:57,787
+Expected payload should be. Um.
+
+445
+00:56:11,167 --> 00:56:21,767
+We enter the route email. Okay. Whether or not.
+
+446
+00:56:21,947 --> 00:56:26,297
+Okay. So we're going to say that we expect that.
+
+447
+00:56:43,297 --> 00:56:51,327
+It's not happy with that for some reason. Can I read properties of no on 26.
+
+448
+00:56:58,917 --> 00:57:02,037
+Coach three online to 15.
+
+449
+00:57:23,337 --> 00:57:31,707
+Of or. 991 26.
+
+450
+00:57:36,997 --> 00:57:51,017
+Couldn't read has actually because form wizard is now. My.
+
+451
+00:57:55,007 --> 00:57:59,567
+Whenever I do a new describe, does that override the old?
+
+452
+00:57:59,687 --> 00:58:03,467
+Before each is. Huh.
+
+453
+00:58:04,397 --> 00:58:33,227
+That might be the case. Which case? All right. Hmm.
+
+454
+00:58:39,487 --> 00:59:13,907
+Hmm. Look.
+
+455
+00:59:19,877 --> 00:59:25,837
+Describe. For each nested.
+
+456
+00:59:26,607 --> 00:59:35,067
+Describe. Execution order.
+
+457
+01:00:01,247 --> 01:00:20,357
+Before it's called for the top four. Malka before Huck's top level before then nesting and nested before top level for each.
+
+458
+01:00:20,627 --> 01:00:25,757
+Nested before each. So what's going wrong here?
+
+459
+01:00:26,057 --> 01:00:29,327
+You should be happy with that. Like before each should be running.
+
+460
+01:00:35,987 --> 01:01:01,397
+Setting up fake wizard. Hmm.
+
+461
+01:01:19,547 --> 01:01:24,017
+If I get rid of all of this. What?
+
+462
+01:01:28,527 --> 01:01:32,997
+What happens? Oh, wait, do I have?
+
+463
+01:01:42,307 --> 01:01:45,307
+Okay. Sorry. These are. It's all belong together.
+
+464
+01:01:54,157 --> 01:01:58,847
+Happy with that. As soon as I put this in here.
+
+465
+01:02:01,727 --> 01:02:04,877
+Um, let's disable some of these.
+
+466
+01:02:11,387 --> 01:02:17,687
+And just to. Construction.
+
+467
+01:02:24,717 --> 01:02:32,787
+Yeah. It doesn't like this. Uh, expect.
+
+468
+01:02:33,477 --> 01:02:37,167
+True to be true. But.
+
+469
+01:02:41,487 --> 01:02:47,847
+That is fine. It's as soon as I use construct valid manager in here.
+
+470
+01:03:08,067 --> 01:03:25,007
+Describe. Hmm.
+
+471
+01:03:29,767 --> 01:03:40,807
+What the heck? All right. Well, I don't want to really spend too much time debugging that, so I'm just going to go up a level.
+
+472
+01:03:45,877 --> 01:04:18,657
+Um. It should no user advance past the.
+
+473
+01:04:23,087 --> 01:04:26,087
+Sign into a FISA step.
+
+474
+01:04:27,647 --> 01:04:44,787
+So I signed an. Should have the FSA step.
+
+475
+01:04:50,057 --> 01:04:58,276
+With the right payload of entering. All right.
+
+476
+01:04:58,277 --> 01:05:06,977
+Whether they think of that. Hmm.
+
+477
+01:05:07,127 --> 01:05:11,357
+Now it's very upset. Oh, right.
+
+478
+01:05:14,117 --> 01:05:18,637
+So we're going to get ready. So. I.
+
+479
+01:05:27,657 --> 01:05:31,887
+Okay. Um.
+
+480
+01:05:32,077 --> 01:05:39,497
+So it needs to do this. Which is annoying.
+
+481
+01:05:39,917 --> 01:05:55,057
+But such is life. The right payload of entering construct valid manager is not defined.
+
+482
+01:06:01,177 --> 01:06:08,167
+Is. Oh is the reason it wasn't working.
+
+483
+01:06:11,077 --> 01:06:22,797
+Hang on, hang on, hang on, hang on. Let's go back for a sec. This is the scope.
+
+484
+01:06:35,537 --> 01:06:47,147
+Oh, that's to find. And inside.
+
+485
+01:06:58,877 --> 01:07:09,297
+Are. All right.
+
+486
+01:07:10,267 --> 01:07:24,967
+Enough of this. Enough of this time waster. Should not let the user experience the.
+
+487
+01:07:29,687 --> 01:07:32,787
+And. And.
+
+488
+01:07:50,037 --> 01:08:02,977
+It should pass. Just see.
+
+489
+01:08:25,997 --> 01:08:29,627
+Okay. So we actually found a failure here expected. Actual.
+
+490
+01:08:29,627 --> 01:08:40,486
+So the ordering sumo email. Oh, right. So I think there is a transform that occurs to that stuff as intentional email.
+
+491
+01:08:40,487 --> 01:08:43,937
+Yeah. So it should be.
+
+492
+01:08:46,657 --> 01:08:54,497
+Similarly, emails should be emailed. Good.
+
+493
+01:08:54,527 --> 01:09:00,737
+Okay. So that. That's nice. And then. Um.
+
+494
+01:09:04,657 --> 01:09:18,117
+Uh. Uh. And we're going to put stuff in there.
+
+495
+01:09:26,927 --> 01:09:33,337
+It should still pass. Good.
+
+496
+01:09:36,477 --> 01:09:44,757
+Then the payload. Should have the.
+
+497
+01:09:52,197 --> 01:09:58,597
+Should have he. Configure sync.
+
+498
+01:10:03,307 --> 01:10:12,097
+And then the state that were passing in sync enabled confirmed choices.
+
+499
+01:10:18,767 --> 01:10:24,187
+All right. True.
+
+500
+01:10:30,157 --> 01:10:36,057
+False. Expected payload to be. Whether or not Sink is enabled.
+
+501
+01:10:38,717 --> 01:10:48,817
+Sync enabled false. Good.
+
+502
+01:10:53,767 --> 01:11:07,687
+And then finally. The user.
+
+503
+01:11:11,897 --> 01:11:15,167
+Conditions meant it was.
+
+504
+01:11:21,387 --> 01:11:27,167
+Um. Should not supply a payload.
+
+505
+01:11:27,887 --> 01:11:34,546
+Should not supply a payload. To set up new device.
+
+506
+01:11:34,547 --> 01:11:50,737
+Step one entering. It's true.
+
+507
+01:11:55,037 --> 01:12:09,557
+Yes. We get rid of that. Expected payload to be the empty object.
+
+508
+01:12:22,437 --> 01:12:24,537
+Good stuff. All right.
+
+509
+01:12:24,537 --> 01:12:34,617
+So we've tested our individual steps, make sure they're doing what we want as spending most of the time getting the test set up.
+
+510
+01:12:41,977 --> 01:12:47,707
+But I think that gets us in a fine position to create a committee here, pull request.
+
+511
+01:12:49,147 --> 01:12:54,477
+So we're going to. Good.
+
+512
+01:12:54,927 --> 01:12:59,447
+Commit a man. I'm going to call.
+
+513
+01:12:59,477 --> 01:13:06,357
+What was the sumo? Issue I had filed create initial step computation mechanism.
+
+514
+01:13:08,307 --> 01:13:12,977
+So. Create initial step computation.
+
+515
+01:13:14,797 --> 01:13:27,547
+Mechanism and UK UK uh, qualification mechanism for the switching devices.
+
+516
+01:13:27,547 --> 01:13:30,936
+Migration Switching Devices.
+
+517
+01:13:30,937 --> 01:13:36,317
+Wizard Manager. This is number one, two, six, eight.
+
+518
+01:13:39,537 --> 01:13:50,177
+This. Adds, Uh, you a string checking.
+
+519
+01:13:51,347 --> 01:14:05,507
+Make sure that the wizard is only able to be used if the client is a Firefox desktop browser.
+
+520
+01:14:10,637 --> 01:14:16,816
+Adds a series of step definitions within switching devices.
+
+521
+01:14:16,817 --> 01:14:23,297
+Wizard Manager with exit with specific exit conditions.
+
+522
+01:14:24,657 --> 01:14:41,847
+And a method for turning the internal state of the switching devices wizard manager into a payload that can be used to configure the selected step.
+
+523
+01:14:44,677 --> 01:14:49,217
+And adds a bunch of tests. So this is our this is our patch.
+
+524
+01:14:49,237 --> 01:14:52,987
+Let's put it up. Let's put it up for review.
+
+525
+01:14:53,047 --> 01:14:57,907
+So the way we do that is we're going to push this.
+
+526
+01:14:58,977 --> 01:15:02,277
+To. Here, let me play the font here.
+
+527
+01:15:03,987 --> 01:15:07,197
+But where or why is it always moved to another display?
+
+528
+01:15:08,487 --> 01:15:12,177
+Get push me. Set steps.
+
+529
+01:15:12,387 --> 01:15:15,597
+Pushing it to my fork. Scooby doo doo doo doo doo doo.
+
+530
+01:15:17,427 --> 01:15:21,687
+So I've got a fork here and I've going to create a pull request from my fork.
+
+531
+01:15:33,937 --> 01:15:40,987
+And I'm going to request review from Hannah.
+
+532
+01:15:42,997 --> 01:15:49,037
+And Ryan. Create pull request.
+
+533
+01:15:50,117 --> 01:15:58,277
+Oh, you know, all I should have done is made sure I'd run the listing web lint web pack.
+
+534
+01:16:04,567 --> 01:16:08,407
+And is there any pretty thing that I need to do here?
+
+535
+01:16:13,207 --> 01:16:21,037
+What about in here? I was a little bit of pretty thing that just happened.
+
+536
+01:16:23,587 --> 01:16:29,657
+Get the. Uh, status.
+
+537
+01:16:29,667 --> 01:16:40,147
+Get at that. It push me.
+
+538
+01:16:43,627 --> 01:16:47,977
+So steps we're going to force push and then we'll update the.
+
+539
+01:16:50,727 --> 01:16:54,237
+I squash my squash that will update the.
+
+540
+01:16:58,757 --> 01:17:06,077
+Or request. And there we go.
+
+541
+01:17:06,107 --> 01:17:13,697
+There's my. There's my. There's my pole request.
+
+542
+01:17:13,697 --> 01:17:19,067
+So hopefully what'll happen now is, you know,
+
+543
+01:17:19,277 --> 01:17:23,356
+the the form wizard is going to fulfill the part of the contract and is working on the form
+
+544
+01:17:23,357 --> 01:17:29,357
+wizard and they're going to expose that set steps method and the disqualify method and,
+
+545
+01:17:32,237 --> 01:17:35,927
+and then we can actually start seeing this thing behave a little bit.
+
+546
+01:17:38,957 --> 01:17:43,367
+And then we need to just do more work for like updating the internal state, like checking.
+
+547
+01:17:43,637 --> 01:17:48,017
+We need to add the capability of checking to see if the user is signed in.
+
+548
+01:17:48,047 --> 01:17:57,017
+So one of the things we do immediately after initializing is we're going to check to see if the user is signed in.
+
+549
+01:18:00,437 --> 01:18:04,217
+And. Yeah.
+
+550
+01:18:04,637 --> 01:18:11,107
+Look, let's we'll add that in here. Um.
+
+551
+01:18:12,527 --> 01:18:15,826
+All right. So I think I'm going to call it there. Thank you so much for watching.
+
+552
+01:18:15,827 --> 01:18:22,187
+Episode What is this? Episode 209 324 Wow.
+
+553
+01:18:25,517 --> 01:18:29,326
+Yeah, this is episode 324 of the joy of coding. Thanks for watching.
+
+554
+01:18:29,327 --> 01:18:30,827
+Oh, actually, let's,
+
+555
+01:18:30,827 --> 01:18:41,537
+let's slip one something extra in before we close out because I didn't want to forget one of our cue people notice there's a problem in the migration.
+
+556
+01:18:41,537 --> 01:18:43,276
+Was this like an inconsistent string?
+
+557
+01:18:43,277 --> 01:18:51,587
+And so I want to fix that real quick and well, let's see if we can sort of sneak that in at the very end of the stream, but I'll show you the bug.
+
+558
+01:18:53,267 --> 01:19:00,916
+This only happens for Mac OS, but basically we've got this permission dialog where we show the user this information in the migration wizard.
+
+559
+01:19:00,917 --> 01:19:09,557
+If they're on safari or their own Mac OS, they're trying to migrate from safari and we need to get permission to read the directory because Mac
+
+560
+01:19:09,557 --> 01:19:16,817
+OS has like pretty strict policies on when applications can read from the Safari Library Directory.
+
+561
+01:19:18,197 --> 01:19:23,836
+And there's like a, there's an inconsistency here where this button used to say continue and now it says Select File.
+
+562
+01:19:23,837 --> 01:19:30,917
+But this instruction was never updated. So we have to update this to say Select File.
+
+563
+01:19:35,767 --> 01:19:49,367
+So we're going to do that right now. Just get that going real quick.
+
+564
+01:19:52,737 --> 01:20:04,227
+And the file that we're going to update is in migration wizard FTL oops spelled that wrong migration was there FTL.
+
+565
+01:20:07,197 --> 01:20:11,037
+And message is called Select.
+
+566
+01:20:14,797 --> 01:20:29,567
+We're just going to look for the word continue. This instructions should be continue.
+
+567
+01:20:29,577 --> 01:20:34,937
+It should be instructions. A select file. Oh, not yet.
+
+568
+01:20:34,967 --> 01:20:48,827
+I got to switch my brain over to Mercurial now. And we're going to say this is instructions.
+
+569
+01:20:49,607 --> 01:20:52,787
+Select File. Select.
+
+570
+01:20:57,387 --> 01:21:01,167
+Oh, that's going to be awkward. It's going to say Select Select File.
+
+571
+01:21:04,787 --> 01:21:08,697
+I need to talk to our copy people. Okay.
+
+572
+01:21:11,697 --> 01:21:14,877
+Okay. I'm not going to be able to fix this here, unfortunately.
+
+573
+01:21:15,957 --> 01:21:19,166
+So we have to do it after that. I have to go talk to some people.
+
+574
+01:21:19,167 --> 01:21:25,587
+But basically we need to replace the string with like verb select file.
+
+575
+01:21:25,587 --> 01:21:32,247
+But Select Select File is very awkward. So you have to work with them to get what ever the right string was supposed to be.
+
+576
+01:21:33,447 --> 01:21:38,547
+All right. Thanks so much for watching. Episode 324 of The Joy of Coding.
+
+577
+01:21:38,547 --> 01:21:44,537
+Let me know what you thought. There's a form here in the agenda to rate this episode and, you know, let me know what you think.
+
+578
+01:21:44,547 --> 01:21:49,436
+I read everything that comes in. It's very helpful and it helps me craft the episode.
+
+579
+01:21:49,437 --> 01:21:53,396
+Four episodes for you. Let me know what you want to see. Do you like it?
+
+580
+01:21:53,397 --> 01:21:57,837
+Whenever I'm working on Sumo. Would you rather I work on something else?
+
+581
+01:21:59,577 --> 01:22:02,637
+Let me know. Have any questions? You can ask them there as well.
+
+582
+01:22:03,057 --> 01:22:04,587
+And if you want to just hear me Natter,
+
+583
+01:22:04,887 --> 01:22:12,057
+you can listen to the podcast episode where I talk to Jason and Ryan from the Thunderbird team on the Thunder cast here.
+
+584
+01:22:12,057 --> 01:22:22,196
+Here's a quick preview. I'm going to give you a quick taste. It's the equivalent in my mind anyways,
+
+585
+01:22:22,197 --> 01:22:29,067
+of like if you've got a whole bunch of people living in a house or like an apartment building and it's on the edge of an eroding cliff.
+
+586
+01:22:29,577 --> 01:22:35,627
+And you the work that's underway is moving that entire apartment complex to a better place,
+
+587
+01:22:35,637 --> 01:22:39,567
+replacing the foundation, replacing the plumbing, because it's all like lead pipes,
+
+588
+01:22:39,747 --> 01:22:43,707
+replacing all the electrical because it's not the tube and doing it while people
+
+589
+01:22:43,707 --> 01:22:52,887
+are still living in the building and they don't even really know what's happening. What a wow, what a pull quote.
+
+590
+01:22:54,417 --> 01:22:57,896
+Anyway, if that doesn't what your whistle. I don't know what will.
+
+591
+01:22:57,897 --> 01:23:01,467
+Go check it out. All right. Thanks again for watching.
+
+592
+01:23:02,007 --> 01:23:05,577
+Hopefully we'll see you next week for episode 325. Take care, everybody.
+
+593
+01:23:07,047 --> 01:23:12,206
+Hang on, bubba. I just got to get that and music working again.
+
+594
+01:23:12,207 --> 01:23:15,927
+Hold on. Bye bye. The joy.
+
+595
+01:23:16,827 --> 01:23:19,567
+Loading the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

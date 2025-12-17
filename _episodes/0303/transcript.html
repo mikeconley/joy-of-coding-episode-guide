@@ -1,0 +1,2601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 303 - October 19, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 303 - October 19, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=e1abb1d4-9435-4e8c-b246-af2e010ef131</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=e1abb1d4-9435-4e8c-b246-af2e010ef131">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:05,077 --> 00:00:15,507
+Well. Through the joy. Oh, hello and welcome to Episode 303 of The Joy of Coding.
+
+2
+00:00:15,517 --> 00:00:22,267
+My name is Mike Conley. It's so good to see you. Going to be hacking on some live, but they're going to be hacking on some Firefox stuff today.
+
+3
+00:00:23,287 --> 00:00:30,817
+It's going to be good. And I'm just going to adjust my camera here so that I'm maybe a little zoom out on there.
+
+4
+00:00:30,847 --> 00:00:36,337
+I think it was a little too close. And I'm also going to get rid of AutoFocus because I started to blur out a little.
+
+5
+00:00:36,967 --> 00:00:42,846
+Hey, it's so good to see you. I'm in the office today, which means that I don't have access to my windows machine.
+
+6
+00:00:42,847 --> 00:00:46,537
+My Windows machine, I. I have it at home and I access it.
+
+7
+00:00:47,047 --> 00:00:56,976
+Oh, that exploded. I access it remotely, but I haven't exposed it so that I can like, get to it from, from here in the office.
+
+8
+00:00:56,977 --> 00:01:01,717
+Which means that. Which means that I can't use it today.
+
+9
+00:01:01,717 --> 00:01:06,456
+Which means no windows jump live stuff. So if you've been following the stream for a while,
+
+10
+00:01:06,457 --> 00:01:11,407
+maybe last couple episodes you'll know that we were working on trying to move some
+
+11
+00:01:11,857 --> 00:01:16,416
+stuff off of the main thread related to the Windows jump list on Firefox desktop.
+
+12
+00:01:16,417 --> 00:01:19,897
+And so we're going to put that on pause for today. We're gonna do something else because I'm in the office.
+
+13
+00:01:20,917 --> 00:01:27,007
+Well, what are we going to do? Let me start by sharing my screen the boom tears, the today's agenda.
+
+14
+00:01:27,007 --> 00:01:32,617
+So yeah, it's episode 303 October 19th, 2022.
+
+15
+00:01:33,277 --> 00:01:39,367
+Reminder No Plan Survives Breakfast. If you've never seen this stream before, I why you know that it is completely unprepared.
+
+16
+00:01:39,367 --> 00:01:43,687
+I don't really know what I'm going to be doing today or like I have a vague sense of it.
+
+17
+00:01:45,277 --> 00:01:52,627
+I sort of know what I want to try and get done, but whether or not I succeed or get sidelined, it's really up to the, you know, the universe.
+
+18
+00:01:52,627 --> 00:01:58,287
+We'll see what happens. But you get to watch me try and get into and out of trouble, which might be fun for you.
+
+19
+00:01:58,497 --> 00:02:01,927
+You know, you get to see software development in the Roth. That's the first thing.
+
+20
+00:02:02,407 --> 00:02:04,927
+The second thing is that the agenda that we're looking at with all these handy
+
+21
+00:02:04,927 --> 00:02:08,167
+dandy links is available to you depending on where you're watching this.
+
+22
+00:02:08,737 --> 00:02:12,007
+Check out if you're watching this on my website, there's a link at the top of the page.
+
+23
+00:02:12,007 --> 00:02:17,736
+If you're watching this on YouTube, it's in the video description. If you're watching this under Mozilla, it's in the details section.
+
+24
+00:02:17,737 --> 00:02:21,787
+If you're watching this on Twitch, it's in the list of links below this video.
+
+25
+00:02:21,787 --> 00:02:24,367
+And if you're watching this on Diode, it's in the video description.
+
+26
+00:02:24,967 --> 00:02:32,406
+So that's where you can get access to all this stuff in as I update it because like I put in what I'm doing today is drilling a pilot hole,
+
+27
+00:02:32,407 --> 00:02:38,917
+not very forthcoming. Now it's kind of cryptic I you know we can as I flesh that out it'll synchronize
+
+28
+00:02:38,917 --> 00:02:43,147
+you can just refresh the the agenda and you'll see the new the new notes.
+
+29
+00:02:44,317 --> 00:02:49,077
+So what am I doing today? Well, I have a couple of things I want to do before I drill a pilot.
+
+30
+00:02:49,087 --> 00:02:56,437
+Well, I'll talk about that in a second, but I want to rebase and resubmit a patch, drill a pilot hole,
+
+31
+00:02:56,437 --> 00:03:08,377
+which means I want to investigate using a reusable web component for our MIGRATE or UI.
+
+32
+00:03:09,997 --> 00:03:15,157
+And I'll give you more details on what that means in a second.
+
+33
+00:03:16,087 --> 00:03:25,747
+And then. I think that will probably cover this will probably be the vast majority of today's episode is doing that.
+
+34
+00:03:26,947 --> 00:03:31,777
+I'll get to that in a second. But first I want to rebase and resubmit a patch.
+
+35
+00:03:31,807 --> 00:03:36,697
+So I submitted a patch. This is Wacky Morning Digest where our sound effects come from.
+
+36
+00:03:36,737 --> 00:03:39,757
+It's me. Mario was going to pin that for a sec.
+
+37
+00:03:40,897 --> 00:03:47,197
+I submitted a patch related to the ESM ification project.
+
+38
+00:03:47,497 --> 00:03:53,377
+If you're not familiar with the ESM ification project, I think I talked about it to talk about it last week or the week before.
+
+39
+00:03:53,827 --> 00:03:57,697
+I think one of these last few episodes I talked about ESM ification.
+
+40
+00:03:57,967 --> 00:04:02,677
+Well, I submitted a patch to do some ESM ification because we've actually been making some great progress.
+
+41
+00:04:04,087 --> 00:04:09,847
+You can see here that like the this blue region is like the number of ESM files we have in the tree.
+
+42
+00:04:09,847 --> 00:04:16,047
+And like there is like this slow, steady increase and there is a big bump here, slow, steady increase, another big bump here.
+
+43
+00:04:16,057 --> 00:04:27,247
+We now have almost exactly one third of our tree being converted from old school Mozilla specific JSON modules to a script six modules.
+
+44
+00:04:27,607 --> 00:04:30,607
+So we're, we're, we're making great progress.
+
+45
+00:04:30,967 --> 00:04:38,297
+And I had submitted a patch to migrate these four files, these four GSM files to be esims.
+
+46
+00:04:38,317 --> 00:04:42,487
+And I got some review feedback. So I thought we could look at that today.
+
+47
+00:04:43,117 --> 00:04:51,457
+So my colleague Catherine read this and it looks like the review feedback was, oh, it's just it needs a rebase.
+
+48
+00:04:51,877 --> 00:04:57,456
+There are some merge conflicts, right? So some, some other modules got converted.
+
+49
+00:04:57,457 --> 00:05:00,997
+And so I'm probably hitting some merge conflicts. So let's do that.
+
+50
+00:05:01,597 --> 00:05:06,127
+The first thing I need to do is find the patch locally and rebase it.
+
+51
+00:05:06,787 --> 00:05:09,837
+Um, I have a loader.
+
+52
+00:05:09,847 --> 00:05:14,267
+I think it's something like. Where is it?
+
+53
+00:05:14,357 --> 00:05:24,077
+What I have. Yeah, here it is. Um, and we're going to rebase that on to Central.
+
+54
+00:05:25,487 --> 00:05:30,767
+Let me pump up the font so you can see what I'm typing. Pump up the works.
+
+55
+00:05:31,067 --> 00:05:34,157
+I can. Why do you do that?
+
+56
+00:05:39,827 --> 00:05:48,947
+So here are our merge conflicts. We got one in something called handler service dot systems and one called handler service test utils.
+
+57
+00:05:49,757 --> 00:05:54,677
+So let's go see what those those conflicts are.
+
+58
+00:05:59,597 --> 00:06:03,437
+Right. So I need to.
+
+59
+00:06:06,317 --> 00:06:15,047
+Well, it's interesting. I can actually because it looks like something is landed to make constant start from a GSM to become an ESM.
+
+60
+00:06:15,047 --> 00:06:27,826
+So that's good. It means I can, uh, instead of doing this, instead of doing any of this, actually, I can do this.
+
+61
+00:06:27,827 --> 00:06:31,757
+Import app constants from.
+
+62
+00:06:33,727 --> 00:06:39,977
+This you are. I think that makes sense.
+
+63
+00:06:41,387 --> 00:06:50,717
+All right. Let's mark that. Uh, you are a loader x handler XT handler service.
+
+64
+00:06:52,007 --> 00:06:55,637
+Let's do the next one, which was handler tests.
+
+65
+00:06:55,667 --> 00:06:58,667
+Handler service to test. Test is the same thing.
+
+66
+00:06:59,057 --> 00:07:02,177
+Same exact thing. We're at constant, Scott.
+
+67
+00:07:05,457 --> 00:07:12,177
+Got converted and we can just reuse that so we can just take this and put it at the top.
+
+68
+00:07:13,317 --> 00:07:20,517
+And I think that was the only conflict in that file and now will resolve.
+
+69
+00:07:24,807 --> 00:07:28,527
+That's the last three. That's the last conflict.
+
+70
+00:07:28,527 --> 00:07:35,817
+So we can continue our rebase. Hello, Den Chub.
+
+71
+00:07:36,227 --> 00:07:40,107
+Who it watching this au den show? I've had a great tweet today.
+
+72
+00:07:40,127 --> 00:07:43,667
+I don't know if people sighed. I think it's worth calling out.
+
+73
+00:07:45,887 --> 00:07:50,117
+Let me pull up your tweet. Let me open up my Twitter.
+
+74
+00:07:56,297 --> 00:08:01,757
+Maybe you're on Twitter or maybe you're not. But I think this is pretty interesting for Firefox users.
+
+75
+00:08:02,927 --> 00:08:16,787
+So what a story here. There's this DOM API that people have been trying to like make happen on the Internet, trying to make fetch happen,
+
+76
+00:08:16,787 --> 00:08:27,477
+but they're making something called web video happen where many is a bubble, where maybe there is some documentation here.
+
+77
+00:08:27,497 --> 00:08:35,326
+Basically, it allows you to expose many instruments to websites so that they can like manipulate them.
+
+78
+00:08:35,327 --> 00:08:44,057
+You can request access to a vanity device and then, you know, send MIDI data data in the mini form and back and forth between.
+
+79
+00:08:44,447 --> 00:08:50,027
+So in theory, you could have like a web based synthesizer plug in a keyboard and, and whatnot.
+
+80
+00:08:50,747 --> 00:08:57,677
+And we've been kind of scared or I shouldn't say scared.
+
+81
+00:08:57,677 --> 00:09:03,827
+We have we have been cautious about implementing this, like Chrome implemented this way back in 43 and Mozilla right out the gate,
+
+82
+00:09:04,157 --> 00:09:11,627
+had a lot of reservations about this API because it was so permissive and so lax.
+
+83
+00:09:11,627 --> 00:09:19,486
+Like one of the things it allows you to do is that like you can enumerate the list
+
+84
+00:09:19,487 --> 00:09:25,697
+of midi instruments connected to a machine without like chrome they've implemented.
+
+85
+00:09:26,147 --> 00:09:30,617
+Chrome does not show a permission dialog to iterate the enumerate the midi instruments.
+
+86
+00:09:30,887 --> 00:09:34,787
+It just let a website do it. And that is like a huge fingerprinting vector.
+
+87
+00:09:34,787 --> 00:09:37,696
+How many people have your particular MIDI instruments?
+
+88
+00:09:37,697 --> 00:09:42,287
+If you if you're a musician and you've got a bunch of like MIDI instruments connected to your computer,
+
+89
+00:09:43,397 --> 00:09:46,997
+how unique do you think your hardware and setup is? Probably pretty unique.
+
+90
+00:09:46,997 --> 00:09:52,607
+That coupled with the other, you know, vectors on your on your machine, you can probably be fingerprinted pretty easily.
+
+91
+00:09:52,607 --> 00:09:58,997
+And that's not just something that Mozilla worries about. We're actually seeing it in action here.
+
+92
+00:09:59,837 --> 00:10:10,787
+So this website, shopee dot SEO, dot T.H. is suddenly like trying to access the web mini API in Firefox.
+
+93
+00:10:10,787 --> 00:10:18,337
+Now Firefox is doesn't allow a website to just use web video right out, right off the bat.
+
+94
+00:10:18,347 --> 00:10:25,756
+Any attempt to use web mini will cause some permission dialogs to appear being like, okay, so do you actually want this website to do this?
+
+95
+00:10:25,757 --> 00:10:29,777
+Like to access many devices and we're still like tinkering with this.
+
+96
+00:10:29,777 --> 00:10:32,297
+I don't even think it's available in general release.
+
+97
+00:10:32,297 --> 00:10:40,787
+But even just innately we're seeing this like shopping website request many devices for no good reason.
+
+98
+00:10:40,817 --> 00:10:47,207
+I think the only reason that they're doing it, I think people started to dig into it was for fingerprinting, for fingerprinting.
+
+99
+00:10:48,227 --> 00:10:56,237
+And so that was an interesting discovery. And so that's what Dennis Dean Chubb was was remarking about, and rightly so.
+
+100
+00:10:56,597 --> 00:10:59,647
+Remember when everyone yelled at Mozilla for not supporting web video with claims
+
+101
+00:10:59,657 --> 00:11:02,777
+of privacy and security concerns were overblown and holding back the web?
+
+102
+00:11:03,137 --> 00:11:05,507
+Well, I hate to say I told you so. I'm adding that in.
+
+103
+00:11:05,807 --> 00:11:14,657
+But just a day after shipping an implementation to Firefox Nightly, this is our first discovered case of web mini fingerprinting.
+
+104
+00:11:15,677 --> 00:11:21,137
+Retro. Retro. So that's a thing to keep in mind.
+
+105
+00:11:22,187 --> 00:11:27,676
+Okay, let's not get too distracted. So we've got our we've got our patch rebased here.
+
+106
+00:11:27,677 --> 00:11:30,617
+What we need to do is we need to build this. We need to rerun our tests.
+
+107
+00:11:33,317 --> 00:11:38,267
+The data show said he would have added, I told you so, but he ran out of characters.
+
+108
+00:11:38,507 --> 00:11:42,077
+How should you use Mastodon? Oh, well.
+
+109
+00:11:45,917 --> 00:11:52,637
+All right. Once we finish building this and running our tests, we can resubmit this for review.
+
+110
+00:11:53,267 --> 00:11:59,207
+And while we're waiting for us to do its little repackage and build, I want to talk a little bit about this pilot whole business.
+
+111
+00:12:01,397 --> 00:12:09,107
+So Firefox has this UI for migrating.
+
+112
+00:12:09,917 --> 00:12:14,947
+Hold on. I want to run the tests. Mark test you or I load or just run all the tests under UI.
+
+113
+00:12:15,647 --> 00:12:20,056
+Let's do it. Headless. Oops. You can understand that. I'm going to guess.
+
+114
+00:12:20,057 --> 00:12:28,657
+You're not going to understand what I mean. Whenever I only have the one s there. Do you actually understand what I mean?
+
+115
+00:12:28,687 --> 00:12:30,397
+No, I'm not going to take the risk. All right.
+
+116
+00:12:31,957 --> 00:12:40,427
+So if I, for example, go to import from another browser, we get this native dialog for importing settings and data from other browsers.
+
+117
+00:12:40,447 --> 00:12:44,227
+These are the installed browsers that it found, and it gives us the ability to do imports.
+
+118
+00:12:44,677 --> 00:12:50,557
+And we're trying to do a slight redesign. We're trying to get rid of this like native modal.
+
+119
+00:12:51,037 --> 00:13:03,217
+And instead we're going to have an in content modal something more like like what's a good example of it in content modal that I can show you.
+
+120
+00:13:07,477 --> 00:13:13,277
+But something that kind of looks like. This.
+
+121
+00:13:13,487 --> 00:13:20,267
+Except it's going to. It's going to instead of just blurring out the content, it'll blur out kind of the whole page and be center aligned.
+
+122
+00:13:20,267 --> 00:13:27,437
+And there'll be a whole dialog in there that allows you to do the, the migration, the actual UI of the might of the,
+
+123
+00:13:28,457 --> 00:13:33,916
+of the migrate or isn't going to change to too much except for some styling and maybe some slight organization.
+
+124
+00:13:33,917 --> 00:13:40,906
+But the idea will be relatively the same. But what's interesting about this redesign is that we also, if you go to about welcome,
+
+125
+00:13:40,907 --> 00:13:48,947
+you'll see that we have this like setup thing which eventually takes you to this importing from a previous browser.
+
+126
+00:13:49,367 --> 00:13:56,176
+And currently whenever you click on this, we actually we all we open the old dialog and what we'd like to do instead because
+
+127
+00:13:56,177 --> 00:14:00,347
+we already have like this kind of what we call a spotlight modal occurring here.
+
+128
+00:14:00,347 --> 00:14:04,637
+And we, we don't want to like put a modal over a modal that never looks good.
+
+129
+00:14:05,027 --> 00:14:08,567
+What we would like to do is have this stuff embedded.
+
+130
+00:14:08,747 --> 00:14:11,867
+Oh, hey, Skip, Skip. Hey, I need to go back.
+
+131
+00:14:12,177 --> 00:14:24,317
+I need to go back. We want to have the the import stuff embedded in this page, and that's not something we currently support.
+
+132
+00:14:24,767 --> 00:14:30,587
+And what's particularly interesting about this is that this page, this about welcome page does not run in the parent process.
+
+133
+00:14:30,917 --> 00:14:34,697
+It's running in the, what we call it, privileged about content process.
+
+134
+00:14:35,237 --> 00:14:41,047
+Oh, someone says that the matrix to Twitch Bridge might have fallen over. Oh, now, am I missing out on a bunch of twitch chat?
+
+135
+00:14:41,057 --> 00:14:44,447
+My bad. Hold on. Let me. Let me do a thing.
+
+136
+00:14:44,957 --> 00:14:49,576
+Let me do a thing 1/2. I'm probably missing a bunch of twitch chat.
+
+137
+00:14:49,577 --> 00:14:52,877
+Apologies to folks on Twitch who've been like saying things and I'm missing it.
+
+138
+00:14:53,717 --> 00:15:04,726
+Let me fix that real quick. I had to restart my web server and I guess I forgot that my bridge isn't happy with that.
+
+139
+00:15:04,727 --> 00:15:09,197
+So let me restart one. Hold on, Twitch.
+
+140
+00:15:09,197 --> 00:15:16,817
+Hang in there. Hang in there. Gaming. Yeah.
+
+141
+00:15:17,387 --> 00:15:25,247
+Snow. Okay. Shut down. Disable bridge.
+
+142
+00:15:26,267 --> 00:15:31,337
+Re-enable bridge. Okay. The bridge is firing up.
+
+143
+00:15:32,087 --> 00:15:35,747
+So hopefully let me just. Here, do a test.
+
+144
+00:15:37,337 --> 00:15:42,537
+How about now? Any twitch folk able to chat.
+
+145
+00:15:43,017 --> 00:15:48,867
+Can I. Any, any, any twitch gang want to say something?
+
+146
+00:15:49,227 --> 00:15:52,987
+Boom. There you go. Root privilege. How you doing?
+
+147
+00:15:53,007 --> 00:15:56,547
+That's impressive. All right. How's it going? Twitch gang.
+
+148
+00:15:56,557 --> 00:16:01,107
+Sorry about that. I wasn't trying to ignore you or anything. It's just my bridge was down.
+
+149
+00:16:01,257 --> 00:16:06,147
+Okay. Our tests are all running. They all passed. Feeling pretty good about that conversion.
+
+150
+00:16:06,477 --> 00:16:12,777
+Let's put this back up for review. Oh, I did the rebase.
+
+151
+00:16:12,777 --> 00:16:17,547
+I didn't actually have the patch checked out. That's embarrassing. So I actually have to run the tests again.
+
+152
+00:16:18,057 --> 00:16:21,387
+My bad. So let's build.
+
+153
+00:16:24,177 --> 00:16:33,127
+Anyways, we can keep talking about this pilot whole. There are two techniques that we're thinking of for having this sort of, like, reusable.
+
+154
+00:16:34,197 --> 00:16:37,467
+Effectively a form for importing.
+
+155
+00:16:39,237 --> 00:16:42,387
+Importing from another browser.
+
+156
+00:16:43,857 --> 00:16:54,627
+And there are two that we're considering are using a shared or like a reusable document document that
+
+157
+00:16:54,627 --> 00:17:05,007
+can be loaded in a paired process modal as well as a privileged about content process XUL browser.
+
+158
+00:17:07,207 --> 00:17:13,267
+I frame. That's one.
+
+159
+00:17:13,297 --> 00:17:21,007
+The second is using a reusable web component for our migration UI.
+
+160
+00:17:21,457 --> 00:17:36,366
+The web component will be defined in a ESM and will have some associated JS actor just window actor gunk like
+
+161
+00:17:36,367 --> 00:17:48,397
+glue to always be able to communicate back and forth with the parent process because that is a thing that the,
+
+162
+00:17:48,757 --> 00:17:52,986
+the migratory will definitely need to run the parent process. Okay, we've got to run our tests again.
+
+163
+00:17:52,987 --> 00:18:01,537
+Sorry to make you watch this all over again, but but these are the two things that we're kind of like weighing and the pilot whole.
+
+164
+00:18:01,987 --> 00:18:07,417
+The reason I'm drilling a pilot hole is because we actually have a set of students working on improving the migrate right now,
+
+165
+00:18:07,687 --> 00:18:10,297
+not the UI so much, but improving the behavior.
+
+166
+00:18:10,297 --> 00:18:17,047
+We've got the students making it so that we can import like fab icons from other browsers, which we've historically not supported.
+
+167
+00:18:17,917 --> 00:18:22,717
+We're adding an opera, my grader, we're adding a Vivaldi. My grader and opera geeks migrate.
+
+168
+00:18:22,717 --> 00:18:29,166
+Or we're going to try to add a doctor, go migrate, or we're going to like all these things along with fab icons, import.
+
+169
+00:18:29,167 --> 00:18:33,457
+We're going to try and fix a bunch of migrate or bugs and then eventually like maybe in the next month,
+
+170
+00:18:33,817 --> 00:18:40,927
+the students will get started on this like modal redesign, the dialog redesign and we want to have a plan in place for them.
+
+171
+00:18:40,927 --> 00:18:47,047
+We don't want to have the students have to kind of do this, this experiment because we have we've got them for a limited amount of time.
+
+172
+00:18:47,257 --> 00:18:54,246
+We'd rather have a set plan for them right out the gate on on how to approach this that we all the mentors on the project all agree on.
+
+173
+00:18:54,247 --> 00:19:02,167
+So one of the things that we do whenever we kind of got one of these choices was we start to talk about these two different choices.
+
+174
+00:19:02,167 --> 00:19:07,057
+And, and these seem to be contenders. We want to evaluate them.
+
+175
+00:19:07,297 --> 00:19:12,517
+This is something we've kind of done before, but there are pluses and minuses with having an embedded document.
+
+176
+00:19:14,857 --> 00:19:17,976
+What does the modal dialog thing have to do with a pilot whole? Yeah.
+
+177
+00:19:17,977 --> 00:19:21,067
+Sorry. What is a pilot hole? Drilling. A pilot hole.
+
+178
+00:19:21,607 --> 00:19:33,247
+This this is a metaphor. A pilot hole is whenever in carpentry or I'm not a carpenter, but whenever I've ever done any sort of amateurish woodworking.
+
+179
+00:19:33,997 --> 00:19:38,827
+If you're going to drill like a large hole, sometimes it's helpful to draw a drill,
+
+180
+00:19:39,037 --> 00:19:44,107
+a very small hole first to make it easier to drill the larger hole.
+
+181
+00:19:44,227 --> 00:19:50,527
+That's the that's the idea. Like, I don't know if you've ever had this experience where, like,
+
+182
+00:19:50,827 --> 00:19:58,747
+the drill bit won't bite or you want to verify that what you are drilling into can be drilled into.
+
+183
+00:19:58,747 --> 00:20:05,976
+And so you'll drill instead of using like the full blown large bit is a really small bit just to sort of like test,
+
+184
+00:20:05,977 --> 00:20:13,087
+you know, like, okay, boom, we're able to do that. Now you switch to the larger bit and drill on top of the small pilot hole you just drilled.
+
+185
+00:20:13,747 --> 00:20:19,567
+This is a metaphor for what we're trying to do here where we're like trying to do some exploration.
+
+186
+00:20:20,947 --> 00:20:23,856
+Julie So that's really what drilling a pilot hole is, is like.
+
+187
+00:20:23,857 --> 00:20:30,667
+We're going to do some quick and dirty explorations to evaluate these two approaches for this particular use case so that
+
+188
+00:20:31,057 --> 00:20:39,037
+we can have some confidence whenever we talk to the students about the plan to redo the dialog of how to approach it.
+
+189
+00:20:39,037 --> 00:20:46,477
+Like we will hopefully have gotten like a clear idea of what the challenges and the pros and cons are.
+
+190
+00:20:46,987 --> 00:20:50,977
+I already have a sense of what may be the concern because we've done this sort of thing before.
+
+191
+00:20:52,927 --> 00:21:08,197
+There's another one too, which is like having an include include document like a build time included document fragment in both places.
+
+192
+00:21:10,417 --> 00:21:18,157
+That's that's the third option. Like we have examples of that in the bookmarks dialog.
+
+193
+00:21:18,907 --> 00:21:29,647
+This, this dialog here, you may have seen it in other places where like if you go to, um, there's like a way you can link and bookmark a link.
+
+194
+00:21:30,577 --> 00:21:33,757
+Yeah, this stuff, this is broken and you have to report this.
+
+195
+00:21:33,757 --> 00:21:41,976
+There's been some recent layout changes, but this, this dialog right here has very similar characteristics to this panel right here.
+
+196
+00:21:41,977 --> 00:21:48,967
+And that's because they actually share the same markup and one is imported into the other bookmark panel versus modal.
+
+197
+00:21:49,767 --> 00:21:54,637
+Um, I realize now that I need to report that bug.
+
+198
+00:21:55,387 --> 00:21:58,747
+Um, that's not a good look, I suspect.
+
+199
+00:21:58,747 --> 00:22:02,827
+Okay, good. Ah, test pass. I'm going to push this back up for review.
+
+200
+00:22:03,637 --> 00:22:07,927
+Um, and now we're going to quickly.
+
+201
+00:22:08,577 --> 00:22:11,967
+Do some bug hunting.
+
+202
+00:22:11,977 --> 00:22:18,507
+We have to quickly report a bug here. For that, for the bookmark model.
+
+203
+00:22:19,437 --> 00:22:24,627
+I actually suspect I know what the aggressor is. Some great work from one of my colleagues.
+
+204
+00:22:24,627 --> 00:22:37,286
+Emilio is getting rid of XUL layout, which is a different kind of layout engine and different type of layout engine inside of Gekko that lays out XUL.
+
+205
+00:22:37,287 --> 00:22:43,047
+And it's where Flex came from. Originally, the first iteration of what you consider flex boxes and in grids and stuff.
+
+206
+00:22:43,047 --> 00:22:51,176
+In modern cases, it was prototyped effectively inside of Zuill Leo and now that CSC layout is sufficiently sophisticated,
+
+207
+00:22:51,177 --> 00:22:56,006
+we don't want to maintain two different layout engines and we want to eventually get off of Zwolle entirely.
+
+208
+00:22:56,007 --> 00:23:01,017
+So we're trying to transition off of Zuill layout while keeping the Zuill mark up.
+
+209
+00:23:01,497 --> 00:23:04,677
+And that's going to make our layout people really happy.
+
+210
+00:23:04,677 --> 00:23:10,556
+They don't have to maintain XL layout. It's also there are a whole host of bugs dealing with Zoom layout,
+
+211
+00:23:10,557 --> 00:23:16,367
+interacting with CSC layout because we can have like zu all nodes embedded within the HTML nodes in those layout.
+
+212
+00:23:16,497 --> 00:23:20,427
+Two separate layout engines are computing things in very bizarre ways and like
+
+213
+00:23:20,817 --> 00:23:28,556
+a whole class of like just bugs that are infuriating kind of fallout from that.
+
+214
+00:23:28,557 --> 00:23:35,067
+And Zuill itself has some like layer wise and in general have some Leo quirks that newcomers,
+
+215
+00:23:35,067 --> 00:23:41,726
+new contributors find mystifying, especially due to the dearth of relevant modern documentation.
+
+216
+00:23:41,727 --> 00:23:44,757
+So what am I looking for here?
+
+217
+00:23:44,757 --> 00:23:48,826
+I'm looking for zu layout. Yeah.
+
+218
+00:23:48,827 --> 00:23:54,107
+This thing, there was a bug that landed relatively recently, which was like.
+
+219
+00:23:57,097 --> 00:24:01,147
+Remove you. It's like use.
+
+220
+00:24:06,167 --> 00:24:12,827
+Uh, browser toolbox use modern flexbox as well as use modern flexbox.
+
+221
+00:24:13,067 --> 00:24:19,457
+And there have been a bunch of regressions. So first thing we do is check the bookmarks folder and tags are zero height and edit panel.
+
+222
+00:24:19,877 --> 00:24:25,457
+That might be it actually eurobonds to short menu flickers.
+
+223
+00:24:31,827 --> 00:24:44,367
+So that's not quite it. But I wonder if this would address the same issue.
+
+224
+00:24:45,597 --> 00:24:49,647
+So let's just quickly apply this patch.
+
+225
+00:24:51,197 --> 00:24:52,397
+Let's see if it fixes it.
+
+226
+00:24:54,857 --> 00:25:02,027
+I know I've gotten a little distracted here where we're drilling our pilot hole, but if you notice a bug, you have to file it or you should file it.
+
+227
+00:25:07,407 --> 00:25:12,987
+I'm a whole stack here. What's in this stack?
+
+228
+00:25:13,857 --> 00:25:16,887
+Oh, yes. He's messing with the at it bookmarks panel.
+
+229
+00:25:17,727 --> 00:25:26,507
+This is good. This might mean that. This might mean that the problem is fixed.
+
+230
+00:25:26,527 --> 00:25:31,316
+So let's let's try it. Okay.
+
+231
+00:25:31,317 --> 00:25:36,567
+Anyways, so these this is a distant third.
+
+232
+00:25:36,747 --> 00:25:43,377
+This is a pain to to have to maintain document fragments like these include files.
+
+233
+00:25:43,827 --> 00:25:47,787
+Um, you know, they're fragile.
+
+234
+00:25:47,817 --> 00:25:55,077
+One of the nice things about reusable components, like we don't want to introduce more preprocessor directives into our markup.
+
+235
+00:25:55,947 --> 00:26:01,316
+That makes it hard to use modern tooling in our markup because like build time
+
+236
+00:26:01,317 --> 00:26:07,707
+includes AR are a weird thing to things like h html limiters and verifiers.
+
+237
+00:26:10,377 --> 00:26:16,736
+So these two are really I think are contenders and we've done this sort of thing before.
+
+238
+00:26:16,737 --> 00:26:22,377
+A reusable document with this is, I think a more modern approach.
+
+239
+00:26:22,377 --> 00:26:26,816
+And this is something that is actually kind of aligned with an initiative that's
+
+240
+00:26:26,817 --> 00:26:33,777
+starting to happen right now about basically having a set of shared web components.
+
+241
+00:26:33,777 --> 00:26:43,856
+It's a bit like XUL widgets and tool kit where you got these things that you can kind of just drop in in the work properly while building those,
+
+242
+00:26:43,857 --> 00:26:50,516
+but having them be like web compatible so that you can drop them into different contexts, like in web content,
+
+243
+00:26:50,517 --> 00:26:57,147
+like in about welcome or about new tab or about, you know, other in content pages as well as the browser UI.
+
+244
+00:26:58,587 --> 00:27:04,587
+That's the idea we have. So let's quickly see if I had to bookmark.
+
+245
+00:27:04,587 --> 00:27:07,707
+Do I get. Yeah, it fixed it good.
+
+246
+00:27:08,367 --> 00:27:14,307
+Let's just I'm going to verify that by now, making sure that it wasn't due to a fluke.
+
+247
+00:27:15,207 --> 00:27:20,667
+We're going to go back up here to the the patch we were on before.
+
+248
+00:27:23,917 --> 00:27:28,897
+And the good news is we don't have to, like, file the bug now because it looks like Amelia's already on it.
+
+249
+00:27:29,557 --> 00:27:36,427
+I mean, go back to drilling our pilot hole. And let's see if we can do it in an hour.
+
+250
+00:27:38,707 --> 00:27:42,666
+And the reason I actually want to do this 1/1. I'm going to put this one up above.
+
+251
+00:27:42,667 --> 00:27:47,406
+And the reason I want to do this 1/1 is because I think this one, to really prove it out,
+
+252
+00:27:47,407 --> 00:27:53,667
+I have to be I have to do a binary build because I have to register.
+
+253
+00:27:53,677 --> 00:28:00,457
+Where do I have to do body build? Maybe I don't, but let's do this 1/1.
+
+254
+00:28:00,457 --> 00:28:03,366
+Anyway, as I was saying, I have to do a buy or build.
+
+255
+00:28:03,367 --> 00:28:15,757
+I have to like register and a vote page that can be loaded by about welcome in in the privileged about content process.
+
+256
+00:28:19,767 --> 00:28:26,427
+But I actually can do that, I think, at runtime. I think I can register an about page at runtime.
+
+257
+00:28:30,897 --> 00:28:35,577
+So maybe that's that's a quick and dirty way of doing that. And like quick and dirty is kind of the name of the game here.
+
+258
+00:28:38,007 --> 00:28:46,647
+Um, okay. So where was I whenever I did that last one here and then one like my list bookmark link.
+
+259
+00:28:47,637 --> 00:28:50,787
+Oh, so that still looks okay. I wonder if.
+
+260
+00:28:55,307 --> 00:29:01,757
+Where was I seeing the issue? Maybe it's already been fixed in a patch that landed recently.
+
+261
+00:29:02,477 --> 00:29:09,737
+But no, this. Yeah.
+
+262
+00:29:09,747 --> 00:29:13,267
+This is broken. I got a feeling this has already been fixed then. My issues are.
+
+263
+00:29:13,277 --> 00:29:18,327
+Have been fixed. Great. I'm not going to file it. Moving on. Moving on.
+
+264
+00:29:23,537 --> 00:29:36,076
+And like the only difference really between these two is that instead of dropping a prebuilt web component like a node into a belt,
+
+265
+00:29:36,077 --> 00:29:46,486
+welcome or the dialog is that we're going to use like a XUL browser or iframe that can load in about
+
+266
+00:29:46,487 --> 00:29:54,347
+page in the in content case and you just load the document in the modal in the parent process case.
+
+267
+00:29:55,877 --> 00:30:02,967
+And the thing that worries me about that technique is that a browser is what we call a reflow route.
+
+268
+00:30:02,987 --> 00:30:04,847
+I think that's the technical term I actually know,
+
+269
+00:30:04,847 --> 00:30:12,857
+but basically means that the size of the contents of the document within that browser do not affect the size of the actual iframe.
+
+270
+00:30:13,337 --> 00:30:18,977
+And rightly so. Right. Like do you don't want an eye frame to resize itself every time the document contains resizes?
+
+271
+00:30:19,697 --> 00:30:27,377
+However, in our particular case, we kind of do. We don't want any part of the importer dialog to accidentally be clipped out and so
+
+272
+00:30:27,377 --> 00:30:31,217
+we want it to flex and we have to do that kind of like synchronization manually.
+
+273
+00:30:31,217 --> 00:30:37,817
+If we use this process in the event that like the shared document changes, its the sizes of itself.
+
+274
+00:30:39,167 --> 00:30:50,627
+And you can work around that by using static sizes of the end, like trying to find a sufficiently large size for your iframe.
+
+275
+00:30:51,137 --> 00:30:56,777
+But you know, if you look at the real estate that we've got here, it's not a line.
+
+276
+00:30:59,087 --> 00:31:02,327
+Look at how much real estate we've got here. Not a whole lot.
+
+277
+00:31:02,747 --> 00:31:05,837
+And if you've got, like, a whole lot of browsers, for example,
+
+278
+00:31:06,977 --> 00:31:14,627
+or you've got like a long strings because you're in a different locale which has like longer strings or something that's a little fragile.
+
+279
+00:31:14,627 --> 00:31:21,506
+That's what worries me about doing the document thing. So let's get started.
+
+280
+00:31:21,507 --> 00:31:25,887
+Let let's get started. Do I want to do first?
+
+281
+00:31:26,187 --> 00:31:30,847
+Starting is always the hardest part. Let's do it again.
+
+282
+00:31:30,867 --> 00:31:43,766
+Let's do this 1/1. So the way I'm going to start is I'm going to create a new document, uh, explorations,
+
+283
+00:31:43,767 --> 00:31:53,517
+I'm going to call it embedded document versus reusable component for migration.
+
+284
+00:31:53,527 --> 00:32:00,147
+You. And we're just going to take notes in here.
+
+285
+00:32:01,287 --> 00:32:08,617
+So we'll start with reusable component. And this is shared shared document.
+
+286
+00:32:11,277 --> 00:32:16,787
+And that. Why we need header header.
+
+287
+00:32:19,287 --> 00:32:22,947
+There are, you know, world.
+
+288
+00:32:22,977 --> 00:32:27,787
+There we go. Header. Okay.
+
+289
+00:32:32,257 --> 00:32:36,337
+So we'll start here. And the first step is we are going to.
+
+290
+00:32:40,517 --> 00:32:44,117
+We're going to create a couple of files we're going to create.
+
+291
+00:32:47,087 --> 00:32:50,927
+And again, this is just going to be quick and dirty stuff here just to prove it out.
+
+292
+00:32:54,997 --> 00:33:00,537
+Under browser components, migration content.
+
+293
+00:33:01,537 --> 00:33:08,527
+We're going to create some files, ah, and create a file called Import Wizard.
+
+294
+00:33:09,127 --> 00:33:16,667
+MJ Yes, we're going to create a file called. I think that's it.
+
+295
+00:33:17,337 --> 00:33:20,517
+It was your daughter, MJ? Yes. Okay.
+
+296
+00:33:20,577 --> 00:33:29,627
+And then over here, we're going to create, um, uh, uh, import wizard parent.
+
+297
+00:33:31,437 --> 00:33:36,507
+And import wizard child to do communication.
+
+298
+00:33:38,697 --> 00:33:49,407
+And now we have to register these things in our, our Mazda build, uh, extra jazz modules, I think we say actors.
+
+299
+00:33:53,567 --> 00:33:57,497
+I think that's right. Right. Extra jazz models.
+
+300
+00:33:57,497 --> 00:34:02,027
+Actors? No straight jazz.
+
+301
+00:34:12,167 --> 00:34:15,607
+Final, final target files actors. Okay.
+
+302
+00:34:19,527 --> 00:34:25,197
+And I just realized they should have been Eastman's final target file's actors, what I call them.
+
+303
+00:34:25,707 --> 00:34:28,797
+Import wizard child. Import wizard parent. Okay, move.
+
+304
+00:34:28,797 --> 00:34:41,637
+Import wizard parent to import wizard parent system jackass and child remove child to system genius.
+
+305
+00:34:44,217 --> 00:34:50,277
+And we are going to then put those in the list here.
+
+306
+00:34:54,847 --> 00:34:58,777
+Poster child systems? Yes. Import wizard.
+
+307
+00:34:58,777 --> 00:35:02,406
+Parent DOT systems, yes. So those are our JavaScript modules.
+
+308
+00:35:02,407 --> 00:35:08,917
+And then for the assets that we put in the module, the other thing,
+
+309
+00:35:08,917 --> 00:35:16,637
+it's going to be like migration, import wizard and jazz and content import wizard and.
+
+310
+00:35:16,767 --> 00:35:25,147
+Yes, okay. And then we are going to, uh, let's add these.
+
+311
+00:35:31,547 --> 00:35:44,057
+To a new commit a content import wizard and yes, um, and now what I want to do is I want to actually put some stuff in these files.
+
+312
+00:35:44,747 --> 00:35:49,337
+Really simple wizard child.
+
+313
+00:35:50,717 --> 00:35:54,737
+It's how do we what's a really what's the simplest child?
+
+314
+00:35:55,517 --> 00:36:02,827
+Um. It be like she's a child.
+
+315
+00:36:05,707 --> 00:36:09,997
+Something really simple. Yeah, something like that.
+
+316
+00:36:12,077 --> 00:36:15,587
+Export import wizard child just. Yeah.
+
+317
+00:36:15,587 --> 00:36:33,167
+Basically this. And then we're going to just say that it is going to handle an event in the case if event type, uh, equals import wizard init.
+
+318
+00:36:38,847 --> 00:36:45,267
+And like Dunne saw in Poor Wizard and it again just quick and dirty stuff here,
+
+319
+00:36:47,067 --> 00:36:55,377
+something's going to probably complain about me not having a license block but again quick and dirty and then import was her parent.
+
+320
+00:36:58,737 --> 00:37:05,227
+We're going to have this thing oh what will do. In child.
+
+321
+00:37:05,407 --> 00:37:09,037
+And then this send async message.
+
+322
+00:37:09,607 --> 00:37:26,766
+Boom. Export class import wizard parent extends GST for actor parents going to have it receive
+
+323
+00:37:26,767 --> 00:37:37,957
+a message console doll or just dumb import wizard parent received message message data.
+
+324
+00:37:40,507 --> 00:37:44,767
+Okay. Oh, wait.
+
+325
+00:37:44,767 --> 00:37:52,357
+No message. That name. That's to. And then our.
+
+326
+00:37:56,067 --> 00:37:59,187
+Actors we also have.
+
+327
+00:38:00,267 --> 00:38:03,387
+We're going to create the simplest web component.
+
+328
+00:38:03,807 --> 00:38:06,987
+Hello, World Web component with Shadow Dom.
+
+329
+00:38:12,077 --> 00:38:18,597
+Where's the hello world? Just want something really simple.
+
+330
+00:38:33,647 --> 00:38:39,057
+Sure. To start us off.
+
+331
+00:38:39,657 --> 00:38:42,807
+But we're going to call it import wizard EL.
+
+332
+00:38:45,177 --> 00:38:48,947
+Uh, import. Yeah.
+
+333
+00:38:48,987 --> 00:38:52,947
+Import wizard extends h html elements.
+
+334
+00:38:54,657 --> 00:39:00,667
+Where to create shadow dom. Uh.
+
+335
+00:39:00,707 --> 00:39:03,976
+And we are going to. Yeah, that's fine.
+
+336
+00:39:03,977 --> 00:39:07,937
+We'll put a hello world in there, and then we're going to say it was heard.
+
+337
+00:39:08,597 --> 00:39:14,987
+It doesn't extend to paragraph. We're going to call it, uh, he import wizard.
+
+338
+00:39:17,467 --> 00:39:20,587
+I actually don't know if we have to. I think we just do it like that.
+
+339
+00:39:23,407 --> 00:39:36,837
+And then. So these comments, after we construct ourselves, we're going to dispatch.
+
+340
+00:39:38,317 --> 00:39:44,347
+Um. This dot com dispatch event new custom events.
+
+341
+00:39:45,127 --> 00:39:54,517
+Um import wizard in it or wait no, not on construction connected callback.
+
+342
+00:39:56,107 --> 00:39:59,347
+Um, where it's connected to the dom.
+
+343
+00:40:05,967 --> 00:40:10,437
+How do we think like bubbles will just bubbles?
+
+344
+00:40:12,977 --> 00:40:18,537
+Okay. I think we've got the beginnings of this.
+
+345
+00:40:18,557 --> 00:40:28,067
+Now we need to register our actor. Um, actors as process actors.
+
+346
+00:40:28,757 --> 00:40:34,637
+It's window actors. You just call this thing every age.
+
+347
+00:40:36,127 --> 00:40:42,047
+Take care. Okay. Import wizard parent.
+
+348
+00:40:51,587 --> 00:41:00,997
+Import wizard parent. And child.
+
+349
+00:41:10,037 --> 00:41:13,607
+And then we're going to say that we're listening for.
+
+350
+00:41:23,997 --> 00:41:29,757
+We're listening for something called import wizard and it.
+
+351
+00:41:33,067 --> 00:41:43,087
+I think it's like once. So it's like, what?
+
+352
+00:41:45,237 --> 00:41:57,757
+Once untrusted. And we only want we want chrome.
+
+353
+00:41:57,757 --> 00:42:11,197
+So this can happen in the parent process but also only in the privileged about content process, process type.
+
+354
+00:42:15,207 --> 00:42:21,317
+Remote tapes privileged about. Okay.
+
+355
+00:42:28,837 --> 00:42:39,857
+And finally. I want to figure out where this thing is.
+
+356
+00:42:48,967 --> 00:42:56,117
+It's an about welcome. Oh.
+
+357
+00:42:57,317 --> 00:43:08,397
+It's a kind of a message. Can I just put the real mark up in here?
+
+358
+00:43:24,047 --> 00:43:27,897
+The world. Okay. So if I could about welcome.
+
+359
+00:43:30,297 --> 00:43:37,287
+We get these, like, strings. So you have this like region in here.
+
+360
+00:43:37,677 --> 00:43:43,107
+How do we get that in there? Playmaker field.
+
+361
+00:43:43,107 --> 00:43:48,717
+Set tiles. Team selection. Team container. How's that?
+
+362
+00:43:54,607 --> 00:44:00,677
+Okay. So what's inside this bundle?
+
+363
+00:44:06,587 --> 00:44:17,807
+It's just so we can, like, define something and react and then that's exported.
+
+364
+00:44:18,497 --> 00:44:24,017
+Themes, export concept themes. And then what?
+
+365
+00:44:25,987 --> 00:44:33,717
+How is that used? Going the.
+
+366
+00:44:39,037 --> 00:44:44,277
+Okay. Here, choose colorway. It's.
+
+367
+00:44:47,597 --> 00:45:09,837
+He should clear away. Tiles type color way.
+
+368
+00:45:15,547 --> 00:45:19,227
+I change? Uh.
+
+369
+00:45:24,787 --> 00:45:28,387
+Okay. And then. Content tiles.
+
+370
+00:45:38,657 --> 00:45:47,747
+Oh, boy. I might have to just do it manually, just like at runtime and not worry about this for now.
+
+371
+00:45:50,207 --> 00:45:53,837
+Let's see. Well, I actually have to build.
+
+372
+00:46:15,117 --> 00:46:18,987
+And so what I'm looking for is the ability to put.
+
+373
+00:46:20,717 --> 00:46:30,647
+This reusable component in both a dialog pairing process dialog as well as.
+
+374
+00:46:36,657 --> 00:46:38,217
+The In content page.
+
+375
+00:46:41,247 --> 00:46:49,527
+And four bonus points inside of about preferences because eventually I think we want this dialog to also appear and about preferences.
+
+376
+00:46:52,797 --> 00:47:01,647
+Cuckoo. Cuckoo. What's going on here? Build, build, build, build, build, build, build, build.
+
+377
+00:47:17,037 --> 00:47:20,997
+Come on. What's the delay? Thank you.
+
+378
+00:47:31,197 --> 00:47:36,837
+Just got a package. Gang, we got to package up that stuff.
+
+379
+00:47:39,867 --> 00:47:45,097
+Okay. You are not building faster.
+
+380
+00:47:45,117 --> 00:47:49,977
+For real? I'm doing an artifact build.
+
+381
+00:47:50,007 --> 00:47:55,617
+That's the thing. Um. I guess I should have done mock build faster.
+
+382
+00:47:55,887 --> 00:48:00,807
+You're right. All right, let's see if we can import our module.
+
+383
+00:48:04,737 --> 00:48:11,907
+From from within here. Like, can I say like from import?
+
+384
+00:48:11,937 --> 00:48:17,287
+What is it, import. Wizard.
+
+385
+00:48:23,987 --> 00:48:28,727
+Oh. I need to export it. Export people.
+
+386
+00:48:29,387 --> 00:48:35,567
+No, wait. I just need to import the images, and I have to export the class, which is defined.
+
+387
+00:48:35,657 --> 00:48:41,117
+Okay, so import. And then what was the path?
+
+388
+00:48:41,417 --> 00:48:44,917
+It's like something like chrome migration.
+
+389
+00:48:50,077 --> 00:48:57,497
+Migration, migration, migration here. So it'll be something like import.
+
+390
+00:49:02,727 --> 00:49:14,727
+Import wizard. Oh.
+
+391
+00:49:14,727 --> 00:49:18,907
+And also, it's supposed to be MJ's. And also, can I do.
+
+392
+00:49:18,927 --> 00:49:23,417
+Do I have crummy tools in here? No, I don't. Um.
+
+393
+00:49:27,577 --> 00:49:34,977
+Script to her. Got something.
+
+394
+00:49:36,787 --> 00:49:42,077
+Okay. I'm just going to do some really gross stuff here about welcomed up bundle.
+
+395
+00:49:42,127 --> 00:49:47,797
+I don't want to do too much fussing around in here, but I'm going to.
+
+396
+00:49:48,547 --> 00:49:54,607
+I know this is a generated file, but I'm going to try and do this anyway because this is supposed to be quick and dirty.
+
+397
+00:49:55,327 --> 00:50:00,847
+Just going to put that up there so we get the import wizard restart.
+
+398
+00:50:02,767 --> 00:50:06,097
+Did you just virtually punch Mark and it suddenly and froze it. Yeah, that's right.
+
+399
+00:50:07,147 --> 00:50:11,857
+That's right. Oh, did I break about welcome?
+
+400
+00:50:12,277 --> 00:50:18,697
+I think I did. Import may only appear at the top level of a module and about welcome is not a module.
+
+401
+00:50:18,697 --> 00:50:25,537
+So instead the document needs to do it. So where's the about welcome document?
+
+402
+00:50:25,537 --> 00:50:29,347
+About welcome. Page.
+
+403
+00:50:29,377 --> 00:50:39,087
+HTML here. Script. Source that.
+
+404
+00:50:41,457 --> 00:50:47,067
+Type equals module. All right.
+
+405
+00:50:47,097 --> 00:50:52,107
+Try again. Okay.
+
+406
+00:50:54,177 --> 00:50:58,777
+Let's try putting. Import wizard.
+
+407
+00:51:04,577 --> 00:51:07,967
+Get rid of this or put it right above the button.
+
+408
+00:51:08,087 --> 00:51:18,977
+I'm just going say import dash wizard. Did I create one?
+
+409
+00:51:21,627 --> 00:51:27,077
+No. What happened just now.
+
+410
+00:51:32,477 --> 00:51:36,057
+Buttons. Here's the button.
+
+411
+00:51:39,497 --> 00:51:46,877
+Is all right. Duplicate. No one said we're going to call it import wizard.
+
+412
+00:51:48,617 --> 00:51:53,027
+Hello, world. There's our mine. There it is. Here it is, gang.
+
+413
+00:51:54,357 --> 00:51:59,027
+We're going to get rid of all these classes because I don't think those are helpful.
+
+414
+00:52:02,887 --> 00:52:10,627
+Okay. Hello world. So we've got our module showing up and then did we, did we see the message go up to the parent.
+
+415
+00:52:13,057 --> 00:52:17,167
+Um. Can we?
+
+416
+00:52:17,197 --> 00:52:24,117
+What is here? Connected.
+
+417
+00:52:25,737 --> 00:52:29,657
+Call back. I didn't see anything there.
+
+418
+00:52:29,987 --> 00:52:34,427
+Let's see if we can see what's going on here.
+
+419
+00:52:34,637 --> 00:52:38,567
+Debugger multiprocessor. Uh.
+
+420
+00:52:40,897 --> 00:52:44,557
+Any thing in here that would indicate what's going wrong.
+
+421
+00:52:49,807 --> 00:52:56,047
+No. Okay. So we're going to import wizard on MJ.
+
+422
+00:52:56,047 --> 00:53:05,337
+Yes. We're in dispatch this event.
+
+423
+00:53:09,047 --> 00:53:12,827
+Nothing. Um.
+
+424
+00:53:16,487 --> 00:53:23,027
+Am I able to get the import wizard actor instantiated for this document?
+
+425
+00:53:23,567 --> 00:53:27,886
+G Browser. Selected browser. I need to be in the right context.
+
+426
+00:53:27,887 --> 00:53:40,317
+Sorry. Selected browser browsing contexts current window global get actor.
+
+427
+00:53:40,587 --> 00:53:43,707
+Import Wizard. I can create one.
+
+428
+00:53:48,117 --> 00:53:54,667
+So how come this doesn't end up in the wizard child?
+
+429
+00:53:54,717 --> 00:53:59,827
+We never. So hold on. We register all types.
+
+430
+00:53:59,847 --> 00:54:03,357
+Privilege the vote on import wizard colon, innit?
+
+431
+00:54:11,837 --> 00:54:16,947
+And. Oh. Events. Events used to be events, gang.
+
+432
+00:54:16,967 --> 00:54:21,817
+All right, restart. Let's try that again. All right.
+
+433
+00:54:26,477 --> 00:54:34,787
+Same idea as last time we're going to create. Instead, we're going to create a new node and we're going to call this one input wizard.
+
+434
+00:54:37,847 --> 00:54:41,747
+Here's our hello world. Did we see the actor running?
+
+435
+00:54:42,857 --> 00:54:47,537
+No. Oh, we hit our break point, that's why. And then we saw the import wizard.
+
+436
+00:54:47,567 --> 00:54:58,307
+Yeah. Okay. So we've got we've proven out sort of the pathway, at least in the privileged about the case.
+
+437
+00:54:59,207 --> 00:55:03,107
+Now let's do the same thing with the parent process dialog.
+
+438
+00:55:03,887 --> 00:55:08,897
+Um, I think we actually have.
+
+439
+00:55:11,887 --> 00:55:19,717
+Some tips tricks your g dialog box.
+
+440
+00:55:28,447 --> 00:55:56,957
+But. Um.
+
+441
+00:55:59,067 --> 00:56:02,997
+Hold on, hold on. I need to update this comment. I realized because I put in the wrong.
+
+442
+00:56:04,687 --> 00:56:07,917
+Uh. Yeah.
+
+443
+00:56:08,007 --> 00:56:23,307
+Okay. And yeah, what I want to do is I want to say, gee, dialog box open and we're going to open up a the my greater.
+
+444
+00:56:26,567 --> 00:56:33,737
+Migrate shun this inside a g dialog box.
+
+445
+00:56:33,737 --> 00:56:37,967
+So let's do that real quick. Um.
+
+446
+00:56:40,037 --> 00:56:45,256
+Uh. G dialog box. Now I need to run inside the context of the parent process.
+
+447
+00:56:45,257 --> 00:56:50,637
+G Dialog box open. Okay.
+
+448
+00:56:50,707 --> 00:56:56,197
+So we've got this thing kind of showing up a little broken looking, but it's that's the idea.
+
+449
+00:56:56,857 --> 00:57:00,667
+And then inside here, right.
+
+450
+00:57:00,727 --> 00:57:05,737
+Uh, create a new node. Create a new node.
+
+451
+00:57:10,577 --> 00:57:14,987
+Can't do that, apparently. Duplicate node instead.
+
+452
+00:57:17,067 --> 00:57:22,907
+Oh, shoot. I need to import the module here.
+
+453
+00:57:22,977 --> 00:57:26,977
+Can I? Okay.
+
+454
+00:57:27,277 --> 00:57:31,087
+Import s module. Um. Yeah.
+
+455
+00:57:31,387 --> 00:57:34,737
+Hacker way at runtime. Um.
+
+456
+00:57:38,627 --> 00:57:43,737
+Interesting. Was this and jazz import?
+
+457
+00:57:43,747 --> 00:57:48,417
+Yes. Module. Custom elements is not defined due to.
+
+458
+00:57:53,057 --> 00:58:10,997
+He talking about? All right.
+
+459
+00:58:10,997 --> 00:58:19,627
+Well, I'll just define it like this. Okay.
+
+460
+00:58:20,437 --> 00:58:23,557
+And now our description. We're going to call this an import wizard.
+
+461
+00:58:28,577 --> 00:58:32,957
+Oh, that's interesting. Do I have to call him a Tamil import wizard?
+
+462
+00:58:34,427 --> 00:58:47,746
+How come I can't get my custom element to appear? How come?
+
+463
+00:58:47,747 --> 00:59:01,767
+My custom element? L let i w google document create element import wizard.
+
+464
+00:59:12,047 --> 00:59:15,137
+I don't know if that's going to work because I did it in script.
+
+465
+00:59:15,857 --> 00:59:21,416
+I'm hacking. That didn't work just now.
+
+466
+00:59:21,417 --> 00:59:32,937
+Didn't know. Okay. I'm what I'm going to do is I'm going to go to my English and the email here.
+
+467
+00:59:33,897 --> 00:59:41,457
+I'm going to say script source equals what I put it into about.
+
+468
+00:59:41,517 --> 00:59:45,837
+Well, come. Basically this.
+
+469
+00:59:51,097 --> 00:59:56,477
+Let's see if that works. Are we allowed to have modules and things like this?
+
+470
+00:59:56,507 --> 01:00:00,167
+We're about to find out. Tune in next time.
+
+471
+01:00:00,887 --> 01:00:08,487
+So this the. This is the community in a run.
+
+472
+01:00:08,507 --> 01:00:19,427
+Okay, restart. You have two rows of import preferences.
+
+473
+01:00:19,457 --> 01:00:23,177
+Yeah, that's the. Yeah.
+
+474
+01:00:24,407 --> 01:00:33,257
+That was because I duplicated the dialog or the description dialog in the dialog to create that import wizard node.
+
+475
+01:00:33,527 --> 01:00:37,677
+Sorry. Like this.
+
+476
+01:00:39,237 --> 01:00:55,717
+We can get rid of the text content. Turn this into is the important dessert.
+
+477
+01:01:09,117 --> 01:01:17,827
+Hmm. Go back.
+
+478
+01:01:19,837 --> 01:01:23,107
+Never heard of it a. But.
+
+479
+01:01:25,257 --> 01:01:36,507
+So it seems like I can't just straight up load the import wizard shared component inside of this Zuill document.
+
+480
+01:01:39,737 --> 01:01:44,447
+Which makes me wonder if I can use it in about preferences too.
+
+481
+01:01:44,657 --> 01:01:47,987
+Like I think we have some mixture of.
+
+482
+01:01:49,917 --> 01:01:54,967
+H html. Here.
+
+483
+01:01:56,317 --> 01:02:06,777
+Utils import is module. Windows nine to find.
+
+484
+01:02:09,917 --> 01:02:14,657
+Oh, because it's not a sissy ism. Right.
+
+485
+01:02:16,477 --> 01:02:21,177
+Or a. Import s modules don't work.
+
+486
+01:02:21,177 --> 01:02:27,837
+What we need to do is. Preferences die next age html.
+
+487
+01:02:29,687 --> 01:02:33,917
+Let's see if we can see. This is an HTML document we may have a better chance of.
+
+488
+01:02:36,787 --> 01:03:02,757
+Loading. This module is here. Create an.
+
+489
+01:03:05,027 --> 01:03:10,657
+Duplicate. Be that node.
+
+490
+01:03:11,927 --> 01:03:17,917
+Create an import wizard. Page HTML import wizard.
+
+491
+01:03:20,127 --> 01:03:26,027
+No. We can't just use that in there, apparently.
+
+492
+01:03:27,837 --> 01:03:37,437
+How about instead of fixing it like that? Like was import wizard executed?
+
+493
+01:03:39,307 --> 01:03:44,857
+I don't think so. Content? If it didn't bring it in.
+
+494
+01:03:50,127 --> 01:03:57,237
+Oh. Loading our CSP may not have allowed us to load it.
+
+495
+01:03:59,997 --> 01:04:14,087
+This was Colonel. Hmm.
+
+496
+01:04:37,627 --> 01:05:00,467
+Preferences. If I were to load a raw HTML document.
+
+497
+01:05:02,437 --> 01:05:06,727
+Like. Well, actually, actually, let's try loading.
+
+498
+01:05:07,567 --> 01:05:11,257
+Just for fun. These. Let's try loading a bell.
+
+499
+01:05:11,257 --> 01:05:16,877
+Welcome inside of that dialog. Uh.
+
+500
+01:05:20,207 --> 01:05:24,467
+Chrome g dialog box open once about welcomes URL.
+
+501
+01:05:26,207 --> 01:05:36,447
+The chrome u url. Here.
+
+502
+01:05:40,997 --> 01:05:59,017
+I do that? So it broke pretty marginal source who are as not allowed in this document.
+
+503
+01:06:02,347 --> 01:06:07,146
+Interesting. Oh, maybe because I tried loading the resource.
+
+504
+01:06:07,147 --> 01:06:10,327
+You or I and not about. Welcome.
+
+505
+01:06:16,937 --> 01:06:25,577
+Okay. Now it breaks. But before we get too freaked out about that, let's stretch it out a little bit.
+
+506
+01:06:28,337 --> 01:06:34,067
+And it's really a short glance.
+
+507
+01:06:36,977 --> 01:06:42,377
+High 500 packs. So empty contents.
+
+508
+01:06:42,407 --> 01:06:49,457
+Gotcha. Now we're going to give a body.
+
+509
+01:06:52,037 --> 01:06:57,317
+Uh, by 500 packs with 500 packs.
+
+510
+01:06:57,677 --> 01:07:00,927
+Background color. Red color.
+
+511
+01:07:01,587 --> 01:07:08,817
+White. Okay. And now in the body, we're going to put in create a new node.
+
+512
+01:07:10,407 --> 01:07:15,117
+We're going to put in our import wizard. There she is.
+
+513
+01:07:16,647 --> 01:07:23,927
+Hit our break point. Uh, I'm going to just exit the debugger because, um.
+
+514
+01:07:25,887 --> 01:07:29,967
+Did we? I didn't see the.
+
+515
+01:07:34,197 --> 01:07:37,717
+The message. I want the message. The debugger kind of broke up.
+
+516
+01:07:37,797 --> 01:07:41,997
+It still things were stopped there. Continue.
+
+517
+01:07:44,287 --> 01:07:52,307
+Um. Hello, world import wizard.
+
+518
+01:07:52,347 --> 01:07:58,827
+Let's manually run the connected callback again. What?
+
+519
+01:07:59,327 --> 01:08:02,867
+Don't you know that is import wizard.
+
+520
+01:08:12,077 --> 01:08:17,167
+How do you not? All right.
+
+521
+01:08:17,167 --> 01:08:22,297
+Well, instead, let's manually run the.
+
+522
+01:08:24,107 --> 01:08:37,827
+This. We did not get our event fire.
+
+523
+01:08:48,087 --> 01:08:54,457
+No. If we were to put the.
+
+524
+01:08:58,517 --> 01:09:01,726
+So what am I? What am I running into here? Because it's like 217.
+
+525
+01:09:01,727 --> 01:09:07,997
+There's there's no way of getting to this part, but, like, there seems to be some difficulty in getting.
+
+526
+01:09:11,267 --> 01:09:14,447
+Import Wizard. My import wizard. Custom element.
+
+527
+01:09:17,247 --> 01:09:30,537
+To show up in Zulu documents. That's going to be tricky for things like about preferences.
+
+528
+01:09:30,957 --> 01:09:44,087
+It works for about welcome. And in theory, if the migrated dialog is an HTML document, it'll work there too.
+
+529
+01:09:44,957 --> 01:09:51,256
+But I'm not seeing the event yet. Like here.
+
+530
+01:09:51,257 --> 01:09:56,757
+Let's let's just let's do this migration directly to HTML.
+
+531
+01:09:56,777 --> 01:10:11,657
+We're going to make this into an HTML document. Or you just take that out for a splat this in here and we're going to get rid of all this stuff.
+
+532
+01:10:16,457 --> 01:10:22,167
+Where have. Import wizard.
+
+533
+01:10:24,647 --> 01:10:32,287
+Get rid of all of this. Okay.
+
+534
+01:10:36,377 --> 01:10:41,757
+Restart. You didn't have to run the define row.
+
+535
+01:10:42,327 --> 01:10:46,587
+Which row are you talking about? It's Murphy. I'm interested in what you're saying.
+
+536
+01:10:50,787 --> 01:10:56,127
+I want to know what you're talking about. Migration.
+
+537
+01:11:00,807 --> 01:11:09,057
+Because I have to build again. Which define row.
+
+538
+01:11:17,127 --> 01:11:26,097
+If I can get the event showing up and instantiating the actors, then we've proven that we can do this.
+
+539
+01:11:27,217 --> 01:11:31,467
+But the idea of dropping.
+
+540
+01:11:35,597 --> 01:11:40,457
+The reusable component into a Zuill document.
+
+541
+01:11:42,047 --> 01:11:47,027
+Preexisting XL document starts to fall over.
+
+542
+01:11:49,707 --> 01:11:53,667
+But where you can build faster. Where are you complaining about?
+
+543
+01:12:01,657 --> 01:12:05,737
+Are you talking about? Preprocessor.
+
+544
+01:12:06,217 --> 01:12:09,577
+Oh. Um.
+
+545
+01:12:12,907 --> 01:12:19,287
+Uh, what was in here before? Sort of preprocessor directive.
+
+546
+01:12:19,287 --> 01:12:25,797
+Yeah. Um, it's just. Your test there.
+
+547
+01:12:25,817 --> 01:12:39,027
+There is a preprocessor directive. Um.
+
+548
+01:12:40,057 --> 01:12:46,537
+Ifdef. XP when and if there is make you happy.
+
+549
+01:12:47,347 --> 01:12:51,906
+Copy the line from Sublime into the toolbox.
+
+550
+01:12:51,907 --> 01:13:01,837
+The part where I define the custom element. I put the importing of the module in the top of the document that we're working with.
+
+551
+01:13:02,137 --> 01:13:20,987
+So I didn't need to do that. Thankfully. All right.
+
+552
+01:13:35,547 --> 01:13:40,027
+Passing air. Okay.
+
+553
+01:13:45,617 --> 01:13:50,207
+You know what? It's mad enough about that that I'm just going to.
+
+554
+01:13:56,457 --> 01:14:02,097
+Change how we package this so that it's no longer be processed.
+
+555
+01:14:16,607 --> 01:14:27,237
+Talk about style. What, 8 minutes?
+
+556
+01:14:27,417 --> 01:14:31,347
+And what have we proven? What have we shown? What did we show?
+
+557
+01:14:32,727 --> 01:14:43,167
+I can put a reusable component inside of about welcome and.
+
+558
+01:14:46,327 --> 01:14:49,417
+Have it talked to a DJ?
+
+559
+01:14:50,257 --> 01:14:53,527
+Uh, yes. Jazz window actor pair.
+
+560
+01:15:08,267 --> 01:15:21,977
+About welcome is complicated, but hopefully our the folks who manage it can find a way of putting our reusable component in there.
+
+561
+01:15:55,967 --> 01:16:05,377
+Okay. Let's try this again. See the message.
+
+562
+01:16:09,937 --> 01:16:13,327
+I don't. Stephen didn't show up. We've got our browser here.
+
+563
+01:16:14,617 --> 01:16:19,086
+Document a pass error. Are you talking about syntax?
+
+564
+01:16:19,087 --> 01:16:22,027
+Location doesn't like.
+
+565
+01:16:33,605 --> 01:16:36,815
+And that. Yeah. Um.
+
+566
+01:16:42,505 --> 01:16:48,715
+We have access to services and info so remote like this.
+
+567
+01:16:49,795 --> 01:16:54,085
+Want I want to understand the execution scope.
+
+568
+01:16:55,105 --> 01:17:03,515
+So I want to be in a particular window. I'm going to be running within migration, that HTML window.
+
+569
+01:17:03,655 --> 01:17:06,965
+Do I have services? I do.
+
+570
+01:17:06,985 --> 01:17:10,825
+Do I have desktop browsing contexts? I do.
+
+571
+01:17:11,125 --> 01:17:16,795
+And do I have a remote? Is remote?
+
+572
+01:17:17,275 --> 01:17:21,925
+No. Process type is in context.
+
+573
+01:17:22,945 --> 01:17:27,355
+It's a canonical. I'm pretty sure I must. I'm obviously in the parent process.
+
+574
+01:17:28,025 --> 01:17:33,565
+Um. Better element or parent?
+
+575
+01:17:39,265 --> 01:17:43,784
+Current window global as well on current. Promote type.
+
+576
+01:17:43,785 --> 01:17:47,264
+That's that's very good. There is no remote type because we're not remote.
+
+577
+01:17:47,265 --> 01:17:52,545
+Current. Window global. Can I get actor?
+
+578
+01:17:52,695 --> 01:17:57,975
+Import Wizard? No, it doesn't match subframes.
+
+579
+01:17:57,975 --> 01:18:01,005
+That's why. Okay. So browser glue.
+
+580
+01:18:01,935 --> 01:18:08,095
+We need it to be able to do all frames. All right.
+
+581
+01:18:08,905 --> 01:18:12,505
+And get this to work. This is going to be a really satisfying conclusion.
+
+582
+01:18:27,585 --> 01:18:31,725
+Okay. We've got our hello world. Still no message.
+
+583
+01:18:34,495 --> 01:18:38,515
+Let's get our scope here.
+
+584
+01:18:42,505 --> 01:18:53,035
+Import wizard doesn't match remote type. Remote type.
+
+585
+01:18:55,365 --> 01:19:02,385
+Are we not allowed to say that something can load in both the privileged about process and the parent process?
+
+586
+01:19:04,975 --> 01:19:08,035
+Oh, that's possible. Like if I remove this.
+
+587
+01:19:11,405 --> 01:19:16,205
+And then restart. That's that's a worry.
+
+588
+01:19:17,195 --> 01:19:24,965
+It might have to add that in. There we go.
+
+589
+01:19:25,385 --> 01:19:28,415
+Okay. We need to make.
+
+590
+01:19:28,565 --> 01:19:30,335
+We need to make it possible.
+
+591
+01:19:33,845 --> 01:19:45,185
+Like when we set remote tapes on a DJ's window actor during a declaration that prevents it from ever being loaded in the pairing process.
+
+592
+01:19:45,605 --> 01:19:55,805
+We need the ability to have something that can load in both the parent process and the privileged content process.
+
+593
+01:19:56,345 --> 01:20:09,545
+I'd really love it if we could figure out a way of getting the actor to work properly, the the pair to work properly in about preferences as well.
+
+594
+01:20:09,575 --> 01:20:14,765
+Like if we can get that because like HTML is in here, we have each HTML in here.
+
+595
+01:20:16,385 --> 01:20:19,955
+Like there are some examples of it.
+
+596
+01:20:20,525 --> 01:20:24,154
+I'm sure we've got HTML in here. It is an HTML document.
+
+597
+01:20:24,155 --> 01:20:29,105
+We've got an HTML body. And did we end up putting the.
+
+598
+01:20:31,695 --> 01:20:39,285
+Import wizard in here? Yes. So, like windowed or custom elements.
+
+599
+01:20:40,825 --> 01:20:44,575
+Get import wizard. Yeah, it got registered.
+
+600
+01:20:44,935 --> 01:20:52,515
+So, like, if I. I want to create a node here.
+
+601
+01:21:01,595 --> 01:21:05,495
+Once again, I just want to, like, figure this out. Duplicate now. Create a new node.
+
+602
+01:21:07,205 --> 01:21:13,205
+No. Okay. Duplicate node. H html import wizard.
+
+603
+01:21:15,195 --> 01:21:18,275
+See? No good. No good.
+
+604
+01:21:19,565 --> 01:21:26,755
+Where's our import wizard? What if I just was like without the prefix?
+
+605
+01:21:26,905 --> 01:21:31,485
+Import wizard. Oh, there it is. No prefix.
+
+606
+01:21:31,495 --> 01:21:35,605
+Prefix works perfectly. And then did we get our message? We did.
+
+607
+01:21:37,105 --> 01:21:47,305
+Okay. Okay. Uh, can also load the reusable component in about preferences.
+
+608
+01:21:47,315 --> 01:21:54,115
+So this is really this is really the thing that we discovered during this pilot whole, which is.
+
+609
+01:21:56,765 --> 01:21:59,765
+That's the rub, and that's something that I think is fixable.
+
+610
+01:21:59,765 --> 01:22:03,755
+We'd have to talk to our dorm team and the people who do like vision and process stuff.
+
+611
+01:22:04,085 --> 01:22:10,205
+But if we can solve that, then this is plausible as a as a as an approach.
+
+612
+01:22:11,105 --> 01:22:12,935
+I'm going to do the same thing with this.
+
+613
+01:22:14,345 --> 01:22:26,224
+I suspect we're going to have similar issues of like trying to embed visual or like embed documents, chrome documents inside of each HTML documents.
+
+614
+01:22:26,225 --> 01:22:35,645
+But we'll see. I'm going to I'm going to test it out. So before we close out, let's reload this page.
+
+615
+01:22:39,665 --> 01:22:44,655
+We got our approval here. I need a testing flag.
+
+616
+01:22:44,735 --> 01:22:53,045
+This is not going to change any behavior. So change project flags testing unchanged doesn't change behavior for users.
+
+617
+01:22:53,045 --> 01:22:55,895
+We can go ahead and land this and we're going to call it a day.
+
+618
+01:23:04,095 --> 01:23:12,165
+So I actually think that was pretty, pretty fruitful in that we were able to prove this thing out more or less.
+
+619
+01:23:12,525 --> 01:23:19,965
+The communication pathways can exist. We just have this one barrier that we kind of have to smash through,
+
+620
+01:23:19,965 --> 01:23:26,835
+but otherwise it is plausible to put a reusable component like a peer web component
+
+621
+01:23:27,285 --> 01:23:33,105
+with a just window actor pair into these contexts and have it work properly.
+
+622
+01:23:36,125 --> 01:23:50,515
+The documents have to be all documents or at least have an HTML root loading inside of a zwolle document,
+
+623
+01:23:51,995 --> 01:24:00,305
+or even if it has the HTML suffix is no bueno.
+
+624
+01:24:03,365 --> 01:24:07,445
+Okay. I'm going to do this one on my own time.
+
+625
+01:24:07,595 --> 01:24:11,735
+And then next week we can get back to the windows, jump with stuff, and we'll see how far we can push that.
+
+626
+01:24:12,695 --> 01:24:15,994
+I hope that was interesting. Thank you so much for watching.
+
+627
+01:24:15,995 --> 01:24:19,865
+Episode 303 of The Joy of Coding.
+
+628
+01:24:20,225 --> 01:24:23,764
+Let me know what you thought. I hope that was kind of interesting. We we did this.
+
+629
+01:24:23,765 --> 01:24:29,914
+We didn't get to this part. But next week, if you're curious, I'll report back on how it went and what things we discovered.
+
+630
+01:24:29,915 --> 01:24:34,595
+And the goal is hopefully by the end of this week, early next week,
+
+631
+01:24:34,745 --> 01:24:41,345
+we'll all have like talked to some of my colleagues who are also mentoring these students and we'll have come to a conclusion on the approach.
+
+632
+01:24:41,585 --> 01:24:47,045
+And then we can start writing up instructions and maybe even putting in some scaffolding for the students to get started on this work.
+
+633
+01:24:47,555 --> 01:24:51,844
+That's the plan. All right. Thank you again so much for watching.
+
+634
+01:24:51,845 --> 01:24:57,184
+Episode 303 of The Joy of Coding. Let me know what you thought. There's a great this episode link right here in the agenda.
+
+635
+01:24:57,185 --> 01:25:01,414
+There's also it's in the same place where you found the agenda link.
+
+636
+01:25:01,415 --> 01:25:09,544
+There will be a rate this episode thing and just in case I'll also put in the twitch chat rate this episode I read everything that comes in.
+
+637
+01:25:09,545 --> 01:25:10,984
+Let me know what you thought of the episode.
+
+638
+01:25:10,985 --> 01:25:18,155
+And if you have ideas or things you want me to cover or talk about questions, you can send them in and I will do my best to answer them.
+
+639
+01:25:18,755 --> 01:25:27,515
+And I will see you next week for episode 304. I wonder if we should do something special for episode 314 for like.
+
+640
+01:25:28,115 --> 01:25:35,315
+Like a pie. A pie related pie related episode.
+
+641
+01:25:35,615 --> 01:25:42,205
+Maybe I'll keep Pi Day. For Episode 314.
+
+642
+01:25:43,615 --> 01:25:48,275
+Okay. Let me know what your thoughts are there.
+
+643
+01:25:48,715 --> 01:25:52,405
+Okay. Thanks again, everybody. I will see you next week. Have yourselves a great week.
+
+644
+01:25:52,795 --> 01:25:56,845
+Take care. Bye bye.
+
+645
+01:25:57,835 --> 01:26:00,835
+Here comes the sounds. The joy.
+
+646
+01:26:01,765 --> 01:26:04,315
+Oh, they see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

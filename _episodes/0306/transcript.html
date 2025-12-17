@@ -1,0 +1,3293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 306 - November 9, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 306 - November 9, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=87f88c83-911a-480a-a4ad-af4800ed8827</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=87f88c83-911a-480a-a4ad-af4800ed8827">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,218 --> 00:00:06,538
+Welcome. Through the Joy Cup.
+
+2
+00:00:07,018 --> 00:00:13,808
+Oh, dear. Hello and welcome to Episode 306 of The Joy of Coding.
+
+3
+00:00:13,828 --> 00:00:18,988
+My name is Mike Conley. It's so good to have you here. Going to be hacking on some Firefox stuff today.
+
+4
+00:00:19,618 --> 00:00:26,918
+I'm at home, but instead of working on the windows jumbling stuff, we're going to be doing some work on what's called the unified extensions UI.
+
+5
+00:00:26,938 --> 00:00:30,838
+This is part of our push to get manifest V3 at the door.
+
+6
+00:00:32,608 --> 00:00:38,548
+The there are various changes that we need to make to the UI to support Web extensions, manifest V3.
+
+7
+00:00:38,788 --> 00:00:42,688
+And that's what I'll be working on today. I'm helping out with that. So let's get started.
+
+8
+00:00:42,718 --> 00:00:47,008
+I'll start by sharing my screen. One second.
+
+9
+00:00:47,458 --> 00:00:52,438
+Is there am I noticing a slight delay between the camera?
+
+10
+00:00:53,878 --> 00:00:57,078
+Is there is there a delay there? I can't tell. I don't know.
+
+11
+00:00:57,088 --> 00:01:01,198
+I'm not sensitive enough in my mind. Let's not get sidetracked.
+
+12
+00:01:02,008 --> 00:01:07,168
+All right. Here's today's agenda. So a reminder, no plan survives breakfast.
+
+13
+00:01:07,618 --> 00:01:12,538
+I don't know what's going to happen today. I know kind of what I want to work on, but, you know, we might get stuck.
+
+14
+00:01:12,568 --> 00:01:16,048
+Who knows what will happen? This is software engineering in the rye, you know, warts and all.
+
+15
+00:01:16,078 --> 00:01:22,768
+So we'll see what goes on. I have a vague, vague idea of what will happen, but it might go completely off the rails, and that's okay.
+
+16
+00:01:24,178 --> 00:01:30,478
+The second thing is that this episode guide or sorry, the episode agenda that you're looking at, where I'm going to,
+
+17
+00:01:30,748 --> 00:01:35,228
+you know, flesh this out as things go on, it's available to you if you're watching this on YouTube.
+
+18
+00:01:35,248 --> 00:01:40,737
+It's in the video description. Same thing with Diodes Zone. If you're watching this on air, Mozilla, it's in the detail section.
+
+19
+00:01:40,738 --> 00:01:43,828
+If you're watching this on Twitch, it's down below in the channel description.
+
+20
+00:01:44,128 --> 00:01:49,168
+I've added the links down there. So let's let's get into it, shall we?
+
+21
+00:01:50,378 --> 00:01:56,738
+So. Yeah, Windows, jobless stuff not going on. I'm working on these changes for the.
+
+22
+00:02:00,078 --> 00:02:07,518
+For for manifest V3. There's a whole stack of patches I want to show, you know, what we've got so far, more or less.
+
+23
+00:02:08,508 --> 00:02:14,178
+Some of this may seem familiar because, you know, I. I sort of described some of it last week.
+
+24
+00:02:18,198 --> 00:02:29,338
+Hang on. I'm just going to answer a question of someone. Let's show you what I've got so far.
+
+25
+00:02:29,358 --> 00:02:35,778
+So in this profile that I'm about to boot up, I've got a bunch of brow web extensions installed that add buttons,
+
+26
+00:02:35,778 --> 00:02:42,558
+what we call browser actions, browser actions, or kinds of buttons that show up in the toolbar regardless of what page is loaded.
+
+27
+00:02:43,368 --> 00:02:49,038
+That's distinct from page actions. Those are things that show up here that only show up on particular types of pages.
+
+28
+00:02:49,338 --> 00:02:54,138
+These are browser action buttons. And you might, you know, be familiar with some of these.
+
+29
+00:02:54,138 --> 00:02:58,818
+This is what is this robo form? This one is https everywhere.
+
+30
+00:02:59,118 --> 00:03:03,608
+I just grabbed a whole bunch from add ons dot mozilla dawg this one is you block
+
+31
+00:03:03,618 --> 00:03:08,898
+one of my favorites lets this one cookie auto delete enhancer for YouTube.
+
+32
+00:03:09,028 --> 00:03:14,328
+Got a bunch of stuff. Now I've also got the panel open here and if I, you know,
+
+33
+00:03:14,538 --> 00:03:26,178
+I can pin things or unpin things from the toolbar and they show up over here and then we can pin things back in the toolbar that's working.
+
+34
+00:03:26,808 --> 00:03:32,148
+These are items that, like every extension that's installed, gets an item in this list.
+
+35
+00:03:32,628 --> 00:03:40,997
+That's kind of important because not every add on adds a button and this list will eventually get filtered out so that we don't have redundancy.
+
+36
+00:03:40,998 --> 00:03:45,288
+Like if we've already got a browser action somewhere in the toolbar,
+
+37
+00:03:45,288 --> 00:03:51,918
+we won't show an item for it here and we'll only list the ones that don't have a browser action somewhere visible in the UI.
+
+38
+00:03:52,308 --> 00:03:54,108
+So we won't have so much redundancy.
+
+39
+00:03:54,468 --> 00:04:04,908
+But you know, the idea is every add on might need to you might need to change its permissions for a particular site as you browse the web.
+
+40
+00:04:05,568 --> 00:04:09,198
+And so we need to have these things. Yeah, like this one.
+
+41
+00:04:09,198 --> 00:04:14,088
+Permission for sponsor block is needed to read and change data on this particular site.
+
+42
+00:04:14,598 --> 00:04:15,478
+So we're going to have to, like,
+
+43
+00:04:15,498 --> 00:04:23,838
+show a permission dialog or like make it possible for the user to opt in to letting sponsor block for YouTube work on this site, stuff like that.
+
+44
+00:04:25,728 --> 00:04:30,077
+I think I'd shown this last week as well that like the overflowing happens in
+
+45
+00:04:30,078 --> 00:04:34,998
+this panel rather than this panel now built in toolbar items go into this panel,
+
+46
+00:04:35,328 --> 00:04:46,518
+everything else, like all the web extension stuff, the browser actions go into this panel and, uh, what did I, what did I want to show you?
+
+47
+00:04:47,298 --> 00:04:51,198
+Oh, right. So what we're working on today, what I've got so far,
+
+48
+00:04:52,128 --> 00:04:58,247
+I don't know how many of you watching this are have built a browser add on before a web extension before.
+
+49
+00:04:58,248 --> 00:05:09,168
+But there is whenever you describe your browser extension, let me bring up the browser action.
+
+50
+00:05:10,308 --> 00:05:16,278
+Let's pull up the documents, the the web extension documentation for browser action.
+
+51
+00:05:17,718 --> 00:05:21,828
+So browser action, this is how you can like programmatically add a browser action,
+
+52
+00:05:23,718 --> 00:05:28,458
+I think, or at least programmatically manipulate your browser action.
+
+53
+00:05:30,858 --> 00:05:35,418
+You can like disable your button programmatically, but you have to declare it inside of your manifest.
+
+54
+00:05:36,498 --> 00:05:40,608
+And that's done. Whereas the browser action.
+
+55
+00:05:40,608 --> 00:05:48,138
+Yeah, in your manifest you declare it like this. And one of the things that you can declare in the browser action.
+
+56
+00:05:48,678 --> 00:05:52,488
+Uh, yeah. Where is the the key.
+
+57
+00:05:52,518 --> 00:05:56,018
+Yeah. One of the things that you can declare is the default area.
+
+58
+00:05:56,028 --> 00:06:04,488
+This is where the button shows up. And by default, I would, I would wager that a lot of browser add ons actually don't supply this.
+
+59
+00:06:06,168 --> 00:06:10,698
+And maybe if you're a browser like an add on developer, you didn't know that you could do this.
+
+60
+00:06:10,698 --> 00:06:18,468
+But in Firefox, at least you can declare when you're setting up your browser action what area the button's going to show in by default.
+
+61
+00:06:18,948 --> 00:06:23,087
+And NAV Bar is like this toolbar right here.
+
+62
+00:06:23,088 --> 00:06:36,078
+This is a very popular one, obviously, for putting Web extensions menu panel was the overflow panel that that is where it would have gone tab strip.
+
+63
+00:06:37,088 --> 00:06:41,798
+That's that's up here. And then personal toolbar, that's the bookmarks toolbar.
+
+64
+00:06:41,798 --> 00:06:49,358
+That's if you have that, you know, visible, then it would or enabled you'd see it there, but that's where it would get added.
+
+65
+00:06:49,718 --> 00:06:54,018
+And whenever you don't supply it, it defaults to nav bar.
+
+66
+00:06:54,338 --> 00:07:03,188
+Well, a decision has been made where in this new world of what we call unified extensions, if the property is not declared,
+
+67
+00:07:03,188 --> 00:07:09,848
+if it's not defined, that instead of defaulting it to the nav bar, we're going to default it to the add ons panel over here.
+
+68
+00:07:10,388 --> 00:07:13,867
+And that way, you know, if you install a bunch of extensions,
+
+69
+00:07:13,868 --> 00:07:19,058
+chances are it won't clutter up your nav bar by default unless the add ons have opted in.
+
+70
+00:07:19,058 --> 00:07:26,828
+Instead, everything is going to go inside of your add ons button and then you can choose to like pin things to your toolbar if you really want to.
+
+71
+00:07:27,458 --> 00:07:35,117
+That's the idea. So. Uh, the first thing I've got is I've got a patch to do that,
+
+72
+00:07:35,118 --> 00:07:46,368
+that very thing make unified extensions area what we call the fallback area if, you know, if the user has not declared a default area.
+
+73
+00:07:46,488 --> 00:07:52,668
+Now I also should mention that the default area can be overridden by the user in customize mode like they can.
+
+74
+00:07:52,938 --> 00:07:59,808
+If the browser action says, okay, my default area is the nav bar, the user can still move it to the bookmarks toolbar or the tab strip or something.
+
+75
+00:07:59,988 --> 00:08:05,688
+What we're saying with the default area for the web extension is if the user has never seen this thing before,
+
+76
+00:08:06,378 --> 00:08:10,998
+if we're installing it for the first time, where should I put this?
+
+77
+00:08:11,538 --> 00:08:17,148
+And and so the default area traditionally, when it's not been supplied, has been following back to NAV Bar.
+
+78
+00:08:17,148 --> 00:08:23,208
+We're going to fall back to the add ons area. And that's what this this patch does.
+
+79
+00:08:25,308 --> 00:08:30,798
+You know, we look at the pref for the unified extension stuff and we figure out what the
+
+80
+00:08:31,608 --> 00:08:40,188
+fallback area should be and set that up and then do the same thing over here.
+
+81
+00:08:45,088 --> 00:08:46,918
+Yeah. We we have to do the same thing over here.
+
+82
+00:08:47,098 --> 00:08:56,928
+Interestingly, extension actions is this thing that is shared between tool kit like for for web extensions that ship on mobile as well.
+
+83
+00:08:56,938 --> 00:09:06,087
+So we probably need to be consistent there because before it was falling back to the nav bar as the default area.
+
+84
+00:09:06,088 --> 00:09:12,868
+But like there is no I don't think the nav bar is really has much meaning necessarily on Phenix.
+
+85
+00:09:12,868 --> 00:09:20,098
+I could be wrong. I don't know if they pay much attention to it, but at any rate, we should be consistent and.
+
+86
+00:09:23,248 --> 00:09:32,278
+Let's see here. Yeah. What we're saying here is, okay, if unified extensions is enabled, then instead of following back automatically to the nav bar,
+
+87
+00:09:32,278 --> 00:09:39,118
+just supply the default area which will be null if or undefined if the user hasn't supplied anything.
+
+88
+00:09:39,118 --> 00:09:47,247
+And then up here for the browser implementation, if unified extensions is enabled, then then you know,
+
+89
+00:09:47,248 --> 00:09:55,948
+if null has been supplied, then use the add ons area as the fallback as opposed to the nav bar.
+
+90
+00:09:56,128 --> 00:09:57,808
+That's that's what's currently going on.
+
+91
+00:09:58,018 --> 00:10:04,348
+And I'm not 100% certain this is the right approach, but I'm hoping that the Web extension team can help me decide.
+
+92
+00:10:04,978 --> 00:10:12,567
+But before I proceed, I want to file a bug for this because there's no bug associated with this work, and I think that's important.
+
+93
+00:10:12,568 --> 00:10:20,218
+So let's do that right now. I just yanked out a beard hair that is like super thick.
+
+94
+00:10:20,788 --> 00:10:25,917
+GROSS It was like I thought it was like I didn't know what it was.
+
+95
+00:10:25,918 --> 00:10:32,858
+Something was itching and and I realized, oh, I got something stuck to my face.
+
+96
+00:10:32,858 --> 00:10:36,267
+They yanked it and it was a gigantic beard here. That's really.
+
+97
+00:10:36,268 --> 00:10:39,778
+I'm sorry you had to see that. My bet. My apologies.
+
+98
+00:10:40,828 --> 00:10:45,778
+All right, so let's start by filing a bug. Uh, too much information?
+
+99
+00:10:45,778 --> 00:10:49,017
+Yeah, for sure. For sure. You don't need to hear about my.
+
+100
+00:10:49,018 --> 00:10:52,708
+My grooming, my hair. My bad, my bad.
+
+101
+00:10:53,638 --> 00:10:57,838
+So we're going to file a bug that blocks the extension button unification effort.
+
+102
+00:11:02,458 --> 00:11:09,958
+Or I say filing this under x web extension's frontend and will say that like web
+
+103
+00:11:09,958 --> 00:11:24,087
+extensions that don't supply or browser actions without a default area set should
+
+104
+00:11:24,088 --> 00:11:38,428
+fall back to using the using area add ons when unified extensions UI is enabled
+
+105
+00:11:40,408 --> 00:11:50,098
+by default when we have up until now if a web extension with browser action.
+
+106
+00:11:53,438 --> 00:11:56,438
+I think I should be consistent here. Browser action.
+
+107
+00:12:01,078 --> 00:12:04,718
+He has not supplied a default area.
+
+108
+00:12:04,738 --> 00:12:12,598
+We've fallen back to putting the browser action into the nav bar.
+
+109
+00:12:15,748 --> 00:12:20,908
+Someone's asking what I look like with a full beard. I actually do have my backpack down here.
+
+110
+00:12:22,138 --> 00:12:26,288
+Here, let me let me show you my. If I do.
+
+111
+00:12:26,398 --> 00:12:29,488
+Hey, let me show you my ID. It's got. It's got a beard on it. Once I got.
+
+112
+00:12:32,718 --> 00:12:49,578
+Getting distracted. One moment that.
+
+113
+00:12:54,148 --> 00:13:00,328
+All right, check this out. Um, I mean, let's switch back to.
+
+114
+00:13:02,698 --> 00:13:05,998
+What? Sorry about that. Check this out. Can you see this?
+
+115
+00:13:06,028 --> 00:13:10,258
+That's what I look like with a beard. Very severe face.
+
+116
+00:13:11,098 --> 00:13:14,128
+That's cause in ID photos you're not supposed to smile.
+
+117
+00:13:15,028 --> 00:13:16,258
+But that's what I look like with a beard.
+
+118
+00:13:17,308 --> 00:13:27,718
+Now, you know, normally I would grow a winter beard, but it makes for poor mask seals, so I haven't grown a beard in a while.
+
+119
+00:13:28,918 --> 00:13:32,698
+Serious. 1.0. Yeah. Okay.
+
+120
+00:13:32,728 --> 00:13:38,127
+By default until I was as. And that's why we fall fallen back to putting the browser action is the nav
+
+121
+00:13:38,128 --> 00:13:46,407
+bar with the unified extensions with the unified exe extensions UI enabled,
+
+122
+00:13:46,408 --> 00:13:56,878
+we want to change that fallback behavior so that browser actions without a default area get added to the.
+
+123
+00:13:59,478 --> 00:14:05,208
+Add ons panel. Uh.
+
+124
+00:14:05,308 --> 00:14:19,918
+Okay. So a task assigned to me, and this is the special whiteboard tag that lets us put a clone into JIRA for prioritization stuff.
+
+125
+00:14:21,268 --> 00:14:26,218
+If you're curious about our Bugzilla JIRA sort of situation, it's really interesting.
+
+126
+00:14:27,508 --> 00:14:35,278
+Some people who do project management at Mozilla do not like Bugzilla at the same time or they the tooling
+
+127
+00:14:35,278 --> 00:14:41,098
+inside of Bug Zilla is easier for them to create reports and to like look at trends and graphs and whatnot.
+
+128
+00:14:42,058 --> 00:14:48,777
+And so what we do is we have a we have our tickets in all in Bugzilla for
+
+129
+00:14:48,778 --> 00:14:56,427
+engineering work and then we have a bot that creates tickets in JIRA that clone,
+
+130
+00:14:56,428 --> 00:15:03,868
+these ones in Bugzilla, so that like JIRA can be used for like Kanban boards and stuff.
+
+131
+00:15:03,868 --> 00:15:07,108
+And then the work happens in Bugzilla. It's kind of interesting.
+
+132
+00:15:07,318 --> 00:15:11,488
+See, look, a bot came by and just added the Web extensions JIRA ticket.
+
+133
+00:15:13,018 --> 00:15:17,188
+Hey, well, you know, but we do all our work in Bugzilla, thank goodness.
+
+134
+00:15:17,368 --> 00:15:20,398
+Not a huge fan of JIRA, to be completely honest.
+
+135
+00:15:20,878 --> 00:15:25,837
+Okay, so now that I have that, I'm going to update, uh, ambiguous.
+
+136
+00:15:25,838 --> 00:15:34,638
+Next change set make unify OC. Update the commit message on this one.
+
+137
+00:15:36,308 --> 00:15:44,178
+Refer to this bug that we've just added. Ake.
+
+138
+00:15:49,168 --> 00:15:52,828
+Default set. What do I say here?
+
+139
+00:15:54,838 --> 00:16:01,077
+Have browser actions. Go to the add ons panel when they don't.
+
+140
+00:16:01,078 --> 00:16:04,918
+When? A default area is supplied.
+
+141
+00:16:08,438 --> 00:16:15,328
+When no valid. With.
+
+142
+00:16:16,488 --> 00:16:22,208
+Unified extensions UI. Here.
+
+143
+00:16:22,208 --> 00:16:32,348
+I think we can do better make add ons panel default the fallback area for browser actions.
+
+144
+00:16:33,248 --> 00:16:37,598
+Yeah. That's all I'll do. Okay.
+
+145
+00:16:51,758 --> 00:17:09,018
+Next step. Mm mm mm mm mm mm mm mm mm mm mm.
+
+146
+00:17:10,008 --> 00:17:13,008
+This is going to break a ton of tests. That's the thing.
+
+147
+00:17:13,428 --> 00:17:23,508
+This will have broken a ton of tests. And I had started to fix some of those tests, like this one browser active script.
+
+148
+00:17:23,898 --> 00:17:27,438
+This, I believe, should still pass. Should pass now.
+
+149
+00:17:27,468 --> 00:17:31,968
+Let's find out if this passes. And browser action here.
+
+150
+00:17:31,998 --> 00:17:39,378
+Basically, I worry that a bunch of the browser action tests are going to be broken because they add browser actions.
+
+151
+00:17:39,378 --> 00:17:42,828
+And I'll bet a bunch of those tests aren't supplying the default area.
+
+152
+00:17:43,428 --> 00:17:46,938
+And so their expectations have changed.
+
+153
+00:17:49,608 --> 00:17:50,948
+Okay. Yeah, that one still passes.
+
+154
+00:17:50,958 --> 00:17:59,237
+So what I want to do, what I'm going to do is we're going to go through here's the browser in like the, the test manifest file.
+
+155
+00:17:59,238 --> 00:18:09,078
+There's a bunch of tests that thankfully are prefixed browser action and the way we can run just those we can
+
+156
+00:18:09,078 --> 00:18:18,708
+use start at and thankfully this is in out I think in alphabetical order so I can go like run these tests,
+
+157
+00:18:19,458 --> 00:18:29,538
+start at that one and at this one and let's just see which ones of these pass.
+
+158
+00:18:47,008 --> 00:18:51,198
+A lot of activity, yadda, yadda, yadda. Okay, then we lock up.
+
+159
+00:18:51,708 --> 00:18:59,028
+So where do we just lock up? Click types.
+
+160
+00:19:01,558 --> 00:19:09,238
+All right. So let's verify that we lock up whenever we just run it in isolation.
+
+161
+00:19:19,558 --> 00:19:26,038
+Yep. Okay. And when does that happen? That happens. Entering test bound test click data reset and v two.
+
+162
+00:19:26,578 --> 00:19:31,978
+So what was the sorry? What was the browser action click types.
+
+163
+00:19:31,978 --> 00:19:43,608
+Browser action click types. So Test Click Data Reset Manifest Version two K.
+
+164
+00:19:45,798 --> 00:19:51,228
+So here. Yeah. Browser action. Command commands action.
+
+165
+00:19:52,298 --> 00:19:59,118
+If we're going to say here, default area nav bar.
+
+166
+00:20:06,578 --> 00:20:20,908
+Now let's see what happens. Good.
+
+167
+00:20:21,328 --> 00:20:28,138
+Okay, let's go back to running our tests then. And, you know, this is this test.
+
+168
+00:20:29,698 --> 00:20:35,817
+This is basically causing us to use the same old behavior in our tests.
+
+169
+00:20:35,818 --> 00:20:43,348
+But that's okay. That's what the tests were doing before. We're going to want to add new tests for the sort of the new fallback and for any
+
+170
+00:20:43,348 --> 00:20:48,778
+tests that we want to update to like have buttons show up in the add ons area first.
+
+171
+00:20:48,778 --> 00:20:52,528
+We'll just have to then update those tests. But we can do that later.
+
+172
+00:20:52,528 --> 00:21:00,358
+So here's another one browser action context here.
+
+173
+00:21:00,388 --> 00:21:03,238
+Action browser action get title.
+
+174
+00:21:04,408 --> 00:21:15,508
+Where do we set up that browser action the manifest extension startup Where's the definition of the extension browser?
+
+175
+00:21:15,508 --> 00:21:25,758
+Get manifest manifest version. Manifest, manifest options manifest.
+
+176
+00:21:25,758 --> 00:21:31,758
+So whenever we're we're past options and run tests. So who's calling run tests down here?
+
+177
+00:21:31,758 --> 00:21:35,178
+Manifest. Okay. Browser action. Default area.
+
+178
+00:21:37,088 --> 00:21:40,958
+NAV bar. We'll do the same thing down here.
+
+179
+00:21:45,378 --> 00:21:49,398
+Uh. Browser action. Default area.
+
+180
+00:21:49,638 --> 00:21:56,068
+NAV bar. So just not a browser action.
+
+181
+00:21:59,508 --> 00:22:03,108
+Browser Action Film Area number.
+
+182
+00:22:07,288 --> 00:22:25,208
+Title. Okay.
+
+183
+00:22:26,458 --> 00:22:30,148
+What test was this? Sorry. Browser action. Context.
+
+184
+00:22:32,158 --> 00:22:40,538
+All right, so let's run that one. So not only two or three for two asks, if you don't mind me asking, What are you doing?
+
+185
+00:22:41,138 --> 00:22:45,728
+Great question. Great question. So we are changing some behavior in Firefox.
+
+186
+00:22:45,728 --> 00:22:53,048
+We're changing some add ons behavior, and that is requiring me to fix up a bunch of tests that assume the old behavior.
+
+187
+00:22:55,358 --> 00:23:01,478
+So I'm going through a bunch of tests that that is I'm trying to find all the
+
+188
+00:23:01,478 --> 00:23:05,588
+tests that assume the old behavior and update them to assume the new behavior.
+
+189
+00:23:08,938 --> 00:23:13,288
+Hopefully that answers your question. NADER Three for two. Nice to have you on the stream.
+
+190
+00:23:15,298 --> 00:23:18,388
+First time caller. I don't know if that's true. Maybe we've talked before.
+
+191
+00:23:22,628 --> 00:23:26,378
+Okay. Here's another one that locks up browser action context menu.
+
+192
+00:23:31,318 --> 00:23:36,028
+So. Yeah. Here we go. Default area. Never.
+
+193
+00:23:42,948 --> 00:23:50,208
+The other browser actions in here. Here's one. Hmm.
+
+194
+00:24:01,688 --> 00:24:06,008
+Yeah. Let's run. What was this one? Context menu. It's running again.
+
+195
+00:24:30,468 --> 00:24:35,888
+Perfect. Okay, so now it's put. Hello.
+
+196
+00:24:35,918 --> 00:24:39,068
+The small plop. Good to have you.
+
+197
+00:24:40,388 --> 00:24:44,648
+What are you currently making? Actually, you have a bite.
+
+198
+00:24:44,978 --> 00:24:50,228
+I'm glad you asked the small plop. What's going on is I'm updating Firefox so that the.
+
+199
+00:24:50,498 --> 00:24:56,198
+The default behavior of the add ons, the Web extensions API is slightly changing.
+
+200
+00:24:56,198 --> 00:24:59,888
+And I'm updating a bunch of tests that are failing because of that change,
+
+201
+00:25:00,188 --> 00:25:04,028
+because they make an assumption about how buttons that get added to the toolbar work.
+
+202
+00:25:04,358 --> 00:25:09,518
+And I am updating the tests to assume the actual new behavior.
+
+203
+00:25:09,818 --> 00:25:13,168
+That's the plan. Yeah.
+
+204
+00:25:13,168 --> 00:25:16,748
+We will need to update the documentation. Absolutely. That's a good point.
+
+205
+00:25:16,768 --> 00:25:19,948
+I should add that to the, uh.
+
+206
+00:25:21,238 --> 00:25:25,288
+Okay, we got another one. I should add that to this bug here. We should also.
+
+207
+00:25:26,548 --> 00:25:34,888
+We should also take the opportunity. To update the documentation at.
+
+208
+00:25:36,648 --> 00:25:39,708
+About this, although.
+
+209
+00:25:44,228 --> 00:25:49,037
+Yeah. That would be a cool thing to show if you make a twitch.
+
+210
+00:25:49,038 --> 00:25:53,678
+But to answer that, what do you do in question? Yeah. That would be pretty cool.
+
+211
+00:25:55,378 --> 00:26:00,748
+So we want to write. Wants to write one. I'll happily deploy it.
+
+212
+00:26:00,988 --> 00:26:04,158
+Okay. So. Browser action.
+
+213
+00:26:05,538 --> 00:26:08,628
+Here's one for stunned. Default action.
+
+214
+00:26:08,808 --> 00:26:16,007
+Default area nav by. What's this one called?
+
+215
+00:26:16,008 --> 00:26:23,938
+Browser Action Experiment? Think we're almost through all of those tests to experiment?
+
+216
+00:26:24,358 --> 00:26:28,528
+Well, no, not quite. We're like a third of the way through.
+
+217
+00:26:29,218 --> 00:26:32,548
+Okay, that one passes. Let's keep going.
+
+218
+00:26:43,058 --> 00:26:46,958
+Hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm.
+
+219
+00:26:50,898 --> 00:26:55,578
+Hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm.
+
+220
+00:27:09,098 --> 00:27:14,548
+Go, go, go. So many tests.
+
+221
+00:27:15,988 --> 00:27:19,028
+Oh, yeah. Locked up again.
+
+222
+00:27:19,268 --> 00:27:23,228
+Browser Action Click Types. Wait, didn't we already update this one?
+
+223
+00:27:25,418 --> 00:27:30,758
+Maybe not. Oh start browser action key click.
+
+224
+00:27:33,508 --> 00:27:37,708
+Again. I think we had already updated click types.
+
+225
+00:27:39,908 --> 00:27:43,808
+Yeah. Uh.
+
+226
+00:27:51,598 --> 00:27:54,837
+But I got a feeling that this is what we're actually locking up in.
+
+227
+00:27:54,838 --> 00:27:58,288
+And this one, this looks like a spurious error.
+
+228
+00:28:00,728 --> 00:28:06,178
+From a previous test. Oh.
+
+229
+00:28:12,708 --> 00:28:18,498
+Okay. This one's called key, but browser action key click.
+
+230
+00:28:23,448 --> 00:28:39,228
+What in the world? All right.
+
+231
+00:28:39,228 --> 00:28:47,258
+He likes it. Let's keep going. Keep going. Don't lose our stride.
+
+232
+00:28:48,668 --> 00:28:53,108
+We're just burning through all of these tests, and eventually we'll have all the browser action ones done.
+
+233
+00:28:53,618 --> 00:29:01,478
+And. And then maybe we can run the whole directory in the background while we work on something slightly different.
+
+234
+00:29:09,598 --> 00:29:13,388
+Mm mm mm mm mm mm. Test.
+
+235
+00:29:13,388 --> 00:29:35,668
+Test, test, test. Test, test, test. Locked up.
+
+236
+00:29:35,998 --> 00:29:39,418
+But again, this one's inside of pop up port.
+
+237
+00:29:45,918 --> 00:29:49,398
+Browser action. Default area.
+
+238
+00:29:50,928 --> 00:29:56,328
+You know, the other thing we could do is we could search our tests.
+
+239
+00:29:58,228 --> 00:30:08,308
+Projects such as extensions test browser search for the term browser action.
+
+240
+00:30:11,078 --> 00:30:14,678
+Um. Wait.
+
+241
+00:30:14,708 --> 00:30:19,198
+Uh, grab in. So there's a lot.
+
+242
+00:30:22,068 --> 00:30:27,138
+Although we don't know if all of these need to be fixed. Here's the thing.
+
+243
+00:30:29,308 --> 00:30:33,298
+Well, maybe that's less helpful than I thought. Okay. What failed just now?
+
+244
+00:30:33,628 --> 00:30:39,118
+Well, along with the lockup, we locked up in pop up port.
+
+245
+00:30:39,418 --> 00:30:44,188
+Looks like we also failed a bunch of tests in here, so we're going to have to figure that out in a sec.
+
+246
+00:30:46,028 --> 00:30:51,818
+So let's start with the lock up. Oh, we already did that. Now, let's make sure that this test doesn't lock up any more.
+
+247
+00:30:54,138 --> 00:31:03,428
+And then we'll take a look at these failures. All right.
+
+248
+00:31:04,168 --> 00:31:08,428
+So these failures happened inside of page action icon.
+
+249
+00:31:10,168 --> 00:31:13,588
+Browser action. Disable this one and then page action icon.
+
+250
+00:31:14,938 --> 00:31:28,998
+So let's start with this one. Okay.
+
+251
+00:31:31,118 --> 00:31:35,198
+I'm guessing it's the exact same thing. Yep. There's a browser action here.
+
+252
+00:31:35,618 --> 00:31:53,238
+Needs to be put inside of the nav bar. Good.
+
+253
+00:31:53,698 --> 00:31:59,628
+And then the other one was page action something or other page action icon.
+
+254
+00:32:01,758 --> 00:32:04,928
+It's the actual path. Right here.
+
+255
+00:32:18,178 --> 00:32:24,798
+Okay. Expecting the right icons is probably having a hard time finding the yeah.
+
+256
+00:32:24,798 --> 00:32:28,698
+Getting no everywhere it's finding no button.
+
+257
+00:32:29,028 --> 00:32:35,068
+It's my guess. Just the two.
+
+258
+00:32:35,088 --> 00:32:40,698
+Okay. Browser action. Fold every now bar.
+
+259
+00:32:42,118 --> 00:32:45,728
+We're here. The area.
+
+260
+00:32:49,468 --> 00:33:03,108
+Yeah, but. Cool.
+
+261
+00:33:03,198 --> 00:33:07,608
+All right. Let's go back to running our tests.
+
+262
+00:33:09,588 --> 00:33:15,078
+You know what I really should do is not run the whole thing, but run everything that I've already fixed forward.
+
+263
+00:33:18,108 --> 00:33:26,448
+So next time I do this, I should change the start at so that we don't have to keep doing all the ones that we've already fixed.
+
+264
+00:33:32,048 --> 00:33:41,428
+It's going to save us time if we do that. Because I think we've definitely fixed these already.
+
+265
+00:33:50,438 --> 00:33:55,618
+Mm hmm. Mm hmm. Mm hmm. You think maybe they'll pick?
+
+266
+00:33:59,988 --> 00:34:03,258
+All right. So this is where we were stuck next.
+
+267
+00:34:04,008 --> 00:34:08,748
+So what we'll do? So exit. Oh, we also had some failures.
+
+268
+00:34:11,858 --> 00:34:16,188
+Um. On.
+
+269
+00:34:16,248 --> 00:34:20,848
+Okay, Papa. So this is these are listed in order of execution.
+
+270
+00:34:20,848 --> 00:34:30,488
+So we're going to start our next set from here. So we're going to change our start at two here.
+
+271
+00:34:35,438 --> 00:34:43,588
+And then let's run that one test. But.
+
+272
+00:34:52,148 --> 00:34:55,717
+Failure. All right, good. Same thing.
+
+273
+00:34:55,718 --> 00:34:59,738
+Yep. Page Action. Default Area. NAV bar.
+
+274
+00:35:01,558 --> 00:35:06,118
+A couple of others. Okay, let's start at the beginning.
+
+275
+00:35:27,228 --> 00:35:32,098
+It's. By.
+
+276
+00:35:34,568 --> 00:35:37,628
+API. So this one is more dynamic for API.
+
+277
+00:35:39,608 --> 00:35:50,258
+API default icon. Is this going to work if we use four page action?
+
+278
+00:35:50,348 --> 00:35:54,488
+Hopefully it gets ignored. Uh, let's see.
+
+279
+00:35:54,878 --> 00:36:00,908
+We may have to do something special for the for that last one, because it's dynamic.
+
+280
+00:36:05,778 --> 00:36:09,558
+Okay. Worked out what was the next failure?
+
+281
+00:36:30,038 --> 00:36:34,748
+Pop up preload. Okay. So that's that's going to be the next one that we start at.
+
+282
+00:36:48,518 --> 00:36:55,958
+And browser action pop up preload.
+
+283
+00:37:04,008 --> 00:37:08,398
+There for I think browser action default pop up default area.
+
+284
+00:37:08,908 --> 00:37:18,698
+Yeah bar. You know.
+
+285
+00:37:41,058 --> 00:38:01,407
+All right, let's keep going. Pop up preload.
+
+286
+00:38:01,408 --> 00:38:17,058
+Smoke test. Just the one.
+
+287
+00:38:44,128 --> 00:38:47,548
+Wow. She's doing something pretty amazing with that button.
+
+288
+00:38:50,708 --> 00:39:07,778
+No idea what it is. I don't know if this is succeeding or failing.
+
+289
+00:39:07,788 --> 00:39:17,368
+This is a really long test. I don't know if it's good or not.
+
+290
+00:39:17,398 --> 00:39:20,578
+Oh, I guess that's good. Oh, in the past, too.
+
+291
+00:39:20,758 --> 00:39:24,898
+What the heck? What is this thing? Test. Preload.
+
+292
+00:39:24,898 --> 00:39:30,728
+Smog test. Does it have like a four loop?
+
+293
+00:39:36,828 --> 00:39:40,728
+Well, people are canceled multiple times to scary scenarios.
+
+294
+00:39:40,728 --> 00:39:41,688
+Another one fixed path,
+
+295
+00:39:41,698 --> 00:39:49,758
+some other similar ones and I slept through test cancel power preload race on unpacked so it just like does a bunch of 200 of these loops.
+
+296
+00:39:51,078 --> 00:40:00,448
+All right. Well, let's not run that again. What's the one after preload smog test pop up resize.
+
+297
+00:40:20,998 --> 00:40:43,768
+Yeah. And also needs to be fixed. Where are we in the list?
+
+298
+00:40:43,788 --> 00:40:46,878
+Pop up resizes here. We're almost there. Gang.
+
+299
+00:41:01,388 --> 00:41:09,998
+Hmm. Still broken in pop up resize. Okay.
+
+300
+00:41:10,778 --> 00:41:14,917
+This is what I was kind of hoping to find, to see if there's something more serious, more interesting.
+
+301
+00:41:14,918 --> 00:41:19,838
+Right now, what we've been doing is really mechanical. It'd be nice if we could find something more interesting.
+
+302
+00:41:24,798 --> 00:41:34,878
+So just sits there. She's the one.
+
+303
+00:41:37,478 --> 00:41:42,398
+Okay. So what are we? We enter test bounce test browser action menu, resize standards.
+
+304
+00:41:42,398 --> 00:41:49,048
+That's this one. All right, let's. It's probably size.
+
+305
+00:41:49,498 --> 00:41:57,518
+Let's test. Pop up. Resize. Was that defined as pop up, resized and had browser action.
+
+306
+00:42:02,298 --> 00:42:14,128
+Oh, here we go. Are there any other while I'm in here?
+
+307
+00:42:16,608 --> 00:42:31,898
+That's just the one. Okay, let's try now. Now this one.
+
+308
+00:42:31,898 --> 00:42:35,978
+I know it looks stuck, but it isn't. It's waiting for something.
+
+309
+00:42:36,488 --> 00:42:39,898
+It's. It's waiting to make sure that a thing doesn't occur. I think.
+
+310
+00:42:43,618 --> 00:42:54,338
+And so it is just going to sit there for a second. You know, it's like 10 seconds, which is a really long time timer.
+
+311
+00:42:56,348 --> 00:43:01,978
+Okay. So pop up resize works now. Let's skip that one as well.
+
+312
+00:43:02,188 --> 00:43:05,468
+Let's not run that again. What was the next one?
+
+313
+00:43:05,468 --> 00:43:08,858
+Pop up. Resize. Pop up. Resize. Bottom.
+
+314
+00:43:13,158 --> 00:43:19,998
+We may have gotten a fix like for free because we changed that sort of like shared function inside, had browser actions.
+
+315
+00:43:20,418 --> 00:43:30,588
+So this might just work. Let's see. Will you be able to move the puzzle piece icon or will it have a reserve place in the toolbar?
+
+316
+00:43:30,798 --> 00:43:40,968
+That's a good question. I don't know. Currently, I think it's not going to be removable because we need to have a dedicated place,
+
+317
+00:43:43,218 --> 00:43:49,398
+a dedicated place for you to grant extension permissions and for us to anchor extension permissions.
+
+318
+00:43:49,998 --> 00:43:53,208
+But we might not show it unless you have extensions installed.
+
+319
+00:43:54,348 --> 00:43:59,448
+That's one thing I've heard, or we might not show it unless there's something listed in there.
+
+320
+00:43:59,478 --> 00:44:07,878
+So, for example, if you have only browser extensions that add buttons, browser actions, and so like I was saying earlier,
+
+321
+00:44:08,118 --> 00:44:14,298
+the panel will not list items for which you already have browser action like buttons in your toolbar.
+
+322
+00:44:14,478 --> 00:44:23,238
+If you only have web extensions for which there are already buttons, then I don't think the button will show or that's eventually the plan.
+
+323
+00:44:25,188 --> 00:44:29,328
+But I'm actually not. That's a kind of outside of what I've been asked to do.
+
+324
+00:44:29,958 --> 00:44:38,718
+So I can't say with any degree of certainty. I've just been asked to help with the.
+
+325
+00:44:40,668 --> 00:44:47,428
+The browser action buttons themselves. Was this browser action simple?
+
+326
+00:44:56,678 --> 00:45:01,718
+And this is all to power manifest V3 because we need to support that real soon now.
+
+327
+00:45:02,378 --> 00:45:10,988
+The good news is if like one of the nice things is something that users have been asking for for a long time is the ability to control,
+
+328
+00:45:12,788 --> 00:45:19,478
+the ability to control extensions, access to individual pages, you know?
+
+329
+00:45:19,778 --> 00:45:26,618
+Up until now, it's been kind of all or nothing like a website Web extension can sort of declare what things it wants,
+
+330
+00:45:26,618 --> 00:45:33,688
+permissions from our permissions to access. But also it can just say every URL as like one of the things it can ask for.
+
+331
+00:45:33,698 --> 00:45:36,487
+And I think now it's going to we're going to be a little more strict.
+
+332
+00:45:36,488 --> 00:45:42,908
+That's part of the specification for manifest V3, as I understand it, which yeah,
+
+333
+00:45:42,908 --> 00:45:49,718
+I think the user gets more granular control like allow the website to access this one and this one and this one, but not this one.
+
+334
+00:45:49,958 --> 00:46:13,118
+That sort of thing. Yes.
+
+335
+00:46:13,128 --> 00:46:20,498
+Is. This is pretty mechanical, but this is sometimes part of the job.
+
+336
+00:46:32,788 --> 00:46:38,398
+So this may be done shortly. I think we're nearing the end of this set of tests.
+
+337
+00:46:41,378 --> 00:46:45,178
+Would you be? Yeah.
+
+338
+00:46:45,208 --> 00:46:49,018
+We just have some failing ones now, so nothing gets stuck now in that set.
+
+339
+00:46:50,588 --> 00:46:54,128
+We just have these failing ones. So, yeah. Default.
+
+340
+00:46:54,188 --> 00:46:57,938
+Ooh. Default area. Test.
+
+341
+00:46:57,938 --> 00:47:13,648
+Static theme. So a lot of these some of them supply default area.
+
+342
+00:47:15,288 --> 00:47:24,978
+Some of them do not. Uh, default area equals nav bar, but they all say yeah, default error equals nav barf.
+
+343
+00:47:31,448 --> 00:47:39,247
+And Cut test test area browser eye test browser action on card access improves images.
+
+344
+00:47:39,248 --> 00:47:48,048
+No. So where is this?
+
+345
+00:47:49,458 --> 00:47:54,128
+Three, five, seven? It's here.
+
+346
+00:47:55,838 --> 00:48:01,428
+So let's skip this one. Let's try and reduce this a little bit and just run this task.
+
+347
+00:48:02,628 --> 00:48:06,108
+Oh, maybe it's because here we need a supply default area.
+
+348
+00:48:06,138 --> 00:48:09,678
+That might be, um. What?
+
+349
+00:48:09,948 --> 00:48:14,268
+What files is prevention? Theme icons. Theme icons.
+
+350
+00:48:26,588 --> 00:48:30,128
+Okay. And now if we say default area.
+
+351
+00:48:30,728 --> 00:48:34,408
+Yeah. Far. What happens?
+
+352
+00:48:43,848 --> 00:48:48,738
+Okay. Good. And now let's get rid of the skip and run the whole test file again.
+
+353
+00:48:52,898 --> 00:49:00,068
+And then we're going to run the whole the whole set of them, start to finish the whole directory and see what we get.
+
+354
+00:49:00,098 --> 00:49:05,917
+I expect that there's still some busted ones. In fact, maybe we can we can do the next bunch.
+
+355
+00:49:05,918 --> 00:49:11,828
+We'll do browsing data to access content, script, connect.
+
+356
+00:49:12,308 --> 00:49:29,447
+How about that? XT Browsing data or browsing data cookie store ID tags all the way down to browser.
+
+357
+00:49:29,448 --> 00:49:34,247
+XT Content Script Connect.
+
+358
+00:49:34,248 --> 00:49:38,928
+Scott Jess, let's see what we got.
+
+359
+00:49:41,068 --> 00:49:44,608
+I hear tea being made? Or maybe it's coffee. I don't know which.
+
+360
+00:49:46,798 --> 00:49:54,858
+That's exciting. Hopefully I get a cup. Now because these.
+
+361
+00:49:56,128 --> 00:50:00,898
+Tests don't exercise browser actions. It's possible that they'll all pass.
+
+362
+00:50:00,898 --> 00:50:03,898
+Fine. This one doesn't. Oh.
+
+363
+00:50:03,928 --> 00:50:12,778
+Or maybe it does. I don't know. Maybe everything's okay so far.
+
+364
+00:50:13,948 --> 00:50:20,878
+Hey. Yeah, everything was fine. Okay, so let's do the next block. So could you store it down to content script connect?
+
+365
+00:50:21,298 --> 00:50:25,858
+Now let's do content cross doc, group adoption.
+
+366
+00:50:27,568 --> 00:50:35,678
+Let's do a bigger span. Content script.
+
+367
+00:50:35,708 --> 00:50:44,468
+Cross Doc Group Adoption will end at.
+
+368
+00:50:45,708 --> 00:50:54,108
+Current window. And then.
+
+369
+00:50:57,018 --> 00:51:17,328
+Let's see how that goes. Oak Island stuck.
+
+370
+00:51:22,388 --> 00:51:29,348
+From browser action pop up. Right. Okay. So that's in content script non non tab connect.
+
+371
+00:51:44,828 --> 00:51:50,128
+Um. I just kept non tab connect.
+
+372
+00:51:55,048 --> 00:51:59,817
+All right. Keep going, keep going, keep going.
+
+373
+00:51:59,818 --> 00:52:03,568
+Full steam. Just be so nice to be me. Curfew.
+
+374
+00:52:03,598 --> 00:52:12,668
+I'm not too keen on to do no know the scheme by Rossi likes to keep it clean gonna sound like us and beep beep beep.
+
+375
+00:52:14,368 --> 00:52:17,808
+Well that would do to remove stuff from.
+
+376
+00:52:22,768 --> 00:52:26,248
+That's the Beastie Boys. That's intergalactic.
+
+377
+00:52:27,748 --> 00:52:33,598
+Well, let me see if I can remember some more lyrics.
+
+378
+00:52:39,528 --> 00:52:42,698
+If my if my, uh.
+
+379
+00:52:42,798 --> 00:52:47,597
+If my rap soup, my beat is stuck with them. Step up, step to the table.
+
+380
+00:52:47,598 --> 00:52:54,858
+When I start to chop. I'm the. Rap deejay Ad-Rock.
+
+381
+00:52:54,858 --> 00:53:02,268
+I don't remember. I don't remember bringing intergalactic planetary bra under your nerve.
+
+382
+00:53:03,468 --> 00:53:09,678
+Boo Boo Ock ex current window. That one got stuck.
+
+383
+00:53:10,068 --> 00:53:15,348
+So let's run. Just this one. We're.
+
+384
+00:53:19,568 --> 00:53:22,898
+Another dimension. Another dimension. Another dimension.
+
+385
+00:53:22,898 --> 00:53:32,978
+Another dimension. About boom, boom, boom, boom, boom.
+
+386
+00:53:35,048 --> 00:53:38,408
+Please don't take my video down. YouTube.
+
+387
+00:53:53,058 --> 00:54:00,208
+Oh, yeah, that's a good point. So there's this really great looking re theme coming for Thunderbirds calendar.
+
+388
+00:54:00,228 --> 00:54:04,008
+Let me let's let's look at this real quick. Check this out.
+
+389
+00:54:05,178 --> 00:54:10,248
+They're calling it Thunderbirds Supernova Preview New Calendar Design.
+
+390
+00:54:10,758 --> 00:54:14,118
+And this is what it's going to look like. It's pretty slick, pretty modern,
+
+391
+00:54:14,328 --> 00:54:24,918
+especially on the I'm getting like it's almost like you slap like safari's center
+
+392
+00:54:24,948 --> 00:54:35,178
+search UI with like slack and discord sidebar kind of paradigm or elements,
+
+393
+00:54:35,238 --> 00:54:38,568
+sidebar paradigm for spaces or something.
+
+394
+00:54:39,348 --> 00:54:42,808
+And then like really modernize that, that calendar.
+
+395
+00:54:43,038 --> 00:54:48,798
+Great job. Great job. This looks cool. Good job. What else about it?
+
+396
+00:54:51,408 --> 00:54:56,328
+The Weekly View. You can view week multi-week individual day.
+
+397
+00:54:57,858 --> 00:55:07,658
+It's a little tip here. You might want to reschedule one of these. Looks pretty neat if you've got feedback or questions.
+
+398
+00:55:08,708 --> 00:55:13,568
+Join the conversation on topic box.
+
+399
+00:55:16,498 --> 00:55:19,598
+Okay. That passed.
+
+400
+00:55:19,598 --> 00:55:26,018
+So we got to the last test in our list. Let's do the next block, which is.
+
+401
+00:55:28,618 --> 00:55:32,968
+Uh. Dev tools down to, let's say, exit menus.
+
+402
+00:55:38,738 --> 00:55:42,368
+Browser XT dev tools.
+
+403
+00:55:43,678 --> 00:55:48,148
+Inspected window dodgers and we're going to end at XT.
+
+404
+00:55:49,808 --> 00:55:57,438
+Menus Jazz. Oh, so many tests in here.
+
+405
+00:55:58,278 --> 00:56:08,418
+And then maybe we'll just run it from there to the end. And just see what we get.
+
+406
+00:56:11,478 --> 00:56:15,768
+I hope that all these and dev tools tests don't need to be changed.
+
+407
+00:56:16,358 --> 00:56:20,118
+I suspect they don't. I don't think they're going to be adding any browser actions.
+
+408
+00:56:24,908 --> 00:56:49,868
+Like they seem to be running. Okay. What's going on here?
+
+409
+00:56:50,918 --> 00:56:55,448
+Okay. Opening up some windows when the house.
+
+410
+00:56:57,218 --> 00:57:04,378
+Maybe we got stuck just now. Next get views.
+
+411
+00:57:07,658 --> 00:57:14,128
+Yes. Yeah.
+
+412
+00:57:14,138 --> 00:57:37,768
+There we go. Was it X to get views.
+
+413
+00:57:38,728 --> 00:57:45,328
+So yeah, we did get outside of the. The Dev tools tests.
+
+414
+00:57:45,598 --> 00:57:55,298
+Not super surprising. All right, let's run from history.
+
+415
+00:58:01,468 --> 00:58:06,828
+History redirects. Two exit menus.
+
+416
+00:58:24,388 --> 00:58:31,948
+Mhm. That one might be broken to a incognito pop up.
+
+417
+00:58:35,258 --> 00:58:39,558
+I hear delivery.
+
+418
+00:58:39,968 --> 00:58:43,718
+Thank you very much. It's. It's tea, everybody.
+
+419
+00:58:43,958 --> 00:58:52,348
+Thank you very much for the tea delivery. Try again.
+
+420
+00:58:54,148 --> 00:58:57,358
+Today's tea is brought to you by orange pico.
+
+421
+00:59:00,058 --> 00:59:04,408
+Orange pico tea. It's basically what Canadians think of as black tea.
+
+422
+00:59:04,588 --> 00:59:12,028
+The default, I think. Anyways. Maybe it's just in my area, but any time we talk about black tea, what we mean is orange pico.
+
+423
+00:59:17,638 --> 00:59:23,118
+And I know for other places they they refer to like English breakfast as the default black tea.
+
+424
+00:59:28,828 --> 00:59:32,948
+Four years. Incognito views.
+
+425
+00:59:34,868 --> 00:59:37,888
+But, you know, maybe I'm wrong. Maybe it's just in my area.
+
+426
+00:59:38,208 --> 00:59:41,917
+My area and other people have different opinions.
+
+427
+00:59:41,918 --> 00:59:45,098
+What? Hey, let's let's ask the crowd. What do you think?
+
+428
+00:59:45,098 --> 00:59:52,588
+What is black tea? What's your default? Black tea. Do you know?
+
+429
+00:59:52,748 --> 00:59:59,048
+Is it English breakfast? Is it? Earl Gray.
+
+430
+01:00:00,828 --> 01:00:27,088
+Is it something completely different? All right.
+
+431
+01:00:27,088 --> 01:00:30,748
+We got some feedback from the crowd. Black tea is tea without sugar and milk.
+
+432
+01:00:31,768 --> 01:00:37,048
+Earl Gray from Danny Colon. So any tea without sugar and milk is black.
+
+433
+01:00:37,048 --> 01:00:41,878
+Tea? Fair. Okay.
+
+434
+01:00:41,908 --> 01:00:52,078
+That's that's fair. Maybe a bit reductive. The I guess what I meant was like whenever you go into a place and order black tea, what do they give you?
+
+435
+01:00:53,488 --> 01:01:00,848
+Because in Ontario, at least in my area, any time you ask for black tea, what you get is orange pico.
+
+436
+01:01:01,468 --> 01:01:06,808
+That's what I meant. Okay.
+
+437
+01:01:06,808 --> 01:01:11,248
+We've got failures and exit menus. The very last one we ran.
+
+438
+01:01:32,108 --> 01:01:38,798
+From Wiki Black Tea also translated to red tea in various East Asian languages is a type of tea that is more oxidized than oolong,
+
+439
+01:01:38,798 --> 01:01:41,888
+yellow, white and green teas. Hmm.
+
+440
+01:01:44,038 --> 01:01:50,808
+Hmm. All right. All right, so we got all the way down to exit menus.
+
+441
+01:01:50,818 --> 01:01:59,518
+Let's see if we can just go. Let's just go right to the end from exit menus, access key to the very last one.
+
+442
+01:02:03,658 --> 01:02:07,048
+I'm going to bet you there are still some more failures lurking in here.
+
+443
+01:02:09,848 --> 01:02:15,548
+But let's try and let's see what we can do. We'll go right down to exit.
+
+444
+01:02:17,108 --> 01:02:20,558
+Right down to browser. Unified Extensions. Overflow Mobile Toolbar.
+
+445
+01:02:43,668 --> 01:02:48,968
+Pop, pop, pop, pop, pop, pop, pop, pop, pop, pop, pop, pop, pop, pop, pop, pop, pop,
+
+446
+01:02:48,968 --> 01:02:52,848
+pop, pop, pop, pop, pop, pop, pop, pop, pop, pop, mama, mama, mama, mama, mama.
+
+447
+01:02:53,178 --> 01:03:01,248
+Okay, we got one. We got one. It is exit menus, events.
+
+448
+01:03:18,218 --> 01:03:30,118
+Who? Looks like this is all dynamic contexts.
+
+449
+01:03:32,178 --> 01:03:36,258
+As you say, men, you create prams and you pass in contexts with browser action.
+
+450
+01:03:37,068 --> 01:03:45,168
+So was context to. Contexts.
+
+451
+01:03:54,348 --> 01:04:04,138
+Great one when you create brands. Case.
+
+452
+01:04:13,068 --> 01:04:18,638
+Action. Okay.
+
+453
+01:04:18,648 --> 01:04:34,697
+Well, we can at least do that. That seems to be arguments that are passed to men you create.
+
+454
+01:04:34,698 --> 01:05:12,298
+So maybe we're okay. Let's just see what happens. Mm mm mm mm mm mm mm mm mm mm mm mm mm mm mm.
+
+455
+01:05:12,328 --> 01:05:17,638
+Okay. Next one is in XT menus target extension.
+
+456
+01:05:17,638 --> 01:05:21,207
+And before we continue, someone just asked me something in Matrix.
+
+457
+01:05:21,208 --> 01:05:31,347
+So I'm going to try and answer them. Someone outside of the live hacking channel, uh, someone's asking whether or not they want me to land this.
+
+458
+01:05:31,348 --> 01:05:38,798
+I think I already requested landing. As auto land closed.
+
+459
+01:05:40,968 --> 01:05:44,898
+Landing is huge. Uh.
+
+460
+01:05:46,228 --> 01:05:53,188
+Okay. Already queued it up. Just waiting for the tree to open for land.
+
+461
+01:05:54,108 --> 01:05:58,168
+Okay. Thanks. Okay.
+
+462
+01:06:02,038 --> 01:06:06,328
+Uh, so what was the what was the failure in that one?
+
+463
+01:06:12,178 --> 01:06:31,848
+Area. While we're waiting.
+
+464
+01:06:31,848 --> 01:06:42,468
+Anyone have any questions about what's going on? I can try and answer any questions about what you're seeing.
+
+465
+01:06:42,468 --> 01:06:46,548
+Just go ahead and drop those in the Live Hacking Channel. I'll do my best to try and answer.
+
+466
+01:06:47,808 --> 01:06:55,127
+Maybe you have more tea opinions or tea information that you want to drop on us.
+
+467
+01:06:55,128 --> 01:07:12,068
+That'd be pretty cool to. So we're down to most.
+
+468
+01:07:12,078 --> 01:07:16,248
+We'll. Mouse.
+
+469
+01:07:16,248 --> 01:07:32,018
+We'll zoom. Boy, this will be nice when this passes, when all these pass.
+
+470
+01:07:40,938 --> 01:08:00,308
+What's the next one? No.
+
+471
+01:08:10,188 --> 01:08:14,298
+But. And. Oh, how did I lose the.
+
+472
+01:08:15,508 --> 01:08:18,808
+Double dash. What?
+
+473
+01:08:19,618 --> 01:08:26,758
+Why? Firefox often doesn't build with stable rust. I'm going to guess it's because we like to use.
+
+474
+01:08:32,038 --> 01:08:35,908
+No, I have no idea. I don't manage that.
+
+475
+01:08:35,918 --> 01:08:40,378
+I do know that someone named Glanbia, a teammate named Glanbia.
+
+476
+01:08:40,378 --> 01:08:46,558
+I'm kind of at least partially partially contributes to like our our build toolchain.
+
+477
+01:08:46,558 --> 01:08:53,607
+And like when we up grade compilers or when we change compilers, it's like a big deal.
+
+478
+01:08:53,608 --> 01:08:57,388
+That's not a thing that we do like willy nilly because of a lot of reasons.
+
+479
+01:08:57,388 --> 01:09:03,208
+Mainly, I mean, we do want language features, but we also want somewhat predictable stability.
+
+480
+01:09:03,838 --> 01:09:11,968
+We don't want to accidentally introduce performance regressions that occur, you know, at the at the binary profile guided optimization level.
+
+481
+01:09:13,108 --> 01:09:19,078
+So, you know, we want to be pretty confident whenever we upgrade compilers or change compilers.
+
+482
+01:09:20,128 --> 01:09:26,187
+So I don't know if we happen to always kind of like be behind stable rust maybe.
+
+483
+01:09:26,188 --> 01:09:33,458
+Or are we ahead? I don't actually know which. I have a feeling we're always where we're never using like a bleeding edge.
+
+484
+01:09:33,458 --> 01:09:34,798
+That would be pretty irresponsible.
+
+485
+01:09:35,788 --> 01:09:44,517
+My guess is we use like the long term support ones or I don't actually know what Rust's versioning toolchain is, all is like,
+
+486
+01:09:44,518 --> 01:09:51,368
+but I know Rust Ships pretty frequently as a language like I think they did when pretty recently, like only a week or two ago.
+
+487
+01:09:52,078 --> 01:10:03,868
+And you know, it would be, I think, probably irresponsible to change our compiler toolchain every time the Rust compiler shipped an update.
+
+488
+01:10:04,408 --> 01:10:08,398
+So I'm guessing we only do like we do it every now and then.
+
+489
+01:10:16,798 --> 01:10:23,518
+Locked to 311 version for the requirement bomb below lock two three 11.1.
+
+490
+01:10:23,848 --> 01:10:28,548
+Hmm. Oh, Smitty says.
+
+491
+01:10:28,548 --> 01:10:31,968
+I actually think he use the dev version of us, at least for manual builds.
+
+492
+01:10:31,998 --> 01:10:37,788
+Oh, that's interesting. So maybe I'm just completely wrong. I this is not a thing I have a whole lot of visibility into.
+
+493
+01:10:38,118 --> 01:10:46,128
+I'll happily admit I run mock bootstrap to get myself the right toolchain and then I run mock build the whole,
+
+494
+01:10:46,158 --> 01:10:50,598
+you know, what compiler we're using and what SDK we're using on Mac OS.
+
+495
+01:10:50,928 --> 01:10:55,728
+I leave that to much more people, much more familiar with that problem domain.
+
+496
+01:10:56,168 --> 01:10:57,858
+That's not a thing I'm very familiar with.
+
+497
+01:10:58,818 --> 01:11:06,798
+And the problems therein we have really, you know, skilled people in that area who think about those problems that I can think about.
+
+498
+01:11:08,028 --> 01:11:10,938
+Web extension problems and browser UI problems.
+
+499
+01:11:12,288 --> 01:11:18,918
+So sorry, I can't be a little more forthcoming or a little more clear on an answer there because I don't actually know.
+
+500
+01:11:21,088 --> 01:11:25,508
+Seems good, says Orcas. I can't tell.
+
+501
+01:11:25,528 --> 01:11:32,427
+I got I got to assume that that's some kind of twitch ism. I don't know if that's like a sarcastic seems good.
+
+502
+01:11:32,428 --> 01:11:36,388
+Like, Oh, but building on fire seems good. Or if it's like a.
+
+503
+01:11:37,968 --> 01:11:48,507
+Do you see? I don't know. I have I feel like I have very little in sort of cultural intelligence of Twitch isms.
+
+504
+01:11:48,508 --> 01:11:52,048
+I just don't know how people express themselves on their platform.
+
+505
+01:11:52,348 --> 01:11:57,298
+A whole culture is built up around how people chat and the emojis that they use.
+
+506
+01:11:57,298 --> 01:12:00,838
+And I don't I don't understand any of it.
+
+507
+01:12:08,738 --> 01:12:14,558
+Did I just end up running the entire directory? What's going on here? I saw a bunch of, like, dev tools test fire up.
+
+508
+01:12:16,148 --> 01:12:22,708
+What are we doing here? You were just running the whole directory.
+
+509
+01:12:27,748 --> 01:12:34,618
+I saw a bunch of tests fly by that I recognized that we'd run earlier, so maybe we're just round the whole directory now.
+
+510
+01:12:35,638 --> 01:12:38,728
+Maybe I typed in the what I want to type in incorrectly.
+
+511
+01:12:39,208 --> 01:12:42,588
+Yep. You did run all the dir. Oh good. Oh good.
+
+512
+01:12:42,598 --> 01:12:47,068
+Well let's see. Let's we're making it pretty far. Let's see how it goes.
+
+513
+01:12:47,338 --> 01:12:56,487
+This, this might take a little while. I'll, I'll, let me, let me see if there are any other audience questions that I can try to answer.
+
+514
+01:12:56,488 --> 01:12:59,878
+Any questions about JavaScript that I can try to answer.
+
+515
+01:13:00,518 --> 01:13:04,048
+Or C++, gecko, C++.
+
+516
+01:13:04,048 --> 01:13:10,558
+I can try to answer that. Those I don't tend to write much rust in the gecko code base.
+
+517
+01:13:11,578 --> 01:13:14,818
+Um. I've done it once or twice.
+
+518
+01:13:14,828 --> 01:13:23,108
+I've tinkered with. With Rust. Oh. Smurf says that they were wrong and then linked to a a python file.
+
+519
+01:13:23,468 --> 01:13:29,377
+I can't open it without interrupting the test, so I don't know what that's being what that that is linking to.
+
+520
+01:13:29,378 --> 01:13:34,928
+But presumably Smurf D says, you know what Smurf he was wrong about was the rest toolchain that we're using.
+
+521
+01:13:37,008 --> 01:13:40,128
+So big of you to admit you were wrong. Smurf d.
+
+522
+01:13:40,998 --> 01:13:48,008
+I think I. I always admire it when people can freely admit that they were wrong and be public about it.
+
+523
+01:13:50,288 --> 01:13:54,908
+Minimum rest version 1.63. Oh, yeah.
+
+524
+01:13:57,628 --> 01:14:04,538
+All right, we hit. We hit one. Almost.
+
+525
+01:14:04,558 --> 01:14:08,007
+Oh, and we got some failures, too. All right.
+
+526
+01:14:08,008 --> 01:14:15,788
+Well, let's start with this one. This is what we'll start from whenever we.
+
+527
+01:14:17,888 --> 01:14:28,357
+Oh, see, what happened was instead of a stop start at I must have mistyped or wasn't paying much attention or my console
+
+528
+01:14:28,358 --> 01:14:34,048
+screwed up and that's why it was running the whole directory is because it didn't recognize what was at the start at.
+
+529
+01:14:34,448 --> 01:14:42,998
+And for some reason its fallback behavior is, oh, I'll just run everything. Uh, default area number.
+
+530
+01:14:44,178 --> 01:14:49,688
+I'm going to dream about that, writing that. Huh?
+
+531
+01:15:06,288 --> 01:15:11,758
+Okay. Let's try that now. Any question about jazz?
+
+532
+01:15:11,788 --> 01:15:18,688
+I have a lot more answering. The meaning of life is probably easier. Hey, Danny Colon with that JavaScript burn.
+
+533
+01:15:24,468 --> 01:15:29,868
+Yeah. Give it a shot. Like I can try and answer JavaScript questions.
+
+534
+01:15:30,498 --> 01:15:33,618
+Unless you're, like, wanting to talk about the design of JavaScript.
+
+535
+01:15:33,618 --> 01:15:36,888
+Because then I can't help you. I don't. I don't.
+
+536
+01:15:37,488 --> 01:15:41,328
+There have been many choices in the design, especially in the early design of the language.
+
+537
+01:15:42,288 --> 01:15:49,188
+I don't understand these days. I think the language is, I think, tending towards a healthier state.
+
+538
+01:15:52,308 --> 01:15:59,328
+Trending towards. You know, more sensible design choices.
+
+539
+01:16:01,118 --> 01:16:04,868
+How do you analyze minified obfuscated JS?
+
+540
+01:16:04,898 --> 01:16:08,198
+Great question. That is a great question.
+
+541
+01:16:08,648 --> 01:16:15,398
+So. If it's your own JavaScript and your, you know, it's compiled or something.
+
+542
+01:16:15,728 --> 01:16:20,947
+Chances are the thing that obfuscated it or compressed it will have included
+
+543
+01:16:20,948 --> 01:16:24,428
+something or hopefully has the option of including something called a source map,
+
+544
+01:16:24,968 --> 01:16:37,988
+which is like a secondary file that our browser dev tools and I think other browser dev tools can find alongside the source code and basically map.
+
+545
+01:16:39,038 --> 01:16:51,058
+E The obvious gated compressed stuff to the obfuscated decompressed source that, you know, will hopefully also be included alongside the source maps.
+
+546
+01:16:51,068 --> 01:16:56,768
+Now that is obviously is not helpful if you are not the one writing the code,
+
+547
+01:16:56,768 --> 01:17:03,338
+like if this is not your website that is, you know, you're not going to be able to omit source maps.
+
+548
+01:17:03,698 --> 01:17:07,378
+But what I think I have a colleague named Tom was new ski.
+
+549
+01:17:08,678 --> 01:17:15,348
+Uh. Uh, I'm looking for.
+
+550
+01:17:18,148 --> 01:17:21,478
+Who wrote an ad on how maybe I'm not.
+
+551
+01:17:23,558 --> 01:17:34,898
+Spelling that right. I did spell that right.
+
+552
+01:17:37,318 --> 01:17:40,448
+Oh with an S. Best case reducer.
+
+553
+01:17:43,478 --> 01:17:47,377
+So what's interesting about this is this is an add on by one of my colleagues.
+
+554
+01:17:47,378 --> 01:17:56,978
+Its job is to like Tom works on our web compat team and our web compat team is constantly like these are the people who,
+
+555
+01:17:57,218 --> 01:18:02,167
+you know, if you ever go to web compat forbes.com and file a bug because you can do that,
+
+556
+01:18:02,168 --> 01:18:06,788
+you can just like file a bug saying this website is broken regardless of what browser you're on or
+
+557
+01:18:07,028 --> 01:18:13,177
+this is basically bug reporting for the web and our web compat team works with other browser vendors,
+
+558
+01:18:13,178 --> 01:18:19,388
+but I think it's mostly our web combat team to talk with browser vendors, website maintainers,
+
+559
+01:18:19,388 --> 01:18:22,927
+to be like, Hey, you know, this website's broken in this sort of situation,
+
+560
+01:18:22,928 --> 01:18:28,898
+or maybe it ends up being a browser bug, in which case, you know, they'll talk to the right team to, to get that sorted out.
+
+561
+01:18:30,098 --> 01:18:35,278
+And so Tom works on this team and as part of like it's a great team.
+
+562
+01:18:35,288 --> 01:18:41,978
+I love that team. They're helping to make sure that browsers like the Web works for people and you should file bugs if you're ever like,
+
+563
+01:18:41,978 --> 01:18:50,347
+Hey, this website's broken, you should use this. And one of the thing that things that that team needs to do periodically is analyze obfuscated
+
+564
+01:18:50,348 --> 01:18:57,098
+code that we have no control over to see what's going on to reduce a test case to,
+
+565
+01:18:57,308 --> 01:19:03,428
+you know, make it easier to file bugs in both for both Firefox or Chrome or Web kit or whatever.
+
+566
+01:19:03,728 --> 01:19:08,468
+Say like, okay, here, you're broken in this sort of situation and this add on helps you do it.
+
+567
+01:19:08,798 --> 01:19:16,087
+So apparently what this extension does, it inspects an element you like to reduce a test case for from in devtools configures the parameters in the
+
+568
+01:19:16,088 --> 01:19:22,628
+test case reducer dev tools panel for the add on click reduced to see the resulting markup in a preview.
+
+569
+01:19:22,628 --> 01:19:27,258
+So basically you can like, uh, serve like a more, uh.
+
+570
+01:19:31,938 --> 01:19:39,108
+It's an add on helping to reduce test cases from live pages and it uses like just beautify.
+
+571
+01:19:39,138 --> 01:19:45,078
+So there are libraries that help you like dog view skate stuff with jazz, beautify,
+
+572
+01:19:46,638 --> 01:19:53,328
+reformat and reinvent bookmarklet ugly JavaScript unpack scripts pack by the packer de obfuscate scripts.
+
+573
+01:19:55,128 --> 01:19:59,568
+So beauty beautify might be something worth checking out. Beautify dot io.
+
+574
+01:19:59,958 --> 01:20:03,708
+So you could just, like, jam stuff in here, and then this will beautify it.
+
+575
+01:20:05,318 --> 01:20:08,788
+Um. Yeah.
+
+576
+01:20:09,138 --> 01:20:14,598
+I don't know. There are some ideas, but you should check out this web compat add on.
+
+577
+01:20:14,628 --> 01:20:20,178
+I'm going to draw up a link to it and I'm going to put it in the test case reducer.
+
+578
+01:20:21,648 --> 01:20:33,998
+This is by my colleague Tom Wisniewski. On Capital C.
+
+579
+01:20:38,458 --> 01:20:42,118
+And then what does this other one beautify, beautify or dot io?
+
+580
+01:20:45,628 --> 01:20:53,818
+So on inspecting obfuscated or compressed JavaScript.
+
+581
+01:20:53,938 --> 01:20:57,148
+I guess those are sort of synonymous.
+
+582
+01:20:57,268 --> 01:21:01,078
+I guess most of the time when you obfuscate, you also compress, but I guess not always.
+
+583
+01:21:02,698 --> 01:21:07,078
+Sometimes you might inflate. Okay, let's see what is going on in here.
+
+584
+01:21:07,708 --> 01:21:13,258
+Front page refresh. There's another browser action.
+
+585
+01:21:14,998 --> 01:21:19,218
+One. I think it's just the one.
+
+586
+01:21:26,338 --> 01:21:33,038
+Yeah. Okay. News refresh.
+
+587
+01:21:33,998 --> 01:21:44,548
+Moving on. Special shout out to our web compat team.
+
+588
+01:21:44,818 --> 01:21:53,038
+What a great team. People are great helping keep the web usable and functioning.
+
+589
+01:21:54,908 --> 01:22:04,388
+And not just working in one browser. Because, you know, we love Web developers, but sometimes they don't test their websites and other browsers.
+
+590
+01:22:14,138 --> 01:22:17,858
+Wow. I really hoped that this would be done by the time this episode ended.
+
+591
+01:22:21,778 --> 01:22:24,808
+This has been a very mechanical episode of the joy of coding.
+
+592
+01:22:24,808 --> 01:22:29,187
+But hey, sometimes this is the way it is. The only way out is through.
+
+593
+01:22:29,188 --> 01:22:33,118
+And the only way through is by doing.
+
+594
+01:22:38,668 --> 01:22:41,818
+Oh, we're into the unified extension stuff. This is good. We're nearly at the end.
+
+595
+01:22:46,178 --> 01:22:52,658
+Okay. We got two here, which is page action clip types.
+
+596
+01:22:58,188 --> 01:23:05,598
+All right. Page Action Click types.
+
+597
+01:23:15,948 --> 01:23:39,878
+Okay. Going. Anyone want me to do any shout outs?
+
+598
+01:23:42,148 --> 01:23:47,278
+Here. Shout out to shout out to Agnes.
+
+599
+01:23:47,908 --> 01:23:52,618
+It's been great having you in the channel. I love your dry sense of humor.
+
+600
+01:23:52,798 --> 01:24:01,058
+Shout out to orcas. And of course, shout out to Smurf D always working on that.
+
+601
+01:24:01,958 --> 01:24:06,248
+You know working on the episode guide you're you're and you're always here you're always like,
+
+602
+01:24:06,368 --> 01:24:14,497
+chipping in with useful information and links and stuff. Shout out to Smurf D You're the best big fan of you, Smurf de Danny Cole.
+
+603
+01:24:14,498 --> 01:24:18,458
+And of course, shout out to Danny Cole.
+
+604
+01:24:18,908 --> 01:24:25,987
+Big fan. Big fan of all y'all. Happy to have you here. Let me know if you want to do any shout outs.
+
+605
+01:24:25,988 --> 01:24:29,168
+Just drop some names into the channels. Just start doing shout outs.
+
+606
+01:24:41,338 --> 01:24:45,348
+Where do we get to? API injection.
+
+607
+01:24:47,098 --> 01:24:54,428
+Down in pop up. Oh.
+
+608
+01:24:54,608 --> 01:24:59,138
+Oh, yeah. Firefox is 18th birthday that apparently just flew right by.
+
+609
+01:25:00,398 --> 01:25:08,108
+So this is distinct from Mozilla's birthday, which like Mozilla is quite a bit older than Firefox,
+
+610
+01:25:08,768 --> 01:25:13,868
+but Firefox is 18th birthday, apparently just happened. Let me actually see if I can.
+
+611
+01:25:14,258 --> 01:25:18,338
+I think I may have just confused this test runner by trying to open up a browser.
+
+612
+01:25:18,348 --> 01:25:23,068
+Hold on. Let's see if I can find some information about it.
+
+613
+01:25:24,538 --> 01:25:38,378
+Firefox 18th birthday. That's old enough to move out and get a, you know, start a start a new life, start a, you know, move out of your parents place.
+
+614
+01:25:39,968 --> 01:25:47,138
+Happy 18th birthday. Uh, although it's weird, I feel like I'm finding a search result.
+
+615
+01:25:47,138 --> 01:25:53,678
+It's like happy 18th birthday, Mozilla Firefox. That was posted two years ago in 2020.
+
+616
+01:25:55,508 --> 01:26:01,268
+So. How old is Firefox?
+
+617
+01:26:02,378 --> 01:26:06,038
+Initial release 18 years ago, November 9th, 24.
+
+618
+01:26:06,278 --> 01:26:17,288
+Okay. Maybe other people are measuring from like the point where it got forked from from from the Mozilla suite.
+
+619
+01:26:19,418 --> 01:26:26,978
+I guess. Yeah. You have to ask when what is the moment, the moment where you consider the start of a browser's life.
+
+620
+01:26:29,798 --> 01:26:34,208
+Geez. Ex pop up browser.
+
+621
+01:26:37,268 --> 01:26:49,138
+Wait. Background right next pop up background. When do you start counting?
+
+622
+01:26:50,698 --> 01:26:54,688
+When it comes to the age of software? The release date.
+
+623
+01:27:01,068 --> 01:27:04,548
+I don't know. Maybe you just have more than 1/18 birthday.
+
+624
+01:27:05,058 --> 01:27:11,038
+That's. That's fun. There's lots of moments.
+
+625
+01:27:11,048 --> 01:27:15,488
+Netscape two, Mozilla, Mozilla, suite of Firefox. Exactly. Lots of opportunities to celebrate.
+
+626
+01:27:16,058 --> 01:27:20,168
+Just celebrate them all. That's what I say. All right.
+
+627
+01:27:20,178 --> 01:27:23,528
+We're we're hitting a lot of them now. Ex pop up corners.
+
+628
+01:27:27,168 --> 01:27:31,128
+Pop up corners browser action default area.
+
+629
+01:27:36,318 --> 01:27:40,218
+Keep going. Mozilla Sweet to Firefox.
+
+630
+01:27:40,218 --> 01:27:44,028
+Firefox to the rapid release model.
+
+631
+01:27:44,508 --> 01:27:53,298
+Firefox using web extensions, stylo, web render, lots of great anniversaries.
+
+632
+01:27:53,298 --> 01:27:57,497
+Electrolysis Fusion was probably the biggest birthday recently,
+
+633
+01:27:57,498 --> 01:28:02,748
+or the biggest sort of major architectural change that is maybe worth celebrating our gecko view.
+
+634
+01:28:02,748 --> 01:28:09,438
+That's another important sort of architectural milestone, although that has more to do with mobile.
+
+635
+01:28:09,438 --> 01:28:14,448
+But that's okay. Firefox mobile is still Firefox. Lots of big milestones.
+
+636
+01:28:15,078 --> 01:28:21,028
+It's pretty exciting. Like it's pretty exciting to be involved on a project that is so long in the tooth, you know?
+
+637
+01:28:21,048 --> 01:28:31,028
+Firefox is quite old. How, how often are people still like hundreds of millions of people using a piece of software that's so old?
+
+638
+01:28:31,038 --> 01:28:34,188
+Like you can probably count on only a couple of hands.
+
+639
+01:28:34,548 --> 01:28:39,168
+How many pieces of software have that kind of longevity?
+
+640
+01:28:39,198 --> 01:28:42,958
+How many pieces of open source software like operating systems?
+
+641
+01:28:42,978 --> 01:28:49,128
+Obviously, browsers are another one, but what other pieces of software have not gone?
+
+642
+01:28:50,988 --> 01:28:54,728
+I don't know. And I mean, desktop software. This is rhetorical.
+
+643
+01:28:54,738 --> 01:29:04,328
+I'm not actually looking for someone to answer this question. I'm just exclaiming, I'm just remarking.
+
+644
+01:29:06,428 --> 01:29:09,308
+It's a privilege to work on Firefox. That's why I think.
+
+645
+01:29:11,938 --> 01:29:20,308
+But certainly more if you're interested in getting involved, maybe you're a student watching this or someone who's looking to get into programing.
+
+646
+01:29:21,298 --> 01:29:32,128
+Well, cool. I think that's great. And when you're in school, I find most schools will have you work on exercises, toy projects, and that's fine.
+
+647
+01:29:32,158 --> 01:29:36,358
+It's like if you're learning woodworking, yet you start by learning how to soar.
+
+648
+01:29:36,358 --> 01:29:42,298
+Or if you're learning, if you're learning how to cook, you start by you know, how to use a knife,
+
+649
+01:29:42,298 --> 01:29:47,008
+how to, you know, clean your kitchen, keep things, you know, sanitary and stuff.
+
+650
+01:29:47,668 --> 01:29:51,298
+But then eventually you enter a real kitchen.
+
+651
+01:29:51,298 --> 01:30:00,538
+And that's what I think of as the Mozilla code base. It's like a real kitchen is a place where there's like, you know, it's it's not an exercise.
+
+652
+01:30:00,548 --> 01:30:02,938
+We ship real things to hundreds of millions of people.
+
+653
+01:30:03,298 --> 01:30:09,507
+We have to, you know, ship updates and do rigorous testing and accessibility, localization and security and performance and privacy.
+
+654
+01:30:09,508 --> 01:30:15,087
+And like all of these things have to be thought of. And that's not to scare you off.
+
+655
+01:30:15,088 --> 01:30:19,978
+That's almost as an invitation if you want to contribute to something really real world.
+
+656
+01:30:20,708 --> 01:30:24,028
+Um, you know, Firefox is a pretty good choice.
+
+657
+01:30:26,158 --> 01:30:29,128
+Do you? I know the service status is. It's still being worked on.
+
+658
+01:30:30,208 --> 01:30:38,308
+So for the people who don't know, Servo was an experimental browser engine written in almost entirely in Rust, I think maybe entirely in Rust.
+
+659
+01:30:38,458 --> 01:30:46,948
+And in fact I believe it was written in parallel with rust as rust was being designed, Servo was being built.
+
+660
+01:30:47,428 --> 01:30:54,538
+And the reason for that is, you know, when you're designing a language ostensibly to help make browser development better,
+
+661
+01:30:54,988 --> 01:30:57,928
+it's helpful if you, you know, have a client,
+
+662
+01:30:57,928 --> 01:31:03,837
+someone who's actually using that language to give you to feed feedback into into the design of the language of like,
+
+663
+01:31:03,838 --> 01:31:06,748
+oh, we need this, oh, that doesn't work, or this is awkward, that sort of thing.
+
+664
+01:31:07,048 --> 01:31:13,587
+And so Servo and Rust were kind of these two things, these two siblings and you know,
+
+665
+01:31:13,588 --> 01:31:16,888
+there were some really interesting innovations that came out of Servo.
+
+666
+01:31:17,158 --> 01:31:20,548
+It was kind of this greenfield browser engine from scratch.
+
+667
+01:31:21,028 --> 01:31:31,048
+And one of the things that came out of it was Stylo, which was a CSS styling engine, and we were able to move that into Firefox.
+
+668
+01:31:31,888 --> 01:31:35,667
+Another piece was Web Render. That was the graphics layer of of servo.
+
+669
+01:31:35,668 --> 01:31:43,108
+We pulled that out and we put it into Firefox. And the rest of servo there was like a networking layer.
+
+670
+01:31:44,008 --> 01:31:47,368
+It used spider monkey for JavaScript. So we already had that.
+
+671
+01:31:48,418 --> 01:31:54,058
+It had its own implementation of the DOM and was starting to experiment with like parallel layout.
+
+672
+01:31:55,688 --> 01:31:59,368
+Oh, here's another one that needs to be fixed.
+
+673
+01:32:01,858 --> 01:32:07,018
+And then they got redirected to, I think, mixed reality work.
+
+674
+01:32:07,798 --> 01:32:21,537
+Um, you know, they want to use it in like embedded VR devices and then, uh, and then that team was laid off.
+
+675
+01:32:21,538 --> 01:32:25,228
+The ones that were working primarily on Servo, a lot of them were laid off.
+
+676
+01:32:25,228 --> 01:32:30,178
+Some of them were I don't think some of them were not. Some of them I think moved to other teams.
+
+677
+01:32:30,538 --> 01:32:38,878
+But the people working on Servo, as I recall, were laid off and then the Servo project was given over to the Linux Foundation.
+
+678
+01:32:39,508 --> 01:32:50,278
+That's the story is like, okay, we have this thing, we are going to work on improving Gecko rather than continuing to invest in servo development.
+
+679
+01:32:50,278 --> 01:32:53,968
+So we're going to try and improve Gecko. We'd already brought some things over from Servo into Gecko.
+
+680
+01:32:53,968 --> 01:33:02,548
+That's great. But now we're going to focus on Gecko. And so for the remaining like servo, we're not going to invest any more into it.
+
+681
+01:33:03,238 --> 01:33:12,298
+And this was right around the time where I think now I'm trying to remember when this was this a couple of years ago.
+
+682
+01:33:12,958 --> 01:33:19,437
+So we headed it off to the Linux Foundation, and I believe they're the ones who now maintain the project.
+
+683
+01:33:19,438 --> 01:33:25,948
+And let's see, I actually haven't looked in a while. Servo, servo, servo, servo dawg.
+
+684
+01:33:29,548 --> 01:33:33,028
+They have Zulu chat, they're still on GitHub.
+
+685
+01:33:39,198 --> 01:33:43,548
+Governance model, the technical schools. Copyright 2021.
+
+686
+01:33:43,578 --> 01:33:47,178
+That's not a good sign. Linux Foundation.
+
+687
+01:33:48,198 --> 01:33:49,898
+These are the people on the steering committee.
+
+688
+01:33:49,908 --> 01:34:01,788
+I know some of these names, but meetings seem to have ceased in 2020, or at least posting of meeting notes and then the actual source code.
+
+689
+01:34:02,178 --> 01:34:07,128
+I do see some commits. Someone is still landing stuff.
+
+690
+01:34:09,558 --> 01:34:24,918
+This is Josh MATTHEWS. Uh, so it is still being maintained, but it doesn't look like there's a whole lot of activity,
+
+691
+01:34:25,698 --> 01:34:31,058
+but there's a bit of a bit of activity and a number of pull requests here.
+
+692
+01:34:31,068 --> 01:34:36,528
+Some of these only days old. This one's a security vulnerability.
+
+693
+01:34:38,628 --> 01:34:42,528
+So, you know, activity is happening. People are filing bugs still.
+
+694
+01:34:44,968 --> 01:34:48,588
+Um, so that's, that's my understanding.
+
+695
+01:34:48,888 --> 01:34:51,588
+So I don't have a whole lot of visibility. I don't actually know.
+
+696
+01:34:52,008 --> 01:35:01,428
+But it, it does appear that people are still contributing to it in patches are being brought brought in.
+
+697
+01:35:02,058 --> 01:35:07,697
+But yeah, like servo we gained, we gained some interesting things.
+
+698
+01:35:07,698 --> 01:35:16,788
+It was an expensive process like bringing stylo in from a from servo bringing web rendering were multiyear projects but those were,
+
+699
+01:35:16,908 --> 01:35:22,878
+you know, they've helped with browser performance. You know, our our CSS performance and our graphics performance are pretty great.
+
+700
+01:35:24,258 --> 01:35:28,778
+Thanks to both stylo and web render. And.
+
+701
+01:35:30,368 --> 01:35:34,358
+And yeah, I think that's the story with Servo as far as I know.
+
+702
+01:35:35,378 --> 01:35:39,638
+So those pieces live on inside of Gecko and Servo itself is being maintained by
+
+703
+01:35:39,638 --> 01:35:42,908
+the Linux Foundation and it looks like people are still contributing to it.
+
+704
+01:35:45,848 --> 01:35:49,708
+Hopefully that answer some questions. Okay, so we had some failures here.
+
+705
+01:35:49,718 --> 01:35:53,048
+Let's investigate this. We're almost right at the end here.
+
+706
+01:35:53,428 --> 01:35:57,428
+Uh, I think we're going to. We're going to close out in just a second.
+
+707
+01:36:01,048 --> 01:36:07,678
+If we can get to the end of the tests. If I extension's context menu.
+
+708
+01:36:09,378 --> 01:36:17,688
+I'll be pretty happy. Hmm.
+
+709
+01:36:23,938 --> 01:36:28,558
+It's something I've dreaded doing all, all day. But I'm glad you are with me, gang.
+
+710
+01:36:28,828 --> 01:36:33,508
+I'm glad the. The Joy of Coding Gang was here with me while I did all of this mechanical stuff.
+
+711
+01:36:35,008 --> 01:36:40,258
+Because sometimes this is part of the job, you know, sometimes it's not always glamorous.
+
+712
+01:36:40,588 --> 01:36:43,737
+Debugging in the toolbox or something.
+
+713
+01:36:43,738 --> 01:36:50,608
+Sometimes it's just find and replace. Find and replace and then overflow will toolbar.
+
+714
+01:36:57,798 --> 01:37:09,748
+Yeah. Browser action. All right.
+
+715
+01:37:10,288 --> 01:37:18,998
+So let's run from. Uh.
+
+716
+01:37:20,468 --> 01:37:26,288
+We'll run from here to the end and then we'll call it there.
+
+717
+01:37:31,958 --> 01:37:45,398
+Fargo goes Rip. Yeah. I mean like I said parts of servo live on inside of Firefox and you know the servo team did great work but
+
+718
+01:37:45,398 --> 01:37:52,958
+I think leadership was like we want to invest more in Gecko directly and as a vehicle for helping to get,
+
+719
+01:37:53,438 --> 01:37:58,228
+you know, Rust to be a language that, you know, other people wanted to use.
+
+720
+01:37:58,238 --> 01:38:04,868
+I think Servo was a huge success as a as a lever to improve the rust language as well.
+
+721
+01:38:05,198 --> 01:38:09,968
+So in many ways, like Rust, a servo accomplished much of its original mission.
+
+722
+01:38:11,458 --> 01:38:17,518
+Was always just an experimental browser engine. You know, to like do R&D on interesting things.
+
+723
+01:38:17,848 --> 01:38:22,888
+That was its whole purpose. And so I think it accomplished a lot of what it set out to do.
+
+724
+01:38:24,308 --> 01:38:36,197
+That's my opinion anyways. But I'll also say I wasn't involved.
+
+725
+01:38:36,198 --> 01:38:41,048
+I didn't work on it. So I don't have any like.
+
+726
+01:38:41,938 --> 01:38:45,008
+Extra information. If you're looking for any.
+
+727
+01:38:46,708 --> 01:38:55,578
+X user events. I just watched and cheered from the sidelines when they merged Stylo and.
+
+728
+01:38:59,068 --> 01:39:30,088
+And Web rendering. Something that might interest some of the people on this on this in this chat or watching the stream is I know Andre's killing.
+
+729
+01:39:30,358 --> 01:39:35,608
+I don't know if I'm pronouncing that right. Uh, Kling,
+
+730
+01:39:36,148 --> 01:39:46,998
+who works on a custom browser engine on a custom OS that he and like a bunch of volunteers are working on in their spare time called Serenity OS.
+
+731
+01:39:47,368 --> 01:39:57,657
+There is a yeah from society OS. So Andreas and his team are working on this browser engine and from scratch, like the operating system.
+
+732
+01:39:57,658 --> 01:40:00,928
+And I think it's called Lady Bird. Let's look this up real quick.
+
+733
+01:40:01,378 --> 01:40:03,628
+What's what's what's wrong browser.
+
+734
+01:40:08,008 --> 01:40:21,868
+And it uses live web, which I think is the web engine for for serenity and live jazz, which is the jazz engine for Serenity OS.
+
+735
+01:40:22,888 --> 01:40:28,918
+And it's got a cross-platform goofy bill written in Cute for Cutie.
+
+736
+01:40:29,668 --> 01:40:33,628
+And yeah, is there like a picture?
+
+737
+01:40:33,718 --> 01:40:38,607
+Let's see, Lady Bird. Like, I saw one recently.
+
+738
+01:40:38,608 --> 01:40:40,308
+Like, they're passing the acid test.
+
+739
+01:40:40,318 --> 01:40:45,958
+I think I saw a tweet recently where they like they have parts of Google Docs working, which is pretty impressive.
+
+740
+01:40:46,528 --> 01:40:51,868
+You know, like building a web browser from from scratch, like a browser engine from scratch is no small feat.
+
+741
+01:40:52,858 --> 01:41:00,298
+It's actually a really rare occurrence to watch a browser engine just kind of emerge from, you know, people's.
+
+742
+01:41:02,438 --> 01:41:05,978
+Like just watching one just kind of show up.
+
+743
+01:41:07,088 --> 01:41:13,838
+Brandy That's a very rare event. So we should be celebrating the birth of a new browser engine.
+
+744
+01:41:14,248 --> 01:41:17,438
+AI All power to them. I think that's great.
+
+745
+01:41:17,798 --> 01:41:21,847
+Let's more browser engines. Gang, gang. Let's get some browser engines out there.
+
+746
+01:41:21,848 --> 01:41:32,618
+Room. In the last video from Andre as he tries to implement logging into discord.
+
+747
+01:41:32,738 --> 01:41:41,048
+I find that so impressive. You know, like the stuff I'm trying to do feels like small potatoes with, like, extensions and stuff.
+
+748
+01:41:42,038 --> 01:41:46,538
+Andreas is like Bill Hill and his team are building a whole web engine from scratch.
+
+749
+01:41:47,378 --> 01:41:49,958
+That is, again, no small feat. No small feat.
+
+750
+01:41:51,608 --> 01:41:58,838
+I mean, you have you have the advantage, of course, of starting from scratch a you know, a greenfield project.
+
+751
+01:41:59,288 --> 01:42:04,867
+You get sort of like the you get the ability to have.
+
+752
+01:42:04,868 --> 01:42:14,668
+And I know Andreas, I think he'd worked for Apple on Web kits. So you've got someone who's like, I've got I've seen what Web engines need to do.
+
+753
+01:42:14,678 --> 01:42:21,248
+I'm in the future now before, you know, after the start of web kit and gecko and blink and all that,
+
+754
+01:42:21,518 --> 01:42:29,348
+I can start creating a web engine from scratch and all of the sort of my knowledge of where the web has been going.
+
+755
+01:42:29,648 --> 01:42:32,978
+He can build into a greenfield project. There's a certain advantage to that, I think.
+
+756
+01:42:33,308 --> 01:42:38,318
+I mean, it's also like, again, no small feat. There is a lot of area to cover.
+
+757
+01:42:38,708 --> 01:42:47,198
+But if there's anything I've noticed from the people working on Sarandos is that they are not intimidated by large amounts of work.
+
+758
+01:42:49,988 --> 01:42:53,918
+Yeah, not just a web engine. It's a whole operating system like that.
+
+759
+01:42:54,188 --> 01:42:57,998
+It is. It's wild. It's really wild.
+
+760
+01:42:58,478 --> 01:43:02,978
+I'm intrigued and impressed. I've never I've never booted it up.
+
+761
+01:43:02,978 --> 01:43:09,278
+I've never tried it. I can't vouch for it as an actual product.
+
+762
+01:43:10,268 --> 01:43:14,648
+I can't vouch for its security. I can't vouch for its performance.
+
+763
+01:43:15,158 --> 01:43:18,338
+But I can certainly vouch for the screenshots that I've seen.
+
+764
+01:43:18,338 --> 01:43:23,918
+And the screenshots that I've seen look pretty impressive, at least in terms of capability.
+
+765
+01:43:26,078 --> 01:43:46,428
+So yeah, it's pretty neat. Almost there.
+
+766
+01:43:46,448 --> 01:43:51,248
+Gang, I feel like we're so close. We're so close.
+
+767
+01:44:06,668 --> 01:44:22,818
+Beep, beep, beep, beep. You. Almost there right around now, I think we started seeing the resizable of the unified toolbar ones.
+
+768
+01:44:23,538 --> 01:44:32,158
+Yeah, here we go. We're nearing. We're in the final stretch, so window's going to start, like, getting big and small at some point.
+
+769
+01:44:32,178 --> 01:44:35,208
+Yeah. Here we go. These are the last tests I wrote. These.
+
+770
+01:44:36,048 --> 01:44:41,178
+Okay. Okay. Just this last, last failure.
+
+771
+01:44:41,688 --> 01:44:46,308
+Otherwise, we passed everything else. We did it, gang.
+
+772
+01:44:47,928 --> 01:44:51,208
+Holy smoke. All right.
+
+773
+01:44:55,298 --> 01:44:58,488
+Let's run this one last test. Well, when was it?
+
+774
+01:44:58,928 --> 01:45:02,718
+Uh. Browser xt windows.
+
+775
+01:45:10,618 --> 01:45:14,667
+Oh. They've also created a memory safe language. Yeah. It's very ambitious.
+
+776
+01:45:14,668 --> 01:45:17,768
+Very ambitious. Let's create an operating system.
+
+777
+01:45:17,788 --> 01:45:21,328
+Well, hold on. Let's create a language.
+
+778
+01:45:21,418 --> 01:45:25,168
+Well, hold on. Let's create a web engine and a browser to go with it.
+
+779
+01:45:25,318 --> 01:45:32,518
+These are all humungous efforts, but they're pulling it off, like, or at least they're making stuff that shows up on screen.
+
+780
+01:45:32,548 --> 01:45:39,687
+I don't know. Again, I cannot vouch for its usability, its its capabilities.
+
+781
+01:45:39,688 --> 01:45:41,817
+But here let's take a look at what it looks like.
+
+782
+01:45:41,818 --> 01:45:47,428
+Serenity was my understanding, just looking at some screenshots as it basically looks like Windows 95.
+
+783
+01:45:47,818 --> 01:45:57,418
+If the Windows 95, the nineties esthetic appeals to you, then, you know, this operating system might be something of interest.
+
+784
+01:45:58,258 --> 01:46:10,888
+Look, it's the web browser. Look, it's a system monitor that looks a lot like the old school Win32 file manager from Windows 95 Start Menu.
+
+785
+01:46:13,648 --> 01:46:17,128
+Serenity Summer of Code When. Good question. Good question.
+
+786
+01:46:17,758 --> 01:46:19,258
+But it's impressive stuff.
+
+787
+01:46:21,118 --> 01:46:31,978
+all right that all past I'm before I lose any of this work let's committed and we're going to amend the commit message we're going to say.
+
+788
+01:46:34,118 --> 01:46:38,448
+42,000 commits. Yeah, prolific. Prolific.
+
+789
+01:46:40,088 --> 01:46:45,328
+Like this is the operating system, the whole project, society, OS, the browser, all these things.
+
+790
+01:46:45,338 --> 01:46:49,448
+Only a couple of years old, two or three years ago. Something like that. O system on chip.
+
+791
+01:46:49,688 --> 01:46:53,648
+I thought you meant summer of code. My bad. Um.
+
+792
+01:46:55,088 --> 01:47:06,368
+Bug such and such. Update existing tests, uh, to put the put browser actions.
+
+793
+01:47:09,118 --> 01:47:14,098
+Two the nav bar by default.
+
+794
+01:47:15,868 --> 01:47:19,078
+We had a number of tests that assumed.
+
+795
+01:47:20,308 --> 01:47:27,208
+That when adding a browser action without specifying the default area.
+
+796
+01:47:29,618 --> 01:47:35,408
+That the button would enter the nav bar after this bug.
+
+797
+01:47:36,248 --> 01:47:48,078
+The. The previous patch. And this series changes that assumption when the unified extension's UI is enabled,
+
+798
+01:47:49,398 --> 01:47:59,748
+instead of updating all of these tests to add additional steps to move the browser actions.
+
+799
+01:48:01,528 --> 01:48:08,378
+Out to the nav bar. After adding them, I've gone ahead and updated them.
+
+800
+01:48:11,718 --> 01:48:17,208
+To default their browser actions to the nav bar instead.
+
+801
+01:48:20,188 --> 01:48:26,218
+And it looks like I may have messed up some JavaScript.
+
+802
+01:48:29,078 --> 01:48:35,048
+Oh, yeah. This isn't that's not going to work at all. Ex you are l overrides new tab.
+
+803
+01:48:35,258 --> 01:48:42,548
+I might have to run that directory. I have to run that directory.
+
+804
+01:48:47,498 --> 01:48:50,568
+Again. I won't do it here on screen.
+
+805
+01:48:50,598 --> 01:48:53,718
+I'll do it whenever I go. Take a break.
+
+806
+01:48:53,898 --> 01:48:58,487
+I'll go for a walk or something. I'll run the whole directory. Hey, thanks for watching.
+
+807
+01:48:58,488 --> 01:49:03,678
+Episode 306 of The Joy of Coding. Pretty mechanical stuff, I hope that was interesting.
+
+808
+01:49:03,708 --> 01:49:06,768
+We talked about Lady Bird. Serenity was.
+
+809
+01:49:07,748 --> 01:49:14,528
+We talked about obfuscated and compressed JavaScript. We talked about unified extensions and black tea.
+
+810
+01:49:14,768 --> 01:49:19,118
+What is it? Let me know what you thought of the episode.
+
+811
+01:49:19,138 --> 01:49:23,937
+There's a rate this episode form here in the agenda. I'm going to drop the link into the chat as well.
+
+812
+01:49:23,938 --> 01:49:30,638
+And if you're watching this on Twitch, you can you can find the link down below to read this episode.
+
+813
+01:49:30,658 --> 01:49:34,438
+Basically, all the places where I put the link to the agenda is also a link to read the episode.
+
+814
+01:49:34,678 --> 01:49:41,188
+I read everything that comes in. Send me your questions. Oh, we also talked about Servo.
+
+815
+01:49:43,408 --> 01:49:52,758
+Send me your thoughts. I read everything that comes in and I will see you next week for episode 307 and we'll check it out.
+
+816
+01:49:52,768 --> 01:49:58,048
+We'll see where we're at. Thank you so much for watching. Let me change cameras here.
+
+817
+01:49:59,488 --> 01:50:03,088
+I'll talk to you soon. See you next week. Take care, everybody. Bye bye.
+
+818
+01:50:05,128 --> 01:50:08,508
+The joy of loading.
+
+819
+01:50:08,968 --> 01:50:09,358
+See it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

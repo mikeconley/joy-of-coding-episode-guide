@@ -1,0 +1,2961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 62</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 62</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=af07585a-d30b-411c-b15c-ac1600012f49</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=af07585a-d30b-411c-b15c-ac1600012f49">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:05,840 --> 00:00:15,100
+Well. Hello and welcome to The Joy of Coding.
+
+2
+00:00:15,100 --> 00:00:24,910
+This is episode sixty two, I believe. I never know I never know what the episode is and I'm pretty sure today's is episode 62.
+
+3
+00:00:24,910 --> 00:00:29,740
+Yes. Welcome to Episode 62, two of The Joy of Coding. My name is Mike Connelly.
+
+4
+00:00:29,740 --> 00:00:34,240
+We're going to be hacking on some Firefox stuff today. It's going to be a great day.
+
+5
+00:00:34,240 --> 00:00:38,590
+I hope you're having a good one. I hope my day can make it better. My.
+
+6
+00:00:38,590 --> 00:00:43,000
+I hope this video will make your day even better. I'm just improvising here.
+
+7
+00:00:43,000 --> 00:00:46,600
+Let's get started. What are we doing? All right.
+
+8
+00:00:46,600 --> 00:00:56,530
+Switching to my screen. A OK, so here is my Evernote with today's agenda.
+
+9
+00:00:56,530 --> 00:01:03,380
+So standard preamble. If you're new to this, you might not know this, but there is kind of a plan.
+
+10
+00:01:03,380 --> 00:01:09,010
+There's not really a plan for what I'm hoping to do today, but there's kind of a roadmap.
+
+11
+00:01:09,010 --> 00:01:18,280
+I don't really know how things are going to work out, but I just kind of try and stick with a stick as close to the roadmap as possible.
+
+12
+00:01:18,280 --> 00:01:22,090
+And if we divert from the plan, that's OK.
+
+13
+00:01:22,090 --> 00:01:26,620
+There's no problem with that. That's life. So first, I just wanna make sure everything's working.
+
+14
+00:01:26,620 --> 00:01:31,700
+My audio's working. My sounds to me Mattio are working.
+
+15
+00:01:31,700 --> 00:01:35,980
+I'm recording all as well. I've pumped up my thought here so you can see it.
+
+16
+00:01:35,980 --> 00:01:47,170
+Okay, so that's good. Self check is done. So what I'm hoping to do today is finish up some addressing some of you feedback for this.
+
+17
+00:01:47,170 --> 00:01:51,880
+Make initial browser remote sooner that we've been working on for a long, long, long time.
+
+18
+00:01:51,880 --> 00:01:54,130
+We're really close to being done.
+
+19
+00:01:54,130 --> 00:02:02,440
+However, this morning, a rather rude awakening or rather route unfortunate discovery as I I'd pushed the patch to try.
+
+20
+00:02:02,440 --> 00:02:10,280
+And if you look, you'll notice that there are a bunch of new failures and we need to figure out what is going on.
+
+21
+00:02:10,280 --> 00:02:13,510
+I'd already done a lot of work to fix a bunch of other tests.
+
+22
+00:02:13,510 --> 00:02:19,900
+So either something has changed in the meantime or somehow in my refactoring or rebasing I've broken something.
+
+23
+00:02:19,900 --> 00:02:29,530
+So we have to figure out what's gone wrong. Because these tests all need to pass at least most of the time.
+
+24
+00:02:29,530 --> 00:02:34,480
+If they're intermittent like this, number three one, that's okay. And number four is intermittent.
+
+25
+00:02:34,480 --> 00:02:43,390
+Number five is intermittent. BBC seven, for example, the browser Chrome Test seven is failing consistently across the board.
+
+26
+00:02:43,390 --> 00:02:48,590
+And we need to figure out what's going on there and try to see if there's anything else that is.
+
+27
+00:02:48,590 --> 00:02:54,220
+Yeah. This this is also bad. So there's a test here.
+
+28
+00:02:54,220 --> 00:03:01,870
+One Moki test, one is failing on s pretty consistently.
+
+29
+00:03:01,870 --> 00:03:04,060
+And we're gonna need to figure out what's going on there, too.
+
+30
+00:03:04,060 --> 00:03:15,190
+So these two things are going to be addressed hopefully in this episode and will hopefully also address some of the review feedback from smog.
+
+31
+00:03:15,190 --> 00:03:19,000
+I've already addressed some of it. I addressed a bunch of it.
+
+32
+00:03:19,000 --> 00:03:21,340
+Yesterday was just a chunk more of it to do today.
+
+33
+00:03:21,340 --> 00:03:29,830
+And hopefully Im hoping, fingers crossed, if I'm lucky by the end of today, I can put up a new patch for review and all the tests will pass.
+
+34
+00:03:29,830 --> 00:03:36,820
+So that's, that's the goal. And we're going to see if it works. So that's kind of the idea of for today and if any that fails.
+
+35
+00:03:36,820 --> 00:03:43,180
+I've also got a bunch of neat info's, a bunch of neat info's got stacked up while I was on PTO and I really need to go through them.
+
+36
+00:03:43,180 --> 00:03:52,300
+I'm hoping to get all of these ones done today and answer some questions for people because blocking people and information is bad.
+
+37
+00:03:52,300 --> 00:04:00,100
+But before I continue to give a quick shout out to Dennis, shout out to Dennis.
+
+38
+00:04:00,100 --> 00:04:06,940
+Hello, Dennis. Dennis, I met earlier today and he told me he'd been watching the joy of coding.
+
+39
+00:04:06,940 --> 00:04:12,190
+So hello, Dennis, I use you said you watch the show and I just want to.
+
+40
+00:04:12,190 --> 00:04:15,850
+I said I'd give you a shout out. So there's a shout out. Hello, Dennis.
+
+41
+00:04:15,850 --> 00:04:25,400
+And you also said that the air horn was slightly loud. So I'm going to turn the air down, but I'm gonna play it anyways.
+
+42
+00:04:25,400 --> 00:04:30,050
+All right. Hopefully not too bad. There you go. How's it going, Dennis?
+
+43
+00:04:30,050 --> 00:04:36,290
+So let's get started. What is up with these failing tests?
+
+44
+00:04:36,290 --> 00:04:46,230
+So I started actually looking at this a little bit today already. Here, I'm going to put this try push the agenda.
+
+45
+00:04:46,230 --> 00:04:52,350
+So, yeah, I didn't even say the agenda. How how is this useful to you if you can't click on any of the links?
+
+46
+00:04:52,350 --> 00:04:57,570
+Well, if you go down if you're watching this on air Mazola, there's an additional link section and there's a link.
+
+47
+00:04:57,570 --> 00:05:01,050
+Oh, shoot. I haven't put the. I ever did that. Hang on.
+
+48
+00:05:01,050 --> 00:05:07,690
+Let me let me do that real quick. Here, Mazola 60 to the joy of coding.
+
+49
+00:05:07,690 --> 00:05:15,120
+Let me just quickly drop the link into the.
+
+50
+00:05:15,120 --> 00:05:21,840
+Gender. That's the one. So that should have today's was July 6th.
+
+51
+00:05:21,840 --> 00:05:26,620
+OK. And the rate this episode link you to update that as well.
+
+52
+00:05:26,620 --> 00:05:32,080
+Whips did mean, didn't you? Bam. So for reals, updated.
+
+53
+00:05:32,080 --> 00:05:36,370
+Now, if you reload the page, if you're watching this on air Mazola,
+
+54
+00:05:36,370 --> 00:05:41,920
+then any additional link section, there should be an up to date agenda here, an agenda link.
+
+55
+00:05:41,920 --> 00:05:47,780
+And if you're watching this on YouTube, it should just be in like the description of.
+
+56
+00:05:47,780 --> 00:05:57,440
+Right. So let's let's I think everything's in order. Sorry for the sort of handwaving screw up there, but let's move on.
+
+57
+00:05:57,440 --> 00:06:05,030
+So this test failure. What's the deal? Yo? I've actually I like I said, I was poking at it a little bit today.
+
+58
+00:06:05,030 --> 00:06:11,930
+Let me clear my console and pump up the phone a little bit so you can see.
+
+59
+00:06:11,930 --> 00:06:16,880
+And I'll also bring the bottom up so you can always see what I'm typing.
+
+60
+00:06:16,880 --> 00:06:20,900
+I never want to be in a state where you can't see what I'm doing. OK.
+
+61
+00:06:20,900 --> 00:06:27,890
+So I've got this test bug 42, 590, browser bug forty two, five ninety.
+
+62
+00:06:27,890 --> 00:06:48,730
+And if I run that test. We fail and we fail because, well, I think it's because there's this error on the stack right around here.
+
+63
+00:06:48,730 --> 00:06:53,940
+Whereas a. Yeah. A new browser's undefined type air, new browser's undefined.
+
+64
+00:06:53,940 --> 00:07:00,510
+I think that's related. Usually whenever there's an error near your test failure, it's good.
+
+65
+00:07:00,510 --> 00:07:05,070
+It's a good idea to check that out. So I think this error is probably related.
+
+66
+00:07:05,070 --> 00:07:11,940
+Now, starting to poke at it and like figure out where this error is coming from.
+
+67
+00:07:11,940 --> 00:07:20,420
+But first, let us see what this test is doing. Let me simplify my layout a little close.
+
+68
+00:07:20,420 --> 00:07:29,170
+One of the things that I don't need. OK, here's the test.
+
+69
+00:07:29,170 --> 00:07:36,430
+I've actually modified this test for simplification sake, but this is basically how the test functions.
+
+70
+00:07:36,430 --> 00:07:43,870
+The test is entered in and we tell it. Okay, we're gonna end asynchronously. So we ask it for wait to wait for explicit finish.
+
+71
+00:07:43,870 --> 00:07:51,010
+And then we call this test customized function, which takes the window and this test Cronos function over here.
+
+72
+00:07:51,010 --> 00:07:57,940
+That's because we're gonna run tests, customize, and then we're gonna call test Koronis after test customizes dones.
+
+73
+00:07:57,940 --> 00:08:02,860
+This is like a callback that test customize calls whenever it's done its thing.
+
+74
+00:08:02,860 --> 00:08:03,910
+It was test customized.
+
+75
+00:08:03,910 --> 00:08:12,490
+Do takes a window and a callback, and the first thing they'll do is they'll get the file menu in the browser, makes sure that we have it.
+
+76
+00:08:12,490 --> 00:08:20,950
+Make sure makes sure that it's enabled. And that's going to open up the customized mode.
+
+77
+00:08:20,950 --> 00:08:28,180
+And whenever it's open up customized mode, it's gonna make sure that the file menu is disabled during toolbar customization.
+
+78
+00:08:28,180 --> 00:08:30,880
+And then we close customize mode.
+
+79
+00:08:30,880 --> 00:08:42,370
+And then whenever we've closed, then we will also make sure that file menu is re enabled after toolbar customization has been exited.
+
+80
+00:08:42,370 --> 00:08:51,580
+And then we'll call the callback. Which in this case is test Cronus. And what test Cronus does is it will open up a chrome window.
+
+81
+00:08:51,580 --> 00:08:57,700
+So chrome equals no R, right chrome os.
+
+82
+00:08:57,700 --> 00:09:01,020
+Test to Chrome's window. Oh, yeah.
+
+83
+00:09:01,020 --> 00:09:07,240
+So we've got rid of the toolbar. That's that's what's going on is the toolbar is gone.
+
+84
+00:09:07,240 --> 00:09:13,060
+But otherwise, the the browser is the same. The toolbar is gone.
+
+85
+00:09:13,060 --> 00:09:23,030
+And then we. Then we make sure that we've opened the window and then we do this.
+
+86
+00:09:23,030 --> 00:09:29,960
+Once the delayed start up and the window is finished, we see that the search bar is hidden for some reason.
+
+87
+00:09:29,960 --> 00:09:40,000
+We make sure that the search bar is hidden and then we make sure that customized mode can be entered and exited on the Christmas window.
+
+88
+00:09:40,000 --> 00:09:44,810
+I don't even know why we'd need that. But that's the test.
+
+89
+00:09:44,810 --> 00:09:50,150
+That is the test, people. And so we've learned something today.
+
+90
+00:09:50,150 --> 00:09:58,650
+What do we have? Today I learned sound. Today, we learned a thing.
+
+91
+00:09:58,650 --> 00:10:06,920
+So now what do we do this information? Well, I can tell you right now that this part, the first call to the normal, we know works just fine.
+
+92
+00:10:06,920 --> 00:10:13,200
+It's the second call that's busted. And.
+
+93
+00:10:13,200 --> 00:10:19,750
+So. Let me.
+
+94
+00:10:19,750 --> 00:10:26,620
+Get us back into that busted state weps. A test Christmas.
+
+95
+00:10:26,620 --> 00:10:31,720
+This is this is the part that's broken for some reason we open this window and that doesn't surprise me
+
+96
+00:10:31,720 --> 00:10:37,180
+that this is what's there's a breakage here because we're opening a window and that's what we're changing.
+
+97
+00:10:37,180 --> 00:10:48,550
+And I part of my instinct, my instincts tell me that maybe it's because somehow the window that we're supposed to be opening isn't behaving correctly,
+
+98
+00:10:48,550 --> 00:10:54,700
+like maybe we're passing the string wrong, because that's recently something I refactored based on review feedback as I changed.
+
+99
+00:10:54,700 --> 00:11:02,650
+How we treat some of these features strings is what we call them the feature string.
+
+100
+00:11:02,650 --> 00:11:16,180
+And I wonder if maybe we're doing that incorrectly. So what I'm going to do, actually, is.
+
+101
+00:11:16,180 --> 00:11:19,690
+I gonna run this test and I'm ah.
+
+102
+00:11:19,690 --> 00:11:28,750
+The test is already running, but it failed and that's why we just exited by Win run this testimony and take a look at the the window that it opens.
+
+103
+00:11:28,750 --> 00:11:32,320
+Now, let's let's take a real close look here. This is interesting.
+
+104
+00:11:32,320 --> 00:11:38,680
+The toolbar is missing and the TAB strip is also missing.
+
+105
+00:11:38,680 --> 00:11:45,800
+But notice how like it's it's not like a standard Pop-Up window that one would expect whenever he asked for no toolbar.
+
+106
+00:11:45,800 --> 00:11:51,910
+Like, it's kind of it's almost like the toolbar and the TAB strip are hidden, but the window itself thing.
+
+107
+00:11:51,910 --> 00:12:04,150
+So it's a normal browser window, which is really interesting. I would expect that the window would look more like a standard Pop-Up window like this.
+
+108
+00:12:04,150 --> 00:12:13,460
+Well, without the toolbar. So let me see what whenever I call this function, because I can I can call this inside my.
+
+109
+00:12:13,460 --> 00:12:22,100
+Inside my browser console and my running Firefox, let's just see what it looks like normally what it's supposed to look like.
+
+110
+00:12:22,100 --> 00:12:32,270
+Interesting. So notice that the you are albar, the search bar is available.
+
+111
+00:12:32,270 --> 00:12:38,900
+Search or enter address. I can't actually type in it, but there it is.
+
+112
+00:12:38,900 --> 00:12:43,250
+Location is yes, toolbar is no. So that's interesting.
+
+113
+00:12:43,250 --> 00:12:49,010
+That kind of bolsters my theory that this window is not behaving correctly.
+
+114
+00:12:49,010 --> 00:12:54,270
+And then we can enter customizing it and we exit. Customize. Yeah. And it's a little weird whenever we do that.
+
+115
+00:12:54,270 --> 00:13:05,870
+This is not a normal window. This is like not a normal situation. Can you even can even customize this?
+
+116
+00:13:05,870 --> 00:13:10,580
+Window. Interesting.
+
+117
+00:13:10,580 --> 00:13:24,530
+It's a very strange situation. So, yeah, this is where I think the problem is, is I think we're we're opening this window incorrectly.
+
+118
+00:13:24,530 --> 00:13:40,220
+Um, if I run, let's see. Yeah, I mean, just run the browser instead of running the test.
+
+119
+00:13:40,220 --> 00:13:48,320
+Get rid of me. Open up the browser console, going to paste the exact same thing I'd put in the other browser console before.
+
+120
+00:13:48,320 --> 00:13:54,270
+All right, take that. We're putting here.
+
+121
+00:13:54,270 --> 00:13:59,750
+Interesting. See, like the window opens, but it doesn't have.
+
+122
+00:13:59,750 --> 00:14:11,510
+The location bar. That's really interesting.
+
+123
+00:14:11,510 --> 00:14:15,730
+So the location bar is missing and it definitely should not be missing.
+
+124
+00:14:15,730 --> 00:14:21,270
+So let's take a quick peek at the rules of this window.
+
+125
+00:14:21,270 --> 00:14:26,470
+We just opened because I have a feeling we calculated them wrong.
+
+126
+00:14:26,470 --> 00:14:30,520
+So the good news is I think we have this test. Failure is not just like a flaky test failure.
+
+127
+00:14:30,520 --> 00:14:38,380
+I think we've actually caught a bug in the code that I wrote the the the change I made.
+
+128
+00:14:38,380 --> 00:14:44,260
+So that's good. So I've said I believe I've selected this window to now inspect.
+
+129
+00:14:44,260 --> 00:14:47,770
+Like, if I were to inspect. Yeah. I can inspect it.
+
+130
+00:14:47,770 --> 00:14:57,220
+No problem. So I can actually look at the window object itself or pump up the font a little.
+
+131
+00:14:57,220 --> 00:15:03,640
+I can mine mine. No, you won't let me pump up the fun.
+
+132
+00:15:03,640 --> 00:15:11,620
+That's that's disappointing. Sorry. Chrom Hidden is toolbar location in directories.
+
+133
+00:15:11,620 --> 00:15:15,970
+That's that's an interesting part. The chrome hidden attribute we've got.
+
+134
+00:15:15,970 --> 00:15:22,510
+This is like the thing that's dictating this attribute on the windows, what dictates the things that are hidden.
+
+135
+00:15:22,510 --> 00:15:28,990
+In this case, we're hiding the menubar, the toolbar, the location, the directory is the status and extra chrome.
+
+136
+00:15:28,990 --> 00:15:35,250
+And in the normal case, whenever I do that over here.
+
+137
+00:15:35,250 --> 00:15:39,420
+Let me let me actually write this down in my notes.
+
+138
+00:15:39,420 --> 00:15:46,790
+So big set of notes, big chunk notes here.
+
+139
+00:15:46,790 --> 00:15:53,880
+Dun dun dun. OK, so the.
+
+140
+00:15:53,880 --> 00:16:02,830
+The interesting thing here was the chrom hidden attribute in the bad case is this.
+
+141
+00:16:02,830 --> 00:16:07,230
+And I know this funds' probably pretty small. Pump it up. Pump it up.
+
+142
+00:16:07,230 --> 00:16:12,570
+Pump the jam. OK. So that's in the bad case.
+
+143
+00:16:12,570 --> 00:16:17,780
+So we really call that a bad case. Chrome had chrome hidden.
+
+144
+00:16:17,780 --> 00:16:31,030
+The attribute is this. Now, in the good case, what is the chromate attribute?
+
+145
+00:16:31,030 --> 00:16:42,310
+Actually, I could do that just by. Doing this and then in the browser knew when.
+
+146
+00:16:42,310 --> 00:16:46,700
+Attribute. No new win the fall. What I want.
+
+147
+00:16:46,700 --> 00:16:51,980
+Document. Document. Element. Yeah.
+
+148
+00:16:51,980 --> 00:17:03,450
+Chrome hidden. Is this menubar toolbar? That stuff.
+
+149
+00:17:03,450 --> 00:17:10,290
+That looks a lot it's a lot like the same as it is.
+
+150
+00:17:10,290 --> 00:17:22,360
+No. Something different. Location. Is missing in a good case, so location is being hidden.
+
+151
+00:17:22,360 --> 00:17:26,840
+And it shouldn't be. OK. That's the problem now.
+
+152
+00:17:26,840 --> 00:17:33,440
+Now, we could actually, like, dig in and figure out why we're hiding the location.
+
+153
+00:17:33,440 --> 00:17:43,520
+So what do we actually do? Is I going to do a debug build? Actually, maybe I can get away with not doing in debug build.
+
+154
+00:17:43,520 --> 00:18:01,510
+In the background, I'll do a debug build. I don't want to waste too much time, but, uh oh, I've got I'm using this like Moore's config tool.
+
+155
+00:18:01,510 --> 00:18:10,300
+Mars config L. And I'm on debug mark build and now like, what is this one using Mars config.
+
+156
+00:18:10,300 --> 00:18:16,610
+No, Muscovy activated. Awesome. So Mark build we should be doing.
+
+157
+00:18:16,610 --> 00:18:23,030
+We should. This should build the debug build. So if you're confused about what I'm doing, it's doing Omeish Debug.
+
+158
+00:18:23,030 --> 00:18:29,700
+There's this tool called Moore's Config Wrapper they heard about while I was in London.
+
+159
+00:18:29,700 --> 00:18:41,520
+That you should totally use if you use multiple miles can. I mean, put a link to my agenda.
+
+160
+00:18:41,520 --> 00:18:49,650
+Config wrapper basically allows me to easily manage and switch between Maskin FAQ's without having you, like, set an environment variable,
+
+161
+00:18:49,650 --> 00:18:56,100
+which normally I've been doing, but I've just recently switched over to using mozz config wrapper, and I'm much happier with it.
+
+162
+00:18:56,100 --> 00:19:01,800
+So check it, Sukh. Okay, let's go back to this.
+
+163
+00:19:01,800 --> 00:19:08,760
+And unfortunately, the font size reset. So now I have to go back down here.
+
+164
+00:19:08,760 --> 00:19:13,500
+OK, so we've got this thing building in the background.
+
+165
+00:19:13,500 --> 00:19:24,030
+I'm going to monitor that over here. And while we're waiting for that, let's see if we can figure out why the location.
+
+166
+00:19:24,030 --> 00:19:30,520
+We think that location is being hidden. So.
+
+167
+00:19:30,520 --> 00:19:40,990
+And as window watcher calculate, chrome flags is like the important bit.
+
+168
+00:19:40,990 --> 00:19:47,780
+And I refactored it so that we call calculate Chrom Flag's helper.
+
+169
+00:19:47,780 --> 00:19:55,250
+Calculate chrome flags, helper. It's going to look for it's going to use calculate chrome flagon and location.
+
+170
+00:19:55,250 --> 00:20:05,030
+This is where it calculates whether or not to set the location flag.
+
+171
+00:20:05,030 --> 00:20:10,770
+Maybe I did this wrong on. Calculate conflict for locations.
+
+172
+00:20:10,770 --> 00:20:24,700
+Let's take a look at the definition here. We see whether or not it's supposed to be force enabled.
+
+173
+00:20:24,700 --> 00:20:37,700
+And what's the test says, location is yes, location should be yes, buddy.
+
+174
+00:20:37,700 --> 00:20:51,400
+We has an option, maybe it's I messed around with wind has option too much.
+
+175
+00:20:51,400 --> 00:21:00,420
+Options name. Found is one.
+
+176
+00:21:00,420 --> 00:21:13,450
+Hmm. Well, what I'll do. I'm going to run the test, but I'm going to do it in the debugger with the debugger.
+
+177
+00:21:13,450 --> 00:21:23,670
+How DP? I feel good.
+
+178
+00:21:23,670 --> 00:21:27,510
+I feel like we're on the right track here. I was worried before.
+
+179
+00:21:27,510 --> 00:21:33,660
+I thought we were about to go into like a downward spiral or a little like.
+
+180
+00:21:33,660 --> 00:21:42,380
+I thought it was Racey tests again. And that always takes forever. Who or second planners?
+
+181
+00:21:42,380 --> 00:21:47,870
+Maintenance. Maintenance Friday. Don't worry about, um.
+
+182
+00:21:47,870 --> 00:22:03,030
+So I'm going to set a break point in the parent and as window watcher, calculate chrome flags for child.
+
+183
+00:22:03,030 --> 00:22:15,330
+Calculate chrome flags, her child should be.
+
+184
+00:22:15,330 --> 00:22:24,000
+Yeah, when you watch, recalculate your micro flex for trial break, and that's when you want to calculate crohn flags for a child.
+
+185
+00:22:24,000 --> 00:22:30,720
+Well, maybe we need to, like, run. And then we'll attach that break point.
+
+186
+00:22:30,720 --> 00:22:34,200
+Probably, probably. Yeah.
+
+187
+00:22:34,200 --> 00:22:48,060
+There we go. Breakpoints added. Paw, paw, paw, paw, paw, paw, paw paw.
+
+188
+00:22:48,060 --> 00:22:53,160
+OK. Oh, hey, I did not.
+
+189
+00:22:53,160 --> 00:23:13,350
+I expected us to hit our break point, the Dealy. Break calculate crown flags.
+
+190
+00:23:13,350 --> 00:23:34,240
+Her child. Why are we not hitting my break point?
+
+191
+00:23:34,240 --> 00:23:43,190
+That's annoying. So I guess that'll be something we wait for from our debug build.
+
+192
+00:23:43,190 --> 00:23:52,640
+I could also use instead of LDV. I could use no auto round.
+
+193
+00:23:52,640 --> 00:23:57,600
+And then. Is going to start up.
+
+194
+00:23:57,600 --> 00:24:08,220
+Not this one, not seven to eight, a one, but.
+
+195
+00:24:08,220 --> 00:24:16,360
+Daily, nightly, nightly, nightly. Nightly, seventy three three nine seventy three, three nine seventy.
+
+196
+00:24:16,360 --> 00:24:21,590
+And I mean, open up X code. Maybe I'll attach my debugger there.
+
+197
+00:24:21,590 --> 00:24:38,260
+Oh, man, look at that C.P.U. Oh. So three three 970.
+
+198
+00:24:38,260 --> 00:24:44,610
+What is going on? Story of my life. OK.
+
+199
+00:24:44,610 --> 00:24:56,390
+And now here I am going to set my breakpoint. Now that I've attached all as well.
+
+200
+00:24:56,390 --> 00:25:09,900
+Window washer. Child.
+
+201
+00:25:09,900 --> 00:25:16,610
+Oh, you know what happened? I know why? Because it's not supposed to be calculate complex for our child.
+
+202
+00:25:16,610 --> 00:25:28,160
+It's calculate chrome flags for parent. That's what it is, because we're running in privilege scope.
+
+203
+00:25:28,160 --> 00:25:32,630
+Here we go. In this case, the dialog. We are a dialog.
+
+204
+00:25:32,630 --> 00:25:39,420
+We do have a crow mural. We do have Crow parent not called from Jass.
+
+205
+00:25:39,420 --> 00:25:47,900
+That's a strange. A call from Jackass is true here.
+
+206
+00:25:47,900 --> 00:25:58,200
+Why is a called from jazz false in year? One, two, three, four, after features.
+
+207
+00:25:58,200 --> 00:26:06,560
+On two, three, four. A call from J is true. Should definitely be true in here.
+
+208
+00:26:06,560 --> 00:26:14,990
+What? Why is a call from Charles false?
+
+209
+00:26:14,990 --> 00:26:20,270
+Maybe that's like a an optimization. This is an opt bill that we're looking at here.
+
+210
+00:26:20,270 --> 00:26:35,790
+I'm kind of cheating. So the question is, how come?
+
+211
+00:26:35,790 --> 00:26:54,110
+Oh, and then calculate chrome flags, helper is. Where the location is computers.
+
+212
+00:26:54,110 --> 00:27:01,600
+OK. Initial flags to.
+
+213
+00:27:01,600 --> 00:27:08,570
+The features is that string location is. Yes. And so.
+
+214
+00:27:08,570 --> 00:27:22,610
+When I go through each of these. Painfully, slowly.
+
+215
+00:27:22,610 --> 00:27:40,470
+I'm demanding much from my machine right now. I'm doing a bill. I'm streaming this whole thing and I'm debugging Firefox.
+
+216
+00:27:40,470 --> 00:27:52,130
+Kana. OK,
+
+217
+00:27:52,130 --> 00:27:58,010
+so the first thing we do is we make sure that we can get the preferences service and the
+
+218
+00:27:58,010 --> 00:28:04,640
+disable features pref branch because there are a number of features that users can disable.
+
+219
+00:28:04,640 --> 00:28:13,730
+Force enables false presence, flaggers false.
+
+220
+00:28:13,730 --> 00:28:21,720
+And then we see whether or not. I'm going to put a break point on that location, because that's what we really care about.
+
+221
+00:28:21,720 --> 00:28:43,170
+Let's just see how this thing behaves when we enter it for title bar.
+
+222
+00:28:43,170 --> 00:28:50,450
+Might not be working out because it's a macro and the OP bill may like in line some of the macro stuff,
+
+223
+00:28:50,450 --> 00:28:54,750
+or it's doing some optimization, which means that we can't really debug it nicely.
+
+224
+00:28:54,750 --> 00:28:58,530
+Shoot, huh? Good news, though.
+
+225
+00:28:58,530 --> 00:29:06,860
+The debug build is almost done. So, yeah, it's just it's approaching the linking stage.
+
+226
+00:29:06,860 --> 00:29:15,050
+So you know what, I'm going to stop it right there. This is not going to be fruitful.
+
+227
+00:29:15,050 --> 00:29:22,640
+Take it down, take it down. Let's see if I can free up some C.P.U to finish this build faster.
+
+228
+00:29:22,640 --> 00:29:34,660
+In the meantime, let's see if we can solve it by inspection. So. I'm calculating the chrome flags, the parent.
+
+229
+00:29:34,660 --> 00:29:42,190
+Features is not empty. So we start with chrome window borders.
+
+230
+00:29:42,190 --> 00:29:53,420
+It is a dialog. We don't have the all. And then we use calculate Crohn flags helper.
+
+231
+00:29:53,420 --> 00:30:12,860
+Have a feature string. And then here.
+
+232
+00:30:12,860 --> 00:30:35,350
+We get whether or not we're force enabling the feature. Check to see.
+
+233
+00:30:35,350 --> 00:30:41,150
+See whether or not we have. The location.
+
+234
+00:30:41,150 --> 00:30:55,040
+It looks like it should work. OK. Out of curiosity, I wonder if all the other one is a little more dubious because it fails intermittently.
+
+235
+00:30:55,040 --> 00:31:04,490
+But I wonder if, like, there's a similar window opening going on in this test as well with, like, feature strings.
+
+236
+00:31:04,490 --> 00:31:29,250
+Let's take a look at that. There is a feature string window opening.
+
+237
+00:31:29,250 --> 00:31:35,260
+No dice. Well, like that, we'll look at that one next. That's a pain in the butt.
+
+238
+00:31:35,260 --> 00:31:41,350
+But nothing jumps out of me. I don't think it's the same thing, but maybe it is maybe.
+
+239
+00:31:41,350 --> 00:31:52,100
+Snapshot canisters are not the same size. Maybe it's because the window decorations are not the same.
+
+240
+00:31:52,100 --> 00:32:01,530
+Changed to too much, just reorganized. How the flags are calculated to not, like, duplicate so much.
+
+241
+00:32:01,530 --> 00:32:06,840
+Well, while I'm waiting, maybe I can do some other stuff that I wanted to clean up like.
+
+242
+00:32:06,840 --> 00:32:15,510
+I've made this global static and, you know, I'd be better probably as.
+
+243
+00:32:15,510 --> 00:32:32,810
+Doing the following. First of all, where am I? I thought we were approaching linking.
+
+244
+00:32:32,810 --> 00:32:52,410
+But I was wrong. OK, we are are we at the patch that I want to be at?
+
+245
+00:32:52,410 --> 00:33:02,940
+Yes, this is the patch that I want to be at. To have any changes, probably a couple.
+
+246
+00:33:02,940 --> 00:33:22,700
+For the test. Some logging that I added.
+
+247
+00:33:22,700 --> 00:33:29,810
+And this was a Hail Mary attempt to the solution, which didn't actually the code never even ran.
+
+248
+00:33:29,810 --> 00:33:39,120
+So revert it. And then.
+
+249
+00:33:39,120 --> 00:33:43,040
+What I'll do instead is I'm going to clean up some of this stuff.
+
+250
+00:33:43,040 --> 00:33:48,150
+So. And that's window watch.
+
+251
+00:33:48,150 --> 00:33:57,130
+H. Window watcher Dot H.
+
+252
+00:33:57,130 --> 00:34:09,420
+That's the one. I've got a couple of these static methods defined, like calculate chrome flags helper, and I think what I'm going to do.
+
+253
+00:34:09,420 --> 00:34:24,840
+Is. Protected like.
+
+254
+00:34:24,840 --> 00:34:36,360
+Private eye might make them private. Static.
+
+255
+00:34:36,360 --> 00:35:03,040
+Casually. And then I can get around that.
+
+256
+00:35:03,040 --> 00:35:22,480
+And then these are. Like this.
+
+257
+00:35:22,480 --> 00:35:26,860
+Um, what else did I do that for sure, flag's safe for content.
+
+258
+00:35:26,860 --> 00:35:51,020
+Same thing. Sure.
+
+259
+00:35:51,020 --> 00:36:16,700
+Flags safe for content. I moved when has option.
+
+260
+00:36:16,700 --> 00:36:20,780
+I probably shouldn't have. I didn't need to probably move back.
+
+261
+00:36:20,780 --> 00:36:38,660
+Now. When has option got moved?
+
+262
+00:36:38,660 --> 00:36:59,670
+From. But back here.
+
+263
+00:36:59,670 --> 00:37:29,220
+It was a Catholic church. And then where was the actual definition of it?
+
+264
+00:37:29,220 --> 00:37:38,350
+When has option was put in after? This comment.
+
+265
+00:37:38,350 --> 00:37:48,570
+Whereas Scott. That's after. Calculate chrome flags for parent.
+
+266
+00:37:48,570 --> 00:38:00,250
+So when has options? Find.
+
+267
+00:38:00,250 --> 00:38:18,380
+At the top, you know, it's at the tops of. Calculate crime flags for a parent.
+
+268
+00:38:18,380 --> 00:38:54,930
+They're right, put it back underneath that. That should just work.
+
+269
+00:38:54,930 --> 00:39:00,520
+There'll be changes there. Just reorganizing some of the static methods work.
+
+270
+00:39:00,520 --> 00:39:12,180
+How we do it on this build. NACCHO is Link is compiling right now here.
+
+271
+00:39:12,180 --> 00:39:17,640
+I'll show you, show you. This is where we're at.
+
+272
+00:39:17,640 --> 00:39:24,630
+So, like, how can we interpret this? Some layout stuff.
+
+273
+00:39:24,630 --> 00:39:33,290
+Zuhal. But in particular, we've got like network protocol stuff is being compiled.
+
+274
+00:39:33,290 --> 00:39:44,600
+I don't know what's being compiled right now is taking forever. Expertize is like some of the, oh, embedding, printing stuff.
+
+275
+00:39:44,600 --> 00:39:48,680
+Yeah. I worked on some of that. I added that component.
+
+276
+00:39:48,680 --> 00:39:54,620
+I feel so guilty. I have guilt, feel shame.
+
+277
+00:39:54,620 --> 00:40:06,410
+So while we're waiting for this debug, build the finish, I don't really have any theories but on why this thing's failing.
+
+278
+00:40:06,410 --> 00:40:13,120
+So I'm going to switch tasks briefly and see if I can answer one of these neat info's while we wait for this.
+
+279
+00:40:13,120 --> 00:40:25,140
+Build the finish. So they need info is for this intermittent browser compartments.
+
+280
+00:40:25,140 --> 00:40:34,570
+Total time. It was like really frequent, intermittent failure.
+
+281
+00:40:34,570 --> 00:40:38,980
+So this is a Mac only intermittent that stopped for five months and resurfaced
+
+282
+00:40:38,980 --> 00:40:43,400
+on June 10th as Lennix pretty weird since I touched the code looking logs.
+
+283
+00:40:43,400 --> 00:40:47,850
+Well, let's see. A single patch was the center on that day. I guess everybody was in the plant. And you get close to this code.
+
+284
+00:40:47,850 --> 00:40:54,830
+Mike, do you know for changing vague any tests around these dates, changing infrastructure?
+
+285
+00:40:54,830 --> 00:41:12,610
+On June 10th. June 10th.
+
+286
+00:41:12,610 --> 00:41:26,020
+Chintan. I can't think of anything that happened in infrastructure. June 10.
+
+287
+00:41:26,020 --> 00:41:38,760
+What is happening around June 10th? Let me pull up my personal calendar. So, I mean, do that offscreen.
+
+288
+00:41:38,760 --> 00:41:59,850
+What's happening around June 10th? That's just before the trip to London.
+
+289
+00:41:59,850 --> 00:42:10,780
+Yes, the question is when we're contextual identities enabled by default.
+
+290
+00:42:10,780 --> 00:42:21,600
+Price. Was it to see?
+
+291
+00:42:21,600 --> 00:42:27,250
+Containers. What is it called, privacy?
+
+292
+00:42:27,250 --> 00:42:41,530
+Context. And perhaps he user context enable that's what it was.
+
+293
+00:42:41,530 --> 00:42:58,160
+When was that set? Ton v.
+
+294
+00:42:58,160 --> 00:43:05,890
+About a month ago and it was done. Twenty days on the 14th.
+
+295
+00:43:05,890 --> 00:43:13,710
+So now what even is this intermittent where intermittently failing, say check?
+
+296
+00:43:13,710 --> 00:43:23,890
+Total user time call is not. Is not Apostolos in that process something or other?
+
+297
+00:43:23,890 --> 00:43:35,630
+Oh, this has nothing to do with compartments, it's containers, its compartments.
+
+298
+00:43:35,630 --> 00:43:45,010
+Oh, geez. No, I can't think of anything. I'm afraid nothing sticks.
+
+299
+00:43:45,010 --> 00:44:06,740
+In memory. Do you know if we changed any?
+
+300
+00:44:06,740 --> 00:44:21,300
+Redirect, basically. So that's clear to medium build still going.
+
+301
+00:44:21,300 --> 00:44:27,360
+Well, UPS didn't mean open slack quit.
+
+302
+00:44:27,360 --> 00:44:32,940
+Clear that one out. Style.
+
+303
+00:44:32,940 --> 00:44:42,490
+I want to format it with a strike through. This one is next.
+
+304
+00:44:42,490 --> 00:44:49,700
+Weibe extension page causes Firefox shut down to hang. Only attach extension and about debating.
+
+305
+00:44:49,700 --> 00:44:57,840
+This is Bill M filed this one. Fantastic engineer, very proud to work with him.
+
+306
+00:44:57,840 --> 00:45:07,080
+The Prouse in action. I can washerman and you can quit hangs Slepian's message about such or hanging.
+
+307
+00:45:07,080 --> 00:45:12,580
+Have Flesher code, sends an async message to each browser window and waits for response merely after sends a message, we remove the tab.
+
+308
+00:45:12,580 --> 00:45:19,910
+I guess there's an argument that we shouldn't remove. Ext page that app shut down.
+
+309
+00:45:19,910 --> 00:45:41,040
+Any chance you could look at this? OK. Immediately after it sends the message, we remove the tab.
+
+310
+00:45:41,040 --> 00:46:01,890
+Tab State Flesch. Steve Flesher.
+
+311
+00:46:01,890 --> 00:46:18,200
+Solve. Just air clean up.
+
+312
+00:46:18,200 --> 00:46:49,500
+No. It crashed.
+
+313
+00:46:49,500 --> 00:46:54,550
+Hangs and eventually with specialist, specialist or hanging.
+
+314
+00:46:54,550 --> 00:47:13,290
+Tab Flesher code sends an async message to each browser window and waits for a response immediately after it sends the message, we remove the tab.
+
+315
+00:47:13,290 --> 00:47:20,030
+Any chance you could look this? I can take a peek.
+
+316
+00:47:20,030 --> 00:47:39,540
+So, I mean, I signed that to myself. Seeing Mike Boettcher recently become.
+
+317
+00:47:39,540 --> 00:47:51,040
+Make sure the right people know what's going on. And I'm going to add this to my cue.
+
+318
+00:47:51,040 --> 00:47:57,110
+All right. So many active bugs, a lot of these are out of date, need to go away.
+
+319
+00:47:57,110 --> 00:48:06,990
+So it's not like I have that many in my queue. I just need to clean them out.
+
+320
+00:48:06,990 --> 00:48:12,390
+Like Eton, I support the printing boom done on the way. It's still in there.
+
+321
+00:48:12,390 --> 00:48:19,080
+So I need the info is cleared. Oh.
+
+322
+00:48:19,080 --> 00:48:25,880
+This. Format, strikethrough.
+
+323
+00:48:25,880 --> 00:48:34,100
+Hello, called black ice. Welcome to the Irish Sea Channel. Sea.
+
+324
+00:48:34,100 --> 00:48:39,440
+We still building here like what's taken forever. What is going on?
+
+325
+00:48:39,440 --> 00:48:43,720
+Half an hour to do a clobber build. OK.
+
+326
+00:48:43,720 --> 00:48:48,880
+We already linked. Where? Where I think we linked so.
+
+327
+00:48:48,880 --> 00:49:00,920
+All the hard parts over, we just have to like. We're just finishing up, building some of the support libraries, some media stuff.
+
+328
+00:49:00,920 --> 00:49:12,460
+Maybe it's just because debug builds take forever to build. OK, well, let's maybe we can figure out one more need info before.
+
+329
+00:49:12,460 --> 00:49:18,510
+It's done. So if a bug was filed.
+
+330
+00:49:18,510 --> 00:49:24,870
+Oh, um. Not Ristau is non remote.
+
+331
+00:49:24,870 --> 00:49:29,310
+Do you want to upload this for 48 49? This patch is not too risky.
+
+332
+00:49:29,310 --> 00:49:39,960
+Scary. Jerry Chang. I'm not sure.
+
+333
+00:49:39,960 --> 00:49:46,140
+All right. I'm not sure this warrants an uplift.
+
+334
+00:49:46,140 --> 00:49:52,370
+I believe. That only a user.
+
+335
+00:49:52,370 --> 00:49:59,640
+I believe I use it. I believe this bug.
+
+336
+00:49:59,640 --> 00:50:10,750
+It's pretty hard to hit. This doesn't strike me as a common bug.
+
+337
+00:50:10,750 --> 00:50:17,600
+And if the user has ever resigned, especially especially because.
+
+338
+00:50:17,600 --> 00:50:27,930
+The user has ever resized a window. Resize the window, I believe.
+
+339
+00:50:27,930 --> 00:50:33,750
+We sidestepped the issue. It's only for new profiles.
+
+340
+00:50:33,750 --> 00:50:41,470
+I believe it's only for new profiles. At the SDR.
+
+341
+00:50:41,470 --> 00:50:49,610
+Cause the bug. This for forty nine four eight four.
+
+342
+00:50:49,610 --> 00:50:57,170
+Who is J. J. I see if I can find out who this is, just make sure I understand the full context.
+
+343
+00:50:57,170 --> 00:51:22,960
+I'll do that. A separate window. To me, Mario is a release manager.
+
+344
+00:51:22,960 --> 00:51:33,570
+It is low risk. However. So I called.
+
+345
+00:51:33,570 --> 00:51:46,580
+You know, either way, to be honest. Do you feel like it warrants uplift?
+
+346
+00:51:46,580 --> 00:52:08,250
+They're. Holy smokes.
+
+347
+00:52:08,250 --> 00:52:21,470
+This is like a windows build. This is taking forever. Well, we cleared out yet another need info.
+
+348
+00:52:21,470 --> 00:52:38,330
+So, I mean, strike this one awfullest. That's why you always have a backup plan, things to do, chores to do whenever your main chore is blocked.
+
+349
+00:52:38,330 --> 00:52:48,570
+Then you can't see that have it all right? You only see the plus button moving with no separators before it.
+
+350
+00:52:48,570 --> 00:53:00,000
+This year, continuous blurb of the text of three tabs, no separators between them from.
+
+351
+00:53:00,000 --> 00:53:05,670
+Good point. Nice. Good point. But no matter, our build is done.
+
+352
+00:53:05,670 --> 00:53:13,710
+Thank goodness. So now we maybe be able we might be able to get some answers.
+
+353
+00:53:13,710 --> 00:53:24,840
+So let's run our build. Let's run our Build Moki test.
+
+354
+00:53:24,840 --> 00:53:33,000
+What was the test? This one and no auto run it.
+
+355
+00:53:33,000 --> 00:53:42,610
+All right. Do exactly this. I use X code.
+
+356
+00:53:42,610 --> 00:53:57,950
+To attach to this process. No, not XP show, detached attach, right, attach.
+
+357
+00:53:57,950 --> 00:54:03,490
+Shoot. I didn't want to. Detach.
+
+358
+00:54:03,490 --> 00:54:08,200
+Detach. This one I wanted.
+
+359
+00:54:08,200 --> 00:54:48,150
+Six six, one five. All right. No.
+
+360
+00:54:48,150 --> 00:55:02,890
+Now I want to pause and end my break point. The one I want to break on was calculate chrome flags for parent.
+
+361
+00:55:02,890 --> 00:55:15,370
+And around. Right.
+
+362
+00:55:15,370 --> 00:55:26,410
+It's doing the whole test. Should modify the tests that we don't have to do that.
+
+363
+00:55:26,410 --> 00:55:37,070
+But what? Here we go. Calculate chrome flags for parent, and then we're going to, uh.
+
+364
+00:55:37,070 --> 00:55:43,910
+And in this case, yeah. Called from Jass is true. That's what I thought it was some kind of optimization.
+
+365
+00:55:43,910 --> 00:55:50,570
+Where for? So we're here. We have our flag.
+
+366
+00:55:50,570 --> 00:55:55,520
+We're going to calculate the flag for location.
+
+367
+00:55:55,520 --> 00:56:24,420
+But first, let's calculate it for title bar and see how it works. Tappet here.
+
+368
+00:56:24,420 --> 00:56:34,530
+I thought maybe we'd get inside the mind grow. Seriously, we're talking to inside a micro.
+
+369
+00:56:34,530 --> 00:56:40,740
+Let me. Out.
+
+370
+00:56:40,740 --> 00:57:06,380
+Out. Out. All right.
+
+371
+00:57:06,380 --> 00:57:14,990
+Well, we're not going to get inside the micro, unfortunately, but we're in to see whether or not the window has the option in reading.
+
+372
+00:57:14,990 --> 00:57:20,250
+So we're looking for a location in here. Yeah, this is the one we care about.
+
+373
+00:57:20,250 --> 00:57:30,740
+Somehow we skipped ahead wacky. How true.
+
+374
+00:57:30,740 --> 00:57:46,040
+Kamar. I set the calm up to be No.
+
+375
+00:57:46,040 --> 00:58:04,650
+Options. Now.
+
+376
+00:58:04,650 --> 00:58:10,900
+How I put it back. Oh, we're going through them one by one.
+
+377
+00:58:10,900 --> 00:58:17,360
+Karna options with Karplus one next. Next one should be.
+
+378
+00:58:17,360 --> 00:58:26,150
+Location, I think. It's dialog.
+
+379
+00:58:26,150 --> 00:58:35,620
+Sorry. Equal, it's gonna equal.
+
+380
+00:58:35,620 --> 00:58:47,840
+Yeah. Calls, no.
+
+381
+00:58:47,840 --> 00:59:02,180
+The next one is location. Options equals location equals.
+
+382
+00:59:02,180 --> 00:59:09,600
+Yes. Equal. OK, options.
+
+383
+00:59:09,600 --> 00:59:20,600
+OK. So we have matched presence flag, present flag is true if equal.
+
+384
+00:59:20,600 --> 00:59:26,630
+Close. That's not true. Does equals yes, found equals one.
+
+385
+00:59:26,630 --> 00:59:50,260
+So found is one found should equal one. Yes. If found so, we should break out now.
+
+386
+00:59:50,260 --> 00:59:57,150
+So then the chrome flags should have should change.
+
+387
+00:59:57,150 --> 01:00:02,450
+Initial flags, chrome flags are now, too.
+
+388
+01:00:02,450 --> 01:00:09,590
+So then they should change. Yes.
+
+389
+01:00:09,590 --> 01:00:16,160
+Yes, they did change. Should have the location flags set now.
+
+390
+01:00:16,160 --> 01:00:52,860
+That worked properly. So the flags that we end up with ours is 66.
+
+391
+01:00:52,860 --> 01:01:05,570
+When has option features scroll bars? Prisoners fly.
+
+392
+01:01:05,570 --> 01:01:09,800
+Desk. How come we didn't?
+
+393
+01:01:09,800 --> 01:01:47,910
+And the Chrome ad, the chrome scroll bars like we should have.
+
+394
+01:01:47,910 --> 01:01:58,600
+If Wynne has option, scrollbar is. Or it's not their.
+
+395
+01:01:58,600 --> 01:02:08,740
+Does it extroverts, do we in the test? Never say anything to us presence flag here.
+
+396
+01:02:08,740 --> 01:02:18,460
+Presence flight was true. Scroll bars, isn't it, here?
+
+397
+01:02:18,460 --> 01:02:45,580
+Oh, no. I somehow screwed up this macro.
+
+398
+01:02:45,580 --> 01:03:30,430
+Get bull press. If force enable. And oh, I must've screwed it up a little bit.
+
+399
+01:03:30,430 --> 01:03:40,200
+We're doing that. Wait.
+
+400
+01:03:40,200 --> 01:03:44,760
+No, no. We must have called. When has option? This is all wrong.
+
+401
+01:03:44,760 --> 01:03:56,670
+This. When has option? Sorry.
+
+402
+01:03:56,670 --> 01:04:04,860
+It's very warm in here as well. And, uh.
+
+403
+01:04:04,860 --> 01:04:10,280
+Private. I disable this for now.
+
+404
+01:04:10,280 --> 01:04:40,420
+Until we can rerun this. Close.
+
+405
+01:04:40,420 --> 01:04:46,490
+Carlos. OK, now I read it again.
+
+406
+01:04:46,490 --> 01:04:55,300
+Oh, no. It's going to run this part. Yeah, I'm going to modify the test that in the future would opt to run that part.
+
+407
+01:04:55,300 --> 01:05:11,440
+Just text us. These are the features Chrome dialog is no location.
+
+408
+01:05:11,440 --> 01:05:22,720
+Goolsbee asked two articles now. What?
+
+409
+01:05:22,720 --> 01:05:31,580
+I had never met. I never re-enable library point.
+
+410
+01:05:31,580 --> 01:05:40,290
+That's prowar. Dude, again, it's time we got to rename my breakpoint.
+
+411
+01:05:40,290 --> 01:06:08,210
+We has option. Do it.
+
+412
+01:06:08,210 --> 01:06:19,970
+Oh, my goodness. Come on. When is you hold up?
+
+413
+01:06:19,970 --> 01:06:44,540
+Do we hit the point? Sig trap what?
+
+414
+01:06:44,540 --> 01:06:55,600
+I mean, we know it's happening. Come on. Still running here.
+
+415
+01:06:55,600 --> 01:07:06,720
+We must've crashed. What happened?
+
+416
+01:07:06,720 --> 01:07:11,490
+Browser existed for some reason. Oh, I think it thought the test was done.
+
+417
+01:07:11,490 --> 01:07:22,170
+I think the test timed out so it killed us. Great. Stewart again.
+
+418
+01:07:22,170 --> 01:07:26,370
+It's time gonna be a little more. Vigorous.
+
+419
+01:07:26,370 --> 01:07:41,670
+I think. Attached to.
+
+420
+01:07:41,670 --> 01:08:27,700
+Process. Do it.
+
+421
+01:08:27,700 --> 01:08:32,910
+Well, how am I attached to SPC Shell again? Come on, come on.
+
+422
+01:08:32,910 --> 01:08:57,110
+What is going on here? Parent. Six. Six. Three, four, six.
+
+423
+01:08:57,110 --> 01:09:08,180
+SABL, great point. Uh. Do it, close the taps.
+
+424
+01:09:08,180 --> 01:09:13,910
+Come on, you're killing me. You're killing me, OK? Now re-enable the break point.
+
+425
+01:09:13,910 --> 01:09:25,850
+And Ron. The joy of coding where everything is fighting against you.
+
+426
+01:09:25,850 --> 01:09:39,510
+So one thing that. I know.
+
+427
+01:09:39,510 --> 01:09:52,870
+It is whether or not we calculate this correctly.
+
+428
+01:09:52,870 --> 01:10:15,080
+Presence flags false. Title bar.
+
+429
+01:10:15,080 --> 01:10:33,970
+Title bar is not in their. Clothes on their toolbar is in there, so we should see a No.
+
+430
+01:10:33,970 --> 01:10:54,680
+Found. Hair or sought to.
+
+431
+01:10:54,680 --> 01:11:12,290
+Come on. And then this should have set the flag. Meanwhile. Presence flag has been set to true.
+
+432
+01:11:12,290 --> 01:11:19,960
+OK. Personal bar or any other ones?
+
+433
+01:11:19,960 --> 01:11:28,450
+Chromed. OK, so I'm going to go forward, disable this breakpoint till we hit the scrollbar one.
+
+434
+01:11:28,450 --> 01:11:35,800
+Now, I wanted to re-enable that break point. I mean, a step in.
+
+435
+01:11:35,800 --> 01:11:54,130
+So do you have a scroll bars? I've been reading.
+
+436
+01:11:54,130 --> 01:12:08,230
+And it's going to find that it never finds it. Presidents fly.
+
+437
+01:12:08,230 --> 01:12:16,190
+Is pointed at true right now. Presence flag never gets set.
+
+438
+01:12:16,190 --> 01:12:21,010
+False. Well, that's a bug.
+
+439
+01:12:21,010 --> 01:12:41,310
+That's the problem. Presence flag is never set to force.
+
+440
+01:12:41,310 --> 01:13:07,280
+She probably defaulted to force to begin with. So that's one problem.
+
+441
+01:13:07,280 --> 01:13:26,930
+Have a presence fly. The scrollbar problem still then, like we have set the flag like we have at this point,
+
+442
+01:13:26,930 --> 01:13:33,710
+when we go back to calculate Crohn flags helper, we've got a chrome flags of 66.
+
+443
+01:13:33,710 --> 01:13:37,970
+And that's what's going to get returned. Whoa, x code.
+
+444
+01:13:37,970 --> 01:13:47,210
+Calm yourself. Calm yourself. And a chrome flags of 66.
+
+445
+01:13:47,210 --> 01:13:52,150
+I mean, decimal to binary.
+
+446
+01:13:52,150 --> 01:14:04,960
+We look at 66. These two flags.
+
+447
+01:14:04,960 --> 01:14:20,580
+And the. Location one, was that the one we were worried about, location, crome, location.
+
+448
+01:14:20,580 --> 01:14:28,420
+Zero zero four. Oh. And hacks are now in binary.
+
+449
+01:14:28,420 --> 01:14:35,890
+So that should be probably this one, which is which bit in zero.
+
+450
+01:14:35,890 --> 01:14:44,830
+One, two, three, four, five, sixth in.
+
+451
+01:14:44,830 --> 01:14:49,070
+40. Oh, wait.
+
+452
+01:14:49,070 --> 01:14:55,070
+Wait a second. Hold on. Am I doing this wrong? Should be the hex value.
+
+453
+01:14:55,070 --> 01:15:07,720
+I think this is Hex. Not 40.
+
+454
+01:15:07,720 --> 01:15:17,490
+My brain, it's so hot in here. Convert programmer Hex.
+
+455
+01:15:17,490 --> 01:15:26,420
+Yes. Forty in binary.
+
+456
+01:15:26,420 --> 01:15:34,030
+Show me in binary. A waps cheese.
+
+457
+01:15:34,030 --> 01:15:39,130
+Well, this is actually him. Yeah. One, two, three zero, one, two, three, four, five, six.
+
+458
+01:15:39,130 --> 01:15:47,960
+Yeah. So the right bit is flipped. The correct bit is flipped.
+
+459
+01:15:47,960 --> 01:15:57,350
+This one. Wait, is it.
+
+460
+01:15:57,350 --> 01:16:04,570
+66. I mean, yeah, it is.
+
+461
+01:16:04,570 --> 01:16:17,930
+It is. So I would expect the location bar to not be in the.
+
+462
+01:16:17,930 --> 01:16:24,910
+And the Rome hidden. Attribute.
+
+463
+01:16:24,910 --> 01:16:31,480
+Yes, it is. So let's see what's going on Krom location.
+
+464
+01:16:31,480 --> 01:16:38,210
+Whereas that used Chrome vocation bar. Get visibility flag.
+
+465
+01:16:38,210 --> 01:16:48,910
+Watch your Web show window. We'll take a look at that at.
+
+466
+01:16:48,910 --> 01:16:53,800
+This one here. Apply chrome flags.
+
+467
+01:16:53,800 --> 01:17:12,790
+We're on a break here. At that point.
+
+468
+01:17:12,790 --> 01:17:18,820
+So what are the chrome flags and chrome flags, palm chrome flags?
+
+469
+01:17:18,820 --> 01:17:35,260
+Is that this sort of gobbledygook? And if we convert that to decimal aren't binary what our bit was, our bit was removed.
+
+470
+01:17:35,260 --> 01:17:46,570
+That's a problem. The chrome flags that got set.
+
+471
+01:17:46,570 --> 01:18:02,910
+We never said. By calling it wrong, help her.
+
+472
+01:18:02,910 --> 01:18:24,320
+Flagg's. Calculate chrome flags for parent.
+
+473
+01:18:24,320 --> 01:18:31,720
+OK, so continue. That's really interesting.
+
+474
+01:18:31,720 --> 01:18:42,510
+The wrong chrome flags are being stashed. The ones that we calculated weren't. Being set.
+
+475
+01:18:42,510 --> 01:19:02,410
+What's the deal here? OK, so let's do it again, but this time, did you.
+
+476
+01:19:02,410 --> 01:19:09,960
+Are you killing it? Time out. You know.
+
+477
+01:19:09,960 --> 01:19:14,820
+Yes. Yeah.
+
+478
+01:19:14,820 --> 01:19:23,460
+All right. You killed it. All right. Chrome flags aren't being set correctly.
+
+479
+01:19:23,460 --> 01:19:28,470
+Why not? OK, well, one thing I'm going to do right now is no.
+
+480
+01:19:28,470 --> 01:19:51,890
+Instead of writing the test, I'm going to run. I ran just with my profile.
+
+481
+01:19:51,890 --> 01:20:01,630
+No way we won't have it killing us, taking us down every time.
+
+482
+01:20:01,630 --> 01:20:29,050
+Attached parent. A break.
+
+483
+01:20:29,050 --> 01:20:42,550
+I think open window internal. This old chestnut.
+
+484
+01:20:42,550 --> 01:20:54,540
+And now I'm going to say that until. Sales center.
+
+485
+01:20:54,540 --> 01:21:01,530
+Man. What happened? I can't do my work.
+
+486
+01:21:01,530 --> 01:21:24,330
+Here we go. Well, some of these things down.
+
+487
+01:21:24,330 --> 01:21:34,030
+Wake up. SMERSH.
+
+488
+01:21:34,030 --> 01:21:55,440
+Oh, yes. Why are you so expensive? Tax cuts taps memory.
+
+489
+01:21:55,440 --> 01:22:00,880
+I have a virtual box running. Oh, my goodness.
+
+490
+01:22:00,880 --> 01:22:04,600
+You know what? I think I have a doctor running Dr Virtual Box right now.
+
+491
+01:22:04,600 --> 01:22:12,510
+Probably help if I shut that down. Doctor machine. Help, Dr. Machine.
+
+492
+01:22:12,510 --> 01:22:18,710
+Uh, stop, stop, stop. Stop the machine.
+
+493
+01:22:18,710 --> 01:22:32,440
+Her machine stop. Default. I just reclaim a bunch of memory.
+
+494
+01:22:32,440 --> 01:22:40,270
+I did Wicked. All right.
+
+495
+01:22:40,270 --> 01:22:50,860
+Now, I will. This is done. I will open your browser console, paste my.
+
+496
+01:22:50,860 --> 01:23:12,600
+String. This is painful.
+
+497
+01:23:12,600 --> 01:23:28,260
+Painfully slow. Shot at the brass.
+
+498
+01:23:28,260 --> 01:24:02,800
+Oh, that's why it's painfully slow. Yeah. And allow. And now I will re-enable the break point.
+
+499
+01:24:02,800 --> 01:24:18,100
+OK. We're here. The calculations of chrome flags happens down here can continue.
+
+500
+01:24:18,100 --> 01:24:25,600
+Our chrome flags start out as what? Zero.
+
+501
+01:24:25,600 --> 01:24:35,890
+Enter here. Pretty sure this calculates it correctly.
+
+502
+01:24:35,890 --> 01:24:40,640
+At this point, we get chrome flags as to.
+
+503
+01:24:40,640 --> 01:25:02,670
+And then eventually. We get past all this.
+
+504
+01:25:02,670 --> 01:25:23,450
+It's now Chrome Flags is 66, as we would expect. Chrome flags is now this value, which is probably okay.
+
+505
+01:25:23,450 --> 01:25:51,650
+Um. We stole that bit there.
+
+506
+01:25:51,650 --> 01:25:58,790
+I want to know four nine, six seventy. Still good.
+
+507
+01:25:58,790 --> 01:26:03,520
+You know what, I'll bet it is. I'll bet it's in the safety thing, I added.
+
+508
+01:26:03,520 --> 01:26:14,530
+To ensure Flagg's safer content. So now chrome flags are this.
+
+509
+01:26:14,530 --> 01:26:20,050
+Two one four seven four eight three six four nine oh.
+
+510
+01:26:20,050 --> 01:26:24,640
+No, they're not. They got cleared out sometime between here and there.
+
+511
+01:26:24,640 --> 01:26:49,510
+Interesting. How did that happen?
+
+512
+01:26:49,510 --> 01:26:56,430
+His dialog, true dialog is true. And.
+
+513
+01:26:56,430 --> 01:27:11,190
+Not features is empty. We do this. E equals sign, we erase everything we calculated over here.
+
+514
+01:27:11,190 --> 01:27:23,170
+Well, that's what's going on. Why would we do that?
+
+515
+01:27:23,170 --> 01:27:46,160
+He bit mask's. I believe in the preexisting code.
+
+516
+01:27:46,160 --> 01:28:16,470
+And feature specified. And not presence fly.
+
+517
+01:28:16,470 --> 01:28:30,700
+When this. It's happened a long time ago and ability to win watch open windows about parents.
+
+518
+01:28:30,700 --> 01:28:49,010
+I added this part, shoot. Oh, God. What? What did I do?
+
+519
+01:28:49,010 --> 01:28:59,150
+I do. Sure.
+
+520
+01:28:59,150 --> 01:29:12,070
+And if you're a we're actually over anchor funds from default, which charge you if the callers fight five feature string when opening a dialog.
+
+521
+01:29:12,070 --> 01:29:26,520
+Get rid of a short circuit that was worse than topicality, realize that it is time for opening down the return early.
+
+522
+01:29:26,520 --> 01:29:36,620
+It's because he of training in Ramona right now. We fall through the conditional I'm changing overwrites confines here is short circuited case.
+
+523
+01:29:36,620 --> 01:29:54,620
+Opening a dialog. The conditional I'm changing overwrites the chrome flags in the original short circuited case.
+
+524
+01:29:54,620 --> 01:30:24,940
+No feature string opens the dialog. Originally on the top of that, would detective your opening a dialog and return early.
+
+525
+01:30:24,940 --> 01:30:30,580
+I think we're we're honing in on the root of the matter once we figured this out and I want to get this test passing passing.
+
+526
+01:30:30,580 --> 01:30:41,770
+I think I won't call the episode right there before we were doing is if there were no features.
+
+527
+01:30:41,770 --> 01:30:48,370
+If we were a dialog, we would do these things and we would return early.
+
+528
+01:30:48,370 --> 01:31:32,570
+There were no features. Now, in this patch, I mean, it's that if there were no features and we were a dialog, but then we would keep going.
+
+529
+01:31:32,570 --> 01:31:51,530
+And that opened this bug. And so I wrote this.
+
+530
+01:31:51,530 --> 01:31:57,710
+Over in Chrome Five's chrome default, we should only do if the cars provide features string.
+
+531
+01:31:57,710 --> 01:32:24,820
+When opening a dialog. Why would we ever want to do this?
+
+532
+01:32:24,820 --> 01:34:05,350
+Chrome default. To continue here.
+
+533
+01:34:05,350 --> 01:34:12,430
+Why is the presence flag necessary? We essentially overwrite everything we've done.
+
+534
+01:34:12,430 --> 01:34:21,710
+Here for opening up a dialog. Why?
+
+535
+01:34:21,710 --> 01:34:28,180
+Why do we do that? That doesn't make any sense.
+
+536
+01:34:28,180 --> 01:34:33,190
+How did this ever work? I guess that's the next question.
+
+537
+01:34:33,190 --> 01:34:41,890
+If I debug if I do a build. From before my patches, how does this work?
+
+538
+01:34:41,890 --> 01:34:50,050
+A. Kill and then shelve my changes.
+
+539
+01:34:50,050 --> 01:34:56,810
+I'm going to go back before my change, I can run my test again or my.
+
+540
+01:34:56,810 --> 01:35:09,690
+A shell that. Don't have to deal with how the evolving.
+
+541
+01:35:09,690 --> 01:35:19,110
+Let's go down to. Here.
+
+542
+01:35:19,110 --> 01:35:33,980
+Let's build this up. Oh, hey, we're doing debug build.
+
+543
+01:35:33,980 --> 01:36:01,480
+Hopefully this won't take too too long and we'll see what we normally do.
+
+544
+01:36:01,480 --> 01:36:24,920
+And in the meantime, maybe we can answer another need info.
+
+545
+01:36:24,920 --> 01:36:29,000
+So this tab separator thing, originally, my idea was, if it makes sense to hide the tab,
+
+546
+01:36:29,000 --> 01:36:33,560
+separate as before and after a tab that is aname, that maybe sidestep this a little.
+
+547
+01:36:33,560 --> 01:36:37,550
+Then you'd see you can't see the tab at all. Right. You only see the plus button moving.
+
+548
+01:36:37,550 --> 01:36:40,790
+No separator before it. I'll see that.
+
+549
+01:36:40,790 --> 01:36:59,230
+Weird for closing times. Meanwhile, U.S. continues blurb of the text of three tabs with no separation between them for a bit.
+
+550
+01:36:59,230 --> 01:37:09,970
+Yeah. Yeah, that's accurate.
+
+551
+01:37:09,970 --> 01:37:21,110
+I think, my dear, was a little half baked. It doesn't make sense to me that tab separator ever displays on top of the new tab
+
+552
+01:37:21,110 --> 01:37:24,960
+button that shouldn't even be ever be physically possible in terms of margins.
+
+553
+01:37:24,960 --> 01:37:42,480
+Patty involved feels like we're missing something. Well, let's take a look here.
+
+554
+01:37:42,480 --> 01:38:08,730
+It's happening. Well, a new tab button is, I think, transparent.
+
+555
+01:38:08,730 --> 01:38:34,140
+Save for the outlying. Safe.
+
+556
+01:38:34,140 --> 01:38:44,440
+Do we know that the separator. It's actually appearing on top of the.
+
+557
+01:38:44,440 --> 01:38:51,360
+Tab, a new tab button. The screen shot doesn't make.
+
+558
+01:38:51,360 --> 01:38:57,430
+It's super clear since from what I remember.
+
+559
+01:38:57,430 --> 01:39:03,140
+The new tab button is transparent. Even on hover.
+
+560
+01:39:03,140 --> 01:39:20,930
+Has a transparent background. And just shows an outline when clicked when Hubbard.
+
+561
+01:39:20,930 --> 01:39:40,320
+Perhaps we're seeing a Tab's separator leaking through that transparency.
+
+562
+01:39:40,320 --> 01:39:50,180
+I know that's very helpful.
+
+563
+01:39:50,180 --> 01:39:59,760
+OK, linking Zul almost done this other debug build, and because I'm using C cache, it'll be May, it'll be much cheaper to go back and forth.
+
+564
+01:39:59,760 --> 01:40:17,920
+Oh, it is warm in here. I'm just going to open this just a little bit, get some air flowing because holy smokes, it is cooking.
+
+565
+01:40:17,920 --> 01:40:24,990
+OK. So what we were going to do is figure out now that I've loaded up all of my non like loaded
+
+566
+01:40:24,990 --> 01:40:33,380
+up everything before the changes I had made is to figure what we normally do whenever.
+
+567
+01:40:33,380 --> 01:40:43,670
+For this line right here. Like, because we do all these calculations and then was just like normally throw them away right here.
+
+568
+01:40:43,670 --> 01:41:28,400
+That's my question. Slot's. Let's find out.
+
+569
+01:41:28,400 --> 01:42:16,080
+Scaling debug build, not surprising.
+
+570
+01:42:16,080 --> 01:42:36,970
+My goodness. Come on. Open up browser console, yet Raida attach to the parent.
+
+571
+01:42:36,970 --> 01:42:42,090
+To get rid of all my existing break points, actually.
+
+572
+01:42:42,090 --> 01:42:57,720
+Um. But I'm going to find what was it, line 16, 90.
+
+573
+01:42:57,720 --> 01:43:02,370
+Right here and here.
+
+574
+01:43:02,370 --> 01:43:17,200
+I swear I'm going to break. Wow.
+
+575
+01:43:17,200 --> 01:43:23,270
+Here we go. Hey, fellas, when I come and say hi, you want to live stream?
+
+576
+01:43:23,270 --> 01:43:29,670
+Know almost almost there are some people who are outside.
+
+577
+01:43:29,670 --> 01:43:35,790
+I want to try and rope them in. I heard them briefly.
+
+578
+01:43:35,790 --> 01:43:42,800
+OK. Where am I? Am I attached to the process? I'm not even attached to the process.
+
+579
+01:43:42,800 --> 01:44:08,590
+I do that. Seven, eight, nine, one seven. Here we go.
+
+580
+01:44:08,590 --> 01:44:21,700
+Spinning, spinning, spinning. OK. So at this point, we had calculated some chrome flags at ten forty five, seventy eight and then.
+
+581
+01:44:21,700 --> 01:44:26,020
+We get through all those other ones. Ten, four, eight, six, forty two.
+
+582
+01:44:26,020 --> 01:44:32,880
+So if we. That sounds familiar. Nope. Not that I want the calculator.
+
+583
+01:44:32,880 --> 01:44:41,120
+Forty eight. Six. Forty two. So we've got. Yeah. That appropriate bid that we want.
+
+584
+01:44:41,120 --> 01:44:50,520
+And. Presence flag is true.
+
+585
+01:44:50,520 --> 01:44:56,670
+That's the thing. And that's why we skip over it.
+
+586
+01:44:56,670 --> 01:45:02,560
+What? Presence flag is true.
+
+587
+01:45:02,560 --> 01:45:20,180
+So we skip over. What does that piece of information mean?
+
+588
+01:45:20,180 --> 01:45:34,560
+Because that's the thing that's changed everything. Presence fly.
+
+589
+01:45:34,560 --> 01:45:52,580
+Let's see if we can scope out the provenance of this presence flag using search Fox to take us back to the beginning of time.
+
+590
+01:45:52,580 --> 01:46:08,660
+Pierre-Paul. Broken windows are the parents way back in the day, Hyatt.
+
+591
+01:46:08,660 --> 01:46:32,460
+Oh, my goodness. These are old names. So what happens is.
+
+592
+01:46:32,460 --> 01:46:44,330
+And its presence flag thing. First, we have cocaine, the president's brother is a small chrom, is not explicitly mentioned, is off.
+
+593
+01:46:44,330 --> 01:46:53,130
+He just trains not no. Dialogs turn a mostly empty feature stream.
+
+594
+01:46:53,130 --> 01:46:57,410
+I mean, is choice and all flags. So I.
+
+595
+01:46:57,410 --> 01:47:05,620
+The stairs pilot window open. Presence.
+
+596
+01:47:05,620 --> 01:47:25,910
+So that's one presence flag was added. Now. Currently, advocates have seen window opening chances way back in the day.
+
+597
+01:47:25,910 --> 01:47:48,050
+Oh, my goodness, methods a bunch of initialized variables.
+
+598
+01:47:48,050 --> 01:47:55,790
+So looks like the presence of. Stuff.
+
+599
+01:47:55,790 --> 01:48:05,900
+Any of those things is important. So maybe that's what I should be passing along in my patch.
+
+600
+01:48:05,900 --> 01:48:19,280
+Like. And I definitely I think the change I made where I'm like, well, just like I said, the presence flowed to false is wrong.
+
+601
+01:48:19,280 --> 01:48:29,950
+And I. I think I need to document when Presence Flag is for me is really not clear.
+
+602
+01:48:29,950 --> 01:48:42,830
+Chelle. Flagg's help her.
+
+603
+01:48:42,830 --> 01:49:07,140
+And presence flag is used here. Chrome flags helper.
+
+604
+01:49:07,140 --> 01:49:45,700
+Presence. Friends fly.
+
+605
+01:49:45,700 --> 01:49:49,790
+Reference giraffe. Ah. Yeah.
+
+606
+01:49:49,790 --> 01:50:19,880
+Presidents fly. So it's value.
+
+607
+01:50:19,880 --> 01:50:35,470
+Mark, Bill, now. If this fixes it, I have some explaining to do.
+
+608
+01:50:35,470 --> 01:51:10,710
+But Presence Flag have to write some documentation that is horrifying.
+
+609
+01:51:10,710 --> 01:51:18,130
+Just waiting for this bill to finish. Maybe we can do another need info.
+
+610
+01:51:18,130 --> 01:51:39,810
+Wait, wait. Let's try this one. Tab switching under load.
+
+611
+01:51:39,810 --> 01:51:44,790
+So this is something blast. Who is working on you try to interact with the browser while it's one perhaps doing something that slows down?
+
+612
+01:51:44,790 --> 01:51:50,190
+We should start measuring that near. We have a couple of things. The pilot in your address about the data that you upfield.
+
+613
+01:51:50,190 --> 01:51:53,930
+I'd rather I'd like data rather than yepp, feels better. So I try not to cheat.
+
+614
+01:51:53,930 --> 01:52:00,360
+Losing wins. We get by accidently aggressing. Replace the about Blanck steady state tab with one that puts the contour process under heavy load.
+
+615
+01:52:00,360 --> 01:52:03,920
+There's a lot of video room to quibble here. The workload is almost a half percent jass.
+
+616
+01:52:03,920 --> 01:52:16,770
+With this patch, we excise other areas. They'll find us with shatteringly squaller.
+
+617
+01:52:16,770 --> 01:52:19,170
+Not in this approach, perhaps just need a bit more convincing.
+
+618
+01:52:19,170 --> 01:52:23,040
+We're going to block the rendering look for 2000 milliseconds at an arbitrary point, the event.
+
+619
+01:52:23,040 --> 01:52:25,440
+This will make this test very noisy, I think.
+
+620
+01:52:25,440 --> 01:52:31,900
+Perhaps we'll make it by motile, perhaps multimodal based eight times yet to flush the event loop coastal responses,
+
+621
+01:52:31,900 --> 01:52:39,050
+which it has in its heart, kind of. That's what we're doing here. Paice, which measures the time until it's complete.
+
+622
+01:52:39,050 --> 01:52:52,230
+Is in chrome presses like in our consciousness, like. It's really measured the number of round trips maker on a value that's under load.
+
+623
+01:52:52,230 --> 01:53:08,260
+I don't think that's where it's coming from. Well, the conference is pure motivational agents have a remote.
+
+624
+01:53:08,260 --> 01:53:17,920
+Let's take a look at this patch. Switch between Tab's.
+
+625
+01:53:17,920 --> 01:53:58,000
+Yes, load. No cash.
+
+626
+01:53:58,000 --> 01:54:12,360
+And load equals false. Ad load, then.
+
+627
+01:54:12,360 --> 01:54:28,200
+They should have. Low Dorridge, Tamao.
+
+628
+01:54:28,200 --> 01:54:56,740
+Yeah, and it's learn the content process. Is this is this test meaningful in Naani tennis?
+
+629
+01:54:56,740 --> 01:55:10,410
+Like, I don't expect us, I like, oh, are we doing work or do we care about measuring?
+
+630
+01:55:10,410 --> 01:55:27,040
+Tab switch under load. Nine, eight, 10 s case.
+
+631
+01:55:27,040 --> 01:55:37,550
+Is that a thing we could. Off the top of my head.
+
+632
+01:55:37,550 --> 01:56:01,140
+I don't see that being. We do care engines, uh, if not, we might want to make this somehow to us only.
+
+633
+01:56:01,140 --> 01:56:10,400
+Ski. HST about.
+
+634
+01:56:10,400 --> 01:56:22,760
+Evil function all too busy while loop. And then it's going to flip back and it's going to what?
+
+635
+01:56:22,760 --> 01:56:52,570
+After oh. It's going to flip flop the colors of the page after the weight count.
+
+636
+01:56:52,570 --> 01:57:36,020
+Set interval here. Yes. Hang on.
+
+637
+01:57:36,020 --> 01:57:55,750
+Arbitrary point in the event lives make this very noisy. I agree that because this because Lowed died aged Shimaa is likely.
+
+638
+01:57:55,750 --> 01:58:04,720
+I agree that because it is just. Going and getting busy is.
+
+639
+01:58:04,720 --> 01:58:15,020
+Busy when? Becomes busy as soon as.
+
+640
+01:58:15,020 --> 01:58:23,770
+Possible. And repeats as soon as possible.
+
+641
+01:58:23,770 --> 01:58:45,010
+We run the risk. We created Ben.
+
+642
+01:58:45,010 --> 01:58:57,940
+Because because of physiotherapy as soon as possible, you don't really have a nice way of.
+
+643
+01:58:57,940 --> 01:59:15,460
+We don't really have a nice way of. Knowing when the event will be freed.
+
+644
+01:59:15,460 --> 01:59:20,350
+I think that the point. Uh, uh.
+
+645
+01:59:20,350 --> 01:59:27,700
+I worry that this will introduce noise. I also worry that this will introduce noise.
+
+646
+01:59:27,700 --> 01:59:37,900
+Perhaps instead is. We could send a message down to the initial tab.
+
+647
+01:59:37,900 --> 01:59:46,720
+After we've switched to the. After weeks.
+
+648
+01:59:46,720 --> 01:59:53,300
+Perhaps we could do this instead. Load.
+
+649
+01:59:53,300 --> 02:00:06,220
+The Tepes that T.P five set to load the busy page in the initial tab, but don't kick off.
+
+650
+02:00:06,220 --> 02:00:12,430
+Busy activities here at. Three.
+
+651
+02:00:12,430 --> 02:00:17,980
+Switch to one page in the TV five set.
+
+652
+02:00:17,980 --> 02:00:24,550
+Switch to a tab. MI five said.
+
+653
+02:00:24,550 --> 02:00:31,960
+For. Send a message to the busy page.
+
+654
+02:00:31,960 --> 02:00:38,020
+To paint. Busy page to get busy.
+
+655
+02:00:38,020 --> 02:00:58,620
+And then switch to it. Once busy, Paige has painted.
+
+656
+02:00:58,620 --> 02:01:10,560
+Yes. Well, let's see. Send another.
+
+657
+02:01:10,560 --> 02:01:20,930
+Well, the T.P five, so don't kick off any busy activities yet.
+
+658
+02:01:20,930 --> 02:01:28,630
+Send a message to the initial Tadgh to get busy.
+
+659
+02:01:28,630 --> 02:01:40,880
+Have the initial tab selected. Switch to one page on the TV set.
+
+660
+02:01:40,880 --> 02:01:49,980
+Record, how long it takes to switch to it and paint.
+
+661
+02:01:49,980 --> 02:01:59,490
+Wait until. The initial page has stopped being vizi.
+
+662
+02:01:59,490 --> 02:02:04,800
+And send it another message to get busy and.
+
+663
+02:02:04,800 --> 02:02:12,020
+Get busy and switch back to the initial tab.
+
+664
+02:02:12,020 --> 02:02:21,050
+Record, how long it takes to switch to it and paint.
+
+665
+02:02:21,050 --> 02:02:27,490
+Wait until the initial page has stopped being busy.
+
+666
+02:02:27,490 --> 02:02:41,050
+And repeat for each tab in the TV set.
+
+667
+02:02:41,050 --> 02:02:46,570
+Meanwhile, as our debug build finished, oh, it aired out missing default argument on perimeter.
+
+668
+02:02:46,570 --> 02:03:12,800
+It's in default argument. Oh, shoot.
+
+669
+02:03:12,800 --> 02:03:22,060
+Perren, noncoms, stelle value. I feel bad about this.
+
+670
+02:03:22,060 --> 02:03:31,510
+Hold up. What am I going to do? I think we need to do.
+
+671
+02:03:31,510 --> 02:03:36,960
+Let's put this before the optional arguments. Presence.
+
+672
+02:03:36,960 --> 02:04:17,310
+Fly. Holy smokes.
+
+673
+02:04:17,310 --> 02:04:23,080
+Let's. Let's see, here are our times got to be almost up.
+
+674
+02:04:23,080 --> 02:04:43,130
+Although I feel like I've been doing good work, I've been clearing a lot of meat info's, which is great.
+
+675
+02:04:43,130 --> 02:04:47,130
+Pierce can't shoot, doesn't like it.
+
+676
+02:04:47,130 --> 02:05:14,120
+Few arguments. Oh. No.
+
+677
+02:05:14,120 --> 02:05:26,710
+Doesn't like it. Non concert. Passing parameter.
+
+678
+02:05:26,710 --> 02:05:57,240
+Cannot find temporary type or cost out value reference to type or.
+
+679
+02:05:57,240 --> 02:06:07,270
+Linking, linking, linking. Wahhab And.
+
+680
+02:06:07,270 --> 02:06:26,910
+OK. Let's see if we fix the problem.
+
+681
+02:06:26,910 --> 02:06:36,890
+Oh, and did I get rid of the. And there is another part when has option.
+
+682
+02:06:36,890 --> 02:06:43,080
+I read this thing. Zaara.
+
+683
+02:06:43,080 --> 02:07:41,430
+Stop. I'm going to play this air horn so loud with this fixes the problem.
+
+684
+02:07:41,430 --> 02:07:57,140
+And we crashed. What? OK.
+
+685
+02:07:57,140 --> 02:08:21,710
+Let's try that again. Soon, that was like a one time fluke.
+
+686
+02:08:21,710 --> 02:08:57,910
+Yes. Oh, debug builds, kill me out slow they are.
+
+687
+02:08:57,910 --> 02:09:04,100
+So I answered that question. I mean, uh. Format this one straight through.
+
+688
+02:09:04,100 --> 02:09:09,590
+Next one. While we wait.
+
+689
+02:09:09,590 --> 02:09:15,150
+Are you ready? Yes. Load the browser.
+
+690
+02:09:15,150 --> 02:09:32,590
+Healthline Web site crashes Firefox railfan information to investigate this issue.
+
+691
+02:09:32,590 --> 02:09:53,010
+I hope to goodness that there are symbols and. No, there are no symbols in this profile.
+
+692
+02:09:53,010 --> 02:10:05,260
+Claire Gucci's. I got Eric Herbalism.
+
+693
+02:10:05,260 --> 02:10:15,960
+And I'm afraid that when you get a five oh three from the symbol server.
+
+694
+02:10:15,960 --> 02:10:27,850
+The profile that gets spat out is usually intelligible, which is unfortunately the case here.
+
+695
+02:10:27,850 --> 02:10:40,160
+If you have a few moments, could you try to gather another profile, the symbol server?
+
+696
+02:10:40,160 --> 02:10:56,670
+Was out of commission a few weeks back, but appears currently appears to be running.
+
+697
+02:10:56,670 --> 02:11:06,070
+And now we open our. Hey, and it's got the thing that we need.
+
+698
+02:11:06,070 --> 02:11:17,310
+Great. So now let's run our test. Well, just run the bare minimum.
+
+699
+02:11:17,310 --> 02:11:27,540
+Yeah. Raspberry's contest, general.
+
+700
+02:11:27,540 --> 02:11:34,990
+Um, um, uh, test. Do it.
+
+701
+02:11:34,990 --> 02:11:42,300
+And I think this will fix it. And then I'll know what the problem had been, which was that the presence flag.
+
+702
+02:11:42,300 --> 02:11:55,400
+What are you talking about? Missing Moki kid extension.
+
+703
+02:11:55,400 --> 02:14:07,880
+What else? Anyhow, I do believe this will address the issue.
+
+704
+02:14:07,880 --> 02:14:11,650
+Come on, you're a test pass.
+
+705
+02:14:11,650 --> 02:14:18,200
+We did it. That's right.
+
+706
+02:14:18,200 --> 02:14:25,750
+Oh, oh. All right.
+
+707
+02:14:25,750 --> 02:14:31,510
+So learned a valuable lesson there about presence flag.
+
+708
+02:14:31,510 --> 02:14:37,460
+What is it? Yeah. Presence flag and how it needs to be passed around.
+
+709
+02:14:37,460 --> 02:14:44,140
+I am going to update the documentation there because that's super, super unintuitive.
+
+710
+02:14:44,140 --> 02:14:48,670
+And that might make it clear for future spelunkers and window watcher.
+
+711
+02:14:48,670 --> 02:14:52,640
+But, folks, that's it figured out what's wrong with that test.
+
+712
+02:14:52,640 --> 02:14:59,530
+I can start looking into the other ones later later today and maybe finish up this patch and have smile.
+
+713
+02:14:59,530 --> 02:15:04,450
+Look at it the next version. So I'm pretty stoked about that. Thank you so much for watching.
+
+714
+02:15:04,450 --> 02:15:08,810
+Hang on. Hang on. WAPs. Hey, Don. Thank you so much for watching.
+
+715
+02:15:08,810 --> 02:15:18,000
+Episode 62 of The Joy of Coding. This was a heck of a trial, but we got through it.
+
+716
+02:15:18,000 --> 02:15:23,490
+Got through in the end. I hope that wasn't too loud just now, I'm actually gonna bring that down a little.
+
+717
+02:15:23,490 --> 02:15:30,090
+I Dennis, I hope that wasn't too loud for you. I know you were talking about the air horn.
+
+718
+02:15:30,090 --> 02:15:35,040
+Yeah, let me know. We thought if you go into the agenda, there's a link to rate this episode.
+
+719
+02:15:35,040 --> 02:15:40,680
+Let me know what you thought. And yeah, come talk to me and hash live hacking.
+
+720
+02:15:40,680 --> 02:15:46,470
+I'd love to talk to you about setting up your own like Mozilla live hacking series.
+
+721
+02:15:46,470 --> 02:15:53,490
+I know a number of people have been doing that. The joy of, I think automation, the joy of automation is a thing.
+
+722
+02:15:53,490 --> 02:15:59,050
+Let me see how many episodes they've got. The joy of automation. I think they're up to six episodes.
+
+723
+02:15:59,050 --> 02:16:03,240
+They haven't done any recently. But hopefully they'll be they'll be adding more soon.
+
+724
+02:16:03,240 --> 02:16:08,370
+That's pretty exciting. There's a link to the joy of automation in the agenda as well.
+
+725
+02:16:08,370 --> 02:16:15,330
+Highly recommend checking it out along with, let's see, joy of illustrators and their Loston data hour of design.
+
+726
+02:16:15,330 --> 02:16:20,880
+There's some great stuff. Go check it out. And if you want to set up your own, it does matter what you're doing in the community.
+
+727
+02:16:20,880 --> 02:16:27,690
+You could be coding, doing designed. Doing kuei doing bug tree. Ozge testing.
+
+728
+02:16:27,690 --> 02:16:32,490
+Who knows. Documentation. Working with.
+
+729
+02:16:32,490 --> 02:16:37,110
+I don't know what. Trying to like teach encryption. Whatever.
+
+730
+02:16:37,110 --> 02:16:42,390
+I want to hear about it. And then maybe we can put a channel together about it or put an episode or two together about it.
+
+731
+02:16:42,390 --> 02:16:50,010
+So come let me know. Drop into the live hacking I.R.S. channel, talk to Richard or myself will help you get a channel set up.
+
+732
+02:16:50,010 --> 02:16:57,720
+Who knows, maybe he can like get a fancy green screen like this do.
+
+733
+02:16:57,720 --> 02:17:04,340
+This isn't actually a Firefox logo. It's just a green screen look to reveal the magic.
+
+734
+02:17:04,340 --> 02:17:10,170
+Look at this magic. This green screen fabric is magical. Thank you, Richard, for that.
+
+735
+02:17:10,170 --> 02:17:14,380
+Maybe get your own green screen, do a couple episodes of your own show. Anyways, thank you so much.
+
+736
+02:17:14,380 --> 02:17:34,667
+Watching Episode 62 of The Joy of Coding. I will see you next week.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

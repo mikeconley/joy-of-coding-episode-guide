@@ -1,0 +1,2822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 370 - June 26, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 370 - June 26, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=13ad0095-4271-4371-b6f8-b18d014178b3</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=13ad0095-4271-4371-b6f8-b18d014178b3">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,050 --> 00:00:08,480
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. To the joy of coding.
+
+2
+00:00:08,750 --> 00:00:12,620
+Hello and welcome to episode 370 of the Joy of coding.
+
+3
+00:00:12,630 --> 00:00:17,560
+My name is Mike Connelly. It's so good to have you here. We're going to be live hacking on some Firefox stuff today.
+
+4
+00:00:17,570 --> 00:00:21,830
+Very excited about that. Uh, let's get into it. Without further ado.
+
+5
+00:00:21,830 --> 00:00:26,360
+Why wait? Why wait? Let's get in there. Um, here's my screen.
+
+6
+00:00:26,960 --> 00:00:32,269
+Yeah, it's June 26th, 2024, episode 370 A reminder no plan survives breakfast.
+
+7
+00:00:32,270 --> 00:00:36,410
+I say this every time, just in case you're new here. I don't know what's going to happen today.
+
+8
+00:00:37,100 --> 00:00:40,880
+I know what I want to work on, more or less, but I don't know how it's going to go.
+
+9
+00:00:40,910 --> 00:00:45,680
+I haven't pre-written any of the solutions or pre-planned any of what I'm going to do, really.
+
+10
+00:00:46,010 --> 00:00:51,500
+Um, like, I have an overarching structure, overarching structure of what I'd like to try and get done,
+
+11
+00:00:51,500 --> 00:00:55,429
+but whether or not I succeed is really, uh, anyone's guess.
+
+12
+00:00:55,430 --> 00:00:58,340
+And you're just going to watch me deal with it live. So that's the first thing.
+
+13
+00:00:58,340 --> 00:01:01,970
+The second thing is that this agenda that we're looking at is available to you.
+
+14
+00:01:02,000 --> 00:01:05,300
+You can click on links. You can follow along as I'm adding stuff to it.
+
+15
+00:01:05,690 --> 00:01:11,900
+Uh, the links for the agenda will be available in the video description if you're on YouTube, um, or uh,
+
+16
+00:01:12,110 --> 00:01:17,390
+over there in the detail section if you're on er, Mozilla and if you're on, um, Twitch, it's down in the channel details.
+
+17
+00:01:17,690 --> 00:01:22,160
+And you know, as I update, uh, the text here, you'll probably see this little spinny spin.
+
+18
+00:01:22,160 --> 00:01:26,750
+And then if you reload the page, you should get, uh, the most up to date version of the agenda.
+
+19
+00:01:28,490 --> 00:01:34,550
+Uh, I also want to take this opportunity to plug that there is an episode guide is a completely viewer driven, uh, episode guide.
+
+20
+00:01:34,880 --> 00:01:39,470
+If you are interested in adding your own corrections addenda, uh, maybe expanding on some point,
+
+21
+00:01:39,470 --> 00:01:46,220
+or maybe I got something wrong and you want to add some some notes to a particular episode, consider sending a pull request to the episode guide.
+
+22
+00:01:46,490 --> 00:01:52,070
+Um, there's a contribution guide here in the agenda itself. Um, and it's all hosted on GitHub.
+
+23
+00:01:52,340 --> 00:01:57,560
+Uh uh, special thanks to Smurf Diaz, uh, very prolific contributor to the episode guide.
+
+24
+00:01:57,860 --> 00:02:01,310
+Um, you know, it keeps that thing running, so. Thank you.
+
+25
+00:02:01,820 --> 00:02:07,430
+Uh, let's get into it. What? What am I working on today? Well, I was hoping we could do a few things.
+
+26
+00:02:07,790 --> 00:02:16,640
+Uh, I think I talked a little bit about the backup project, uh, last week, and, uh, you know, some things have landed since then.
+
+27
+00:02:16,640 --> 00:02:19,940
+If we, uh, have, uh, copy of nightly.
+
+28
+00:02:20,150 --> 00:02:24,830
+And if we build one, um, I can show you the current state of things.
+
+29
+00:02:25,610 --> 00:02:28,790
+Uh, one second. Wait for this build to complete.
+
+30
+00:02:33,870 --> 00:02:45,050
+Mhm. Mhm. So these uh these days if you were to create a backup using the debugger, um the like backup debug UI.
+
+31
+00:02:46,070 --> 00:02:56,299
+Uh it creates the backup very quickly. Um, and here it is, there's the archive and it is a very nicely structured HTML page.
+
+32
+00:02:56,300 --> 00:03:01,820
+And inside that HTML page it's like a specially crafted HTML page that actually contains your backup data.
+
+33
+00:03:02,090 --> 00:03:08,150
+In this case, my backup data is not encrypted in this HTML page, but I could choose to encrypt it if I really wanted to.
+
+34
+00:03:08,420 --> 00:03:17,479
+And, uh, I encourage you to do so if you, if and when you start using this, um, the, uh, uh, the thing I wanted to work on,
+
+35
+00:03:17,480 --> 00:03:24,949
+there were two, uh, two bugs that I had filed kind of in advance, like, I it's not like anyone's testing this.
+
+36
+00:03:24,950 --> 00:03:28,240
+And bugs were filed because people, um, discovered issues.
+
+37
+00:03:28,250 --> 00:03:33,890
+But to be clear, if you're not familiar with bugzilla, maybe you're a software developer at another shop or something.
+
+38
+00:03:34,070 --> 00:03:37,880
+Your terminology for, like, uh, a chunk of work or a unit of work might be a,
+
+39
+00:03:38,060 --> 00:03:43,699
+a ticket or a task or something at Mozilla and working on, uh, uh, Firefox and whatnot.
+
+40
+00:03:43,700 --> 00:03:46,550
+You'll probably just hear everyone talking about bugs, because we use bugzilla,
+
+41
+00:03:46,550 --> 00:03:51,320
+and the unit of work in bugzilla is a bug, whether or not it's a defect or not.
+
+42
+00:03:51,350 --> 00:04:00,680
+We just call them bugs. So, uh, the bugs that I filed for, uh, you know, for the backup service I was hoping to work on today are,
+
+43
+00:04:00,950 --> 00:04:04,910
+uh, here when they, um, deferred, but blocking.
+
+44
+00:04:05,450 --> 00:04:10,340
+Oh, sorry. I'm in the wrong browser. Deferred, but blocking my work.
+
+45
+00:04:11,900 --> 00:04:18,620
+There are two bugs, I think. I'm assigned two of them.
+
+46
+00:04:20,660 --> 00:04:23,779
+Oh, I see is, uh, the filer of a lot of them.
+
+47
+00:04:23,780 --> 00:04:30,760
+But these two do not allow backups, uh, to be recovered in browser versions older than the one that created the backup.
+
+48
+00:04:30,770 --> 00:04:34,010
+We can't allow downgrades through the backup service, unfortunately.
+
+49
+00:04:34,400 --> 00:04:43,519
+Um, that is is not a thing we are going to support. And, uh, uh, we generally don't, uh, support profile downgrades in, like, just in general.
+
+50
+00:04:43,520 --> 00:04:46,910
+We don't tend to support that because oftentimes, um,
+
+51
+00:04:47,180 --> 00:04:54,230
+data store upgrades are irreversible and then don't allow backups to be recovered when the app name does not match.
+
+52
+00:04:54,230 --> 00:04:59,809
+So, uh, these are the two things I was hoping to look at the very beginning and that so that like,
+
+53
+00:04:59,810 --> 00:05:07,760
+if you're using a different Mozilla Firefox based browser, like, I don't know, Tor, um, you shouldn't be able to recover,
+
+54
+00:05:08,660 --> 00:05:16,970
+uh, Tor backup inside of Firefox or similarly, um, you should not be able to recover a Firefox backup inside of Tor,
+
+55
+00:05:17,330 --> 00:05:20,269
+uh, because, you know, there are two completely different applications that work differently.
+
+56
+00:05:20,270 --> 00:05:25,490
+And that doesn't sound like a, a great way of having a, um, a stable product.
+
+57
+00:05:25,940 --> 00:05:29,269
+So let's, uh, let's, uh, add some checks for those.
+
+58
+00:05:29,270 --> 00:05:40,700
+Now, I actually, I had started on this, um, locally and then I was like, oh, this is probably, probably be a good idea to, uh, to do on a stream.
+
+59
+00:05:40,700 --> 00:05:44,570
+So it's actually the very first one I was thinking of working on was the app name one.
+
+60
+00:05:44,570 --> 00:05:47,870
+So 1903606 I'll put a link to that.
+
+61
+00:05:48,620 --> 00:05:59,420
+Uh, here in the agenda. Uh, now, the the thing that we're doing here is in this routine to recover from a snapshot.
+
+62
+00:05:59,720 --> 00:06:03,500
+That's what we call like a moment in time, a backup that's created at a moment in time.
+
+63
+00:06:04,040 --> 00:06:14,060
+Um, I'm adding this check to see whether or not the app name in the manifest matches the app constants Maus app name of the current application.
+
+64
+00:06:14,060 --> 00:06:17,239
+And if not, then we're going to throw an exception so that that seems right.
+
+65
+00:06:17,240 --> 00:06:22,670
+But I want to test this. Uh, I want to test, uh, write in uh, an automated test.
+
+66
+00:06:24,050 --> 00:06:26,479
+And so I've been thinking about how I want to do that.
+
+67
+00:06:26,480 --> 00:06:35,120
+And I think what I want to do is, um, add a new test file called test backup service recover from snapshot folder.
+
+68
+00:06:35,660 --> 00:06:44,479
+So let's start there. Uh, mock add test browser components, backup test, SPC shell, uh, and then test.
+
+69
+00:06:44,480 --> 00:06:50,810
+Backup service. Recover from snapshot folder.
+
+70
+00:06:51,500 --> 00:06:56,360
+And we're going to add. To our.
+
+71
+00:06:58,400 --> 00:07:03,080
+Um mercurial tracking. And then we'll build.
+
+72
+00:07:05,480 --> 00:07:10,880
+And then let's open up the test that we just added. So this is the skeleton of a test.
+
+73
+00:07:11,150 --> 00:07:12,439
+Not a whole lot going on here.
+
+74
+00:07:12,440 --> 00:07:31,760
+I'm going to start by explaining what I'm going to test, uh, tests that um, if the uh, backup manifest dot Json, uh, um, uh, provides a, an app name.
+
+75
+00:07:32,290 --> 00:07:35,770
+Different because like the manifest, there's a schema for it.
+
+76
+00:07:35,780 --> 00:07:44,230
+Whereas the schema here, the app name, um, it provides an app name different from mas.
+
+77
+00:07:47,920 --> 00:07:55,390
+App name. Of the currently running application.
+
+78
+00:07:56,080 --> 00:08:04,210
+Then uh, recover from snapshot folder should throw an exception.
+
+79
+00:08:05,440 --> 00:08:09,640
+So, uh, I'm going to test, uh, different app name.
+
+80
+00:08:10,120 --> 00:08:18,250
+Uh, I'll do the, uh, test and the, the, uh, the when we work on the next bug, which is about the app version being,
+
+81
+00:08:18,670 --> 00:08:26,770
+um, you know, you're trying to recover from a version greater than the one that you're on.
+
+82
+00:08:26,830 --> 00:08:30,750
+Uh, we'll probably add another test in here, but for now, we'll just do the different app name.
+
+83
+00:08:30,760 --> 00:08:37,840
+So how do I want to do this? Well, I think what I'm going to do, what I'm going to start with is I'm going to create a temporary folder.
+
+84
+00:08:39,550 --> 00:08:43,570
+Um, this is how you can create.
+
+85
+00:08:45,070 --> 00:08:49,150
+Uh, there's some examples in here of creating a temporary folder.
+
+86
+00:08:51,190 --> 00:08:54,790
+Yeah. Create unique directory and create a unique testing directory.
+
+87
+00:08:59,430 --> 00:09:09,230
+Um. And I'm going to call a test.
+
+88
+00:09:10,440 --> 00:09:17,000
+Different app name. Case right here.
+
+89
+00:09:17,780 --> 00:09:22,700
+Uh, and then I'm going to write a manifest in there.
+
+90
+00:09:23,600 --> 00:09:30,230
+Now. What I'll do is I'll manually write a manifest.
+
+91
+00:09:30,690 --> 00:09:33,860
+Uh, we have, like, a fake set of metadata.
+
+92
+00:09:35,210 --> 00:09:40,790
+Um. In hedges already.
+
+93
+00:09:42,230 --> 00:09:53,640
+So I'll clone this. Uh, let metadata equals object dot create and fake metadata.
+
+94
+00:09:53,660 --> 00:10:00,260
+So that's cloning the object. And I'm going to change the app name to be some other application.
+
+95
+00:10:01,070 --> 00:10:04,310
+And then we're going to create our manifest.
+
+96
+00:10:04,550 --> 00:10:09,140
+Um, now the structure of a manifest according to the schema.
+
+97
+00:10:12,480 --> 00:10:20,130
+Is you've got the version, the metadata and then resources which may or may not have any properties in there.
+
+98
+00:10:20,550 --> 00:10:30,480
+So that's pretty simple. So will, um, manifest that, uh, uh, this.
+
+99
+00:10:32,520 --> 00:10:38,700
+Uh, simplicity version. Um, we're going to say backup service dot.
+
+100
+00:10:39,480 --> 00:10:43,560
+I believe that as a constants. Uh, constant schema version.
+
+101
+00:10:47,730 --> 00:10:50,760
+Oh, no. It's under archive utils schema version.
+
+102
+00:10:53,280 --> 00:10:57,510
+Okay, so, uh, I'm going to need to import archive utils.
+
+103
+00:11:00,620 --> 00:11:05,729
+Uh. Um. Uh.
+
+104
+00:11:05,730 --> 00:11:10,830
+Chrome utils. Import. Yes. Module resource modules.
+
+105
+00:11:10,830 --> 00:11:13,890
+Backup archive utils.
+
+106
+00:11:20,790 --> 00:11:24,300
+And, uh. So version.
+
+107
+00:11:27,540 --> 00:11:33,510
+Schema version. Uh, meta. And then resources will just be the empty object.
+
+108
+00:11:33,540 --> 00:11:39,060
+Now, the other thing I want to do is I want to make sure that this abides by the schema.
+
+109
+00:11:39,750 --> 00:11:46,920
+Um, the current schema version. So that in the event that we ever change the schema, this test should fail so that we can update it.
+
+110
+00:11:47,670 --> 00:11:54,090
+So, um, let's see, I think I've got a preexisting test that does that sort of thing.
+
+111
+00:11:55,650 --> 00:12:01,080
+Um, Json validator, some schema that.
+
+112
+00:12:03,920 --> 00:12:06,999
+Test back. I'm serious. Here we go. Jason.
+
+113
+00:12:07,000 --> 00:12:11,380
+Schema. Um.
+
+114
+00:12:18,400 --> 00:12:28,640
+Load the manifest schema. Uh, and then we'll assert the schema matches the manifest.
+
+115
+00:12:32,770 --> 00:12:40,290
+And then. Assert not equal that, uh, app name.
+
+116
+00:12:41,010 --> 00:12:46,140
+App constants. Ma app name. Um.
+
+117
+00:12:48,950 --> 00:12:57,470
+Uh, uh, set up a different, uh, name in the manifest correctly.
+
+118
+00:13:00,080 --> 00:13:08,830
+Because if we ever did this wrong and, uh, then these would match and then we wouldn't throw, uh, jarring.
+
+119
+00:13:12,020 --> 00:13:22,220
+Coincidence? All right, now we are going to write the manifest, uh, utils.
+
+120
+00:13:22,220 --> 00:13:28,340
+Right. Json to path utils, join test profile path.
+
+121
+00:13:28,850 --> 00:13:37,160
+And then what's the name? It's like, uh, back up manifest dot Json, which is manifest file name static member.
+
+122
+00:13:38,660 --> 00:13:47,449
+Anyway, why do you do this to me? Code backup service dot manifest file name.
+
+123
+00:13:47,450 --> 00:13:52,010
+And we're going to write the manifest I think that's the.
+
+124
+00:13:54,790 --> 00:14:02,530
+Uh, right. Usage. Path value and then options.
+
+125
+00:14:02,710 --> 00:14:08,060
+What are the options? No.
+
+126
+00:14:08,130 --> 00:14:14,519
+Don't need to do anything like that. Okay. And then we are going to call like the new backup service.
+
+127
+00:14:14,520 --> 00:14:24,480
+And we're going to say yes to it. Um, we're basically going to call a thing that we expect to reject and recover from backup.
+
+128
+00:14:26,490 --> 00:14:34,979
+From snapshot folder. Um, path.
+
+129
+00:14:34,980 --> 00:14:38,850
+We're going to say no profile root path X date.
+
+130
+00:14:38,880 --> 00:14:42,439
+No. Cover.
+
+131
+00:14:42,440 --> 00:14:45,920
+And this because this is async, we expect this to reject.
+
+132
+00:14:45,920 --> 00:14:49,050
+So. Await. Assert dot.
+
+133
+00:14:49,130 --> 00:14:59,850
+Rejects. Then we're going to pass in our path, which is test profile.
+
+134
+00:15:00,300 --> 00:15:03,360
+It's not a profile path. Test recovery path.
+
+135
+00:15:05,620 --> 00:15:13,819
+Recovery path. And when else should launch?
+
+136
+00:15:13,820 --> 00:15:17,210
+False. Yeah. Okay. We can we can leave those as defaults.
+
+137
+00:15:17,900 --> 00:15:25,129
+Uh, and then should. Oh, the way the way that we do assert rejects.
+
+138
+00:15:25,130 --> 00:15:30,010
+This will match on the. Um.
+
+139
+00:15:32,870 --> 00:15:40,350
+Okay. Um. You write exp.
+
+140
+00:15:43,040 --> 00:15:48,430
+Um. But I don't.
+
+141
+00:15:53,430 --> 00:15:57,090
+I think that's how that works. Oh, wait a server, gents.
+
+142
+00:15:59,220 --> 00:16:03,869
+See some usage. So yeah you pass a rejects there.
+
+143
+00:16:03,870 --> 00:16:12,760
+So let's see if this test passes. How are we doing out there in chat land?
+
+144
+00:16:12,940 --> 00:16:17,020
+I'm not seeing much traffic. Am I streaming? Is this is any of this working?
+
+145
+00:16:17,050 --> 00:16:20,520
+Can people hear me? Um, I don't know.
+
+146
+00:16:20,530 --> 00:16:24,610
+Maybe I'm just yelling into the into the void. Um.
+
+147
+00:16:25,180 --> 00:16:28,510
+Check, check. One, two. Can y'all hear me?
+
+148
+00:16:34,490 --> 00:16:37,700
+Smurfd0. He says we can hear you. Okay? It's just a quiet day. All good.
+
+149
+00:16:37,730 --> 00:16:41,360
+No problem. Property descriptor. Must be an object.
+
+150
+00:16:43,880 --> 00:16:48,170
+Uh, recover. So, line 27, we fail. So all the way back here.
+
+151
+00:16:49,250 --> 00:16:56,840
+Try. Script must be an object.
+
+152
+00:16:59,530 --> 00:17:06,930
+What had. And the data by using object create from.
+
+153
+00:17:19,090 --> 00:17:22,270
+Or maybe it's something else. Maybe it's object copy.
+
+154
+00:17:29,300 --> 00:17:40,770
+Cologne. No no no no no no no.
+
+155
+00:17:48,330 --> 00:17:51,959
+After that clone doesn't exist. Object. Dot.
+
+156
+00:17:51,960 --> 00:17:55,020
+Create. Color. Bind. Assign. That's what it is.
+
+157
+00:17:55,050 --> 00:18:00,450
+Object dot a sign is what I want. Yeah.
+
+158
+00:18:04,920 --> 00:18:10,150
+That's how you copy. Just.
+
+159
+00:18:12,900 --> 00:18:17,070
+Boom passed. Uh, amazing. Um.
+
+160
+00:18:21,590 --> 00:18:25,670
+We, uh. This should reject and mention the app.
+
+161
+00:18:26,030 --> 00:18:29,840
+The invalid app name from the manifest.
+
+162
+00:18:35,200 --> 00:18:38,540
+Okay. That's done.
+
+163
+00:18:40,120 --> 00:18:44,480
+Uh, and then we should delete. And wait. I chose, not remove.
+
+164
+00:18:45,830 --> 00:18:50,540
+Uh, test recovery path. Recursive tree.
+
+165
+00:18:59,850 --> 00:19:09,050
+And that's the first one done. Great. Bug.
+
+166
+00:19:09,770 --> 00:19:13,430
+Well, now let's let's actually do a manual test.
+
+167
+00:19:13,970 --> 00:19:20,660
+Um, the way we can do that is we're going to create a backup.
+
+168
+00:19:28,630 --> 00:19:32,400
+And we're open the backups folder up. Here are snapshots.
+
+169
+00:19:32,410 --> 00:19:36,699
+Here's the here's the the directory.
+
+170
+00:19:36,700 --> 00:19:47,840
+And I'm going to say we're going to open this. With code, we're going to change the app name from Firefox to.
+
+171
+00:19:49,880 --> 00:19:56,600
+Foo for x. And then I'm going to try and recover from a staging folder.
+
+172
+00:19:57,980 --> 00:20:02,180
+Uh, try and recover from the staging folder.
+
+173
+00:20:03,770 --> 00:20:08,900
+Let's see what happens. Should C fail to recover?
+
+174
+00:20:08,930 --> 00:20:11,970
+Cannot recover backup from food freaks in Firefox.
+
+175
+00:20:11,990 --> 00:20:18,109
+Good stuff. Um, and yeah, there was an error in debug, but that's okay.
+
+176
+00:20:18,110 --> 00:20:21,320
+It's the debug page. Good. Okay. I'm happy with that.
+
+177
+00:20:23,750 --> 00:20:27,080
+Um, so commit bug.
+
+178
+00:20:30,970 --> 00:20:37,170
+This is the right one, right? Mhm.
+
+179
+00:20:37,230 --> 00:20:40,860
+Mhm. Mhm. Mhm. Mhm. Yeah.
+
+180
+00:20:43,380 --> 00:20:58,500
+And I actually think uh this is a pretty good title. Uh prevent um recovery from backups created from an application with a different app name.
+
+181
+00:21:04,900 --> 00:21:08,320
+You can you can also check that the correct app name works.
+
+182
+00:21:08,340 --> 00:21:12,930
+I mean, we kind of already do like, um.
+
+183
+00:21:15,000 --> 00:21:21,539
+We assert that like we, we do a number of tests that do like an actual recovery.
+
+184
+00:21:21,540 --> 00:21:24,750
+But what we could do, actually, that's that's an interesting idea.
+
+185
+00:21:25,140 --> 00:21:37,650
+Um, smurfd0 is that we can assert that, uh, the backup app name matches the actual, um, app name, the most app name.
+
+186
+00:21:38,970 --> 00:21:43,260
+So let's see here backup service. And at first.
+
+187
+00:21:48,340 --> 00:21:55,640
+Do we do? Mars app? No. Create.
+
+188
+00:22:00,580 --> 00:22:04,600
+Recover from snapshot folder right Json Terraform state.
+
+189
+00:22:13,380 --> 00:22:19,660
+Create backup staging path. Um.
+
+190
+00:22:22,930 --> 00:22:28,030
+I'm sure that the models, uh, the app name and the written manifest.
+
+191
+00:22:36,120 --> 00:22:46,280
+Um. Matches up constant uh, matches the current times app name.
+
+192
+00:22:47,660 --> 00:22:55,400
+So let manifest equal. Do we do any other manifest manipulation?
+
+193
+00:22:58,180 --> 00:23:05,290
+Just post recovery, okay. Manifest equal weight file utils.
+
+194
+00:23:05,290 --> 00:23:13,030
+Read Json and then its path utils join staging path backup service.
+
+195
+00:23:13,780 --> 00:23:19,750
+Uh manifest file name. And then assert.
+
+196
+00:23:22,360 --> 00:23:25,930
+Equal manifest dot Mattox.
+
+197
+00:23:26,010 --> 00:23:29,830
+App name is equal to app constants. Mars app name.
+
+198
+00:23:31,030 --> 00:23:35,710
+Um. It matches Mars app name.
+
+199
+00:23:37,450 --> 00:23:41,620
+This app constants is in here. All right. And then we can run test backup service.
+
+200
+00:23:52,560 --> 00:23:57,240
+Yeah. Looking good. I like it.
+
+201
+00:23:59,460 --> 00:24:01,110
+All right, let's post that up for review.
+
+202
+00:24:02,790 --> 00:24:09,580
+We've also got like, an end to end test that just ensures that this whole thing, you can actually do a recovery.
+
+203
+00:24:09,600 --> 00:24:15,540
+I'll show it to you, actually. Um, I'll run it and show it to you at mock test browser Kono's backup test marionette.
+
+204
+00:24:17,160 --> 00:24:20,790
+This will actually launch a browser. Launch another browser.
+
+205
+00:24:20,800 --> 00:24:27,150
+This one performs a backup on itself. This one recovers from that back up.
+
+206
+00:24:29,660 --> 00:24:33,769
+And then we clear it all out. Um, so it's.
+
+207
+00:24:33,770 --> 00:24:37,700
+That is working still. So pretty happy about that.
+
+208
+00:24:37,940 --> 00:24:42,770
+Oh, and also, after we recover, we make sure all the stuff that we had put into the original profile works.
+
+209
+00:24:43,370 --> 00:24:47,180
+So, um. Okay. Did I already amend?
+
+210
+00:24:48,260 --> 00:24:50,990
+I presume I did, so I'm going to say before I do that. Mark.
+
+211
+00:24:51,590 --> 00:25:00,200
+Um, lint outgoing fix just in case there's any, uh, um, linting issues before I post this for review.
+
+212
+00:25:01,940 --> 00:25:06,200
+None. All right, let's get this up for review. Submit tip single.
+
+213
+00:25:06,530 --> 00:25:10,540
+And, uh, let's do a fast follow. Let's do the app version one.
+
+214
+00:25:10,550 --> 00:25:15,470
+I think that's should be as similar. Similar in scope, size and complexity.
+
+215
+00:25:15,860 --> 00:25:22,850
+So, um, our new condition is that, like the app, if the meta version.
+
+216
+00:25:26,920 --> 00:25:35,560
+Um. What we need to do is use the version comparator utility services.
+
+217
+00:25:35,620 --> 00:25:38,830
+Uh, I think it's VC dot compare.
+
+218
+00:25:40,870 --> 00:25:49,160
+Yeah, exactly. This compare. Uh.
+
+219
+00:25:50,210 --> 00:25:54,290
+Meta. App version.
+
+220
+00:25:55,430 --> 00:26:01,250
+And then what's the definition of compare version compare.
+
+221
+00:26:04,160 --> 00:26:16,100
+So A is on the left, B is on the right. Returns less than zero if A is less than B which if it if the version is less than that.
+
+222
+00:26:19,920 --> 00:26:33,240
+Yeah. Then we want to throw can cannot recover a back up from uh created on version meta app version in version.
+
+223
+00:26:33,690 --> 00:26:37,650
+Mars app version. Um.
+
+224
+00:26:51,970 --> 00:26:58,120
+Okay. So let's go ahead and write a test for that.
+
+225
+00:27:05,270 --> 00:27:11,150
+Test that if the backup manifest provides an app version newer.
+
+226
+00:27:13,190 --> 00:27:22,730
+Than app constants. Uh, greater, I should say greater than Ma's app version of the currently running application.
+
+227
+00:27:22,730 --> 00:27:28,040
+Then it should throw an exception. Uh, newer app version.
+
+228
+00:27:29,960 --> 00:27:33,650
+Test. Newer app version.
+
+229
+00:27:37,340 --> 00:27:44,210
+Metadata. So we need to set the app version to be something quite large.
+
+230
+00:27:44,990 --> 00:27:50,290
+Um, now, if I try and get access to app constants.
+
+231
+00:27:50,300 --> 00:27:55,040
+Dot Ma's app version. If I just like.
+
+232
+00:27:55,490 --> 00:27:59,270
+I don't think I can just do this. No, that'll just concatenate.
+
+233
+00:28:00,320 --> 00:28:04,530
+Um. So I'm going to say something really ridiculous.
+
+234
+00:28:04,800 --> 00:28:08,460
+99 999.0.0.
+
+235
+00:28:12,080 --> 00:28:15,930
+Hope this will cover us for now.
+
+236
+00:28:17,250 --> 00:28:23,490
+This will. The static version number will do for now.
+
+237
+00:28:24,680 --> 00:28:28,140
+Uh, maybe someday we'll be at version 999, and then we'll have to.
+
+238
+00:28:28,440 --> 00:28:31,720
+We'll have to bump this. Um.
+
+239
+00:28:32,740 --> 00:28:38,440
+Cert. Um. Equal.
+
+240
+00:28:40,960 --> 00:28:49,540
+services.vc dot compare uh countries app version.
+
+241
+00:28:50,980 --> 00:28:55,180
+Net uh version should be minus one.
+
+242
+00:28:57,310 --> 00:29:03,670
+Um. The current version is less than 999.0.0.
+
+243
+00:29:05,470 --> 00:29:08,650
+Current application version.
+
+244
+00:29:11,830 --> 00:29:16,149
+Uh, manifests schema version.
+
+245
+00:29:16,150 --> 00:29:21,609
+Meta resources. That's all good. Schema matches, right?
+
+246
+00:29:21,610 --> 00:29:31,240
+The Json. And then it should reject, uh, version because it mentioned the invalid app version from the manifest.
+
+247
+00:29:32,200 --> 00:29:49,340
+All right, let's try it. No good.
+
+248
+00:29:49,350 --> 00:29:55,720
+Cannot recover. Backup created on version. Go for a backup.
+
+249
+00:29:55,870 --> 00:30:00,190
+What, so the string doesn't match? Cannot recover a backup created on version.
+
+250
+00:30:00,760 --> 00:30:05,230
+Oh. Meta app version. Version.
+
+251
+00:30:05,230 --> 00:30:09,460
+Firefox. Yeah. Good.
+
+252
+00:30:09,850 --> 00:30:15,250
+That passed. Good. Good, good. Um, let's now manually test it.
+
+253
+00:30:20,520 --> 00:30:23,640
+So let's go back to instead of Foo Frick's.
+
+254
+00:30:23,790 --> 00:30:32,400
+What was that? Uh. I can manifest it and I have it open.
+
+255
+00:30:36,250 --> 00:30:40,780
+Uh, I guess I closed it. Okay. Backup manifest open with vs code.
+
+256
+00:30:41,800 --> 00:30:45,460
+So, foo for x, we're going to call that Firefox.
+
+257
+00:30:46,670 --> 00:30:51,130
+We're going to say version 135. All right.
+
+258
+00:30:52,180 --> 00:31:06,820
+Run. Back up to, uh, recover from.
+
+259
+00:31:07,120 --> 00:31:10,390
+No, recover from a staging folder. This one.
+
+260
+00:31:13,960 --> 00:31:17,710
+And fail to recover.
+
+261
+00:31:17,720 --> 00:31:23,890
+Cannot recover a backup can version. Uh, 130 50A 1 in 129 080A1.
+
+262
+00:31:23,890 --> 00:31:27,460
+That is correct. That's what we want. All right.
+
+263
+00:31:27,640 --> 00:31:31,840
+And and, uh, let's follow the same advice from Smurf D.
+
+264
+00:31:33,220 --> 00:31:36,610
+We'll go back to test backup service and we'll make sure.
+
+265
+00:31:39,430 --> 00:31:49,930
+That the. Uh, app name and that, uh, version matches bars.
+
+266
+00:31:49,960 --> 00:31:53,890
+App version. Um.
+
+267
+00:31:58,850 --> 00:32:11,420
+App version. Uh.
+
+268
+00:32:11,430 --> 00:32:15,810
+Test characteristics PCR test. Backup service.
+
+269
+00:32:21,130 --> 00:32:24,790
+Great. Les, now run the marionette. Let's run the whole suite.
+
+270
+00:32:26,140 --> 00:32:29,320
+We'll run marionette. Post it.
+
+271
+00:32:34,440 --> 00:32:38,160
+Okay, marionette. The end to end test.
+
+272
+00:32:53,630 --> 00:32:57,960
+Good. And, uh. We'll call. We'll call that a done deal.
+
+273
+00:32:57,980 --> 00:33:01,490
+So that's, uh. Uh, yeah. Commit.
+
+274
+00:33:01,730 --> 00:33:08,760
+What's the bug number? Versions we update each.
+
+275
+00:33:08,770 --> 00:33:11,800
+And, uh. So that's this number.
+
+276
+00:33:13,900 --> 00:33:18,430
+Math bug. Such and such do not prevent recovery.
+
+277
+00:33:18,440 --> 00:33:28,180
+I'll use the same terminology here. That same structure prevent recovery from backups created from an application with a newer version.
+
+278
+00:33:29,530 --> 00:33:32,930
+Newer app version. All right.
+
+279
+00:33:33,610 --> 00:33:51,580
+Okay. Computers. Okay, uh, let's post that up for review.
+
+280
+00:33:57,320 --> 00:34:02,490
+And then we'll wire up the dependency. With Moore's fab reorg, I think it needs that.
+
+281
+00:34:02,910 --> 00:34:09,300
+Maybe, maybe it'll do it automatically. We'll see. Sometimes it knows to set up the.
+
+282
+00:34:11,940 --> 00:34:32,790
+Um, set up the relationship. Yeah.
+
+283
+00:34:32,790 --> 00:34:35,970
+It did not set up the relationship. So I'll go mas fab reorg.
+
+284
+00:34:41,100 --> 00:34:45,660
+Yes. All right. So now if we look at the stack.
+
+285
+00:34:46,020 --> 00:34:49,570
+Great I got these two things. Hooray.
+
+286
+00:34:49,590 --> 00:34:54,840
+Okay. So got those two things done. Um what's the next thing I wanted to do?
+
+287
+00:34:55,290 --> 00:35:02,970
+Well, there's a chunk of UI that we've been working on for back up that, um, we've been working with.
+
+288
+00:35:03,180 --> 00:35:05,490
+We've been focusing on a lot of the management dialogs.
+
+289
+00:35:06,480 --> 00:35:11,699
+So that's dialogs for, like, enabling back up, disabling back up, setting the encryption password,
+
+290
+00:35:11,700 --> 00:35:17,190
+removing the encryption password, changing the encryption password, all of all of these things.
+
+291
+00:35:17,220 --> 00:35:27,270
+But the main the sort of the root UI for backup inside of uh, uh the settings page here is, well, first of all, it's hidden.
+
+292
+00:35:27,330 --> 00:35:33,000
+So let me turn it on. Uh, backup. Preferences UI enabled.
+
+293
+00:35:33,690 --> 00:35:38,040
+Uh, but it does not look great. This is all very sloppy still.
+
+294
+00:35:38,340 --> 00:35:42,740
+Uh, this this part has not been worked out like we can. We can open the dialogs.
+
+295
+00:35:42,750 --> 00:35:48,239
+Um, those are nice, but the this chunk in here does not look good.
+
+296
+00:35:48,240 --> 00:35:51,390
+And I'd like to try working on that, cleaning that up a little bit today,
+
+297
+00:35:51,420 --> 00:35:57,480
+but I want to base that on a set of patches that I have locally but are kind of waiting for review.
+
+298
+00:35:57,900 --> 00:36:06,630
+Um, but the reason for that is because one of those patches sets up the scheduler that schedules backups and records the last backup time,
+
+299
+00:36:06,960 --> 00:36:10,380
+because part of the and I'll show you are part of the design.
+
+300
+00:36:10,380 --> 00:36:11,340
+Here is what it's supposed to look like.
+
+301
+00:36:12,540 --> 00:36:20,550
+Part of the design is like telling you when the last backup was, um, what the file name of the backup is, I'll have to figure out how to do that.
+
+302
+00:36:20,550 --> 00:36:23,790
+And then, uh, and then sort of like a better, slightly better layout.
+
+303
+00:36:24,900 --> 00:36:28,230
+Um, so I'm thinking of trying to do this.
+
+304
+00:36:28,800 --> 00:36:32,640
+Uh, I think I'll file a new bug to do this.
+
+305
+00:36:33,990 --> 00:36:37,349
+Um, having fun with Zoo Layout in preferences.
+
+306
+00:36:37,350 --> 00:36:42,030
+Been there, done that. Now, the good news is, is that, uh, we're able to do.
+
+307
+00:36:42,060 --> 00:36:45,690
+So far, we've been able to do this without Zul. Add a single line of zoo.
+
+308
+00:36:46,320 --> 00:36:49,560
+We've been doing it, uh, for better or worse.
+
+309
+00:36:49,740 --> 00:36:55,979
+Well, actually, these days it's a lot safer, because it used to be we would intermix Zul and HTML.
+
+310
+00:36:55,980 --> 00:37:00,210
+Like if you go into, um, settings and you like, inspect some of this stuff,
+
+311
+00:37:01,470 --> 00:37:08,310
+you'll see a mixture of like this is Zuul and H box and this is h HTML and H one group box.
+
+312
+00:37:08,310 --> 00:37:15,690
+That's uh, I think that Zul and then uh, label label is I think shared between as well in HTML,
+
+313
+00:37:15,990 --> 00:37:21,300
+but then you'll have like other um, there would be like HTML things in here.
+
+314
+00:37:21,720 --> 00:37:27,120
+Let's see like this button. I think that's a mars.
+
+315
+00:37:27,240 --> 00:37:31,470
+Um, I think that's a I think there's a real mix.
+
+316
+00:37:32,370 --> 00:37:39,840
+There's a mixture of HTML and Zul in here. And that used to be really, really dangerous because, um, is isn't H box and V box HTML?
+
+317
+00:37:39,870 --> 00:37:44,640
+No, those are Zul elements. Excuse me.
+
+318
+00:37:45,000 --> 00:37:54,270
+However, they used to be implemented using Zul, the usual layout model, but, um.
+
+319
+00:37:55,240 --> 00:38:00,520
+We got rid of the Zul late model. All Zul now uses the HTML.
+
+320
+00:38:01,240 --> 00:38:04,059
+Um, the normal CSS flex layout model.
+
+321
+00:38:04,060 --> 00:38:13,060
+We got rid of XUL layout like over a year ago I think, which means that Zul is now kind of like, um, an alternative markup syntax,
+
+322
+00:38:13,060 --> 00:38:22,840
+but it shares the same layout characteristics, and that has saved us so much when we intermingle HTML and Zul, because it used to be a nightmare.
+
+323
+00:38:22,900 --> 00:38:26,770
+You'd have these like two layout models, um, like.
+
+324
+00:38:28,290 --> 00:38:34,739
+Fighting and competing against one another because Zulle had a very different layout model and we didn't want to write more.
+
+325
+00:38:34,740 --> 00:38:38,939
+Zul we wanted to write with HTML because like our tooling knows how to deal with it.
+
+326
+00:38:38,940 --> 00:38:44,340
+And, um, our engineers know how to deal with HTML and CSS layout.
+
+327
+00:38:44,490 --> 00:38:51,929
+And Zul layout was like very mysterious and unusual. And so mixing them was so full of of weird errors,
+
+328
+00:38:51,930 --> 00:38:58,980
+and we were able to eliminate all of those entirely by transitioning Zul to run as, uh, run with HTML layout.
+
+329
+00:38:59,220 --> 00:39:00,330
+And then we got rid of it.
+
+330
+00:39:00,810 --> 00:39:10,980
+And so now, yeah, there is an intermix of Zul and HTML in some of our pages, but, uh, there the Zul is just using CSS like normal CSS layout.
+
+331
+00:39:11,250 --> 00:39:17,190
+There are just like special tags like vbox. I'm pretty sure if we take a look at the definition of vbox.
+
+332
+00:39:19,830 --> 00:39:26,070
+It's just a, um, it's just a thing with a flex direction of column that's like a flexbox.
+
+333
+00:39:27,000 --> 00:39:31,530
+Um, like this is the definition of Zul. It's just this CSS sheet.
+
+334
+00:39:31,860 --> 00:39:37,170
+Now I'm oversimplifying. There are still some very like zul non HTML.
+
+335
+00:39:37,380 --> 00:39:46,710
+Like there are things that Zul can do that HTML cannot currently do still, but um, that, that set of things is shrinking and shrinking and shrinking.
+
+336
+00:39:51,470 --> 00:39:55,940
+Uh baa baa baa baa baa baa. Wait, you actually work at Mozilla?
+
+337
+00:39:55,970 --> 00:40:00,079
+Wow. Hi, yes I do. Hi. I'm on seven k underscore.
+
+338
+00:40:00,080 --> 00:40:03,229
+Nice to. Nice to meet you. Spock. Sexual preferences.
+
+339
+00:40:03,230 --> 00:40:06,910
+Page is back in time. When I was doing damn toolbars expires.
+
+340
+00:40:06,920 --> 00:40:11,270
+Oof! Yep. It's, uh. It's a blast from the past.
+
+341
+00:40:11,390 --> 00:40:21,680
+Uh, we don't like if there were, like, Zul, was this, like, super, super powerful, but super hacky thing, like, you'll hear about,
+
+342
+00:40:21,800 --> 00:40:29,000
+uh, ad on developers bemoaning some ad on an old school ad on developers bemoaning the loss of school and, um.
+
+343
+00:40:30,380 --> 00:40:39,349
+While there was great power with zeal add ons, what you were effectively doing was making the entire UI an API surface,
+
+344
+00:40:39,350 --> 00:40:44,890
+an API layer that add ons could inject nodes into and rearrange and change.
+
+345
+00:40:44,900 --> 00:40:52,400
+And that made for extremely unstable software, and that also made for, you know, very common breakage.
+
+346
+00:40:52,520 --> 00:40:59,390
+You couldn't change like an ID in the UI, like a class name without breaking like 10,000 add ons that you've never heard of.
+
+347
+00:40:59,810 --> 00:41:07,790
+Um, so, you know, there was I am not sad that Zul overlays are gone and that Zul add ons are a thing of the past.
+
+348
+00:41:08,300 --> 00:41:15,970
+Um. We had developed a framework that was building extensions and zul and building the HTML equivalent for creating the same extension.
+
+349
+00:41:16,640 --> 00:41:21,430
+Uh, you know, back in the day, it was an idea to get the same extension running in both browsers for web extensions.
+
+350
+00:41:21,760 --> 00:41:25,180
+Um, on some cases, I just started my first internship. Looking forward to the world of software development.
+
+351
+00:41:25,390 --> 00:41:31,270
+Did you start, uh, your started your first internship at Mozilla, or are you at some other or, uh, some other shop?
+
+352
+00:41:31,510 --> 00:41:37,070
+I'm on seven K and yes, we had to always check for breakage and Zul before it hit Firefox prod releases.
+
+353
+00:41:37,150 --> 00:41:41,170
+Yeah, it was like it was a nightmare back in the day.
+
+354
+00:41:41,170 --> 00:41:51,340
+Like, um, because at least now with web extensions, you have a stable, well-defined API surface that is very well tested.
+
+355
+00:41:51,550 --> 00:41:54,699
+Whereas before, like the I,
+
+356
+00:41:54,700 --> 00:42:04,870
+the UI markup was your API surface and it was only okay tested and we did not have like a battery of add ons that were tested against it.
+
+357
+00:42:05,320 --> 00:42:08,950
+Um, whereas with web extensions we do. So it's a, it's a lot more stable.
+
+358
+00:42:09,280 --> 00:42:15,740
+Um, I do not miss Zul add ons. Um, I'm sorry if if you're watching this and you misses will add on that.
+
+359
+00:42:15,750 --> 00:42:20,670
+That sucks. But like it is not a thing I miss whatsoever as a browser developer.
+
+360
+00:42:20,680 --> 00:42:25,840
+They were such a pain. Such a pain. Um, and they slowed us down so much.
+
+361
+00:42:27,070 --> 00:42:30,730
+Um, okay. What now?
+
+362
+00:42:31,120 --> 00:42:34,710
+Uh, yeah, the preferences UI.
+
+363
+00:42:34,720 --> 00:42:40,930
+So the first thing I want to do is I think I want to file a bug because I don't think there is a bug yet for this UI work.
+
+364
+00:42:41,110 --> 00:42:48,610
+Um, so there is, uh, that, uh, build our initial UI controller backup feature.
+
+365
+00:42:48,610 --> 00:42:54,610
+I think I need to file a bug against this. Not in a different org.
+
+366
+00:42:54,850 --> 00:42:58,600
+So he oh I'm on some K is in a different org. We make games. Oh what kind of games.
+
+367
+00:42:58,600 --> 00:43:01,750
+What kind of games do you make them on some K and what technology are you using.
+
+368
+00:43:01,840 --> 00:43:05,439
+Let me guess. You're using unity. We make unity games.
+
+369
+00:43:05,440 --> 00:43:14,290
+That's my guess. Smurfd0 is the Zuul about page still around that had that Ghostbusters pun.
+
+370
+00:43:14,740 --> 00:43:20,830
+So the Zul namespace then. So Zul was like an XML thing.
+
+371
+00:43:20,830 --> 00:43:28,040
+And um, whenever you have a like a dialect of XML, you have a namespace normally and the Zul namespace.
+
+372
+00:43:28,060 --> 00:43:35,080
+Um, I think it was so. And as was it is fine as there is only.
+
+373
+00:43:35,980 --> 00:43:40,359
+Yeah. This is, um. XML namespace.
+
+374
+00:43:40,360 --> 00:43:47,710
+Yeah. This is the, uh, namespace definition for the Zul, uh, markup language.
+
+375
+00:43:47,920 --> 00:43:52,270
+Keymaster gatekeeper. There is only Zul. It was a Ghostbusters gag, I think.
+
+376
+00:43:52,990 --> 00:43:56,920
+Mobile games, not unity. It's a custom engine. Oh, cool. Very cool.
+
+377
+00:43:57,070 --> 00:44:00,510
+Um, the, uh uh uh.
+
+378
+00:44:00,550 --> 00:44:05,560
+That's exciting, that's exciting. Uh, I hope you enjoy your time in the world of, uh, of games.
+
+379
+00:44:05,770 --> 00:44:09,130
+I hope it's not a real grind. I've heard.
+
+380
+00:44:09,490 --> 00:44:14,859
+I've heard mixed things from, you know, people who I went to school with,
+
+381
+00:44:14,860 --> 00:44:19,929
+who entered the games industry, that certain shops, Triple-A shops, for example.
+
+382
+00:44:19,930 --> 00:44:26,710
+It can be a real grind. I hope you have a nice, long career doing what you love and that you get to enjoy the whole time.
+
+383
+00:44:28,480 --> 00:44:35,050
+Okay, uh, let's file a bug file, a bug file a bug, um, fix up the.
+
+384
+00:44:35,230 --> 00:44:39,100
+So the the I think it's called the backup settings.
+
+385
+00:44:39,280 --> 00:44:42,940
+Backup settings. Um, widget.
+
+386
+00:44:43,690 --> 00:44:49,330
+Let me just double check. Backup settings.
+
+387
+00:44:49,330 --> 00:44:55,030
+Yeah. Fix up the back up settings widget to be closer to the spec.
+
+388
+00:44:55,990 --> 00:45:01,230
+Um, so this is a task no severity P3.
+
+389
+00:45:01,270 --> 00:45:13,510
+Tag it right for our project. And I'll say, uh, this isn't going to be exhaustive because there are still a number of moving parts here.
+
+390
+00:45:14,380 --> 00:45:27,500
+But what I'd like to do is one. Show the back up on back up off state.
+
+391
+00:45:29,420 --> 00:45:35,020
+Have the man it turn. Uh, have the back up.
+
+392
+00:45:35,800 --> 00:45:45,620
+What is it called? Manage back up whenever you've got, uh, back ups disabled, it just has manage back up.
+
+393
+00:45:48,010 --> 00:46:04,130
+Turn on. Have a. Show a turn on backup button kept backups are disabled, which brings up the Manage Backup dialog.
+
+394
+00:46:07,370 --> 00:46:12,710
+Um, right. Like if you click on turn on back.
+
+395
+00:46:12,740 --> 00:46:23,530
+Yeah. Actually, um, let me just.
+
+396
+00:46:26,200 --> 00:46:31,480
+Just give me a quick second here. Does it ever say manage back up.
+
+397
+00:46:31,540 --> 00:46:47,060
+Turn on backup. Turn off backup. Tour off back up shop at short for their location at it never says oh yeah it does, says Manage Backup when it's on.
+
+398
+00:46:58,820 --> 00:47:03,050
+But in a different screenshot it says turn off backup.
+
+399
+00:47:03,140 --> 00:47:10,970
+Sorry, I'm not I'm not showing this to you because I don't know how much of this figma I want to show, but.
+
+400
+00:47:15,100 --> 00:47:20,890
+Okay. That might be a question for. For our designers.
+
+401
+00:47:25,940 --> 00:47:30,840
+Show a turn on back of backups or disable brings up the Manage Backup dialog.
+
+402
+00:47:32,220 --> 00:47:35,730
+Um. Show the last backup time.
+
+403
+00:47:36,630 --> 00:47:47,310
+Um, I'm not going to show the the location. Well, maybe I will show the last backup location.
+
+404
+00:47:50,260 --> 00:47:57,060
+Uh, or last backup file name. And then.
+
+405
+00:48:02,910 --> 00:48:07,050
+What else? Location.
+
+406
+00:48:09,530 --> 00:48:14,210
+To choose. Choose a file.
+
+407
+00:48:14,690 --> 00:48:17,840
+There's a restore, so I think it's supposed to be restore.
+
+408
+00:48:18,980 --> 00:48:23,780
+Um. I think that's all.
+
+409
+00:48:23,930 --> 00:48:27,380
+Uh. Uh, what I what this bug will not cover.
+
+410
+00:48:32,070 --> 00:48:36,960
+Uh, the show, the, uh, the location.
+
+411
+00:48:39,300 --> 00:48:46,699
+Show in folder or edit buttons from, uh, copy link.
+
+412
+00:48:46,700 --> 00:48:52,410
+Kenya link. From, uh.
+
+413
+00:48:54,740 --> 00:48:57,910
+And any of the restore your data part?
+
+414
+00:49:04,210 --> 00:49:07,210
+So this will be an incremental improvement.
+
+415
+00:49:12,100 --> 00:49:19,360
+Not a one on one shot. Okay.
+
+416
+00:49:21,750 --> 00:49:41,170
+Take. So says that they're dealing with voxels now helping mining industries voxels to help the mining industry.
+
+417
+00:49:42,220 --> 00:49:45,940
+Very interesting. Okay.
+
+418
+00:49:46,460 --> 00:49:52,359
+Uh, I want to base our work, however, off of my scheduling, uh, patch.
+
+419
+00:49:52,360 --> 00:49:59,500
+So I'm going to, um. I'm going to actually base it off of this one.
+
+420
+00:50:06,310 --> 00:50:14,180
+So build. A question for Ammon's seven K.
+
+421
+00:50:14,870 --> 00:50:20,600
+Um, has your company, um, made any games that you really enjoy, like.
+
+422
+00:50:20,720 --> 00:50:28,150
+Are there any games that you, um, that you're going to be working on that you've tried and you're like, oh yeah, this is really cool.
+
+423
+00:50:28,160 --> 00:50:33,080
+Like, maybe you don't have to give us any title if you're trying to, like, not tell us who you work for, that's fine.
+
+424
+00:50:33,080 --> 00:50:39,500
+But I just I'm curious to know whether or not you've been able to play any cool games that you really dig at your at your company.
+
+425
+00:50:42,380 --> 00:50:47,300
+Um, this is also an opportunity to be like, oh, our games are only okay, and you don't have to give us the company name.
+
+426
+00:50:47,330 --> 00:50:51,740
+It's up to you. It's up to you. Uh, okay.
+
+427
+00:50:52,070 --> 00:50:57,170
+So here we are. Here's the definition for the UI.
+
+428
+00:50:59,450 --> 00:51:06,320
+Um, what I'm going to do. The back up in progress thing.
+
+429
+00:51:09,440 --> 00:51:12,920
+Is actually not necessary. I'm going to get rid of that.
+
+430
+00:51:17,390 --> 00:51:24,660
+Scheduled backups. Sensitive data.
+
+431
+00:51:35,070 --> 00:51:44,840
+Local schedule. So what I'm going to do is I'm going to put in.
+
+432
+00:51:48,910 --> 00:51:55,510
+Some big honking piece of text. What's a. It's a good example.
+
+433
+00:51:57,310 --> 00:52:03,310
+So this is size 20 to the header.
+
+434
+00:52:08,330 --> 00:52:20,510
+And. It's about right font size, but it's ultimately about 22 tall.
+
+435
+00:52:23,510 --> 00:52:27,880
+And then this thing is supposed to be 17.
+
+436
+00:52:30,060 --> 00:52:33,900
+Ultimately, I have 24.
+
+437
+00:52:33,910 --> 00:52:38,069
+That's making sense. Oh. Font size 22.
+
+438
+00:52:38,070 --> 00:52:41,160
+Font size 17. That's. Sorry, I made a mistake.
+
+439
+00:52:41,940 --> 00:52:45,720
+And this is font size 15, so this is only slightly larger.
+
+440
+00:52:45,960 --> 00:52:52,080
+We do have like a typography. This is in content font heading default.
+
+441
+00:52:52,290 --> 00:52:57,120
+This is in content font heading large. Um.
+
+442
+00:53:01,890 --> 00:53:05,580
+And I think is the typography style sheet in here.
+
+443
+00:53:11,700 --> 00:53:17,040
+Typography. Yeah. Good.
+
+444
+00:53:17,390 --> 00:53:22,400
+Okay, I think. I think it's good. For my board.
+
+445
+00:53:23,600 --> 00:53:30,940
+Let's put her. Rules from text and typography.
+
+446
+00:53:30,950 --> 00:53:44,140
+Okay, good. Font size was turned to xlarge and I think that matches that is not match this.
+
+447
+00:53:44,150 --> 00:53:47,150
+This is just large and this is default.
+
+448
+00:53:47,960 --> 00:53:51,080
+And this is also default. So these are actually.
+
+449
+00:53:55,020 --> 00:54:02,100
+In content font body default, but the size is different.
+
+450
+00:54:02,670 --> 00:54:07,850
+That looks like maybe there there's been a mistake there. Font.
+
+451
+00:54:07,860 --> 00:54:11,759
+Oh it's heading. Default. Heading. Default. Heading.
+
+452
+00:54:11,760 --> 00:54:16,080
+Large. Heading. Default to such thing exist.
+
+453
+00:54:18,000 --> 00:54:21,210
+Typography. Heading. Large.
+
+454
+00:54:22,320 --> 00:54:28,710
+Heading. Extra. Large. Heading large. So maybe H2 it's supposed to be an H2.
+
+455
+00:54:29,310 --> 00:54:37,400
+And that is what this is. It's an H2. Oh wait no no no no no no.
+
+456
+00:54:37,590 --> 00:54:43,410
+I'm getting confused. General is an H1.
+
+457
+00:54:43,890 --> 00:54:47,130
+This is an H2.
+
+458
+00:54:48,060 --> 00:54:52,410
+This is also in H2. What does an H3 look like?
+
+459
+00:54:54,400 --> 00:54:58,150
+Just normal text. Hmm.
+
+460
+00:55:00,320 --> 00:55:05,190
+Okay. What does sink do?
+
+461
+00:55:07,390 --> 00:55:11,590
+Sinking on sinking is using an H2.
+
+462
+00:55:23,060 --> 00:55:27,950
+So I wonder if they're expecting this to be in its own section.
+
+463
+00:55:27,980 --> 00:55:42,690
+That's what's up. Okay, well, for now, what I'll do is I will have.
+
+464
+00:55:46,510 --> 00:55:51,310
+Hmhm. Text and typography.
+
+465
+00:56:00,530 --> 00:56:07,360
+I'll use heading large on. Span.
+
+466
+00:56:09,440 --> 00:56:15,500
+As equals heading large. And I'll just say like back up on.
+
+467
+00:56:16,340 --> 00:56:19,610
+Let's take a look and see what that looks like. If I just do that.
+
+468
+00:56:38,490 --> 00:56:41,700
+Oof! That's a bit big. Uh. Not quite.
+
+469
+00:56:41,730 --> 00:56:46,830
+Let's let's modify this a little bit. Heading medium.
+
+470
+00:56:49,780 --> 00:56:57,960
+That's more like it. Heading medium. And now the backup, on or off?
+
+471
+00:56:57,960 --> 00:57:02,340
+That is the sort of thing that, uh, I think.
+
+472
+00:57:02,430 --> 00:57:06,300
+Let's take a look. And how sync does it again? Sync.
+
+473
+00:57:09,060 --> 00:57:12,390
+Um. Syncing on.
+
+474
+00:57:14,520 --> 00:57:24,210
+Drafts. Syncing on. So they probably do the whole string group prefs sinking on.
+
+475
+00:57:26,820 --> 00:57:30,060
+Right. Okay. We're going to do the same thing.
+
+476
+00:57:32,580 --> 00:57:43,140
+Uh, that, uh uh, that has a call this, uh, ID equals backup schedule.
+
+477
+00:57:48,320 --> 00:57:58,340
+I'm tasked to find scheduled backups enabled as the ID and.
+
+478
+00:58:02,880 --> 00:58:06,030
+I'll go to backup settings that FTL.
+
+479
+00:58:10,120 --> 00:58:14,260
+Um. Uh, settings.
+
+480
+00:58:14,950 --> 00:58:18,130
+Uh, data.
+
+481
+00:58:18,130 --> 00:58:21,430
+Uh settings. Data. Uh. Backup.
+
+482
+00:58:23,770 --> 00:58:30,429
+Uh, scheduled. Backups.
+
+483
+00:58:30,430 --> 00:58:34,690
+On top of that. Backup.
+
+484
+00:58:37,500 --> 00:58:41,940
+Hon. Back off.
+
+485
+00:58:46,850 --> 00:58:52,080
+Okay. And then we'll go back to.
+
+486
+00:58:55,260 --> 00:58:59,520
+Back. Upsetting those images.
+
+487
+00:59:08,070 --> 00:59:13,990
+Um. Oh, we can make our choice here.
+
+488
+00:59:14,000 --> 00:59:23,479
+On which one to show. Um, by looking at the state, the current backups state back, uh, scheduled backups enabled.
+
+489
+00:59:23,480 --> 00:59:26,690
+We do have a state for that. So we'll say.
+
+490
+00:59:28,970 --> 00:59:32,600
+Uh, data l10n ID equals.
+
+491
+00:59:34,540 --> 00:59:42,870
+Uh. Uh.
+
+492
+00:59:45,240 --> 00:59:49,980
+Scheduled backups enabled out, and then I'd.
+
+493
+00:59:54,000 --> 01:00:00,990
+Let scheduled backups out in an ID equal this dot state dot.
+
+494
+01:00:04,460 --> 01:00:11,630
+Scheduled backups enabled, and then it's, um.
+
+495
+01:00:16,910 --> 01:00:28,350
+This. Or this.
+
+496
+01:00:34,310 --> 01:00:41,240
+Okay, let's take a look and see what that does. Um.
+
+497
+01:00:45,720 --> 01:00:55,460
+It broke things. Let's take a quick peek here.
+
+498
+01:00:57,320 --> 01:01:00,350
+They just fully broke stuff. Back up settings.
+
+499
+01:01:02,020 --> 01:01:07,570
+No complaints or anything here. It's custom elements type.
+
+500
+01:01:07,570 --> 01:01:11,930
+Error schedule. The state is undefined. Is it something else?
+
+501
+01:01:11,960 --> 01:01:18,320
+This backup service state. That's what it is. Start backup service.
+
+502
+01:01:18,330 --> 01:01:24,080
+State. Backup off!
+
+503
+01:01:24,200 --> 01:01:27,980
+Okay, now turn it on. Backup on now!
+
+504
+01:01:28,010 --> 01:01:31,190
+Turn it off! Nice. All right.
+
+505
+01:01:33,620 --> 01:01:37,370
+Um. Good stuff.
+
+506
+01:01:39,080 --> 01:01:46,100
+Next. Uh, we're going to move this button all the way over to the right here.
+
+507
+01:01:46,820 --> 01:01:53,830
+And that way, I think we tend to do that. It's inspect here.
+
+508
+01:01:55,930 --> 01:01:58,960
+So you flex. We're going to flex.
+
+509
+01:02:05,110 --> 01:02:12,550
+Can I flex this? That's not the way to do this.
+
+510
+01:02:17,580 --> 01:02:26,270
+Um, it might also help if I like, um, align self.
+
+511
+01:02:26,640 --> 01:02:33,270
+Uh, flex end? No, because we're not inside a grid or flex side.
+
+512
+01:02:33,570 --> 01:02:37,140
+That's why scheduled backups might need to be.
+
+513
+01:02:41,070 --> 01:02:44,250
+We might need to be inside of like a flex row.
+
+514
+01:02:46,500 --> 01:02:53,940
+Um, div. ID equals scheduled backups.
+
+515
+01:02:56,950 --> 01:03:13,170
+Control. Uh, we're going to move these dialogs.
+
+516
+01:03:15,900 --> 01:03:32,230
+Here. Uh, and I'm going to move this stuff up there.
+
+517
+01:03:36,580 --> 01:03:40,540
+And this thing back up settings.
+
+518
+01:03:47,530 --> 01:03:52,450
+Um. Display flex. Let's take a look.
+
+519
+01:03:56,020 --> 01:04:00,220
+Okay. This.
+
+520
+01:04:00,220 --> 01:04:04,990
+If I give this a flex of one, it's not quite enough.
+
+521
+01:04:07,740 --> 01:04:13,020
+Because this also needs to flex out. Because this needs to flex out.
+
+522
+01:04:16,750 --> 01:04:21,890
+X one. Yeah. That's what's up.
+
+523
+01:04:21,940 --> 01:04:38,930
+That's what's up. Okay, so I need to make Maine dot incorrect HTML back up settings.
+
+524
+01:04:40,460 --> 01:04:47,360
+Flex equals one. And then I need to make.
+
+525
+01:04:54,950 --> 01:05:01,170
+This one. Flax. Spend.
+
+526
+01:05:03,900 --> 01:05:10,330
+Settings. It's nice.
+
+527
+01:05:13,470 --> 01:05:22,460
+And then I think I also need it to be center to vertically align content center there.
+
+528
+01:05:24,920 --> 01:05:28,030
+Okay. All right.
+
+529
+01:05:28,080 --> 01:05:33,930
+Let's take a look. Oh, I think I have to build because I changed a pre-processed file.
+
+530
+01:05:36,300 --> 01:05:39,360
+Times 208. Making good progress.
+
+531
+01:05:50,240 --> 01:05:57,700
+Hmhm still not flexing. Why not? Huh?
+
+532
+01:05:58,780 --> 01:06:14,130
+Why are you flexing? Hmm.
+
+533
+01:06:14,490 --> 01:06:21,060
+Okay. Uh, backup settings. I think what I'll do is I'll say that that's what happens.
+
+534
+01:06:21,900 --> 01:06:26,640
+So then main and quick, get rid of that.
+
+535
+01:06:29,160 --> 01:06:35,010
+Um. Faster.
+
+536
+01:06:48,300 --> 01:06:52,090
+Better, better. Choose your file.
+
+537
+01:06:52,110 --> 01:06:55,170
+I'm going to move that where it went. Where's that coming from?
+
+538
+01:06:55,320 --> 01:07:02,309
+Backup settings images. Choose your file render from backup template.
+
+539
+01:07:02,310 --> 01:07:07,080
+Restore from backup template. I'm going to move that down here.
+
+540
+01:07:19,750 --> 01:07:23,910
+Back up, back up. Okay.
+
+541
+01:07:27,710 --> 01:07:32,080
+Um. Next.
+
+542
+01:07:32,680 --> 01:07:42,410
+We need the. Time of the last backup.
+
+543
+01:07:54,420 --> 01:08:01,560
+Hmhm. I he it equals like last back up.
+
+544
+01:08:04,340 --> 01:08:13,040
+Info. And then there is a span equals last backup date.
+
+545
+01:08:15,950 --> 01:08:21,290
+And last backup file name.
+
+546
+01:08:22,970 --> 01:08:26,089
+And which those be spans.
+
+547
+01:08:26,090 --> 01:08:36,590
+Probably not. Uh, and what should the text be?
+
+548
+01:08:44,190 --> 01:09:01,420
+Uh, l10n ID. So if there is no last backup, then we don't show this.
+
+549
+01:09:03,950 --> 01:09:07,490
+If, um. How do I put logic in here?
+
+550
+01:09:11,240 --> 01:09:16,580
+Render. I think I've seen people do logic in here.
+
+551
+01:09:18,290 --> 01:09:21,830
+It's like. Um.
+
+552
+01:09:40,500 --> 01:09:44,460
+Okay. Templates.
+
+553
+01:09:44,790 --> 01:09:53,430
+So. The state backup service.
+
+554
+01:09:53,490 --> 01:10:00,510
+State that last backup. Uh.
+
+555
+01:10:05,760 --> 01:10:10,890
+We need to get the back up. State. State.
+
+556
+01:10:15,370 --> 01:10:21,410
+The last backup date. And we need to pipe that down.
+
+557
+01:10:24,650 --> 01:10:27,670
+Back up. Pick it back up. UI.
+
+558
+01:10:27,710 --> 01:10:34,239
+Pair it. Since the state.
+
+559
+01:10:34,240 --> 01:10:42,819
+Down. Pack up your child. See, you said since that to the backup service state.
+
+560
+01:10:42,820 --> 01:10:53,709
+So I actually I need to update backup settings dot mjs to have last backup date equal.
+
+561
+01:10:53,710 --> 01:11:00,520
+No. And then.
+
+562
+01:11:05,230 --> 01:11:10,990
+Last backup date. Um.
+
+563
+01:11:13,900 --> 01:11:17,320
+This. That. What's the convention?
+
+564
+01:11:20,710 --> 01:11:26,220
+Last back up template. I know.
+
+565
+01:11:34,950 --> 01:11:42,030
+Okay. Uh, last backup template.
+
+566
+01:11:44,970 --> 01:11:58,480
+HTML. Uh, that uh l10n uh args equals.
+
+567
+01:12:03,900 --> 01:12:09,420
+I think it's like this. I think it'll be like. Um.
+
+568
+01:12:17,680 --> 01:12:32,110
+Last backup date. Get time. Parks.
+
+569
+01:12:35,220 --> 01:13:02,939
+Uh, David. Oh.
+
+570
+01:13:02,940 --> 01:13:16,940
+Even better. Uh, equals. Uh, let backup date our schools.
+
+571
+01:13:17,930 --> 01:13:28,910
+Um, date? I think that's how you get the get time, because that's how we render them.
+
+572
+01:13:29,570 --> 01:13:33,410
+Backup service, right?
+
+573
+01:13:34,160 --> 01:13:39,320
+Yeah. It's kind of silly, but that's the way it is.
+
+574
+01:13:41,030 --> 01:13:45,050
+Um. Backup settings get time has the date.
+
+575
+01:13:46,190 --> 01:13:52,340
+Um. And then. Calls.
+
+576
+01:13:54,530 --> 01:13:57,599
+Jason. Stringify date.
+
+577
+01:13:57,600 --> 01:14:15,500
+Parks. And last backup date.
+
+578
+01:14:17,720 --> 01:14:20,990
+Wait a second. Wait a second. What do we stash in there?
+
+579
+01:14:23,360 --> 01:14:26,870
+It's a number. Oh, it's a number. Okay, so I don't have to do get time on it.
+
+580
+01:14:27,140 --> 01:14:32,210
+Um, I'm is spec service.
+
+581
+01:14:38,860 --> 01:14:51,940
+And file name to do. And then I need to set the data l10n id to be uh.
+
+582
+01:14:55,800 --> 01:14:59,940
+Like in. Settings.
+
+583
+01:15:03,350 --> 01:15:10,880
+Data backup. Last backup date.
+
+584
+01:15:12,620 --> 01:15:18,560
+And I'll put that inside of backup settings, not FTL.
+
+585
+01:15:23,150 --> 01:15:28,490
+And we do this date time.
+
+586
+01:15:36,990 --> 01:15:40,529
+Date and exact form as last.
+
+587
+01:15:40,530 --> 01:15:47,900
+Backup. Time.
+
+588
+01:15:48,330 --> 01:15:51,540
+Sure. And then. Date. Good.
+
+589
+01:15:52,620 --> 01:16:03,100
+All right. Let's see what that looks like. Last backup for 35 on January 20th, 1970.
+
+590
+01:16:03,120 --> 01:16:09,020
+That can't be right. Um.
+
+591
+01:16:11,730 --> 01:16:16,010
+Full on Unix time for sure. Uh, I am doing something wrong here.
+
+592
+01:16:16,020 --> 01:16:21,600
+I have a feeling I need to multiply. I need to do a multiply.
+
+593
+01:16:29,500 --> 01:16:33,790
+Or even better, last backup date equals.
+
+594
+01:16:37,900 --> 01:16:45,120
+Now. Seconds. Yeah.
+
+595
+01:16:45,130 --> 01:16:49,890
+Okay. Um, I have to multiply it by a thousand.
+
+596
+01:16:52,220 --> 01:17:02,870
+And I'll explain why in a second. The last backup date is stored in preferences.
+
+597
+01:17:05,610 --> 01:17:12,099
+Which only accepts. I think 32 bit values.
+
+598
+01:17:12,100 --> 01:17:17,200
+Signed values. So we automatically.
+
+599
+01:17:18,990 --> 01:17:26,280
+Uh, divide it by a thousand before storing it.
+
+600
+01:17:27,270 --> 01:17:36,960
+We need to re multiply it by a thousand to, uh, get fluent, to render the right time.
+
+601
+01:17:40,060 --> 01:17:43,540
+I might get some review feedback for that. They're like, what the heck? What's going on?
+
+602
+01:17:43,840 --> 01:17:47,690
+That's fine. That's more like it.
+
+603
+01:17:47,750 --> 01:17:51,230
+June 20th. That was yesterday. 248. Good stuff.
+
+604
+01:17:54,920 --> 01:18:04,640
+Um. And then the last backup file name, uh, also need to record.
+
+605
+01:18:09,830 --> 01:18:18,320
+So that's something from backup service. That's backup pref name.
+
+606
+01:18:21,020 --> 01:18:25,009
+That's backup file. File.
+
+607
+01:18:25,010 --> 01:18:28,010
+Name. Pref name. Last backup file.
+
+608
+01:18:30,110 --> 01:18:33,230
+And I'm pretty sure we don't have that set as any value.
+
+609
+01:18:33,230 --> 01:18:39,850
+Right. Right.
+
+610
+01:18:41,760 --> 01:18:44,900
+So then when we write the file.
+
+611
+01:18:51,260 --> 01:19:03,890
+Prefix. File name. File name. Services.
+
+612
+01:19:03,890 --> 01:19:11,810
+Prefs. Set. String pref. That to file name.
+
+613
+01:19:20,220 --> 01:19:23,850
+Um. Uh, last backup date.
+
+614
+01:19:27,600 --> 01:19:30,660
+Last backup file name. No.
+
+615
+01:19:34,580 --> 01:19:41,800
+Just good. Equals when we create the back up.
+
+616
+01:19:41,810 --> 01:19:44,870
+Okay. We knit the backup scheduler.
+
+617
+01:19:51,310 --> 01:19:55,810
+This that state lines back up.
+
+618
+01:19:56,230 --> 01:20:01,000
+File name equals services. Graphs get string.
+
+619
+01:20:01,000 --> 01:20:10,260
+Pref. Last backup file and pref for the empty string.
+
+620
+01:20:12,240 --> 01:20:24,400
+So I guess this is not that. Um, and then down in back up settings.
+
+621
+01:20:27,750 --> 01:20:40,900
+Just look at the file name. And was supposed to look like file name.
+
+622
+01:20:43,270 --> 01:20:52,240
+Uh, data l10n args equals Json Stringify backup file name args.
+
+623
+01:20:55,510 --> 01:21:01,330
+Uh, backup file name and or let uh equals file name.
+
+624
+01:21:01,870 --> 01:21:06,230
+Um. It's the back of service state.
+
+625
+01:21:09,800 --> 01:21:16,489
+And then the data out analyzed the Obi settings.
+
+626
+01:21:16,490 --> 01:21:19,760
+Data backup. Last backup file name.
+
+627
+01:21:32,640 --> 01:21:36,600
+Okay. Um, so we need to put this in here.
+
+628
+01:21:37,230 --> 01:21:40,590
+Backup settings FTL.
+
+629
+01:21:42,480 --> 01:21:46,740
+De de de de de de de equals.
+
+630
+01:21:46,740 --> 01:21:49,860
+Flasks. All right. File name.
+
+631
+01:21:53,400 --> 01:21:58,380
+And then. How do we do the variables again?
+
+632
+01:22:02,320 --> 01:22:07,000
+I only have the variables.
+
+633
+01:22:10,760 --> 01:22:16,610
+File name. String. The name of the, uh, file.
+
+634
+01:22:17,060 --> 01:22:20,780
+The name of the backup. Last backup.
+
+635
+01:22:21,980 --> 01:22:26,120
+The file name of the last backup that was created.
+
+636
+01:22:28,940 --> 01:22:32,070
+File name and then backup.
+
+637
+01:22:32,090 --> 01:22:37,670
+So it's time to use filing that file name.
+
+638
+01:22:37,700 --> 01:22:51,040
+Yeah. Let's see. Let's see what that does. So I'm going to have to restart create a backup because there is no file name stored in backup.
+
+639
+01:22:51,670 --> 01:22:58,040
+Uh, create a backup. And still no good.
+
+640
+01:22:58,130 --> 01:23:04,410
+Why not? Last back, a file name pref is not defined.
+
+641
+01:23:04,430 --> 01:23:15,320
+2779. 2779.
+
+642
+01:23:15,320 --> 01:23:18,830
+Last backup file named pref. Oh. Uh.
+
+643
+01:23:18,830 --> 01:23:32,100
+Whoops. Should be that. 737792779 should in fact.
+
+644
+01:23:33,360 --> 01:23:37,140
+All right. That should work. No.
+
+645
+01:23:38,010 --> 01:23:50,260
+Still don't like. It didn't insert.
+
+646
+01:23:50,830 --> 01:23:54,700
+Why not? Config.
+
+647
+01:23:55,390 --> 01:24:00,490
+Last. Uh. Backup. Uh. Scheduled.
+
+648
+01:24:00,730 --> 01:24:05,830
+Last. Backup. File name. There it is. Uh.
+
+649
+01:24:05,950 --> 01:24:16,740
+Backup file. So if I get the state of the backup service.
+
+650
+01:24:18,990 --> 01:24:30,630
+Um. Uh, yeah, yeah.
+
+651
+01:24:30,650 --> 01:24:36,090
+Star state. The last backup file name is that.
+
+652
+01:24:36,110 --> 01:24:44,260
+That's correct. So. If I open up the debugger.
+
+653
+01:24:47,830 --> 01:24:52,180
+I go back up settings. Let's back up the file name.
+
+654
+01:25:10,540 --> 01:25:14,110
+So that if I cause that to reset.
+
+655
+01:25:15,550 --> 01:25:18,610
+So what is file name is that?
+
+656
+01:25:21,220 --> 01:25:25,530
+So then what's the problem? Oh, it's a, uh.
+
+657
+01:25:27,520 --> 01:25:34,720
+Because. This didn't put a closing quote.
+
+658
+01:25:36,370 --> 01:25:41,860
+Classic. All right. Start. Last.
+
+659
+01:25:42,100 --> 01:25:46,450
+There it is. File name. Um. Good stuff.
+
+660
+01:25:46,520 --> 01:25:51,070
+Turn back up, turn off, back up. There it all is.
+
+661
+01:25:51,640 --> 01:25:57,460
+And, uh, let's see if we can quickly style this to match the spec.
+
+662
+01:25:59,560 --> 01:26:04,480
+Um, we're obviously missing this part, but we've got this part.
+
+663
+01:26:07,390 --> 01:26:12,640
+Um. So styling. This is, like, secondary text color.
+
+664
+01:26:13,480 --> 01:26:20,110
+Um. I think there's a.
+
+665
+01:26:22,050 --> 01:26:36,270
+File. Second. Very. Spare backups hangs text de-emphasized is the class.
+
+666
+01:26:47,540 --> 01:26:51,679
+Their. Text color.
+
+667
+01:26:51,680 --> 01:26:55,400
+De-emphasize that used anywhere else. Text to emphasize.
+
+668
+01:26:57,500 --> 01:27:04,219
+No. So what's another example of us doing that sort of thing?
+
+669
+01:27:04,220 --> 01:27:09,020
+De-emphasize text so large? Um.
+
+670
+01:27:14,350 --> 01:27:20,510
+Here. Description de-emphasized.
+
+671
+01:27:27,060 --> 01:27:30,120
+I guess I can just set text color de-emphasized on it.
+
+672
+01:27:32,250 --> 01:27:36,930
+Okay. So last backup info.
+
+673
+01:27:41,230 --> 01:27:45,969
+Uh, color. That's color.
+
+674
+01:27:45,970 --> 01:27:53,900
+De-emphasize. Let's see if that works. It does.
+
+675
+01:27:53,920 --> 01:28:03,330
+And now we just need the spacing to be correct. So we want between these things.
+
+676
+01:28:06,300 --> 01:28:13,180
+Margin of about eight pixels. That's already got.
+
+677
+01:28:15,830 --> 01:28:25,780
+A little bit of its own like margin. So what I'm going to suggest is that.
+
+678
+01:28:33,420 --> 01:28:37,350
+Let's back up info rules.
+
+679
+01:28:39,630 --> 01:28:47,840
+I do this last back up info div margin block and eight pixels.
+
+680
+01:28:47,850 --> 01:29:06,630
+What's it look like? Still looks a little packed to me.
+
+681
+01:29:11,060 --> 01:29:17,120
+How about margin block? That's better.
+
+682
+01:29:24,880 --> 01:29:31,720
+Like, it claims that there's eight pixels of difference, but it's not taking into account the existing sort of like line height.
+
+683
+01:29:33,580 --> 01:29:38,530
+Like, I guess. Do I want to set like I.
+
+684
+01:29:42,370 --> 01:29:52,630
+I about that. I think that's pretty unusual for us to set the line height like that.
+
+685
+01:30:04,120 --> 01:30:07,419
+But maybe. Maybe there are other cases. Line height.
+
+686
+01:30:07,420 --> 01:30:10,630
+Um. Oh, I am, over time.
+
+687
+01:30:10,840 --> 01:30:14,020
+Um. Hey, thanks for watching.
+
+688
+01:30:14,440 --> 01:30:20,220
+The joy of coding. Every once in a while, like there was.
+
+689
+01:30:23,960 --> 01:30:27,400
+Yeah. Uh, thanks for watching the Joy of coding. I hope that was interesting.
+
+690
+01:30:27,410 --> 01:30:30,500
+I hope, uh, you got to see some stuff you wanted to see.
+
+691
+01:30:30,650 --> 01:30:35,090
+Let me know what you thought. Uh, there is a form in the agenda here.
+
+692
+01:30:35,330 --> 01:30:42,080
+If you wanted to, uh, submit some feedback. Here, let me put a link into the chat, uh, form for feedback.
+
+693
+01:30:43,190 --> 01:30:48,769
+Uh, I read everything that comes in. That's a great place. If you want to ask questions or you want to get feedback on what you want to see more of,
+
+694
+01:30:48,770 --> 01:30:52,640
+what you want to see less of, would, you know, do this, do that, or try this or that sort of thing?
+
+695
+01:30:52,970 --> 01:30:56,359
+Um, if you've got ideas on ways I can improve the stream, uh,
+
+696
+01:30:56,360 --> 01:31:01,670
+go ahead and fill out that form and I'll read everything that comes in and, uh, I'm going to call it there.
+
+697
+01:31:02,420 --> 01:31:07,460
+Thanks again for watching. Have yourselves agree a great week, a great week.
+
+698
+01:31:07,550 --> 01:31:10,669
+You can have a great week if you want. Nothing wrong with that.
+
+699
+01:31:10,670 --> 01:31:15,019
+If you want to have a Greek week, but also have a great week and I'll see you hopefully next week.
+
+700
+01:31:15,020 --> 01:31:21,770
+Take care everyone. Bye bye. The joy of coding.
+
+701
+01:31:21,980 --> 01:31:22,370
+See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

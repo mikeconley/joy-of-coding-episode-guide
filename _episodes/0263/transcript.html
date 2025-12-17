@@ -1,0 +1,2769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 263 - September 22, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 263 - September 22, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=06d39a85-2418-4669-b27f-ad900148816b</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=06d39a85-2418-4669-b27f-ad900148816b">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,389 --> 00:00:14,229
+Welcome. The joy comes, hello and welcome to Episode 263 of The Joy of Coding.
+
+2
+00:00:14,229 --> 00:00:24,249
+My name is Mike Conley. It's so good to have you here. We're going to be hacking on Firefox things today, maybe looking at some telemetry probes.
+
+3
+00:00:24,249 --> 00:00:29,019
+I'm going to be answering some of your questions. It's going to be great. I also have something new to show off,
+
+4
+00:00:29,019 --> 00:00:35,619
+which I don't know how it's going to work out because it arrived like an hour ago and I've just sort of plugged everything in.
+
+5
+00:00:35,619 --> 00:00:39,339
+So I don't know if it's going to work out. But I'll get to that in a second.
+
+6
+00:00:39,339 --> 00:00:44,499
+Let me start actually by sharing my screen, OK?
+
+7
+00:00:44,499 --> 00:00:49,299
+And so let me add in a bullet here, a new toy to show off.
+
+8
+00:00:49,299 --> 00:00:53,469
+But first, before we get into that, a reminder, no plan survives breakfast.
+
+9
+00:00:53,469 --> 00:00:59,589
+I kind of know what I want to do today. I have a general layout of things I want to do, but things might go horribly wrong, and that's OK.
+
+10
+00:00:59,589 --> 00:01:06,399
+That's the name of the game with this stream where I will just try and adapt and and do my best to get through some bugs.
+
+11
+00:01:06,399 --> 00:01:12,519
+And we might get sidetracked. We might get distracted, we might get blocked on things where we might get who knows, we might close some bugs.
+
+12
+00:01:12,519 --> 00:01:19,809
+We'll see. But that's just the name of the game. We're capturing software development in the raw, warts and all.
+
+13
+00:01:19,809 --> 00:01:23,739
+The second thing is that the agenda that we're looking at is something that you have access to.
+
+14
+00:01:23,739 --> 00:01:27,639
+If you're watching this on air Mozilla, check out the details section to my left.
+
+15
+00:01:27,639 --> 00:01:32,829
+I always point in the wrong direction to my left, your no, my right, your left.
+
+16
+00:01:32,829 --> 00:01:42,339
+If you're watching this on YouTube, check the video description. And if you're watching this on Twitch, then you link.
+
+17
+00:01:42,339 --> 00:01:49,719
+I should always just have this in my clipboard. But the link is right here. Let me just drop this into the twitch chat.
+
+18
+00:01:49,719 --> 00:01:54,399
+There you go. And hopefully that shows up in the twitch chat.
+
+19
+00:01:54,399 --> 00:01:57,789
+Yes, it looks like it did. That's the first thing.
+
+20
+00:01:57,789 --> 00:02:05,079
+The second thing is that there is an episode guide. If you are, you know, curious about maybe things that I've covered in other episodes,
+
+21
+00:02:05,079 --> 00:02:08,409
+maybe you have your own corrections or addenda that you want to add.
+
+22
+00:02:08,409 --> 00:02:13,449
+Maybe I made a mistake in this episode and you want to, like, follow up on something and like, you know,
+
+23
+00:02:13,449 --> 00:02:19,239
+correct me and say, like, well, Mike said this, but in actual in actuality, this is actually the case.
+
+24
+00:02:19,239 --> 00:02:25,449
+There is an episode guide for you to do exactly that sort of thing. It's completely viewer driven and it's available on GitHub.
+
+25
+00:02:25,449 --> 00:02:31,899
+So you can you can view the episode guide as it is right now by following the link in the agenda that I just linked to.
+
+26
+00:02:31,899 --> 00:02:35,829
+In fact, let's check it out right now. Here's the episode guide.
+
+27
+00:02:35,829 --> 00:02:40,569
+We've got all the way up to episode to 60, all the way up to episode two 60.
+
+28
+00:02:40,569 --> 00:02:46,839
+And there's like a bunch of Q&A and stuff in here and like some tips and other things that I talked about.
+
+29
+00:02:46,839 --> 00:02:51,579
+And and you might yourself want to contribute to the episode guide.
+
+30
+00:02:51,579 --> 00:02:54,459
+If you'd like to do that, you can do that. It's hosted on GitHub.
+
+31
+00:02:54,459 --> 00:03:01,719
+You can send me a pull request and I will happily merge or your suggestions in your editions in.
+
+32
+00:03:01,719 --> 00:03:05,589
+And if you're not sure how to do that, if you're not sure what a pull request is or how to do that,
+
+33
+00:03:05,589 --> 00:03:12,099
+there are links in the agenda here on a guide on guides that can help you through it as the first thing.
+
+34
+00:03:12,099 --> 00:03:15,879
+The episode guide. I want to show off my new to my new toy.
+
+35
+00:03:15,879 --> 00:03:25,149
+So I for the longest time, any time I've needed to like, draw a thing, like maybe if I want to include a drawing and like, you know,
+
+36
+00:03:25,149 --> 00:03:33,189
+show a diagram or something, I would like draw with my mouse and it would be really sloppy and I might try and draw words and it'd be awful.
+
+37
+00:03:33,189 --> 00:03:42,549
+But I recently cashed in some some rewards points and, you know, I got some recommendations on some hardware and I have a new drawing tool.
+
+38
+00:03:42,549 --> 00:03:48,819
+So if all goes well and I just plug this stuff in and I just downloaded the software, it's called Carita.
+
+39
+00:03:48,819 --> 00:03:53,799
+It's like opensource cross platform drawing and painting software.
+
+40
+00:03:53,799 --> 00:03:57,969
+And this should work if I. Yeah, there we go.
+
+41
+00:03:57,969 --> 00:04:02,379
+It's a big that's a big brush. Let me try something a little bit lighter test.
+
+42
+00:04:02,379 --> 00:04:06,609
+Well, test. I'm still kind of getting used to it.
+
+43
+00:04:06,609 --> 00:04:09,789
+I need to I need to, you know, get better at it.
+
+44
+00:04:09,789 --> 00:04:16,089
+But soon I'll be able to like draw boxes and be like, OK, this is where the doc show, you know, starts.
+
+45
+00:04:16,089 --> 00:04:24,129
+And then we've got like a tree of dog show, like, I can do this stuff now, which I think will be handy for explaining things or answering questions.
+
+46
+00:04:24,129 --> 00:04:28,449
+So, yeah, I'm pretty excited. I'm pretty excited.
+
+47
+00:04:28,449 --> 00:04:31,779
+I do need to adjust. You can't tell here,
+
+48
+00:04:31,779 --> 00:04:37,359
+but I've realized now that the my my microphone boom is down is that it's in the way
+
+49
+00:04:37,359 --> 00:04:41,949
+I'm going to have to like reorient my entire space so that I don't have to like,
+
+50
+00:04:41,949 --> 00:04:47,199
+reach under my microphone boom in order to draw. But details, details.
+
+51
+00:04:47,199 --> 00:04:53,559
+We'll figure that out as we go. So if you have questions that I can answer with drawing now, I can do that.
+
+52
+00:04:53,559 --> 00:04:58,479
+So let me now go back to my screen over here.
+
+53
+00:04:58,479 --> 00:05:05,859
+So I've done that. It is a what's called a Wacom tablet or a Wacom Cinetic 16.
+
+54
+00:05:05,859 --> 00:05:15,969
+If you're curious, it was pretty pricey. But again, I was able to cash in some rewards, some some some credit card rewards and stuff.
+
+55
+00:05:15,969 --> 00:05:20,169
+This is not like a thing that I got through work. This is like my own personal hardware.
+
+56
+00:05:20,169 --> 00:05:27,789
+So, you know, I can do I can do like cartooning or something in my off hours.
+
+57
+00:05:27,789 --> 00:05:36,699
+OK, so what are we working on today? I have a couple of neat info's on me to update some probes, some telemetry probes.
+
+58
+00:05:36,699 --> 00:05:41,739
+So we're going to look at that.
+
+59
+00:05:41,739 --> 00:05:51,699
+So what is a telemetry probe, a telemetry probe is a thing that we put into Firefox to measure usage, measure performance, to measure, you know,
+
+60
+00:05:51,699 --> 00:05:59,859
+behavior in the wild so that, you know, features that we might not be sure how people are using them or whether or not they're even using them.
+
+61
+00:05:59,859 --> 00:06:05,849
+We add probes to get information on it. And some of this information is actually you can you can view it yourself.
+
+62
+00:06:05,849 --> 00:06:10,989
+If you go to telemetry dot in the zerg, there's something called the measurement dashboard. You can go here and you can, like,
+
+63
+00:06:10,989 --> 00:06:21,809
+open up some of the measurement dashboards and loops that we should note on that picture in picture like you can look at.
+
+64
+00:06:21,809 --> 00:06:29,939
+A histogram for how many, like over a period of time, say, from September 6th to September 16th,
+
+65
+00:06:29,939 --> 00:06:40,019
+this is a histogram of like the maximum number of concurrent picture in picture players that users on Beita had open have got Beita selected here.
+
+66
+00:06:40,019 --> 00:06:47,789
+We can look at Knightley as well. We can't look at release because I think there's a there's a problem with viewing release.
+
+67
+00:06:47,789 --> 00:06:57,929
+Either we don't collect this probe on release or we we just don't have access to the release data here.
+
+68
+00:06:57,929 --> 00:07:05,099
+But at any rate, we can look at Knightley and we can look at Beita and we can see that like the vast majority of users, for example,
+
+69
+00:07:05,099 --> 00:07:11,849
+or the vast majority of clients, I should say, because there can be multiple users per client and there can be multiple clients per user.
+
+70
+00:07:11,849 --> 00:07:19,719
+Like you can't really map one to one the number of things sending a telemetry packet to people.
+
+71
+00:07:19,719 --> 00:07:28,529
+So, I mean, we're going to use the word client, the number of individual clients between September 6th and September 19th.
+
+72
+00:07:28,529 --> 00:07:34,499
+Most of them, the vast majority of them say ninety eight point three, five percent, according to this histogram use.
+
+73
+00:07:34,499 --> 00:07:40,169
+At most when they're using picture in picture, they use that most one window. So they aren't taking advantage of the fact that we do.
+
+74
+00:07:40,169 --> 00:07:45,629
+We allow multiple picture in picture player windows. But that's not all of them.
+
+75
+00:07:45,629 --> 00:07:52,869
+Some people do. Some people have two concurrent player windows, one point three five percent of clients between September 6th,
+
+76
+00:07:52,869 --> 00:07:58,109
+the 19th had a maximum of two concurrent picture in picture player windows.
+
+77
+00:07:58,109 --> 00:08:03,059
+And that's a pretty like it's a very steep drop off, like we go from ninety eight point three,
+
+78
+00:08:03,059 --> 00:08:14,909
+five percent of samples down to one point three five percent samples down to like point one for like it's like orders of magnitude drop off as you go.
+
+79
+00:08:14,909 --> 00:08:21,149
+Pretty steep tail. I don't know if there's like a logarithmic way of viewing this,
+
+80
+00:08:21,149 --> 00:08:30,629
+but what we can also do is we can look at the evolution over time of say, well, it's not like the median.
+
+81
+00:08:30,629 --> 00:08:36,629
+The median is for the most part one. But if we look at like the 90th percentile.
+
+82
+00:08:36,629 --> 00:08:42,419
+Well, I guess this isn't a very good probe to measure, because most people just use one when they when they use it at all.
+
+83
+00:08:42,419 --> 00:08:51,709
+So let's use a different probe. All of the different ways that people opened picture in picture know how all the different ways that people closed
+
+84
+00:08:51,709 --> 00:08:58,369
+picture in picture because there are different mechanisms that we record whenever you close picture and picture.
+
+85
+00:08:58,369 --> 00:09:09,129
+And how do I do that? How do we view this? Do we just stop measuring this, we may have stopped measuring this one at about.
+
+86
+00:09:09,129 --> 00:09:17,349
+Open method. Yeah, I think this one expired, which is maybe part of the problem here.
+
+87
+00:09:17,349 --> 00:09:24,309
+Picture a picture, close method, except I did see it in the evolution view here.
+
+88
+00:09:24,309 --> 00:09:33,919
+Beda. Opened method now. OK, so the dashboard here could use a little work, it's oh, you know what?
+
+89
+00:09:33,919 --> 00:09:38,869
+I remember what it is. It's the number of people is actually too small.
+
+90
+00:09:38,869 --> 00:09:43,699
+We trim if we remove trimming small buckets, we remove trimming, sanitize the data.
+
+91
+00:09:43,699 --> 00:09:49,999
+No, I don't actually know what's going wrong here. I don't know why it's showing it's not showing up correctly.
+
+92
+00:09:49,999 --> 00:10:00,669
+But basically, the vast majority of users are accessing picture in picture via the the toggle, which shouldn't be super surprising.
+
+93
+00:10:00,669 --> 00:10:05,659
+The context menu is not used as much.
+
+94
+00:10:05,659 --> 00:10:10,609
+I just wish that this visualization actually showed it off for some reason.
+
+95
+00:10:10,609 --> 00:10:15,079
+The distribution like the I want to show you the distribution, but it's not showing up.
+
+96
+00:10:15,079 --> 00:10:21,649
+So that's kind of disappointing. Anyways, that's all to say that we have a bunch of probes that measure different things.
+
+97
+00:10:21,649 --> 00:10:29,299
+And one of the probes that we want to renew is whether like a probe that captures certain types of events,
+
+98
+00:10:29,299 --> 00:10:31,789
+like a user has created a picture and picture window,
+
+99
+00:10:31,789 --> 00:10:36,229
+a user has resized a picture and picture window, and a user has moved a picture in picture window.
+
+100
+00:10:36,229 --> 00:10:43,759
+And we can use this information to make, you know, to measure things like, well, first of all, how many people are using the feature?
+
+101
+00:10:43,759 --> 00:10:48,349
+How many people are finding that the initial window is not the size that they need it to be?
+
+102
+00:10:48,349 --> 00:10:55,159
+And how many people are finding that the initial position is not where they need to be and they need to move it around?
+
+103
+00:10:55,159 --> 00:10:56,449
+These were actually very useful.
+
+104
+00:10:56,449 --> 00:11:06,409
+Whenever we were like we landed a feature about a year ago where we remember the position of the last picture and picture player window that closed.
+
+105
+00:11:06,409 --> 00:11:10,729
+And then we saw changes in some of these probes, which is pretty interesting.
+
+106
+00:11:10,729 --> 00:11:18,259
+And so one of the things that happens is because we have what's called Lean Data practices, these probes are automatically set to expire,
+
+107
+00:11:18,259 --> 00:11:24,469
+like we have very strict thresholds on on what it is that we are willing to collect and for how long.
+
+108
+00:11:24,469 --> 00:11:32,659
+And we like we throw data away after a certain number of months because, you know, if you don't need it, you shouldn't have it.
+
+109
+00:11:32,659 --> 00:11:45,149
+So you throw it away. And in this particular case, we think that these probes are valuable enough to make part of our permanent collection,
+
+110
+00:11:45,149 --> 00:11:50,009
+what we call, yeah, permanent probes, permanent collection probes, because they're about to expire.
+
+111
+00:11:50,009 --> 00:11:58,019
+In fact, according to 13 days ago, the telemetry probes bot said that these probes are going to expire whenever Knightley becomes 95.
+
+112
+00:11:58,019 --> 00:12:00,389
+Right now, Knightley is 94, I believe.
+
+113
+00:12:00,389 --> 00:12:06,179
+So it's kind of looking ahead and saying, hey, these things are about to expire when the next nightly bump occurs.
+
+114
+00:12:06,179 --> 00:12:11,039
+So we should we should make some kind of decision here on on what to do with these probes.
+
+115
+00:12:11,039 --> 00:12:12,929
+I asked around, like, do we still want them?
+
+116
+00:12:12,929 --> 00:12:18,209
+And our product people were like, yes, let's we we still care about these let's make these permanent probes.
+
+117
+00:12:18,209 --> 00:12:24,329
+So that's what we're going to do to start I mean, to show you the process for making these probes permanent.
+
+118
+00:12:24,329 --> 00:12:30,659
+So these three probes, these are what are called event probes or events.
+
+119
+00:12:30,659 --> 00:12:38,129
+It's like event telemetry. And they're defined in this YAML file in our source code events.
+
+120
+00:12:38,129 --> 00:12:43,499
+Why Amelle? And so there's lots of different things that we measure.
+
+121
+00:12:43,499 --> 00:12:48,569
+And some of them is opt out. Some of it it's opt in.
+
+122
+00:12:48,569 --> 00:12:54,899
+And the ones for picture and picture are down here.
+
+123
+00:12:54,899 --> 00:13:02,399
+And it's all documented like what we measure and the bug numbers that are associated that they're associated with.
+
+124
+00:13:02,399 --> 00:13:06,989
+And you know, what the values are and what processes the record in which products.
+
+125
+00:13:06,989 --> 00:13:11,099
+It's actually interesting. Like we should definitely not be recording this with Fennec any more.
+
+126
+00:13:11,099 --> 00:13:12,809
+Fennec is no longer a product that exists.
+
+127
+00:13:12,809 --> 00:13:18,389
+So I can already start updating this probe description because, like, it's way out of date and probably this.
+
+128
+00:13:18,389 --> 00:13:23,669
+We never used this probe, as far as I can tell, on Fennec.
+
+129
+00:13:23,669 --> 00:13:28,019
+So let me actually just double check that, make sure no one else is using this probe somehow.
+
+130
+00:13:28,019 --> 00:13:44,619
+In the mobile. In in the mobile. And the mobile code, it would be very surprising if they were you can see us recording it in in this particular case,
+
+131
+00:13:44,619 --> 00:13:53,799
+it created I think it's inside of picture and picture that JSM and scalars scalar.
+
+132
+00:13:53,799 --> 00:13:59,829
+No, I'm wrong. It's not here. Where do we record the event?
+
+133
+00:13:59,829 --> 00:14:06,489
+Maybe it's in play or not. Yes. The actual player window. Mm hmm.
+
+134
+00:14:06,489 --> 00:14:11,959
+Yeah. We say we're recording events and then we record.
+
+135
+00:14:11,959 --> 00:14:19,299
+Oh here's a helper method that does it. Yeah. Record resize, create that sort of thing.
+
+136
+00:14:19,299 --> 00:14:25,899
+And so is there anyone using like services, telemetry, record of any picture and picture in our mobile code.
+
+137
+00:14:25,899 --> 00:14:30,549
+I would be very surprised if they were. Uh, yeah.
+
+138
+00:14:30,549 --> 00:14:34,899
+I don't I don't see I don't see that happening there.
+
+139
+00:14:34,899 --> 00:14:42,869
+We actually even also check the Phenix code just in case somehow they've got access to it.
+
+140
+00:14:42,869 --> 00:14:46,409
+It doesn't look like they're using that this stuff at all,
+
+141
+00:14:46,409 --> 00:14:51,689
+so we can just straight up remove Fennec, I think, from the list, it wouldn't even make sense.
+
+142
+00:14:51,689 --> 00:14:58,289
+You know, if Phenix was somehow using it, we still it still wouldn't be recorded because the product name is different.
+
+143
+00:14:58,289 --> 00:15:00,779
+So I don't even know why I looked at Phenix in the first place.
+
+144
+00:15:00,779 --> 00:15:09,599
+So I'm going to just get rid of that as a starter and then for expiry version instead of ninety five, we're going to put in never.
+
+145
+00:15:09,599 --> 00:15:15,869
+So this thing will never expire. And we also have to like include the bug number or making these various decisions.
+
+146
+00:15:15,869 --> 00:15:38,329
+So I'm going to kind to put this bug number in and we're going to do the same thing with the resize event and the move event.
+
+147
+00:15:38,329 --> 00:15:44,479
+Get rid of Fennec there, and I think that's it, that's all that that needs to be done here,
+
+148
+00:15:44,479 --> 00:15:49,639
+except like that's that's what needs to be done in the code. And we can build it and make sure it works.
+
+149
+00:15:49,639 --> 00:15:58,459
+So we'll build because that actually this generates this YAML file is used to generate C++ and JavaScript bindings.
+
+150
+00:15:58,459 --> 00:16:06,049
+And like all of this stuff like Web IDL bindings, to make it easy to set these sorts of probes from both CSS, from C++ and JavaScript.
+
+151
+00:16:06,049 --> 00:16:10,099
+I'm also noticing that my background is like is really poor.
+
+152
+00:16:10,099 --> 00:16:15,949
+I think my lighting is off. Just give me one quick second while this is building, I'm going to just try and adjust my lighting a little bit.
+
+153
+00:16:15,949 --> 00:16:45,809
+One second. It's a little bit better, I've got the spot on my forehead, but I can probably adjust that a little bit using some of my camera tricks.
+
+154
+00:16:45,809 --> 00:16:52,349
+Hold on a second. I apologize for wasting time on this part.
+
+155
+00:16:52,349 --> 00:16:57,209
+Here we go. Here we go. Balance. There we go.
+
+156
+00:16:57,209 --> 00:17:00,629
+OK, so we've got our build.
+
+157
+00:17:00,629 --> 00:17:07,409
+And now if you actually want to see what it's like whenever these things are being recorded, you there is like an interface to see that sort of stuff.
+
+158
+00:17:07,409 --> 00:17:14,429
+So if you if you go to about Colen telemetry, what's telemetry?
+
+159
+00:17:14,429 --> 00:17:19,959
+You can see that there is like a bunch of stuff in here that you can look at, including one called events.
+
+160
+00:17:19,959 --> 00:17:32,719
+And there are already a bunch of events that have been recorded. And if I go to YouTube dotcom, I'm just going to pick like some Firefox just.
+
+161
+00:17:32,719 --> 00:17:39,049
+Here, what do developers build on? Blah, blah, I don't I don't want to hear it, I want to hear it.
+
+162
+00:17:39,049 --> 00:17:43,269
+I just want to click on the picture and picture.
+
+163
+00:17:43,269 --> 00:17:50,949
+Toggle, move this around, I'm going to resize it, so I will have done all three, I've done the move, the resize and the create.
+
+164
+00:17:50,949 --> 00:17:55,749
+So if I reload this, we should see some pic.
+
+165
+00:17:55,749 --> 00:18:02,379
+Yeah, here we go. Create, move, move, resize, move. And and there we go.
+
+166
+00:18:02,379 --> 00:18:07,539
+That's working properly quitte.
+
+167
+00:18:07,539 --> 00:18:12,839
+So what we do then is we create a patch for this bug.
+
+168
+00:18:12,839 --> 00:18:17,259
+Oops. Was the bug remember. One seven three oh three nine.
+
+169
+00:18:17,259 --> 00:18:25,929
+Hmm. Bump expiry expiries on some picture in picture probes actually known to be more accurate.
+
+170
+00:18:25,929 --> 00:18:35,049
+We're not bumping the expiries wear make picture and picture.
+
+171
+00:18:35,049 --> 00:18:42,189
+Event probes never expire, and I'm going to have who can who can review this?
+
+172
+00:18:42,189 --> 00:18:47,259
+I mean, Mark Streamers worked with me a little bit on picture and picture stuff.
+
+173
+00:18:47,259 --> 00:18:55,359
+So and this is a reasonably straightforward, almost like a rubber stamp style of review for the Córdova part of it.
+
+174
+00:18:55,359 --> 00:18:59,049
+But then there's the data review, part of it, which we're going to have to look into next of,
+
+175
+00:18:59,049 --> 00:19:03,669
+like how do we get approval from our data stewards to make this transition from
+
+176
+00:19:03,669 --> 00:19:11,559
+a make this transition from a like expiring probe to a non expiring probe?
+
+177
+00:19:11,559 --> 00:19:14,349
+I see a question in the audience. How long have I had this office here?
+
+178
+00:19:14,349 --> 00:19:19,779
+You've probably noticed if you saw when I was away, the office looks pretty decrepit, like it's falling to pieces.
+
+179
+00:19:19,779 --> 00:19:23,889
+It's it's pretty cheap. This is a cheap office chair that I got when I was a student.
+
+180
+00:19:23,889 --> 00:19:24,989
+And I you know,
+
+181
+00:19:24,989 --> 00:19:36,159
+I I'm only using like I thought I probably should have invested in a new office chair when I realized I'd be working from home for so long.
+
+182
+00:19:36,159 --> 00:19:42,339
+But instead, I got this tablet a. All right.
+
+183
+00:19:42,339 --> 00:19:48,399
+Yeah, but this chair is from back when I was in school. I've had it for a long, long time and it serves me well and serves me well.
+
+184
+00:19:48,399 --> 00:19:55,779
+It's comfortable. It's comfortable. It's not the best office chair though. Ergonomically speaking, I could probably do a lot better.
+
+185
+00:19:55,779 --> 00:20:01,149
+OK, so we've got this patch. Let's take a quick peek at it.
+
+186
+00:20:01,149 --> 00:20:09,339
+You know what? This font's way too small. It's pumped this up so you can see it better. OK, so the patch, as we said, is removes these things.
+
+187
+00:20:09,339 --> 00:20:14,019
+It sets the bug, it sets never on the expiry. That's exactly what we're supposed to be doing.
+
+188
+00:20:14,019 --> 00:20:17,549
+And we can go ahead and submit this for review.
+
+189
+00:20:17,549 --> 00:20:32,129
+Yeah, OK, mine's fab cement tip single, that'll do it, and then the other thing we need to do is we need to submit a data review request.
+
+190
+00:20:32,129 --> 00:20:38,189
+So data review, I have to sort of remember how this works.
+
+191
+00:20:38,189 --> 00:20:51,219
+Requests, uh. Because there are different kinds of requests, there's there's that review, there's data renewal requests.
+
+192
+00:20:51,219 --> 00:20:56,529
+So this is I think what we want to do now is a renewal request,
+
+193
+00:20:56,529 --> 00:21:00,519
+but because it's a slight difference in the we're not just bumping it to another version,
+
+194
+00:21:00,519 --> 00:21:04,629
+we're making it so it's never it's possible that our data stewards are going to come back and say,
+
+195
+00:21:04,629 --> 00:21:12,609
+OK, we need greater justification for this, but for now, I will use a data renewal request.
+
+196
+00:21:12,609 --> 00:21:23,469
+So the way that works is I will attach a new file. It's a just like data renewal request, and then I can just, like, dump the text in here.
+
+197
+00:21:23,469 --> 00:21:28,899
+So the way you do that is you like look at the the actual raw markdown.
+
+198
+00:21:28,899 --> 00:21:33,459
+We put it in here. Get rid of this note. All questions are mandatory.
+
+199
+00:21:33,459 --> 00:21:37,209
+Yes. Provide a link to the initial data review request for this collection.
+
+200
+00:21:37,209 --> 00:21:43,389
+So thanks to this sort of chain of of bugs, I can point to this.
+
+201
+00:21:43,389 --> 00:21:47,349
+This one probably add telemetry to measure usage.
+
+202
+00:21:47,349 --> 00:21:52,839
+Here's the data review requests from two years ago. So here's the link.
+
+203
+00:21:52,839 --> 00:21:58,839
+When will the collection now expire? The collection will now never expire.
+
+204
+00:21:58,839 --> 00:22:11,199
+Why was the initial period of collection insufficient product? DM's the picture in picture feature worth a persistent measurement.
+
+205
+00:22:11,199 --> 00:22:33,569
+Worth perpetual measurement. Since it's a it's a well-loved differentiating feature that.
+
+206
+00:22:33,569 --> 00:22:52,359
+We still want to iterate on and improve. OK, so I will say data review request, and I'm going to choose Megan McCorquodale as my data reviewer.
+
+207
+00:22:52,359 --> 00:22:56,849
+And we'll see how that does.
+
+208
+00:22:56,849 --> 00:23:05,489
+So that's that's how probe expiry and like making sure that, you know, we go through all the proper channels, how that works,
+
+209
+00:23:05,489 --> 00:23:10,499
+like it's not just like other software shops where you just like, you know,
+
+210
+00:23:10,499 --> 00:23:15,299
+measure everything and measure the world and hold onto it forever and reanalysis on forever.
+
+211
+00:23:15,299 --> 00:23:19,679
+We have very, very strict data collection practices.
+
+212
+00:23:19,679 --> 00:23:38,339
+We call our lean, sorry, lean data practices. And you can find more about lean data here, lean data practices.
+
+213
+00:23:38,339 --> 00:23:43,259
+OK, now we have a similar thing going on here with some other probes where I'm just going to kind of blast through those.
+
+214
+00:23:43,259 --> 00:23:50,129
+I'm not going to explain necessarily again what's what is happening, but it's very similar.
+
+215
+00:23:50,129 --> 00:24:02,779
+You know, these probes are about to expire, so let's check them out.
+
+216
+00:24:02,779 --> 00:24:08,419
+Now, this one, I don't think we will want to make expire forever.
+
+217
+00:24:08,419 --> 00:24:13,099
+I'm just going to bump the expiry. So what kind of probes are these?
+
+218
+00:24:13,099 --> 00:24:21,289
+These are. There's two kinds. There's a histogram, I can tell, because it's in this form of all caps with underscores.
+
+219
+00:24:21,289 --> 00:24:27,889
+That's the old way of doing probes, histogram probes.
+
+220
+00:24:27,889 --> 00:24:32,989
+And then there is there are these, which I believe are events.
+
+221
+00:24:32,989 --> 00:24:45,899
+I could be wrong. No, they're not events there are called scalars, for which we only record ones about home cash result, right?
+
+222
+00:24:45,899 --> 00:24:53,989
+Yeah, scalars. OK, and so for these, while I'm going to do is I'm going to bump it out a couple of releases,
+
+223
+00:24:53,989 --> 00:24:59,989
+because at some point I'm going to eventually make it so that I can run this experiment that I want to do with the about home startup cash.
+
+224
+00:24:59,989 --> 00:25:04,969
+But I haven't had a chance to get around to it yet. So I'm going to bump this out by a couple of months.
+
+225
+00:25:04,969 --> 00:25:09,109
+Ideally, you bump it out by six months from the point of expiry.
+
+226
+00:25:09,109 --> 00:25:13,339
+So if we look at the calendar, six months from now is September, October,
+
+227
+00:25:13,339 --> 00:25:17,719
+November, December, January, February, March, sometime towards the end of March.
+
+228
+00:25:17,719 --> 00:25:21,619
+So which which release is going to be sometime at the end of March?
+
+229
+00:25:21,619 --> 00:25:28,969
+Well, it looks like it's going to be probably you know, I can choose Firefox one hundred.
+
+230
+00:25:28,969 --> 00:25:34,129
+Firefox one hundred. So that's what I'm going to do.
+
+231
+00:25:34,129 --> 00:25:43,389
+One hundred. And we're going to add this bug.
+
+232
+00:25:43,389 --> 00:25:50,359
+To the list up here. Yeah, Firefox's one,
+
+233
+00:25:50,359 --> 00:25:54,889
+it's going to be interesting because we don't actually know there's actually an experiment underway right
+
+234
+00:25:54,889 --> 00:26:07,099
+now to see how websites are going to react to suddenly three digits in the in the user agent stream.
+
+235
+00:26:07,099 --> 00:26:13,279
+We're actually right now, I think I don't know if there are any other probes that are testing.
+
+236
+00:26:13,279 --> 00:26:18,739
+The one hundred other is there's one for media. Mark McVee can play in there.
+
+237
+00:26:18,739 --> 00:26:25,969
+They're tested to work with version one hundred. So we're good. I was like, are we the first probe to be expiring in one hundred?
+
+238
+00:26:25,969 --> 00:26:31,129
+But no, uh, so that's that's two.
+
+239
+00:26:31,129 --> 00:26:35,719
+I've done this one. I've done this one. And then they're shut down. Right. Which is also a scalar shut down.
+
+240
+00:26:35,719 --> 00:26:49,539
+Right. OK, so, oh, I forgot to put the bug in this last one.
+
+241
+00:26:49,539 --> 00:26:55,059
+Um, shut down, right. It it's this bug.
+
+242
+00:26:55,059 --> 00:27:11,779
+There you go. And then we will call this one bump expiry about home startup cash probes and I'll have Heisse reviews.
+
+243
+00:27:11,779 --> 00:27:16,879
+These are pretty straightforward. Again, the patch is not that interesting.
+
+244
+00:27:16,879 --> 00:27:23,629
+It's more of a rubber stamp. What's more interesting is the data collection review.
+
+245
+00:27:23,629 --> 00:27:43,599
+OK, so let's post this up for review. And then we're going to do another data collection, data renewal form.
+
+246
+00:27:43,599 --> 00:27:54,159
+And in fact, we might be able to crib from an earlier one, because we've done this before.
+
+247
+00:27:54,159 --> 00:28:07,139
+Data collection, renewal request, I did this four months ago. So I'm actually going to just crib, crib this whole thing, um.
+
+248
+00:28:07,139 --> 00:28:11,969
+Just kicking the can down the road, and the only reason I just haven't had time to do the experiment yet,
+
+249
+00:28:11,969 --> 00:28:19,039
+which is kind of a pain, but no, we'll get to it.
+
+250
+00:28:19,039 --> 00:28:27,149
+Data collection, renewal requests. Firefox one hundred.
+
+251
+00:28:27,149 --> 00:28:39,429
+OK, Dad, review again, I'll ask Megan McCorquodale review.
+
+252
+00:28:39,429 --> 00:28:54,349
+OK, so that's two and then the third one I want to look at one, two is this one for tab closing?
+
+253
+00:28:54,349 --> 00:29:12,689
+Um. Yeah, and I will take this bug for myself.
+
+254
+00:29:12,689 --> 00:29:17,879
+So these are both, again, histograms, you can tell, because of the style that they've been defined in.
+
+255
+00:29:17,879 --> 00:29:23,139
+And we're going to renew these we're going to bump them out again.
+
+256
+00:29:23,139 --> 00:29:31,409
+In fact, I think this is another situation where we can just craib off the last renewal request, spir and version.
+
+257
+00:29:31,409 --> 00:29:37,229
+We're going to go one hundred year supply at Bug.
+
+258
+00:29:37,229 --> 00:29:47,139
+No, we're going to find this one. Same deal, Delio.
+
+259
+00:29:47,139 --> 00:29:57,939
+One hundred, I'm also going to remove Eric Smyth transferred to a different a different group, so I'm going to remove him from the.
+
+260
+00:29:57,939 --> 00:30:12,569
+From the, uh, alert emails. And let's take a look.
+
+261
+00:30:12,569 --> 00:30:28,499
+Looks right to me, such and such bump expiry on tab closing probes have Heise review this one as well.
+
+262
+00:30:28,499 --> 00:30:35,649
+And let's take a look again. We can craib off probably the renewal request the last time we did this.
+
+263
+00:30:35,649 --> 00:30:55,419
+Four months ago. Um.
+
+264
+00:30:55,419 --> 00:31:01,749
+So there's some conversation going on in Matrixx about the one hundred version number and how
+
+265
+00:31:01,749 --> 00:31:08,919
+that might impact websites and the wild Smurf D like one hundred and then Darity Bindy says,
+
+266
+00:31:08,919 --> 00:31:13,059
+yeah, expect broken legacy websites. Well, it's possible.
+
+267
+00:31:13,059 --> 00:31:17,799
+It's very possible. It could totally happen. And I'm hoping not.
+
+268
+00:31:17,799 --> 00:31:24,399
+And in fact, that's what the study is for. I don't know if I'm participating in the study right now, am I?
+
+269
+00:31:24,399 --> 00:31:32,679
+Oh, I am. I am participating in the study. Oh, that's great. You can check if you're participating in the study by going to about colon studies.
+
+270
+00:31:32,679 --> 00:31:40,109
+It's so let's see what my user agent is. Navigator, user agent.
+
+271
+00:31:40,109 --> 00:31:50,929
+Well, that's not right, saying 94. How does oh, I wonder if I'm part of the control, I might be part of the control.
+
+272
+00:31:50,929 --> 00:31:59,769
+The control branch. Which would make sense. All right, uh, let's see here.
+
+273
+00:31:59,769 --> 00:32:07,999
+Uh, this. Should have my patch showing up soon, but in the meantime,
+
+274
+00:32:07,999 --> 00:32:15,619
+we can just fill in the data collection renewal request and then we're just going to say that instead of expiring in ninety five,
+
+275
+00:32:15,619 --> 00:32:30,409
+we're expiring in one hundred. So we're kicking the can. OK, and then we'll have Megan McCorquodale review this one as well.
+
+276
+00:32:30,409 --> 00:32:37,489
+One of our illustrious data stewards, we take data collection and privacy very seriously.
+
+277
+00:32:37,489 --> 00:32:43,829
+Why isn't this showing up yet in bulk? So I wonder if there's like a delay.
+
+278
+00:32:43,829 --> 00:32:50,619
+Know there's a delay. Uh. Well, it'll show up eventually.
+
+279
+00:32:50,619 --> 00:32:54,069
+OK, so we've made great progress. It wasn't like super complicated stuff.
+
+280
+00:32:54,069 --> 00:32:57,699
+It was mainly like just sort of crossing T's and dotting I's.
+
+281
+00:32:57,699 --> 00:33:04,719
+But we've gotten the probes, the probes, you know, patches for updating the probes up.
+
+282
+00:33:04,719 --> 00:33:11,559
+Our data review requests are up. And, you know, what I'm going to do, actually, is I'm going to open a new window,
+
+283
+00:33:11,559 --> 00:33:16,029
+keep my email open in the background just to see if we can get approval for any of these things.
+
+284
+00:33:16,029 --> 00:33:27,179
+We may land them before the the episode concludes. We'll see nothing yet.
+
+285
+00:33:27,179 --> 00:33:36,629
+OK, so there's this other bug that someone had asked me on or need information about a memory leak.
+
+286
+00:33:36,629 --> 00:33:43,199
+Now, I'm not the greatest sort of memory detective out there, but I've never seen this bug before.
+
+287
+00:33:43,199 --> 00:33:52,439
+I don't know what we're going to see. Let's check it out, though. So this was originally filed in core DOM, Core HTML two years ago.
+
+288
+00:33:52,439 --> 00:34:03,689
+Giese So. And then I've been part of a conversation in here.
+
+289
+00:34:03,689 --> 00:34:10,279
+And then twenty three days ago.
+
+290
+00:34:10,279 --> 00:34:19,639
+OK, so it looks like so I don't remember this conversation at all, I'm going to have to kind of refresh my memory of of what what's going on in here.
+
+291
+00:34:19,639 --> 00:34:24,469
+So the user restarts their browser one time over many days.
+
+292
+00:34:24,469 --> 00:34:30,259
+It may work for two weeks. I noticed that I use is too much, maybe too much memory measure memory usage after start,
+
+293
+00:34:30,259 --> 00:34:34,639
+then I surf after I've worked at closed all open tabs except about memory measured again.
+
+294
+00:34:34,639 --> 00:34:41,089
+I expect I can get memory back after closing a tab of memory usage by the main processes isn't reduced.
+
+295
+00:34:41,089 --> 00:34:46,579
+It's increased. And then I asked whether or not Dev tools is open.
+
+296
+00:34:46,579 --> 00:34:52,939
+I said, yeah, I'm usually using dev tools and this is probably several different profiles. First profile really opened up tools.
+
+297
+00:34:52,939 --> 00:34:59,449
+I use this to server like regular user and I often used tools. The developer may also have some web extensions.
+
+298
+00:34:59,449 --> 00:35:02,519
+They also view different pages in different profiles.
+
+299
+00:35:02,519 --> 00:35:07,279
+I'm not seeing anything particularly unusual about the report and reportedly attachment at the point where you gathered it,
+
+300
+00:35:07,279 --> 00:35:13,049
+where you experiencing assessment, memory usage, how much after some work is such and such.
+
+301
+00:35:13,049 --> 00:35:20,089
+So the difference is one hundred and three megabytes. Is a quick test when to use Estela's version,
+
+302
+00:35:20,089 --> 00:35:26,989
+that difference between star and current usage becomes more bigger because I use it not five minutes for a few days,
+
+303
+00:35:26,989 --> 00:35:33,199
+you're still using this one gigabyte despite close tabs, only 30 minutes.
+
+304
+00:35:33,199 --> 00:35:40,399
+If you could capture the foreign half of this situation, you have the you have a heavier usage one, and then they came back.
+
+305
+00:35:40,399 --> 00:35:46,749
+Now it's more than nine hundred megs. OK, let's take a look at the memory report.
+
+306
+00:35:46,749 --> 00:35:56,019
+It's not often that a user comes back from, you know, having not commented for like years and then they follow up.
+
+307
+00:35:56,019 --> 00:36:01,359
+So that's a nice memory.
+
+308
+00:36:01,359 --> 00:36:09,739
+What what was this thing called 30, where did I put it and.
+
+309
+00:36:09,739 --> 00:36:15,049
+Documents. Doug Burns.
+
+310
+00:36:15,049 --> 00:36:22,029
+We're. I should do is make it easier to find by.
+
+311
+00:36:22,029 --> 00:36:30,679
+I think what you can do is you can like drag here's a trick in drag stuff.
+
+312
+00:36:30,679 --> 00:36:41,269
+Into the like, if you drag into the oh, come on, I can you open it?
+
+313
+00:36:41,269 --> 00:36:46,489
+I guess maybe it's exempt. OK, there we go, start.
+
+314
+00:36:46,489 --> 00:36:54,679
+Here's my report, Restart Berry Report. Jason so I don't know which one's the before and the after.
+
+315
+00:36:54,679 --> 00:37:00,999
+I presume this. Let's look at this one first. So load.
+
+316
+00:37:00,999 --> 00:37:10,089
+And then I will drag this in here and then I can do that.
+
+317
+00:37:10,089 --> 00:37:17,679
+OK, so we are now looking at a memory report, and again, I'm not very good at these, to be abundantly clear,
+
+318
+00:37:17,679 --> 00:37:24,159
+to be very honest, we're very good at understanding these, but we'll do what we can.
+
+319
+00:37:24,159 --> 00:37:30,459
+So the first thing that jumps out is that there's a bunch of cheap unclassified, which is not good, cheap, unclassified is basically dark matter.
+
+320
+00:37:30,459 --> 00:37:35,919
+We don't know what the stuff is and there's like six hundred thirty nine megs of it.
+
+321
+00:37:35,919 --> 00:37:43,809
+So we're not sure what that is. There's one browser window and it's detached, there's a detached browser window.
+
+322
+00:37:43,809 --> 00:37:51,739
+So something to me that's like a leaking browser window.
+
+323
+00:37:51,739 --> 00:38:01,779
+And then there are a couple of other browser windows that are open, but they are attached.
+
+324
+00:38:01,779 --> 00:38:23,039
+Um. There are a bunch of objects in this detached window, eventless nurse.
+
+325
+00:38:23,039 --> 00:38:34,079
+There are a whole bunch of extensions in here. Some of these are ones that, like we ship built in, like the picture in picture one.
+
+326
+00:38:34,079 --> 00:38:55,159
+In fact, most of these are the built in ones. These two are not.
+
+327
+00:38:55,159 --> 00:39:08,739
+Um. Web extension process doesn't look that bad.
+
+328
+00:39:08,739 --> 00:39:17,479
+Privileged content doesn't look that bad, actually looks really good, comparatively.
+
+329
+00:39:17,479 --> 00:39:23,989
+Our Ed Processor's is really the main process that's looking pretty rough and most of its in this heap unclassified.
+
+330
+00:39:23,989 --> 00:39:37,689
+So that's what I'm going to write. Basically my conclusion is so I can say thank you also J.W.
+
+331
+00:39:37,689 --> 00:39:49,569
+Thanks also J.W. For coming back with the memory report, oh, we should look at the other memory report as well,
+
+332
+00:39:49,569 --> 00:39:55,149
+there was there was the one after the restart, presumably.
+
+333
+00:39:55,149 --> 00:40:00,919
+Yeah. So you can see the main process is like only two hundred twelve megs.
+
+334
+00:40:00,919 --> 00:40:16,369
+I'd say it's a lot of heat unclassified. And that that window, that leaking window, you don't see a detached window here.
+
+335
+00:40:16,369 --> 00:40:27,159
+Hmm. OK, so two things jump out to me.
+
+336
+00:40:27,159 --> 00:40:36,999
+From this memory report, one, there's there's about six hundred and thirty nine,
+
+337
+00:40:36,999 --> 00:40:45,099
+so six hundred and forty makes about six hundred and forty bags of heap unclassified in the parent process.
+
+338
+00:40:45,099 --> 00:40:54,509
+This is effectively dark matter that the memory report can't tell.
+
+339
+00:40:54,509 --> 00:41:02,369
+That this is effectively dark matter and the memory report can't tell what it is.
+
+340
+00:41:02,369 --> 00:41:14,229
+Um. Two, there's a detached window.
+
+341
+00:41:14,229 --> 00:41:25,749
+There's a detached browser window holding one hundred and forty six hole,
+
+342
+00:41:25,749 --> 00:41:34,809
+holding about one hundred and forty six megabytes of memory alive, apparently holding.
+
+343
+00:41:34,809 --> 00:41:42,619
+So we're leaking. So that sounds like a window leak.
+
+344
+00:41:42,619 --> 00:41:48,499
+So that sounds like a window league to me now at this point, I don't exactly know what to do like I have.
+
+345
+00:41:48,499 --> 00:41:57,209
+I have analyzed it and seen the problem. But this is almost like seeing a crime scene and like.
+
+346
+00:41:57,209 --> 00:42:05,159
+You know, there's a there's just like broken glass everywhere and all the jewelry has been stolen and,
+
+347
+00:42:05,159 --> 00:42:09,959
+you know, there's a giant hole in the wall and you kind of have to work backwards, like, how did we get here?
+
+348
+00:42:09,959 --> 00:42:14,639
+And there's you only have, like, this one picture of the crime scene.
+
+349
+00:42:14,639 --> 00:42:18,929
+I don't actually I don't have, like, the ability to walk through the crime scene.
+
+350
+00:42:18,929 --> 00:42:22,169
+I can't replay the crime scene, which is a pain.
+
+351
+00:42:22,169 --> 00:42:32,159
+So what I'm going to do actually is I'm going to redirect hate to one of our memory experts, Haima create.
+
+352
+00:42:32,159 --> 00:42:41,309
+Does anything else jump out at you from this memory report?
+
+353
+00:42:41,309 --> 00:42:57,129
+In fact, I'm going to attach the. Uh.
+
+354
+00:42:57,129 --> 00:43:21,029
+Attach that memory report. I extracted the memory report, uh, that has the heavier memory usage and attached it above.
+
+355
+00:43:21,029 --> 00:43:27,419
+So from this, anything else jump out at you from this MEMRI report, so I'm going to redirect the need info to MacRay now.
+
+356
+00:43:27,419 --> 00:43:36,449
+MacRay is one of are like memory experts who might be able to give the reporter some tips on things they could try to see if they could,
+
+357
+00:43:36,449 --> 00:43:46,379
+you know, suss out what's going on with the heap unclassified. Somebody asks, do you from experience know what can be in the CETP unclassified?
+
+358
+00:43:46,379 --> 00:43:50,639
+Again, it's not really my wheelhouse is not a thing I know a whole lot about.
+
+359
+00:43:50,639 --> 00:43:57,659
+What I do know is that we have some tools to try and determine what that stuff is.
+
+360
+00:43:57,659 --> 00:44:01,529
+We have something called Dark Matter Detector,
+
+361
+00:44:01,529 --> 00:44:09,839
+which is a variant like you basically you build Firefox in a special way to track down what those heap unclassified things are.
+
+362
+00:44:09,839 --> 00:44:15,449
+It basically creates much more verbose logs of memory allocations.
+
+363
+00:44:15,449 --> 00:44:21,659
+And then you can use that to sort of suss things out and.
+
+364
+00:44:21,659 --> 00:44:30,069
+You know what, things create heat, unclassified, basically, things that we don't have good memory reporters for,
+
+365
+00:44:30,069 --> 00:44:39,429
+I think I was remembering or I was familiar with one related to fonts, something to do with like Web fonts.
+
+366
+00:44:39,429 --> 00:44:44,979
+We didn't have good memory reporters for that, and so we ended up in a heap unclassified.
+
+367
+00:44:44,979 --> 00:44:51,309
+Let me just put this documentation in here. Uh, dark matter detector.
+
+368
+00:44:51,309 --> 00:44:55,209
+But again, it's not really my wheelhouse. I'm not so good at the memory stuff.
+
+369
+00:44:55,209 --> 00:45:03,099
+I can analyze the reports kind of I'm much better at performance profiles than I am.
+
+370
+00:45:03,099 --> 00:45:12,909
+Than I am at the reports. OK, so that's that's all of those bugs, but we've still got a lot of time left.
+
+371
+00:45:12,909 --> 00:45:16,269
+I think maybe what I'll do is I'll try and answer some questions and then I'm going
+
+372
+00:45:16,269 --> 00:45:22,179
+to see if I can pull some more work out of out of my queue for us to work on.
+
+373
+00:45:22,179 --> 00:45:28,749
+So let me pull up my dashboard and see if there's anything interesting there in the background.
+
+374
+00:45:28,749 --> 00:45:33,489
+Meanwhile, let's answer some questions. Question one from the audience.
+
+375
+00:45:33,489 --> 00:45:40,299
+Picture in picture. Current way to see all available control options is to visit this sumo page.
+
+376
+00:45:40,299 --> 00:45:44,379
+Would it be possible to add a small button, perhaps only when using PIP for the first time,
+
+377
+00:45:44,379 --> 00:45:50,039
+which could expand to show all available shortcuts or maybe direct user to this page?
+
+378
+00:45:50,039 --> 00:45:55,809
+Um, yeah. This is always this is tricky because it's not just a picture and picture problem.
+
+379
+00:45:55,809 --> 00:46:07,059
+This is a Firefox problem where we've got so many keyboard shortcuts and we don't have a great way of communicating them to the user.
+
+380
+00:46:07,059 --> 00:46:11,709
+And some cases we do like a user hovers like the reload button.
+
+381
+00:46:11,709 --> 00:46:16,539
+You can see in there that there is a tooltip with a keyboard shortcut included with it.
+
+382
+00:46:16,539 --> 00:46:22,929
+So I wonder if the more we add controls to the picture in picture player window,
+
+383
+00:46:22,929 --> 00:46:29,259
+we can have tool tips for them to indicate what the what what the keyboard shortcuts are.
+
+384
+00:46:29,259 --> 00:46:33,279
+The the problem is. So there are a couple of problems.
+
+385
+00:46:33,279 --> 00:46:44,889
+First of all, there's the general keyboard shortcut problem because reload, reload is an example of, you know, we've got a tooltip for something,
+
+386
+00:46:44,889 --> 00:46:55,239
+but there are lots of buttons and functions where there are keyboard shortcuts and we don't have we don't have a keyboard shortcut listed somewhere.
+
+387
+00:46:55,239 --> 00:47:01,959
+And so one of the solutions that someone was suggesting a while back was like a shortcut HD.
+
+388
+00:47:01,959 --> 00:47:07,149
+This is something that people have been like tinkering with off and on for for a while.
+
+389
+00:47:07,149 --> 00:47:12,279
+I think, Danny, calling you in the in the chat, you'd been thinking about this.
+
+390
+00:47:12,279 --> 00:47:21,319
+It looks like you had tinkered with an about shortcuts, which is a cool idea.
+
+391
+00:47:21,319 --> 00:47:27,439
+It looks like we removed. Oh, yeah, the person who was originally mentoring this, they left Mozilla,
+
+392
+00:47:27,439 --> 00:47:31,579
+so we've removed it from our mentored bugs list because this is a bigger problem.
+
+393
+00:47:31,579 --> 00:47:42,229
+But if you're interested in reading up on this, I can supply the link shortcut HD.
+
+394
+00:47:42,229 --> 00:47:50,649
+I like your screenshot, though. Danny Colen. This is from two years ago.
+
+395
+00:47:50,649 --> 00:47:59,709
+I wonder if you could almost like take take something that's like one of these work in progress patches as like a starting point,
+
+396
+00:47:59,709 --> 00:48:06,039
+and then have someone create an about page that groups the shortcuts somehow.
+
+397
+00:48:06,039 --> 00:48:11,449
+I don't know. It's a tricky problem. It's a tricky problem.
+
+398
+00:48:11,449 --> 00:48:17,029
+So, yeah, there's the general shortcode problem in Firefox, and then there's the problem of picture in picture in general,
+
+399
+00:48:17,029 --> 00:48:27,319
+where we wanted to sort of like strike a balance because right now the controls don't work on every page.
+
+400
+00:48:27,319 --> 00:48:38,479
+One of the problems with picture in picture is that we have to integrate with a bunch of Web players that may or may not obey,
+
+401
+00:48:38,479 --> 00:48:43,669
+like may or may not behave correctly whenever you just like seek using like the video element,
+
+402
+00:48:43,669 --> 00:48:49,939
+because whenever you like, fast forward or rewind with the keyboard shortcuts with picture in picture, that's what we're doing.
+
+403
+00:48:49,939 --> 00:48:55,999
+We are seeking the video element and that works in some cases, but in others it definitely doesn't.
+
+404
+00:48:55,999 --> 00:49:02,239
+I'll pick an example. Netflix, it definitely breaks the video if you try and seek it using the keyboard shortcuts.
+
+405
+00:49:02,239 --> 00:49:08,869
+So we have actually disabled the keyboard shortcuts for seeking on Netflix because it breaks the video.
+
+406
+00:49:08,869 --> 00:49:24,229
+And and so what we wanted to do was to build up site specific video adapters that knows how to that know how to rap,
+
+407
+00:49:24,229 --> 00:49:32,809
+you know, sort of the unique characteristics of a of a site like Netflix so that,
+
+408
+00:49:32,809 --> 00:49:42,589
+for example, you could have like a YouTube wrapper, you could have a Netflix wrapper that we could maintain separately from picture and picture.
+
+409
+00:49:42,589 --> 00:49:48,019
+And then that wrapper sort of does the work of figuring out what you're supposed to do for a particular site,
+
+410
+00:49:48,019 --> 00:49:55,099
+for seeking or for pausing or for, you know, muting and unmeaning and captions.
+
+411
+00:49:55,099 --> 00:50:00,439
+And once you have that once you have that sort of adapter in place, then we can expose a lot more of the controls.
+
+412
+00:50:00,439 --> 00:50:09,709
+Then we'd feel much more comfortable exposing like actual controls on the player window, exposing more controls on the player window.
+
+413
+00:50:09,709 --> 00:50:16,159
+And then you could have tool tips on those controls for the keyboard shortcuts.
+
+414
+00:50:16,159 --> 00:50:22,069
+So the keyboard shortcuts were almost kind of like this compromise of, you know, they're not very well exposed,
+
+415
+00:50:22,069 --> 00:50:26,929
+maybe even intentionally, not very well exposed, because we don't know how well they work on many sites.
+
+416
+00:50:26,929 --> 00:50:35,949
+They're kind of in some ways broken in some cases. And it's the same thing for the mute on mute capability in picture, in picture,
+
+417
+00:50:35,949 --> 00:50:42,009
+like if you go to here, here's an old joy of coding video and I opened this up in picture.
+
+418
+00:50:42,009 --> 00:50:46,179
+In picture. Come on. Come on YouTube.
+
+419
+00:50:46,179 --> 00:50:49,989
+I think I freaked it out by hitting play too quickly.
+
+420
+00:50:49,989 --> 00:50:57,789
+So if I open this up in picture and picture, I have a mute and on mute button which works on YouTube, but it doesn't work on some sites.
+
+421
+00:50:57,789 --> 00:51:01,539
+In fact, on some sites, mute will work, but then unmuted won't.
+
+422
+00:51:01,539 --> 00:51:03,369
+So you'll be like stuck in muted mode.
+
+423
+00:51:03,369 --> 00:51:10,389
+And so this is only enabled on nightly the mute on mute button because we're not comfortable yet with shipping it,
+
+424
+00:51:10,389 --> 00:51:15,369
+because we don't want users to get frustrated with the feature. You know, why is it on mute working?
+
+425
+00:51:15,369 --> 00:51:20,169
+And in order to make it work properly, we need to finish up these site specific video adapters.
+
+426
+00:51:20,169 --> 00:51:25,389
+And there's just like a bunch of work in progress to do that. So we might have some more students.
+
+427
+00:51:25,389 --> 00:51:29,319
+Historically, we've had a bunch of students hack on the site, specific video adapters.
+
+428
+00:51:29,319 --> 00:51:36,579
+We haven't been able to dedicate any like full time engineering resources on it, but hopefully soon.
+
+429
+00:51:36,579 --> 00:51:42,069
+So I can see this being a path to having keyboard shortcuts be more like visible
+
+430
+00:51:42,069 --> 00:51:47,619
+for picture and picture is to just make more controls and then have the tool tips,
+
+431
+00:51:47,619 --> 00:51:51,669
+talk about, like to have the tool tips, describe the keyboard shortcuts.
+
+432
+00:51:51,669 --> 00:52:00,589
+So hopefully that answers your question. Yeah, the biggest issue with shortcuts is that they're not registered in one place,
+
+433
+00:52:00,589 --> 00:52:07,129
+that is exactly the problem with the general keyboard shortcut, problem, problem.
+
+434
+00:52:07,129 --> 00:52:13,219
+Keyboard shortcuts are not all registered in one place.
+
+435
+00:52:13,219 --> 00:52:20,479
+Yeah, you have to kind of like gather them. And it's a that's a hard problem.
+
+436
+00:52:20,479 --> 00:52:25,879
+Are there any newsletters that you were subscribed to? No, I don't subscribe to newsletters.
+
+437
+00:52:25,879 --> 00:52:31,439
+I don't have any that I'm subscribed to.
+
+438
+00:52:31,439 --> 00:52:37,259
+When it comes to planning daily events, do you use a traditional calendar, a digital calendar or something else?
+
+439
+00:52:37,259 --> 00:52:49,279
+I use a combination of Google calendar. Remember the milk as my to do list for my to do list.
+
+440
+00:52:49,279 --> 00:52:54,559
+I think that's how I do most of my scheduling is with Google Calendar and remember the milk and for work stuff,
+
+441
+00:52:54,559 --> 00:53:08,329
+I will periodically, you know, for work stuff I'll need info's on myself in Bug Zyla.
+
+442
+00:53:08,329 --> 00:53:13,339
+So that helps with planning, I guess helps give me a cue of things.
+
+443
+00:53:13,339 --> 00:53:18,979
+And that kind of segues nicely into choosing the next bit of work to do.
+
+444
+00:53:18,979 --> 00:53:31,409
+So I was need info on a bug that I think we can take a look at. Uh.
+
+445
+00:53:31,409 --> 00:53:35,879
+Yeah, this was a problem with a test, an intermittent test failure,
+
+446
+00:53:35,879 --> 00:53:45,719
+and this is way too big of a font intermittent test failure in some of our performance tests for what's called damp.
+
+447
+00:53:45,719 --> 00:53:59,579
+Damp is our dev tools. Dev tools code, and this is very similar to something that we fixed a couple of days ago or a couple of episodes ago,
+
+448
+00:53:59,579 --> 00:54:05,579
+if I remember correctly, there was like a an episode where we fixed a TALOS.
+
+449
+00:54:05,579 --> 00:54:11,249
+Yeah. Here in bug one seven two three seven to nine, which yeah.
+
+450
+00:54:11,249 --> 00:54:24,379
+Heise is already attached to. We solved this. So I think Dad probably suffers from the same problem and we can like we can fix it.
+
+451
+00:54:24,379 --> 00:54:30,289
+So how do we reproduce this? The first thing I want to do is, yeah, I actually want to reproduce the issue.
+
+452
+00:54:30,289 --> 00:54:40,249
+I don't want to have to whenever we do these crashes. Well, uh, let me actually take a look at the crash log.
+
+453
+00:54:40,249 --> 00:54:47,759
+Tells Test damp and then we crash.
+
+454
+00:54:47,759 --> 00:55:00,719
+Here, makefile input stream, because we there's like a missing chrom or resource Eurail page loader HTML.
+
+455
+00:55:00,719 --> 00:55:07,459
+I was one and there was one that was like tart or damp dot Icko.
+
+456
+00:55:07,459 --> 00:55:15,059
+Is that correct? Blank icon.
+
+457
+00:55:15,059 --> 00:55:25,399
+I actually don't see that in here. Let's open up the raw log. I don't see that in the log blank icon.
+
+458
+00:55:25,399 --> 00:55:34,929
+I don't think that's actually the problem, folks. The URL in question is cited here.
+
+459
+00:55:34,929 --> 00:55:55,729
+I'm not sure what should be checked and by whom. That was nine days ago. Sickroom, you are so, yeah, it's actually it's Page Loder, the.
+
+460
+00:55:55,729 --> 00:56:09,509
+The test in question, the logs and the comment zero don't show an attempt, a failed.
+
+461
+00:56:09,509 --> 00:56:20,349
+To load. Crome Quansah slashed heart content, Blankfort icon TML.
+
+462
+00:56:20,349 --> 00:56:29,739
+What I see instead is an attempt to load page loader, which fails and then we crash.
+
+463
+00:56:29,739 --> 00:56:39,999
+Um. So I'm going to get rid of the C also, so this is well, I'll keep it because it's kind of related.
+
+464
+00:56:39,999 --> 00:56:55,169
+It's the same class of problem, I think. So this isn't exactly the same as bug one seven two three seven to nine, but it's a similar class of issue.
+
+465
+00:56:55,169 --> 00:57:05,739
+Uh, let me see if I can figure this out.
+
+466
+00:57:05,739 --> 00:57:22,679
+It's intermittent, too, which is kind of frustrating. Because.
+
+467
+00:57:22,679 --> 00:57:30,769
+Bug one seven two three seven to nine. Was like a perma failure, wasn't it?
+
+468
+00:57:30,769 --> 00:57:39,329
+Oh, we put in some kind of like we put in an exception for it, and that patch allowed me to remove the exception.
+
+469
+00:57:39,329 --> 00:57:42,499
+So there's no exception for this one, which is why we're crashing.
+
+470
+00:57:42,499 --> 00:57:48,499
+But for some reason, it seems like some of the time we attempt to load page loaded audax HTML and then we fail.
+
+471
+00:57:48,499 --> 00:58:04,169
+So what is attempting to load page load or not HTML? This is when we try and run.
+
+472
+00:58:04,169 --> 00:58:25,389
+What are we trying to run here? What test? This is after a bunch of tests run after damp runs.
+
+473
+00:58:25,389 --> 00:58:38,039
+And then we try and run something else. What are we trying to run here to start wait for Browsr profile?
+
+474
+00:58:38,039 --> 00:58:59,769
+It's trying to run. Let's get past this crash report.
+
+475
+00:58:59,769 --> 00:59:12,289
+It's a big old crash report, so tell us what it was trying to run.
+
+476
+00:59:12,289 --> 00:59:23,479
+For damp, I guess, yeah. So maybe it was trying to run it again, or are there like multiple kinds of damp tests?
+
+477
+00:59:23,479 --> 00:59:34,069
+It's a sweet, damp. Tests, damp page sets, TPE, 5n and the number of tests.
+
+478
+00:59:34,069 --> 00:59:41,649
+There's just the damp tests, the damp tests again.
+
+479
+00:59:41,649 --> 00:59:53,989
+And like, damp seems to work, it does a bunch of stuff, it reports a bunch of results here and then we run something else.
+
+480
+00:59:53,989 --> 01:00:04,719
+So. Oh, we only ran one five cycles, one cycle.
+
+481
+01:00:04,719 --> 01:00:21,489
+Server protocol, that jack stamp. Mm.
+
+482
+01:00:21,489 --> 01:00:37,489
+Mm. OK, well, let's take a look at the damps source code, the damp source code, damp.
+
+483
+01:00:37,489 --> 01:00:45,349
+Oh, yes, Murf, do you want to point out about newsletter's I don't I don't read I don't subscribe to any, but I do write one.
+
+484
+01:00:45,349 --> 01:00:55,439
+I do write these weeks in Firefox, which, if you're interested in, you can read at the nightly blog.
+
+485
+01:00:55,439 --> 01:01:11,569
+Which gives some interesting updates on things we've been doing in Firefox land, so if you want to check that out, here it is.
+
+486
+01:01:11,569 --> 01:01:14,979
+But but but what what are you doing?
+
+487
+01:01:14,979 --> 01:01:27,679
+I'm looking at damp, so damp, damp, damp, it's under Talos I think Talos.
+
+488
+01:01:27,679 --> 01:01:37,629
+Damp test. Task test dev tools.
+
+489
+01:01:37,629 --> 01:01:58,849
+Dev tools at maximum performance, a.k.a. damp. And how does that work if we look at the definition of damp towels, test Stoppie, it is a page or test.
+
+490
+01:01:58,849 --> 01:02:07,099
+It's supposed to load page loader as well as. Dev tools.
+
+491
+01:02:07,099 --> 01:02:22,149
+So. Do we need to somehow do something to wait for Paige Loder to be fully loaded before?
+
+492
+01:02:22,149 --> 01:02:36,239
+Um. For proceeding.
+
+493
+01:02:36,239 --> 01:02:46,009
+Caltrain. It's not that's not what I want.
+
+494
+01:02:46,009 --> 01:02:58,749
+Um, Paige Voloder tests what are Paige lower tests that load extension's.
+
+495
+01:02:58,749 --> 01:03:19,129
+Tresize, Tresize. So as Tresize do anything to wait for.
+
+496
+01:03:19,129 --> 01:03:32,709
+Things. It just like loads the script.
+
+497
+01:03:32,709 --> 01:03:40,769
+And who is anyone lowed page Flotard Temel inside of Damp.
+
+498
+01:03:40,769 --> 01:04:07,159
+That's interesting, nothing attempts, something wants to load page loaded HTML.
+
+499
+01:04:07,159 --> 01:04:31,689
+Just here. And the only reason it would fail is if Paige Loder.
+
+500
+01:04:31,689 --> 01:04:38,889
+The only thing that attempts to load page loaded Lotronex HTML is the module for which,
+
+501
+01:04:38,889 --> 01:04:45,309
+like the only reason it wouldn't exist if it was it was missing.
+
+502
+01:04:45,309 --> 01:04:55,779
+Would be if they hadn't been installed yet, but the code that accesses it is part of the page loader.
+
+503
+01:04:55,779 --> 01:05:03,549
+What Chrome do we do some like oh, chrome registry register.
+
+504
+01:05:03,549 --> 01:05:17,309
+Chrome on startup. That makes sense if we like if somehow this thing raises a little bit and sometimes could can TALOS start happen?
+
+505
+01:05:17,309 --> 01:05:26,679
+Try lowed, try a load. Well, this register crome.
+
+506
+01:05:26,679 --> 01:05:41,609
+Coromandel. Try import Thomas Powers, parent profiler.
+
+507
+01:05:41,609 --> 01:05:52,069
+We try and load and then we start, so does register. Chrom, what does this return?
+
+508
+01:05:52,069 --> 01:06:05,279
+It comes back with an aura, I help her. Is it possible?
+
+509
+01:06:05,279 --> 01:06:11,799
+That we're racing somehow register chrome.
+
+510
+01:06:11,799 --> 01:06:29,609
+How does this work? We insert registry entries.
+
+511
+01:06:29,609 --> 01:06:43,939
+So like that, that should work. Um, where was I, where was I sorry, I got I got misplaced.
+
+512
+01:06:43,939 --> 01:06:49,619
+We register page soder. For manifest your eyes manifest.
+
+513
+01:06:49,619 --> 01:06:59,299
+Jason. Oh, wait a second, I want to start up.
+
+514
+01:06:59,299 --> 01:07:14,749
+Childhood is used to way Fatalis powers to be around. I feel like this is trying to solve the same problem.
+
+515
+01:07:14,749 --> 01:07:26,519
+And I wonder if we can add to it basically we pull to wait until the extensions are all like around and available.
+
+516
+01:07:26,519 --> 01:07:39,559
+Um. So what what does page load or provide anything that we can try and like load, page load or.
+
+517
+01:07:39,559 --> 01:07:48,869
+Talos. Testing.
+
+518
+01:07:48,869 --> 01:07:53,939
+Talos. Page gloater.
+
+519
+01:07:53,939 --> 01:08:05,069
+Colonel. Well, we can try and just import page loaded ajaz.
+
+520
+01:08:05,069 --> 01:08:18,139
+Does that do anything on execution, like can I if I just. I think just defines a bunch of functions.
+
+521
+01:08:18,139 --> 01:08:41,319
+It should be fine for me to just do that. Um.
+
+522
+01:08:41,319 --> 01:08:53,909
+It was an attempt to get us off of page voter. OK, here's what we're going to try.
+
+523
+01:08:53,909 --> 01:09:06,739
+I'm going to update the damp test here, um.
+
+524
+01:09:06,739 --> 01:09:14,469
+Tests have tools, add on API and update this one.
+
+525
+01:09:14,469 --> 01:09:32,449
+Oh, I wonder if that. Is the issue is that this one's not waiting like the other one does, uh, appetite J.S. was Tresize Tresize.
+
+526
+01:09:32,449 --> 01:09:43,449
+Um. Teresa's API, Gorgias.
+
+527
+01:09:43,449 --> 01:09:51,139
+JPI. Tab on startup.
+
+528
+01:09:51,139 --> 01:09:54,989
+Oh, wait, no, that's I've gotten confused,
+
+529
+01:09:54,989 --> 01:10:11,719
+I've gotten confused what was the thing that was like requesting the timeout TALOS Powers parent JSM, I seem to recall.
+
+530
+01:10:11,719 --> 01:10:27,639
+TALOS powers. Was it resource?
+
+531
+01:10:27,639 --> 01:10:49,219
+Page Voloder API. Start test, so is it possible that.
+
+532
+01:10:49,219 --> 01:10:56,689
+What caused damp start test returned do start test.
+
+533
+01:10:56,689 --> 01:11:08,859
+Wood calls this. Driver.
+
+534
+01:11:08,859 --> 01:11:15,919
+Yeah, OK, I got a feeling the damp test in particular does not.
+
+535
+01:11:15,919 --> 01:11:38,289
+Does not wait for this TELESTAR. Wait for.
+
+536
+01:11:38,289 --> 01:11:49,919
+OK. Yeah, OK. Does does Damp require the page loader?
+
+537
+01:11:49,919 --> 01:11:57,229
+That's my next question, does damp require? The page loader.
+
+538
+01:11:57,229 --> 01:12:03,829
+Like it loads damped out HTML, which.
+
+539
+01:12:03,829 --> 01:12:12,469
+Loads the driver, that's the only reason. Oh, my brain.
+
+540
+01:12:12,469 --> 01:12:16,919
+OK, let's take a look. You know what, it probably bases itself off of Taat.
+
+541
+01:12:16,919 --> 01:12:23,509
+So what does taht do? Class theart, also a loader test.
+
+542
+01:12:23,509 --> 01:12:32,779
+What is Tartu what? Manifest says like, yeah, go to Tommo.
+
+543
+01:12:32,779 --> 01:12:41,109
+Well, wait, if. If Paige Loder is what ultimately sends.
+
+544
+01:12:41,109 --> 01:13:06,849
+Oh, my brain, if payloaders, would ultimately sends us to damped HTML, which Lowe's driver or Jass which calls damp start test.
+
+545
+01:13:06,849 --> 01:13:12,059
+No, this doesn't make any sense. This makes no sense, why would.
+
+546
+01:13:12,059 --> 01:13:23,189
+Why would this fail? Just Crome.
+
+547
+01:13:23,189 --> 01:13:31,369
+Remind me again what this means. Dynamic Chrom registry entries and returns an object with a destruct method,
+
+548
+01:13:31,369 --> 01:13:36,889
+the bass manifest, you arrive for the entries, your URL values result relative to this you.
+
+549
+01:13:36,889 --> 01:13:51,659
+So it just finds manifest and then it puts content page, loader and chrome.
+
+550
+01:13:51,659 --> 01:14:09,499
+First, choose your. Oh, man, my brain is absolutely melting.
+
+551
+01:14:09,499 --> 01:14:13,009
+Oh, OK,
+
+552
+01:14:13,009 --> 01:14:17,689
+I think what we can do actually is just verify our assumption that this this is
+
+553
+01:14:17,689 --> 01:15:01,209
+where we're failing is when we attempt to open this window to load this you URL.
+
+554
+01:15:01,209 --> 01:15:07,849
+What crashes, is it a parent process that crashes or the content process that crashes?
+
+555
+01:15:07,849 --> 01:15:15,639
+Um. Close these things, close these things.
+
+556
+01:15:15,639 --> 01:15:29,439
+Too many open things. What is crashing process crash?
+
+557
+01:15:29,439 --> 01:15:41,269
+Process crash. What is what is crashin?
+
+558
+01:15:41,269 --> 01:15:48,509
+Thread zero. This is thread zero, all right.
+
+559
+01:15:48,509 --> 01:16:01,499
+Yeah. This is going to tell me if this is know, this is I think the parent process remain.
+
+560
+01:16:01,499 --> 01:16:13,929
+In response to some J.S. In response to opening the window, we attempt to load the Auri.
+
+561
+01:16:13,929 --> 01:16:24,689
+And then we crash. Because these things are missing.
+
+562
+01:16:24,689 --> 01:16:35,259
+Check for broken chrome yourself, how does that work? It works by attempting to get.
+
+563
+01:16:35,259 --> 01:17:00,999
+Or testbeds. So, like checking for files everywhere and expects failures.
+
+564
+01:17:00,999 --> 01:17:10,029
+Oh, we can debug here. Dump the gas stack, that's handy.
+
+565
+01:17:10,029 --> 01:17:22,669
+Um. Gets back.
+
+566
+01:17:22,669 --> 01:17:52,739
+How are we determining that it's missing check for broken, get the scheme, the file path we check for.
+
+567
+01:17:52,739 --> 01:18:00,539
+Which one was on the stack, it was makefile input stream. OK, if the file is not found, OK.
+
+568
+01:18:00,539 --> 01:18:23,269
+The file was not found when it trying to get. File input stream.
+
+569
+01:18:23,269 --> 01:18:48,239
+For directory. Checking to see if it's directory.
+
+570
+01:18:48,239 --> 01:18:56,619
+And I think this is some kind of race where. Registering this stuff.
+
+571
+01:18:56,619 --> 01:19:09,519
+Register Crome. At some point, we like.
+
+572
+01:19:09,519 --> 01:19:32,959
+Insert. Into some kind of registry.
+
+573
+01:19:32,959 --> 01:19:41,559
+Who reads this stuff? How does the crime registry?
+
+574
+01:19:41,559 --> 01:19:49,649
+You reach out and you reach higher rates up to code. Bob?
+
+575
+01:19:49,649 --> 01:20:03,399
+What is this thing? But does it implement what interface does this implement server and add on start up?
+
+576
+01:20:03,399 --> 01:20:17,889
+But like, there's a thing that knows how to map from.
+
+577
+01:20:17,889 --> 01:20:26,349
+From a chrom, you or I, to the filesystem. Entry register.
+
+578
+01:20:26,349 --> 01:20:34,079
+Strangers register. Uh, here it is, common registry, manifest process and content.
+
+579
+01:20:34,079 --> 01:21:09,899
+Pride overrides content. This is what would happen, manifest content from the Chrome registry.
+
+580
+01:21:09,899 --> 01:21:17,959
+How do we get this log in? If this logging would be interesting or.
+
+581
+01:21:17,959 --> 01:21:38,289
+That's the console service man. All right, well, do we see anything related to that in here?
+
+582
+01:21:38,289 --> 01:21:43,899
+What are we going to do, what are we going to do? OK, here's what I think I'm going to do.
+
+583
+01:21:43,899 --> 01:21:50,569
+I'm going to push to try with some logging.
+
+584
+01:21:50,569 --> 01:22:00,719
+What I'm going to do is I'm going to try and determine when this fails, where in the file system it's looking for something.
+
+585
+01:22:00,719 --> 01:22:12,929
+So the way I do that is we're going to go to. Yeah, here, check for Broken Chromeo URL.
+
+586
+01:22:12,929 --> 01:22:28,799
+Um. What is the load info have?
+
+587
+01:22:28,799 --> 01:22:43,499
+Info. What info does it have like?
+
+588
+01:22:43,499 --> 01:22:51,389
+The file, you or I, that it's trying to get.
+
+589
+01:22:51,389 --> 01:23:00,149
+Result principal, you are I unstrapped, you are I. Uh, this is all not relevant.
+
+590
+01:23:00,149 --> 01:23:26,399
+OK. Yeah, here's what we're going to do, we're going to go into page loaded ojars and we're going to say, um.
+
+591
+01:23:26,399 --> 01:23:46,509
+Page Loder API, we're going to say, um, registering page load or chrome dome done, um.
+
+592
+01:23:46,509 --> 01:23:55,149
+Attempting to load page voter sage.
+
+593
+01:23:55,149 --> 01:24:11,519
+Dun dun. It's wild because page like appetizer, James Page letter content.
+
+594
+01:24:11,519 --> 01:24:20,539
+Page floater. Talos tells Page Voloder.
+
+595
+01:24:20,539 --> 01:24:37,069
+Content. How is it registering content page order chrome.
+
+596
+01:24:37,069 --> 01:24:50,599
+This work. Content for Marfil Crome content.
+
+597
+01:24:50,599 --> 01:24:59,919
+What is the API here? IDL. So and she's an array of arrays, each containing a registry entry,
+
+598
+01:24:59,919 --> 01:25:09,269
+as it would appear in a cargo manifest file, only the following entry types are currently accepted Lukow.
+
+599
+01:25:09,269 --> 01:25:17,639
+An array of arrays. The only following three types are currently except local and override a local
+
+600
+01:25:17,639 --> 01:25:23,279
+has a four is a four element array and an override is a three element array,
+
+601
+01:25:23,279 --> 01:25:31,349
+right. Content saying it's like what would appear inside of.
+
+602
+01:25:31,349 --> 01:25:37,169
+Manifest, so what we're saying is we're registering some content in the page or namespace,
+
+603
+01:25:37,169 --> 01:25:48,879
+everything under Chrome slash so that page load or content page load of maps to in here.
+
+604
+01:25:48,879 --> 01:26:08,589
+So that means. Makes sense, I guess so I've got my logging in here now, I'm going to add logging where where we just were.
+
+605
+01:26:08,589 --> 01:26:20,259
+Sorry, I have to find it file input stream.
+
+606
+01:26:20,259 --> 01:26:32,939
+In his file channel. Makefile input stream.
+
+607
+01:26:32,939 --> 01:26:42,749
+Could not check directory status on and then that will be the the file name,
+
+608
+01:26:42,749 --> 01:26:49,769
+if I can get the full path and I'll get the path file is of type NSI file.
+
+609
+01:26:49,769 --> 01:26:58,289
+And as I file, we just take a quick gander at the interface.
+
+610
+01:26:58,289 --> 01:27:03,849
+Path, string, normalize, path get.
+
+611
+01:27:03,849 --> 01:27:30,529
+Get the native path, that's what I want, native path.
+
+612
+01:27:30,529 --> 01:27:35,149
+OK, and native path, what's the type that it returns or a native path returns,
+
+613
+01:27:35,149 --> 01:27:42,129
+a pasturing and a pasturing is of type path, value type path value type is depending on the system.
+
+614
+01:27:42,129 --> 01:27:50,389
+Cha cha cha. OK.
+
+615
+01:27:50,389 --> 01:28:04,849
+Oh, right, so depending on what so this is just windows, so I'm going to do this thing, um, OK, here's what I'm going to do with, say, path.
+
+616
+01:28:04,849 --> 01:28:21,949
+String file path. Equals file native path, and then we're going to say.
+
+617
+01:28:21,949 --> 01:28:32,779
+And a string. Wait, convert at UTF eight to UTF 16 otherwise.
+
+618
+01:28:32,779 --> 01:28:42,289
+I don't want you to see this as UTF eight, you know what I'm just going to say, uh.
+
+619
+01:28:42,289 --> 01:28:52,189
+File path I'd get can I just do that? Hmm.
+
+620
+01:28:52,189 --> 01:28:59,089
+It'd be easier if I just did this to see whether or not this is even valid because I know it'll execute.
+
+621
+01:28:59,089 --> 01:29:06,759
+So let us try building this. See what happens.
+
+622
+01:29:06,759 --> 01:29:11,699
+Anything in the chatter, nothing. Are you all.
+
+623
+01:29:11,699 --> 01:29:21,019
+Not. Wrap this up in a second, but I'm hoping that by the time by the time this next the next episode airs,
+
+624
+01:29:21,019 --> 01:29:26,279
+we'll have sorted out enough debugging information to figure out what what is going on here.
+
+625
+01:29:26,279 --> 01:29:32,229
+Hmm. So this is an opportunity to to let you know.
+
+626
+01:29:32,229 --> 01:29:34,209
+Yeah, the the joy of coding,
+
+627
+01:29:34,209 --> 01:29:43,089
+if you have questions that you want me to answer here and try and run this program and dump a bunch of stuff, could not check directory.
+
+628
+01:29:43,089 --> 01:29:48,639
+Yeah, OK. So it's it's it's pretty incorrectly OK, at least on Mac OS.
+
+629
+01:29:48,639 --> 01:29:58,179
+So what I'll do is to put that here.
+
+630
+01:29:58,179 --> 01:30:10,599
+And I'll say that this is like some debugging gunk or damp test, intermittent failure.
+
+631
+01:30:10,599 --> 01:30:24,599
+And then I'm going to rebase that, because I've got a whole bunch of other know, I don't need to rebase it, um.
+
+632
+01:30:24,599 --> 01:30:38,499
+And then. What I'm going to do is.
+
+633
+01:30:38,499 --> 01:30:46,629
+Uh, yeah, I need to try push damp, see here, damp, damp, damn, damn, damn, damn.
+
+634
+01:30:46,629 --> 01:30:54,699
+OK, I'm just going to run damp. Mark, try fuzzy.
+
+635
+01:30:54,699 --> 01:31:03,289
+No artifact because we need to build the native stuff. And what does this fail on?
+
+636
+01:31:03,289 --> 01:31:12,409
+This is a failure on you. I have to go back to the root bug again.
+
+637
+01:31:12,409 --> 01:31:21,929
+Uh. Failure on what platform, what platform?
+
+638
+01:31:21,929 --> 01:31:26,379
+Where Windows 10 x eighty six Web renders shippable opt.
+
+639
+01:31:26,379 --> 01:31:36,919
+OK, so here goes. Wait, I mean I need to before I do this, I better add my SSL key booboos.
+
+640
+01:31:36,919 --> 01:31:40,829
+OK, and you go, Mark, try fuzzy.
+
+641
+01:31:40,829 --> 01:31:53,129
+No artifact. I'm sad I didn't get to draw anything.
+
+642
+01:31:53,129 --> 01:31:56,609
+I didn't get to draw for you for the for the first joy of coding.
+
+643
+01:31:56,609 --> 01:32:08,999
+I didn't have an excuse. Hey, I know something fun. Any requests for me to draw something like pick pick a funny, I don't know, pick a pick an animal.
+
+644
+01:32:08,999 --> 01:32:22,389
+I'll try and draw it in like 30 seconds and just drop it in the chat and I'll that'll be my excuse for using the the drawing surface for this episode.
+
+645
+01:32:22,389 --> 01:32:28,479
+Pick anything, any any small animal, a sheep, Snoopy.
+
+646
+01:32:28,479 --> 01:32:38,409
+OK, I'm going to draw a sheep and Snoopy in just a second. But first, it's like Windows, Talos, damp, windows.
+
+647
+01:32:38,409 --> 01:32:45,919
+Eighty six damp. No windows damp.
+
+648
+01:32:45,919 --> 01:32:57,019
+Not debug, not web platform, not browser time, not Mokey test.
+
+649
+01:32:57,019 --> 01:33:07,779
+Just try to yeah, here we go, it's one of these now, was it with software, render weibe, render shippable.
+
+650
+01:33:07,779 --> 01:33:12,389
+I think it's just eaten us, so we'll do that one, OK?
+
+651
+01:33:12,389 --> 01:33:31,789
+And now, without further ado, I will attempt to draw a sheep and Snoopy, here goes, um, sheep.
+
+652
+01:33:31,789 --> 01:33:41,699
+Oh, man, that's that's too big a brush. I need to do a better job of controlling the pressure of this thing.
+
+653
+01:33:41,699 --> 01:33:46,379
+That whoa, where'd that come from?
+
+654
+01:33:46,379 --> 01:34:01,619
+I think I accidentally hit a key bar. OK.
+
+655
+01:34:01,619 --> 01:34:13,689
+That looks like it's got boots on. OK, there's a sheep, uh, talking with Snoopy, so I need to, like, move this character.
+
+656
+01:34:13,689 --> 01:34:16,809
+How can I do that? Uh, can you do that?
+
+657
+01:34:16,809 --> 01:34:30,819
+I've never used creative before, so I'm new at it, so I can just do that and now control X, control V and then move.
+
+658
+01:34:30,819 --> 01:34:35,699
+No. Uh, is there a tool for that to move tool.
+
+659
+01:34:35,699 --> 01:34:43,399
+Yeah. We go OK. And now Snoopy uh please don't sue me.
+
+660
+01:34:43,399 --> 01:34:54,329
+And was the the beloved beloved, uh estate of Charles Schulz.
+
+661
+01:34:54,329 --> 01:34:59,219
+All right, here we go. Snoopy, wait by using the right tool.
+
+662
+01:34:59,219 --> 01:35:02,699
+How do I do I how do I draw which tool that I need?
+
+663
+01:35:02,699 --> 01:35:08,369
+This is a line tool. No paintbrush tool? No. What's the default tool?
+
+664
+01:35:08,369 --> 01:35:14,369
+So this one. No, nope. Was the tool I was I was drawing with before.
+
+665
+01:35:14,369 --> 01:35:19,499
+Does anyone remember what what the tool was. Oh man.
+
+666
+01:35:19,499 --> 01:35:25,769
+What's the default tool. And Greta. No I just tried that one.
+
+667
+01:35:25,769 --> 01:35:30,719
+Um was it this one. No, this one just tried that.
+
+668
+01:35:30,719 --> 01:35:35,849
+Wow. And keep her being that this one. No.
+
+669
+01:35:35,849 --> 01:35:43,439
+Wow. What happened to my sheep over here by the way? It got all fuzzy. OK, clearly I need to just like get better at this tool.
+
+670
+01:35:43,439 --> 01:35:48,739
+Um. I don't know why I can't draw anymore.
+
+671
+01:35:48,739 --> 01:36:02,239
+Is it because I'm using the wrong color? No. Is it because I've got a very small selection that looks like a very small selection?
+
+672
+01:36:02,239 --> 01:36:07,069
+So clear selection and now can I draw? There we go.
+
+673
+01:36:07,069 --> 01:36:11,689
+All right, let's get back to the color black.
+
+674
+01:36:11,689 --> 01:36:22,559
+So here's Snoopy. Try drawing Snoopy. Already, I can tell it's a very good, um.
+
+675
+01:36:22,559 --> 01:36:54,699
+No. Not very good, but it's the best I can do.
+
+676
+01:36:54,699 --> 01:37:04,029
+In short notice, there you go. I thank you for tolerating me as I learned my new drawing tablet, but there you go.
+
+677
+01:37:04,029 --> 01:37:13,759
+A sheep talking to Snoopy. What Snoopy saying Snoopy is saying.
+
+678
+01:37:13,759 --> 01:37:19,879
+Whether ever, ever.
+
+679
+01:37:19,879 --> 01:37:27,199
+That's a stupid joke. All right, well, on that note, I want to thank you so much for watching episode what was this episode?
+
+680
+01:37:27,199 --> 01:37:32,099
+Two hundred. And hang on, let me go back to my screen here.
+
+681
+01:37:32,099 --> 01:37:36,049
+This is episode two hundred and sixty three of the Joy of Coding.
+
+682
+01:37:36,049 --> 01:37:40,669
+Thanks. Thanks for watching and I hope to see you next week whenever.
+
+683
+01:37:40,669 --> 01:37:44,419
+Maybe I can do some explaining. Hey. Hey. That's the thing. Yeah. Ask your questions.
+
+684
+01:37:44,419 --> 01:37:53,299
+And this rate, this episode, maybe if there's anything you want me to like, like a diagram you want me to draw about something now I can do it.
+
+685
+01:37:53,299 --> 01:37:59,239
+So in the rate this episode part in your questions, you can, you can fill that in now I can draw for you.
+
+686
+01:37:59,239 --> 01:38:02,569
+So there you go. Thanks again for watching. Take care.
+
+687
+01:38:02,569 --> 01:38:07,729
+I'll see you next week. Bye bye. Hold on a second.
+
+688
+01:38:07,729 --> 01:38:25,473
+I got to play myself out. But the joy, according to.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

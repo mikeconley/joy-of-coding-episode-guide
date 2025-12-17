@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 357 - February 28, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 357 - February 28, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=fc8767cc-022b-4597-aa6e-b106011ca016</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=fc8767cc-022b-4597-aa6e-b106011ca016">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,810 --> 00:00:08,110
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy Cup.
+
+2
+00:00:08,350 --> 00:00:14,289
+Oh, hello and welcome to episode 357 of The Joy of Coding.
+
+3
+00:00:14,290 --> 00:00:18,570
+My name is Mike Connelly. It's so good to have you here. Going to be live hacking on some Firefox stuff today.
+
+4
+00:00:18,580 --> 00:00:25,420
+Going to continue digging into some work that we started a couple of weeks ago on making further improvements
+
+5
+00:00:25,420 --> 00:00:30,010
+to the Windows jumble of stuff that we worked on for most of 2023 and where we're doing more refinements.
+
+6
+00:00:30,250 --> 00:00:38,289
+Let's start by sharing my screen and getting getting a shot of what's going on today, getting a real good breakdown of what we're hoping to do.
+
+7
+00:00:38,290 --> 00:00:43,990
+Well, guess what, gang? No plan survives breakfast. It's February 28th, 2024, Episode 357.
+
+8
+00:00:43,990 --> 00:00:47,439
+I say this every time. Yeah. No plan survives breakfast. I think I know what I'm going to do.
+
+9
+00:00:47,440 --> 00:00:53,530
+I think I know what we're going to cover. But it might not happen and we might go sideways, might get stuck.
+
+10
+00:00:53,530 --> 00:00:58,300
+We might find out that I can't connect to my VM or something and I will just work through it.
+
+11
+00:00:58,330 --> 00:01:02,500
+You know, that's what we're capturing here as you're going to watch me working like I would normally be working,
+
+12
+00:01:02,500 --> 00:01:08,530
+I'll just try and think out loud while I'm doing it. And sometimes plans don't go as you'd think.
+
+13
+00:01:09,430 --> 00:01:13,900
+That's the first thing. The second thing is that the agenda that we're looking at is something you have access to.
+
+14
+00:01:14,110 --> 00:01:21,580
+So if you're watching this on air, Mozilla over in the details section over there, you should find a link to this agenda for Diodes phone or YouTube.
+
+15
+00:01:21,580 --> 00:01:28,540
+It'll be down the video description and in Twitch it's down in the channel details and as I update it and like add stuff,
+
+16
+00:01:28,870 --> 00:01:34,270
+this little spinning thing will spin. And if you reload the agenda, it should it should be up to date.
+
+17
+00:01:34,360 --> 00:01:38,080
+Let's actually double check that. I look at the agenda. Oh, guess what?
+
+18
+00:01:38,740 --> 00:01:43,809
+It's not working. Hold on a second. Let me just go ahead and make sure that that's in sync.
+
+19
+00:01:43,810 --> 00:01:47,200
+One sec. Um, there it is.
+
+20
+00:01:47,380 --> 00:01:50,740
+Just took another little kick there. Just had to kick it a little bit.
+
+21
+00:01:51,580 --> 00:01:56,410
+All right, so what are we working on today? Well, first of all, is my mike too hot?
+
+22
+00:01:56,830 --> 00:02:00,850
+I realize I'm red lining. I'm going to turn down the game just a little bit.
+
+23
+00:02:04,420 --> 00:02:08,430
+Is this? Is this better? Is this better? I'm no longer here.
+
+24
+00:02:08,980 --> 00:02:12,370
+I'm trying not to red line. So now I'm.
+
+25
+00:02:12,400 --> 00:02:15,400
+I'm nice in the. In the yellow. I'm in the yellow zone.
+
+26
+00:02:15,700 --> 00:02:18,880
+Let me know if that's better or worse. Okay.
+
+27
+00:02:18,880 --> 00:02:22,720
+So what I was hoping to do today was to continue with last week's work.
+
+28
+00:02:22,720 --> 00:02:26,740
+We are starting to get the fab icon stuff that's built into the jump list system.
+
+29
+00:02:27,640 --> 00:02:34,299
+We were working on getting the the sort of the fabric on fetching part to work properly into not do you mean thread
+
+30
+00:02:34,300 --> 00:02:43,449
+I oh the the actual fetching of the fab icons does occur off of the main thread and writing the fab icons to disk,
+
+31
+00:02:43,450 --> 00:02:48,700
+but checking whether or not the fab icons are present happens on the main thread.
+
+32
+00:02:48,700 --> 00:02:51,920
+And so the next step is to really just get the whole thing off of the main threat.
+
+33
+00:02:51,920 --> 00:02:57,430
+And that's what we were working on last week and the week before that. I did want to give a quick update on the jump of stuff.
+
+34
+00:02:57,430 --> 00:03:02,409
+I've heard from Cuba today that they've been testing the new off main thread
+
+35
+00:03:02,410 --> 00:03:07,869
+Windows jump list on Firefox Beta 124 and so far have not found any major issues.
+
+36
+00:03:07,870 --> 00:03:14,350
+So we are on track presuming they continue to test it and happen to miss the first part.
+
+37
+00:03:14,350 --> 00:03:17,500
+But sounds okay. Okay. Good. Good. I'm glad that the microphone is working.
+
+38
+00:03:18,910 --> 00:03:24,910
+If all goes well, if she doesn't find anything made any major issues and we don't see any like stability issues suddenly arise,
+
+39
+00:03:25,510 --> 00:03:35,199
+then the new off main thread junk list will go out in 124 and users may not notice like the behavior of the jump list should be the same,
+
+40
+00:03:35,200 --> 00:03:43,180
+but the but it should ultimately be more responsive because it's no longer blocked on on main thread IO, which is good.
+
+41
+00:03:43,210 --> 00:03:48,400
+The whole browser becomes more responsive so I can get rid of this line.
+
+42
+00:03:48,400 --> 00:03:56,920
+Now I actually need to sort of come up to speed. I didn't I didn't really do any prep before this episode, so I forget where we got to last week.
+
+43
+00:03:57,760 --> 00:04:12,370
+And so what I am actually going to do is let's, let's take a look at what we did last week recordings and see where we left off with episode 356.
+
+44
+00:04:12,670 --> 00:04:16,749
+So I'm just going to fast forward right to the end. This is a sort of a meta joy of coding episode.
+
+45
+00:04:16,750 --> 00:04:25,540
+So where did I get to? That's the last I want to get right to the very end here where I, I flipped back to have it past the path.
+
+46
+00:04:26,260 --> 00:04:30,670
+I don't know, just be ignored by the old version.
+
+47
+00:04:34,240 --> 00:04:44,160
+The old consumer of this stuff. So the run of all the decoding, the downloading of the fabrication and the encoding of it, that's fine.
+
+48
+00:04:44,170 --> 00:04:47,260
+It's the writing where eventually the running ball is run.
+
+49
+00:04:47,800 --> 00:04:52,570
+This part? Yes, the running ball. Are we able to pass more?
+
+50
+00:04:54,660 --> 00:04:58,830
+Information like the path here. That's something to think about next week.
+
+51
+00:04:59,340 --> 00:05:03,510
+Hey. Hey. So now it's next week.
+
+52
+00:05:04,260 --> 00:05:10,620
+So we were talking about what were we talking about passing to the.
+
+53
+00:05:10,770 --> 00:05:22,630
+Well, let me back that up a little bit. The old consumer of this stuff and it just be ignored in somehow haven't got cash is available these rumbles.
+
+54
+00:05:22,650 --> 00:05:28,800
+I'd love it if I could somehow have it pass the path and it just be ignored.
+
+55
+00:05:30,060 --> 00:05:33,930
+Have it pass the bill Bill. These rumbles I'd love.
+
+56
+00:05:40,780 --> 00:05:44,480
+Hang on. What are we talking about?
+
+57
+00:05:44,690 --> 00:05:50,840
+This is awkward. This is awkward. We might end up having to rewrite humongous chunks of some of this.
+
+58
+00:05:51,200 --> 00:05:55,940
+A callback because there's a callback once our callback is fired.
+
+59
+00:05:56,150 --> 00:06:02,150
+But we have to get the path out somehow. Oh, this is once our callback.
+
+60
+00:06:02,450 --> 00:06:06,500
+Right? So our callback?
+
+61
+00:06:08,600 --> 00:06:11,840
+Yes. Now, I remember. I remember.
+
+62
+00:06:12,020 --> 00:06:15,530
+Okay, so we're caught up to date.
+
+63
+00:06:16,340 --> 00:06:21,109
+Let's go back to our. Let's go to my windows machine where I haven't touched the editor since last week.
+
+64
+00:06:21,110 --> 00:06:26,990
+So we're in the same spot, more or less. But the problem, the problem that we're trying to solve.
+
+65
+00:06:27,770 --> 00:06:34,880
+Famicom cache get or cache, was it cache?
+
+66
+00:06:38,960 --> 00:06:42,080
+Obtain cached icon file async this one.
+
+67
+00:06:42,470 --> 00:06:46,880
+So we're trying to have a thing that returns a promise.
+
+68
+00:06:47,450 --> 00:06:58,700
+And that promise is supposed to resolve with the path of the file that either exists already on disk or gets downloaded and then cached to disk.
+
+69
+00:06:59,630 --> 00:07:07,520
+And then we need to get that file path out. And the way that a lot of the helpers that we've been that the old mechanism uses,
+
+70
+00:07:09,380 --> 00:07:22,160
+the way those work is you you kick off this run a ball but the run a ball whenever it completes the where's the part where there's a callback.
+
+71
+00:07:28,540 --> 00:07:33,340
+Whereas. Whereas in a good example this thing cached I can file here.
+
+72
+00:07:33,340 --> 00:07:40,870
+Yeah, you can get a run able to run after this job has occurred, but you don't really get a result from it.
+
+73
+00:07:41,740 --> 00:07:49,210
+But I wonder if there's a pattern that we can I wonder if there's a pattern that we can use.
+
+74
+00:07:49,930 --> 00:07:53,620
+Here's, here's what I know. And it's I run a ball.
+
+75
+00:07:54,130 --> 00:08:00,340
+That's that's you know, that's the interface for a run of a thing that is like a task that will be
+
+76
+00:08:00,340 --> 00:08:04,650
+dispatched to some event queue somewhere and eventually be consumed and run.
+
+77
+00:08:04,660 --> 00:08:09,130
+You can think of that as a task. There is a run method.
+
+78
+00:08:09,280 --> 00:08:14,290
+That run method doesn't take any arguments.
+
+79
+00:08:14,870 --> 00:08:24,760
+It doesn't take any arguments. All we can do is have because we know who the we can have control over the class itself.
+
+80
+00:08:25,300 --> 00:08:32,740
+Like the run of the class in this case. Um, or Dewey, do we have control over this?
+
+81
+00:08:34,740 --> 00:08:39,000
+Ten cash I can file who passes us.
+
+82
+00:08:42,100 --> 00:08:54,540
+Who calls us obtain cash. So this one doesn't use the run up bill.
+
+83
+00:08:55,740 --> 00:09:05,460
+That's helpful. Legacy one also doesn't use the running ball and data object does use the running bowl.
+
+84
+00:09:06,210 --> 00:09:09,540
+And what it is, is it creates a run up function.
+
+85
+00:09:13,520 --> 00:09:21,830
+So really what we should do is get this to use our new mechanism or our new promise mechanism,
+
+86
+00:09:22,950 --> 00:09:31,760
+rather like trying to get the Oh geez, so we create a new rentable function.
+
+87
+00:09:32,570 --> 00:09:37,219
+So it's just this like little lambda and it's just a function.
+
+88
+00:09:37,220 --> 00:09:44,420
+It takes a single thing into scope, which is E is the some kind of event.
+
+89
+00:09:45,260 --> 00:09:53,900
+And we see if, if after we get the fab icon, we might either send a signal or send some kind of message.
+
+90
+00:09:55,940 --> 00:10:00,790
+I see. We think here.
+
+91
+00:10:06,340 --> 00:10:10,210
+Because what I was originally thinking is if the running bill.
+
+92
+00:10:13,690 --> 00:10:24,700
+If we can control the class, then we can have the running bull set a member after the path is obtained on itself.
+
+93
+00:10:25,690 --> 00:10:30,490
+And then within the run able function, you can then access that member.
+
+94
+00:10:33,730 --> 00:10:40,810
+But I think what we might be doing accidentally is trying to shoehorn.
+
+95
+00:10:42,400 --> 00:10:44,570
+We might we might be doing more work than we need to.
+
+96
+00:10:44,590 --> 00:10:51,289
+Like, if we can convert this to use our new promises system, then we don't even need to do the callback thing anymore.
+
+97
+00:10:51,290 --> 00:10:57,460
+And we can rewrite all of the callback stuff. Let's see what this does real quick.
+
+98
+00:10:59,350 --> 00:11:05,980
+Get file content, internet shortcut. Create the special format for an internet shortcut and build up the data structures that the shell is expecting.
+
+99
+00:11:06,820 --> 00:11:09,160
+This is like a Windows specific thing.
+
+100
+00:11:09,670 --> 00:11:25,000
+So given some I presume we're being we're exposing we're implementing some function, I don't know, like we're returning an H result and as data obj.
+
+101
+00:11:25,420 --> 00:11:32,590
+So, you know, this is very windows, this is very Win32, These are Windows structures.
+
+102
+00:11:32,710 --> 00:11:39,940
+I can tell that. But we're doing some X because we get the you or I for.
+
+103
+00:11:43,150 --> 00:11:46,510
+Extract shortcut URL from. From what?
+
+104
+00:11:50,370 --> 00:11:55,080
+We. Oh, we are in a state of object. That's what's going on.
+
+105
+00:11:55,560 --> 00:12:04,350
+We are implementing something for and as data objects, we are a data object and we read out the URL.
+
+106
+00:12:04,410 --> 00:12:11,580
+Presumably it's encoded in some like window specific format. We extract it, we construct an NCAI, you or I.
+
+107
+00:12:11,590 --> 00:12:22,180
+From it, we get the ASCII spec, the then we see whether or not it's true that we're supposed to be doing this case.
+
+108
+00:12:22,180 --> 00:12:25,500
+Shell icon pref shortcut fab icons.
+
+109
+00:12:27,150 --> 00:12:30,870
+What is the default value of this pref? It's true.
+
+110
+00:12:33,240 --> 00:12:42,899
+Okay, so. If it's not true, then we skip all of what we're about to do.
+
+111
+00:12:42,900 --> 00:12:51,780
+We instead do we? We construct a shortcut, string, format, string, and we insert some stuff into it, presumably.
+
+112
+00:12:52,110 --> 00:12:57,030
+And you know, the inner windows is happy with this sort of shortcut file.
+
+113
+00:12:57,030 --> 00:13:00,240
+So that's what we're doing, is we're constructing some kind of shortcut file.
+
+114
+00:13:02,280 --> 00:13:06,870
+Now, if we do want to embed the fab icon, then what we do is we.
+
+115
+00:13:11,150 --> 00:13:24,380
+We create some structure as we request the fab icon, and if and when we get it, then he is waiting an auto set event.
+
+116
+00:13:24,920 --> 00:13:29,720
+Then we signal it, we unblock it. If it's not waiting, we can not wait until the fabrication was available.
+
+117
+00:13:29,730 --> 00:13:34,820
+We have to refresh to reflect the fabric. And so you say, okay, well, send windows a message.
+
+118
+00:13:35,090 --> 00:13:40,400
+Hey, we I guess we updated the fab icons, yo.
+
+119
+00:13:41,570 --> 00:13:54,350
+Meanwhile, while that's happening, we get the output icon power for the ISO file, so this may or may not have anything in it yet.
+
+120
+00:13:56,390 --> 00:14:00,010
+And then we write that. Okay. Okay. I see.
+
+121
+00:14:00,020 --> 00:14:10,360
+And then we write that into here. And.
+
+122
+00:14:17,220 --> 00:14:22,090
+What? Tell me more about this auto set event. He.
+
+123
+00:14:25,250 --> 00:14:29,640
+Set of end implementation. It's it's like some kind of signal.
+
+124
+00:14:29,660 --> 00:14:33,980
+It's like a it's not a mutex. It's like a a monitor of some kind.
+
+125
+00:14:35,870 --> 00:14:42,590
+I think with an auto close event wrap, not no event auto close event.
+
+126
+00:14:42,590 --> 00:14:49,530
+And that is a. Wait for a single object event.
+
+127
+00:14:52,610 --> 00:14:58,250
+That I think is we are polling in a very. Q That's not what it means.
+
+128
+00:14:58,250 --> 00:15:02,660
+Checks the current state to a specified object is in the signaled state.
+
+129
+00:15:03,140 --> 00:15:07,400
+So we're not pulling an event queue or waiting for us to enter a particular state.
+
+130
+00:15:07,940 --> 00:15:12,500
+And then the second argument is the timeout interval.
+
+131
+00:15:16,030 --> 00:15:19,120
+It must have a synchronize axis where we were waiting for.
+
+132
+00:15:19,810 --> 00:15:29,680
+We're waiting for access to a thing. We're waiting for access to some object that has like there's like a mute, sexy thing going on.
+
+133
+00:15:29,680 --> 00:15:34,780
+And then this is a timeout. And so if we are.
+
+134
+00:15:38,740 --> 00:15:41,740
+We cannot wait until the phev comes available to refresh reflect the fabric icon.
+
+135
+00:15:42,790 --> 00:15:53,260
+Okay. I think what we want to do then is to have this use the async mechanism and then use van here to do this stuff.
+
+136
+00:15:58,300 --> 00:16:01,710
+Now the output icon path part.
+
+137
+00:16:03,820 --> 00:16:04,780
+What does this do again?
+
+138
+00:16:05,800 --> 00:16:14,529
+Obtains the I could con if successful we generate the name sure ensure so it doesn't check to see whether or not there's actually anything there.
+
+139
+00:16:14,530 --> 00:16:23,260
+It's just given this I you are right. This is where we would put the icon file and that's important because we haven't necessarily populated it yet.
+
+140
+00:16:23,560 --> 00:16:27,490
+That should still work. We don't want to block doing that.
+
+141
+00:16:27,970 --> 00:16:32,290
+So we want to just do this exact same thing, but inside the van.
+
+142
+00:16:32,650 --> 00:16:39,310
+And we don't even need that in our in this particular case, we will not need the path.
+
+143
+00:16:41,490 --> 00:16:49,050
+Actually come to think of it, now that I now that I think about it, we don't need,
+
+144
+00:16:50,790 --> 00:16:56,760
+uh, we don't need to resolve with the path because we it's like it's deterministic.
+
+145
+00:16:57,270 --> 00:17:01,320
+It's deterministic because we know the you or I, we know what the path will be.
+
+146
+00:17:03,890 --> 00:17:08,210
+So we actually don't need to have our promise here.
+
+147
+00:17:08,930 --> 00:17:18,350
+We obtained cached icon file async promise. We don't need the callback to resolve at all with the path.
+
+148
+00:17:18,350 --> 00:17:28,890
+We already know what the path will be. I go file?
+
+149
+00:17:32,190 --> 00:17:48,840
+So instead if it exists. We resolve if it doesn't exist, we're going to queue up retrieving it and then our callback will be called.
+
+150
+00:17:51,580 --> 00:17:57,350
+And then what do we do? Run of the mill cash.
+
+151
+00:17:58,190 --> 00:18:03,060
+How can you write a sink? We do this stuff.
+
+152
+00:18:03,060 --> 00:18:06,750
+We get the call back. I know this is all very familiar.
+
+153
+00:18:08,100 --> 00:18:16,120
+A6, I have a condom already. On Vatican data not available.
+
+154
+00:18:18,010 --> 00:18:21,609
+We'll go and get it on complete.
+
+155
+00:18:21,610 --> 00:18:29,650
+If there's no data, then we don't do a thing we do on fabric on not available.
+
+156
+00:18:35,900 --> 00:18:44,090
+Then we. It looks like we'll fall back. Will fall back to some other fab icon and write that in instead.
+
+157
+00:18:48,500 --> 00:18:54,740
+Otherwise, we'll do all this work. And then.
+
+158
+00:18:59,490 --> 00:19:03,310
+Code and right icon and run the ball. Yeah.
+
+159
+00:19:03,420 --> 00:19:08,640
+When is the end Run a bull run in the failure case of run the ball.
+
+160
+00:19:14,310 --> 00:19:20,549
+I don't know if we'd ever actually run it in that case. That might be a return channel async.
+
+161
+00:19:20,550 --> 00:19:28,440
+Open listener or listener is a new downloader and we have a download Observer, which is this thing.
+
+162
+00:19:28,530 --> 00:19:35,790
+My download Observer You might download my download Observer.
+
+163
+00:19:38,040 --> 00:19:50,110
+Okay on download complete. Seriously is that What is what is this my download Observer.
+
+164
+00:19:52,150 --> 00:19:56,830
+Well, what do you know? Why is that? That's kind of bizarre.
+
+165
+00:20:01,800 --> 00:20:05,850
+Download observer en download complete doesn't do much with it.
+
+166
+00:20:05,850 --> 00:20:15,150
+Okay. Don't need to worry about that. We just need I guess to satisfy the satisfy the interface.
+
+167
+00:20:19,980 --> 00:20:25,330
+Get a listener out. And then we async open.
+
+168
+00:20:27,400 --> 00:20:32,600
+Get the file. I actually don't know if we end up.
+
+169
+00:20:39,290 --> 00:20:48,320
+You know, async and code and write and then we pass the run over here and then the running ball over here will call the run of all.
+
+170
+00:20:51,340 --> 00:21:03,630
+Only on success. That's really interesting.
+
+171
+00:21:03,660 --> 00:21:12,540
+So it means that there are cases where the run bill will never have resolved the runner but will never run.
+
+172
+00:21:24,880 --> 00:21:41,110
+It seems like a mistake. You know, haven't.
+
+173
+00:21:47,810 --> 00:21:52,640
+It seems like a mistake and it's something to note for later.
+
+174
+00:21:53,720 --> 00:22:03,590
+I think what I'm I'm coming to the realization of, though, is that we can still use this stuff and have our roundtable do the work.
+
+175
+00:22:05,210 --> 00:22:13,280
+Like, have our run able call this stuff the async fabric and all this business.
+
+176
+00:22:18,720 --> 00:22:28,550
+Um. This thing.
+
+177
+00:22:31,350 --> 00:22:38,010
+Cache icon file. Rumble. Forget like if we call this.
+
+178
+00:22:41,110 --> 00:22:44,140
+From within here if the Vatican doesn't exist.
+
+179
+00:22:52,000 --> 00:23:03,310
+And then have it resolve once are run a ball like have our run the run a bowl that we pass it.
+
+180
+00:23:04,600 --> 00:23:11,380
+Resolve the promise using the calculated icon path that we know of.
+
+181
+00:23:20,570 --> 00:23:31,860
+Because we already know what it would have been. Checked if exists Funk.
+
+182
+00:23:33,710 --> 00:23:42,590
+Okay, well. Where were we?
+
+183
+00:23:42,600 --> 00:23:46,200
+We were dealing with this. We had gotten to the point where.
+
+184
+00:23:48,750 --> 00:23:52,200
+This is a familiar problem. It's not a pointer promise holder.
+
+185
+00:23:58,830 --> 00:24:03,409
+Sure. Then we moved.
+
+186
+00:24:03,410 --> 00:24:09,290
+We used a unique. Pointer.
+
+187
+00:24:14,980 --> 00:24:18,010
+And I presume we're still in the state where this will not build.
+
+188
+00:24:19,120 --> 00:24:24,279
+Basically, you just heard me think out loud for the past half an hour.
+
+189
+00:24:24,280 --> 00:24:31,700
+You've heard me think out loud. But let me let me take an opportunity to write my thinking down here, too.
+
+190
+00:24:32,560 --> 00:24:55,619
+Do we have an active bug? Yeah. So what I'm thinking, reconciling the run of both of the NCAI run a bill passed to what is it called?
+
+191
+00:24:55,620 --> 00:25:05,790
+Obtain in cash or something. The cache icon files from fabric on your sink.
+
+192
+00:25:07,730 --> 00:25:12,440
+Uh. With the promise.
+
+193
+00:25:13,220 --> 00:25:22,070
+So the good news is that we actually can deterministically derive the saved icon
+
+194
+00:25:22,070 --> 00:25:29,269
+file location from the MCU or AI without actually having to do the download.
+
+195
+00:25:29,270 --> 00:25:34,310
+Like, that's part of how all of this works.
+
+196
+00:25:34,320 --> 00:25:40,370
+We know where the icon files should be if it exists and if it's not.
+
+197
+00:25:40,700 --> 00:25:52,280
+There we go and get it. So what we should do is resolve the promise if and when.
+
+198
+00:25:55,400 --> 00:26:10,200
+The cash I can file from five account or a sink call run a ball is fired and have the color of cash icon such as?
+
+199
+00:26:10,240 --> 00:26:17,120
+Such as this. As I resolve that promise with the path of the I come from.
+
+200
+00:26:20,410 --> 00:26:23,540
+H1 tags are like Highlanders. There can only be one. Should there?
+
+201
+00:26:23,560 --> 00:26:33,190
+Oh, okay. Good call. Good call. Actually, this is almost like a sub bullet of this thing.
+
+202
+00:26:41,740 --> 00:26:44,800
+That's what I like. Wait, Cash? Yeah, okay.
+
+203
+00:26:45,010 --> 00:26:50,360
+It's not. It's. It's a sibling. Okay. Scooby Doo.
+
+204
+00:26:50,590 --> 00:26:59,290
+So I'm going to guess that that didn't build because no matching member function function called to resolve if exists.
+
+205
+00:26:59,530 --> 00:27:04,060
+Candidate function typically not required because it requires two arguments.
+
+206
+00:27:09,600 --> 00:27:16,230
+The path. And the method name.
+
+207
+00:27:17,160 --> 00:27:22,469
+Let's see an example of that being used in the wild. I think I know what it is.
+
+208
+00:27:22,470 --> 00:27:26,670
+I think it's possibly funkier. Renegades of Funk.
+
+209
+00:27:50,140 --> 00:27:56,190
+So what we have to do instead is dispatch, Oh, this is annoying.
+
+210
+00:27:56,200 --> 00:28:00,670
+We're going to dispatch a runner able to run on the main thread to call.
+
+211
+00:28:00,790 --> 00:28:13,180
+I think we have to do that to call. Cache icon far from fab icon.
+
+212
+00:28:13,180 --> 00:28:23,950
+You are in a sync. So we're going to pass the Promise folder back to the main thread.
+
+213
+00:28:30,060 --> 00:28:33,990
+Okay. First of all, does that compile?
+
+214
+00:28:41,800 --> 00:28:46,630
+Uh, if it exists, then do this then.
+
+215
+00:28:46,900 --> 00:28:52,600
+Else. I guess if we ever reach here.
+
+216
+00:28:52,690 --> 00:28:55,150
+We don't need to. We don't need to. Else we know.
+
+217
+00:28:55,150 --> 00:29:02,540
+If we're here, then either the icon file didn't exist or it was expired, in which case we need to do the thing.
+
+218
+00:29:02,560 --> 00:29:06,400
+So we're going to dispatch now. Dispatch or run a bill.
+
+219
+00:29:08,720 --> 00:29:15,800
+So the main thread that will request the five icon.
+
+220
+00:29:19,800 --> 00:29:30,750
+Karl, this is so circuitous you call such and such to request the Valkyrie.
+
+221
+00:29:42,680 --> 00:29:48,260
+Is there a better way? Your eyes.
+
+222
+00:29:52,930 --> 00:30:07,510
+Is there a better way? Who calls this thing?
+
+223
+00:30:07,720 --> 00:30:11,770
+Maybe all of this like marshaling back and forth between.
+
+224
+00:30:11,920 --> 00:30:15,480
+Yeah. It's only those two places. That's really clumsy.
+
+225
+00:30:15,490 --> 00:30:21,010
+Like we send a message to the background thread to check for the presence on the desk and the expiry and stuff.
+
+226
+00:30:21,280 --> 00:30:23,890
+And if we need to re request the fab icon,
+
+227
+00:30:24,100 --> 00:30:33,010
+we send a runner back to the main thread and its job is to then queue up a run bill on a different the IO thread to.
+
+228
+00:30:34,180 --> 00:30:38,080
+Yeah, that sounds wrong. And also from.
+
+229
+00:30:52,070 --> 00:30:56,120
+Is there a way we could put that initial logic of.
+
+230
+00:31:01,630 --> 00:31:07,640
+A sink. Call back if I can.
+
+231
+00:31:07,640 --> 00:31:10,670
+Data for page, call back.
+
+232
+00:31:19,670 --> 00:31:32,610
+For example, could we have this? It's the same problem.
+
+233
+00:31:33,750 --> 00:31:36,170
+It's the same problem in the fabric of service.
+
+234
+00:31:36,180 --> 00:31:45,660
+Like, even if we had this do the work off of the main thread, you'd have to come back in order to invoke the fabric on service.
+
+235
+00:31:46,590 --> 00:31:52,220
+It's a pain. How is it done for Mac and Linux?
+
+236
+00:31:57,100 --> 00:32:00,520
+I don't know. I don't know. This is very window specific.
+
+237
+00:32:03,490 --> 00:32:11,200
+Good question. We did look at politics, street decay.
+
+238
+00:32:13,300 --> 00:32:20,500
+Is there some kind of fab icon thing in here, which is chic and is fab?
+
+239
+00:32:20,500 --> 00:32:25,530
+Because there is. Like us.
+
+240
+00:32:25,970 --> 00:32:29,630
+I'm going to guess we don't do anything for GTA. Doesn't look like we do.
+
+241
+00:32:32,120 --> 00:32:43,960
+And then for Mac OS. We may actually I don't actually know.
+
+242
+00:32:45,480 --> 00:32:48,870
+I wonder if we delegated to the operating system because they have support for it.
+
+243
+00:32:51,240 --> 00:32:55,700
+When we pass the icon data. Hmm.
+
+244
+00:32:57,950 --> 00:33:04,560
+I mean, in this particular case, like jump lists are very jump lists are very window specific.
+
+245
+00:33:04,560 --> 00:33:10,340
+There's not really a great analog for what we're trying to do here, at least as far as I can tell.
+
+246
+00:33:10,340 --> 00:33:16,639
+For Mac OS Analytics, it's like Linux has some kind of similar menu.
+
+247
+00:33:16,640 --> 00:33:23,480
+I think there's a file that one writes to. It's like a desktop file that describes the contents.
+
+248
+00:33:26,350 --> 00:33:32,540
+Well. Describes the contents of.
+
+249
+00:33:42,750 --> 00:33:46,409
+The menu or maybe like, actions here.
+
+250
+00:33:46,410 --> 00:33:53,070
+Yeah, but I don't think that there's an equivalent where we'll, like, list recent sites or something.
+
+251
+00:33:53,080 --> 00:33:56,420
+I think this is very window specific. Yeah.
+
+252
+00:33:58,810 --> 00:34:13,510
+Okay, So we might be stuck with our sort of clumsy architecture where we do the check off the main thread check fails,
+
+253
+00:34:13,810 --> 00:34:20,520
+queue up, work on the main thread that does that kicks off work off of the main threat.
+
+254
+00:34:22,780 --> 00:34:29,790
+We shares that a better way of doing. Given this, I don't want to rewrite everything.
+
+255
+00:34:33,160 --> 00:34:36,700
+To get further out of her page.
+
+256
+00:34:37,600 --> 00:34:48,180
+What does that do? Okay.
+
+257
+00:34:48,360 --> 00:34:54,050
+Your faith of pageant paycheck. And I really will try return the rude domain icon data when it's known.
+
+258
+00:35:02,340 --> 00:35:06,150
+Okay, so this may do like network requests. It will do its best.
+
+259
+00:35:13,240 --> 00:35:18,780
+And what we're really talking about is like an on disk cache in front of this stuff.
+
+260
+00:35:26,130 --> 00:35:30,720
+And we don't want it to be checked on the main threat.
+
+261
+00:35:33,540 --> 00:35:39,300
+So this is awkward, but that's what we're going to do. You know, my reviewers might have better ideas.
+
+262
+00:35:42,150 --> 00:35:47,010
+So let's look at dispatching to the main thread.
+
+263
+00:35:52,490 --> 00:35:56,510
+Get me through the cereal, then Target sounds I.
+
+264
+00:36:07,060 --> 00:36:24,070
+Um. Neuronal function uh, on helper protein cached in icon file is sync.
+
+265
+00:36:26,300 --> 00:36:39,650
+What? I'll call this desk check, this cash check and this run will function is, uh, icon retrieval.
+
+266
+00:36:41,750 --> 00:36:44,870
+Uh, icon five icon service.
+
+267
+00:36:46,910 --> 00:36:56,930
+Service retrieval. And then we're going to move the Promise folder over here.
+
+268
+00:37:01,570 --> 00:37:04,600
+The actual. I can file, I guess. Yeah.
+
+269
+00:37:04,600 --> 00:37:18,470
+We can move that to. Um, we don't need the time out.
+
+270
+00:37:27,990 --> 00:37:31,620
+Uh, let's move this in here.
+
+271
+00:37:31,900 --> 00:37:35,700
+See, what happens. Is that Bill?
+
+272
+00:37:59,870 --> 00:38:14,550
+Okay. Doesn't like it because. Construct using standard move.
+
+273
+00:38:14,550 --> 00:38:39,020
+That's what I'm doing. With no CAPTCHA default specified.
+
+274
+00:38:43,850 --> 00:38:53,510
+So I missed something in my lambda. Standard move.
+
+275
+00:38:54,170 --> 00:39:24,490
+Promise holder. That's right.
+
+276
+00:39:24,650 --> 00:39:32,750
+I miss. Variable promise will can't be implicitly implicitly captured.
+
+277
+00:39:33,080 --> 00:39:44,720
+It was declared here in this lambda expression captured by her no capture promise holder by reference.
+
+278
+00:39:48,550 --> 00:39:55,810
+So it's suggesting that. I put an ampersand here.
+
+279
+00:39:56,380 --> 00:40:02,440
+Oh, it's also there's an error on line 118.
+
+280
+00:40:03,880 --> 00:40:10,390
+It's not liking some of my friends. Did I screw up my friends here?
+
+281
+00:40:10,420 --> 00:40:15,670
+Let's. That's right. This is wrong.
+
+282
+00:40:15,700 --> 00:40:19,330
+What did I miss? What did I miss? Parentheses there.
+
+283
+00:40:21,280 --> 00:40:26,220
+Closed bracket here. What did I miss?
+
+284
+00:40:26,230 --> 00:40:30,270
+What did I miss? That's that.
+
+285
+00:40:33,800 --> 00:40:41,380
+I'm. Maybe that's enough to make it happy.
+
+286
+00:40:45,190 --> 00:40:55,110
+I got a feeling. No, though. Oh, that's handy was saying hey, to match this this, um, parentheses.
+
+287
+00:40:55,960 --> 00:41:01,190
+I didn't notice that before. That's handy. Knowing how you want me to balance.
+
+288
+00:41:01,200 --> 00:41:05,370
+Okay, so it's like, Hey, you can't do that.
+
+289
+00:41:06,200 --> 00:41:18,640
+Call it a deleted constructor. Unique point has been explicitly marked deleted here construct using standard move.
+
+290
+00:41:19,720 --> 00:41:24,190
+I'm trying to rebuild from Silicon Valley.
+
+291
+00:41:32,960 --> 00:41:46,040
+Make unique. You need a pointer.
+
+292
+00:41:46,280 --> 00:42:02,860
+That's. You.
+
+293
+00:42:03,010 --> 00:42:22,300
+Come here. Who can be assigned directly to you any point or.
+
+294
+00:42:25,400 --> 00:42:28,110
+What does it say? That nothing about threads.
+
+295
+00:42:33,730 --> 00:42:40,059
+Smart pointer that wholly owns the resource ownership may be transferred out of a pointer through explicit action, but otherwise resources destroyed.
+
+296
+00:42:40,060 --> 00:42:45,549
+When the unique pointer is destroyed, it's impossible to copy unique pointer.
+
+297
+00:42:45,550 --> 00:42:48,070
+Copying an auto pointer obviously can't copy ownerships.
+
+298
+00:42:48,070 --> 00:42:53,920
+What happens if you try to copy one or is transferred you course else's problem by being movable rather
+
+299
+00:42:53,920 --> 00:43:00,730
+than copy able you pass move and you're doing so you indicate you're moving ownership out of you.
+
+300
+00:43:00,790 --> 00:43:09,400
+Yeah out of out of one scope and into another. Removes moves on a pointer.
+
+301
+00:43:09,400 --> 00:43:15,580
+Proceeds like this you create thing deletes the and no problem unique pointer owns that it.
+
+302
+00:43:19,300 --> 00:43:23,260
+Cheat to leaks. It's and still requires deletion.
+
+303
+00:43:23,860 --> 00:43:27,910
+Free. Okay. Wow.
+
+304
+00:43:28,000 --> 00:43:38,520
+This is pretty complicated. It was.
+
+305
+00:43:43,240 --> 00:43:45,940
+Specialized for Ray Ray types. That doesn't matter.
+
+306
+00:43:49,330 --> 00:43:55,570
+This transfer is a pointer, so ownership of the data, the fresh shooting pointer created in the calling function that will then toil own that data.
+
+307
+00:44:05,360 --> 00:44:13,370
+In here about rumbles. I mean, I'm trying to move it, gang.
+
+308
+00:44:13,790 --> 00:44:19,580
+Is it the fact that it's called. Like, what's the problem here?
+
+309
+00:44:19,600 --> 00:44:31,630
+I, I moved it here. I presume if I don't move it, then this is going to compile.
+
+310
+00:44:43,570 --> 00:44:47,510
+Construct. Porter promised Holder.
+
+311
+00:44:56,930 --> 00:45:04,580
+Let's look for more cases of using unique pointers, passing them between threads.
+
+312
+00:45:06,730 --> 00:45:18,380
+Standard move. Make unique promise holder or any or this in particular make unique promise Holder.
+
+313
+00:45:18,410 --> 00:45:24,380
+That's what I want. Let's see if there are any examples that we can look at.
+
+314
+00:45:24,470 --> 00:45:34,990
+So there are a few. And what happens is that gets moved into one lambda and then it's done.
+
+315
+00:45:39,100 --> 00:45:48,760
+Here moved into one lambda, and then it's done here.
+
+316
+00:45:51,940 --> 00:45:55,180
+Moved into this lambda. Done.
+
+317
+00:45:55,360 --> 00:46:00,100
+Oh, no. And then Move. Standard move Holder.
+
+318
+00:46:03,540 --> 00:46:12,810
+And to get champ content parent. So this one moved it again.
+
+319
+00:46:17,390 --> 00:46:22,130
+So what's wrong with mine? How come you don't want my man?
+
+320
+00:46:52,160 --> 00:46:57,180
+What if I rename it? Is there confusion there?
+
+321
+00:47:03,030 --> 00:47:21,480
+I don't know why there would be. No.
+
+322
+00:47:22,870 --> 00:47:24,650
+So it's making a suggestion.
+
+323
+00:47:25,060 --> 00:47:42,630
+It's like, hey, you know, have you considered putting, uh, have you considered doing this, which is just doing this from the officer?
+
+324
+00:47:46,020 --> 00:47:49,740
+That's its suggestion. It feels weird.
+
+325
+00:47:53,270 --> 00:48:14,210
+To not move it, I feel like. Huh?
+
+326
+00:48:15,110 --> 00:48:19,280
+I think it's like I said. All right, Well, to do.
+
+327
+00:48:19,760 --> 00:48:23,449
+How come I can't? Standard move. Promise.
+
+328
+00:48:23,450 --> 00:48:26,660
+Holder here. Is this safe?
+
+329
+00:48:30,810 --> 00:48:40,080
+All right, great. So now I'm on the main thread again, and what I want to do is call that function.
+
+330
+00:48:54,290 --> 00:48:59,360
+And we're going to pass and all this stuff. Turns out then I'm going to need.
+
+331
+00:49:02,150 --> 00:49:05,570
+I'm going to need the your I am going to need the ic0 file.
+
+332
+00:49:05,570 --> 00:49:19,030
+I am going to need the IO thread. I will need to construct around a bowl.
+
+333
+00:49:22,910 --> 00:49:28,700
+Hey, you are a shortcut. Oh yeah whether or not.
+
+334
+00:49:29,690 --> 00:49:37,700
+So this use shortcut character. And everything else is out here.
+
+335
+00:49:45,290 --> 00:49:49,430
+Okay, This is pretty sloppy. But here goes. We're going to pass all that stuff along.
+
+336
+00:49:54,580 --> 00:50:25,150
+Let's pass along. Michael Page, You or I equals standard move a fab icon page you or I and then io thread will standard move.
+
+337
+00:50:25,900 --> 00:50:35,230
+IO thread. I don't think it's going to like this. And then the use shortcut caster.
+
+338
+00:50:37,030 --> 00:50:48,000
+I think it's just a primitive that we can just send over. We don't use any of those things except here where we basically pass them back.
+
+339
+00:50:50,940 --> 00:50:59,550
+Page You or I, people's standard move page you or ii0 thread equals.
+
+340
+00:51:01,840 --> 00:51:08,400
+Standard move I read. And then what was the last one?
+
+341
+00:51:09,360 --> 00:51:15,900
+Use a shortcut. CASTOR And then we will plug these things in instead.
+
+342
+00:51:15,900 --> 00:51:23,639
+PAGE You or iic0 file i o thread used shortcut.
+
+343
+00:51:23,640 --> 00:51:27,180
+Castor And now let's not pass in a run of all.
+
+344
+00:51:29,620 --> 00:51:32,800
+For now and just see if this compiles.
+
+345
+00:51:33,280 --> 00:51:37,750
+I'll be fairly surprised if this compiles.
+
+346
+00:51:48,580 --> 00:51:51,610
+Some great Winamp chat going on in the chat.
+
+347
+00:51:52,090 --> 00:51:57,130
+People are thinking sublime. This sublime icon kind of looks like the Winamp icon.
+
+348
+00:51:57,700 --> 00:52:01,540
+It's pretty cool. Too. Few arguments. Can I pass?
+
+349
+00:52:01,570 --> 00:52:06,420
+No, I think I can pass. No. I mean, if.
+
+350
+00:52:08,850 --> 00:52:33,290
+See what that's all about. Okay.
+
+351
+00:52:33,770 --> 00:52:38,480
+Binding reference ref point value of type cause draft point drops the cons qualifier.
+
+352
+00:52:55,640 --> 00:53:09,120
+You or. I'm just going to make a guess.
+
+353
+00:53:09,240 --> 00:53:18,860
+I'm going to make a guess. Can I do this? I'm really just kind of hacking, slashing and guessing.
+
+354
+00:53:20,450 --> 00:53:35,450
+I am way outside my comfort zone. I would love something where it's what we're dealing with is this bizarre intersection of C++ and JavaScript XP.
+
+355
+00:53:35,450 --> 00:53:42,110
+Com promises. Moore's promises and Multi-threading use of undeclared identifier.
+
+356
+00:53:42,140 --> 00:53:51,110
+It's never heard of IO thread before, so it's a IO thread a0 IO thread.
+
+357
+00:53:59,640 --> 00:54:04,470
+I got. I had so many bad feelings about this. Hi, Mike.
+
+358
+00:54:04,960 --> 00:54:08,730
+Is a question Erica with three rights. Hi, Mike. I'm an intern. Onboarding in Missoula in two months.
+
+359
+00:54:08,760 --> 00:54:13,740
+Hey, congratulations, Eric. I chose to use the MacBook Pro, but I was told it would have trouble running a Windows environment.
+
+360
+00:54:13,770 --> 00:54:18,150
+How do you run a Windows on your Mac book? Technically, I'm not running this on my MacBook.
+
+361
+00:54:18,150 --> 00:54:21,930
+I am signed in using something called Microsoft Remote Desktop.
+
+362
+00:54:21,930 --> 00:54:28,950
+I'm using the RTP protocol, the remote into my my Windows desktop.
+
+363
+00:54:29,370 --> 00:54:34,050
+There's a tower sitting under my desk. C still still having a problem there.
+
+364
+00:54:34,230 --> 00:54:43,380
+So that's not to say that you can't virtualize Windows on your MacBook, but you may have it, you might have some performance issues.
+
+365
+00:54:44,310 --> 00:54:47,370
+What I would recommend if you can, you've got two choices.
+
+366
+00:54:47,840 --> 00:54:54,239
+It depends on what team you're you're interning with will kind of inform your choices.
+
+367
+00:54:54,240 --> 00:55:01,020
+If you're just going to be like doing artifact builds and testing, you can probably get away with using VMware Fusion on your MacBook Pro,
+
+368
+00:55:01,140 --> 00:55:08,939
+like the M1 M2 chip are, they're fairly powerful and you know, booting up a Windows VM fairly,
+
+369
+00:55:08,940 --> 00:55:12,930
+fairly, you know, powerful like I think you'd get away with that.
+
+370
+00:55:12,930 --> 00:55:18,809
+I think it would work. If you're doing full builds, it might be more cumbersome, it might take a while, for example,
+
+371
+00:55:18,810 --> 00:55:25,920
+at the very least to do full builds in a Windows VM inside of your MacBook Pro, even though it's an M one or an empty chip.
+
+372
+00:55:26,700 --> 00:55:31,350
+The alternative is to if you've already chosen the MacBook Pro laptop,
+
+373
+00:55:31,620 --> 00:55:35,310
+I don't know if you're going to be going into any of the offices, but you can get a temporary Windows loaner.
+
+374
+00:55:35,790 --> 00:55:39,210
+You just get a secondary machine, ask for a Windows loaner laptop.
+
+375
+00:55:40,410 --> 00:55:46,920
+Those are fairly easy to come by. There's usually, you know, a locker somewhere with with reference laptops that you could you could snag.
+
+376
+00:55:48,330 --> 00:55:54,720
+So hopefully that answers your question. All right. So this this is not helpful passing threads this way.
+
+377
+00:55:55,830 --> 00:56:03,510
+It's not working party Americans have temporary foreign value of type construct pointer jobs Cons qualifier.
+
+378
+00:56:19,010 --> 00:56:26,240
+So I noticed this happening with elsewhere where like.
+
+379
+00:56:31,880 --> 00:56:40,740
+Oh, you know what it might be? So this is this silly contact reference to the thread.
+
+380
+00:56:43,590 --> 00:56:48,930
+And then. Assume the threat itself.
+
+381
+00:56:51,970 --> 00:56:58,030
+Because I think the lambdas I'm on the desktop integration team and my manager is really pushing me to use Windows.
+
+382
+00:56:59,170 --> 00:57:06,650
+Yeah, I don't know if if you're going to be in the in the Toronto office because I know that's where some of the desktop integrations people are.
+
+383
+00:57:06,690 --> 00:57:08,650
+If so, looking forward to meeting you in person.
+
+384
+00:57:09,640 --> 00:57:17,590
+You can ask for a Windows loaner to go alongside your main MacBook Pro developer machine, for example.
+
+385
+00:57:17,770 --> 00:57:21,130
+Oh wow. That I can't believe that's linking. It worked. It worked. Gang.
+
+386
+00:57:21,550 --> 00:57:25,209
+This is that does just means it's building though. It might it might absolutely explode.
+
+387
+00:57:25,210 --> 00:57:39,060
+But here we go. So what we need to do instead now, instead of passing no pointer, is we need to pass some kind of running bill.
+
+388
+00:57:39,930 --> 00:57:45,420
+And the run of all that I want to pass is like this.
+
+389
+00:57:47,830 --> 00:57:52,750
+Let's look at the one call that we do with this thing from.
+
+390
+00:57:56,550 --> 00:57:59,700
+Oh, not cash. Not this one.
+
+391
+00:58:01,650 --> 00:58:09,040
+But the consumer of this Web's web source, or perhaps the consumer, which is over here.
+
+392
+00:58:10,350 --> 00:58:14,250
+So obtain cached icon file the caller of this.
+
+393
+00:58:14,700 --> 00:58:18,240
+We had one over here and it uses a readable function.
+
+394
+00:58:18,390 --> 00:58:22,200
+This is what we want to do. So another running bull gang we're throwing in another run of all.
+
+395
+00:58:26,510 --> 00:58:31,220
+This is such a mess. Okay? Running malfunction.
+
+396
+00:58:32,630 --> 00:58:37,220
+It's a it's a chain. Chain, Chain, Chain.
+
+397
+00:58:37,760 --> 00:58:55,350
+Chain of fools. And this is why I can't help her obtain favor on file async file icon retrieved.
+
+398
+00:59:00,610 --> 00:59:04,750
+It'd be great if we could reformat this. Can we? Do we have some helpful reformatting?
+
+399
+00:59:04,780 --> 00:59:08,320
+No. Fine. I'll do this.
+
+400
+00:59:08,500 --> 00:59:16,000
+My best. This is.
+
+401
+00:59:17,070 --> 00:59:24,680
+Quite poor. A function like that.
+
+402
+00:59:25,670 --> 00:59:32,540
+And then we're going to do this. And this and this.
+
+403
+00:59:35,630 --> 00:59:39,380
+And we're not going to do that. And what did I forget?
+
+404
+00:59:46,370 --> 00:59:54,910
+What am I missing? Parentheses wise. I got that.
+
+405
+00:59:56,230 --> 01:00:01,460
+I need that. There it is. Okay, so now what I need to do is once.
+
+406
+01:00:02,470 --> 01:00:06,780
+I just need the promise folder now. So I'm going to move once again.
+
+407
+01:00:06,790 --> 01:00:13,510
+Move the Promise folder. Now, this is still on the same thread.
+
+408
+01:00:18,820 --> 01:00:24,040
+So I should probably ensure that assert to have some asserts.
+
+409
+01:00:27,050 --> 01:00:32,470
+A assert. Is main.
+
+410
+01:00:32,910 --> 01:00:40,380
+His main threat? Yeah. Here we go. So, Miles, assert is main thread.
+
+411
+01:00:44,070 --> 01:00:47,220
+And we're going to Mars assert over here that we're on the main thread.
+
+412
+01:00:51,040 --> 01:00:58,120
+We're going to assert over here that we're not on the main thread. And then.
+
+413
+01:01:01,740 --> 01:01:09,900
+Promise holder resolve if exists. We actually do want the icon path so.
+
+414
+01:01:18,270 --> 01:01:25,650
+So we're going to move all my co file equals standard to IKO file.
+
+415
+01:01:26,820 --> 01:01:38,510
+So does. It's resolved this up here.
+
+416
+01:01:39,970 --> 01:01:47,120
+Okay. Uh, uh, Promise folder project exists.
+
+417
+01:01:47,940 --> 01:01:55,670
+Uh, if it is failed, are a promise holder reject if exists.
+
+418
+01:02:01,640 --> 01:02:12,800
+We're going to reject with our error code. Else problems hold.
+
+419
+01:02:12,830 --> 01:02:16,610
+Their resolve exists.
+
+420
+01:02:19,530 --> 01:02:22,890
+CEO file path funk.
+
+421
+01:02:26,750 --> 01:02:30,000
+Does it build, reject, as misspelled?
+
+422
+01:02:30,030 --> 01:02:34,640
+Oh, I think I fix it. Yeah, I fixed. You're good. Thank you for the highlight.
+
+423
+01:02:37,550 --> 01:02:48,070
+Wow. What a mess. It's a bit Rube Goldberg.
+
+424
+01:02:52,120 --> 01:02:57,950
+But what are you going to do? You kind of need the parent, the main thread to do a bunch of this marshaling.
+
+425
+01:02:58,640 --> 01:03:03,470
+The call comes in. He sent off some work to the IO thread.
+
+426
+01:03:04,310 --> 01:03:09,980
+You come back with the result and based on that result.
+
+427
+01:03:14,370 --> 01:03:22,440
+Actually. What happens if we. Yeah, we only will resolve in the event that we successfully got a thing.
+
+428
+01:03:23,190 --> 01:03:28,260
+A kind of wonder if we can save some.
+
+429
+01:03:32,190 --> 01:03:43,010
+Repetition by moving this out. Yeah.
+
+430
+01:03:46,140 --> 01:03:51,970
+While the RV I co-founded. Okay.
+
+431
+01:03:52,060 --> 01:04:01,840
+At any rate, it built. So now I'm very curious to know what happens when we call obtain cached icon file async.
+
+432
+01:04:01,850 --> 01:04:13,030
+Now, did I expose this somehow via who do do do do do do do do do do do do do.
+
+433
+01:04:14,430 --> 01:04:18,660
+Jump. This builder uses it in obtain and cash fab icon.
+
+434
+01:04:19,770 --> 01:04:29,790
+And I think what I want to do is assign Jim list builder obtain and cash fab icon.
+
+435
+01:04:33,070 --> 01:04:37,730
+We're going to have this. Promise.
+
+436
+01:04:38,380 --> 01:04:43,550
+Obtain and cash on a sink in an etc.
+
+437
+01:04:43,550 --> 01:05:01,150
+I found you url and so then will go over to jump list builder dot CPB data and cache valve icon and we'll do the async one here.
+
+438
+01:05:15,340 --> 01:05:20,330
+Let's just make sure that that builds. And then.
+
+439
+01:05:27,050 --> 01:05:30,490
+Oh, there needs to be like an implied. Right?
+
+440
+01:05:30,640 --> 01:05:35,570
+Right, right. Jump was delivered on IDL We because we're returning a promise.
+
+441
+01:05:35,600 --> 01:05:38,900
+There is an implied implicit jazz context.
+
+442
+01:05:39,620 --> 01:05:44,150
+We have a jazz context. So I'm actually going to kill this build.
+
+443
+01:05:44,300 --> 01:05:45,110
+We're going to do it again.
+
+444
+01:05:47,360 --> 01:05:57,350
+And that means we actually have to offscreen kill the build again because we have to change your function signature and jobless builder LCP.
+
+445
+01:06:00,260 --> 01:06:03,379
+I think those two come at the end. Yeah.
+
+446
+01:06:03,380 --> 01:06:08,180
+J as context c X and then the promise come at the end.
+
+447
+01:06:08,510 --> 01:06:16,130
+Obtain and cache five icon. Come on, you might want to find There we go.
+
+448
+01:06:16,610 --> 01:06:24,740
+So that I think should build. Going to need a format the heck out of this.
+
+449
+01:06:26,980 --> 01:06:34,330
+We're going to want to do a lot of the same stuff we've been doing up here where we assert some things.
+
+450
+01:06:39,140 --> 01:06:48,350
+And create a dom promise holder. So it's fairly happy with what's going on.
+
+451
+01:06:48,390 --> 01:06:57,080
+That's good. Tom promise Holder.
+
+452
+01:07:00,280 --> 01:07:06,020
+Then we're going to. Call.
+
+453
+01:07:11,010 --> 01:07:23,180
+Obtain cached icon file async. When I pass those arguments and where they are, then we I do that then.
+
+454
+01:07:31,750 --> 01:07:36,910
+Take cash if I can finally, finally sink. Um.
+
+455
+01:07:42,400 --> 01:07:46,460
+Then. This is how we do that.
+
+456
+01:07:48,500 --> 01:07:56,860
+So then. And.
+
+457
+01:07:57,530 --> 01:08:09,420
+And. This is the resolution.
+
+458
+01:08:13,560 --> 01:08:17,820
+And this is the rejection rejected.
+
+459
+01:08:23,200 --> 01:08:27,700
+Okay. So let's format this in a better way.
+
+460
+01:08:36,270 --> 01:08:43,040
+Define not exactly we don't want to promise with undefined. We're actually going to be getting back a string.
+
+461
+01:08:45,600 --> 01:08:48,950
+And then this is the rejection. This is correct. Where?
+
+462
+01:08:51,700 --> 01:09:04,310
+Where we will. And then.
+
+463
+01:09:07,640 --> 01:09:12,340
+Close the van. Done and.
+
+464
+01:09:15,110 --> 01:09:25,910
+That. I need to change the structure of this instead of a boolean coming back, we're going to be getting a string.
+
+465
+01:09:28,400 --> 01:09:34,820
+The string is with utils and a string.
+
+466
+01:09:37,630 --> 01:09:47,350
+Okay. Jobless builder and a string iko file have.
+
+467
+01:09:48,900 --> 01:09:52,140
+Or is that a promise with undefined? Okay, build it.
+
+468
+01:10:07,090 --> 01:10:10,900
+Man. My brain is melting. This is wheels within wheels, everybody.
+
+469
+01:10:14,670 --> 01:10:20,310
+Um, I'm definitely going to be relying on, uh, doesn't know what I mean.
+
+470
+01:10:23,260 --> 01:10:27,240
+I got five baths. I like honey. All right. Oh, yeah.
+
+471
+01:10:27,250 --> 01:10:32,610
+The signature is different. What's it supposed to be when utilized on page?
+
+472
+01:10:32,650 --> 01:10:45,699
+It's supposed to be. The fabric in your eye, the thread the caster found on your the thread and then the caster.
+
+473
+01:10:45,700 --> 01:10:54,790
+In this case, it's going to be like icon fabric on helper caster, Chambliss caster.
+
+474
+01:11:00,840 --> 01:11:04,200
+Oh or J five.
+
+475
+01:11:04,230 --> 01:11:14,170
+I can't help her. Jones lost. Cash here right now is John Lewis.
+
+476
+01:11:14,170 --> 01:11:18,580
+Cash dur icon Cash No missing one icon Cash dir.
+
+477
+01:11:23,690 --> 01:11:28,490
+All right, build that. Now, we should think about that.
+
+478
+01:11:44,390 --> 01:11:52,460
+Mm. Mm. I'm going to have to stop soon.
+
+479
+01:11:53,090 --> 01:11:57,109
+I am. I have a long meeting after this, this stream.
+
+480
+01:11:57,110 --> 01:12:00,350
+And I need to rest up and get my head kind of straight before that.
+
+481
+01:12:00,680 --> 01:12:06,950
+I can't believe this is building. That's crazy. All right, all right, let's let's.
+
+482
+01:12:08,420 --> 01:12:12,110
+Let's go one further. Maybe resolve with the string.
+
+483
+01:12:12,320 --> 01:12:16,700
+How do we do that? Maybe resolve.
+
+484
+01:12:17,660 --> 01:12:22,880
+And then can we pass in the string?
+
+485
+01:12:23,270 --> 01:12:36,320
+The next string? Maybe resolve a IKO file.
+
+486
+01:12:36,920 --> 01:12:42,860
+Too good to be true. Let's find out.
+
+487
+01:12:45,140 --> 01:13:08,100
+Build again. Let's just build binaries. Go, go, go, go.
+
+488
+01:13:17,850 --> 01:13:33,710
+It's linking. What are you linking about? Does anyone has anyone ever seen that commercial?
+
+489
+01:13:34,340 --> 01:13:38,449
+There's a TV commercial from a long time ago.
+
+490
+01:13:38,450 --> 01:13:44,090
+I don't remember what was for. I think it was for like Rosetta Stone or whatever that that like, language tool.
+
+491
+01:13:45,740 --> 01:13:54,590
+Uh, a German like Coast Guard is like a radio operator is working.
+
+492
+01:13:54,590 --> 01:13:57,979
+He's all alone. He's by the radio. Just German coast guard monitoring the radio.
+
+493
+01:13:57,980 --> 01:14:09,710
+Suddenly this, uh, this British transmission comes in from, I guess, a ship, you know, from from Britain.
+
+494
+01:14:09,950 --> 01:14:12,970
+And it's going like. Hello? Is anyone out there? I was.
+
+495
+01:14:13,010 --> 01:14:14,570
+We are singing. We are singing.
+
+496
+01:14:15,290 --> 01:14:27,030
+And the the German Coast Guard officer who I guess for him, I mean most people I know in Germany speak English quite, quite beautifully.
+
+497
+01:14:27,050 --> 01:14:30,320
+Like they're basically fluent in the pronunciation is incredible.
+
+498
+01:14:30,320 --> 01:14:37,160
+But this fellow, I guess he's he's rather new at English and he's hearing this this transmission, we're sinking.
+
+499
+01:14:37,160 --> 01:14:41,810
+We are sinking. And he goes, This is German Coast Guard.
+
+500
+01:14:42,500 --> 01:14:50,209
+What are you thinking about? And I thought that was that was quite funny at the time.
+
+501
+01:14:50,210 --> 01:14:54,170
+Anyways, I thought it was quite funny. Maybe now I also think it's quite funny.
+
+502
+01:14:55,640 --> 01:14:58,670
+Okay, What are you thinking about?
+
+503
+01:15:03,680 --> 01:15:10,440
+This is a debug builds. This is going to be kind of slow. We're going to launch this puppy.
+
+504
+01:15:16,670 --> 01:15:20,960
+And we're going to do. What are we going to do?
+
+505
+01:15:26,720 --> 01:15:30,480
+I would like to get access to the jump list builder.
+
+506
+01:15:32,700 --> 01:15:47,490
+It used to be builder groups, just jump lists, so I'm going to get access to the proper.
+
+507
+01:15:49,250 --> 01:15:52,710
+He used to do this all the time when Taskbar jumped list.
+
+508
+01:15:54,570 --> 01:16:02,100
+Okay. Open up the console.
+
+509
+01:16:02,100 --> 01:16:07,650
+That's going to take a second. Oh, come on.
+
+510
+01:16:07,920 --> 01:16:22,510
+Come on, now. Debug build taking five ever.
+
+511
+01:16:27,760 --> 01:16:33,660
+Open the console. Maybe.
+
+512
+01:16:38,900 --> 01:16:44,750
+Maybe we should leave it on a cliffhanger. Oh, here we go. This is going to be painful, but here we go.
+
+513
+01:16:46,670 --> 01:17:02,809
+Let win taskbar, jump list, equal chrome, utils, import ease module resource modules, windows jump lists.
+
+514
+01:17:02,810 --> 01:17:10,070
+Does this time to ask is that what it is? Jumps to lists, resource modules.
+
+515
+01:17:10,070 --> 01:17:13,260
+Windows jump lists. Yeah.
+
+516
+01:17:13,890 --> 01:17:19,200
+Alex Right. Let's see what happens. Do I get access to it? Yeah.
+
+517
+01:17:19,420 --> 01:17:24,000
+When? Taskbar, Jump list. Here's the thing.
+
+518
+01:17:24,390 --> 01:17:28,440
+Let's get access to the builder. There's our builder.
+
+519
+01:17:28,950 --> 01:17:43,030
+Obtain. Prototype builder.
+
+520
+01:17:47,730 --> 01:17:51,390
+So there's like a bill there and then within that is a builder. Right.
+
+521
+01:17:53,580 --> 01:17:57,330
+Builder. Is that correct? Yeah.
+
+522
+01:17:58,020 --> 01:18:04,660
+Ten in cash. So like on async. Okay.
+
+523
+01:18:05,290 --> 01:18:08,500
+Now it's going to expect a you or I. So I'm going to construct one.
+
+524
+01:18:10,690 --> 01:18:14,500
+Let's do one. That's already. Oh, wow.
+
+525
+01:18:14,530 --> 01:18:19,750
+Like, for some reason, those. None of those have been retrieved. So let's do one for my personal website.
+
+526
+01:18:20,740 --> 01:18:28,240
+Um, so, uh, what am Mike?
+
+527
+01:18:28,240 --> 01:18:31,510
+You are I equals services that I showed on you. You are?
+
+528
+01:18:31,510 --> 01:18:41,980
+I actually was asked to be as cornstarch slash my colleague Don s.A slash my colleague, Don K.
+
+529
+01:18:43,690 --> 01:18:50,560
+Slash. Okay.
+
+530
+01:18:50,830 --> 01:18:54,570
+Got ourselves a mercury. And now say, Kane.
+
+531
+01:18:55,240 --> 01:18:58,870
+Mike, I'm going to do that. And let's a wait and see what happens.
+
+532
+01:18:58,900 --> 01:19:08,450
+Now, this may crash, but let's find it. It crashed.
+
+533
+01:19:10,688 --> 01:19:22,148
+No promise. All right. The search engine failure was on line 1084.
+
+534
+01:19:31,478 --> 01:19:38,148
+Yeah. I got a feeling what happens is that like. Wait, what?
+
+535
+01:19:38,158 --> 01:19:41,788
+1024 by the time we get over here?
+
+536
+01:19:45,098 --> 01:19:55,058
+Was promised. Destroy. Default. Delete. The unique pointer, the movement.
+
+537
+01:19:59,668 --> 01:20:02,818
+I got a feeling we're doing this wrong with moving of promises.
+
+538
+01:20:21,848 --> 01:20:25,118
+We should be straightforward to move a promise.
+
+539
+01:20:25,118 --> 01:20:28,418
+Holder. Right. Promise Holder. Promise Holder.
+
+540
+01:20:28,928 --> 01:20:33,758
+Promise Holder. Main thread Pointer handle. But that's for a damn promise.
+
+541
+01:20:36,128 --> 01:20:41,498
+Now, should that be? Should we instead be using?
+
+542
+01:20:54,308 --> 01:20:58,748
+Could we use a mars promise there instead? Because, like, I think you can just kind of pass it anything.
+
+543
+01:21:06,668 --> 01:21:09,968
+Why not? Because we know that that works.
+
+544
+01:21:14,818 --> 01:21:18,058
+Okay, let's I'm going to take it to 26.
+
+545
+01:21:18,748 --> 01:21:23,188
+I don't think I've got time. Probably don't have time.
+
+546
+01:21:24,148 --> 01:21:28,138
+Let's see. Let's see if it'll at least compile. So we've done this before.
+
+547
+01:21:29,938 --> 01:21:34,798
+Uh, Jumbles Builder. What did I do? I was like, Hey, here's a Promise folder.
+
+548
+01:21:35,518 --> 01:21:40,408
+Create one of these things. We're going to wrap our promise in it.
+
+549
+01:21:48,558 --> 01:21:54,438
+And so I think I want to do the same thing, except it's going to be a moore's promise.
+
+550
+01:21:57,708 --> 01:22:03,588
+Moore's promise. HOLDER So make unique fab icon this thing.
+
+551
+01:22:04,608 --> 01:22:09,077
+Main thread Pointer. Holder. Promise.
+
+552
+01:22:09,078 --> 01:22:15,918
+Promise Holder. And then we're going to insert our promise in there.
+
+553
+01:22:16,218 --> 01:22:20,238
+So we're going to say what?
+
+554
+01:22:24,098 --> 01:22:31,468
+Ralph Poynter. Obtain cash to icon file async promise.
+
+555
+01:22:33,338 --> 01:22:40,048
+Promise equals new. Sure.
+
+556
+01:22:40,768 --> 01:22:47,038
+Let's see what happens when I do that. And so then we get this, like, promise holder thing.
+
+557
+01:22:48,028 --> 01:22:54,057
+And how do we feel about moving that around? Because I clearly do that here.
+
+558
+01:22:54,058 --> 01:23:01,198
+I do standard moving, and maybe I can do that as well down here, because I think.
+
+559
+01:23:05,168 --> 01:23:23,698
+I think I've seen I've done that before. Are you going to compile a no matter what if this compiles an ending or doesn't?
+
+560
+01:23:23,848 --> 01:23:31,708
+Either case. I'm ending the stream here and we can keep going in next week and seeing where we're at.
+
+561
+01:23:43,938 --> 01:23:47,828
+Doesn't work because I'm actually construction for initialization if I.
+
+562
+01:23:49,148 --> 01:23:58,238
+Oh. Um. I need to construct it better.
+
+563
+01:24:00,578 --> 01:24:16,498
+New Mars Promise. I promise Holder has it.
+
+564
+01:24:16,498 --> 01:24:19,858
+Do it. When you when you say ensure.
+
+565
+01:24:22,708 --> 01:24:26,878
+I said I wasn't going to. I said I wasn't going to do this.
+
+566
+01:24:30,478 --> 01:24:35,578
+Ensure method name. So it's a new promise and you pass the method name.
+
+567
+01:24:36,268 --> 01:24:39,298
+Okay. I said I wasn't going to try it again, but I am. I can't resist.
+
+568
+01:24:39,988 --> 01:24:48,568
+I cannot resist. So new fab icon funk.
+
+569
+01:24:49,288 --> 01:24:53,548
+One more one more time. This time with feeling.
+
+570
+01:24:55,508 --> 01:25:02,018
+And then seriously, no matter what, I'm ending the stream. In fact, I'm going to just do a drum roll now.
+
+571
+01:25:02,588 --> 01:25:15,088
+Let's do a drum on drum roll. We're not even going to check to see if it's like it'll do the right thing or fixes the crash.
+
+572
+01:25:15,598 --> 01:25:22,588
+Yeah. No matching construction, no immaculate matching constructor rather.
+
+573
+01:25:23,998 --> 01:25:30,988
+Because it's expecting. He wants a boolean as well.
+
+574
+01:25:33,208 --> 01:25:37,888
+Now I'm going to resist. I'm going to resist. So let's end it there.
+
+575
+01:25:37,918 --> 01:25:45,118
+Thanks so much, everybody, for watching. Episode. What was it, 357 to the joy coating.
+
+576
+01:25:45,118 --> 01:25:56,078
+I hope that was interesting. Let me know what you thought made some forward progress with some fairly Rube Goldberg.
+
+577
+01:25:58,948 --> 01:26:15,478
+Um. You know, architecture to Marshall's stuff between the IO thread that I kind of service and the main thread.
+
+578
+01:26:17,188 --> 01:26:31,978
+But we got something that ultimately builds but crashed when used, trying to use a main thread pointer holder instead.
+
+579
+01:26:34,138 --> 01:26:42,888
+Main thread water holder it's called. And as made three pointer handle.
+
+580
+01:26:45,018 --> 01:26:50,178
+Is that because maybe that's better.
+
+581
+01:26:51,478 --> 01:27:04,098
+He could really use some help, maybe from our media team, which definitely uses promises and promises a lot.
+
+582
+01:27:04,548 --> 01:27:07,728
+Maybe what I'll do, actually, if people don't mind,
+
+583
+01:27:07,728 --> 01:27:14,208
+I might talk to the media team separately outside of this stream so that next week when we come back,
+
+584
+01:27:14,208 --> 01:27:16,638
+I'll have a better sense of how to how to maybe do.
+
+585
+01:27:16,733 --> 01:27:21,053
+Stuff done and then having to burn it all down if and when they come back with like, here's what you're actually supposed to do.
+
+586
+01:27:21,683 --> 01:27:26,363
+So if that's all right, I'll do that and then I'll give you a full brain dump of what I learned.
+
+587
+01:27:26,633 --> 01:27:35,093
+So to do. Talk to media team about the right way of doing this.
+
+588
+01:27:35,723 --> 01:27:38,873
+All right. I got to end it there. Hey, thanks so much, everybody, for watching.
+
+589
+01:27:38,873 --> 01:27:43,103
+Episode 357 of The Joy of Coding. Let me know. We thought there's a form at the end of the agenda here.
+
+590
+01:27:43,283 --> 01:27:48,943
+To rate this episode, I'm going to drop the link to rate this episode in the chat.
+
+591
+01:27:50,033 --> 01:27:53,023
+There it is. Let me know what you think. I read everything that comes in.
+
+592
+01:27:53,033 --> 01:27:57,953
+If you have an idea or if you have a question or something, I can try and answer it on the stream.
+
+593
+01:27:57,953 --> 01:28:00,773
+You can just let me know using that form and I'll do my best.
+
+594
+01:28:01,283 --> 01:28:07,343
+Each episode gets its own unique form, so feel free to be as specific to this episode as you'd like.
+
+595
+01:28:08,063 --> 01:28:12,263
+And that's it. Thanks again, everybody. Have yourselves a great week.
+
+596
+01:28:12,263 --> 01:28:16,403
+I hope it's I hope it's I hope it's a good one.
+
+597
+01:28:16,703 --> 01:28:19,903
+And we'll talk to you soon. Take everyone. Take care, everyone.
+
+598
+01:28:20,033 --> 01:28:25,603
+Bye bye. The joy of coding.
+
+599
+01:28:25,853 --> 01:28:26,183
+See it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

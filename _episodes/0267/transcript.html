@@ -1,0 +1,2721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 267 - October 27, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 267 - October 27, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c00326a4-ce3e-44b3-a325-adb20100a532</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c00326a4-ce3e-44b3-a325-adb20100a532">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:08:42,570 --> 00:08:53,640
+Welcome. Hello and welcome to Episode two hundred and sixty seven of The Joy of Coding.
+
+2
+00:08:53,640 --> 00:08:58,240
+My name is Mike Connelly. It's so good to see you. So good to have you here.
+
+3
+00:08:58,240 --> 00:09:03,780
+Going to be hacking on some Firefox stuff, answering questions, maybe fixing some tests.
+
+4
+00:09:03,780 --> 00:09:07,500
+Who knows what's going to happen today? I'm really looking forward to it. I hope you are, too.
+
+5
+00:09:07,500 --> 00:09:09,480
+Let's get started.
+
+6
+00:09:09,480 --> 00:09:17,820
+Let me start by sharing my screen and showing you the agenda so we have a bit of a preamble for every stream for the folks who are new.
+
+7
+00:09:17,820 --> 00:09:23,490
+So I apologize if you've heard this two hundred and sixty six times before.
+
+8
+00:09:23,490 --> 00:09:27,450
+But here we go. So welcome to the Stream. No plan survives.
+
+9
+00:09:27,450 --> 00:09:33,390
+Breakfast is kind of the philosophy behind this stream where, you know, I think I know what I want to do.
+
+10
+00:09:33,390 --> 00:09:37,470
+I think I have a general sense of the things I want to touch on today.
+
+11
+00:09:37,470 --> 00:09:41,670
+But this stream is not really planned. Things could go wrong. I could get sidelined.
+
+12
+00:09:41,670 --> 00:09:45,240
+I could get sidetracked. I might spend more time on one thing and not get to another.
+
+13
+00:09:45,240 --> 00:09:51,420
+Who knows what will happen. We're capturing software development in the raw unrefined warts and all.
+
+14
+00:09:51,420 --> 00:09:56,580
+So if that's your bag, welcome that. That's that's what we're doing here.
+
+15
+00:09:56,580 --> 00:09:59,070
+That's the first thing. The second thing is about the agenda.
+
+16
+00:09:59,070 --> 00:10:05,970
+So this agenda that we're looking at, which is like kind of a vague sense of what I want to do and also lists handy links for you,
+
+17
+00:10:05,970 --> 00:10:10,620
+this is something that you have access to. So if you're on YouTube, check out the video description.
+
+18
+00:10:10,620 --> 00:10:14,220
+And if you're on er Mozilla, check out the details for the video.
+
+19
+00:10:14,220 --> 00:10:24,390
+And if you're on Twitch, then I believe if presuming that my twitch chat mirror bot is working, which it is, yes.
+
+20
+00:10:24,390 --> 00:10:32,850
+You should now have that link to the agenda in the Twitch chat. So go check that it.
+
+21
+00:10:32,850 --> 00:10:35,310
+What are we doing today.
+
+22
+00:10:35,310 --> 00:10:43,530
+I want to just jump right into it and talk a little bit about this first one, because this is something that we kind of have to fix ASAP.
+
+23
+00:10:43,530 --> 00:10:50,880
+I wanted to save it for the stream, but, you know, we've got to fix it soon and I'll explain why in a second.
+
+24
+00:10:50,880 --> 00:10:57,240
+Let's pull up the bug and then I'll I'll talk about what's going on.
+
+25
+00:10:57,240 --> 00:11:03,720
+So this was open eight days ago. I assigned myself just yesterday.
+
+26
+00:11:03,720 --> 00:11:07,470
+I guess I this kind of got lost in my email, unfortunately.
+
+27
+00:11:07,470 --> 00:11:15,990
+But basically, we have a telemetry probe that's going to expire when Firefox 96 becomes nightly.
+
+28
+00:11:15,990 --> 00:11:22,770
+And it also causes whenever whenever a probe expires.
+
+29
+00:11:22,770 --> 00:11:32,280
+This particular probe has a test associated with it that tests its capabilities and, you know, tests that the probe is actually measuring properly.
+
+30
+00:11:32,280 --> 00:11:36,570
+And so that test will fail if the probe expires. And so that's not good.
+
+31
+00:11:36,570 --> 00:11:39,900
+Now, the good news is that nightly, if you if you're like me, you're riding.
+
+32
+00:11:39,900 --> 00:11:46,200
+Oh, I have a I'm a little out of date, but I'm riding yesterday's nightly and it's 95.
+
+33
+00:11:46,200 --> 00:12:01,110
+But 96 is just around the corner. If we pull up the release calendar, you'll see that ninety six is supposed to merge on the eleventh.
+
+34
+00:12:01,110 --> 00:12:04,950
+Sorry, not on the eleven on the 1st of November. And today is October 27th.
+
+35
+00:12:04,950 --> 00:12:11,100
+So that's only a couple of days from now. Plus the fact that this Friday I'm away.
+
+36
+00:12:11,100 --> 00:12:14,880
+In fact, most of Mozilla, a lot of people at Mozilla are going to be away on Friday.
+
+37
+00:12:14,880 --> 00:12:19,890
+So we're not going to be working. So I've really got today and tomorrow to get this fixed.
+
+38
+00:12:19,890 --> 00:12:24,660
+Now, the good news is removing or updating probes is pretty straightforward.
+
+39
+00:12:24,660 --> 00:12:33,930
+And we did this in a couple of episodes ago, if I remember correctly, if I go back to like episode to 60.
+
+40
+00:12:33,930 --> 00:12:38,430
+Three, yeah, back in episode sixty three, so about a month ago.
+
+41
+00:12:38,430 --> 00:12:40,080
+Well, it's not super surprising.
+
+42
+00:12:40,080 --> 00:12:46,380
+That was about a month ago because this sort of thing happens every time a release cycle occurs where we hit an expiry.
+
+43
+00:12:46,380 --> 00:12:55,410
+And this is no exception. We're about to hit the end of a release cycle or aversion cycle of the of the browser.
+
+44
+00:12:55,410 --> 00:13:01,560
+So that's why we're hitting this. But it's a lot of of similar techniques here.
+
+45
+00:13:01,560 --> 00:13:05,400
+There's a link in the two sixty three episode guide to our Lean Data practices.
+
+46
+00:13:05,400 --> 00:13:11,070
+If you have questions about, you know, what we're doing with the data and what's captured and what not and how it works,
+
+47
+00:13:11,070 --> 00:13:17,760
+you should check out episode two sixty three. And let me tell you just briefly what this probe measures.
+
+48
+00:13:17,760 --> 00:13:25,430
+We can actually pull it up and.
+
+49
+00:13:25,430 --> 00:13:34,340
+And look at it, so it's a scalar probe, it's one of our scalars that means that it's just a single number per telemetry
+
+50
+00:13:34,340 --> 00:13:42,260
+packet like telemetry will send a as opposed to like a whole series of numbers,
+
+51
+00:13:42,260 --> 00:13:51,620
+like in an array where like every time an event occurs, like maybe every time you use picture in picture, we like add a number to a collection.
+
+52
+00:13:51,620 --> 00:13:54,590
+This is just like a single number that sent out.
+
+53
+00:13:54,590 --> 00:14:04,820
+And what it is, is the count, the maximum number of picture in picture player windows a user has had open at any one time during a particular session.
+
+54
+00:14:04,820 --> 00:14:13,820
+And it's currently opt out and it is for Firefox and only records in the main process, and it expires in 96.
+
+55
+00:14:13,820 --> 00:14:21,110
+And so what I think I want to do is similar to O and actually this one expired.
+
+56
+00:14:21,110 --> 00:14:25,160
+That's interesting. We let this one expire. That's fine. I guess we didn't need it.
+
+57
+00:14:25,160 --> 00:14:34,600
+There were some other probes that. Did we know the closed method in the open method?
+
+58
+00:14:34,600 --> 00:14:38,620
+We let those all expire. That's interesting. What were the ones that we recently renewed?
+
+59
+00:14:38,620 --> 00:14:51,400
+What was it? Uh. Because we recently renewed some let's pull these up.
+
+60
+00:14:51,400 --> 00:14:55,750
+Oh, thank you, Smurf Smurf wishes me a happy Friday in advance.
+
+61
+00:14:55,750 --> 00:15:03,040
+Thank you very much. So it was the events for creating, resizing and moving.
+
+62
+00:15:03,040 --> 00:15:10,510
+So what we can do then is take a look at what we did here, where we did a data collection renewal request.
+
+63
+00:15:10,510 --> 00:15:18,460
+And it's a very sort of it's a very straightforward process where we we ask our data
+
+64
+00:15:18,460 --> 00:15:23,890
+collection or data stewards to approve our change and the data we're collecting.
+
+65
+00:15:23,890 --> 00:15:28,800
+So I'm going to.
+
+66
+00:15:28,800 --> 00:15:49,550
+I refer to this comment, so I'm going to say such and such a per bugs comment three, I'm going to update these probes and make them stop expiring.
+
+67
+00:15:49,550 --> 00:15:57,970
+OK, so when you update a probe to make it not expire, what that means in practice in the patch is instead of having a version number four,
+
+68
+00:15:57,970 --> 00:16:02,900
+the expire, you just say expiry never spiri version ever.
+
+69
+00:16:02,900 --> 00:16:07,360
+So that's the first thing we're going to do is we're going to open up scalars A.M.
+
+70
+00:16:07,360 --> 00:16:13,510
+Oh, wait, do I have to have an up to date version of the tree here.
+
+71
+00:16:13,510 --> 00:16:23,940
+Let me just double check what I. Version is this is from yesterday.
+
+72
+00:16:23,940 --> 00:16:35,690
+Uh, should be fine, but let me you know, what I'll do is all I should have built this before I, um.
+
+73
+00:16:35,690 --> 00:16:41,360
+You know, it is fun, it's fun, I can just play it here. These these these files don't change much.
+
+74
+00:16:41,360 --> 00:16:47,600
+So I'm not worried about conflicts picture in picture.
+
+75
+00:16:47,600 --> 00:16:57,010
+I should probably remove these probes. You know, what I'll do, actually,
+
+76
+00:16:57,010 --> 00:17:04,120
+is I will file a bug for these probes to have Rahman figure out whether or not we actually
+
+77
+00:17:04,120 --> 00:17:10,000
+want to bring these probes back to life or if we want to just remove them altogether.
+
+78
+00:17:10,000 --> 00:17:16,360
+And in the meantime, that's not the focus of this bug. I don't want to I don't want to get sidetracked.
+
+79
+00:17:16,360 --> 00:17:25,630
+So the first thing we do is we add the bug where we're changing the behavior of the probe to the sort of the bug list, the bug numbers here.
+
+80
+00:17:25,630 --> 00:17:32,350
+That's policy. And then for expires now in the other patch, we had like expiry version.
+
+81
+00:17:32,350 --> 00:17:44,080
+This one is just. I think I don't know why we make that distinction, but yeah, we just say never whenever we want it to never expire.
+
+82
+00:17:44,080 --> 00:17:48,130
+So never an.
+
+83
+00:17:48,130 --> 00:17:58,510
+And other than that, I think that is that's all we need to do in the actual scalars YAML file so we can commit that, that's very straightforward.
+
+84
+00:17:58,510 --> 00:18:05,740
+So hang on, let me bump up the font. You can see what I'm doing.
+
+85
+00:18:05,740 --> 00:18:20,710
+So what we do is we say H-E commit and then the bug number was this make the most concurrent.
+
+86
+00:18:20,710 --> 00:18:31,150
+Was it most concurrent players probe picture in picture scalar probe never expire.
+
+87
+00:18:31,150 --> 00:18:44,710
+And then I'll have actually we can review that and then we'll do data review will be who did the last data review.
+
+88
+00:18:44,710 --> 00:18:51,870
+Um on these. The review is from Megan McCorquodale.
+
+89
+00:18:51,870 --> 00:19:00,050
+OK, so I will do the same thing because Megan McCorquodale probably has context.
+
+90
+00:19:00,050 --> 00:19:03,680
+Um, so that review.
+
+91
+00:19:03,680 --> 00:19:14,850
+No, no, I must not have copy that properly and. Roy.
+
+92
+00:19:14,850 --> 00:19:27,660
+They're. And the data review equals and McCorquodale hour, and typically that's how we say like data review is coming from McCorquodale.
+
+93
+00:19:27,660 --> 00:19:32,520
+And the reason I put an equals here and not an equals here, that's kind of habit.
+
+94
+00:19:32,520 --> 00:19:36,600
+But data review is not a thing that fabricator and bugs Zillah.
+
+95
+00:19:36,600 --> 00:19:46,020
+So, like Landow does the right thing whenever a review has been approved or a patch has been approved and you
+
+96
+00:19:46,020 --> 00:19:51,630
+and it lands the patch by updating the commit message to change the R questionmark into an R equals.
+
+97
+00:19:51,630 --> 00:19:56,910
+Our question mark is how we basically it's old school musila speak for requesting a review from and
+
+98
+00:19:56,910 --> 00:20:04,770
+then the I.R.S. Nick or the the the the Matrix snick of the person or the user name Nikken fabricator.
+
+99
+00:20:04,770 --> 00:20:09,360
+And for data review, we don't have that support.
+
+100
+00:20:09,360 --> 00:20:15,360
+So I'm assuming I'm going to get data review approval, but I won't land it until I do.
+
+101
+00:20:15,360 --> 00:20:26,330
+So we can create that patch and post it up for review already. That's no problem.
+
+102
+00:20:26,330 --> 00:20:30,500
+How's my microphone volume, by the way, I up the the sensitivity of my mic,
+
+103
+00:20:30,500 --> 00:20:41,120
+I had the opportunity to re watch last week's stream just to try something, just just to see how something went down.
+
+104
+00:20:41,120 --> 00:20:44,270
+And I noticed my microphone and maybe it's been this way for years,
+
+105
+00:20:44,270 --> 00:20:49,340
+but I think it has to do with the positioning of my microphone lately that my microphone is quite quiet.
+
+106
+00:20:49,340 --> 00:20:53,900
+And so how is my microphone volume? I'm curious, is it too loud?
+
+107
+00:20:53,900 --> 00:21:02,490
+Is it not loud enough? Do you have to crank your speakers? What's happening?
+
+108
+00:21:02,490 --> 00:21:14,820
+OK, so that's the patch, very, very simple, very simple, and we will submit that no problem,
+
+109
+00:21:14,820 --> 00:21:20,220
+and then we have to actually do the data review request itself surfaces.
+
+110
+00:21:20,220 --> 00:21:28,060
+Sounds good. Danny Cohen agrees. Fantastic. So the data review request is very straightforward for a renewal.
+
+111
+00:21:28,060 --> 00:21:32,670
+This is a preexisting probe, meaning that the questions I have to answer, there's fewer of them.
+
+112
+00:21:32,670 --> 00:21:39,330
+You have to answer a lot more questions whenever it's a new probe. If we're renewing one, it means it's been approved in the past.
+
+113
+00:21:39,330 --> 00:21:45,690
+So I can I can just answer only a smaller set of questions.
+
+114
+00:21:45,690 --> 00:21:55,380
+So what I'm going to do is I'm going to attach a data collection renewal request and then answer these questions violent.
+
+115
+00:21:55,380 --> 00:22:01,950
+The initial review, data collection review requests. So the initial request, I would imagine, is encoded.
+
+116
+00:22:01,950 --> 00:22:07,170
+It's inside the first bug that was ever filed for this probe, which would probably be this one.
+
+117
+00:22:07,170 --> 00:22:15,430
+Yeah, data review request. So let me supply that.
+
+118
+00:22:15,430 --> 00:22:17,640
+The collection will now never expire.
+
+119
+00:22:17,640 --> 00:22:24,700
+Ibrahim's page worth perpetual measurement since the Wellbelove differentiating feature that we still want to iterate on and improve.
+
+120
+00:22:24,700 --> 00:22:34,530
+And then I'll have a data review flag for and McCorquodale and submit.
+
+121
+00:22:34,530 --> 00:22:39,000
+And that friends is how that's done.
+
+122
+00:22:39,000 --> 00:22:44,220
+So we are now waiting on a very straightforward code review and then a very straightforward data review.
+
+123
+00:22:44,220 --> 00:22:49,380
+And then we can land this and then Bob's your uncle. All right.
+
+124
+00:22:49,380 --> 00:22:56,200
+So that one's done. That was that was easy. That was easy.
+
+125
+00:22:56,200 --> 00:23:06,160
+The other thing I want to look at today, I've got let me pull this up in my dashboard and then we can take a look at it.
+
+126
+00:23:06,160 --> 00:23:09,970
+It was a oh, that's interesting.
+
+127
+00:23:09,970 --> 00:23:17,230
+This is a new this is a new need. And I had this is not this is something that I was in for on just a few days ago.
+
+128
+00:23:17,230 --> 00:23:23,830
+Let's take a quick peek here. Six days ago, open Firefox enabled to menubar open bookmarks from the menubar,
+
+129
+00:23:23,830 --> 00:23:28,600
+enable high contrast and click on the bookmarks menu bar the panels display.
+
+130
+00:23:28,600 --> 00:23:40,790
+As expected, the panel slightly cut off the push log shows that there were Gresser was made from me from the proton context menus.
+
+131
+00:23:40,790 --> 00:23:46,770
+Let's see the video. High contrast mode.
+
+132
+00:23:46,770 --> 00:23:50,940
+Turn it on on Windows 10. Oh, I see.
+
+133
+00:23:50,940 --> 00:24:00,080
+And then they get cut off. Interesting, the icons are still there, that might be why.
+
+134
+00:24:00,080 --> 00:24:10,930
+No, no, no, I'm wrong. Those icons are still there. Huh?
+
+135
+00:24:10,930 --> 00:24:26,640
+Interesting, um, what I'm going to do is need info, Meka.
+
+136
+00:24:26,640 --> 00:24:39,660
+Uh, who is working with the set of students on improving high contrast mode on Windows and is
+
+137
+00:24:39,660 --> 00:24:49,470
+as anything like this shown up on the radar of the folks working on high contrast mode?
+
+138
+00:24:49,470 --> 00:24:56,400
+Would it be possible if.
+
+139
+00:24:56,400 --> 00:25:07,320
+There's time, do you think that team would be interested in taking a look at this one?
+
+140
+00:25:07,320 --> 00:25:18,960
+So to request to Megale in one in one code, joy of coding session, very nice, so clear that need info.
+
+141
+00:25:18,960 --> 00:25:23,010
+And then the other thing I want to look at was, yes,
+
+142
+00:25:23,010 --> 00:25:33,480
+a test that I wrote that is failing periodically and I never got like a really good, really good explanation for it.
+
+143
+00:25:33,480 --> 00:25:47,500
+Oh, and then it was disabled. The test was I guess I just I took too long to answer it, and so they disabled the test.
+
+144
+00:25:47,500 --> 00:26:00,490
+If it was skipped, if we're on Linux 64, which is the only kind we build on, and Windows, so it only now runs on Windows nine.
+
+145
+00:26:00,490 --> 00:26:08,380
+Oh, and not debug so only on Linux. Sixty four opt and win 10 opt.
+
+146
+00:26:08,380 --> 00:26:15,160
+Right. So that's something we can look at today.
+
+147
+00:26:15,160 --> 00:26:33,550
+How frequently was it failing. It was. Uh, thirty seventh, most frequent failure, and then it just got disabled.
+
+148
+00:26:33,550 --> 00:26:44,270
+OK, well, we can try and look at that today. Let's see, what would I want to do?
+
+149
+00:26:44,270 --> 00:26:52,610
+I mean, ideally, we could reproduce it in like a.
+
+150
+00:26:52,610 --> 00:27:06,250
+Hmm. Actually, you know what, I think we worked on this, I think I investigated this not that long ago and then pushed to try yeah.
+
+151
+00:27:06,250 --> 00:27:15,650
+Here. And I was trying to add logging for it.
+
+152
+00:27:15,650 --> 00:27:21,590
+Search for an orange and did I ever these artifacts all got thrown away.
+
+153
+00:27:21,590 --> 00:27:27,220
+This is like a month ago, so the artifacts got thrown away.
+
+154
+00:27:27,220 --> 00:27:42,480
+Um. I think who.
+
+155
+00:27:42,480 --> 00:28:08,890
+And what was I doing here? I was like adding logging. And logging here.
+
+156
+00:28:08,890 --> 00:28:16,390
+Yeah, this let's let's push this again. It's been a little while, but like, here's my solution or what I'm thinking so far.
+
+157
+00:28:16,390 --> 00:28:22,660
+This logging is interesting. I guess I just never followed up on this because I only I pushed and then it just like sat here.
+
+158
+00:28:22,660 --> 00:28:31,060
+I probably should have, like, tried to rerun, triggered the test a bunch of times and get like a failure to appear.
+
+159
+00:28:31,060 --> 00:28:37,990
+And I didn't. And that would be useful. So let's do that.
+
+160
+00:28:37,990 --> 00:28:45,040
+So what I'll do is, first of all, do I still have this patch my tree somewhere?
+
+161
+00:28:45,040 --> 00:29:01,880
+I do. I'm going to base this on Central.
+
+162
+00:29:01,880 --> 00:29:10,580
+Who's going girl Smurf de Smurf, do you saying that they're going gir who's going there?
+
+163
+00:29:10,580 --> 00:29:18,080
+And then the other thing I need to do is I need to update the test so that it's no longer disabled.
+
+164
+00:29:18,080 --> 00:29:22,340
+So I need to remove this stuff.
+
+165
+00:29:22,340 --> 00:29:24,260
+What I'm going to do is I'm going to run this on Linux.
+
+166
+00:29:24,260 --> 00:29:34,460
+So in the ideal situation, I might be able to even capture this in like Panozzo, which is a tool.
+
+167
+00:29:34,460 --> 00:29:52,820
+I think I may have talked to some people about sublime text browser or browser or any delegate which is going to remove the skip it rules.
+
+168
+00:29:52,820 --> 00:30:05,910
+And then, oh, hang on, oh, I rebase, but I did not update the tips or any update to the.
+
+169
+00:30:05,910 --> 00:30:18,380
+And yeah, we're just removing that we're going to amend and I probably have a mock try Fuzzy.
+
+170
+00:30:18,380 --> 00:30:28,770
+Well, how did I do it before I did like mock try fuzzy Linux vision, because that's where it was failing on Linux vision.
+
+171
+00:30:28,770 --> 00:30:34,440
+And what I'll do is instead of waiting for me to, like, come back and manually trigger it,
+
+172
+00:30:34,440 --> 00:30:46,410
+I'm going to say you can do mock, try fuzzy and you can tell it, hey, I want you to rebuild like 20 times, rebuild.
+
+173
+00:30:46,410 --> 00:31:12,050
+And we're not going to use an artifact build. Oh, and I also want to pass the directory that I want to run, which is doc show tests browser.
+
+174
+00:31:12,050 --> 00:31:18,560
+Scooby Doo, Scooby Doo Doo.
+
+175
+00:31:18,560 --> 00:31:27,050
+While we're waiting for that to show up, let me just quickly check the chat and make sure everyone's still OK.
+
+176
+00:31:27,050 --> 00:31:34,100
+Oh, the person who got the bugs to sign. So I'm not assigning Mattingley the bugs, I'm just asking for information.
+
+177
+00:31:34,100 --> 00:31:40,850
+So hopefully it's OK. I hope I'm not bugging particularly too much, but good.
+
+178
+00:31:40,850 --> 00:31:45,620
+Good point. Sometimes mock fuzzy Mochrie fuzzy takes a while.
+
+179
+00:31:45,620 --> 00:31:56,990
+Any of the sort of like mock try jobs or commands that try and like come up with the list of things that can possibly be built,
+
+180
+00:31:56,990 --> 00:32:02,240
+can take a while because it has to like generate that list on the fly based on a bunch of python.
+
+181
+00:32:02,240 --> 00:32:14,820
+And I think that as intense like I can hear my fans spinning up because of it, while we're waiting for that, I can try and answer some questions.
+
+182
+00:32:14,820 --> 00:32:19,310
+So these are some questions that were left over from last week.
+
+183
+00:32:19,310 --> 00:32:25,710
+And I never got to I never got to answer how is Browser and X become used?
+
+184
+00:32:25,710 --> 00:32:37,970
+Can you talk about it, too? Sure. So let's start with browser.
+
+185
+00:32:37,970 --> 00:32:42,930
+Yeah, so Danny Collins is running on three point nine, that is correct.
+
+186
+00:32:42,930 --> 00:32:47,990
+Whoa, yeah. Yeah, Moch is running on three point nine.
+
+187
+00:32:47,990 --> 00:32:58,340
+I think we've mostly switched all of our python over to Python, three point nine, Linux eight four sixty four.
+
+188
+00:32:58,340 --> 00:33:11,120
+And then what was the build type I wanted to do vision, vision, opt.
+
+189
+00:33:11,120 --> 00:33:22,880
+Yeah, this one, not a sin or debug oped, OK, run.
+
+190
+00:33:22,880 --> 00:33:28,340
+Oh, you know what, it's going to be mad because I have not added my sausage key.
+
+191
+00:33:28,340 --> 00:33:34,550
+Yeah, OK. So that's annoying because I just recently restarted my computer and so my ass is key.
+
+192
+00:33:34,550 --> 00:33:42,710
+I need to authenticate it. Added and authenticated again. But the good news is, is that Mark remembers the thing that I just tried to do.
+
+193
+00:33:42,710 --> 00:33:51,660
+So the whole on. Doo doo doo doo doo doo doo doo, and I go, Mark, try again,
+
+194
+00:33:51,660 --> 00:33:58,560
+and it'll just like retry the thing I just did without having to, like, rebuild the list, which is really handy.
+
+195
+00:33:58,560 --> 00:34:04,980
+So. So that can go up.
+
+196
+00:34:04,980 --> 00:34:09,000
+OK, so let's talk a little bit about browser and XP.
+
+197
+00:34:09,000 --> 00:34:15,720
+Well, those are two very different things. So I'm going to start with one and then talk about the other.
+
+198
+00:34:15,720 --> 00:34:19,780
+So let's talk about G browser and then eventually we'll talk about XP.
+
+199
+00:34:19,780 --> 00:34:26,160
+Come what is G browser?
+
+200
+00:34:26,160 --> 00:34:45,480
+G browser is the name of the component in the Firefox and a Firefox window browser window that manages tabs,
+
+201
+00:34:45,480 --> 00:35:01,620
+tabs and the underlying infrastructure for switching tabs, adding tabs, knowing about tab switches, et cetera.
+
+202
+00:35:01,620 --> 00:35:05,160
+So it's a pretty big deal. It's probably one of the more complicated components.
+
+203
+00:35:05,160 --> 00:35:12,090
+And in fact, I believe we have a little bit of documentation on it.
+
+204
+00:35:12,090 --> 00:35:20,640
+Let's see here G browser we have.
+
+205
+00:35:20,640 --> 00:35:28,560
+So, yeah, it's very, very minimal documentation, except for the async tabs,
+
+206
+00:35:28,560 --> 00:35:48,690
+which are which is documented light documentation right here and you can think of browser is an instance of a component called tab browser window,
+
+207
+00:35:48,690 --> 00:35:56,550
+global instance of a component called TAB Browser. And that's why this thing is called tab browser.
+
+208
+00:35:56,550 --> 00:36:00,930
+And you get one per window, there's one browser per window.
+
+209
+00:36:00,930 --> 00:36:13,770
+And so if you ever like, build a Firefox here, let's manipulate a Firefox and we can start checking it out a little bit.
+
+210
+00:36:13,770 --> 00:36:20,730
+So let me just do a quick artifact build. We'll bring it up, we'll bring up the console and then we can start messing around with it a little bit.
+
+211
+00:36:20,730 --> 00:36:29,310
+But the browser is a window global, very like that's a variable that's available in the browser window scope.
+
+212
+00:36:29,310 --> 00:36:34,830
+And what it's doing is it's referring to that Windows Tab browser instance.
+
+213
+00:36:34,830 --> 00:36:40,710
+OK, and that means that browser is really powerful.
+
+214
+00:36:40,710 --> 00:36:50,610
+You know, that's that's your gateway for adding tabs and a window, for removing tabs, for switching tabs, for you know, it does a bunch of stuff.
+
+215
+00:36:50,610 --> 00:36:58,890
+Like sometimes the things that G browser does is more than like it's not necessarily related to tabs,
+
+216
+00:36:58,890 --> 00:37:04,950
+but it also like it's a it's a sort of a central place because it's like one of the biggest,
+
+217
+00:37:04,950 --> 00:37:07,320
+if you think about it, like with our Web browser,
+
+218
+00:37:07,320 --> 00:37:17,700
+the fact that you can switch tabs and then this content area updates and all of these toolbar items update depending on like which tab you're in.
+
+219
+00:37:17,700 --> 00:37:24,960
+And like like all of that state management is managed by TAB browser.
+
+220
+00:37:24,960 --> 00:37:34,320
+It's it's a pretty important part of what a browser window does. And it's kind of become this dumping ground, I think, for various browser functions.
+
+221
+00:37:34,320 --> 00:37:37,980
+I think that browser is a bad name for it.
+
+222
+00:37:37,980 --> 00:37:56,700
+However, the browser is a bad name, is a pretty bad name for what it is, could maybe be called like G tab manager or like G browser manager,
+
+223
+00:37:56,700 --> 00:38:12,540
+browser window browser, no browsers manager because it allows you like what is a browser, what is what is a browser.
+
+224
+00:38:12,540 --> 00:38:22,860
+A browser is similar to an iFrame in that it's a browser element.
+
+225
+00:38:22,860 --> 00:38:27,120
+If you look at the Dom actually as this bill done yet we can take a look at it.
+
+226
+00:38:27,120 --> 00:38:33,060
+This will all make more sense whenever we have something we can play with.
+
+227
+00:38:33,060 --> 00:38:36,600
+OK, so we have a browser window. Let's open up a couple of tabs.
+
+228
+00:38:36,600 --> 00:38:44,430
+Let me open up some pocket stories, something like that on I'm at a break point for some reason.
+
+229
+00:38:44,430 --> 00:38:48,420
+Why am I breakpoints? Disable all my breakpoints. I don't want breakpoints.
+
+230
+00:38:48,420 --> 00:38:54,390
+I must have been doing some stuff. All right. Let's say I've got some tabs.
+
+231
+00:38:54,390 --> 00:39:04,410
+Am I still. Why am I hitting breakpoint? Stop hitting breakpoints. OK, let's say at some tabs and we get the console.
+
+232
+00:39:04,410 --> 00:39:08,700
+We can see that one of the things that's available to us is browser.
+
+233
+00:39:08,700 --> 00:39:12,810
+Now, let me start by saying what what does this G?
+
+234
+00:39:12,810 --> 00:39:22,950
+So that's an old Mozilla convention in our in our both in our C++, I think, but in our in our JavaScript as well.
+
+235
+00:39:22,950 --> 00:39:31,770
+G stands for Global. It's a way of indicating inside of the variable name that something is globally scoped.
+
+236
+00:39:31,770 --> 00:39:34,440
+In this case it's global to the window.
+
+237
+00:39:34,440 --> 00:39:41,070
+The browser window like this browser window is distinct from this browser window obviously, and each one has a G browser.
+
+238
+00:39:41,070 --> 00:39:47,370
+This one is the A browser and this one has a browser. And, you know, they can talk to each other.
+
+239
+00:39:47,370 --> 00:39:54,450
+We can pass tabs back and forth, for example. But the G is global for a particular browser window.
+
+240
+00:39:54,450 --> 00:39:59,520
+But every single tab in here will be managed through this Windows browser.
+
+241
+00:39:59,520 --> 00:40:03,600
+That's that's the first thing to note. The G stands for Global and we have other conventions like that.
+
+242
+00:40:03,600 --> 00:40:09,900
+Like you might notice that some of our arguments and functions will start with a like let me find some examples.
+
+243
+00:40:09,900 --> 00:40:17,430
+You can really see it in some of our older JavaScript to like, let me find some old JavaScript.
+
+244
+00:40:17,430 --> 00:40:28,990
+Well, like the TAB browser code. Let's find some functions here, old functions or, yeah, like a you try a herranz, a index,
+
+245
+00:40:28,990 --> 00:40:42,700
+a flags that a stands for argument and that was a way of differentiating between G is for global A is for argument.
+
+246
+00:40:42,700 --> 00:40:44,800
+It was a way so that like if you were looking at a variable,
+
+247
+00:40:44,800 --> 00:40:52,150
+you can get a sense of what scope it's in and a would be like, oh it's function scoped or method scoped.
+
+248
+00:40:52,150 --> 00:40:59,500
+M is for method S is for static.
+
+249
+00:40:59,500 --> 00:41:10,180
+I've seen like K is for constant global constant.
+
+250
+00:41:10,180 --> 00:41:20,050
+But I've also seen all caps for global constant as well.
+
+251
+00:41:20,050 --> 00:41:27,010
+Yeah, so these are just conventions and these conventions are really old, like before I showed up more than 10 years ago,
+
+252
+00:41:27,010 --> 00:41:33,730
+maybe even before missile existed, maybe from back in the day from Netscape, was before you had things like name spacing.
+
+253
+00:41:33,730 --> 00:41:40,480
+Maybe you had different ways of like better practices for declaring whether something is a global or an argument or a method or something.
+
+254
+00:41:40,480 --> 00:41:49,870
+These are like this is the old school way of doing it, that that Mozilla has just kind of gotten its DNA and we do it kind of on and off to this day.
+
+255
+00:41:49,870 --> 00:41:55,330
+Like, I'll still see people landing patches where they use a in front of their arguments.
+
+256
+00:41:55,330 --> 00:42:03,730
+And sometimes we don't. Sometimes we don't. And I can't say that I care either way.
+
+257
+00:42:03,730 --> 00:42:10,060
+Like I it doesn't really help me, at least in the JavaScript land,
+
+258
+00:42:10,060 --> 00:42:19,720
+but it's a convention that's kind of like poorly enforced and it's questionable whether or not it's actually worth worth doing,
+
+259
+00:42:19,720 --> 00:42:24,940
+at least in our JavaScript code. OK, so that's that's hopefully going to explain what G is.
+
+260
+00:42:24,940 --> 00:42:34,130
+What is a browser? Just so we're clear, a browser is a is an element, a Zuhal element that knows how to render Web content.
+
+261
+00:42:34,130 --> 00:42:40,150
+So all of this stuff in here, the stuff that I'm highlighting, all this flashy stuff, this is an HTML document.
+
+262
+00:42:40,150 --> 00:42:44,050
+It's loaded inside of a browser. You can think of a browser very similar to an iFrame.
+
+263
+00:42:44,050 --> 00:42:48,910
+You can send it to a source like you can you can navigate it, but it's got more powers.
+
+264
+00:42:48,910 --> 00:42:53,620
+Like as the person who is managing a browser like element,
+
+265
+00:42:53,620 --> 00:43:01,300
+we can like tell it to do a lot more than you can tell an iFrame like under the hood browser and iFrame or using the same infrastructure.
+
+266
+00:43:01,300 --> 00:43:07,480
+But a browser has more powers. You know, we can, we can do a lot more with, with a browser element.
+
+267
+00:43:07,480 --> 00:43:15,970
+And so back in the day there was only one browser per window.
+
+268
+00:43:15,970 --> 00:43:22,960
+Wait, hold on a second. There's a question Jonathan Lindsey asks. I've seen a person use a whole lot of Firefox windows and not use tabs is intended.
+
+269
+00:43:22,960 --> 00:43:29,380
+Is the browser why the RAM usage goes way up in that case, I may not have been following because I'm working.
+
+270
+00:43:29,380 --> 00:43:40,150
+Sorry, there's so it's hard to say whether or not that's related to memory going up.
+
+271
+00:43:40,150 --> 00:43:46,360
+You can think of like memory going up or the browser is slow or the, you know,
+
+272
+00:43:46,360 --> 00:43:56,140
+it's Janki or skips frames or it's like these are almost like the sorts of the real problems, but it's the same kind of problem as,
+
+273
+00:43:56,140 --> 00:44:07,000
+like a stomach ache or, you know, a persistent headache or something, where if you go to the doctor's office and say,
+
+274
+00:44:07,000 --> 00:44:12,340
+I've got a stomach ache, could it be from this thing that I that I ate yesterday?
+
+275
+00:44:12,340 --> 00:44:16,930
+It's like, well, we don't know. Maybe, maybe, but it could be any number of things.
+
+276
+00:44:16,930 --> 00:44:18,160
+You might have a tapeworm.
+
+277
+00:44:18,160 --> 00:44:29,140
+You might be having a cramp, you might have an ulcer, you might have heartburn, maybe it could be all sorts of things we have no idea of.
+
+278
+00:44:29,140 --> 00:44:31,600
+The only way really of knowing is measuring.
+
+279
+00:44:31,600 --> 00:44:38,770
+So if you have an instance where you have like a person with lots of browser windows and there are consuming a lot of memory,
+
+280
+00:44:38,770 --> 00:44:45,850
+then, you know, you can take a measurement using about memory and that might help get a sense of where all that memory is going.
+
+281
+00:44:45,850 --> 00:44:51,340
+If you go to about Colen memory and take a measurement and you can like examine that and you can send posted debug zayla.
+
+282
+00:44:51,340 --> 00:44:56,650
+One thing to note, though, whenever you have many windows open is that they're all visible.
+
+283
+00:44:56,650 --> 00:45:06,700
+Like one of the optimizations that we do whenever a browser has tabs is that we know that there is a foreground tab and a background tab.
+
+284
+00:45:06,700 --> 00:45:10,990
+So for example, this background tab, whatever goes into the background,
+
+285
+00:45:10,990 --> 00:45:17,350
+a like all of the graphics stuff for it, we throw it away because we don't need to paint it anymore.
+
+286
+00:45:17,350 --> 00:45:22,840
+We retain the page. It's still loaded in the background, but all the graphic stuff gets thrown away.
+
+287
+00:45:22,840 --> 00:45:31,630
+All of these background windows are still technically visible. And so we keep that stuff in memory, the graphics stuff.
+
+288
+00:45:31,630 --> 00:45:39,280
+And because they're all foregrounded in their windows, they're all running at like full sixty frames per second.
+
+289
+00:45:39,280 --> 00:45:42,430
+Background tabs tend we tend to throttle them down a little bit.
+
+290
+00:45:42,430 --> 00:45:46,210
+We reduce the amount of cycles we give them.
+
+291
+00:45:46,210 --> 00:45:54,940
+We reduce how much how many times we let them like tick the paint loop because they're not actually visible,
+
+292
+00:45:54,940 --> 00:46:00,100
+but because all of these background tabs are technically visible. They're all running at 60 fps.
+
+293
+00:46:00,100 --> 00:46:06,010
+Like we're we're refreshing them as fast as we can. And they're all all the graphics stuff is loaded into memory.
+
+294
+00:46:06,010 --> 00:46:15,250
+So that might be related to, you know, a person who is seeing more memory, more memory usage because they have a bunch of windows open.
+
+295
+00:46:15,250 --> 00:46:19,960
+Jonathan Lindsey says if. The windows are minimized, does that make them invisible? Yes, it does.
+
+296
+00:46:19,960 --> 00:46:27,850
+If you minimize the windows, then we throw the layers away, we throttle things down because we know that the user can't see them on Mac OS.
+
+297
+00:46:27,850 --> 00:46:32,320
+Actually, we have an optimization because of something called window occlusion.
+
+298
+00:46:32,320 --> 00:46:37,270
+So if a window is fully covered by another window, then we know it's not visible.
+
+299
+00:46:37,270 --> 00:46:43,300
+So this background window, for example, we will throw its layers away when it's all covered up and we'll bring them back.
+
+300
+00:46:43,300 --> 00:46:53,140
+I don't we're pretty good at, like, making making sure you don't see the the any kind of flicker.
+
+301
+00:46:53,140 --> 00:46:58,570
+But like, we throw the layers away whenever the window is occluded, we do that on on Mac.
+
+302
+00:46:58,570 --> 00:47:02,350
+I don't know if we have the same mechanism on Windows we can actually check.
+
+303
+00:47:02,350 --> 00:47:17,710
+I'm curious myself now occlusion here and sort Dr. Occlusions State and that is occlusions state.
+
+304
+00:47:17,710 --> 00:47:27,250
+Oh we, we do have a wind window occlusion tracker. So some at some point we added window occlusion support on windows.
+
+305
+00:47:27,250 --> 00:47:38,080
+And when was this Scutaro out of it. Oh, like Jested earlier this month as supportive window occlusion windows by disabling it by proff.
+
+306
+00:47:38,080 --> 00:47:46,390
+So it sounds like this is something that we're like currently working on is window occlusion on windows.
+
+307
+00:47:46,390 --> 00:47:48,520
+It sounds like we have to like track it ourselves.
+
+308
+00:47:48,520 --> 00:47:56,920
+Like the OP on Mac OS, the operating system tells us whether or not a window is occluded or not is like we get events about it.
+
+309
+00:47:56,920 --> 00:48:08,520
+Whereas here I think we have to like track it ourselves. And I don't know what the preferences here.
+
+310
+00:48:08,520 --> 00:48:24,060
+What is the pref? It probably have been added to the static pref list, and it's called widget windows window occlusion tracking enabled.
+
+311
+00:48:24,060 --> 00:48:30,980
+It's currently false. It looks like well, that would be my guess, is that it's currently false.
+
+312
+00:48:30,980 --> 00:48:36,860
+Yes, currently false, and someone asked whether or not Linux has it.
+
+313
+00:48:36,860 --> 00:48:44,150
+I'm curious myself now, I would guess probably not, but you never know.
+
+314
+00:48:44,150 --> 00:48:54,710
+Stransky from RedHat, who basically owns the widget layer at this point of of Geko, is pretty, pretty prolific.
+
+315
+00:48:54,710 --> 00:49:01,700
+So let's see a window occlusion, windows.
+
+316
+00:49:01,700 --> 00:49:11,900
+I don't see anything for GTK. I think they're focusing mainly on like getting onto Weland and making sure Weland works properly.
+
+317
+00:49:11,900 --> 00:49:20,330
+Maybe Weland will give us some occlusions stuff, but I don't see let's let's say GTK occlusion.
+
+318
+00:49:20,330 --> 00:49:27,000
+Yeah, nothing. So I am reasonably, reasonably certain that we do not have window occlusion,
+
+319
+00:49:27,000 --> 00:49:34,940
+state change support on Linux, but maybe someday we're getting it on Windows so it could happen.
+
+320
+00:49:34,940 --> 00:49:39,500
+Wow. We are really sidelined, but that's kind of what the name of the game is with joy of coding.
+
+321
+00:49:39,500 --> 00:49:48,290
+We we you know, we'll answer questions as they come and did my.
+
+322
+00:49:48,290 --> 00:49:51,680
+Well what was I. I was answering this question. Yeah.
+
+323
+00:49:51,680 --> 00:49:55,760
+Sorry I got distracted by browser is a terrible name.
+
+324
+00:49:55,760 --> 00:50:04,910
+Um, if we would, if we had a second shot at it we might call G tab manager or G like G tabs manager
+
+325
+00:50:04,910 --> 00:50:12,290
+or browser's manager because it's managing multiple browsers like multiple.
+
+326
+00:50:12,290 --> 00:50:19,220
+Let me close some of these windows because we have a bunch of windows open now. It's managing multiple browsers.
+
+327
+00:50:19,220 --> 00:50:28,640
+And by browsers I mean those elements, again, like these things, there's one per tab, one one browser element gets created per tab.
+
+328
+00:50:28,640 --> 00:50:34,040
+There's a one to one relationship there. And so G browser tab browser.
+
+329
+00:50:34,040 --> 00:50:41,720
+Its job is to manage both the TAB elements and switching between the different browser elements.
+
+330
+00:50:41,720 --> 00:50:44,390
+And there is another piece of the puzzle here,
+
+331
+00:50:44,390 --> 00:50:57,080
+which is that Firefox used to not have tabs or at least or at least navigated in the Netscape the or the Mozilla browser,
+
+332
+00:50:57,080 --> 00:51:03,800
+Mozilla Navigator, whatever they called the browser in the Net, the Mozilla suite.
+
+333
+00:51:03,800 --> 00:51:13,850
+What was the browser called? Was it just called browser, at least the Mozilla suite when it first came out?
+
+334
+00:51:13,850 --> 00:51:23,750
+Well, I don't know if that's true, but like at some point in its lineage, Firefox didn't have tabs.
+
+335
+00:51:23,750 --> 00:51:32,900
+It was one browser per window. And then and this was a lot this is long before I came here.
+
+336
+00:51:32,900 --> 00:51:38,210
+But that individual browser element was called browser.
+
+337
+00:51:38,210 --> 00:51:42,860
+And that makes a lot more sense that one browser element was called browser.
+
+338
+00:51:42,860 --> 00:51:47,750
+And then they wanted to add more tabs. They want to add tabs to it.
+
+339
+00:51:47,750 --> 00:52:03,620
+So what they did was they reused the browser name and they they kept the same API but made it so that it proxy's calls to it to the selected browser,
+
+340
+00:52:03,620 --> 00:52:08,900
+the currently foregrounded browser. And the reason for that, I think I wasn't around for this.
+
+341
+00:52:08,900 --> 00:52:15,300
+Like they kept the same name when adding tabs.
+
+342
+00:52:15,300 --> 00:52:28,460
+I think this was to make it easier to support Zul add ons that relied on touching browser.
+
+343
+00:52:28,460 --> 00:52:38,270
+The new G browser variable had the same interface as the old one,
+
+344
+00:52:38,270 --> 00:52:50,810
+but I would forward calls to the currently selected browser and I'm reasonably certain that's why it's called browser.
+
+345
+00:52:50,810 --> 00:52:55,940
+Uh, going back to Occlusions State Change for a second, we got an update from Danny Colon.
+
+346
+00:52:55,940 --> 00:53:03,110
+Thank you, Daniel. I wish this was like I had like news music and I could like over to you, Danny Colon,
+
+347
+00:53:03,110 --> 00:53:10,400
+and we could bring you up almost like like with the weather or with, like, breaking news, but breaking new boop boop boop boop boop boop.
+
+348
+00:53:10,400 --> 00:53:14,510
+Breaking news, occlusions, state change. Support for Weland has been filed.
+
+349
+00:53:14,510 --> 00:53:25,280
+That was filed eight months ago. And there it sounds like they're waiting for upstream to implement a protocol to support service occlusion.
+
+350
+00:53:25,280 --> 00:53:29,300
+That is your update for four months ago.
+
+351
+00:53:29,300 --> 00:53:34,970
+A proper protocol. All was underway here. I don't know where it's at now.
+
+352
+00:53:34,970 --> 00:53:44,240
+I haven't I am not familiar with this. Looks like it was last touched two months ago.
+
+353
+00:53:44,240 --> 00:53:49,130
+It's wild that this is this is there.
+
+354
+00:53:49,130 --> 00:53:50,660
+Wow. There you can get this.
+
+355
+00:53:50,660 --> 00:53:57,950
+While it's been a while since I've looked at free desktop, dawg, I didn't realize they'd gone to get Labbe cool, at any rate.
+
+356
+00:53:57,950 --> 00:54:05,300
+That's your update. It might come whenever Weland has surfaced. Seclusions support that has been your occlusions date change update.
+
+357
+00:54:05,300 --> 00:54:14,690
+Boop boop boop boop boop boop boop. All right. So hopefully that answers your question about what browser is the first?
+
+358
+00:54:14,690 --> 00:54:23,390
+The first part of the question, what it is now? What can it do? It can do a lot of browser has a ton of methods implemented on it.
+
+359
+00:54:23,390 --> 00:54:27,620
+And like these are these are some of the ones that are like forwarding like remember
+
+360
+00:54:27,620 --> 00:54:32,900
+I was telling you that we we kept whoever did this kept the same interfaces before,
+
+361
+00:54:32,900 --> 00:54:39,940
+but made it forward to the underlying selected browser. This is that happening right here.
+
+362
+00:54:39,940 --> 00:54:44,210
+Oh, Amy JPEG asks, what is the Matrix channel for the stream?
+
+363
+00:54:44,210 --> 00:54:53,720
+Great question. If you go to the agenda, there is a link down here for the chat and I will copy that link and drop it in.
+
+364
+00:54:53,720 --> 00:55:02,840
+But I can see your I can see your message like you're in the Matrix chat by being on, you know, where how do I get this link?
+
+365
+00:55:02,840 --> 00:55:06,950
+Come on. By being in the twitch chat. I've bridged the two.
+
+366
+00:55:06,950 --> 00:55:12,050
+So you don't have to join Matrix if you don't want to.
+
+367
+00:55:12,050 --> 00:55:16,820
+But you're welcome to. You're welcome to. And there's documentation in the agenda on how to join.
+
+368
+00:55:16,820 --> 00:55:25,100
+If you want a link to the agenda again, just scroll up further in the twitch chat or even better, let me just supply that link again.
+
+369
+00:55:25,100 --> 00:55:30,020
+Boom. There you go. So scroll down here. Check out this chat section. Hopefully that will answer your questions.
+
+370
+00:55:30,020 --> 00:55:36,170
+And if not, let me know. OK, so that's a big bunch of history on G browser.
+
+371
+00:55:36,170 --> 00:55:43,520
+I wanted to just point out some of the complexity of this thing, because this class this this it's a class, I guess.
+
+372
+00:55:43,520 --> 00:55:48,440
+Yeah, it's an object with a bunch of methods on it. So it's kind of like it's more like a struct than a class.
+
+373
+00:55:48,440 --> 00:55:53,390
+We don't instantiate with new or anything, but it's massive.
+
+374
+00:55:53,390 --> 00:56:01,100
+It is massive. It does a lot. It does a lot like look at this thing, look at the size of this thing.
+
+375
+00:56:01,100 --> 00:56:09,500
+It does so much and it's like creating Browsr elements. It does it Lezley for session restore it handles discarding them.
+
+376
+00:56:09,500 --> 00:56:19,340
+If, for example, Session Store does need a more where were you doing like lazy lazy unloading or unloading of tabs are taking up too much memory.
+
+377
+00:56:19,340 --> 00:56:22,580
+There's a lot of security stuff in here to make sure that when tabs are opened,
+
+378
+00:56:22,580 --> 00:56:28,280
+they've got the right like security principles and methods for removing tabs
+
+379
+00:56:28,280 --> 00:56:34,400
+like all the stuff that powers like right click and like close multiple tabs,
+
+380
+00:56:34,400 --> 00:56:39,410
+close other tabs, close tabs left, close tabs, the right. It's all manage from within here.
+
+381
+00:56:39,410 --> 00:56:46,160
+What else happens. Replace tabs with window adopt tab move tab multi tab select.
+
+382
+00:56:46,160 --> 00:56:54,480
+Did you know you can select multiple tabs by holding shift. You can, you can select multiple tabs and then you can like close them or something.
+
+383
+00:56:54,480 --> 00:56:58,190
+So for example I could like select these two. Right. Click and close them.
+
+384
+00:56:58,190 --> 00:57:03,860
+Did you know you could do that. You can add something that TAB browser supports.
+
+385
+00:57:03,860 --> 00:57:10,160
+What else does it do. Handles a bunch of events. Here's the occlusions state change stuff where we tell whether or not we should
+
+386
+00:57:10,160 --> 00:57:15,590
+preserve layers if the occlusions state changed or if we have minimized.
+
+387
+00:57:15,590 --> 00:57:21,800
+Apropos of that memory stuff, it's kind of wild that we ran into this kind of like a nice idiosyncrasy there.
+
+388
+00:57:21,800 --> 00:57:24,380
+We're not idiosyncrasy. A coincidence, a coincidence.
+
+389
+00:57:24,380 --> 00:57:34,820
+We happened to run into this code when, you know, was Jonathan Lindsey kind of asked that very interesting question about memory and multiple windows.
+
+390
+00:57:34,820 --> 00:57:38,450
+Yeah, I think that's all I'm going to say about browser. It does a lot.
+
+391
+00:57:38,450 --> 00:57:43,370
+And I invite you to read the source code to see what it does. I wish it was better documented.
+
+392
+00:57:43,370 --> 00:57:48,770
+It is not. But if you want to read it, here is the source code for browser.
+
+393
+00:57:48,770 --> 00:57:53,060
+But I think I've given you the sort of the salient details of what it is.
+
+394
+00:57:53,060 --> 00:58:01,280
+It is a thing for managing browsers and tabs and a window and it is understandable.
+
+395
+00:58:01,280 --> 00:58:13,100
+Yes, it is very long, but you can each one is like more or less independent of one another and they are relatively well named what the methods do.
+
+396
+00:58:13,100 --> 00:58:17,660
+So you can check it out and you might be really interested in some of the stuff it can do.
+
+397
+00:58:17,660 --> 00:58:24,260
+And I guess we also implement the TAB context menu in here. OK, great.
+
+398
+00:58:24,260 --> 00:58:29,880
+And then XP come. What is XP come. Can we talk about it.
+
+399
+00:58:29,880 --> 00:58:34,450
+This is this dream is becoming a lot of questions, but I think that's OK. People are finding this interesting.
+
+400
+00:58:34,450 --> 00:58:38,520
+I'll keep going. But if people would rather I like hack on a bug, I can do that, too.
+
+401
+00:58:38,520 --> 00:58:46,410
+But I'm going to start trying to explain what XP. Com is very briefly, because it's kind of complicated.
+
+402
+00:58:46,410 --> 00:58:58,560
+XP become was Netscape Mozilla, was it next Netscape or was it Missoula's?
+
+403
+00:58:58,560 --> 00:59:01,830
+I don't remember when it was introduced either,
+
+404
+00:59:01,830 --> 00:59:10,320
+but was during the before during like the Netscape days or after Mozilla spun out into its own organization.
+
+405
+00:59:10,320 --> 00:59:23,640
+But let's say it's an it's a very old Mozilla technology modeled after my spungen.
+
+406
+00:59:23,640 --> 00:59:28,350
+Right. Modeled on Ma.
+
+407
+00:59:28,350 --> 00:59:31,920
+What modeled. That's how you spell that.
+
+408
+00:59:31,920 --> 00:59:41,190
+Right. Modeled model Molk DL The past participle.
+
+409
+00:59:41,190 --> 00:59:45,360
+That's a word modeled. Come on.
+
+410
+00:59:45,360 --> 00:59:49,170
+Past tense. What. All right.
+
+411
+00:59:49,170 --> 00:59:54,510
+Well anyways, that's a real word. It's a very old Mozilla technology modeled after.
+
+412
+00:59:54,510 --> 01:00:01,230
+Com from Microsoft. So calm was a sort of a pattern that Microsoft developed.
+
+413
+01:00:01,230 --> 01:00:04,500
+It's still, I think in use to this day you can write.
+
+414
+01:00:04,500 --> 01:00:14,490
+Com applications using com and it's it's somewhat it's quite verbose.
+
+415
+01:00:14,490 --> 01:00:20,850
+It's quite verbose and reminds me sometimes of some stuff I've seen from my Java days.
+
+416
+01:00:20,850 --> 01:00:25,500
+But what it effectively allows you to do, like there are a couple of big parts to it.
+
+417
+01:00:25,500 --> 01:00:38,730
+But though here's the way I think of it. Oh Scarr Jabri is spamming the channel with some kind of garbage, so feel free to kick that person.
+
+418
+01:00:38,730 --> 01:00:42,300
+And why spam on this channel. Shame on you Skar.
+
+419
+01:00:42,300 --> 01:00:55,140
+Gabourey. OK, the first thing to think about is it's a pattern for defining interfaces pattern.
+
+420
+01:00:55,140 --> 01:00:59,880
+Is it a pattern. It's like infrastructure, more like it's not a design pattern,
+
+421
+01:00:59,880 --> 01:01:13,200
+it's infrastructure for designing interfaces for components that are implementation language agnostic.
+
+422
+01:01:13,200 --> 01:01:21,300
+This means a component can be written in.
+
+423
+01:01:21,300 --> 01:01:40,620
+This means a component written in language. A can in theory talk to a component written in language B by way of an interface defined in IDL file.
+
+424
+01:01:40,620 --> 01:01:46,830
+So, you know, this is what we would call a binding, the ability to bind to different things,
+
+425
+01:01:46,830 --> 01:01:52,080
+to different languages, things written in two different languages together. It's called a binding, I think.
+
+426
+01:01:52,080 --> 01:02:06,150
+And what IDL at IDL put that in quotes because like it's called IDL, but the actual files and in IDL, let's actually take a look at an ideal file.
+
+427
+01:02:06,150 --> 01:02:15,650
+And Trud, I mean, let's look at a simple one.
+
+428
+01:02:15,650 --> 01:02:34,820
+Let's let's pull one up. Maasdam and very simple, like vestigial menu builder, OK, this is a very simple interface definition file.
+
+429
+01:02:34,820 --> 01:02:39,620
+And if you remember from Java, if you've ever had a used like Java before,
+
+430
+01:02:39,620 --> 01:02:44,240
+there's like the notion of an interface file or an interface that's very similar,
+
+431
+01:02:44,240 --> 01:02:54,830
+where you have this language that allows you to define the sorts of things something exposes for consumption.
+
+432
+01:02:54,830 --> 01:02:59,180
+And in particular, what types of things like these are methods.
+
+433
+01:02:59,180 --> 01:03:11,030
+So a thing that implements this interface must implement this method that takes a string and returns void.
+
+434
+01:03:11,030 --> 01:03:20,640
+It takes these things in and returns void. And in this case, here's a it must implement this function and return a string.
+
+435
+01:03:20,640 --> 01:03:29,960
+And these these interface definition files are consumed at build time and turned into the binding layer.
+
+436
+01:03:29,960 --> 01:03:38,300
+The it's like turned into basically C++ for communicating between different languages.
+
+437
+01:03:38,300 --> 01:03:44,750
+Or in particular, I make it seem as if like a bunch of parts of Firefox written in a bunch of different languages.
+
+438
+01:03:44,750 --> 01:03:45,740
+It used to be the case.
+
+439
+01:03:45,740 --> 01:04:01,550
+The dream was that Mozilla backed applications could be written in whatever language you wanted to you wanted so long as it supported XP home.
+
+440
+01:04:01,550 --> 01:04:03,680
+So if you built in XP.
+
+441
+01:04:03,680 --> 01:04:12,800
+Com Support or XP Connect, which is another technology that I think does the reflection back and forth between languages, you could you, for example,
+
+442
+01:04:12,800 --> 01:04:20,930
+could have written an X become component in Python or one in Java or one in Lisp
+
+443
+01:04:20,930 --> 01:04:27,560
+Whoknows so long as it supported X become XP connectivity like built that support,
+
+444
+01:04:27,560 --> 01:04:31,430
+then you could write a component written in that language.
+
+445
+01:04:31,430 --> 01:04:40,820
+But these days, practically speaking, X bcom components these days are written in C++, JavaScript or Rust.
+
+446
+01:04:40,820 --> 01:04:44,690
+These are the three ways of writing C X become components.
+
+447
+01:04:44,690 --> 01:04:52,670
+And what X become allows us to do is it allows us to speak between these components without caring what's on the other side.
+
+448
+01:04:52,670 --> 01:04:56,450
+It could be C++. On the other side, it could be rust, it could be JavaScript.
+
+449
+01:04:56,450 --> 01:05:01,340
+It it doesn't matter X because I'm kind of just like takes care of it, which is pretty incredible,
+
+450
+01:05:01,340 --> 01:05:11,060
+especially for something back in the day because like there's like a lot of magic happening under the hood of like translation between languages.
+
+451
+01:05:11,060 --> 01:05:19,280
+That's what XP Connect is. It's like the the work of reflecting things like type's between languages and you know, when you pass arguments,
+
+452
+01:05:19,280 --> 01:05:24,470
+it will turn those into the sorts of things that the other language can then understand
+
+453
+01:05:24,470 --> 01:05:31,640
+because it might have its own internal notion of what a number is or like a string.
+
+454
+01:05:31,640 --> 01:05:35,690
+So, yeah, that is that is kind of what allows us to do.
+
+455
+01:05:35,690 --> 01:05:52,550
+And then X become offers us a registry of X components and X become components singletons called services,
+
+456
+01:05:52,550 --> 01:05:58,670
+X become components singletons where there's only one instance per process.
+
+457
+01:05:58,670 --> 01:06:04,310
+Those are called services. And we have a bunch of those.
+
+458
+01:06:04,310 --> 01:06:10,850
+And the way you get at these things is through these globalize that are available in privileged JavaScript.
+
+459
+01:06:10,850 --> 01:06:21,410
+And you'll often see them look like this component's classes sometimes that oftentimes these days that's actually shortened down to C C,
+
+460
+01:06:21,410 --> 01:06:33,920
+but that is a shortcut to component's classes. You all see S.I for components interfaces and you'll see invocations like this.
+
+461
+01:06:33,920 --> 01:06:45,990
+Let's see. Let's see if we can find an invocation here, perfect.
+
+462
+01:06:45,990 --> 01:06:54,690
+So this is just an example because thingy.
+
+463
+01:06:54,690 --> 01:07:03,090
+I don't know if that's rendering right wing. Jazz is that rendering, right?
+
+464
+01:07:03,090 --> 01:07:12,840
+Let's take a look at how that's showing up on the agenda. Scooby Doo Doo.
+
+465
+01:07:12,840 --> 01:07:20,070
+No, that looks like garbage. Uh, let's see here. Does I understand this?
+
+466
+01:07:20,070 --> 01:07:25,080
+Wow. Why isn't any of this rendering nicely?
+
+467
+01:07:25,080 --> 01:07:30,360
+I would have thought that markdown would just kind of be consumed. Oh, is it because I'm using.
+
+468
+01:07:30,360 --> 01:07:39,510
+You know what? It's because I'm using the rich rich editor in I need to use like the.
+
+469
+01:07:39,510 --> 01:07:47,670
+Yeah, this is what I need to do and that's what's going on. Oh, boy.
+
+470
+01:07:47,670 --> 01:07:57,660
+Yeah, hold on a second. This is Joplin, I'm really struggling to make this look good.
+
+471
+01:07:57,660 --> 01:08:00,870
+I'm going to you know, I'm going to fix this up later. Let's not get distracted.
+
+472
+01:08:00,870 --> 01:08:10,140
+So this is an example of a an invocation of, like, getting an expection component instantiated.
+
+473
+01:08:10,140 --> 01:08:15,000
+That's what this is doing. And it's very verbose. But think of it like this.
+
+474
+01:08:15,000 --> 01:08:22,950
+You can think of Sisi as this map of factories effectively.
+
+475
+01:08:22,950 --> 01:08:36,840
+So the key to that map is this unique string that identifies the factory that, you know, there's a there's a key value mapping.
+
+476
+01:08:36,840 --> 01:08:41,550
+And like the key is supposed to be a descriptor for what the factory provides.
+
+477
+01:08:41,550 --> 01:08:48,450
+And it starts with at Mozilla, Doug, because I think the original dream was that, oh, you know, different institutions.
+
+478
+01:08:48,450 --> 01:08:56,460
+Maybe if you're building like an old school binary, add on for browser or you're building an application using, you know, some Mozilla technology,
+
+479
+01:08:56,460 --> 01:09:02,400
+but some of your own, you might want to like differentiate it by having your own institution's name and here some kind of like identifier.
+
+480
+01:09:02,400 --> 01:09:06,900
+So I could have had, like, my colleague to slash my special ID or something.
+
+481
+01:09:06,900 --> 01:09:13,440
+And I think this is supposed to be a version. No, a lot of this is like old school convention that we just stuck with forever.
+
+482
+01:09:13,440 --> 01:09:19,000
+And it doesn't make sense these days, but that's what it's for.
+
+483
+01:09:19,000 --> 01:09:24,390
+But basically, this is a map. Look up to give us a factory.
+
+484
+01:09:24,390 --> 01:09:29,700
+In fact, if we go back to our browser here and we open up console and we just do that,
+
+485
+01:09:29,700 --> 01:09:36,750
+what we get is this thing and this is this is the factory effectively.
+
+486
+01:09:36,750 --> 01:09:45,990
+And it's got like this a unique user uid and and that's got these functions create instance or get service.
+
+487
+01:09:45,990 --> 01:09:53,310
+And because we know we want an individual instance, we don't want the one single instance per global.
+
+488
+01:09:53,310 --> 01:09:56,820
+We want to create an individual instance. We can call create instance on it.
+
+489
+01:09:56,820 --> 01:10:00,930
+And what it will do is it will that factory, if one exists somewhere,
+
+490
+01:10:00,930 --> 01:10:08,130
+if someone has registered a factory for that particular key, will return an XP home component that implements this interface.
+
+491
+01:10:08,130 --> 01:10:16,140
+There's an interface called NECI refer info and then we'll get it here and then we can call stuff on it using the XCOM interface.
+
+492
+01:10:16,140 --> 01:10:22,830
+Very complicated. And and, you know, whenever I was first learning this stuff, it was like, holy smokes.
+
+493
+01:10:22,830 --> 01:10:31,630
+That is a wild way of doing this. But it was based on a preexisting pattern that Microsoft felt called calm.
+
+494
+01:10:31,630 --> 01:10:39,450
+What? No, no, no. Was it Microsoft? Com. Let's look that up.
+
+495
+01:10:39,450 --> 01:10:47,370
+Microsoft's component object model calm.
+
+496
+01:10:47,370 --> 01:10:55,760
+Like, it's very, very similar to calm and let's look here like you have some interface and then it implement,
+
+497
+01:10:55,760 --> 01:11:02,070
+you can like subclass it and then you can create an instance and you pass the interface
+
+498
+01:11:02,070 --> 01:11:06,930
+that you're expecting to the create instance method and then you get it back.
+
+499
+01:11:06,930 --> 01:11:12,870
+And the the other thing that's worth noting here is that whatever you get back, you don't actually know what it is.
+
+500
+01:11:12,870 --> 01:11:15,660
+All you know is that it implements an interface.
+
+501
+01:11:15,660 --> 01:11:26,820
+And that's part of the power as well as the strangeness of XP, is that there's so much hidden from you you don't really know what's on the other side.
+
+502
+01:11:26,820 --> 01:11:30,420
+You just know that you've been given back a thing that implements this interface.
+
+503
+01:11:30,420 --> 01:11:35,940
+You don't know what language it's been implemented in. You don't even know if it implements other interfaces.
+
+504
+01:11:35,940 --> 01:11:43,680
+You could find out you can you can query it to actually see if it implements, implements other interfaces.
+
+505
+01:11:43,680 --> 01:11:46,440
+And that's called query interface.
+
+506
+01:11:46,440 --> 01:11:59,400
+So if you are holding a genius or an X become component or an object, you can call a query interface on it with an interface.
+
+507
+01:11:59,400 --> 01:12:05,400
+And if that returns you something that is not null, that means it implements this interface as well.
+
+508
+01:12:05,400 --> 01:12:12,210
+So a thing can implement multiple interfaces and then you can like ask this sort of like mystery object.
+
+509
+01:12:12,210 --> 01:12:17,250
+It's almost like it's like it's wearing a mask. You don't know what it is, but you say, are you also one of these?
+
+510
+01:12:17,250 --> 01:12:21,810
+And it can go, yes. And you don't you still don't know what it is or what it's implemented in.
+
+511
+01:12:21,810 --> 01:12:26,670
+And in a way, you're not supposed to care. You're just supposed to go, oh, OK, good, you implement that interface.
+
+512
+01:12:26,670 --> 01:12:30,720
+I'm going to call this method on you. Hopefully you're going to do what I want. I want you to do so.
+
+513
+01:12:30,720 --> 01:12:35,400
+The interface is kind of a contract and so X becomes a pattern.
+
+514
+01:12:35,400 --> 01:12:47,610
+There has been a lot of work to decontaminate is the terminology that we use to decontaminate decontamination
+
+515
+01:12:47,610 --> 01:12:54,210
+of the Mozilla source code to reduce all of the harm that we're using because it's very verbose.
+
+516
+01:12:54,210 --> 01:13:01,200
+There's a there's performance overhead, especially when you're passing stuff back and forth between the C++ and JavaScript implementations.
+
+517
+01:13:01,200 --> 01:13:02,430
+If you do it very, very frequently,
+
+518
+01:13:02,430 --> 01:13:09,150
+there's the attacks effectively by crossing what we call the language boundary or the boundary or the connect boundary,
+
+519
+01:13:09,150 --> 01:13:21,120
+there's a tax to convert things back and forth. And there's better ways, actually, of exposing things that JavaScript can call native code from.
+
+520
+01:13:21,120 --> 01:13:26,370
+And what we do is we implement a lot of those things using what's called a web of Web IDL bindings instead.
+
+521
+01:13:26,370 --> 01:13:29,940
+And those are have like a similar interface language.
+
+522
+01:13:29,940 --> 01:13:39,990
+And it generates similar C++ for making it possible to call into C++ from JavaScript very easily.
+
+523
+01:13:39,990 --> 01:13:46,350
+But there's a lot less overhead. Now, one of the other things about Web IDL is it doesn't allow us to implement Web
+
+524
+01:13:46,350 --> 01:13:53,520
+IDL bindings are Web wide Web IDL interface implementations in JavaScript.
+
+525
+01:13:53,520 --> 01:13:59,490
+You can only implement them in Restor C++. In fact, I think it's only C++.
+
+526
+01:13:59,490 --> 01:14:07,830
+I don't know if you can implement a web video component or a Web IDL interface using just straight rust, you might have to go through C++.
+
+527
+01:14:07,830 --> 01:14:11,710
+But the the thing is you can't implement one in JavaScript.
+
+528
+01:14:11,710 --> 01:14:20,430
+Used to be able to, but you can't. So it's kind of a one way street with Web IDL, whereas, you know, with XP.
+
+529
+01:14:20,430 --> 01:14:27,600
+Com, it's a two way street. C++ can call into JavaScript which can then call into C++, which can call into JavaScript like it.
+
+530
+01:14:27,600 --> 01:14:35,370
+You can kind of go both ways. In fact, this you know that remember that test we were looking at?
+
+531
+01:14:35,370 --> 01:14:44,100
+Oh, hey, we got our test failure, I think test unexpected fail.
+
+532
+01:14:44,100 --> 01:14:51,090
+That's not what we wanted. These are test failures that are unrelated, this is the one we wanted,
+
+533
+01:14:51,090 --> 01:14:57,330
+so this top level navigation delegate, this is an example of an expected component.
+
+534
+01:14:57,330 --> 01:15:02,060
+Let me actually pull up the source and show you we have an interface for it.
+
+535
+01:15:02,060 --> 01:15:09,960
+It takes just a single method. And then we've got some C++ inside of Doc Shell,
+
+536
+01:15:09,960 --> 01:15:19,350
+which tries to get access to something that implements this interface and then calls this function called should navigate on it.
+
+537
+01:15:19,350 --> 01:15:26,910
+While lo and behold, if you look at the test for this, you can implement that interface in JavaScript in our test.
+
+538
+01:15:26,910 --> 01:15:33,030
+That's exactly what we do. We implement the interface in JavaScript right here.
+
+539
+01:15:33,030 --> 01:15:36,960
+We say this thing implements this interface. This is how you do it in JavaScript.
+
+540
+01:15:36,960 --> 01:15:43,020
+You like you say that you implement basically the query interface method on it.
+
+541
+01:15:43,020 --> 01:15:48,810
+And because we do, we we say, hey, yeah,
+
+542
+01:15:48,810 --> 01:15:56,220
+we implement this interface and then you actually implement the interface C++ and then call into this JavaScript code, which is pretty wild.
+
+543
+01:15:56,220 --> 01:16:02,940
+You know, that's really powerful. You have these things kind of talking back and forth.
+
+544
+01:16:02,940 --> 01:16:07,590
+So that is, I think all I'm going to say about XP home. I really have to clean of this document.
+
+545
+01:16:07,590 --> 01:16:14,730
+I'll do it. This is garbage. I will do it after after I'm done streaming.
+
+546
+01:16:14,730 --> 01:16:23,460
+But hopefully that answers your question about XP. Come and G browser. Whoever asked that?
+
+547
+01:16:23,460 --> 01:16:28,230
+You know what? I don't think I'm going to get to these two and maybe I'll answer this one next time.
+
+548
+01:16:28,230 --> 01:16:38,790
+What I want to do is if I can take a look at this test failure that we've got a log for now test unexpected failure.
+
+549
+01:16:38,790 --> 01:16:46,260
+So the test failure is occurring because we fail to see a load attempt when we expect to see a load attempt.
+
+550
+01:16:46,260 --> 01:16:51,510
+And that happens that that failure occurs online.
+
+551
+01:16:51,510 --> 01:16:58,710
+Forty of this test. So let's pull up that test.
+
+552
+01:16:58,710 --> 01:17:07,910
+Oh, that is a helper method. Is there a stack does delegate for 40.
+
+553
+01:17:07,910 --> 01:17:20,990
+Well, there's not a stack, unfortunately, but what we can do is we can look at the log messages and see where it got to.
+
+554
+01:17:20,990 --> 01:17:37,110
+So here's the actual test. Do we get to checking that we don't delegate, checking that we don't know, we never get there.
+
+555
+01:17:37,110 --> 01:17:48,600
+But we first load example, dotcom, that happens here when we create the tab, and then we saw the load of calm,
+
+556
+01:17:48,600 --> 01:18:03,390
+we saw now an attempt to load example dog that happens here and we expect it to delegate or contacts, load your eyes and kind of child.
+
+557
+01:18:03,390 --> 01:18:19,420
+We received it, saw a navigation attempt, and then we say, hey, false navigation delegates return false tests, top level.
+
+558
+01:18:19,420 --> 01:18:33,140
+Return false to say that, hey, this thing should not navigate, so that's good, we should be delegating and then we fail.
+
+559
+01:18:33,140 --> 01:18:37,780
+Oh we see a pass for delegated navigation to example dog.
+
+560
+01:18:37,780 --> 01:18:42,190
+So that's good. So that was the first one.
+
+561
+01:18:42,190 --> 01:19:04,260
+And then we try going to example dog to. Saw the load of end load attempt.
+
+562
+01:19:04,260 --> 01:19:24,350
+So. We fail does delegate for online 40, we failed this assertion.
+
+563
+01:19:24,350 --> 01:19:41,450
+The parent actor. Should have been sent the string.
+
+564
+01:19:41,450 --> 01:20:04,000
+But maybe it wasn't centered in time because like we send this message and then we dispatch this event type of navigation, delicate event.
+
+565
+01:20:04,000 --> 01:20:24,400
+We wait for the content event. Should navigate, should have been received here and we should push.
+
+566
+01:20:24,400 --> 01:20:32,410
+The message that you are eyestrain here, but we don't know what that's the other half of what we should have done,
+
+567
+01:20:32,410 --> 01:20:44,630
+we should have said some logging here, like top level navigation, delegate, parent received message, message, dot name.
+
+568
+01:20:44,630 --> 01:20:53,720
+Well, I guess it will always be should navigate. There's only one message, a message with your eye and a message that data that you are eyestrain.
+
+569
+01:20:53,720 --> 01:21:20,160
+Then the other thing we should do is. Dump out, the Signore String's parent has seen these strings, Jason String Afie Yeah.
+
+570
+01:21:20,160 --> 01:21:31,830
+And this this failure that we're dealing with here, oh, what is the bug number again,
+
+571
+01:21:31,830 --> 01:21:42,570
+top level navigationally delegate, intermittent, intermittent test time out.
+
+572
+01:21:42,570 --> 01:21:49,530
+Is this a test time? It's this is an unexpected fail. Here we go.
+
+573
+01:21:49,530 --> 01:21:55,170
+Here's a test timeout. So this is a slightly different matter. So there might be actually two problems in here.
+
+574
+01:21:55,170 --> 01:22:06,850
+So we've added logging for one problem. Here's the test, the test time one, which is what was originally filed for.
+
+575
+01:22:06,850 --> 01:22:11,910
+OK, we see the load attempt for the original tab. All good.
+
+576
+01:22:11,910 --> 01:22:17,520
+Then we load example log. Yup, we delegate for it.
+
+577
+01:22:17,520 --> 01:22:23,550
+Then we try to load this page. We receive the load of time, we delegate for it.
+
+578
+01:22:23,550 --> 01:22:31,890
+Then we attempt to load this page and we delegate for it.
+
+579
+01:22:31,890 --> 01:22:34,110
+OK, so that's I think good.
+
+580
+01:22:34,110 --> 01:22:41,040
+We were supposed to delegate, delegate, delegate and then we want to make sure that we don't delegate, for example, dot com.
+
+581
+01:22:41,040 --> 01:22:51,780
+That's the how this test works. So attempting to load example, dot com asking browser to load your example dot com.
+
+582
+01:22:51,780 --> 01:22:57,210
+He's loaded the order, receive the load attempt site navigation attempt to example dot com.
+
+583
+01:22:57,210 --> 01:23:12,810
+We're going to allow it to load and then we see oh we see a dom content loaded event with.
+
+584
+01:23:12,810 --> 01:23:51,180
+This, which is from back here. This is the content loaded event for this document load.
+
+585
+01:23:51,180 --> 01:24:10,470
+Which is weird, we shouldn't even be allowing it. Uh.
+
+586
+01:24:10,470 --> 01:24:34,090
+Does not delegate for. And we just kind of wait awaiting loaded here.
+
+587
+01:24:34,090 --> 01:24:48,540
+Where is that? We're awaiting for this event, waiting for a harsh change event, no.
+
+588
+01:24:48,540 --> 01:25:00,260
+We're waiting for. The browser to load.
+
+589
+01:25:00,260 --> 01:25:14,270
+Alone attempts to load example dotcom that's here.
+
+590
+01:25:14,270 --> 01:25:34,100
+We do the load child receives the message to load it, and then we get this old DA content loaded with the old.
+
+591
+01:25:34,100 --> 01:25:53,550
+Why would we have looked at that? See, we received the load, you or I, and we say don't do it.
+
+592
+01:25:53,550 --> 01:26:12,910
+Do we? Content loaded.
+
+593
+01:26:12,910 --> 01:26:37,530
+How is this event fired? Um, Dongzhou, I'm content, loaded.
+
+594
+01:26:37,530 --> 01:27:04,970
+Dispatch. I mean, fired Tom document ready for idle, trying to find the place where we dispatch oh yeah, unblock dom content loaded.
+
+595
+01:27:04,970 --> 01:27:25,760
+Dispatch content, loaded events. Documents being loaded.
+
+596
+01:27:25,760 --> 01:27:42,080
+And the DOM content loaded like the browser test, utils stuff on this side of things, Dom, content included, it's getting the document.
+
+597
+01:27:42,080 --> 01:27:52,240
+You are I. It's fired on the.
+
+598
+01:27:52,240 --> 01:28:13,660
+Document. And the document you are I invisible, you are I location what the.
+
+599
+01:28:13,660 --> 01:28:27,020
+Uh, no, sorry, wrong, uh. So I Tom, content loaded with you are invisible, you or I.
+
+600
+01:28:27,020 --> 01:28:37,670
+So, like, why does it think that these are the current documentary?
+
+601
+01:28:37,670 --> 01:28:46,240
+Um, do we have a timing issue here?
+
+602
+01:28:46,240 --> 01:28:54,380
+Get document, you or I. This is um we get the M document.
+
+603
+01:28:54,380 --> 01:28:59,960
+You are I and document you are I equals when we set the document you or I.
+
+604
+01:28:59,960 --> 01:29:16,140
+And when is that set. We handle the same document navigation.
+
+605
+01:29:16,140 --> 01:29:37,250
+On location change. Mm hmm.
+
+606
+01:29:37,250 --> 01:29:48,530
+Update your own history. The document you were a change of finally set the browser market something in the back,
+
+607
+01:29:48,530 --> 01:30:35,540
+but is nailing this happens when when we are updating the Yooralla and history and that happens when we call document open or when we add state.
+
+608
+01:30:35,540 --> 01:31:14,100
+That's delegates for. I'm just let's look at the order of events here, start the test.
+
+609
+01:31:14,100 --> 01:31:20,030
+See a navigation attempt and return false for the first one.
+
+610
+01:31:20,030 --> 01:31:34,460
+For orig. Why don't we see one, when do we register this thing register?
+
+611
+01:31:34,460 --> 01:31:43,460
+Well, we registered here at the very start after we've loaded this, we wait, do we register?
+
+612
+01:31:43,460 --> 01:31:50,540
+And then the very first thing after that is, you know, we've got this thing set up.
+
+613
+01:31:50,540 --> 01:32:02,110
+Our registered delegate sees those first event, AKAM.
+
+614
+01:32:02,110 --> 01:32:19,720
+Sarda or. Or two.
+
+615
+01:32:19,720 --> 01:32:28,750
+You know, what I'd like to do is try and reproduce this with her nasco, reproduce this failure in the Panozzo app.
+
+616
+01:32:28,750 --> 01:32:38,980
+This is exactly the sort of thing I want to do with Panozzo test name this one number of reproduction attempts.
+
+617
+01:32:38,980 --> 01:32:46,180
+Let's try and do it 15 times. Let's use chaos mode, reproduce.
+
+618
+01:32:46,180 --> 01:32:55,000
+All right. So we're going to see if we can get this in a Panozzo trace, because if we can,
+
+619
+01:32:55,000 --> 01:33:00,040
+we might be in good shape because I can maybe see why we're firing that event.
+
+620
+01:33:00,040 --> 01:33:03,820
+Penasco is something that I talked about. Oh, hang on a second.
+
+621
+01:33:03,820 --> 01:33:11,620
+I'm seeing some commentary is are there any dogs? And it's become when I go to Firefox's source code Dock's, it starts with logging.
+
+622
+01:33:11,620 --> 01:33:19,030
+And then someone linked to this uh com collections IDL.
+
+623
+01:33:19,030 --> 01:33:26,110
+So, yeah, our documentation for XCOM is pretty poor for Firefox or stocks, but it does exist.
+
+624
+01:33:26,110 --> 01:33:31,630
+It just hasn't been properly ported yet. So there's a bunch of old documents on XP.
+
+625
+01:33:31,630 --> 01:33:40,360
+Com that were on developer dot Mozilla tag, but they got archived because we made developer out Mozilla blog about just web development.
+
+626
+01:33:40,360 --> 01:33:46,690
+General, we took all of the sort of Mozilla technology stuff out of it and we put it in this like archived content GitHub repository,
+
+627
+01:33:46,690 --> 01:33:53,350
+and we need to like port all this stuff. But there is documentation in here.
+
+628
+01:33:53,350 --> 01:33:59,140
+It's just it needs to be converted to see if there's anything in here.
+
+629
+01:33:59,140 --> 01:34:24,930
+But it's become. Missile attack become yeah, Zillah Tech expe com here's a bunch of stuff, and it's like very poorly, very like this.
+
+630
+01:34:24,930 --> 01:34:32,550
+A lot of the stuff's really old but the documentation's in here, but it's just the raw HTML.
+
+631
+01:34:32,550 --> 01:34:36,570
+We need to like go through it and convert it like here.
+
+632
+01:34:36,570 --> 01:34:41,160
+This is how to create a python exp com component wall.
+
+633
+01:34:41,160 --> 01:34:48,960
+Like let's let's briefly check out this document. I'm going to just drop it into a document viewer.
+
+634
+01:34:48,960 --> 01:34:54,660
+Here was the old provides a tour for making a simple JavaScript C++ code.
+
+635
+01:34:54,660 --> 01:35:03,600
+So, yeah, there was a book called Creating Applications with Mozilla, which I guess this website doesn't work anymore.
+
+636
+01:35:03,600 --> 01:35:08,970
+We're creating applications with Mozilla while their backs become get this book.
+
+637
+01:35:08,970 --> 01:35:14,970
+It talks about a lot of the old technology. Who wrote this?
+
+638
+01:35:14,970 --> 01:35:23,100
+Hey, I know some of these people and you can build Piak become, which is, I guess, the part,
+
+639
+01:35:23,100 --> 01:35:30,750
+the native layer native library for Python that allows you to bind to XP and then you import it and then
+
+640
+01:35:30,750 --> 01:35:40,200
+you can define a simple IDL file and then you can compile that into the special binary format for it.
+
+641
+01:35:40,200 --> 01:35:45,900
+And then you can implement the component by using this very strange form.
+
+642
+01:35:45,900 --> 01:35:53,640
+But then you like implement the interface, right. Change, et cetera. And then.
+
+643
+01:35:53,640 --> 01:36:03,550
+Gendering, implementation templates, and then I guess there you go, you've got your you've got yourself next become component,
+
+644
+01:36:03,550 --> 01:36:10,410
+I don't know, but like the documentation is in here and it needs to all be converted.
+
+645
+01:36:10,410 --> 01:36:17,610
+In fact, if people are looking for interesting volunteer opportunities, supporting documentation,
+
+646
+01:36:17,610 --> 01:36:27,570
+interesting documentation from this, this GitHub repository is very noble and something that we should be doing more of.
+
+647
+01:36:27,570 --> 01:36:35,790
+Help us support for documentation from here.
+
+648
+01:36:35,790 --> 01:36:48,060
+So here's how I would do that. First, find the documentation that you want to port.
+
+649
+01:36:48,060 --> 01:37:13,220
+In the GitHub repository, then you want to file a bug, um, we just did this recently for Bug SJS, No server, Firefox source docs.
+
+650
+01:37:13,220 --> 01:37:25,400
+Here, here's an example of a bug where we reported some of the work over, the documentation over,
+
+651
+01:37:25,400 --> 01:37:32,090
+and there's like a tool called Pandak, which you can actually just follow these instructions for how to, like,
+
+652
+01:37:32,090 --> 01:37:47,690
+convert to an arrestee, follow these instructions to convert the document to an RSG file, and then you can use this as a template,
+
+653
+01:37:47,690 --> 01:38:02,370
+use this example as a template, and then what you want to do is file a bug blocking meta document.
+
+654
+01:38:02,370 --> 01:38:19,140
+Source docks at port archived and file a bug blocking this one by bug blocking this bug and then post for a review and that would be great.
+
+655
+01:38:19,140 --> 01:38:25,590
+The more you can, the more useful. So part of the challenge with doing that is that a lot of this documentation,
+
+656
+01:38:25,590 --> 01:38:29,400
+like there's there's some definitely some interesting documentation in this folder,
+
+657
+01:38:29,400 --> 01:38:35,070
+in this in this GitHub repository, but there's a lot of it that's way out of date.
+
+658
+01:38:35,070 --> 01:38:44,940
+And I think it's arguable that sometimes out-of-date or incorrect documentation is worse than no documentation, but like,
+
+659
+01:38:44,940 --> 01:38:57,570
+it might be worth just kind of like leafing through here, maybe under Mesilla in particular missile attack and like going through some of this stuff.
+
+660
+01:38:57,570 --> 01:39:03,030
+And if there's anything in here that you're like, hey, all of this is still really relevant or looks relevant,
+
+661
+01:39:03,030 --> 01:39:10,950
+then filing a bug and getting it ported to Firefox or stocks, which is where it shows up in here.
+
+662
+01:39:10,950 --> 01:39:16,650
+It gets built, it gets it lives inside of the source control and then it gets rendered nightly.
+
+663
+01:39:16,650 --> 01:39:22,440
+I think we do a build of it and host it here, which is far better than putting it on the wiki.
+
+664
+01:39:22,440 --> 01:39:26,580
+So if you're looking for volunteer opportunities, this is it.
+
+665
+01:39:26,580 --> 01:39:31,770
+This is one this is one way of doing it. OK, I think I'm going to end the stream here.
+
+666
+01:39:31,770 --> 01:39:35,220
+Hey, thank you so much for watching. Episode two hundred sixty seven of the Joy of Coding.
+
+667
+01:39:35,220 --> 01:39:40,620
+I know we didn't work on too much stuff. We started to get into some interesting stuff with that that test.
+
+668
+01:39:40,620 --> 01:39:48,300
+I'm interested in knowing whether or not Penasco is going to come back to me with with the test failure reproduced.
+
+669
+01:39:48,300 --> 01:39:57,180
+And if so, then that would be very interesting. Maybe I'll hold off on examining that Penasco trace until next week, but we shall see.
+
+670
+01:39:57,180 --> 01:40:01,020
+I want to thank you again for watching Episode 267 of the Joy Coding.
+
+671
+01:40:01,020 --> 01:40:06,540
+Let me know what you thought of the episode. There is a forum at the very bottom of this poorly formatted agenda.
+
+672
+01:40:06,540 --> 01:40:10,410
+Just I will clean this up, but click on the read this episode.
+
+673
+01:40:10,410 --> 01:40:14,820
+If you have questions that you want me to answer or feedback about the stream, let me know.
+
+674
+01:40:14,820 --> 01:40:20,700
+I'll do my best to accommodate you. And with that, I think I'm going to call her, call it a day.
+
+675
+01:40:20,700 --> 01:40:25,680
+So thank you again for watching. Episode two hundred sixty seven. Have yourselves a great day.
+
+676
+01:40:25,680 --> 01:42:58,319
+Take care. Bye bye. The joy it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

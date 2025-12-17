@@ -1,0 +1,2565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 288 - May 4, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 288 - May 4, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=2d3050dc-4777-4944-89f1-ae6f01511600</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=2d3050dc-4777-4944-89f1-ae6f01511600">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,249 --> 00:00:10,159
+Welcome. To the jury of.
+
+2
+00:00:10,159 --> 00:00:15,229
+Hello. Hello, and welcome to episode two hundred and eighty eight of the joy of coding.
+
+3
+00:00:15,229 --> 00:00:22,579
+My name is Mike Connolly. It's so good to have you here. It's May 4th, 2020 to episode 288.
+
+4
+00:00:22,579 --> 00:00:27,259
+We're going to be live hacking on some Firefox stuff today. Let's see how it goes.
+
+5
+00:00:27,259 --> 00:00:34,079
+Let's get started. So here's my screen, here's my screen, and already out, right out the gate, there's something wrong.
+
+6
+00:00:34,079 --> 00:00:45,629
+I forgot that I had changed the layout of everything during my my stint at streaming from the office last week or the week before last, rather.
+
+7
+00:00:45,629 --> 00:00:55,439
+So if there are some settings that appear off, let me know I'll do my best to fix them live like just now, like when I change the display size.
+
+8
+00:00:55,439 --> 00:01:00,239
+Right? So, yeah, welcome to the joy of coding. Reminder no plan survives breakfast.
+
+9
+00:01:00,239 --> 00:01:03,779
+I don't know what's going to happen during the stream today. Things might go horribly wrong.
+
+10
+00:01:03,779 --> 00:01:10,289
+We might be stuck waiting for builds forever. But you know, we're we're going to find ways forward.
+
+11
+00:01:10,289 --> 00:01:14,669
+We're going to figure stuff out. We might get stuck, we might get sidelined, but I'm sure it'll be entertaining.
+
+12
+00:01:14,669 --> 00:01:20,069
+That's half the fun, right? You're watching me deal with software development in the raw.
+
+13
+00:01:20,069 --> 00:01:24,539
+You know, I don't have the solutions pre-written. Who knows what we're going to run into?
+
+14
+00:01:24,539 --> 00:01:30,809
+That's the first thing. The second thing is that the agenda that we're looking at is something you have access to if you are watching this on YouTube.
+
+15
+00:01:30,809 --> 00:01:35,939
+Check out the video description for a link if you're watching this on.
+
+16
+00:01:35,939 --> 00:01:38,729
+Air, Mozilla, it'll be in the details section.
+
+17
+00:01:38,729 --> 00:01:48,719
+And if you're watching this on Twitch, then let me get the you're watching this war, then let me drop this into the Twitch chat.
+
+18
+00:01:48,719 --> 00:01:56,459
+Here's the agenda for episode two hundred eighty eight. And as I update the agenda, it will live update and there is an episode guide.
+
+19
+00:01:56,459 --> 00:01:59,639
+You should check out the episode guide. I haven't actually updated it in a couple of weeks.
+
+20
+00:01:59,639 --> 00:02:07,949
+I should. I have a few pull requests. I should apply. I might do that right after this episode, but it's reasonably up to date.
+
+21
+00:02:07,949 --> 00:02:12,629
+So if you want to check out the episode guide, you can read up on things I've done in previous episodes.
+
+22
+00:02:12,629 --> 00:02:19,199
+And if you want to contribute to the episode guide, that is a thing you can definitely do because it is a completely viewer driven resource.
+
+23
+00:02:19,199 --> 00:02:25,439
+If this is a thing that you want to contribute to, maybe you want to add your own notes. Addenda corrections expand on some topic.
+
+24
+00:02:25,439 --> 00:02:31,769
+Send me a pull request and I will merge it in. So the first thing I want to do is say, Happy Firefox 100.
+
+25
+00:02:31,769 --> 00:02:37,619
+Yesterday, Firefox 100 came out. I think that deserves a sound.
+
+26
+00:02:37,619 --> 00:02:48,359
+Let's see. I haven't played sounds in a while. Oh, oh yeah, that's right.
+
+27
+00:02:48,359 --> 00:02:53,189
+Happy Firefox 100. It went out yesterday.
+
+28
+00:02:53,189 --> 00:02:57,359
+It is slowly, you know, the updates are starting to apply. People are starting to get one.
+
+29
+00:02:57,359 --> 00:03:02,399
+One of my favorite things about Firefox 100. You know, I'm a little biased here.
+
+30
+00:03:02,399 --> 00:03:04,799
+Picture in Picture has gotten a number of improvements,
+
+31
+00:03:04,799 --> 00:03:12,449
+including subtitle and captions support on some major sites that includes sites like Netflix and Amazon Prime.
+
+32
+00:03:12,449 --> 00:03:19,319
+YouTube, of course, and any site that uses Web VTi that that spec, you get that for free.
+
+33
+00:03:19,319 --> 00:03:20,069
+But you know,
+
+34
+00:03:20,069 --> 00:03:28,949
+all of those sort of popular websites that do captions and subtitles in their own freaky the way we we have rappers now that let us do that.
+
+35
+00:03:28,949 --> 00:03:33,329
+So I'm very excited about that. Also an update. I think last stream, it was April 20th.
+
+36
+00:03:33,329 --> 00:03:42,059
+We were working on landing a patch like reviving a patch that allows these player windows to not overlap, one another that actually landed.
+
+37
+00:03:42,059 --> 00:03:46,469
+And it is in nightly and beta right now because of the beta uplift.
+
+38
+00:03:46,469 --> 00:03:50,339
+So if you are on nightly or betas, so one on one or one or two,
+
+39
+00:03:50,339 --> 00:03:58,499
+then you'll notice if you open up multiple picture in picture player windows that they will, we will do our best to not overlap them, which is great.
+
+40
+00:03:58,499 --> 00:04:03,179
+I wasn't streaming last week because I went to a conference that was a very good conference.
+
+41
+00:04:03,179 --> 00:04:12,779
+So what do I want to do today? Well, I was need info on a bug about the about home cash, about home startup cash.
+
+42
+00:04:12,779 --> 00:04:18,389
+There is a frequent test failure that I want to take a look at.
+
+43
+00:04:18,389 --> 00:04:25,079
+And you know, this might be a bit of a pain to examine because one of the things that well, let me let me tell you more information.
+
+44
+00:04:25,079 --> 00:04:29,119
+Let me tell you everything I know about this bug and what's going on.
+
+45
+00:04:29,119 --> 00:04:35,479
+So the about home start up cash are not going to go into too much detail about what it is or how it works, because that would take a while.
+
+46
+00:04:35,479 --> 00:04:40,549
+But if you're curious, there is documentation about it. I will link to the documentation right here.
+
+47
+00:04:40,549 --> 00:04:47,749
+We've actually worked on it for a while. You know, in times, past streams past, we will have worked on it in the stream.
+
+48
+00:04:47,749 --> 00:04:52,039
+If you want to know more about how it works, you should read this documentation.
+
+49
+00:04:52,039 --> 00:05:02,359
+Maybe I'll actually change the text here to be about home startup cash documentation.
+
+50
+00:05:02,359 --> 00:05:14,699
+Um. Actually, I just so I just had a thought.
+
+51
+00:05:14,699 --> 00:05:20,629
+Just had a thought frequent beta test time outs on beta, how do we run these tests?
+
+52
+00:05:20,629 --> 00:05:29,829
+This thing's only on. Sorry, I kind of got caught in my head there for a second.
+
+53
+00:05:29,829 --> 00:05:39,579
+I think I understand. So basically, we have this component that allows us to do start up more quickly if we've got a cache of about home,
+
+54
+00:05:39,579 --> 00:05:43,239
+about home is the first page that's loaded by default. It basically looks like this.
+
+55
+00:05:43,239 --> 00:05:48,849
+This is about new tab, about home being called the same thing, except you can set your new tab to be a different tab.
+
+56
+00:05:48,849 --> 00:05:53,799
+You can have about home be something different, and they both more or less point at the same document.
+
+57
+00:05:53,799 --> 00:05:59,019
+But on startup, what we like to do is because of start up is so busy we like to.
+
+58
+00:05:59,019 --> 00:06:03,759
+Instead of re computing about home, we'll pull it from a cache from the last time you shut down.
+
+59
+00:06:03,759 --> 00:06:08,379
+So we periodically cache about home and then we pull from that cache on startup so that we
+
+60
+00:06:08,379 --> 00:06:14,979
+don't have to re compute it because startup is a very process intensive like operation.
+
+61
+00:06:14,979 --> 00:06:24,699
+And the less we can do, the better, you know, the more upfront computing we can do like, say, before we last shut down, the better.
+
+62
+00:06:24,699 --> 00:06:28,989
+So, yeah, read up on how that works by following this link.
+
+63
+00:06:28,989 --> 00:06:34,569
+But what's going on is there is an intermittent test failure that one of our sheriffs reported,
+
+64
+00:06:34,569 --> 00:06:39,759
+or rather they called a frequent test timeout that occurs when they do a beta simulation.
+
+65
+00:06:39,759 --> 00:06:49,089
+What is a beta simulation? A beta simulation is the sheriffs will take what's currently in nightly,
+
+66
+00:06:49,089 --> 00:06:56,889
+and they will pretend like the uplift has occurred and they will push it to try with all of
+
+67
+00:06:56,889 --> 00:07:02,109
+the beta flags on so that they can see whether or not stuff's broken stuff will be broken.
+
+68
+00:07:02,109 --> 00:07:09,459
+When this when central merges over the beta in, say, three and a half through four weeks time from now.
+
+69
+00:07:09,459 --> 00:07:12,129
+So it's a way of kind of like getting ahead of that problem.
+
+70
+00:07:12,129 --> 00:07:21,759
+And what they've noticed is that during that simulation, we are seeing a frequent test timeout in this about home start up cash test.
+
+71
+00:07:21,759 --> 00:07:30,309
+And it's very curious and I went through it earlier today. I describe some of my thinking and one piece of information.
+
+72
+00:07:30,309 --> 00:07:34,569
+This is the thing that I was like thinking about when I kind of spaced out there for a second
+
+73
+00:07:34,569 --> 00:07:39,999
+is that the about home startup cash is not actually enabled by default on beta or release.
+
+74
+00:07:39,999 --> 00:07:43,699
+It's only enabled by default on nightly. It's been like that way for a while.
+
+75
+00:07:43,699 --> 00:07:53,379
+You can enable it yourself if you'd like. If you're on beta, I think you can go to about preferences in the experimental the experiment section.
+
+76
+00:07:53,379 --> 00:08:00,369
+You can turn on the about home start cash here if you'd like to opt into it, but I think it's only on on nightly.
+
+77
+00:08:00,369 --> 00:08:06,879
+However, we do run the tests even if it's disabled on that particular channel like we force,
+
+78
+00:08:06,879 --> 00:08:13,779
+enable the startup cash and we can actually find the tests that are being referred to.
+
+79
+00:08:13,779 --> 00:08:24,549
+I think it's over here. Browser components, new tab test and then browser about home cash is pretty deep here,
+
+80
+00:08:24,549 --> 00:08:31,479
+but down here in this initialize function or browser any manifest, we tell it to enable it by default.
+
+81
+00:08:31,479 --> 00:08:41,109
+So even if it's off on beta, it will be on whenever we run it, which is very interesting.
+
+82
+00:08:41,109 --> 00:08:46,509
+What else do we need to know about what's happening?
+
+83
+00:08:46,509 --> 00:08:50,799
+Well, I did a little bit of an analysis about why the test is timing out,
+
+84
+00:08:50,799 --> 00:09:00,159
+and I was able to do that analysis by looking at the logs or sheriff's very helpfully put the log into the the bug report about,
+
+85
+00:09:00,159 --> 00:09:01,179
+you know, what was happening.
+
+86
+00:09:01,179 --> 00:09:08,469
+So the about Homestar Cache is very one of the nice things about it is that we added a bunch of logging so that it tells you what it's doing,
+
+87
+00:09:08,469 --> 00:09:11,919
+like all these things are from the logs and that's nice.
+
+88
+00:09:11,919 --> 00:09:18,969
+And one of the things I was able to derive from that is that the the storage mechanism that we use for the cache,
+
+89
+00:09:18,969 --> 00:09:30,849
+which is the same one that we use for, you know, any web page that you owe that we want to cache, we use something called the HTTP cache.
+
+90
+00:09:30,849 --> 00:09:40,509
+Each cash entry has a representation in memory, and on this called an NCAI cash entry and on startup.
+
+91
+00:09:40,509 --> 00:09:56,979
+That's true even if we don't actually have something in the cash for it like we you can think of a cash entry as a you earl, a unique, a unique item.
+
+92
+00:09:56,979 --> 00:10:05,759
+Every URL results in a unique NCAI cash entry, and that cash entry may or may not actually represent something that's in the cash.
+
+93
+00:10:05,759 --> 00:10:13,389
+If if nothing is in the cash for that URL, then that cash entry can be used to, for example, right into the cash.
+
+94
+00:10:13,389 --> 00:10:21,159
+If there is something in that cash entry, you can use that NCAI cash and try to like pull out the cash.
+
+95
+00:10:21,159 --> 00:10:24,939
+So that's that's what's, you know, first things first.
+
+96
+00:10:24,939 --> 00:10:32,319
+But what I determined by looking at these logs is that the operation of getting at that first cash entry,
+
+97
+00:10:32,319 --> 00:10:36,429
+like getting at the cash entry, is not succeeding.
+
+98
+00:10:36,429 --> 00:10:42,459
+Whenever we time out. So let me show you the line of code that I'm referring to.
+
+99
+00:10:42,459 --> 00:10:48,579
+And actually, before I actually go deep into this because I don't want I'm trying not to have us waste too much time.
+
+100
+00:10:48,579 --> 00:10:55,659
+I'd like us to try and build with better enabled.
+
+101
+00:10:55,659 --> 00:11:00,879
+Or let's actually do something simpler, let's build with artifact.
+
+102
+00:11:00,879 --> 00:11:04,839
+Let's do an artifact build of central and let's see if we can reproduce this
+
+103
+00:11:04,839 --> 00:11:09,669
+test failure just ourselves right here without having to worry about beta,
+
+104
+00:11:09,669 --> 00:11:11,199
+because that makes things a lot simpler.
+
+105
+00:11:11,199 --> 00:11:22,179
+Once you can reproduce the test failure locally, because right now it seems like it's only testing it on reproducing an automation.
+
+106
+00:11:22,179 --> 00:11:28,999
+The other thing I wanted to mention about browser glue. Yeah, I want to show you where the.
+
+107
+00:11:28,999 --> 00:11:34,059
+Open your eyes, sink was its cash and tree promise.
+
+108
+00:11:34,059 --> 00:11:40,339
+Yeah, here this is where we attempt to get at the cash entry.
+
+109
+00:11:40,339 --> 00:11:49,219
+We're saying, Hey, get our disk cache storage and, you know, give me the about home cache entry.
+
+110
+00:11:49,219 --> 00:11:52,549
+Whether or not there's anything in the cache entry doesn't matter.
+
+111
+00:11:52,549 --> 00:11:59,869
+Just give me the cache entry. That's an async operation. And when we get something back, because this occurs off of the main thread,
+
+112
+00:11:59,869 --> 00:12:06,649
+we will have a callback function called this one down here called on cache entry available
+
+113
+00:12:06,649 --> 00:12:11,659
+and we will log this message cache entry is available and then we will run all of this stuff.
+
+114
+00:12:11,659 --> 00:12:20,269
+And that's the part that's not happening is that we like, request this cache entry and we don't get anything back.
+
+115
+00:12:20,269 --> 00:12:25,049
+So let's see if we can reproduce that issue while we're waiting for that, though.
+
+116
+00:12:25,049 --> 00:12:31,669
+I'm curious if we can, uh,
+
+117
+00:12:31,669 --> 00:12:40,759
+sort of dig more into how async open your eye works because maybe itself has some logging that we can turn on and then we can.
+
+118
+00:12:40,759 --> 00:12:48,739
+Instead of having to do this locally and build locally, we can push to try and work on other things while we wait for the logging to come back.
+
+119
+00:12:48,739 --> 00:12:55,759
+So it looks like async open your eye is implemented in this space right here.
+
+120
+00:12:55,759 --> 00:13:06,959
+Cache storage. And if it fails, then we will have lobbed this failure, failed to open about home cache entry, and that is not a thing that is logged.
+
+121
+00:13:06,959 --> 00:13:17,189
+To be clear, like we init, we say we're going to construct the pipes and then we eventually get down to initialized.
+
+122
+00:13:17,189 --> 00:13:28,469
+So we never logged an error, meaning that we succeeded in calling this so it doesn't return, not initialized or anything.
+
+123
+00:13:28,469 --> 00:13:42,039
+It may have returned NZOC. If, like it may have returned and it's OK and call on cash and free available immediately passing,
+
+124
+00:13:42,039 --> 00:13:47,399
+no, I guess it like how would we handle that if we call?
+
+125
+00:13:47,399 --> 00:13:51,089
+On cash and tree available, we would have logged this message.
+
+126
+00:13:51,089 --> 00:14:00,619
+Cash and tree is available even if. The entry was null pointer.
+
+127
+00:14:00,619 --> 00:14:03,259
+So I don't think that's what's happening.
+
+128
+00:14:03,259 --> 00:14:15,499
+Same goes to here, we do all this verification, all of this must succeed and then we invoke the callback synchronously.
+
+129
+00:14:15,499 --> 00:14:30,229
+May invoke it. May invoke the callback synchronously. Interesting. So it calls add storage entry.
+
+130
+00:14:30,229 --> 00:14:39,609
+And calls async open on it. Async open.
+
+131
+00:14:39,609 --> 00:14:46,839
+So we do have some logging that we could maybe enable here cash to log,
+
+132
+00:14:46,839 --> 00:14:54,879
+and that might be our key is turning on some of this logging if we're logging in the right places and
+
+133
+00:14:54,879 --> 00:15:06,009
+it like creates this callback thing and then we get here when the callback wants to bypass cash,
+
+134
+00:15:06,009 --> 00:15:14,829
+when it's busy whereas bypass passive busy come from its if we passed a flag.
+
+135
+00:15:14,829 --> 00:15:27,909
+Saying bypass, if the cash is busy. Well, that's not the case, and so open is then called.
+
+136
+00:15:27,909 --> 00:15:42,299
+Chuck stayed under lock or no call back load opens the lock, invoke callbacks, loading is in progress load, so logging here.
+
+137
+00:15:42,299 --> 00:15:48,029
+So I think what we should do, actually, maybe, maybe is push to try.
+
+138
+00:15:48,029 --> 00:15:55,889
+With some of this logging enabled that might help reveal what's going on more, but let's let's try running this test locally.
+
+139
+00:15:55,889 --> 00:16:01,769
+No hold on. We want to run components new tab test browser about home cache.
+
+140
+00:16:01,769 --> 00:16:08,579
+Excuse me. We're going to browser locale change. What we do is we're going to run it headless and we'll run it with Verify.
+
+141
+00:16:08,579 --> 00:16:13,679
+But that's going to do is it's going to run. Oh, sorry. Mark Moki Test Well,
+
+142
+00:16:13,679 --> 00:16:22,409
+that's going to do is it's going to run the test a whole bunch of times in a row using like chaos mode and new windows to try and like suss out,
+
+143
+00:16:22,409 --> 00:16:30,789
+you know, intermittent races, failures, that sort of thing, which I think.
+
+144
+00:16:30,789 --> 00:16:38,169
+I think we stand a small chance of succeeding here, especially because this is only showing up on beta,
+
+145
+00:16:38,169 --> 00:16:42,489
+what might be better is to like if and when this fails.
+
+146
+00:16:42,489 --> 00:16:48,429
+I fully expect this to. Oh no.
+
+147
+00:16:48,429 --> 00:17:00,149
+Eventually we got there. What are these long waits for?
+
+148
+00:17:00,149 --> 00:17:21,079
+Then cash entry is available. These are long waits waiting.
+
+149
+00:17:21,079 --> 00:17:30,499
+Did it always take this long? I wonder if that's related because like.
+
+150
+00:17:30,499 --> 00:17:54,849
+If there's something new happening here. All these warnings from.
+
+151
+00:17:54,849 --> 00:18:02,139
+Mm hmm. So let's suppose that none of this is going to work out,
+
+152
+00:18:02,139 --> 00:18:09,579
+we're not going to reproduce this locally, how would we push to try with these logs going out?
+
+153
+00:18:09,579 --> 00:18:18,069
+Well, the way you do that is you there's an environment variable that you can set that will enable logging for various components.
+
+154
+00:18:18,069 --> 00:18:27,939
+In this case, we have a thing called GCash to log, and wherever this thing is instantiated will tell us what the special identifier is.
+
+155
+00:18:27,939 --> 00:18:38,009
+It's called cash to cash, too. So this is what we want to.
+
+156
+00:18:38,009 --> 00:18:43,019
+See, we want we want to enable cash to logging at level five.
+
+157
+00:18:43,019 --> 00:18:47,219
+That's what the call in five four is for. It's like, what level do you want and call?
+
+158
+00:18:47,219 --> 00:18:56,909
+And five is like everything. Give me everything. OK, so how do we get that logging enabled when we push to try?
+
+159
+00:18:56,909 --> 00:19:08,629
+Well, let's see. There's instructions in here on how to do a better SIM.
+
+160
+00:19:08,629 --> 00:19:21,779
+Oopsy, Daisy. Where are the latest seven structures?
+
+161
+00:19:21,779 --> 00:19:28,199
+Pull from everything from Central Update, central mock trials release the migration, central data,
+
+162
+00:19:28,199 --> 00:19:38,159
+if not all the jobs run to verify tests, append stage changes to the command and select jobs with mock try chooser.
+
+163
+00:19:38,159 --> 00:19:46,339
+No artifact. OK.
+
+164
+00:19:46,339 --> 00:19:47,999
+Let's change the configuration of the base simulation,
+
+165
+00:19:47,999 --> 00:19:53,749
+puts the try server and then reverse changes open that first you hear a link to the console might take a few minutes for trial to find that job,
+
+166
+00:19:53,749 --> 00:19:58,489
+though. Add the link after you do, select the running the green jobs and check the classified jobs available in the current date.
+
+167
+00:19:58,489 --> 00:20:01,309
+Selection run links trunk as early data in the G Dock.
+
+168
+00:20:01,309 --> 00:20:11,479
+OK, so this um, this looks like it will be helpful, but how do I set environment variables in a build?
+
+169
+00:20:11,479 --> 00:20:20,309
+I think there is a yeah, see all of these past. That's that's that's interesting.
+
+170
+00:20:20,309 --> 00:20:33,539
+You know, there's there's something else I want to try. I'm very curious about.
+
+171
+00:20:33,539 --> 00:20:46,309
+That delay, whether or not that delay is new. So what I want to do is I want to check out a build from, say, a week ago.
+
+172
+00:20:46,309 --> 00:20:54,529
+I do I do that update. So if this if this problem was introduced around May 2nd.
+
+173
+00:20:54,529 --> 00:21:01,999
+Let's see if we can find a revision that's a little bit earlier.
+
+174
+00:21:01,999 --> 00:21:12,079
+Or hang on, where was the regression range in the bug progression range?
+
+175
+00:21:12,079 --> 00:21:17,329
+So who's the parent of this one, this is the first one in the regression range.
+
+176
+00:21:17,329 --> 00:21:42,699
+So who's the parent here? And perf herder or a tree herder, let's pull a tree herder.
+
+177
+00:21:42,699 --> 00:21:50,879
+Case, so I want to check out this one from Friday, April 29th.
+
+178
+00:21:50,879 --> 00:21:57,869
+Let's see when we build it, whether or not we get that same delay, because that that smells suspicious to me.
+
+179
+00:21:57,869 --> 00:22:05,049
+I think I've still got artifact enabled, so we'll just do mock bill.
+
+180
+00:22:05,049 --> 00:22:12,009
+Because if they have that pause, like I still think it's worth us pushing to try with that log,
+
+181
+00:22:12,009 --> 00:22:19,989
+with the logging enabled and seeing what's going wrong within the sea, what's going wrong with the cash?
+
+182
+00:22:19,989 --> 00:22:24,129
+Because I assume I I'm pretty sure that that's where things are going wrong is it's
+
+183
+00:22:24,129 --> 00:22:33,609
+something is either going wrong in the cash or in the mechanism that returns the cash entry.
+
+184
+00:22:33,609 --> 00:22:40,259
+So. Yeah, what I'm hoping is to gather as much information as possible,
+
+185
+00:22:40,259 --> 00:22:49,979
+like is this pause may be related to it and then maybe point our networking people who own the cache.
+
+186
+00:22:49,979 --> 00:22:58,559
+All of this information because I figure, you know, they're sort of the experts on how the underlying cache system works.
+
+187
+00:22:58,559 --> 00:23:01,679
+I'm just consuming it.
+
+188
+00:23:01,679 --> 00:23:08,789
+Hey, while we're waiting for this build to finish, I wanted to quickly ask Paul the audience because I think some people are watching.
+
+189
+00:23:08,789 --> 00:23:19,379
+I've recently become more interested in federated social networks like I've been using Mastodon more.
+
+190
+00:23:19,379 --> 00:23:23,489
+I've started dabbling in using something called pixel fed for pictures,
+
+191
+00:23:23,489 --> 00:23:32,099
+started investigating something called bookworm for tracking my reading, and I hear that there is something for video in the Fed.
+
+192
+00:23:32,099 --> 00:23:37,589
+A verse called Peer to now peer tube is software that you can run.
+
+193
+00:23:37,589 --> 00:23:40,649
+You can self-hosted your own instance of peer tube.
+
+194
+00:23:40,649 --> 00:23:47,549
+Think of it as like a video hosting platform like YouTube, but you can host it yourself or like Mastodon, like you can host to yourself.
+
+195
+00:23:47,549 --> 00:23:50,759
+You can, like, join an instance that's out there,
+
+196
+00:23:50,759 --> 00:23:58,829
+and I'm trying to determine if it would make sense for me to broadcast the joy of coding on a peer tube instance somewhere.
+
+197
+00:23:58,829 --> 00:24:08,969
+And as with, like every Festivus style application, there is this initial challenge of, well, which one do I want to be on and does it matter?
+
+198
+00:24:08,969 --> 00:24:14,819
+Are there peer tube instances where it makes sense for me to stream myself?
+
+199
+00:24:14,819 --> 00:24:19,679
+Should I just use the flagship one because there is a flagship, the flagship peer tube instance?
+
+200
+00:24:19,679 --> 00:24:25,469
+Or is there one that sort of caters to live hackers and has more of a live hacking community in it?
+
+201
+00:24:25,469 --> 00:24:30,329
+I'm I send that question out to the audience. You can either let me know in the chat.
+
+202
+00:24:30,329 --> 00:24:37,829
+I will happily investigate any peer tube instances that you suggest there or if you are watching this recording and and maybe know of an instance,
+
+203
+00:24:37,829 --> 00:24:42,929
+I should investigate. You can let me know in the form here to rate this episode. You don't even have to leave a rating, just make it all up.
+
+204
+00:24:42,929 --> 00:24:50,129
+But you could like put some information in there, or you can send me a message over Mastodon or Twitter or email me or something.
+
+205
+00:24:50,129 --> 00:25:02,599
+Just let me know what you think and and I'll check it out.
+
+206
+00:25:02,599 --> 00:25:07,649
+OK, so we've got our bill here, I actually just want to see if we have that same.
+
+207
+00:25:07,649 --> 00:25:17,189
+Oz, because I don't remember the same air, I don't remember that pause occurring whenever I first developed this test.
+
+208
+00:25:17,189 --> 00:25:24,569
+And so I wonder if that's new and related because this is about a test time out, right?
+
+209
+00:25:24,569 --> 00:25:43,939
+And those pauses, if they get if they stack up enough, that's where things could go wrong.
+
+210
+00:25:43,939 --> 00:25:57,139
+See, there is yeah, there is a pause there as well, OK, not related, not related or at least I don't think it's related.
+
+211
+00:25:57,139 --> 00:26:07,069
+So what I'd like to do, then we'll go back up to central. And what I want to do is follow these instructions to do a beta simulation.
+
+212
+00:26:07,069 --> 00:26:13,729
+But I also want to get that environment variable set so that we log stuff.
+
+213
+00:26:13,729 --> 00:26:17,119
+Let me see here Moore's log on.
+
+214
+00:26:17,119 --> 00:26:24,519
+Try that you. Try.
+
+215
+00:26:24,519 --> 00:26:35,049
+Enabling logging for tricep runs is exactly what I want you enable PR logging and tribe by hacking, build automation, Peida in in deaf environment.
+
+216
+00:26:35,049 --> 00:26:41,159
+Wow. OK.
+
+217
+00:26:41,159 --> 00:26:47,719
+Let's take a look at this file. Umm hmm.
+
+218
+00:26:47,719 --> 00:26:55,909
+This file doesn't exist anymore. What are you talking about is this, um?
+
+219
+00:26:55,909 --> 00:27:08,919
+This completely invalid now. Have environment.
+
+220
+00:27:08,919 --> 00:27:16,329
+No, this all looks like the wrong place, ref, test run, test run, tests, remote.
+
+221
+00:27:16,329 --> 00:27:29,249
+I mean, that kind of sounds right. Yeah, this might make more sense in here in set defaults.
+
+222
+00:27:29,249 --> 00:27:40,099
+OK, test run tests, remote. Test environment.
+
+223
+00:27:40,099 --> 00:28:02,019
+OK, so maybe this is where we'll. Put our change, so.
+
+224
+00:28:02,019 --> 00:28:08,509
+If, oh, if Mars logs, do they have like a Mars log?
+
+225
+00:28:08,509 --> 00:28:21,829
+No. Bill, browser environment, if the blog and browser environment, if there are Moore's logs and say where to put them on blog.
+
+226
+00:28:21,829 --> 00:28:34,159
+OK, well, what I want to do is say and set default Moore's log, then we're going to say cash to five.
+
+227
+00:28:34,159 --> 00:28:45,379
+We're going to set two cash to five. And so let me create a commit here.
+
+228
+00:28:45,379 --> 00:28:55,079
+Enable HP Cash to logging in automation by default.
+
+229
+00:28:55,079 --> 00:29:03,519
+OK, tests by default. Then why are these instructions?
+
+230
+00:29:03,519 --> 00:29:11,259
+We're going to run this, if not all jobs shall run to verify text for a test fix, append stage changes to the command.
+
+231
+00:29:11,259 --> 00:29:18,929
+OK, sounds good. Stage changes.
+
+232
+00:29:18,929 --> 00:29:24,879
+She commit. OK, so do that.
+
+233
+00:29:24,879 --> 00:29:34,619
+She commit beta early SIM and then select jobs with mock trade choose or no artifact.
+
+234
+00:29:34,619 --> 00:29:40,259
+So did this. Free to file, it did oh, look at all these changes that got generated.
+
+235
+00:29:40,259 --> 00:29:48,979
+OK, and then we'll go early data sim. Yes, that's fine.
+
+236
+00:29:48,979 --> 00:30:01,439
+And then we're going to do mock try chooser, no artifact, and then I'm able to do is I can pass in a directory.
+
+237
+00:30:01,439 --> 00:30:10,519
+Of tests to run. So I see some I see some traffic about.
+
+238
+00:30:10,519 --> 00:30:16,919
+Various options for fed diverse streaming, Jonathan Lindsey says, Have you looked at Odyssey dot com?
+
+239
+00:30:16,919 --> 00:30:21,199
+Well, let's take a look. I've never heard of this. Let's hope I'm not getting trapped.
+
+240
+00:30:21,199 --> 00:30:25,279
+I'm going to I'm going to open up a private browsing window off screen just
+
+241
+00:30:25,279 --> 00:30:32,419
+so I can take a look at this thing before I put it up in front of everyone. What is this?
+
+242
+00:30:32,419 --> 00:30:42,339
+OK. OK. What is Odyssey?
+
+243
+00:30:42,339 --> 00:30:53,659
+FAC. I want to know more about what we're looking at here.
+
+244
+00:30:53,659 --> 00:30:59,389
+Uh, community guidelines like what is this thing?
+
+245
+00:30:59,389 --> 00:31:12,909
+Declaration of indifference. As.
+
+246
+00:31:12,909 --> 00:31:24,259
+OK, so so maybe this is the right, maybe tack, what's on tech?
+
+247
+00:31:24,259 --> 00:31:36,019
+Uh, people playing games and stuff, people talking about hardware becoming a Linux power user.
+
+248
+00:31:36,019 --> 00:31:41,449
+OK, so maybe this is the right. Oh yeah, this is what I wanted, actually.
+
+249
+00:31:41,449 --> 00:31:48,289
+So these beta simulations, these failures that were being noticed, what platform were they on?
+
+250
+00:31:48,289 --> 00:32:00,369
+They were on. OS x Web render ship able.
+
+251
+00:32:00,369 --> 00:32:22,619
+So Mac OS X. Uh, monkey tat, oh, is there a Web render?
+
+252
+00:32:22,619 --> 00:32:26,759
+You know what, I'm not going to use chooser, I'm going to use fuzzy, fuzzy is better.
+
+253
+00:32:26,759 --> 00:32:31,679
+Yeah, says no task like that. We're going to do. Mark, try fuzzy.
+
+254
+00:32:31,679 --> 00:32:44,009
+No artifact. OK, so this this might be right, I wish I knew more about what the heck Odyssey is.
+
+255
+00:32:44,009 --> 00:32:52,289
+What is it? Odyssey is a new video site.
+
+256
+00:32:52,289 --> 00:33:01,169
+OK. Or I'll be our wire block down, no.
+
+257
+00:33:01,169 --> 00:33:14,839
+Um. Hmm.
+
+258
+00:33:14,839 --> 00:33:21,559
+Uh, okay.
+
+259
+00:33:21,559 --> 00:33:26,479
+Well, maybe maybe we'll look into it.
+
+260
+00:33:26,479 --> 00:33:30,619
+Danny Collins says that's always the issue with decentralized networks. What instances should you use?
+
+261
+00:33:30,619 --> 00:33:39,879
+Is this instance still going to be around one month, six months, one year?
+
+262
+00:33:39,879 --> 00:33:45,489
+Surfaces where the stuff for you example, one to watch is on YouTube, there's not much that need to join peer tube.
+
+263
+00:33:45,489 --> 00:33:50,619
+Yeah, and I'm not saying I'm going to move from YouTube to peer two, but I just mean, like, is there a place?
+
+264
+00:33:50,619 --> 00:34:00,319
+It makes sense for me to cross stream to like a particular peer tube instance because I agree like.
+
+265
+00:34:00,319 --> 00:34:06,949
+I think it makes sense to just have like a lot of options for people, and they can watch it on the platform that they care about.
+
+266
+00:34:06,949 --> 00:34:18,129
+All right. So once again it was Mac OS 10 15 shoppable Mac OS.
+
+267
+00:34:18,129 --> 00:34:32,269
+Chip bubble. How come she is not in here to any like the full set?
+
+268
+00:34:32,269 --> 00:34:47,369
+We need the full set in there. Yeah, for ship able, I want Test Mac OS X Ten 15, 64 ship able.
+
+269
+00:34:47,369 --> 00:34:53,699
+And then we'll get our logs. Now, what do we want to do after that because we're going to be waiting for logs for a while and that could take forever.
+
+270
+00:34:53,699 --> 00:34:56,339
+So the other thing I've been starting to do is like,
+
+271
+00:34:56,339 --> 00:35:03,749
+I've created this new folder of bugs I've noticed flyby that might be tasty for live hacking and you know,
+
+272
+00:35:03,749 --> 00:35:07,589
+something that's nice and small, but maybe we could just kind of take out.
+
+273
+00:35:07,589 --> 00:35:20,309
+And so I thought maybe we could look at this one bug six nine eight eight seven three.
+
+274
+00:35:20,309 --> 00:35:26,869
+And let me put the, uh, the bug.
+
+275
+00:35:26,869 --> 00:35:33,629
+Description and here the bug summary, So basically, we've got these like Zoom levels here inside of the menu,
+
+276
+00:35:33,629 --> 00:35:38,809
+zoom in, zoom out an actual size and when you are right now, I'm zoomed in to one hundred and thirty three percent.
+
+277
+00:35:38,809 --> 00:35:45,079
+If I go to actual size, actual size is still enabled, even though it doesn't do anything.
+
+278
+00:35:45,079 --> 00:35:57,139
+And so the request is to disable this menu item whenever we're actually at the actual size.
+
+279
+00:35:57,139 --> 00:36:05,629
+You know, excuse me, it makes a lot of sense, especially if, like you're maxed out in a particular area.
+
+280
+00:36:05,629 --> 00:36:11,209
+I wonder if it makes sense to also disable Zoom out when you can't zoom out anymore. That sort of thing.
+
+281
+00:36:11,209 --> 00:36:27,049
+OK. Before we continue maquilas chip bubble monkey test, yeah, this is what I wanted at monkey test ship Schipol QR.
+
+282
+00:36:27,049 --> 00:36:37,369
+Chrome fills a10s, I think the closest one is down here, it was 10 15, so I think it's this one Mac OS 10,
+
+283
+00:36:37,369 --> 00:36:47,779
+15 64 ship of AQR opt Moki test browser Chrome Fizz E.T.A. one Yeah, bc1.
+
+284
+00:36:47,779 --> 00:36:59,889
+Yeah, we'll run that one. Go.
+
+285
+00:36:59,889 --> 00:37:17,609
+We'll see how that goes. Am I have to do a bunch of triggers in order for it to to rear its head, but at least we can get it started.
+
+286
+00:37:17,609 --> 00:37:24,439
+And I can put a link in the bug. For the.
+
+287
+00:37:24,439 --> 00:37:29,269
+For the try push. So investigators can check it out.
+
+288
+00:37:29,269 --> 00:37:37,219
+Meanwhile, let's think a little bit about this bug, so the Zoom controls this where where is the source code for the Zoom controls here?
+
+289
+00:37:37,219 --> 00:37:41,899
+Well, let's see if we can find them. Find them zoom in. Zoom out actual size. Zoom text only.
+
+290
+00:37:41,899 --> 00:37:47,569
+So what I like to do, I'm kind of lazy. I'll just like, look for the strings.
+
+291
+00:37:47,569 --> 00:37:52,009
+And so there's these fluent strings menu bar that sounds promising.
+
+292
+00:37:52,009 --> 00:37:57,139
+The menu view full Zoom toggle edy for the string.
+
+293
+00:37:57,139 --> 00:38:02,419
+And so, but boom, here we go. We've got our menu items here.
+
+294
+00:38:02,419 --> 00:38:08,719
+Zoom in. Zoom out. Zoom. Reset and toggle Zoom.
+
+295
+00:38:08,719 --> 00:38:17,519
+And these are associated with these commands. So let's take a quick peek and see what implements full zoom reset.
+
+296
+00:38:17,519 --> 00:38:35,519
+Square. That command is here, we go on command, full Zoom reset, full Zoom reset, scaling Zoom.
+
+297
+00:38:35,519 --> 00:38:40,319
+And so there's this component called full Zoom.
+
+298
+00:38:40,319 --> 00:38:53,649
+Let's see if we can find it. Here it is. Is there information here about what Zoom, whether or not we're able to zoom further or not?
+
+299
+00:38:53,649 --> 00:39:04,049
+Patient change. Update menu.
+
+300
+00:39:04,049 --> 00:39:12,959
+Menu item, OK? Reduce in large.
+
+301
+00:39:12,959 --> 00:39:21,659
+We'll say zoo manager in a large change zoom by.
+
+302
+00:39:21,659 --> 00:39:29,349
+If a browser and reader mode sends a message to reader increase font size, it's OK, this is slightly different.
+
+303
+00:39:29,349 --> 00:39:35,439
+Behavior based on whether or not we're about reader or in PDF viewer.
+
+304
+00:39:35,439 --> 00:39:57,089
+Otherwise we use something called the zoo manager. So we've got different rules, depending on whether or not we're using a boat reader or PDF D.J.s.
+
+305
+00:39:57,089 --> 00:40:05,829
+But for the base case, we have something called the Zoom manager. So where is the zoo manager?
+
+306
+00:40:05,829 --> 00:40:15,199
+Does that thing? New manager from View Zoom overlay.
+
+307
+00:40:15,199 --> 00:40:25,639
+Zoo manager. For browser.
+
+308
+00:40:25,639 --> 00:40:34,939
+In large produce reset. OK.
+
+309
+00:40:34,939 --> 00:40:44,319
+These are the Zoom managers, Zoom values and Max.
+
+310
+00:40:44,319 --> 00:40:58,209
+Is Max percent, five hundred? Experts.
+
+311
+00:40:58,209 --> 00:41:07,749
+By default, on Android, it defaults to 400. Here it's five hundred everywhere, everywhere else is 500.
+
+312
+00:41:07,749 --> 00:41:14,769
+And then we. Divide by 100.
+
+313
+00:41:14,769 --> 00:41:20,579
+I see. Versus. 30 percent.
+
+314
+00:41:20,579 --> 00:41:27,109
+I see so that kind of roughly maps to this after you've done the division.
+
+315
+00:41:27,109 --> 00:41:37,379
+So, yeah, there is a Max and there is a men, and because we know what the Zoom level is.
+
+316
+00:41:37,379 --> 00:41:47,719
+We should, in theory, be able to disable the menu items if we're at the zoom level of one.
+
+317
+00:41:47,719 --> 00:41:57,189
+So I think we could we could probably work that out. Here's our try push URL, by the way, so we can post this in the bug.
+
+318
+00:41:57,189 --> 00:42:15,239
+Here's a try. Push doing a beta simulation. Just running the about home cash test directory with BHP cash logging enabled.
+
+319
+00:42:15,239 --> 00:42:31,019
+OK. So we're going to wait to hear back from that.
+
+320
+00:42:31,019 --> 00:42:38,069
+OK. So the enabling and disabling of stuff.
+
+321
+00:42:38,069 --> 00:42:45,619
+How does that work? To say there's like the disabled state on the control,
+
+322
+00:42:45,619 --> 00:42:53,029
+and that makes sense we want if we're going to set disabled, we're going to do it on the controls.
+
+323
+00:42:53,029 --> 00:42:58,329
+If you assume overlay control command.
+
+324
+00:42:58,329 --> 00:43:03,069
+Those are full Zoom and who defines this, this is under browser base.
+
+325
+00:43:03,069 --> 00:43:09,169
+And this is under browser sets, so the command layer is kind of like in here.
+
+326
+00:43:09,169 --> 00:43:17,209
+Or less? Who talks to this?
+
+327
+00:43:17,209 --> 00:43:25,189
+Customizable widgets, talks to it do command.
+
+328
+00:43:25,189 --> 00:43:35,589
+So I think what we kind of want to do. Take a look at how other disabling work.
+
+329
+00:43:35,589 --> 00:43:52,099
+Like the backwards and forwards commands. Basically, I think what we need to do is every time in a window, the zoom level is detected to have changed.
+
+330
+00:43:52,099 --> 00:43:59,929
+We need to revisit those controls the those commands, the zoom, reduce,
+
+331
+00:43:59,929 --> 00:44:09,079
+increase and reset and set them to the appropriate like either set remove disabled or add disabled.
+
+332
+00:44:09,079 --> 00:44:19,669
+Um, a large change zoom by set zoom sets the zoom level for.
+
+333
+00:44:19,669 --> 00:44:29,839
+Apply Zoom to PREF- change Zoom by.
+
+334
+00:44:29,839 --> 00:44:37,769
+All of these kind of go through Zoom manager.
+
+335
+00:44:37,769 --> 00:44:45,529
+And do we ever hear about whether or not the Zoom state changes?
+
+336
+00:44:45,529 --> 00:44:49,369
+No. Do you use up?
+
+337
+00:44:49,369 --> 00:45:02,589
+When is update menu called? That sounds relevant, full zoom.
+
+338
+00:45:02,589 --> 00:45:26,039
+Update menu. That makes a lot of sense, so basically, like any time you go here, here will update the menu.
+
+339
+00:45:26,039 --> 00:45:36,229
+So maybe that's what we should do instead. Update the menu. And what we can do is we can check to see, for example, if.
+
+340
+00:45:36,229 --> 00:45:48,779
+Let reset equal, let's let's just do one. Let's just do a check here or a real simple test, zoom reset.
+
+341
+00:45:48,779 --> 00:45:55,349
+Reset got disabled, equals Zoom manager Dot.
+
+342
+00:45:55,349 --> 00:46:07,629
+Uh, get full Zoom for browser or get Zoom for browser.
+
+343
+00:46:07,629 --> 00:46:14,929
+If you want to get the Zoom for the browser.
+
+344
+00:46:14,929 --> 00:46:37,809
+For South. For.
+
+345
+00:46:37,809 --> 00:46:48,969
+I think that's what's like the Zoom text only is basically what controls full Zoom, full Zoom toggle.
+
+346
+00:46:48,969 --> 00:47:03,839
+Right? So if you want to zoom everything or just the text. And so what we want to know is.
+
+347
+00:47:03,839 --> 00:47:10,439
+We just want to zoom, and if we're using full Zoom, then we'll get the full zoom value.
+
+348
+00:47:10,439 --> 00:47:18,079
+For text, Zoom only, then what?
+
+349
+00:47:18,079 --> 00:47:26,309
+2X soon, if there's a Zoom value, then we'll return the number.
+
+350
+00:47:26,309 --> 00:47:42,139
+OK. I think this is what we want. Zoom manager get Zoom for browser.
+
+351
+00:47:42,139 --> 00:47:52,299
+Maybe we'll just get get Zoom, like if I do Zoom manager Zoom.
+
+352
+00:47:52,299 --> 00:47:59,009
+If I change that. If I go over here.
+
+353
+00:47:59,009 --> 00:48:05,729
+Increase this. Point five. Over here.
+
+354
+00:48:05,729 --> 00:48:10,319
+Or maybe go to a different website here. One. OK, so that's what I want.
+
+355
+00:48:10,319 --> 00:48:16,169
+This is the value, just the Zoom getter. That seems fine.
+
+356
+00:48:16,169 --> 00:48:21,679
+Zoom manager does Zoom equal to one.
+
+357
+00:48:21,679 --> 00:48:33,419
+Sort of like, is it it sort of is it a. Just one is fine equal to one.
+
+358
+00:48:33,419 --> 00:48:54,349
+All right, let's see what that looks like. Hmm, mm hmm.
+
+359
+00:48:54,349 --> 00:49:33,549
+Mm hmm. All right.
+
+360
+00:49:33,549 --> 00:49:43,299
+Doo doo doo doo doo, what's taken so long?
+
+361
+00:49:43,299 --> 00:49:58,589
+While we're waiting for this, maybe there are some tests we can look at like this or anything that uses tries to open up this menu.
+
+362
+00:49:58,589 --> 00:50:05,309
+It's actually it's a difficult thing to do to simulate opening up the native menu.
+
+363
+00:50:05,309 --> 00:50:09,659
+We might not actually be able to run this test on Mac OS.
+
+364
+00:50:09,659 --> 00:50:14,099
+We might be able to run it on Linux and Windows, though.
+
+365
+00:50:14,099 --> 00:50:28,979
+Oh, what the. Oh, you know what? I've got this beat some stuff here, I'm going to go back to Central.
+
+366
+00:50:28,979 --> 00:50:43,439
+Mark Bill. So this builds B building builds.
+
+367
+00:50:43,439 --> 00:50:54,629
+Be building. So, I mean, the other thing we can do whenever we open this thing up is we can also disable the max value.
+
+368
+00:50:54,629 --> 00:51:09,869
+If the zoo manager, if the if the level is at max and the minimum one, if it's at minimum bet we can do all three.
+
+369
+00:51:09,869 --> 00:51:18,239
+Part of me wonders whether or not, like we should be doing it to the commands as well, like whenever we reach the minimum,
+
+370
+00:51:18,239 --> 00:51:29,849
+should this button become disabled, we reach the maximum, should this button become disabled?
+
+371
+00:51:29,849 --> 00:51:37,619
+And then there's other controls too. Like if you do customize toolbar, you can bring where the zoom controls.
+
+372
+00:51:37,619 --> 00:51:47,219
+Oh, you know what? I think I actually already have them in here. My toolbar should probably disable that button.
+
+373
+00:51:47,219 --> 00:52:00,249
+Disable the commands. So what we really need is something that.
+
+374
+00:52:00,249 --> 00:52:04,509
+Like when you change the tab. Do we do something?
+
+375
+00:52:04,509 --> 00:52:18,879
+Do we like? Notify the broadcast will Zoom so listeners can view PDFs, Zoom.
+
+376
+00:52:18,879 --> 00:52:39,539
+Update menu, because we want to update the commands. Yeah, when the location of a tab changes, whether or not it's a tab switch.
+
+377
+00:52:39,539 --> 00:52:49,089
+That's what we want to do, we want to. I think we want to call update.
+
+378
+00:52:49,089 --> 00:52:57,449
+Menu. Right? Like inside here.
+
+379
+00:52:57,449 --> 00:53:09,299
+Having been initially, they have received an allocation change last or a initialization or all pending async zoom accesses in the browser.
+
+380
+00:53:09,299 --> 00:53:19,509
+This is a tab switch. Was notified on location change.
+
+381
+00:53:19,509 --> 00:53:29,749
+Broadcast location news to the listeners can be notified when the Zoom levels on those pages change.
+
+382
+00:53:29,749 --> 00:53:36,889
+And then. Apply pressure to Zoom.
+
+383
+00:53:36,889 --> 00:53:47,369
+What if notify on location change actually should be when we update the menu?
+
+384
+00:53:47,369 --> 00:53:57,959
+And this should be like update commands. Tempting, tempting.
+
+385
+00:53:57,959 --> 00:54:06,929
+It would make sense to disable plus or minus when you reach Max and Min Metis, Metta Seaborn asks Do peer tube instances allow live streams?
+
+386
+00:54:06,929 --> 00:54:12,869
+I think so. Pure tube live streaming.
+
+387
+00:54:12,869 --> 00:54:16,679
+I think I saw something like that where you can, yeah,
+
+388
+00:54:16,679 --> 00:54:26,829
+publish a live peer to four version greater than V three, you can publish, you can you can do live streaming.
+
+389
+00:54:26,829 --> 00:54:39,489
+So, yeah, I don't know. By importing upload a video import with a torrent published Live Go Live is there like, yeah,
+
+390
+00:54:39,489 --> 00:54:44,799
+there'll be an art end point and then I can stream to that which, you know, that's that's easy.
+
+391
+00:54:44,799 --> 00:54:55,419
+I can do that. So the question goes back to like, OK, well, what instances of peer to make sense?
+
+392
+00:54:55,419 --> 00:54:59,589
+Like, I am a video maker.
+
+393
+00:54:59,589 --> 00:55:07,119
+I want to create an account. I want to do live streaming and I'm into, I guess, science and technology.
+
+394
+00:55:07,119 --> 00:55:13,659
+Maybe how to, um? English allowed video space.
+
+395
+00:55:13,659 --> 00:55:22,659
+My videos are pretty large, so at least 50 gigs. So like, these are the ones that he recommends crowd zone.
+
+396
+00:55:22,659 --> 00:55:28,179
+So net video server a z in pure tube videos from t.f.
+
+397
+00:55:28,179 --> 00:55:33,309
+It's a trade free video hosting platform for science, technology and nature videos.
+
+398
+00:55:33,309 --> 00:55:35,619
+Hard limit that might be good.
+
+399
+00:55:35,619 --> 00:55:47,799
+Paradigm Threat Conspiracy Repository That sounds sketchy Technics Paradise Diode Zone Focus on creativity in electronics.
+
+400
+00:55:47,799 --> 00:55:54,429
+I don't know. I don't know. Let me know what you think. Let me know what you think.
+
+401
+00:55:54,429 --> 00:56:08,409
+Uh, where are we here? Build still going. So what I'm going to do is I'm actually going to call this update commands.
+
+402
+00:56:08,409 --> 00:56:14,699
+And the place where we call full Zoom. Update menu.
+
+403
+00:56:14,699 --> 00:56:16,499
+We're going to get rid of that.
+
+404
+00:56:16,499 --> 00:56:25,709
+We don't need to call that only when opening, what we're going to do is we're going to do this every time the location changes.
+
+405
+00:56:25,709 --> 00:56:30,619
+So Browser MenuBar Bar Inc 160 browser menu.
+
+406
+00:56:30,619 --> 00:56:41,299
+Bar Inc, line 160. Update menu, so we don't need that anymore.
+
+407
+00:56:41,299 --> 00:56:57,309
+And. These commands, I think, are what we care about, not the actual.
+
+408
+00:56:57,309 --> 00:57:04,809
+Elements, because when you enable or disable a or command, anything that's using that command will also be enabled and disabled,
+
+409
+00:57:04,809 --> 00:57:10,059
+which is the nice part of the command, platform or command.
+
+410
+00:57:10,059 --> 00:57:22,609
+The command pattern rather. So we can get these commands so full zoom command, for example, as well.
+
+411
+00:57:22,609 --> 00:57:30,219
+We'll zoom and then we'll say, like full Zoom command checked.
+
+412
+00:57:30,219 --> 00:57:35,809
+Equals. Not zoo manager.
+
+413
+00:57:35,809 --> 00:57:45,189
+Use full Zoom. And then.
+
+414
+00:57:45,189 --> 00:57:54,119
+Reset command. Is. This one.
+
+415
+00:57:54,119 --> 00:58:03,779
+And then we can say that disabled is like that reset command and then what's the enlarge and reduce?
+
+416
+00:58:03,779 --> 00:58:08,729
+Maybe we can put these in the same order that they're listed inside the commands list that might make sense.
+
+417
+00:58:08,729 --> 00:58:13,459
+So reset and then toggle is after that.
+
+418
+00:58:13,459 --> 00:58:21,939
+Then before that. We'll have reduce.
+
+419
+00:58:21,939 --> 00:58:28,299
+Reduced command equals document get element by the.
+
+420
+00:58:28,299 --> 00:58:39,809
+And then we'll say, hey, reduce command disabled, equal Zoom managers, Zoom equals Zoom manager Dot Minh.
+
+421
+00:58:39,809 --> 00:58:52,579
+And then in large command is that what's called Zoom full zoom in large, full zoom and large.
+
+422
+00:58:52,579 --> 00:58:58,449
+Large command. If that's the Max.
+
+423
+00:58:58,449 --> 00:59:06,569
+OK. And then we will use.
+
+424
+00:59:06,569 --> 00:59:12,209
+Um, notify on location change.
+
+425
+00:59:12,209 --> 00:59:27,679
+Say, Uh. This update commands.
+
+426
+00:59:27,679 --> 00:59:35,149
+Does that make sense? Dispatch to me.
+
+427
+00:59:35,149 --> 00:59:39,809
+OK. Let's see what happens. Hmm.
+
+428
+00:59:39,809 --> 00:59:48,129
+Didn't you write too few equals, but I. Schools, oh, you're right, you're right.
+
+429
+00:59:48,129 --> 01:00:08,009
+Good call, Chris. Thank you. Classic error equals means assignment, folks.
+
+430
+01:00:08,009 --> 01:00:13,649
+Good catch across you saving me time. All right.
+
+431
+01:00:13,649 --> 01:00:28,229
+Zoom in and out. So that's not actually disabled.
+
+432
+01:00:28,229 --> 01:00:43,689
+So let's see what's going wrong here. Let's go to the debugger and say browser full Zoom update commands.
+
+433
+01:00:43,689 --> 01:00:50,999
+Are we entering here? Um, oh, you know what?
+
+434
+01:00:50,999 --> 01:00:58,319
+Probably not, because we want to update commands not only whenever we switch tabs,
+
+435
+01:00:58,319 --> 01:01:08,729
+but also if the Zoom level changes, so it's not just on switching tabs.
+
+436
+01:01:08,729 --> 01:01:29,409
+Um. If the Zoom level changes since the Zoom level page and given price, the content pressed or apply Zoom to press.
+
+437
+01:01:29,409 --> 01:01:53,459
+I pressed Zoom. Maybe that's a better place to to do updating the commands, not hang on those back.
+
+438
+01:01:53,459 --> 01:01:59,659
+Maybe. Applies him to press.
+
+439
+01:01:59,659 --> 01:02:15,119
+You write that preferences apply pressure to Zoom. Value.
+
+440
+01:02:15,119 --> 01:02:28,019
+So Zoom for browser. Token.
+
+441
+01:02:28,019 --> 01:02:34,949
+So super proud. Call back.
+
+442
+01:02:34,949 --> 01:02:54,129
+Who controls apply to Zoom? It's on location change.
+
+443
+01:02:54,129 --> 01:03:06,879
+So super browser. The start.
+
+444
+01:03:06,879 --> 01:03:22,999
+Date commands. Like, I presume, set Zoom for browsers not going to like fire, an event for some the fire, an event or something, right?
+
+445
+01:03:22,999 --> 01:03:31,269
+No. So do in two places.
+
+446
+01:03:31,269 --> 01:03:39,609
+Kind of unfortunate, and what this is for is for global Zoom should work independent of the site specific press.
+
+447
+01:03:39,609 --> 01:03:46,659
+So if we have globe have like some kind of global zoom value.
+
+448
+01:03:46,659 --> 01:04:04,709
+OK. Makes sense. Zoom level.
+
+449
+01:04:04,709 --> 01:04:14,089
+Still not, uh. We're not calling in here.
+
+450
+01:04:14,089 --> 01:04:22,259
+Did I forget to build, I probably forgot to build. Let's hear.
+
+451
+01:04:22,259 --> 01:04:33,709
+But maybe it's. What?
+
+452
+01:04:33,709 --> 01:04:42,469
+If I go to a normal website like here, OK, then we go here, then we might update the commands.
+
+453
+01:04:42,469 --> 01:04:49,829
+OK. So a whole new tab is kind of different.
+
+454
+01:04:49,829 --> 01:04:59,329
+Zoom in. Actual size.
+
+455
+01:04:59,329 --> 01:05:05,659
+Zoom in. No Zoom actual size.
+
+456
+01:05:05,659 --> 01:05:32,029
+So I don't think we've got the right spot. Also like update commands isn't doing the right thing, either.
+
+457
+01:05:32,029 --> 01:05:42,289
+Zoo manager equals one. So reset command.
+
+458
+01:05:42,289 --> 01:05:55,289
+I wonder if we have to actually set attribute disabled.
+
+459
+01:05:55,289 --> 01:06:04,859
+And if we have to, it's that old school. So it is OK, so there are a couple of problems here that we have to deal with.
+
+460
+01:06:04,859 --> 01:06:17,119
+Um. Update commands.
+
+461
+01:06:17,119 --> 01:06:31,169
+Toggle attribute disabled. Uh, toggle attribute.
+
+462
+01:06:31,169 --> 01:06:37,939
+Disabled. And then this one as well.
+
+463
+01:06:37,939 --> 01:06:49,159
+Title X should be disabled. And just for.
+
+464
+01:06:49,159 --> 01:06:53,809
+Good measure. Consistency, sake.
+
+465
+01:06:53,809 --> 01:07:00,009
+Now I'll bet you. This will work better.
+
+466
+01:07:00,009 --> 01:07:12,539
+It's not going to get fired at the right time, but we can solve that next.
+
+467
+01:07:12,539 --> 01:07:32,029
+So let's start with the. The default case, which is actual size that should be disabled.
+
+468
+01:07:32,029 --> 01:07:43,939
+So like, what's going wrong there? Reduce and large reset command Zoom and your Zoom is one.
+
+469
+01:07:43,939 --> 01:08:06,439
+So reset command. Oh, it needs to have disabled equals true or so, just toggle attributes not going to do is set attribute disabled.
+
+470
+01:08:06,439 --> 01:08:12,879
+Um. Hang on.
+
+471
+01:08:12,879 --> 01:08:31,289
+Toggle tribute. Main force.
+
+472
+01:08:31,289 --> 01:08:39,859
+You just said to empty string. It's no good.
+
+473
+01:08:39,859 --> 01:08:52,679
+Um. This will coerce to truth be, I think.
+
+474
+01:08:52,679 --> 01:09:10,029
+Let's see what happens now. Some of this is pretty old school, old school, zul old schools or.
+
+475
+01:09:10,029 --> 01:09:17,509
+So let's take a look at what it coerced to reset command.
+
+476
+01:09:17,509 --> 01:09:23,179
+Said Attribute disabled. Now it's still the empty string.
+
+477
+01:09:23,179 --> 01:09:31,559
+So that's no good. Um, what is browser dogs used for?
+
+478
+01:09:31,559 --> 01:09:41,239
+Update back. Ford commands. Yeah, we have to do it this way, so to attribute disabled.
+
+479
+01:09:41,239 --> 01:09:59,389
+When you do set actually disabled, true like that. If Zoom is Zoom in, then.
+
+480
+01:09:59,389 --> 01:10:15,349
+I'll. Remove the attribute. Um.
+
+481
+01:10:15,349 --> 01:10:25,619
+If this. And in large command said attribute to Sable.
+
+482
+01:10:25,619 --> 01:10:33,609
+True. Else you may have attribute.
+
+483
+01:10:33,609 --> 01:10:43,479
+Very old school. I think we can't copy paste and hopefully don't introduce copy paste errors.
+
+484
+01:10:43,479 --> 01:11:05,669
+Zoom equals one. Then, uh, reset command.
+
+485
+01:11:05,669 --> 01:11:17,579
+Checked, you know? If.
+
+486
+01:11:17,579 --> 01:11:23,209
+Not that painful Zoom command set attribute.
+
+487
+01:11:23,209 --> 01:11:29,809
+Check. True. Else full zoom.
+
+488
+01:11:29,809 --> 01:11:41,489
+Mande move attributes. They're going to be happy with this.
+
+489
+01:11:41,489 --> 01:11:59,949
+It's a little JavaScript humor for you. Hmm, hmm, hmm, hmm, hmm, hmm, hmm, hmm.
+
+490
+01:11:59,949 --> 01:12:05,149
+How's our tribal doing? Oh, it's going.
+
+491
+01:12:05,149 --> 01:12:13,889
+All right. Update commands.
+
+492
+01:12:13,889 --> 01:12:20,979
+Good disabled now, zoom in. Update commands again.
+
+493
+01:12:20,979 --> 01:12:29,149
+Good. Now Zoom in all the way. And update commands again.
+
+494
+01:12:29,149 --> 01:12:35,329
+Yeah. And now, Zoom, if we look at some of the other buttons, this one is now disabled.
+
+495
+01:12:35,329 --> 01:12:43,419
+And what about the other control websites and.
+
+496
+01:12:43,419 --> 01:12:49,479
+Let's put these in here. Hey, disabled.
+
+497
+01:12:49,479 --> 01:12:58,909
+Now let's reset. Update commands. Good.
+
+498
+01:12:58,909 --> 01:13:11,129
+Zoom out. Update commands now we might not want this label to ever look disabled, this one to look disabled whenever.
+
+499
+01:13:11,129 --> 01:13:24,269
+You're at the default state because that's kind of like a I don't know if that makes sense to have it look disabled.
+
+500
+01:13:24,269 --> 01:13:36,999
+Because it's kind of it's not just the reset button, it's also sort of a status indicator.
+
+501
+01:13:36,999 --> 01:13:45,309
+But all right, we can we can deal with that in a second, what I want to know now is what was the best time to call?
+
+502
+01:13:45,309 --> 01:13:55,889
+Obey commands. So does it apply? Pressed to Zoom.
+
+503
+01:13:55,889 --> 01:14:04,549
+And. Nope. Is it?
+
+504
+01:14:04,549 --> 01:14:18,309
+Uh, set Zoom. Nope.
+
+505
+01:14:18,309 --> 01:14:25,649
+Uh, is it change Zoom by? Nope.
+
+506
+01:14:25,649 --> 01:14:36,759
+In large, I'll bet you it's in large, yet now obviously, what I want is a.
+
+507
+01:14:36,759 --> 01:14:46,319
+A common place, I don't want to have to like, sprinkle or sprinkle around update commands everywhere, so like, let's follow this through.
+
+508
+01:14:46,319 --> 01:15:01,559
+So we're going to zoom in large ignore pending Zoom access, and we say apply Zoom to PREF- and then we.
+
+509
+01:15:01,559 --> 01:15:14,139
+We write. Save the Zoom level a page, the current browse the content prep store.
+
+510
+01:15:14,139 --> 01:15:57,519
+I think that's when we'll want to update the commands. Reduce, ignore petting zoo MAXs, enlarge, reduce.
+
+511
+01:15:57,519 --> 01:16:09,389
+OK. And then go to places, please Zoom to press.
+
+512
+01:16:09,389 --> 01:16:18,769
+Update commands. And whenever we change the tabs.
+
+513
+01:16:18,769 --> 01:16:35,239
+Um. Both.
+
+514
+01:16:35,239 --> 01:16:52,019
+All right. Let's reload. Let's see what happens. Uh, get rid of our point, OK?
+
+515
+01:16:52,019 --> 01:16:58,959
+Makes sense. In actual size.
+
+516
+01:16:58,959 --> 01:17:20,629
+Why is an actual size disabled? Now it's disabled because I think resetting doesn't go through that one of the code paths, whereas reset.
+
+517
+01:17:20,629 --> 01:17:28,949
+It's here so like. But.
+
+518
+01:17:28,949 --> 01:17:36,329
+What a mess. So get browser token, then we'll remove the pref.
+
+519
+01:17:36,329 --> 01:17:57,839
+OK, so that's another place where we're going to want to update the commands. If we remove the PREF.
+
+520
+01:17:57,839 --> 01:18:09,409
+All right. What's nice about this is that I think I can test this with by just like looking at the command state.
+
+521
+01:18:09,409 --> 01:18:32,409
+Why isn't that disabled now? Reset. Well.
+
+522
+01:18:32,409 --> 01:18:43,239
+It is the Zoom level. Too early.
+
+523
+01:18:43,239 --> 01:18:57,069
+Remove Pref. What if we have to do it here, then?
+
+524
+01:18:57,069 --> 01:19:22,509
+Handle completion. Otherwise, wait until.
+
+525
+01:19:22,509 --> 01:19:48,409
+OK. Reload. Makes sense.
+
+526
+01:19:48,409 --> 01:19:54,429
+OK. Uh, uh.
+
+527
+01:19:54,429 --> 01:20:12,259
+Uh. All the way in. I mean, it's done.
+
+528
+01:20:12,259 --> 01:20:22,179
+The reset is underway and. It's done Zoom text only.
+
+529
+01:20:22,179 --> 01:20:41,009
+It's checked. Oh, how do I disable Zoom text only?
+
+530
+01:20:41,009 --> 01:20:48,269
+Hmm. Zoom text only.
+
+531
+01:20:48,269 --> 01:20:53,939
+Like, I'm pretty sure if I do that here it goes away.
+
+532
+01:20:53,939 --> 01:21:11,729
+Yes. So Zoom text only, how does that work? Call command full Zoom toggle.
+
+533
+01:21:11,729 --> 01:21:42,439
+We call zoo manager toggle Zoom. So.
+
+534
+01:21:42,439 --> 01:21:50,379
+You know what? This is all kind of sloppy.
+
+535
+01:21:50,379 --> 01:21:59,589
+What I think I want to do. What might be a better architecture than like kind of willy nilly calling update commands
+
+536
+01:21:59,589 --> 01:22:14,929
+from in here is firing an event from here on the browser whenever the Zoom level changes.
+
+537
+01:22:14,929 --> 01:22:26,209
+And then updating the commands. Yeah, basically, the orcas, what you're saying.
+
+538
+01:22:26,209 --> 01:22:34,789
+I don't like that, I'm having to kind of sprinkle around the update commands inside here, it seems kind of sloppy.
+
+539
+01:22:34,789 --> 01:22:40,839
+Now the thing is, the scoping is kind of different views. Zoom Zoom overlay is a tool kit utilities.
+
+540
+01:22:40,839 --> 01:22:50,479
+So this is going to be used by Android. It's going to be used by, um, it's going to be used by Thunderbird, it's going to be used by a bunch of stuff.
+
+541
+01:22:50,479 --> 01:22:55,639
+And so I have to make sure and browser full Zoom, the name kind of implies browser Dash.
+
+542
+01:22:55,639 --> 01:23:00,469
+And because of where it's located under the browser folder, this is a Firefox specific file.
+
+543
+01:23:00,469 --> 01:23:06,559
+So I have to do what. Like things over here need to be agnostic to the application that's running it.
+
+544
+01:23:06,559 --> 01:23:11,719
+So firing an event is sort of like a a simple way of getting around this.
+
+545
+01:23:11,719 --> 01:23:16,399
+So we like omit an event that Thunderbird and Android can ignore.
+
+546
+01:23:16,399 --> 01:23:20,749
+And then Firefox can listen for it and use that to update the commands.
+
+547
+01:23:20,749 --> 01:23:36,639
+So let's see if there's existing events that we could sort of piggyback off of Zoom.
+
+548
+01:23:36,639 --> 01:23:52,499
+A vet. I don't really.
+
+549
+01:23:52,499 --> 01:24:14,849
+So what I'll do is we can. All dispatch a new custom event.
+
+550
+01:24:14,849 --> 01:24:22,119
+Fan equals new custom event. Zoom level change.
+
+551
+01:24:22,119 --> 01:24:36,769
+And we'll set the detail to be the value. And it should a bubble probably doesn't need to bubble.
+
+552
+01:24:36,769 --> 01:24:47,369
+And then we'll dispatch it on the browser. But is we might want this to bubble.
+
+553
+01:24:47,369 --> 01:24:56,999
+She browsers have found. Browser.
+
+554
+01:24:56,999 --> 01:25:04,009
+So this might be a cheap browser, it might not be.
+
+555
+01:25:04,009 --> 01:25:11,579
+Yeah, we want this to bubble. Bubbles true.
+
+556
+01:25:11,579 --> 01:25:19,609
+Um. Dispatch event.
+
+557
+01:25:19,609 --> 01:25:27,549
+Uh, Zoom level change of.
+
+558
+01:25:27,549 --> 01:25:37,779
+And then over in browser, full Zoom.
+
+559
+01:25:37,779 --> 01:25:43,749
+Just this thing, innit? Yeah. G browser oh, do Zoom in large by 10 do Zoom reduced by 10.
+
+560
+01:25:43,749 --> 01:25:52,439
+We already have some events browser do Zoom. Do Zoom.
+
+561
+01:25:52,439 --> 01:26:00,029
+Who dispatches these? Dispatch on mouse wheel, oh, that's interesting.
+
+562
+01:26:00,029 --> 01:26:08,769
+OK, well, what we're going to say is gee browser, add event listener.
+
+563
+01:26:08,769 --> 01:26:23,319
+Zoom level change. And is there a handle of that?
+
+564
+01:26:23,319 --> 01:26:30,919
+Case Zoom level change this update commands.
+
+565
+01:26:30,919 --> 01:26:43,449
+Then maybe what we'll do is we'll pass in the event detail. Update commands.
+
+566
+01:26:43,449 --> 01:27:06,499
+Based on this Zoom level. Let's see what that's like.
+
+567
+01:27:06,499 --> 01:27:14,729
+OK, so immediately, not good enough, because something.
+
+568
+01:27:14,729 --> 01:27:25,329
+Something's not happening, something is not right. Our our.
+
+569
+01:27:25,329 --> 01:27:29,079
+I think I need to build again. I think we've got like cached artifacts here.
+
+570
+01:27:29,079 --> 01:27:34,029
+Mark build faster. I saw a leftover.
+
+571
+01:27:34,029 --> 01:27:38,619
+Instances of this build update commands. Oh yeah, we did have them.
+
+572
+01:27:38,619 --> 01:27:44,149
+OK, we need to get rid of these. Get rid of that. Rid of that.
+
+573
+01:27:44,149 --> 01:27:50,969
+Here are the best change. No, we're not changing it, we just get rid of it.
+
+574
+01:27:50,969 --> 01:28:00,409
+Take commands. Get rid of this. Get rid of this.
+
+575
+01:28:00,409 --> 01:28:08,329
+So many instances of upbeat commands. Much cleaner, I agree.
+
+576
+01:28:08,329 --> 01:28:15,079
+Chris. OK.
+
+577
+01:28:15,079 --> 01:28:22,369
+Let's take a look and see how this works. See if this is better.
+
+578
+01:28:22,369 --> 01:28:30,289
+Right, once refactor, improve, I mean, think about tests, hey, all right now, the zoom levels.
+
+579
+01:28:30,289 --> 01:28:38,599
+Hey, hey. All right. Hey, that's looking good.
+
+580
+01:28:38,599 --> 01:28:51,949
+Yeah, that's what I wanted. That looks right.
+
+581
+01:28:51,949 --> 01:29:04,339
+Cool, cool, cool, cool. So, um. Think what I want to do.
+
+582
+01:29:04,339 --> 01:29:18,379
+Um, so, um.
+
+583
+01:29:18,379 --> 01:29:31,969
+Something just occurred to me, which is, um, I mean, the value inside of here is changing dynamically at the exact right times.
+
+584
+01:29:31,969 --> 01:29:35,929
+That we would want to update the command, so what powers that,
+
+585
+01:29:35,929 --> 01:29:48,159
+what powers that value Zoom reset the Zoom reset, not the menu item, it would be like the toolbar button.
+
+586
+01:29:48,159 --> 01:29:59,039
+The Zoom. Reset command.
+
+587
+01:29:59,039 --> 01:30:05,559
+You know what changes this is this value.
+
+588
+01:30:05,559 --> 01:30:16,659
+This is value, the Zoom. We have something called Zoom UI Dot Jassem update zoom controls.
+
+589
+01:30:16,659 --> 01:30:21,969
+What on Zoom, change on Zoom?
+
+590
+01:30:21,969 --> 01:30:26,679
+Full. We already had it. Well, we already had events.
+
+591
+01:30:26,679 --> 01:30:36,489
+Bah bah bah bah bah bah bah. Oh. Turns out we are reinventing the wheel.
+
+592
+01:30:36,489 --> 01:30:45,109
+So put that away. Um.
+
+593
+01:30:45,109 --> 01:30:59,009
+Zoom UI, which is a module, we have these events, text, zoom change and that calls on Zoom change.
+
+594
+01:30:59,009 --> 01:31:21,619
+Which is then eventually calls into update Zoom UI. Charles reset button.
+
+595
+01:31:21,619 --> 01:31:35,869
+Yeah, this is where we want to call it. So update commands.
+
+596
+01:31:35,869 --> 01:31:50,469
+So it's full Zoom. Sumi, why?
+
+597
+01:31:50,469 --> 01:32:07,669
+Full Zoom. Update commands and we want to pass and the Zoom level.
+
+598
+01:32:07,669 --> 01:32:30,259
+Simple fact. And full Zoom is going to be something that's actually on the window itself.
+
+599
+01:32:30,259 --> 01:32:42,019
+Window dot, full zoom. So many zooms.
+
+600
+01:32:42,019 --> 01:32:54,759
+OK, let's try that now. Don't want to reinvent the wheel.
+
+601
+01:32:54,759 --> 01:32:59,499
+And then if this works, I'm going to probably call the stream here, maybe next week.
+
+602
+01:32:59,499 --> 01:33:09,279
+I'm not in a rush to land this next week. Maybe we can work on tests for this thing and get it up for review.
+
+603
+01:33:09,279 --> 01:33:19,599
+Yes, this works nicely. And we also need to address the issue where, like this is styled kind of hard to read, like that's very difficult to read.
+
+604
+01:33:19,599 --> 01:33:30,729
+We probably don't want to show the text in the disabled state just for the the Zoom control read out here.
+
+605
+01:33:30,729 --> 01:33:38,059
+But yeah, this this is going to do it, I think. Feeling pretty good.
+
+606
+01:33:38,059 --> 01:33:46,939
+All right. Let's call it there. I'll create a commit.
+
+607
+01:33:46,939 --> 01:33:54,629
+What was the bug number here? So what else do?
+
+608
+01:33:54,629 --> 01:34:00,719
+Text only Zoom still needs to be tested, that's true. I didn't really do much testing there.
+
+609
+01:34:00,719 --> 01:34:13,039
+You know, take this and. Text only.
+
+610
+01:34:13,039 --> 01:34:21,999
+Bup bup bup bup bup bup bup bup bup bup bup bup bup bup bup bup bup bup bup.
+
+611
+01:34:21,999 --> 01:34:34,149
+Yeah, you're right, I didn't fix that part, so I'm going to write that down, so underactive bugs, let's create a new bug.
+
+612
+01:34:34,149 --> 01:34:42,679
+We're going to work on that next week. So to Dos.
+
+613
+01:34:42,679 --> 01:34:49,649
+Um, actually, do you like this fixed the lowest call?
+
+614
+01:34:49,649 --> 01:34:58,889
+Zoom text only. Toggle right tests.
+
+615
+01:34:58,889 --> 01:35:03,659
+Post for review, that's what we'll do next week. All right.
+
+616
+01:35:03,659 --> 01:35:17,499
+Let's create a work in progress, commit. Oh, yeah, we can we can get rid of this, too inside of full zoom.
+
+617
+01:35:17,499 --> 01:35:32,869
+What else Zoom level change? Get out of here. And what else need that?
+
+618
+01:35:32,869 --> 01:35:42,979
+Would change this back. Was a line notified on location change.
+
+619
+01:35:42,979 --> 01:35:50,559
+Here, you know, put that there. And.
+
+620
+01:35:50,559 --> 01:36:07,019
+That looks OK. OK, so commit, but. This update Zoom commands when changing Zoom level.
+
+621
+01:36:07,019 --> 01:36:22,079
+And this is a work in progress. So I'll push this up as a work in progress patch.
+
+622
+01:36:22,079 --> 01:36:27,379
+Mas fab submit tip single.
+
+623
+01:36:27,379 --> 01:36:32,159
+Whip.
+
+624
+01:36:32,159 --> 01:36:40,229
+And we'll call it there, hey, thank you so much for watching episode two hundred and eighty eight of the joy of coding, I hope that was interesting.
+
+625
+01:36:40,229 --> 01:36:45,119
+We didn't get to solve this, but we were able to sort of get the the tribe push going.
+
+626
+01:36:45,119 --> 01:36:48,359
+So if you're curious about what was going on there, follow along.
+
+627
+01:36:48,359 --> 01:36:56,429
+The builds are still building, so we'll probably have information hopefully later today, maybe on what's going wrong with that test.
+
+628
+01:36:56,429 --> 01:37:01,469
+And then we were able to sort of knock this one out more or less. Well, we'll finish that off next week.
+
+629
+01:37:01,469 --> 01:37:08,639
+That should be pretty straightforward. And let me know about where, if anywhere, I should maybe be live streaming in the Festivus.
+
+630
+01:37:08,639 --> 01:37:12,299
+You know, I repeat the stream to air Mozilla to YouTube, to Twitch.
+
+631
+01:37:12,299 --> 01:37:18,389
+Is there another one that I should repeat to a Festivus instance of peer tube or something?
+
+632
+01:37:18,389 --> 01:37:27,299
+Preferably nothing that is like super sketchy. So please don't send me sketchy requests or sketchy end points.
+
+633
+01:37:27,299 --> 01:37:31,449
+Let me know. You can let me know by saying, you know, drop me a line and rate this episode.
+
+634
+01:37:31,449 --> 01:37:37,289
+You can also ask me questions, et cetera, et cetera. OK. Thanks again for watching episode two hundred eighty eight of the joy of coding.
+
+635
+01:37:37,289 --> 01:37:42,959
+Have yourselves a great week, everybody. Uh, and I will see you next week.
+
+636
+01:37:42,959 --> 01:37:48,069
+Take care. Bye bye. The joy.
+
+637
+01:37:48,069 --> 01:37:55,818
+Oh, they see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

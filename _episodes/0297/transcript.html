@@ -1,0 +1,3385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 297 - August 17, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 297 - August 17, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6d15ae48-5a9f-49d1-834c-aed8015557e8</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6d15ae48-5a9f-49d1-834c-aed8015557e8">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,714 --> 00:00:09,254
+Welcome. Through the joy of color coding.
+
+2
+00:00:09,944 --> 00:00:14,314
+Hello and welcome to Episode 297 of The Joy of Coding.
+
+3
+00:00:14,324 --> 00:00:18,643
+My name is Mike Connelly. It's so good to have you here. We're going to be hacking on Firefox stuff.
+
+4
+00:00:18,644 --> 00:00:26,053
+We're going to be doing things on windows with threads and talking to Windows APIs and a background thread.
+
+5
+00:00:26,054 --> 00:00:34,254
+I'm I'm excited, I'm scared. Who knows what's going to happen trying to do com stuff com com not scale.
+
+6
+00:00:34,314 --> 00:00:40,124
+I'm trying to do com stuff. Talking to the component object model inside of windows off of the main thread.
+
+7
+00:00:40,854 --> 00:00:43,934
+I'm sure it's going to work fine. I'm sure it's going to be great.
+
+8
+00:00:44,204 --> 00:00:47,684
+We're probably going be doing like C++ promise stuff that's going to work fine.
+
+9
+00:00:48,074 --> 00:00:53,444
+It's going to be a good time. Let's get started. So here's the agenda.
+
+10
+00:00:53,714 --> 00:00:57,373
+A reminder, if you've never seen the stream before, if you join me for the first time, it's so good to have you here.
+
+11
+00:00:57,374 --> 00:01:00,884
+And no plan survives breakfast. I kind of know what I want to do today.
+
+12
+00:01:00,884 --> 00:01:08,533
+I know I want to work on like this. Windows jump with stuff and move things in the background thread, but things might go horribly wrong.
+
+13
+00:01:08,534 --> 00:01:12,764
+You know, I haven't prepared any of this code in advance. I haven't done a whole lot of pre-planning.
+
+14
+00:01:12,764 --> 00:01:15,943
+So we might get sideline rabbit hole. You're going to see me struggle.
+
+15
+00:01:15,944 --> 00:01:22,364
+That's okay. That's all part of the game. And, you know, if things go sideways, just we'll roll with it.
+
+16
+00:01:22,364 --> 00:01:25,964
+We'll just deal with it. If my stream just falls over, all of a sudden we'll just roll with it.
+
+17
+00:01:26,894 --> 00:01:31,034
+So that's the first thing. The second thing is that the agenda that we're looking at is available to you.
+
+18
+00:01:31,244 --> 00:01:36,554
+If you're watching this on air Mozilla, I do check out the video details section where I've updated the link.
+
+19
+00:01:37,304 --> 00:01:43,064
+If you're on YouTube, check out the video description. Same with Diode Dot Zone, check out the video description.
+
+20
+00:01:43,334 --> 00:01:50,084
+And for the folks who are on Twitch, let me just drop that into the Twitch chat agenda.
+
+21
+00:01:51,584 --> 00:01:57,373
+Episode 297. I hope. I hope you can see that. I saw that the joy of coding Bridgeport saw it.
+
+22
+00:01:57,374 --> 00:02:03,703
+So hopefully that got piped through to the twitch chat. Let me know if if you can't see it somehow.
+
+23
+00:02:03,704 --> 00:02:09,224
+I don't know how you would actually. Because if I if you can't see it, it probably means that the the bridge is broken.
+
+24
+00:02:09,614 --> 00:02:13,364
+So if I don't see any traffic inside of the twitch chat in a couple of seconds,
+
+25
+00:02:13,364 --> 00:02:16,934
+I'll assume everything's broken and then we'll do our best to try and fix it.
+
+26
+00:02:17,924 --> 00:02:21,314
+Okay, let's get started. The first thing I want to.
+
+27
+00:02:22,004 --> 00:02:26,044
+To. Oh, yep. I see some traffic from across.
+
+28
+00:02:26,054 --> 00:02:29,203
+Great. Thank you. So that bridge is working.
+
+29
+00:02:29,204 --> 00:02:34,034
+I want to briefly highlight something that you may or may not have seen traffic about.
+
+30
+00:02:34,544 --> 00:02:40,004
+If you've been like if you follow me on Twitter or anything or you follow the Firefox account on Twitter,
+
+31
+00:02:40,004 --> 00:02:45,163
+there is this thing, there's this website called connect dot Mozilla dot org.
+
+32
+00:02:45,164 --> 00:02:50,653
+The link for which is in the agenda here, Mozilla Connect is where you go.
+
+33
+00:02:50,654 --> 00:02:57,553
+This isn't a support place like I know that it kind of looks like you can like ask questions about like your bugs or something.
+
+34
+00:02:57,554 --> 00:03:07,304
+This is not a support website. This is a website for proposing ideas for how to improve Firefox or change Firefox or,
+
+35
+00:03:07,634 --> 00:03:10,994
+you know, set the direction for different products, not just Firefox.
+
+36
+00:03:10,994 --> 00:03:16,453
+I think I've seen some Thunderbird stuff in here, but for the VPN as well, this is where you can go, this is where you should go.
+
+37
+00:03:16,454 --> 00:03:26,984
+If you've got an idea, an enhancement request, maybe things that you know, you've seen something occur and you're like,
+
+38
+00:03:27,524 --> 00:03:31,694
+This would be better if it was more like this, more like X, more like Y, etc.,
+
+39
+00:03:31,694 --> 00:03:36,944
+etc. This is where you can go and talk and discuss with not just engineering.
+
+40
+00:03:36,944 --> 00:03:43,214
+Because if you'd previously done that in Bugzilla, you'd mainly be talking with engineering inside of connect out mozilla dot org.
+
+41
+00:03:43,394 --> 00:03:49,064
+You have a higher probability of speaking with product managers, product people,
+
+42
+00:03:49,214 --> 00:03:55,933
+and these are the people who ultimately make final calls on what goes on after feedback from engineering and user experience,
+
+43
+00:03:55,934 --> 00:04:04,364
+etc. They're the ones who set the schedule. And so this is your main interface for talking with the product team and they will interact with you here.
+
+44
+00:04:04,364 --> 00:04:08,384
+They will lead discussions. Here are a great example.
+
+45
+00:04:08,384 --> 00:04:11,773
+A recent example is some changes to the picture in picture feature.
+
+46
+00:04:11,774 --> 00:04:15,404
+One of my favorite features. You may have seen me work on it during the stream.
+
+47
+00:04:16,424 --> 00:04:22,693
+There was some recent feedback on various sites that we should supply site specific wrappers for to make captions,
+
+48
+00:04:22,694 --> 00:04:28,304
+support, work, and that was all sort of driven I think here within connect out Mozilla talks.
+
+49
+00:04:28,304 --> 00:04:35,664
+So I highly recommend going here if you've got ideas or you have things that you want to suggest, connect out Mozilla Dot or create a free account.
+
+50
+00:04:35,784 --> 00:04:42,433
+Then you can join some discussions and you can submit ideas and whatnot and like the idea is it can be like,
+
+51
+00:04:42,434 --> 00:04:45,794
+hey, like this looks like a random set of trending ideas.
+
+52
+00:04:46,844 --> 00:04:52,243
+This one's interesting because we kind of already have this inside of reader mode, this read aloud feature.
+
+53
+00:04:52,244 --> 00:04:55,964
+This was submitted like I could actually maybe respond to this right now.
+
+54
+00:04:57,884 --> 00:05:02,654
+Please consider we two sites as well as in PDF files like Microsoft Edge.
+
+55
+00:05:02,834 --> 00:05:06,194
+It's a good browser. I go to Edge whenever I want to stay for my exams. Read aloud.
+
+56
+00:05:06,734 --> 00:05:10,783
+Firefox also has read a lot that we have to switch to reader view and then click to activate,
+
+57
+00:05:10,784 --> 00:05:14,264
+read aloud and to stop we have to click on the same, which is very annoying.
+
+58
+00:05:14,594 --> 00:05:18,924
+Instead, messages like this is this is a very interesting idea, very hard.
+
+59
+00:05:19,244 --> 00:05:25,244
+Look at that how it is. I love you Mozilla Firefox nightly it's such a what what a great what a great message.
+
+60
+00:05:25,544 --> 00:05:32,714
+So this is an interesting idea. Should we make it possible for instead of having to enter reader mode because not every website is readable,
+
+61
+00:05:32,984 --> 00:05:38,683
+but maybe we can have some kind of tool that makes it easier to read out what's on the page.
+
+62
+00:05:38,684 --> 00:05:44,234
+Kind of like a screen reader, but more about the text as opposed to the like the DOM and stuff.
+
+63
+00:05:44,414 --> 00:05:51,793
+That's interesting. So you can submit your own idea, you can participate in discussions, you can, you know, vote up and down ideas.
+
+64
+00:05:51,794 --> 00:05:55,514
+I think it's only voting up. I don't think you can vote down, but you can vote up ideas.
+
+65
+00:05:55,514 --> 00:05:58,844
+If you've got ideas that you see in here that you like sometimes can open up a pop.
+
+66
+00:05:59,954 --> 00:06:05,204
+And so that's that's my pitch. Go to Mozilla connect dot Mozilla dot org.
+
+67
+00:06:05,504 --> 00:06:09,433
+And this is how you can if if you don't want to write patches,
+
+68
+00:06:09,434 --> 00:06:15,554
+maybe you don't have time or you don't have the skill set or you don't have the, the desire to write patches.
+
+69
+00:06:15,734 --> 00:06:20,084
+Then another way you can contribute to the project is by submitting your ideas.
+
+70
+00:06:20,084 --> 00:06:22,814
+And I'm sure you've got them. I'm sure you've got them.
+
+71
+00:06:23,144 --> 00:06:29,234
+And you might find other people have the same idea and you can like help mold them in this in this system.
+
+72
+00:06:29,234 --> 00:06:33,224
+Here connect comes. All right, all right. That's my pitch. All right.
+
+73
+00:06:33,494 --> 00:06:38,534
+So windows jump list, if you recall last episode that was back in August 3rd.
+
+74
+00:06:39,434 --> 00:06:48,734
+So a couple of weeks back, we were trying to make you know, we were working on this bug about private browsing, like permanent private browsing.
+
+75
+00:06:48,734 --> 00:06:50,594
+So there was like user interface confusion.
+
+76
+00:06:51,074 --> 00:06:59,893
+And one of the things we ran into is the fact that we've got this like very lazy mechanism for setting what shows up in the windows jump list.
+
+77
+00:06:59,894 --> 00:07:03,584
+If you're not sure what the jump list is, that's this thing down here.
+
+78
+00:07:03,874 --> 00:07:10,394
+Now, when you right click on this, like all of these items aren't actually supplied directly from Firefox.
+
+79
+00:07:10,394 --> 00:07:11,504
+We're not drawing this.
+
+80
+00:07:11,504 --> 00:07:21,544
+The operating system is Windows ten is supplying this based on stuff that Firefox writes out into like the operating system APIs.
+
+81
+00:07:21,554 --> 00:07:29,864
+Like there's just like a mechanism for us to say like, okay, add these items and for each item you supply a command line sort of string.
+
+82
+00:07:30,164 --> 00:07:35,323
+And that's what gets invoked. Whenever, whenever you click on one of these is like a command line gets invoked.
+
+83
+00:07:35,324 --> 00:07:40,034
+So you can't like directly attach script handlers to these things.
+
+84
+00:07:40,724 --> 00:07:44,414
+And what was particularly interesting, I got a mosquito bite. That's what's going on here.
+
+85
+00:07:44,414 --> 00:07:47,773
+I'm like, Why am I itchy down here? It turns out I get mosquito bites. Sorry.
+
+86
+00:07:47,774 --> 00:07:53,924
+Getting distracted. It turns out one of the interesting things is that when you have multiple profiles,
+
+87
+00:07:54,194 --> 00:08:00,914
+they will combine into the same sort of the same icon in the taskbar.
+
+88
+00:08:01,484 --> 00:08:06,614
+And that's because they're the same application just using different user profiles.
+
+89
+00:08:07,544 --> 00:08:12,974
+I haven't actually checked to see what Chrome does. It wouldn't surprise me if Chrome kind of has the same idea.
+
+90
+00:08:12,984 --> 00:08:16,664
+I don't know if it allows you to have more than one open at a time. Maybe it does.
+
+91
+00:08:16,664 --> 00:08:22,424
+Maybe it doesn't. I don't know. But I would I would suspect that they can actually test the.
+
+92
+00:08:23,244 --> 00:08:29,544
+Problem on this machine. If I like, I've got person one, I'm going to do guest.
+
+93
+00:08:30,084 --> 00:08:34,224
+Oh, that's interesting. They separate it as a separate application.
+
+94
+00:08:37,184 --> 00:08:46,484
+I wonder if maybe that's that's maybe the one of the smarter things to do, because that was like talking about ways we can, you know,
+
+95
+00:08:46,484 --> 00:08:55,303
+more efficiently write the jump list so that whichever one was last focused is the, you know, the one that gets that populates here.
+
+96
+00:08:55,304 --> 00:09:02,954
+But having them be separate applications in the in the task switcher down here might make more sense.
+
+97
+00:09:03,374 --> 00:09:09,434
+Now, I'm just sort of like saying that off the top of my head, just like it kind of just dropped in there, that that might be the better choice.
+
+98
+00:09:09,734 --> 00:09:18,643
+I still think it's important for performance wise to make writing the stuff off of the main thread happen because as I demonstrated last episode,
+
+99
+00:09:18,644 --> 00:09:29,924
+we have this like hang stats, whoopsie daisy, you know, sort of stuff, but do do do do do do do do do, do, do.
+
+100
+00:09:31,124 --> 00:09:34,454
+I've got all these add ons if you go to hang stats,
+
+101
+00:09:35,234 --> 00:09:47,594
+which is this tool that my colleague Florian built to sort of like aggregate and visualize the stacks for frequent hangs that occur on nightly.
+
+102
+00:09:48,644 --> 00:09:58,723
+I think it's just nightly. You'll see that the windows jump list one is like number four and it's always been in like the top set of, of, of hags.
+
+103
+00:09:58,724 --> 00:10:04,334
+And that's because this does this guy on the main thread and we know this and there's this associated bug.
+
+104
+00:10:04,334 --> 00:10:13,184
+So I thought we might tackle that today. But now I'm also curious about how we separate tasks, tray items.
+
+105
+00:10:13,724 --> 00:10:16,754
+So I kind of want to do two things today.
+
+106
+00:10:17,024 --> 00:10:21,974
+Let's spend the first couple of minutes. You know, let's here's today's agenda.
+
+107
+00:10:22,844 --> 00:10:31,904
+Well, first first let's see what it takes to not coalesce items in the Windows task tray.
+
+108
+00:10:33,584 --> 00:10:38,534
+And so you're going to watch me Google around. You can watch me use the search engine and try and figure that out,
+
+109
+00:10:38,684 --> 00:10:46,394
+see if StackOverflow has some answers, because ultimately that might be the most sensible solution.
+
+110
+00:10:47,084 --> 00:10:50,984
+Each profile is maps to a different spot on the tray.
+
+111
+00:10:55,004 --> 00:11:01,994
+And the other thing we were going to do is we going to make Windows, JetBlue stuff happen off the main track saying this may or may not.
+
+112
+00:11:04,124 --> 00:11:11,594
+Actually contribute to the permanent private browsing thing we've been looking at.
+
+113
+00:11:14,494 --> 00:11:24,064
+But it's righteous work because of the placement it has in the hang stats list.
+
+114
+00:11:24,334 --> 00:11:27,783
+Currently number four. All right.
+
+115
+00:11:27,784 --> 00:11:29,254
+So let's see if we can figure this out.
+
+116
+00:11:29,824 --> 00:11:41,164
+I'm going to just see I have to sort of like remember, you're going to watch me Google stuff and and like this is how I search for things.
+
+117
+00:11:41,284 --> 00:11:46,294
+So on Windows, it's called the task bar, right?
+
+118
+00:11:46,534 --> 00:11:51,514
+Windows Taskbar. I need to figure out what exactly Microsoft calls it.
+
+119
+00:11:53,554 --> 00:11:58,054
+The Taskbar. So this is it. Talking about Windows 11.
+
+120
+00:11:58,984 --> 00:12:04,534
+Um, but yeah, I think they call it the taskbar and that's important. You want to use their terminology when you're searching for this stuff.
+
+121
+00:12:07,054 --> 00:12:14,703
+And I want to know, like, if you're a Win32 application developer, so I start with Win32, that's a good way of getting like developer stuff.
+
+122
+00:12:14,704 --> 00:12:19,414
+Win32 Taskbar, coalesce.
+
+123
+00:12:21,394 --> 00:12:26,764
+Here we go. This is like developer documentation about the taskbar.
+
+124
+00:12:27,874 --> 00:12:32,164
+The Windows interface includes a special application desktop toolbar called the Taskbar.
+
+125
+00:12:32,434 --> 00:12:36,064
+You can use the taskbar for such tasks as switching between open windows to start new applications,
+
+126
+00:12:39,694 --> 00:12:43,014
+adding deleting taskbar icons in the notification area.
+
+127
+00:12:43,024 --> 00:12:47,524
+That's not exactly it. That's. That's more like the task tray, what used to be called a task tray.
+
+128
+00:12:48,574 --> 00:12:51,624
+Um, I think. I think I'm wrong.
+
+129
+00:12:51,634 --> 00:12:56,764
+Am I right about that notification icon? Yeah. Taskbar notification area.
+
+130
+00:12:56,764 --> 00:13:00,904
+That's. That's what they used to call the task tray. Right.
+
+131
+00:13:02,524 --> 00:13:06,594
+TREY Yeah, they've like removed TREY tasks.
+
+132
+00:13:06,634 --> 00:13:13,924
+Trey from the from the verbiage the taskbar supports to display options auto hide in windows vista
+
+133
+00:13:13,924 --> 00:13:21,633
+in earlier on always on top oh yeah of course the work area is pushing out skewed by the taskbar.
+
+134
+00:13:21,634 --> 00:13:28,354
+Oh, look at all this terminology. It's possible to cover the taskbar by setting the size of a window to the size of the screen with that window plus.
+
+135
+00:13:29,824 --> 00:13:32,883
+Okay. Adding shortcuts to the start menu.
+
+136
+00:13:32,884 --> 00:13:36,874
+That's good. Oh, I wonder if that's a factor here.
+
+137
+00:13:36,904 --> 00:13:42,004
+Like if I pin let's. Let's try this.
+
+138
+00:13:42,244 --> 00:13:47,374
+Where I pin this and then open gas.
+
+139
+00:13:47,404 --> 00:13:51,364
+Yeah. It still acts as a separate, separate item here.
+
+140
+00:13:51,384 --> 00:13:56,084
+Let me launch again from there. Um.
+
+141
+00:13:57,114 --> 00:14:00,714
+Guest Yeah, that's I think that's, that's the right move.
+
+142
+00:14:02,064 --> 00:14:08,754
+Um, to ensure the Windows Place in the house, we create an unknown window in the window one for being placed in the taskbar.
+
+143
+00:14:08,764 --> 00:14:11,064
+Create the unknown when using the X tool window as well.
+
+144
+00:14:11,514 --> 00:14:17,004
+So remove the windows button from the taskbar only if the window style system supports visible taskbar buttons.
+
+145
+00:14:17,304 --> 00:14:27,504
+I think how we tell. Windows about the window is going to be the key here.
+
+146
+00:14:29,824 --> 00:14:32,914
+Um, modify for me.
+
+147
+00:14:32,914 --> 00:14:38,123
+You know, I actually taskbar buttons. Okay.
+
+148
+00:14:38,124 --> 00:14:49,704
+So like create an unknown window with the X app window style for start, you know, as a board or something edge composite context tell.
+
+149
+00:14:51,704 --> 00:15:09,514
+Should take part in dialog box navigation. Right.
+
+150
+00:15:12,384 --> 00:15:15,474
+Let me just ensure that I've got this correct.
+
+151
+00:15:15,474 --> 00:15:23,214
+So if I open a new instance of Firefox nightly right now, let me just do that here from.
+
+152
+00:15:26,384 --> 00:15:31,034
+What's program files? What C program files?
+
+153
+00:15:34,184 --> 00:15:39,944
+Oh Firefox I probably want nightly whereas nightly.
+
+154
+00:15:40,244 --> 00:15:53,954
+Whereas this thing, uh, I want information about nightly where you hosted your in program data site where you put things.
+
+155
+00:15:53,984 --> 00:15:59,634
+Oh, it's a shortcut. And you are under his program files nightly.
+
+156
+00:15:59,664 --> 00:16:04,854
+That's what we call it. Okay. And we're going to say PB mode.
+
+157
+00:16:05,184 --> 00:16:10,844
+I think that was the name of it. We launched the application.
+
+158
+00:16:13,794 --> 00:16:18,384
+Thinks about it for a sec. It has some updates to install. That's going to be a problem for this other instance.
+
+159
+00:16:18,624 --> 00:16:25,134
+And so yeah, like I've got two different instances, two completely different instances.
+
+160
+00:16:25,374 --> 00:16:31,574
+They're running the same application, but they're. Two different profiles.
+
+161
+00:16:31,604 --> 00:16:41,024
+That's my default. It's this PB mode, but they're being coalesced here in the in the task tray.
+
+162
+00:16:42,314 --> 00:16:51,164
+It'd be great to not do that. So what powers the coalescing logic questions if you have two users and a guest.
+
+163
+00:16:51,254 --> 00:16:55,064
+If it opens three different windows? Uh, good question.
+
+164
+00:16:55,754 --> 00:16:59,983
+Uh, I add another one. Let's, uh, continue.
+
+165
+00:16:59,984 --> 00:17:05,094
+Without an account, we're going to call this, like, user two. Don't create a desktop shortcut.
+
+166
+00:17:11,374 --> 00:17:17,294
+Uh. Oh, interesting.
+
+167
+00:17:17,304 --> 00:17:23,914
+Who's using it? And then look at what they do. They like they put they overlay it with a particular icon.
+
+168
+00:17:23,934 --> 00:17:27,204
+I wonder if that's. Guest.
+
+169
+00:17:31,344 --> 00:17:32,994
+I mean, they weren't doing that before.
+
+170
+00:17:33,954 --> 00:17:41,634
+But I can see that being like a factor in separating because you obviously, if you have a different icon, you want to like separate it out.
+
+171
+00:17:41,874 --> 00:17:45,334
+But we didn't have that. Uh, how do we manage these?
+
+172
+00:17:45,354 --> 00:17:48,684
+I'm going to remove user to delete.
+
+173
+00:17:49,794 --> 00:17:52,974
+Then it reruns. Yeah. Okay. Refreshes the icons.
+
+174
+00:17:56,024 --> 00:18:00,914
+Okay. Okay. That's interesting behavior.
+
+175
+00:18:02,204 --> 00:18:07,214
+Anyways, uh, so how do you tell it?
+
+176
+00:18:08,084 --> 00:18:13,874
+Whenever you create a window, you tell it. If you have a parrot, you give it a window name.
+
+177
+00:18:20,834 --> 00:18:32,254
+Just classic examples. Let's look at some code here.
+
+178
+00:18:36,344 --> 00:18:39,484
+Uh. Um.
+
+179
+00:18:42,314 --> 00:18:47,594
+Sure. Windows seven samples. Why not? When you.
+
+180
+00:18:53,214 --> 00:19:00,894
+Shell. I'm just making some guesses here. Shell integration.
+
+181
+00:19:03,144 --> 00:19:06,353
+She's all right. Taskbar now.
+
+182
+00:19:06,354 --> 00:19:14,254
+Toolbar. Sure. So it's okay.
+
+183
+00:19:14,854 --> 00:19:27,934
+When you create, you create an instance of, uh, uh, it's like a calm thing and then you construct an image.
+
+184
+00:19:36,124 --> 00:19:39,374
+When do you create the window? Create the window? Here we do. Here we go.
+
+185
+00:19:39,394 --> 00:19:50,553
+Here we go. Initialize calm. We're going to create a window class line with instance, a background menu name.
+
+186
+00:19:50,554 --> 00:19:56,944
+Class name. The title.
+
+187
+00:20:04,774 --> 00:20:08,794
+Some of these I have some questions about because I have a feeling it's going to be how we
+
+188
+00:20:08,794 --> 00:20:13,744
+describe the window to the operating system that's going to cause the overlap to occur or not.
+
+189
+00:20:15,094 --> 00:20:21,123
+What, for example, is s z title is just some string.
+
+190
+00:20:21,124 --> 00:20:24,814
+And then we're saying, Hey, give me a string, give me the app title.
+
+191
+00:20:26,254 --> 00:20:28,984
+Okay, load it into this thing.
+
+192
+00:20:31,444 --> 00:20:43,174
+I can't imagine Windows is just using the title to coalesce that like that can't be right, especially because the title is going to change.
+
+193
+00:20:43,714 --> 00:20:47,554
+Yeah, the title is changing. So that's not enough.
+
+194
+00:20:50,844 --> 00:20:57,024
+But maybe some of this other stuff like the class name was a said window class.
+
+195
+00:20:57,114 --> 00:21:02,634
+Thumbnail toolbar when the main window class name and where is it coming up with this?
+
+196
+00:21:03,234 --> 00:21:06,324
+Like what is what is that? What do we normally use?
+
+197
+00:21:07,194 --> 00:21:11,154
+Yeah, we just like make something up. Mozilla battery class.
+
+198
+00:21:11,454 --> 00:21:20,174
+Window class. So it looks like that can be any kind of string.
+
+199
+00:21:20,194 --> 00:21:27,754
+I wonder if. Weekend register window clerks.
+
+200
+00:21:31,394 --> 00:21:35,914
+She stuck. That's when you go to class.
+
+201
+00:21:40,124 --> 00:21:43,334
+Stock application if you have these things. And we're going to.
+
+202
+00:21:47,644 --> 00:21:58,784
+Register windows. Last name Hidden Dialog Drop Shadow where we get the main window class.
+
+203
+00:21:59,564 --> 00:22:03,484
+The main window class. This.
+
+204
+00:22:04,954 --> 00:22:08,884
+Oh, that's interesting. We can, like, override it. What is that value?
+
+205
+00:22:14,074 --> 00:22:20,224
+Ninth Street overrides when two classes from normal the same as to or makes some trackpad drivers behave better hilarious.
+
+206
+00:22:20,434 --> 00:22:31,714
+So what we could try is like what happens if I update this instance, the PBE instance, so that UI a window class override we're going to call it.
+
+207
+00:22:32,344 --> 00:22:38,584
+Mike Connelly was here and then we're going to shut down and we're going to start up.
+
+208
+00:22:41,874 --> 00:22:46,874
+Uh. I think there's, like, a tool.
+
+209
+00:22:47,064 --> 00:22:50,924
+Uh, what was that tool that's used to, like, get information about?
+
+210
+00:22:53,484 --> 00:23:03,054
+Visual Studio. Oh.
+
+211
+00:23:03,114 --> 00:23:08,034
+I'm seeing a bunch of traffic. Launch launching applications from 50.
+
+212
+00:23:08,064 --> 00:23:13,344
+What are we doing with the window class names? What are we doing with new class names?
+
+213
+00:23:13,374 --> 00:23:17,124
+Hey, how's it going? Dr. Goldfarb, I'm trying to figure out just to catch you up.
+
+214
+00:23:17,124 --> 00:23:24,804
+I'm trying to figure out why. When we open up multiple instances of Firefox study XXI with different profiles, Windows,
+
+215
+00:23:24,804 --> 00:23:31,914
+the taskbar like coalesces them into the same item here as opposed to, say, Chrome, for example,
+
+216
+00:23:31,914 --> 00:23:41,004
+where when they have like if you open like a guest window up or something like they will overlap guest windows into the same item,
+
+217
+00:23:41,364 --> 00:23:46,524
+but like a different profile, user profile, even though these are using presumably the same executable,
+
+218
+00:23:48,204 --> 00:23:51,924
+they're not like a new item is added in the taskbar.
+
+219
+00:23:51,924 --> 00:23:59,774
+And I'm trying to figure out how that works because I think that might be helpful for this private thing.
+
+220
+00:23:59,784 --> 00:24:08,064
+Privacy always private browsing mode thing I'm working on is Chrome overriding the app user model id?
+
+221
+00:24:08,694 --> 00:24:12,294
+Good question. We can find that out. Um.
+
+222
+00:24:16,264 --> 00:24:26,554
+I seem to remember there being like a tool that would allow you to like do deep dove analyzes of, like, window decorations, class values.
+
+223
+00:24:26,944 --> 00:24:30,273
+Like, you just like, launch this thing on windows.
+
+224
+00:24:30,274 --> 00:24:33,494
+And then you pointed out another window and you say, Tell me everything about this window.
+
+225
+00:24:33,514 --> 00:24:37,234
+And it would tell us about it. I just can't remember what that tool was.
+
+226
+00:24:38,374 --> 00:24:44,284
+All right. When our ti. Probably not, uh, smart I.D.
+
+227
+00:24:52,104 --> 00:24:59,194
+Where do they define it? First of all, I don't even know what this thing is.
+
+228
+00:25:00,334 --> 00:25:03,584
+Uh, I've used your model I.D. Oh, yeah.
+
+229
+00:25:03,604 --> 00:25:06,874
+Here's some documentation. I like documentation.
+
+230
+00:25:15,864 --> 00:25:20,934
+However, an application that runs multiple processes or an application is running in a host process might need explicitly identify itself so that
+
+231
+00:25:21,174 --> 00:25:31,254
+it can group its otherwise disparate windows under a single taskbar button and control the contents of that application's jump list.
+
+232
+00:25:32,784 --> 00:25:42,034
+Oh, hang on. I think Dr. Gould Via has pointed us in the right direction here.
+
+233
+00:25:43,144 --> 00:25:45,184
+This is exactly what I was looking for.
+
+234
+00:25:45,814 --> 00:25:56,434
+So it must be that Google is overriding this for the guest window or for other types of like other profiles who shall integration you build?
+
+235
+00:25:57,634 --> 00:26:00,694
+Aha. Oh, what's this?
+
+236
+00:26:01,264 --> 00:26:05,464
+What's this? Straight.
+
+237
+00:26:06,384 --> 00:26:11,484
+Build it. Find the maximum number of characters allowed in each component.
+
+238
+00:26:11,484 --> 00:26:19,134
+Confident that. Backside length.
+
+239
+00:26:19,154 --> 00:26:31,474
+So we're making a string. So do we get.
+
+240
+00:26:42,534 --> 00:26:45,744
+Component components we we like pass it.
+
+241
+00:26:48,864 --> 00:26:52,014
+A bunch of stuff. So hold on a second. What would we pass to it?
+
+242
+00:26:52,704 --> 00:26:56,034
+Pass components. You push the. That's what it is. You push the profile ID.
+
+243
+00:26:56,904 --> 00:27:01,044
+That's how they're doing it. Okay. Oh.
+
+244
+00:27:01,344 --> 00:27:09,753
+Dr. Goldfine saved the day. So at some point in the whole, like, chromium stack, I guess whenever we're creating one of these windows,
+
+245
+00:27:09,754 --> 00:27:25,083
+like the actual operating system native window thing, we construct a unique app user model ID, um, and this is where we do it, this is where we do it.
+
+246
+00:27:25,084 --> 00:27:31,014
+And I'm going to put how do I permalink this links.
+
+247
+00:27:33,954 --> 00:27:38,124
+Commit? Is this is this a permanent. It looks like a permalink.
+
+248
+00:27:40,934 --> 00:27:51,924
+Yeah. All right. I'm going to put that in here. This appears to be how chromium does it?
+
+249
+00:27:53,074 --> 00:27:59,374
+They're setting a, uh, app user model.
+
+250
+00:28:00,934 --> 00:28:04,174
+I'd. Her profile.
+
+251
+00:28:07,744 --> 00:28:11,374
+Can we do the same thing? Probably.
+
+252
+00:28:12,154 --> 00:28:18,544
+What do we do with the app? User model ID? Bu there's a lot going on here.
+
+253
+00:28:19,564 --> 00:28:27,124
+Uh, what do we do with the app? User model? ID know this is whenever we're like launching the first browser window.
+
+254
+00:28:35,754 --> 00:28:44,004
+Despite the shell service we get, you get user model I.D., send out param.
+
+255
+00:28:44,004 --> 00:28:52,494
+Yes. What is this?
+
+256
+00:28:52,914 --> 00:29:00,084
+What are you. Current process explicit app user model I.D sign I.D.
+
+257
+00:29:00,624 --> 00:29:03,774
+If we're using private browsing, they won't generate one.
+
+258
+00:29:06,554 --> 00:29:10,424
+If marked use a hash. What the. What? What?
+
+259
+00:29:12,324 --> 00:29:17,514
+We added some kind of capability to, like, do this grouping that I want to do.
+
+260
+00:29:18,474 --> 00:29:30,604
+When was this added? Jim MATTHEWS added this in 2011.
+
+261
+00:29:30,994 --> 00:29:34,894
+All right. Let's see what the heck is going on here?
+
+262
+00:29:36,334 --> 00:29:39,484
+Why wasn't this turned on? Well, first of all, let's see if it works.
+
+263
+00:29:39,874 --> 00:29:45,454
+This is wild. Okay. We are down the rabbit hole, people.
+
+264
+00:29:46,444 --> 00:29:52,684
+Down the rabbit hole. Okay. I'm going to start by updating both.
+
+265
+00:29:54,244 --> 00:29:59,284
+Its profile. And the other one.
+
+266
+00:30:05,934 --> 00:30:11,514
+All right, let's see what happens now. I'm going to relaunch lips and relaunch this profile.
+
+267
+00:30:13,134 --> 00:30:16,874
+Yeah. So far so good.
+
+268
+00:30:19,494 --> 00:30:22,624
+And now. See that didn't work.
+
+269
+00:30:23,584 --> 00:30:26,884
+Why not? Hmm.
+
+270
+00:30:27,454 --> 00:30:30,974
+Someone was talking about spy. And I think that's exactly right.
+
+271
+00:30:30,994 --> 00:30:36,134
+I wanted a spy. Do I have that? No.
+
+272
+00:30:36,144 --> 00:30:42,024
+And it was called like spy plus plus or spy. Yeah.
+
+273
+00:30:45,274 --> 00:31:04,384
+I get it. Uh uh uh uh uh uh uh uh.
+
+274
+00:31:04,384 --> 00:31:13,174
+Yeah. That's what I want. How do I get it? Oh, I might already have it.
+
+275
+00:31:13,934 --> 00:31:17,414
+So what? Spy tools?
+
+276
+00:31:17,444 --> 00:31:21,494
+Here it is. That's what I was talking about.
+
+277
+00:31:21,524 --> 00:31:24,634
+All right, so we've got our browser windows here.
+
+278
+00:31:24,644 --> 00:31:31,754
+We'll put one here. But the other one over here, we got our spy plus plus here.
+
+279
+00:31:31,754 --> 00:31:38,474
+And if I recall, there's a way that I can, like, choose a window with, like, my hand.
+
+280
+00:31:38,904 --> 00:31:42,554
+Was it this one? Properties. No, I want. It's like the picker.
+
+281
+00:31:44,534 --> 00:31:48,384
+Can I just like. Search find window.
+
+282
+00:31:50,474 --> 00:31:59,104
+Uh, yeah. Here we go. This window. Window.
+
+283
+00:31:59,824 --> 00:32:04,584
+That's its class. Properties.
+
+284
+00:32:07,284 --> 00:32:10,634
+Uh. And what was it? App? Something.
+
+285
+00:32:10,634 --> 00:32:25,154
+Something I'd. Dr. Goldfarb says.
+
+286
+00:32:25,154 --> 00:32:32,224
+I don't think this is going to show you the humid shoot. All right. Well, let's take a closer look at that source code.
+
+287
+00:32:33,244 --> 00:32:38,254
+Do we know if this is even going to get hit, get pull profile, grouping, use profile?
+
+288
+00:32:38,284 --> 00:32:42,924
+If so. Let's here.
+
+289
+00:32:42,924 --> 00:32:48,294
+Let's do a thing. Let me shut down spy, because I guess that's not going to work out.
+
+290
+00:32:48,564 --> 00:32:53,184
+I've got a debug build. Uh, all ready to go here.
+
+291
+00:32:53,994 --> 00:32:58,134
+I think because we have a. Um.
+
+292
+00:32:58,984 --> 00:33:04,824
+And it's been a while since I've done this on Windows Mac run debug.
+
+293
+00:33:06,244 --> 00:33:11,644
+Uh. Uh. To kind of let this go.
+
+294
+00:33:11,764 --> 00:33:16,374
+Let me set up. Okay.
+
+295
+00:33:17,604 --> 00:33:21,984
+Does it know what I'm talking about? Okay. Can I, like, set a break point now?
+
+296
+00:33:23,284 --> 00:33:26,934
+Uh, try and remember how any of this works.
+
+297
+00:33:27,774 --> 00:33:32,154
+Debug. I actually have to start.
+
+298
+00:33:34,844 --> 00:33:40,514
+The program and then I'm going to set a break point in.
+
+299
+00:33:41,354 --> 00:33:46,124
+What was it called? This thing, this static method.
+
+300
+00:33:47,144 --> 00:33:50,954
+We're going to do that. It's never heard of it.
+
+301
+00:33:54,054 --> 00:33:59,364
+Uh. All righty. Uh.
+
+302
+00:33:59,384 --> 00:34:04,214
+Do I need to? Is there a namespace? I think Mozilla widget.
+
+303
+00:34:04,304 --> 00:34:09,794
+Okay, so we're gonna. So, uh.
+
+304
+00:34:13,144 --> 00:34:16,394
+No. Still never heard of it. Come on, it's a widget.
+
+305
+00:34:16,414 --> 00:34:20,514
+When taskbar. Spell it right?
+
+306
+00:34:20,844 --> 00:34:25,974
+Yeah. Come on. What's dealio? Um.
+
+307
+00:34:26,994 --> 00:34:32,484
+All right, well, uh, can I, uh.
+
+308
+00:34:32,634 --> 00:34:38,844
+Normally. Normally this would work.
+
+309
+00:34:39,114 --> 00:34:42,114
+And so you see here that one.
+
+310
+00:34:44,094 --> 00:34:47,324
+Have you ever heard of this window?
+
+311
+00:34:47,334 --> 00:34:54,734
+In this window? You know what? I think I know exactly what's going wrong here, which is that we may have attached.
+
+312
+00:34:54,744 --> 00:34:56,544
+I think I've run into this problem before.
+
+313
+00:34:59,094 --> 00:35:07,424
+I think I've run into this problem for I think we've attached to the launch a process and we should have probably disabled the launch process.
+
+314
+00:35:07,434 --> 00:35:11,214
+I actually think I've done this like on this dream, I've run into this problem.
+
+315
+00:35:20,364 --> 00:35:25,164
+Yeah. That's the wrong process where we're attached to the wrong process. No wonder.
+
+316
+00:35:25,854 --> 00:35:30,204
+All right, so let's attach to an existing one.
+
+317
+00:35:30,444 --> 00:35:38,124
+What was that idea? Oh, it's gone away. Perfect. Okay, so what we're going to do is we're going to disable the launcher process.
+
+318
+00:35:42,314 --> 00:35:48,894
+And there's a way I can do that with it looks like a command line that can take much longer.
+
+319
+00:35:51,804 --> 00:35:57,834
+Context. There's got to be a way I can disable it in here is that it looks like there's a pref.
+
+320
+00:36:00,414 --> 00:36:10,474
+And if there's something that I can pass to. Mock run.
+
+321
+00:36:11,434 --> 00:36:22,194
+If not, I'll just. Defines wait for a browser.
+
+322
+00:36:25,004 --> 00:36:29,544
+Context defines. Okay.
+
+323
+00:36:29,754 --> 00:36:33,804
+We're going to just set this pref. That just seems easier.
+
+324
+00:36:34,434 --> 00:36:38,304
+So. Shut her down.
+
+325
+00:36:44,994 --> 00:36:50,134
+This is worth it, people. See here.
+
+326
+00:36:50,464 --> 00:36:54,144
+TV set pref come on.
+
+327
+00:36:54,144 --> 00:37:04,564
+Was a browser launcher process enabled? This will work.
+
+328
+00:37:12,694 --> 00:37:18,914
+Hilarious. All right, so let's not use set prep.
+
+329
+00:37:19,124 --> 00:37:22,754
+Maybe we can still do this. Oh, we can't. Because we flipped.
+
+330
+00:37:24,494 --> 00:37:27,934
+Because we flipped the task thing inside that profile.
+
+331
+00:37:27,944 --> 00:37:30,944
+So what was the preference for that? It was.
+
+332
+00:37:34,134 --> 00:37:44,454
+Taskbar grouping. I'm curious about why this was never set to true.
+
+333
+00:37:44,844 --> 00:38:06,624
+There might be a good reason. Yeah.
+
+334
+00:38:06,654 --> 00:38:14,084
+And then there's, like, this dupe. Okay.
+
+335
+00:38:14,454 --> 00:38:19,694
+So start. Break point.
+
+336
+00:38:20,824 --> 00:38:24,364
+What was it? It was Mozilla widget.
+
+337
+00:38:25,624 --> 00:38:30,664
+Generate. Presumably I can hit that again.
+
+338
+00:38:34,114 --> 00:38:39,564
+Still hasn't heard about it. Unbelievable. Um.
+
+339
+00:38:44,764 --> 00:38:48,394
+I think we're still in the wrong process. I think setting that prep didn't help.
+
+340
+00:38:48,784 --> 00:38:55,234
+All right. We're going to do something different than what we're going to do is we're just going to attach to a running instance of the browser.
+
+341
+00:38:55,264 --> 00:39:00,034
+That's fine. I'm fine with that. I'm fine.
+
+342
+00:39:01,114 --> 00:39:06,154
+I'm not upset. Um.
+
+343
+00:39:07,114 --> 00:39:11,914
+Yeah. Oh.
+
+344
+00:39:12,044 --> 00:39:15,194
+Dr. Goldfine says I have to set the prep and then restart. Oh, yeah.
+
+345
+00:39:15,554 --> 00:39:19,844
+Oh, I get it. Because he. Yeah. Okay. You have to write a thing.
+
+346
+00:39:20,774 --> 00:39:25,514
+Well, I'm just going to attach to a running instance of the browser. Why did I open it with dash?
+
+347
+00:39:25,514 --> 00:39:29,444
+Dash, debug again? That's not what I wanted to do. I wanted to say, just run.
+
+348
+00:39:30,074 --> 00:39:37,544
+Just run. And then in this existing instance of Visual Studio, we're going to attach.
+
+349
+00:39:39,284 --> 00:39:49,124
+So what's our process ID? You're getting to watch all the warts, all the warts and all the me flailing about.
+
+350
+00:39:50,504 --> 00:40:00,704
+And if it wasn't for Dr. Gold Fire and Oculus and Amelio and everyone in the chat and Smurf D, I'd be probably still going through the agenda.
+
+351
+00:40:01,004 --> 00:40:08,594
+So thank you all for your help so far. All right, let's get ourselves a process ID.
+
+352
+00:40:12,454 --> 00:40:15,154
+It's not real defining without you actually having. You're right.
+
+353
+00:40:15,214 --> 00:40:25,023
+We are this this yak is getting shaved process I.D. We'll get to that thread stuff in a second.
+
+354
+00:40:25,024 --> 00:40:30,744
+To two 408 to 2 408. There it is.
+
+355
+00:40:30,754 --> 00:40:35,834
+There you are. Okay.
+
+356
+00:40:36,284 --> 00:40:39,914
+Now we're going to set our breakpoint on Mozilla widget.
+
+357
+00:40:42,884 --> 00:40:50,364
+Okay. What was it that? Have you heard of that?
+
+358
+00:40:52,124 --> 00:40:58,854
+Oh, yes, you have. Very good. Okay, so now I'm going to say sign, create a new window.
+
+359
+00:41:04,484 --> 00:41:12,164
+So we didn't even hit that code path at all. So that might explain why it's not working.
+
+360
+00:41:13,574 --> 00:41:16,694
+Let's see who calls into this.
+
+361
+00:41:29,704 --> 00:41:34,354
+Uh. Uh uh.
+
+362
+00:41:34,454 --> 00:41:38,794
+That's why. Because private browsing auto starts enabled.
+
+363
+00:41:43,154 --> 00:41:46,574
+So let's temporarily disable private browsing on a star.
+
+364
+00:41:46,584 --> 00:41:54,223
+We might need to revisit this decision. Private person might need to figure out what's going on here.
+
+365
+00:41:54,224 --> 00:42:05,714
+But let us go back over here and disable permanent private browsing mode just to see where we got.
+
+366
+00:42:14,434 --> 00:42:20,044
+PB There. Uh, where is it?
+
+367
+00:42:20,154 --> 00:42:23,454
+Maybe it was over here.
+
+368
+00:42:25,014 --> 00:42:29,124
+It's a debug build, so it's it's. It's slow, slow af.
+
+369
+00:42:34,784 --> 00:42:42,734
+Privacy and security. Come on, private browsing mode.
+
+370
+00:42:42,764 --> 00:42:47,114
+Okay. So how do I say I'm not okay?
+
+371
+00:42:47,144 --> 00:42:50,924
+Get rid of that. So restart nicely.
+
+372
+00:42:52,154 --> 00:42:56,204
+So now we're going to stop debugging.
+
+373
+00:43:00,074 --> 00:43:03,074
+Now. I do expect it to attach to a different.
+
+374
+00:43:03,824 --> 00:43:11,964
+Um. Like if I launch a different profile using the same executable.
+
+375
+00:43:13,824 --> 00:43:17,454
+What's going wrong here? Get it together. Debug build which do it.
+
+376
+00:43:17,484 --> 00:43:23,494
+All right. There we go. I expect to hit that code path now.
+
+377
+00:43:24,514 --> 00:43:29,194
+Let's see if we can find that window or that process.
+
+378
+00:43:33,664 --> 00:43:40,214
+Hello. Um.
+
+379
+00:43:44,194 --> 00:43:48,454
+Settings. It's probably. Screw it.
+
+380
+00:43:48,464 --> 00:43:59,104
+Let's just get the process ID. That's not what I wanted.
+
+381
+00:43:59,134 --> 00:44:02,224
+I didn't want invite out of the windows private. Wanda.
+
+382
+00:44:03,484 --> 00:44:08,704
+Oh, you know what it is. I'll bet the console stuff isn't.
+
+383
+00:44:09,724 --> 00:44:15,394
+What isn't? Persisted in permanent private browsing, which makes sense.
+
+384
+00:44:15,394 --> 00:44:21,824
+2401624. 016.
+
+385
+00:44:22,004 --> 00:44:27,024
+All right. We are going to get to that off main threads stuff in a second.
+
+386
+00:44:27,074 --> 00:44:32,104
+Trust me, I'm not I'm not this is not a bait and switch.
+
+387
+00:44:32,114 --> 00:44:37,974
+I'm not trying to fool you. But we still didn't hit that code path.
+
+388
+00:44:38,274 --> 00:44:41,784
+So I'm very curious about why now. So we're going to set a different breakpoint.
+
+389
+00:44:42,024 --> 00:44:46,694
+We're going to set a breakpoint here inside of the constructor of the window.
+
+390
+00:44:46,884 --> 00:44:51,534
+And it's window create. And we're just going to walk through and see what's going wrong.
+
+391
+00:44:56,114 --> 00:45:04,304
+Okay. So let's create a window. Well, I actually don't think this is the.
+
+392
+00:45:09,214 --> 00:45:12,734
+Yeah. I'm going to close the console. Okay.
+
+393
+00:45:13,474 --> 00:45:20,644
+I'm going to hit command. And now here we go.
+
+394
+00:45:20,974 --> 00:45:24,874
+Right. Right. Hit. Continue and see what happens.
+
+395
+00:45:26,014 --> 00:45:33,584
+I'm, like, hitting it a lot. All right.
+
+396
+00:45:33,604 --> 00:45:41,433
+All right. Fair enough. I'm there. I'm there. I've got what I want. So. Main thread a bit about Bob, but it's a top window.
+
+397
+00:45:41,434 --> 00:45:53,734
+Is it? Yep. Um. Get the tool kit always on top, or are you a pip window?
+
+398
+00:45:54,084 --> 00:45:58,294
+Are you invisible? Wants to know.
+
+399
+00:46:01,534 --> 00:46:07,024
+Get the class name. Where to create that window?
+
+400
+00:46:10,114 --> 00:46:18,214
+I really want to get down here to the, uh, generate model thing.
+
+401
+00:46:24,314 --> 00:46:28,244
+Oh I see. So we skipped right over this generate app user model ID.
+
+402
+00:46:32,744 --> 00:46:38,684
+We didn't we didn't do it at all because it's not a private browsing window.
+
+403
+00:46:42,584 --> 00:46:47,264
+All right. Sounds like I got some homework to do.
+
+404
+00:46:47,274 --> 00:46:57,444
+I need to reach out to the Windows Folk and it turns out we've got a mechanism to do this already.
+
+405
+00:46:57,954 --> 00:47:01,884
+It got added back in such and such a bug.
+
+406
+00:47:04,324 --> 00:47:08,554
+Back in bug was it 577867.
+
+407
+00:47:12,564 --> 00:47:16,464
+But it appears to only work for private browsing windows.
+
+408
+00:47:16,614 --> 00:47:28,164
+Let's actually test that out just to make sure I'm right. Uh, so we're going to disable our break points here and continue.
+
+409
+00:47:28,934 --> 00:47:35,214
+And let's see if we can create a new private browsing window. So, see, it's grouping all our windows here.
+
+410
+00:47:35,214 --> 00:47:44,034
+We've got a couple. And now I'm going to create a new private browsing one. Is it going to put it in a different icon?
+
+411
+00:47:47,264 --> 00:47:52,914
+No. The answer is no. Why not?
+
+412
+00:48:01,404 --> 00:48:04,764
+Um. Why not?
+
+413
+00:48:08,604 --> 00:48:17,214
+Okay. So let's go down. Back down to here. Should be a private browsing window right here.
+
+414
+00:48:18,024 --> 00:48:24,404
+Continue to there. Continue.
+
+415
+00:48:24,504 --> 00:48:28,424
+Yeah. Okay, we hit there it is. A private browsing window.
+
+416
+00:48:30,254 --> 00:48:33,884
+If privacy segmentation windows, separation enabled is false.
+
+417
+00:48:35,084 --> 00:48:42,044
+Okay, so there's like some kind of existing work, I think that is under way here.
+
+418
+00:48:42,284 --> 00:48:46,844
+I think I'm in I'm getting into a zone that other people are already kind of looking at.
+
+419
+00:48:48,884 --> 00:48:54,193
+So I'm going to actually go back to what I originally wanted to do in this whole episode,
+
+420
+00:48:54,194 --> 00:49:03,433
+which is let's just talk about off main thread jump list updating and I'm going to go talk to some of
+
+421
+00:49:03,434 --> 00:49:09,704
+our our the gang doing like privacy private window stuff and figure out what the heck is going on here.
+
+422
+00:49:09,704 --> 00:49:15,794
+Cause it feels like there's like some efforts and intentional choices underway on, or like that have been made about this stuff.
+
+423
+00:49:16,534 --> 00:49:20,834
+And so I'm going to go talk to them and I'll, I'll hopefully have news next week about that.
+
+424
+00:49:20,834 --> 00:49:34,934
+So I'm Connelly to figure out how to talk to privacy and security team to figure out what's going on with the app.
+
+425
+00:49:36,134 --> 00:49:42,254
+What was it what did you call it, an app. User app.
+
+426
+00:49:42,494 --> 00:49:48,734
+And I saw it there. It's the AEW mid. Stop.
+
+427
+00:49:50,724 --> 00:49:56,304
+Okay. So let's not get super distracted from what our original task was,
+
+428
+00:49:56,394 --> 00:50:00,744
+which was let's see if we can make that windows jumbled stuff happen off of the main thread.
+
+429
+00:50:01,674 --> 00:50:07,764
+Now recall when we were looking at it before the the stack that we got for the hangs.
+
+430
+00:50:08,634 --> 00:50:15,034
+Let's pull that up real quick. The stack that we got for the hangs was like.
+
+431
+00:50:17,874 --> 00:50:22,744
+Go, go, go, go. When we.
+
+432
+00:50:26,144 --> 00:50:34,334
+Call method. Jobless Support List Build. That's interesting.
+
+433
+00:50:38,114 --> 00:50:42,044
+Pointless build. Let's open up, Bugzilla.
+
+434
+00:50:47,244 --> 00:50:53,274
+This represents 1% of the total hang time, between 501,000,500 milliseconds and 1/2.
+
+435
+00:50:56,564 --> 00:51:04,363
+Many main thread IIRC was caused by a set path and some were caused by a obtained cached icon file calling as local file exists.
+
+436
+00:51:04,364 --> 00:51:11,884
+And that's from Florian from a couple of years back. Here.
+
+437
+00:51:12,094 --> 00:51:18,574
+We're invoking it from a short list build from windows, jump lists, line 621.
+
+438
+00:51:18,904 --> 00:51:21,994
+Let's take a quick peek here.
+
+439
+00:51:22,264 --> 00:51:26,344
+I've got my editor here. Windows.
+
+440
+00:51:27,874 --> 00:51:31,533
+Jump lists for list.
+
+441
+00:51:31,534 --> 00:51:37,744
+Build. So any kind of like if we request update list while another update was in progress, this could happen.
+
+442
+00:51:37,744 --> 00:51:45,364
+It shut down idle or private browsing aboard the current list building and then we'll like synchronously do that.
+
+443
+00:51:46,114 --> 00:51:50,254
+But also start build like any sort of like build or stuff.
+
+444
+00:51:51,094 --> 00:51:54,844
+I think the builder is.
+
+445
+00:51:57,954 --> 00:51:59,484
+But as builder we can.
+
+446
+00:51:59,694 --> 00:52:13,404
+There's like a builder class that wraps something else that's a builder, which I think is the underlying, uh, the underlying like XP com component.
+
+447
+00:52:15,314 --> 00:52:23,024
+There, Bill there is create jobless bill there from the Taskbar Service and the taskbar service.
+
+448
+00:52:26,964 --> 00:52:32,644
+What's that? That's bar service. Uh.
+
+449
+00:52:32,654 --> 00:52:36,854
+Is this thing Windows Taskbar inside when taskbar. And so when taskbar.
+
+450
+00:52:44,104 --> 00:52:48,394
+In a preview. Good test for our progress. And there's a thing probably called a jump list builder.
+
+451
+00:52:48,394 --> 00:52:58,364
+Create a jump list builder. How's that work?
+
+452
+00:52:58,824 --> 00:53:03,704
+Create jumble as builder. It will create an instance we're going to generate.
+
+453
+00:53:04,134 --> 00:53:05,654
+We'll get to see you again.
+
+454
+00:53:06,254 --> 00:53:17,504
+We, uh, generate the app user model idea and we pass it to the builder, presumably because that's how it maps to the slot in the task tray.
+
+455
+00:53:18,344 --> 00:53:24,854
+Makes sense. And then the builder itself is an NSA jump list builder.
+
+456
+00:53:27,494 --> 00:53:34,964
+And I think we had looked at this last week where various operations here are synchronous.
+
+457
+00:53:35,654 --> 00:53:42,043
+This one is not here. We're doing you know, we're at least returning a promise.
+
+458
+00:53:42,044 --> 00:53:46,854
+We have the we have the potential to do asynchronous things here and off main thread things here.
+
+459
+00:53:46,874 --> 00:53:50,534
+That's nice. But some of these things are synchronous, like this one.
+
+460
+00:53:52,754 --> 00:53:55,903
+I mean, that one just I guess that's got to be synchronous.
+
+461
+00:53:55,904 --> 00:54:00,074
+Presumably, if we want to do something about a failed abort.
+
+462
+00:54:00,764 --> 00:54:05,534
+We might need to return a promise there that rejects or something. Commits the current jump list commit.
+
+463
+00:54:07,484 --> 00:54:17,954
+That to me is like another stab at making this kind of asynchronous where you like add and then commit.
+
+464
+00:54:18,434 --> 00:54:28,124
+But as I recall, even though add list to build and commit is where some of main thread stuff is happening.
+
+465
+00:54:28,304 --> 00:54:31,814
+Add list to build was already doing some main thread stuff.
+
+466
+00:54:32,864 --> 00:54:39,104
+So let's look that up. Next, jump list builder add item.
+
+467
+00:54:39,654 --> 00:54:45,944
+Does it add list to build? Add list to build is all coming back.
+
+468
+00:54:47,084 --> 00:54:53,614
+Celine Dion. Take a look.
+
+469
+00:55:01,944 --> 00:55:09,624
+See, I feel like this should. Especially because, uh, jobless items.
+
+470
+00:55:09,624 --> 00:55:19,374
+It's just an array. I seem to recall like what was it?
+
+471
+00:55:19,384 --> 00:55:25,864
+It was like. There was something in here that was doing it like.
+
+472
+00:55:28,864 --> 00:55:34,834
+Get Chelle Link was doing it. I seem to recall this.
+
+473
+00:55:37,014 --> 00:55:42,744
+Even though you pass a thread into it, jump this shortcut.
+
+474
+00:55:44,934 --> 00:55:48,364
+She'll link. Where are you?
+
+475
+00:55:54,934 --> 00:55:59,164
+Person and i o thread. What are we doing with it?
+
+476
+00:56:08,554 --> 00:56:18,704
+Payne obtained a file. This looks synchronous to me.
+
+477
+00:56:31,954 --> 00:56:34,674
+Yeah. Okay. Cash, I can file from five.
+
+478
+00:56:34,684 --> 00:56:43,024
+Can you write if the last one is old and re cash this check to be available as long as I hear async from the file answer.
+
+479
+00:56:43,034 --> 00:56:48,524
+So the next time we try and build a journalist, it's available. Oh, I see.
+
+480
+00:56:48,534 --> 00:56:51,954
+So there's, like, kind of like, we're going to do our best effort.
+
+481
+00:56:51,954 --> 00:56:55,494
+We've cashed it. If we made a request for it before, we'll cash it.
+
+482
+00:56:58,104 --> 00:57:03,684
+And then if it's available from a previous cache, asynchronous cache, then we'll return it synchronously.
+
+483
+00:57:03,834 --> 00:57:10,744
+That's my read on that. So that's how that works.
+
+484
+00:57:10,864 --> 00:57:15,394
+And that looks like it may have been from like.
+
+485
+00:57:27,664 --> 00:57:30,894
+A method called get shell link.
+
+486
+00:57:30,904 --> 00:57:43,614
+Show link. Before what we were doing was just just straight getting it getting that icon.
+
+487
+00:57:46,474 --> 00:57:56,024
+I guess we weren't even getting the fab icon. We were just like. Getting some generic icon.
+
+488
+00:58:00,484 --> 00:58:05,154
+Okay. And at some point we added.
+
+489
+00:58:09,074 --> 00:58:12,974
+It's weird that that happened from like a format.
+
+490
+00:58:15,914 --> 00:58:21,374
+I don't believe you. Search Fox. That's where this got introduced.
+
+491
+00:58:25,334 --> 00:58:33,764
+Okay. So that's a little bit of a mess. And the read I'm having on this is this was always synchronous.
+
+492
+00:58:33,764 --> 00:58:38,623
+And then there have been multiple stabs like synchronous and on the main thread and
+
+493
+00:58:38,624 --> 00:58:42,943
+there have been multiple stabs to try and make this stuff happen off of the main thread.
+
+494
+00:58:42,944 --> 00:58:50,714
+But you know, you're kind of dealing with a bunch of legacy code that might behave like rely on the synchronous APIs,
+
+495
+00:58:51,284 --> 00:58:53,564
+the structure of the interface might rely on it.
+
+496
+00:58:53,924 --> 00:59:00,553
+And so it's not the job was not completed to make this all asynchronous plus, you know, writing off, you know,
+
+497
+00:59:00,554 --> 00:59:11,713
+non writing concurrent C++ is tricky, it's dangerous, it's hard to get it right, even for the best of us.
+
+498
+00:59:11,714 --> 00:59:15,044
+So I don't begrudge the previous efforts here.
+
+499
+00:59:15,524 --> 00:59:22,184
+You know, someone gave it a shot and we're going to give it another shot. So let's figure out how we want to break this down.
+
+500
+00:59:25,094 --> 00:59:27,853
+I mean, it kind of makes sense to do most of this,
+
+501
+00:59:27,854 --> 00:59:35,264
+either on the IO thread or ideally on the like on the background thread, this whole jump list creation stuff.
+
+502
+00:59:36,944 --> 00:59:45,884
+I feel like the IO thread might already be like I don't want to add more traffic to it if if we don't need to.
+
+503
+00:59:45,884 --> 00:59:54,734
+We have background threads like sort of lower priority background threads available to us that we should be using for stuff like this.
+
+504
+01:00:02,414 --> 01:00:05,414
+What is the return value supposed to be as true or false?
+
+505
+01:00:08,304 --> 01:00:11,364
+What is the what do we do with this right now?
+
+506
+01:00:15,674 --> 01:00:19,963
+If we succeeded in constructing stuff, build the list.
+
+507
+01:00:19,964 --> 01:00:27,043
+So like if. Category tasks we create an instance of a thing.
+
+508
+01:00:27,044 --> 01:00:30,704
+We build the list for each item.
+
+509
+01:00:32,174 --> 01:00:35,204
+We query it for a jump list item.
+
+510
+01:00:36,014 --> 01:00:43,994
+We check for a separator. Uh, if we find a shell link, we're going to create a shell link.
+
+511
+01:00:48,174 --> 01:00:51,803
+Which may or may not give us like a fab icon from the cash.
+
+512
+01:00:51,804 --> 01:00:55,194
+We don't know. And then if that.
+
+513
+01:00:56,944 --> 01:01:03,874
+If wink wink collection, if we failed to do that, then, you know, we're done.
+
+514
+01:01:04,234 --> 01:01:08,373
+And then we're going to add that to our collection collection as an object collection.
+
+515
+01:01:08,374 --> 01:01:11,854
+So we're constructing some stuff. So far, none of this.
+
+516
+01:01:13,114 --> 01:01:20,284
+None of us is adding too much IO unless creating one of these things causes.
+
+517
+01:01:20,284 --> 01:01:24,474
+IO wasn't last.
+
+518
+01:01:24,524 --> 01:01:30,284
+There like a different stack last week where we saw, um.
+
+519
+01:01:30,634 --> 01:01:46,414
+Hang on, jump list. It's more than just a bought list build, though, right?
+
+520
+01:01:50,354 --> 01:01:59,324
+Previous day. Let's look at some previous stuff.
+
+521
+01:02:12,784 --> 01:02:23,014
+Yeah. This is what I remember. It was more like this. Com base objects tell us by like.
+
+522
+01:02:28,334 --> 01:02:39,614
+We run some kind of moto loop inside of calm to something something windows.
+
+523
+01:02:41,774 --> 01:02:49,644
+Okay. Uh. Okay.
+
+524
+01:02:49,644 --> 01:02:55,224
+So I think I have a goal here. I want to make ad lists to build.
+
+525
+01:02:56,574 --> 01:02:59,994
+Do most of its work off of the main thread.
+
+526
+01:03:01,724 --> 01:03:08,084
+We'll start with that. That's the first step. I don't even know if we can do that in isolation, though.
+
+527
+01:03:08,094 --> 01:03:16,094
+Like how does the commit stuff work? Like when you commit, I presume this is like part one.
+
+528
+01:03:17,034 --> 01:03:21,324
+And then you commit or you abort.
+
+529
+01:03:23,064 --> 01:03:27,924
+Both of them have to do with a jump list manager, I think.
+
+530
+01:03:28,164 --> 01:03:31,854
+Yeah. Chambliss, manager.
+
+531
+01:03:39,414 --> 01:03:50,784
+You tell it. Hey, abort. Now, when you commit, you can be dispatched to the IO thread this method.
+
+532
+01:03:50,814 --> 01:03:55,944
+Hey, we're done here. Uh, do commit list build.
+
+533
+01:03:56,664 --> 01:03:59,904
+And what that does is off of the main thread. It will.
+
+534
+01:04:03,304 --> 01:04:08,404
+Get at the jump list manager and call commit list on it.
+
+535
+01:04:11,754 --> 01:04:18,773
+Yeah. It takes a lot. Okay. That's why. Okay, so the fact that the like.
+
+536
+01:04:18,774 --> 01:04:23,094
+When else do we use this jump list manager? Who else is using this?
+
+537
+01:04:23,964 --> 01:04:27,494
+We use it and build. A board.
+
+538
+01:04:32,404 --> 01:04:36,094
+Do. Commit. Delete.
+
+539
+01:04:36,124 --> 01:04:45,234
+Active list. Uh.
+
+540
+01:04:49,654 --> 01:05:00,794
+MTA. Citrix has different threads speed agile reference across different departments.
+
+541
+01:05:02,534 --> 01:05:16,074
+I wonder if that's what MTA stands for. Apart. Those are and then app user model I.D., we get access to it we call an app that.
+
+542
+01:05:22,354 --> 01:05:32,894
+Get the maximum number of items. Last.
+
+543
+01:05:35,694 --> 01:05:39,204
+It will return the maximum number of items. And then we have bought that.
+
+544
+01:05:46,714 --> 01:05:58,154
+One of the things we know is that a bought a board bought, our friend bought.
+
+545
+01:06:01,994 --> 01:06:12,284
+Get one of those license plates. Uh, import list also does.
+
+546
+01:06:13,634 --> 01:06:17,894
+I know. Like, well or. Well, here. What's happening is we're taking a lock.
+
+547
+01:06:18,764 --> 01:06:28,813
+So, like, we. We risk contention here because, like, by trying to get access to that, lock that, like, what this other thread might have,
+
+548
+01:06:28,814 --> 01:06:33,433
+we're going to, we're going to wait for that lock to be released and then we're blocking the main threat again.
+
+549
+01:06:33,434 --> 01:06:41,714
+So I feel like any time we're taking a lock, we risk we run the risk of of hitting this problem.
+
+550
+01:06:41,714 --> 01:06:50,863
+So what we really want to do is really only interact with the jump list manager off of the main thread that would be best can we.
+
+551
+01:06:50,864 --> 01:06:58,004
+So that, that is my next question. So goal this is a different goal.
+
+552
+01:06:58,304 --> 01:07:05,044
+I want the. This is maybe more a stronger goal.
+
+553
+01:07:05,314 --> 01:07:13,144
+I want the jump list manager to only ever be accessed off of the main thread.
+
+554
+01:07:15,404 --> 01:07:23,714
+So that the parent, the main parent or the main thread in the parent process never has to get a lock.
+
+555
+01:07:30,264 --> 01:07:35,454
+So let's, uh, let's think about how we could do that.
+
+556
+01:07:40,694 --> 01:07:48,794
+I think part of it's going to be we're going to need to change a lot of the interface in here because like some of this information is only available.
+
+557
+01:07:50,894 --> 01:07:59,324
+Like this is this is a synchronous access and I wonder if we can do better.
+
+558
+01:07:59,324 --> 01:08:04,124
+Max list is that first of all is that even used who uses that max list items.
+
+559
+01:08:06,194 --> 01:08:15,044
+It's not even used people. We might be able to clean this up by.
+
+560
+01:08:16,964 --> 01:08:21,384
+Um. Max.
+
+561
+01:08:21,634 --> 01:08:27,284
+Whereas a jump list max item count, max item count.
+
+562
+01:08:28,684 --> 01:08:32,644
+Where does that come from? I think it actually just comes from preface.
+
+563
+01:08:39,884 --> 01:08:44,204
+Yeah. We get it. We pull it from press max list item count.
+
+564
+01:08:46,974 --> 01:08:51,834
+Seven. We just like hard code that in there.
+
+565
+01:08:52,344 --> 01:08:55,794
+So like, that's, that's the first thing we can do is we can get rid of.
+
+566
+01:08:58,434 --> 01:09:02,694
+Let's try to. Let's put together a shopping list.
+
+567
+01:09:03,514 --> 01:09:10,444
+Um. You know.
+
+568
+01:09:13,864 --> 01:09:17,104
+Might I add a checkbox?
+
+569
+01:09:18,544 --> 01:09:21,754
+Yeah, I want to get rid of.
+
+570
+01:09:21,904 --> 01:09:25,074
+What was that? What was that?
+
+571
+01:09:25,774 --> 01:09:33,964
+Uh, a surface called. You can get rid of max list items.
+
+572
+01:09:37,094 --> 01:09:42,534
+That's easy. Since it doesn't appear to be used simplifies things.
+
+573
+01:09:44,664 --> 01:09:48,324
+What else? What else can we get rid of? What's available?
+
+574
+01:09:50,214 --> 01:10:05,944
+What's available? Well.
+
+575
+01:10:07,604 --> 01:10:14,494
+Oh, sorry. I just saw it. Um. Can.
+
+576
+01:10:15,484 --> 01:10:20,614
+Available that we get a lock on it and then we just see whether or not it's around.
+
+577
+01:10:24,014 --> 01:10:33,193
+Because presumably the could this ever get destroyed after it's constructed on shut shutdown?
+
+578
+01:10:33,194 --> 01:10:37,264
+We can. We clear it?
+
+579
+01:10:38,794 --> 01:10:55,564
+Otherwise. I guess if we have not yet like we've not done this, we've not executed this part yet or we failed to execute this.
+
+580
+01:10:58,344 --> 01:11:05,984
+Then. I guess this could be why we need to take a look here.
+
+581
+01:11:06,004 --> 01:11:09,034
+I guess there's a race condition. Interesting.
+
+582
+01:11:16,724 --> 01:11:23,624
+There was a crash between those crazy time last night and the locks.
+
+583
+01:11:28,404 --> 01:11:33,654
+The only possible race is that lazy idle thread one is using them jumble as the rough count will never be zero.
+
+584
+01:11:35,274 --> 01:11:42,054
+So originally we had to take the lock because.
+
+585
+01:11:47,574 --> 01:11:51,414
+Something might have cleared this thing back in the day.
+
+586
+01:11:57,384 --> 01:12:05,544
+Okay. So who checks to see whether or not this thing was available?
+
+587
+01:12:05,784 --> 01:12:13,424
+Does anyone actually use available? Builder available.
+
+588
+01:12:15,474 --> 01:12:28,094
+Okay. So the next step is we're going to make available async.
+
+589
+01:12:30,624 --> 01:12:34,644
+What's next? We're going to do the same thing. What's the next method?
+
+590
+01:12:35,874 --> 01:12:39,683
+We're just going to kind of catalog these things. I'm sorry.
+
+591
+01:12:39,684 --> 01:12:44,924
+I'm in the wrong browser and get confused. We don't need maxs.
+
+592
+01:12:44,934 --> 01:12:48,894
+EMS is less committed. Who uses that?
+
+593
+01:12:55,744 --> 01:13:09,414
+Nobody. We can get rid of it. No, buddy.
+
+594
+01:13:09,714 --> 01:13:15,984
+Okay, so let's get rid of that. Get rid of is list committed.
+
+595
+01:13:18,914 --> 01:13:21,944
+It's not important. Uh.
+
+596
+01:13:23,144 --> 01:13:26,144
+That's already a sink.
+
+597
+01:13:26,144 --> 01:13:34,274
+That's nice. We're going to want add to build. I make ad lists to build a sink.
+
+598
+01:13:35,984 --> 01:13:48,074
+A promise. Now.
+
+599
+01:13:48,074 --> 01:13:53,834
+No one ever does anything with the abort list build. Like, who's calling this board list?
+
+600
+01:13:53,834 --> 01:13:58,234
+Build. So they wouldn't do anything.
+
+601
+01:13:58,254 --> 01:14:02,454
+There's no, like, return value that anything. It's just like calling it so.
+
+602
+01:14:04,554 --> 01:14:08,904
+I mean, we could return a promise there. Uh, theoretically.
+
+603
+01:14:09,804 --> 01:14:15,114
+Could make a short list billed return a promise.
+
+604
+01:14:15,684 --> 01:14:27,624
+Except nobody is doing anything with the return value, so maybe it's fine, but we should have this work occur off of the main threat.
+
+605
+01:14:28,794 --> 01:14:33,894
+That might be pretty straightforward. Commit list, build.
+
+606
+01:14:35,784 --> 01:14:46,854
+We could, like, uh, make commit list, build, return a promise instead of using that, uh, old callback mechanism.
+
+607
+01:14:47,814 --> 01:14:56,064
+That might be nice. Delete active lists make presumably that is.
+
+608
+01:14:59,094 --> 01:15:04,774
+The list. Is anyone using that to elite active with. Yes, it's being used.
+
+609
+01:15:05,824 --> 01:15:10,564
+I should probably also make the leave active list return promise.
+
+610
+01:15:11,404 --> 01:15:22,174
+And then what about set app user model idea? Make set up user model if no one does anything with the return value of that either.
+
+611
+01:15:24,364 --> 01:15:30,424
+So we just make that happen off of the main thread that's on the jump list.
+
+612
+01:15:30,424 --> 01:15:34,684
+Builder. So builder. Oh, someone.
+
+613
+01:15:40,474 --> 01:15:48,514
+Okay. Just queue that for the the thread, the background thread, that's probably fine.
+
+614
+01:15:50,644 --> 01:15:57,994
+I'm curious about why this is even exposed on the XP comm interface.
+
+615
+01:15:59,074 --> 01:16:03,874
+Uh, I guess it was just from back in the day, but nothing from JavaScript seems to call it.
+
+616
+01:16:21,614 --> 01:16:34,264
+Okay. Make set app user model I.D.
+
+617
+01:16:35,534 --> 01:16:40,044
+Um. Async.
+
+618
+01:16:45,024 --> 01:16:48,714
+Like do its work off of the main thread.
+
+619
+01:16:50,934 --> 01:16:54,174
+So I think in terms of like easiest work,
+
+620
+01:16:54,294 --> 01:17:02,874
+I like to do the easy work first and have that be like a like I'll do it in a series of patches so we can get rid of things that's easy.
+
+621
+01:17:04,074 --> 01:17:07,164
+And then these promise things are going to be the harder ones.
+
+622
+01:17:07,694 --> 01:17:14,474
+Uh. I think these ones.
+
+623
+01:17:14,774 --> 01:17:17,834
+Uh, delete active list.
+
+624
+01:17:18,104 --> 01:17:23,734
+Remind me again with someone using that delete active list. Yeah, it was returning values.
+
+625
+01:17:23,734 --> 01:17:35,944
+So these, I think would be the next easiest, which is these things that just need to dispatch their work off of the main thread.
+
+626
+01:17:37,624 --> 01:17:42,324
+And then these things are next, which is like, Hey, now we want return value, so you have to return a promise.
+
+627
+01:17:42,784 --> 01:17:49,023
+So that's how I plan on attacking it. Wow, that's taken us a long time to sort of like come up with a plan.
+
+628
+01:17:49,024 --> 01:17:58,524
+But I think I think we're on to something. So let's start with getting rid of Max List items, get rid of max list items, shut everything down.
+
+629
+01:17:58,534 --> 01:18:02,554
+Don't need you, don't need you on you, don't need you.
+
+630
+01:18:02,734 --> 01:18:06,364
+All right, so, max, list items.
+
+631
+01:18:06,814 --> 01:18:09,934
+Um, in here.
+
+632
+01:18:15,154 --> 01:18:19,944
+Get rid of the definition there and the.
+
+633
+01:18:24,164 --> 01:18:28,544
+Just going to bloop. And you do don't need that.
+
+634
+01:18:29,794 --> 01:18:33,004
+That's easy. Then what was the other one?
+
+635
+01:18:34,864 --> 01:18:48,104
+Is Liz committed? The place is less committed.
+
+636
+01:18:55,204 --> 01:18:58,744
+So that should build, presumably.
+
+637
+01:19:03,554 --> 01:19:08,804
+And just too I want to double check that Max list items and is less committed are being used anywhere.
+
+638
+01:19:11,384 --> 01:19:17,324
+No. Uh, it looks like.
+
+639
+01:19:17,324 --> 01:19:22,334
+No, it's a no for both. So I think we can call that done, presuming this builds.
+
+640
+01:19:22,334 --> 01:19:27,374
+Okay. Let it do its thing and we can move on.
+
+641
+01:19:32,484 --> 01:19:36,654
+Let's assume that works. Okay. Let's do this next thing. So abort list, build or set.
+
+642
+01:19:36,834 --> 01:19:42,324
+I'm going to do this. This 1/1. Set app user model ID.
+
+643
+01:19:42,504 --> 01:19:49,324
+Let's do that one next. So. Uh.
+
+644
+01:19:52,494 --> 01:19:59,574
+Yeah, right here. So normally what it does is like, hey, okay, I'm going to take a lock and then I'm going to call,
+
+645
+01:20:00,024 --> 01:20:05,274
+I'm going to take this string and I'm going to call such and such on it.
+
+646
+01:20:06,714 --> 01:20:11,964
+It looks like it can throw if we don't have access to the jump list manager.
+
+647
+01:20:14,454 --> 01:20:20,544
+So maybe it turns out we do want to reject a promise of this fails.
+
+648
+01:20:21,714 --> 01:20:27,414
+Oh, okay. So that, uh, make it return a promise.
+
+649
+01:20:30,444 --> 01:20:33,984
+So you put that here, and then a short list.
+
+650
+01:20:33,984 --> 01:20:39,784
+Build a board. Let's build.
+
+651
+01:20:44,654 --> 01:20:47,713
+I see. This can also. Yeah. All right, all right, all right. Fair enough.
+
+652
+01:20:47,714 --> 01:20:59,864
+So all of these need to return promises. Make a board list, build or turn a promise since it can reject.
+
+653
+01:21:01,814 --> 01:21:07,784
+But those are those are pretty straightforward. So what we're going to do is we're going to update the interface.
+
+654
+01:21:08,894 --> 01:21:14,174
+We're going to make. Oh, and then what about available?
+
+655
+01:21:14,174 --> 01:21:19,754
+Did we decide what to do about available make available return a promise.
+
+656
+01:21:22,994 --> 01:21:28,794
+Maybe we should start with that. Get available.
+
+657
+01:21:33,444 --> 01:21:38,274
+That's just making sure that the jump list manager is around.
+
+658
+01:21:48,384 --> 01:21:52,884
+Confused about when this would not be around, I guess.
+
+659
+01:21:54,294 --> 01:21:58,344
+Like, why would we need to take a lock? When would this have gone away?
+
+660
+01:22:13,264 --> 01:22:18,994
+I guess if this doesn't happen, it looks like this is expected to happen synchronously.
+
+661
+01:22:29,174 --> 01:22:41,144
+So I don't understand why. Also.
+
+662
+01:22:41,324 --> 01:22:51,244
+Why is this? I like where? Creating her own special thread for this with manual shut down.
+
+663
+01:22:55,784 --> 01:23:05,314
+I don't know if we want our own special thread for this. You might just want to use the background thread so that we can have a managed thread pool.
+
+664
+01:23:07,934 --> 01:23:11,994
+Like Chris Wright has been working hard on getting our threads story under control.
+
+665
+01:23:12,014 --> 01:23:18,434
+I think creating a thread like this is maybe this is an opportunity to not do that.
+
+666
+01:23:32,014 --> 01:23:35,704
+Hmm. Well, I don't mind. Let's make this.
+
+667
+01:23:38,414 --> 01:23:43,814
+Say tickets for the jets for the current host were it's a promise.
+
+668
+01:23:46,954 --> 01:23:58,224
+Is available. And yeah, implicit jazz context.
+
+669
+01:24:03,334 --> 01:24:06,544
+We presume so.
+
+670
+01:24:10,434 --> 01:24:16,224
+This is how this works is we get handed a pointer pointer.
+
+671
+01:24:22,724 --> 01:24:29,424
+For a promise. What I want to do.
+
+672
+01:24:35,464 --> 01:24:38,794
+Store. You know where? In a store. Copy pass by reference.
+
+673
+01:24:39,364 --> 01:24:45,044
+You pass the promise into it and you call. I see.
+
+674
+01:24:52,374 --> 01:25:00,744
+Okay. That's what we want to do. We basically want to do a lot of this stuff.
+
+675
+01:25:07,494 --> 01:25:19,704
+And what we're going to do is we're going to say, okay. I think you can.
+
+676
+01:25:20,664 --> 01:25:23,994
+Can you do just like a lambda you run a ble function.
+
+677
+01:25:25,274 --> 01:25:35,034
+Be helpful if you just do it. A lambda. I've done one of these before.
+
+678
+01:25:35,424 --> 01:25:40,913
+Uh, page icon protocol here that we did this recently. Lambda.
+
+679
+01:25:40,914 --> 01:25:46,094
+Lambda. On our. Come on.
+
+680
+01:25:47,064 --> 01:25:53,574
+Definitely do like lambdas stuff in here. Yeah. Changing promises.
+
+681
+01:25:53,574 --> 01:25:57,174
+Is there C++ promises? Not done promises. That's the problem.
+
+682
+01:25:58,374 --> 01:26:05,034
+Oof! Okay. Um. Fine.
+
+683
+01:26:05,084 --> 01:26:11,273
+Fine, fine. Fine, fine. Pretty sure no one ever does.
+
+684
+01:26:11,274 --> 01:26:15,224
+Like you knew.
+
+685
+01:26:15,264 --> 01:26:23,193
+Run a ball. Say whatever.
+
+686
+01:26:23,194 --> 01:26:43,014
+Pass on land. So ever done.
+
+687
+01:26:44,904 --> 01:26:50,734
+Be nice to not have to. Mm.
+
+688
+01:26:50,874 --> 01:26:56,844
+Mm mm mm mm. I guess not.
+
+689
+01:27:01,884 --> 01:27:05,154
+All right, fine. New rentable method.
+
+690
+01:27:05,154 --> 01:27:08,244
+It is the rentable method. It is.
+
+691
+01:27:09,744 --> 01:27:14,754
+Uh, so we're going to say it available.
+
+692
+01:27:15,644 --> 01:27:23,184
+Do get available. We were dispatched that on our IO thread.
+
+693
+01:27:24,514 --> 01:27:36,824
+Uh. Void.
+
+694
+01:27:37,964 --> 01:27:42,844
+Uh, jump list build. Do you get available?
+
+695
+01:27:44,264 --> 01:27:49,634
+What is this? How does that how do they do it? You get a ref pointer that got moved to you.
+
+696
+01:27:53,674 --> 01:28:08,294
+Uh. And then what did they do with it? They just call, like. Oh, here.
+
+697
+01:28:08,304 --> 01:28:12,314
+Here. We're doing like a lambda. That's interesting.
+
+698
+01:28:12,884 --> 01:28:21,164
+And as new rentable function. Dispatched to.
+
+699
+01:28:23,794 --> 01:28:33,664
+Can we as dispatch to. Current thread, I want to dispatch to a different thread.
+
+700
+01:28:36,384 --> 01:28:55,734
+Dispatched to. How they're doing is as fast to me and as new and as new run a function.
+
+701
+01:29:03,434 --> 01:29:08,864
+Dispatch background task. See, this is what I really want to be doing is I want to use.
+
+702
+01:29:12,144 --> 01:29:15,264
+The background thread. I want to move everything to this.
+
+703
+01:29:16,904 --> 01:29:21,314
+That'd be really nice. And maybe that's where I should start.
+
+704
+01:29:21,494 --> 01:29:29,184
+Like, I know I already got some of this done, but, like, maybe I should be moving all this stuff to use in the background.
+
+705
+01:29:29,234 --> 01:29:32,293
+You know? One thing at a time will clean it up in a second.
+
+706
+01:29:32,294 --> 01:29:36,224
+So let's make get available work. Do you get available?
+
+707
+01:29:36,224 --> 01:29:43,094
+So the way that works is we're just going to like check to see whether or not such and such exists.
+
+708
+01:29:46,484 --> 01:29:51,704
+We're going to dispatch to the main thread. I see.
+
+709
+01:29:53,414 --> 01:30:05,644
+Resolve or reject. And for now, I guess we need to get our get our lock.
+
+710
+01:30:08,804 --> 01:30:15,464
+Uh. For now. They're going to remove these locks once.
+
+711
+01:30:16,304 --> 01:30:19,874
+Uh, the. John Bliss, Manager.
+
+712
+01:30:25,454 --> 01:30:29,204
+Is no longer access. The main threat.
+
+713
+01:30:31,284 --> 01:30:38,304
+Okay. And where is. Do you get available?
+
+714
+01:30:41,094 --> 01:30:46,354
+Resolve. We're going to move.
+
+715
+01:30:50,034 --> 01:30:58,684
+Or it has how we're going to do this, we're going to say. Lots of things have gone wrong.
+
+716
+01:30:58,704 --> 01:31:04,104
+Otherwise, we're going to so with you as to move we're going to move that thing.
+
+717
+01:31:04,494 --> 01:31:08,344
+So really, all we want is like, hey, does this thing exist?
+
+718
+01:31:08,364 --> 01:31:11,754
+The the jump list manager.
+
+719
+01:31:16,764 --> 01:31:21,924
+And what were we doing before? Like Chambliss, manager.
+
+720
+01:31:32,024 --> 01:31:49,603
+It's like really just if it's around if the pointer exists and is non know okay uh, to get available.
+
+721
+01:31:49,604 --> 01:31:55,784
+So we're going to say. Who is available.
+
+722
+01:31:55,814 --> 01:31:59,814
+Equals. Chambliss, manager.
+
+723
+01:32:05,114 --> 01:32:11,194
+Uh, do that coercion. And then we're going to say, okay, pass is available.
+
+724
+01:32:12,094 --> 01:32:16,963
+Long. Oh.
+
+725
+01:32:16,964 --> 01:32:21,404
+Did I just always have to remember how you do the standard move?
+
+726
+01:32:22,164 --> 01:32:28,494
+Yeah, it's a primitive. So I actually don't know if I need to do any special move stuff.
+
+727
+01:32:28,514 --> 01:32:32,954
+I think I can just say, like a you resolve.
+
+728
+01:32:51,194 --> 01:32:56,794
+Was all. Okay.
+
+729
+01:32:56,884 --> 01:33:04,354
+And then in jump list builder h, we need to add our method.
+
+730
+01:33:07,574 --> 01:33:12,313
+Uh, I always like to put these in roughly the same order. So it's before.
+
+731
+01:33:12,314 --> 01:33:15,794
+It's after. Get available for in it list build.
+
+732
+01:33:19,724 --> 01:33:25,654
+Lloyd, do you get available? Storm.
+
+733
+01:33:30,594 --> 01:33:45,814
+Okay. You know, move this. Was that their build?
+
+734
+01:33:47,854 --> 01:33:56,744
+Um. And then let's spawn an instance.
+
+735
+01:33:56,744 --> 01:34:04,494
+Let's run an instance and see if we can confirm that we get a true value.
+
+736
+01:34:07,514 --> 01:34:11,864
+No typo line 62.
+
+737
+01:34:15,324 --> 01:34:19,634
+Uh, this. Of this.
+
+738
+01:34:24,474 --> 01:34:39,123
+This. So yeah, we're going to do this in multiple waves.
+
+739
+01:34:39,124 --> 01:34:41,103
+We're going to like we did that, we did that.
+
+740
+01:34:41,104 --> 01:34:48,364
+We're going to do all of these and we're going to migrate off of dedicated, lazy thread to background thread pool.
+
+741
+01:34:54,144 --> 01:34:59,344
+And I think that's actually going to end up cleaning a lot of this stuff up. I'm going to probably stop in the next 5 minutes.
+
+742
+01:34:59,764 --> 01:35:03,514
+I just wanted to check your firewall conversion from.
+
+743
+01:35:03,844 --> 01:35:07,684
+Oh, you want me to. I see. I see.
+
+744
+01:35:08,584 --> 01:35:11,704
+You don't like my coercion.
+
+745
+01:35:14,724 --> 01:35:21,954
+Fair enough. That is available to get available.
+
+746
+01:35:23,934 --> 01:35:29,004
+Like. If.
+
+747
+01:35:30,104 --> 01:35:41,054
+And jump jobless manager is available. It was true and I could like cast maybe my review or just be like, Hey, just coworkers, but that's fine.
+
+748
+01:35:42,194 --> 01:35:55,634
+They can do that. So what just happened here?
+
+749
+01:35:55,874 --> 01:36:04,544
+I'm basically saying, hey, whenever someone calls, get available, let's do all of this work to construct a promise, a damn promise.
+
+750
+01:36:04,844 --> 01:36:13,333
+And then we're going to dispatch a a runner onto the iron thread, which is the background thread that all of jumbles builder uses.
+
+751
+01:36:13,334 --> 01:36:15,823
+And we're going to say, okay, call,
+
+752
+01:36:15,824 --> 01:36:24,703
+do get available on it and do you get available is going to take a lock and then check to see whether or not my jump list manager exists.
+
+753
+01:36:24,704 --> 01:36:28,394
+And if so, it will dispatch writable function to the main thread saying yes,
+
+754
+01:36:28,394 --> 01:36:38,844
+resolve that promise with the is available value out of line definition does not match get available.
+
+755
+01:36:38,864 --> 01:36:49,014
+Oh. Right. Right. Right. Um. Is available.
+
+756
+01:36:50,394 --> 01:37:01,544
+It shouldn't be. Get is available. Should be is available.
+
+757
+01:37:04,454 --> 01:37:09,684
+Oops. That's what I called it. And this should be.
+
+758
+01:37:09,834 --> 01:37:15,894
+Do get God. No, sorry is available just to be consistent.
+
+759
+01:37:16,944 --> 01:37:27,154
+Do is available. But over here, too, it's a film.
+
+760
+01:37:29,034 --> 01:37:54,514
+All right, build. Wright still doesn't like it because I apparently I still have a reference to do get available in here online to one seven.
+
+761
+01:37:57,134 --> 01:38:01,154
+Right this should be do is available.
+
+762
+01:38:05,424 --> 01:38:14,024
+Naming. Naming is hard. Build, build, build.
+
+763
+01:38:16,814 --> 01:38:20,624
+What's the next one that I was hoping to do after available?
+
+764
+01:38:24,124 --> 01:38:27,514
+Is a short list build. Maybe we can do that one to.
+
+765
+01:38:44,614 --> 01:38:56,624
+Mm mm mm mm mm mm mm. And I'm just realizing right now that I should have committed the removal of those other functions.
+
+766
+01:38:56,624 --> 01:38:59,254
+So we're going to do that before we close out here.
+
+767
+01:39:01,754 --> 01:39:07,034
+And you can watch me sort of like do to like I'm going to do commit interactive so I can pick and choose.
+
+768
+01:39:08,194 --> 01:39:14,944
+Um. Murphy says, Hey, program idea.
+
+769
+01:39:14,964 --> 01:39:18,654
+Look in a code directory for names and split a different variable names and function names for you to use.
+
+770
+01:39:18,684 --> 01:39:22,914
+Oh, good. Yeah. To reuse. Yeah, that's interesting.
+
+771
+01:39:23,934 --> 01:39:26,974
+Interesting idea. I think it's pretty.
+
+772
+01:39:27,654 --> 01:39:35,774
+Like that winky face. All right, here we go. What we're going to do is I'm going to call into the builder.
+
+773
+01:39:35,784 --> 01:39:42,504
+I'm going to construct a jump list builder directly up.
+
+774
+01:39:49,164 --> 01:40:02,634
+So I would do. 29 taskbar service.
+
+775
+01:40:02,664 --> 01:40:08,514
+Okay. So in a when taskbar.
+
+776
+01:40:18,534 --> 01:40:27,744
+Let's get ourselves a console. But TBS equal CC.
+
+777
+01:40:27,894 --> 01:40:35,034
+This thing gets service C.I. and a when taskbar.
+
+778
+01:40:39,604 --> 01:40:42,724
+TV's. Here it is.
+
+779
+01:40:43,214 --> 01:40:49,144
+That builder equals TBS. What was it? That's wire service.
+
+780
+01:40:49,834 --> 01:40:53,064
+Create jump plus builder. False.
+
+781
+01:41:04,334 --> 01:41:11,014
+Okay. Fill their. Great dry spell that wrong chump.
+
+782
+01:41:11,164 --> 01:41:16,294
+Maybe capital l. It's a debug build, so things are super slow.
+
+783
+01:41:19,514 --> 01:41:22,944
+Can you declare a builder like that? Okay.
+
+784
+01:41:23,804 --> 01:41:31,274
+Okay. Got it. So, builder. Dot available or is available as well.
+
+785
+01:41:31,284 --> 01:41:43,364
+It was we renamed it to. It's a function.
+
+786
+01:41:44,774 --> 01:41:49,634
+It returns a promise and it is fulfilled.
+
+787
+01:41:49,904 --> 01:41:54,224
+Amazing. So, like, I can await it. Probably like a wait.
+
+788
+01:41:59,594 --> 01:42:07,664
+Mhm. But yeah. There it is. So we got ourselves, uh, we got ourselves is available now working off of the main thread.
+
+789
+01:42:07,784 --> 01:42:14,834
+It's holding the lock. But if we can get everything that touches that thing off of the main thread and onto that thread,
+
+790
+01:42:15,584 --> 01:42:23,804
+we can remove our locks and then we can transition everything over to using a background thread.
+
+791
+01:42:24,524 --> 01:42:26,714
+And I think we're going to be in pretty good shape.
+
+792
+01:42:28,124 --> 01:42:36,644
+I realize I, I ate a bunch of today's episode trying to figure out and getting a lot of help with the media user I.D. thing from,
+
+793
+01:42:36,644 --> 01:42:40,004
+from, uh, Dr. Gold Fire and everyone in the chat.
+
+794
+01:42:40,004 --> 01:42:47,143
+So I appreciate your patience, but we've got a plan together now on how we can migrate the rest of the stuff over and get off of the main thread.
+
+795
+01:42:47,144 --> 01:42:53,174
+So I think that's pretty great. Let's commit what we've got is and commit interactive.
+
+796
+01:42:53,714 --> 01:43:01,474
+Um. Oh, seriously?
+
+797
+01:43:03,334 --> 01:43:08,674
+Uh, yes. Uh, record change?
+
+798
+01:43:08,704 --> 01:43:13,324
+No, not that one. Yes, those ones.
+
+799
+01:43:14,854 --> 01:43:19,034
+Uh, yes. Jump up there. You're going to get lost.
+
+800
+01:43:21,434 --> 01:43:27,994
+Oh, man. Want to help?
+
+801
+01:43:28,354 --> 01:43:39,554
+Help. Yes, added skippering skipper mane change record oil change energy as well as change manually.
+
+802
+01:43:44,854 --> 01:43:53,844
+So I just want to get. Uh.
+
+803
+01:44:02,834 --> 01:44:07,004
+What a pain in the butt. Normally I use, like, this Cursus interface to do.
+
+804
+01:44:09,374 --> 01:44:13,414
+Oh, geez. All right, well, I'm going to have to figure that out.
+
+805
+01:44:13,424 --> 01:44:16,484
+I'll probably end up reverting some stuff into doing to individual comments.
+
+806
+01:44:16,514 --> 01:44:24,144
+I'd love it if the. I thought. I thought I had committed interactive working with curses on windows.
+
+807
+01:44:24,164 --> 01:44:28,554
+Hang on. Mercurial curses.
+
+808
+01:44:28,794 --> 01:44:34,033
+Curses instead of pip install windows.
+
+809
+01:44:34,034 --> 01:44:47,434
+Curses? Yeah. I thought I had that. Oh wait three instal windows, curses.
+
+810
+01:44:52,324 --> 01:44:56,914
+Okay. Now, can I do? Committed interactive. Come on.
+
+811
+01:44:58,274 --> 01:45:05,914
+Uh. Uh, mercurial comet, interactive windows, curses.
+
+812
+01:45:11,594 --> 01:45:22,764
+No answer. Well.
+
+813
+01:45:29,904 --> 01:45:35,184
+Well, I might have to do this by hand. What a pain in the butt. Do I need to restart the terminal for curses to start working?
+
+814
+01:45:35,194 --> 01:45:49,014
+Maybe. Let's try. And also, is there anything in here about curses?
+
+815
+01:45:54,814 --> 01:45:58,924
+Shoot. Yeah. All right, well, I'll have to look into it.
+
+816
+01:45:59,734 --> 01:46:07,104
+Commit interactive. Uh, I'd like to know more like color.
+
+817
+01:46:08,194 --> 01:46:13,464
+Curse. Curse. No, no.
+
+818
+01:46:14,254 --> 01:46:15,544
+I'm going to have to dig into this.
+
+819
+01:46:16,114 --> 01:46:21,304
+I've never tried to do this or I haven't recently tried to do this on Windows, so that's why I'm having some difficulty.
+
+820
+01:46:21,304 --> 01:46:25,054
+But I will commit that stuff later. I have to go. I have a meeting I need to prepare for.
+
+821
+01:46:25,354 --> 01:46:29,044
+Hey, thank you so much for watching episode whatever this was or the joy of coding.
+
+822
+01:46:29,044 --> 01:46:32,644
+I think it was 297 of the joy of coding. We started to make a little bit of headway here.
+
+823
+01:46:32,644 --> 01:46:34,674
+We got sidelined, sidetracked a little bit.
+
+824
+01:46:35,764 --> 01:46:42,963
+I got to figure out how to get the Cursus interface from material working inside of my shell so I can do a better job of command.
+
+825
+01:46:42,964 --> 01:46:48,694
+Interactive stuff. Yeah, it's going to be great next week.
+
+826
+01:46:48,784 --> 01:46:50,554
+Stick around. We're going to we're going to do this again.
+
+827
+01:46:50,554 --> 01:46:55,564
+We're going to try and get through more of this list now that like there's a pretty sort of boilerplate pattern of doing it,
+
+828
+01:46:56,254 --> 01:46:57,273
+I think we're going to blast through.
+
+829
+01:46:57,274 --> 01:47:04,114
+Most of this will probably have the most difficulty for the things that end up doing, like XP, economy, business.
+
+830
+01:47:04,324 --> 01:47:14,733
+We might have to like dig into that a little bit and then like remove locks and monitors and then like once we get down here,
+
+831
+01:47:14,734 --> 01:47:26,074
+it's, we're smooth sailing. Oh, and then I also have to like update all of the callers of the above methods in jump list builder.
+
+832
+01:47:26,314 --> 01:47:29,374
+So we'll do that. Yeah. Very close to episode 300.
+
+833
+01:47:30,184 --> 01:47:35,074
+If you have ideas on things I should do, I kind of have a sense of what I want to do for episode 300,
+
+834
+01:47:35,374 --> 01:47:39,574
+but if you have ideas on things I should do, send them in to the rate this episode form.
+
+835
+01:47:40,384 --> 01:47:45,664
+That's a great way of letting me know what you think about the stream or ideas you might have on how to improve things.
+
+836
+01:47:45,664 --> 01:47:53,434
+I read everything that comes in. I'm going to put the link in the chat for people who are on twitch chat and want to follow the link you just read.
+
+837
+01:47:54,184 --> 01:47:57,574
+Just fill it out. I read everything that comes in and thanks again for watching.
+
+838
+01:47:57,574 --> 01:48:01,174
+Episode 297 of The Joy of Coding. I hope that was interesting. I'll see you next week.
+
+839
+01:48:01,174 --> 01:48:05,614
+We're going to try and get through more of this list unless something else more important comes up.
+
+840
+01:48:06,244 --> 01:48:10,354
+All right. With that, I will build. You do. Thanks, everyone, for watching.
+
+841
+01:48:10,834 --> 01:48:15,964
+Take care. Bye bye. The joy.
+
+842
+01:48:16,874 --> 01:48:19,814
+Loading the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

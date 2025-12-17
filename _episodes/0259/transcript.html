@@ -1,0 +1,2757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 259 - August 25, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 259 - August 25, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=e4b68bae-072a-46ed-9dac-ad750161d24b</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=e4b68bae-072a-46ed-9dac-ad750161d24b">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:05,381 --> 00:00:17,091
+Oh, no, oh, no. I don't know if you heard that in my headset, but the I don't think the audio input is working after that restart.
+
+2
+00:00:17,091 --> 00:00:24,441
+Oh, man. So, wow, what a what a rough what a rough start to this this stream.
+
+3
+00:00:24,441 --> 00:00:29,331
+I apologize. What's going on? Hi, my name is Mike Conley.
+
+4
+00:00:29,331 --> 00:00:35,841
+So good to have you here for the Joy of Coding Episode 259, where we have been having some pretty major technical issues,
+
+5
+00:00:35,841 --> 00:00:43,791
+mainly because I restarted my computer to get this microphone to work again and Mac has decided to install an update.
+
+6
+00:00:43,791 --> 00:00:52,281
+And Hellboy, everything has changed and my microphone still not working and wacky morning J.
+
+7
+00:00:52,281 --> 00:00:56,691
+Which allows me to play my my sound cues also not working.
+
+8
+00:00:56,691 --> 00:01:02,391
+So so there's that. I'm not sure what what I'm going to do about that for now.
+
+9
+00:01:02,391 --> 00:01:06,981
+But let's let's just move forward. Let's move forward.
+
+10
+00:01:06,981 --> 00:01:13,431
+It's so good to see you. How is it going? My name is Mike Conley. It's so good to have you here for the Joy of Coding Episode two fifty nine.
+
+11
+00:01:13,431 --> 00:01:19,401
+Let me share my screen. We're going to blast past all of these technical issues and we're just going to get to it.
+
+12
+00:01:19,401 --> 00:01:25,161
+We're going to talk about Firefox engineering. We're going to maybe look at a performance issue and I'm going to answer some viewer questions.
+
+13
+00:01:25,161 --> 00:01:30,231
+That's that's my general plan today. Although a reminder, no plan survives breakfast.
+
+14
+00:01:30,231 --> 00:01:36,321
+I mean, if the Mac OS restart thing is any indication, no plan survives breakfast.
+
+15
+00:01:36,321 --> 00:01:40,161
+You know, I'm going to just roll with the punches here. You know, things might go horribly wrong.
+
+16
+00:01:40,161 --> 00:01:45,531
+The hardware might just start deciding to misbehave. You know, anything could happen.
+
+17
+00:01:45,531 --> 00:01:50,131
+And that's OK. You know, we're just going to roll with the punches and do our best.
+
+18
+00:01:50,131 --> 00:01:54,411
+The other thing that I want to let you know is that there is an agenda.
+
+19
+00:01:54,411 --> 00:02:00,381
+That's what we're looking at right here, the agenda which has all these handy links that you might be interested in and you have access to the agenda.
+
+20
+00:02:00,381 --> 00:02:07,791
+If you go to if you're watching this on YouTube, there will be a link in the video description to the agenda.
+
+21
+00:02:07,791 --> 00:02:13,701
+And if you're watching this on air Mozilla in the details section, there is a link to the agenda.
+
+22
+00:02:13,701 --> 00:02:20,511
+And if you're watching this on Twitch, then I'm dropping a link in the twitch chat to the agenda.
+
+23
+00:02:20,511 --> 00:02:25,401
+And and that's the agenda. We also have an episode guide. You can find that in the agenda as well.
+
+24
+00:02:25,401 --> 00:02:32,991
+I highly recommend checking that out. And you can read up on past episodes and what's gone what's gone on.
+
+25
+00:02:32,991 --> 00:02:36,701
+Sureshot, 55, asks, Is it today?
+
+26
+00:02:36,701 --> 00:02:47,171
+In the in the Twitch chat, yeah, I think it is today, it is today, like that's kind of like a very abstract, almost like a Buddhist Zen koan.
+
+27
+00:02:47,171 --> 00:02:51,611
+Is it today? Yes. Am I in the present?
+
+28
+00:02:51,611 --> 00:02:58,511
+Yes, although I'm not entirely certain if that's the question you were trying to ask Shawshank.
+
+29
+00:02:58,511 --> 00:03:02,741
+So I'm just going to answer in the chat. Yes, it is.
+
+30
+00:03:02,741 --> 00:03:07,721
+Are you able to see the stream? So hopefully people on Twitch are able to see the stream.
+
+31
+00:03:07,721 --> 00:03:18,581
+I haven't actually checked, but hopefully it is. Let me actually check while I'm just double check my live, my live, I am live, of course.
+
+32
+00:03:18,581 --> 00:03:27,931
+Yes, here I am. So all is well. Good, good, so hopefully that answered your question question sure, Jack, is it today?
+
+33
+00:03:27,931 --> 00:03:34,471
+Yes, it is today. I want to talk a little bit about desktop, Firefox, desktop, front end engineering.
+
+34
+00:03:34,471 --> 00:03:36,691
+This is a presentation I did for some new hires.
+
+35
+00:03:36,691 --> 00:03:43,141
+And I thought it might actually be interesting for, you know, people who aren't new hires, new volunteer contributors,
+
+36
+00:03:43,141 --> 00:03:47,521
+or people are just generally interested to hear what I said to them,
+
+37
+00:03:47,521 --> 00:03:53,641
+because I think this is applicable to anyone who might be interested in hacking on Firefox desktop.
+
+38
+00:03:53,641 --> 00:03:59,191
+So that's what I think I'm going to start with today and let's let's see where we get to.
+
+39
+00:03:59,191 --> 00:04:06,721
+So this is an intro, a very high level intro to Firefox desktop, front end engineering.
+
+40
+00:04:06,721 --> 00:04:13,621
+So I'm pretending that, you know, if you're watching this, you are very new to Firefox desktop, front end engineering.
+
+41
+00:04:13,621 --> 00:04:19,921
+You've probably never written a patch for Firefox desktop. You might not know how it works or how Firefox has organized anything like that.
+
+42
+00:04:19,921 --> 00:04:28,501
+And that's OK. That's what this is all about, is a like think this is like Firefox desktop engineering 101.
+
+43
+00:04:28,501 --> 00:04:36,301
+It's a one time only seminar or just a lecture on desktop engineering, Firefox, desktop engineering.
+
+44
+00:04:36,301 --> 00:04:42,431
+So roughly, this is how it's going to go. I'm going to talk about the theory of what a Web browser actually is.
+
+45
+00:04:42,431 --> 00:04:46,831
+You know, Firefox desktop is a Web browser. So what is a Web browser?
+
+46
+00:04:46,831 --> 00:04:53,101
+What is it supposed to do? And then how do the various teams that work on our Web browser, the Firefox Web browser, how do they work?
+
+47
+00:04:53,101 --> 00:04:59,521
+And then we're going to zoom in specifically for the Firefox desktop front end team and the sorts of things it does,
+
+48
+00:04:59,521 --> 00:05:08,441
+and like how we hack on the browser code. So we're going to start with this first slide, this first question, what is a Web browser?
+
+49
+00:05:08,441 --> 00:05:12,941
+And that is not a rhetorical question. It's a it's a legitimate question.
+
+50
+00:05:12,941 --> 00:05:17,261
+You know, it's obvious I'm using a Web browser right now to show you these slides.
+
+51
+00:05:17,261 --> 00:05:24,101
+It's a thing for viewing Web pages that might be one answer for one definition for a Web browser,
+
+52
+00:05:24,101 --> 00:05:29,951
+although there are other things that view Web pages that might not be considered Web browsers.
+
+53
+00:05:29,951 --> 00:05:36,701
+For example, I have a program called Stiehm on my computer which allows me to play different kinds of games.
+
+54
+00:05:36,701 --> 00:05:42,071
+And whenever you're doing purchases within that application, it will view Web pages.
+
+55
+00:05:42,071 --> 00:05:46,871
+But I wouldn't call Stiehm a Web browser.
+
+56
+00:05:46,871 --> 00:05:52,421
+There are there are lots of different things that that view Web pages that maybe aren't considered Web browsers.
+
+57
+00:05:52,421 --> 00:05:56,231
+So what what do we consider a Web browser?
+
+58
+00:05:56,231 --> 00:06:06,851
+Well, to me, a Web browser is one a program that executes untrusted instructions downloaded over the Internet from other machines.
+
+59
+00:06:06,851 --> 00:06:11,351
+And those instructions generate websites or Web applications.
+
+60
+00:06:11,351 --> 00:06:15,731
+That to me, is is the core part of what a Web browser is.
+
+61
+00:06:15,731 --> 00:06:22,511
+And then the second part, the second important part, and maybe critically for, you know, people working on the front end of the browser,
+
+62
+00:06:22,511 --> 00:06:27,291
+it's a set of utilities for interacting with those websites and navigating around them.
+
+63
+00:06:27,291 --> 00:06:32,711
+So, you know, history and bookmarking tools form password and credit card information, security tools,
+
+64
+00:06:32,711 --> 00:06:41,591
+tabs for doing multitasking, you know, downloading and download management, that sort of thing.
+
+65
+00:06:41,591 --> 00:06:47,561
+That to me, when you sum all those things up, that to me is the definition for a Web browser.
+
+66
+00:06:47,561 --> 00:06:55,151
+And this division of these two points, a thing that executes untrusted instructions downloaded over the Internet to create these interactive
+
+67
+00:06:55,151 --> 00:07:02,801
+websites and Web applications and this set of utilities and sort of stuff surrounding these programs.
+
+68
+00:07:02,801 --> 00:07:09,281
+That's actually how we divide labor up for the various teams that work on Firefox.
+
+69
+00:07:09,281 --> 00:07:18,311
+You can call this first part platform almost like this is this is what we consider the domain of what we call the platform team.
+
+70
+00:07:18,311 --> 00:07:22,241
+We also call them like the geko team or the native layer team.
+
+71
+00:07:22,241 --> 00:07:31,391
+You know, Geko is the name of the rendering engine that knows how to turn things like HTML access and JavaScript into Web pages.
+
+72
+00:07:31,391 --> 00:07:33,611
+It's what we call a Web engine.
+
+73
+00:07:33,611 --> 00:07:44,681
+And so oftentimes this the people who sort of, you know, center their work around this first bullet are what we call the platform team, the geko team.
+
+74
+00:07:44,681 --> 00:07:51,911
+Sometimes you'll also hear it called the native layer, although I think that's that's that's referred to less.
+
+75
+00:07:51,911 --> 00:07:56,261
+And then this other set of util, the stuff surrounding the Web pages, you know,
+
+76
+00:07:56,261 --> 00:08:04,001
+the toolbars, the UI, this is what we consider the Firefox, the UI, the front end.
+
+77
+00:08:04,001 --> 00:08:08,511
+You know, that's that's how we divide things up.
+
+78
+00:08:08,511 --> 00:08:16,611
+And so you can think of Firefox and Geko that relationship, there are there are analogies you can draw with other programs.
+
+79
+00:08:16,611 --> 00:08:21,081
+So, for example, I'm going back to games again. I mentioned steam.
+
+80
+00:08:21,081 --> 00:08:27,411
+A lot of games these days are designed with a particular sort of high level model in mind,
+
+81
+00:08:27,411 --> 00:08:31,851
+where you have an engine for the game and then the game is built on top of the engine.
+
+82
+00:08:31,851 --> 00:08:42,941
+So, for example, you know, there is a there are a couple of really popular, powerful game engines like Unity and The Unreal Engine.
+
+83
+00:08:42,941 --> 00:08:47,571
+And then there are lots of games built on top of those engines.
+
+84
+00:08:47,571 --> 00:08:54,621
+And we have something similar for Firefox like that platform and a library called Tool Kit.
+
+85
+00:08:54,621 --> 00:09:03,621
+Are these sort of shared set of tools that we can use between different programs and then we build Firefox on top of it.
+
+86
+00:09:03,621 --> 00:09:11,361
+So, you know, that that also kind of helps draw a distinction between the division of labor.
+
+87
+00:09:11,361 --> 00:09:17,451
+You know, like other things can be built with the platform and what what are those other things?
+
+88
+00:09:17,451 --> 00:09:22,161
+Well, there are other applications that use Geko, and we always have to keep them in mind.
+
+89
+00:09:22,161 --> 00:09:24,441
+But for the when you're working on Firefox desktop,
+
+90
+00:09:24,441 --> 00:09:37,151
+this is generally the stack of you've got like Firefox specific code and then shared tool kit code and then platform that underlies the whole thing.
+
+91
+00:09:37,151 --> 00:09:44,261
+All right, and if there are any questions throughout this this presentation, just feel free to drop them in the chat.
+
+92
+00:09:44,261 --> 00:09:46,781
+There's the twitch chat for the people who are there.
+
+93
+00:09:46,781 --> 00:09:54,381
+And if you're not on Twitch, there is a link in the video descriptions to a Matrix channel where I will also be able to see questions.
+
+94
+00:09:54,381 --> 00:09:59,111
+So just go ahead and drop them in and I'll try and answer them as I go.
+
+95
+00:09:59,111 --> 00:10:04,661
+So how do the teams, these two teams, platform and Firefox, how do they work?
+
+96
+00:10:04,661 --> 00:10:10,751
+So I'm going to pretend that, you know, the people watching this are now working on the Firefox front end team.
+
+97
+00:10:10,751 --> 00:10:18,681
+So, you know, you are here. If you're working on the Firefox run team, you work on generally these things,
+
+98
+00:10:18,681 --> 00:10:24,651
+but you coordinate and work closely with the people who work on the platform team.
+
+99
+00:10:24,651 --> 00:10:32,751
+OK, that's how we divide the labor up. Generally speaking, that's not a hard and fast rule, but that's generally how we divide things up.
+
+100
+00:10:32,751 --> 00:10:40,641
+That's generally how we're organized. There's the Firefox front end team and then there is a platform team.
+
+101
+00:10:40,641 --> 00:10:46,581
+Other applications, like I mentioned earlier, are also built on top of the platform, or Geko, for example,
+
+102
+00:10:46,581 --> 00:10:55,671
+Phenix, a.k.a. Firefox for Android, uses some components from tool kit and is also also renders using platform.
+
+103
+00:10:55,671 --> 00:11:01,111
+And that's that's managed by the mobile team, which is distinct from the Firefox desktop team.
+
+104
+00:11:01,111 --> 00:11:08,031
+And then there is the Thunderbird project, which also builds on top of Geko and tool kit.
+
+105
+00:11:08,031 --> 00:11:12,981
+And they have their own sort of, you know, Thunderbird specific code that they maintain.
+
+106
+00:11:12,981 --> 00:11:19,291
+And that's maintained by the Thunderbird community and a number of paid people who are working on Thunderbird.
+
+107
+00:11:19,291 --> 00:11:25,341
+And so Tool Kit is a series of shared components that are used and shared between these applications.
+
+108
+00:11:25,341 --> 00:11:27,681
+Sometimes you can opt in to sharing them.
+
+109
+00:11:27,681 --> 00:11:35,091
+And when we develop something that can be used by other applications, we tend to put it, put it in a toolkit so that the others can use them as well.
+
+110
+00:11:35,091 --> 00:11:40,151
+But we all rely on platform. We're all running on top of platform.
+
+111
+00:11:40,151 --> 00:11:49,511
+So platform, let's talk about platform just real quick, platform has many specialist subthemes, so there are lots of teams.
+
+112
+00:11:49,511 --> 00:11:56,231
+Platform is a very big surface area. You can think of a Web browser these days almost as analogous to an operating
+
+113
+00:11:56,231 --> 00:12:00,371
+system and how complex it is and all of the sorts of things it needs to do.
+
+114
+00:12:00,371 --> 00:12:08,081
+So, you know, you've got people managing Dham, which is like the primary API that websites use to communicate,
+
+115
+00:12:08,081 --> 00:12:18,611
+to construct like documents and to manipulate documents and like JavaScript APIs for, you know, doing various things.
+
+116
+00:12:18,611 --> 00:12:26,961
+You know, the exposure and the implementation of various APIs is generally managed by the DOM team.
+
+117
+00:12:26,961 --> 00:12:33,551
+Then you've got the JavaScript team that, you know, takes care of making sure that our JavaScript engine works.
+
+118
+00:12:33,551 --> 00:12:37,751
+It can interpret JavaScript and do it quickly and efficiently.
+
+119
+00:12:37,751 --> 00:12:42,461
+And what's interesting about the JavaScript team is the JavaScript engine itself,
+
+120
+00:12:42,461 --> 00:12:49,781
+which is embedded inside of Geko or platform, is something that can also run independently of Geko.
+
+121
+00:12:49,781 --> 00:12:57,221
+There are projects that use spider monkey externally. I'm aware of, for example, one game engine.
+
+122
+00:12:57,221 --> 00:12:59,921
+It's not a game that you may have heard of,
+
+123
+00:12:59,921 --> 00:13:09,851
+but I know if a colleague or an ex colleague of mine on the side built a game engine and scripts it using spider monkey,
+
+124
+00:13:09,851 --> 00:13:11,831
+which I thought was pretty cool.
+
+125
+00:13:11,831 --> 00:13:19,281
+But there are other projects that use spider monkey outside of gecko and but we have a core team of people that work on that engine.
+
+126
+00:13:19,281 --> 00:13:24,011
+Then there's like all the networking stack, what we also call Neco.
+
+127
+00:13:24,011 --> 00:13:28,241
+I see a question, doesn't Firefox for Android use a new code base, especially Katlin?
+
+128
+00:13:28,241 --> 00:13:35,501
+Do they share some front end code? So, yes, they are like a lot all of their kotlin stuff,
+
+129
+00:13:35,501 --> 00:13:40,871
+all of their java that they're writing is all in this orange block, you know, for Phenix things.
+
+130
+00:13:40,871 --> 00:13:47,501
+You know, obviously we are not using that for the browser front end, like writing.
+
+131
+00:13:47,501 --> 00:13:52,061
+We don't write the the browser front end for desktop in Cortland or we don't use Java.
+
+132
+00:13:52,061 --> 00:13:58,061
+The reason they tend to use Java is because that's like the primary language, I think, for writing for Android.
+
+133
+00:13:58,061 --> 00:14:07,691
+I'm not an Android developer, but, you know, Java and Cortland or or Native Code or how you talk to the Android operating system.
+
+134
+00:14:07,691 --> 00:14:12,341
+And we do have some shared stuff, but it's usually not like UI widgets.
+
+135
+00:14:12,341 --> 00:14:22,591
+It's usually like logic for things like session management or, you know, logic for.
+
+136
+00:14:22,591 --> 00:14:28,891
+Tab, tab, state and tab restoration and like password management,
+
+137
+00:14:28,891 --> 00:14:34,261
+that sort of thing would fall under toolkit and so they wouldn't necessarily be UI components,
+
+138
+00:14:34,261 --> 00:14:41,641
+but some might be just like logical modules to do operations that lots of different applications need to do,
+
+139
+00:14:41,641 --> 00:14:48,001
+like store password security or something. And so that would also be in toolkit.
+
+140
+00:14:48,001 --> 00:14:55,051
+Hopefully that answered your question, sure. Fifty five, so there again, lots of teams and lots of specialists in each of these teams,
+
+141
+00:14:55,051 --> 00:15:00,031
+like a lot of the spider monkey team, only work on spider monkey.
+
+142
+00:15:00,031 --> 00:15:06,391
+A lot of our networking team only works on networking, but there are also generalists that will float between these teams.
+
+143
+00:15:06,391 --> 00:15:14,551
+You know, I can I can think of a number of generalists who I've seen apply fixes to style
+
+144
+00:15:14,551 --> 00:15:20,611
+and layout and then also feel comfortable applying fixes to like the DOM,
+
+145
+00:15:20,611 --> 00:15:25,531
+you know, the dorm code or even the JavaScript engine.
+
+146
+00:15:25,531 --> 00:15:25,831
+You know,
+
+147
+00:15:25,831 --> 00:15:36,001
+people who are able to sort of move between these teams are are able to do like a lot without necessarily having to request work from other teams,
+
+148
+00:15:36,001 --> 00:15:39,391
+which is pretty powerful. So that's that's nice.
+
+149
+00:15:39,391 --> 00:15:43,411
+You've got a mixture of generalists and specialists on the platform team,
+
+150
+00:15:43,411 --> 00:15:47,941
+and sometimes the generalists will also float between the platform and the front end as well.
+
+151
+00:15:47,941 --> 00:15:52,831
+There are some front end engineers who feel comfortable hacking on style and layout code
+
+152
+00:15:52,831 --> 00:15:56,851
+or networking code or the JavaScript engine or accessability or all of these things.
+
+153
+00:15:56,851 --> 00:16:04,861
+And there are some platform engineers who feel comfortable hacking on front and code and we're able to like kind of go back and forth,
+
+154
+00:16:04,861 --> 00:16:10,381
+which which is also really powerful. You know, this division of labor is handy.
+
+155
+00:16:10,381 --> 00:16:15,151
+You know, it means that some people are able to focus on one particular thing,
+
+156
+00:16:15,151 --> 00:16:20,911
+but having a more holistic view of how things tie together is also very handy
+
+157
+00:16:20,911 --> 00:16:28,561
+because it allows you it can allow for greater integration between parts.
+
+158
+00:16:28,561 --> 00:16:40,361
+If you have people who are like very familiar with with multiple things and working in those in those subsystems, hopefully that made sense.
+
+159
+00:16:40,361 --> 00:16:43,151
+So the Firefox's front end has lots of pieces as well.
+
+160
+00:16:43,151 --> 00:16:48,791
+We were just listing all of these pieces for the platform team Firefox's front and has lots of pieces to.
+
+161
+00:16:48,791 --> 00:16:52,991
+So, you know, I list a bunch here, but like history and bookmarks, that's main.
+
+162
+00:16:52,991 --> 00:17:00,881
+That's some of that is shared in toolkit. But a bunch of it is specialized for Firefox, our privacy and security UI.
+
+163
+00:17:00,881 --> 00:17:07,211
+The media controls some of that's shared in toolkit. Some of it is not.
+
+164
+00:17:07,211 --> 00:17:17,201
+For example, the HTML video player that Firefox for desktop uses is also used, I believe, for Phenix.
+
+165
+00:17:17,201 --> 00:17:26,141
+But the picture and picture code is only used in Firefox for desktop and I believe the Firefox for Android people,
+
+166
+00:17:26,141 --> 00:17:30,821
+the Phenix team have developed their own picture and picture implementation and that was
+
+167
+00:17:30,821 --> 00:17:36,951
+because there was just not a great way of having a shared abstraction between the two of them.
+
+168
+00:17:36,951 --> 00:17:48,771
+Sorry, theme's menus, like all these things, some of them are very Firefox's specific and they, you know, they exist within the Firefox code based.
+
+169
+00:17:48,771 --> 00:17:57,771
+The add on manager is something that is shared between Firefox and Thunderbird and some parts of Phenix as well.
+
+170
+00:17:57,771 --> 00:18:06,251
+So, you know, that's also in tool kit. And on the Firefox's team, we tend to be a lot smaller, there aren't as many of us,
+
+171
+00:18:06,251 --> 00:18:11,441
+and so we because there are so many subsystems and components, we tend to be more generalists.
+
+172
+00:18:11,441 --> 00:18:16,031
+You know, we tend to be able to move very quickly and easily between these various components.
+
+173
+00:18:16,031 --> 00:18:23,531
+And that's not to say that we don't have domain expertize in a certain area like I am, I would say a domain expert in the picture in picture code.
+
+174
+00:18:23,531 --> 00:18:31,061
+I am not a domain expert for the on manager, for example, but I would feel comfortable looking at that code and changing that code.
+
+175
+00:18:31,061 --> 00:18:36,851
+I would probably want a domain expert on the team to to review it, though.
+
+176
+00:18:36,851 --> 00:18:40,631
+So that's that that's generally the shape of things.
+
+177
+00:18:40,631 --> 00:18:46,631
+Again, the line between Firefox and platform and who's responsible for what can also be blurry,
+
+178
+00:18:46,631 --> 00:18:54,701
+especially for really old chunks of code, you know, stuff from the the Netscape days because, you know, surprise.
+
+179
+00:18:54,701 --> 00:19:00,191
+Firefox is a direct descendant of the Netscape Navigator, if you're not familiar with it.
+
+180
+00:19:00,191 --> 00:19:07,541
+Netscape Navigator is a Web browser that existed in the late 90s and early 2000s.
+
+181
+00:19:07,541 --> 00:19:09,901
+It was a very popular Web browser.
+
+182
+00:19:09,901 --> 00:19:18,011
+It was part of the what we call the original browser wars between Netscape and Internet Explorer and Mozilla and Firefox are a direct descendant,
+
+183
+00:19:18,011 --> 00:19:24,131
+an offshoot of the Netscape of the Netscape organization,
+
+184
+00:19:24,131 --> 00:19:31,751
+the code base for Netscape Navigator communicator I like the whole suite, was open sourced as the Mozilla suite.
+
+185
+00:19:31,751 --> 00:19:40,841
+And then Firefox was a an effort to sort of strip away most of the suite and just focus on the browser part of it.
+
+186
+00:19:40,841 --> 00:19:45,161
+And that's what Firefox 1.0 was. And we are a direct descendant of that stuff.
+
+187
+00:19:45,161 --> 00:19:52,811
+And, you know, there aren't too many pieces from the Netscape days that are still around, but some of them are still there.
+
+188
+00:19:52,811 --> 00:20:00,221
+And interestingly, you might see some parts of the code base that have special acronyms at the front, like NECI,
+
+189
+00:20:00,221 --> 00:20:09,521
+like there are interfaces like NECI, Doc Shell, and that NES stands for, I believe, Netscape, Netscape interface.
+
+190
+00:20:09,521 --> 00:20:16,651
+And that's before we had like proper name spacing in C++ and stuff.
+
+191
+00:20:16,651 --> 00:20:24,721
+All right, so hopefully that that helps draw a distinction between Firefox and platform and the specializations that we
+
+192
+00:20:24,721 --> 00:20:31,801
+have in the fact that we are also a collection of generalists that can kind of float between these subsystems.
+
+193
+00:20:31,801 --> 00:20:38,971
+All right, moving on. So let's talk quickly about the Firefox desktop front,
+
+194
+00:20:38,971 --> 00:20:47,251
+and so you may have heard me use this term a lot in previous recordings, you may hear other developers using it.
+
+195
+00:20:47,251 --> 00:20:52,981
+You might even hear other browsers referring to it. This notion, this distinction between chrome and content.
+
+196
+00:20:52,981 --> 00:20:58,981
+And I want to be clear, I'm not referring to chrome or chromium, the Web browser by Google.
+
+197
+00:20:58,981 --> 00:21:07,031
+That is a different thing than what I'm referring to in Chrome, the Google the Google team who developed Chrome and branded Chrome.
+
+198
+00:21:07,031 --> 00:21:15,971
+You know, it only added confusion, but basically for a long time in Web browser land and maybe even in other applications,
+
+199
+00:21:15,971 --> 00:21:22,421
+these terms meant something specific. What they meant chrome and content.
+
+200
+00:21:22,421 --> 00:21:32,921
+Where were this? It was drawing this distinction where content is this area where you display Web pages and the chrome is everything surrounding it.
+
+201
+00:21:32,921 --> 00:21:40,901
+And I believe it's an automobile analogy, you know, like the chrome around, like the I guess cars back in the day usually had,
+
+202
+00:21:40,901 --> 00:21:47,141
+like, a lot of chrome around various parts of it, you know, almost like decoration.
+
+203
+00:21:47,141 --> 00:21:56,711
+Even though the front end is not decoration. It is like the main interface to, like, navigation and management managing your web browsing.
+
+204
+00:21:56,711 --> 00:22:00,821
+But I think it's more about the surroundings is what they mean by Chrome.
+
+205
+00:22:00,821 --> 00:22:11,711
+And so that's why they call it that's why they've called it chrome and why you may have seen things like this special type of urai in our code base.
+
+206
+00:22:11,711 --> 00:22:19,031
+That's what it's referring to, the user interface, like you can kind of think of Chrome as the user interface of the browser.
+
+207
+00:22:19,031 --> 00:22:25,871
+And that is only made more confusing by the fact that Google branded their browser and called it Chrome.
+
+208
+00:22:25,871 --> 00:22:29,231
+All right. And this this sort of distinction,
+
+209
+00:22:29,231 --> 00:22:37,391
+I've color coded it similarly to before because like that that is like a that is a it mirrors the same division as before.
+
+210
+00:22:37,391 --> 00:22:43,991
+You know, like the platform team tends to manage the stuff that shows up in this green box
+
+211
+00:22:43,991 --> 00:22:49,811
+and the Firefox team tends to manage the stuff that shows up surrounding it,
+
+212
+00:22:49,811 --> 00:23:00,321
+above it. And overlaying on top of it tends to I say it's a bit of an oversimplification, but generally that's the case.
+
+213
+00:23:00,321 --> 00:23:08,501
+I'm just going to pull the audience any questions so far before we start getting into the finer grained details?
+
+214
+00:23:08,501 --> 00:23:11,981
+I see, sure, she says that user chrome OS makes sense now.
+
+215
+00:23:11,981 --> 00:23:18,481
+Yes, so there is a way of modifying the user interface.
+
+216
+00:23:18,481 --> 00:23:25,441
+Using CSFs called by creating user chromatics file and putting it into your profile
+
+217
+00:23:25,441 --> 00:23:30,481
+directory and the naming of that case file is informed by this distinction,
+
+218
+00:23:30,481 --> 00:23:34,591
+whenever you are affecting the chrome, you're creating a stylesheet for the chrome.
+
+219
+00:23:34,591 --> 00:23:38,401
+We call it the user chrome stylesheet or user chromed access.
+
+220
+00:23:38,401 --> 00:23:45,721
+And similarly, there's one called user content access that you can create that will apply to all Web content.
+
+221
+00:23:45,721 --> 00:23:50,161
+Although you have to be careful, I believe by default they will apply it to every Web page.
+
+222
+00:23:50,161 --> 00:23:57,691
+And if you want to do things for specific Web pages, you have to add special like matching flags.
+
+223
+00:23:57,691 --> 00:24:03,421
+You know, make sure that the the URL matches the site that you want to be modifying.
+
+224
+00:24:03,421 --> 00:24:14,881
+Or you might consider using an add on like stylish instead. Smurf says this is a great presentation so far, I'm getting a very generous delivery.
+
+225
+00:24:14,881 --> 00:24:19,821
+Let me check here. It's tea. Thank you very much for the tea delivery.
+
+226
+00:24:19,821 --> 00:24:22,101
+That's that's delightful.
+
+227
+00:24:22,101 --> 00:24:29,151
+I also, incidentally, for long time viewers, I don't know if you can tell the green screen is making this really hard to see, I think.
+
+228
+00:24:29,151 --> 00:24:36,081
+But what I'm holding is the green water bottle that you may have seen me using in like the first episodes of The Joy of Coding.
+
+229
+00:24:36,081 --> 00:24:43,311
+I found it. It was in a box. I found it. You know, I'm very happy to have it back.
+
+230
+00:24:43,311 --> 00:24:54,021
+OK, let's move on. So surprise the platform, a.k.a. a gecko, is also used to render the front end.
+
+231
+00:24:54,021 --> 00:24:59,541
+This is a key insight, a key thing to understand about the front end.
+
+232
+00:24:59,541 --> 00:25:05,961
+You know, I think this is the thing that blew me away when I first started looking at how Firefox was built.
+
+233
+00:25:05,961 --> 00:25:10,341
+This was kind of like a a like brain explosion moment.
+
+234
+00:25:10,341 --> 00:25:13,671
+So let's think for a second about, you know, what the front end is.
+
+235
+00:25:13,671 --> 00:25:18,411
+I'm going to go back a slide. What we have in the front end, actually, maybe I'll go here.
+
+236
+00:25:18,411 --> 00:25:23,121
+We have all these rectangles, we have buttons, we have things we need to click. We need to be able to draw things.
+
+237
+00:25:23,121 --> 00:25:28,281
+And we need to be able to, like, react to user input and do things.
+
+238
+00:25:28,281 --> 00:25:31,521
+And we also have to we want to do this in a cross platform way.
+
+239
+00:25:31,521 --> 00:25:40,251
+Firefox is an application that is designed to be, you know, to work properly on Windows, Mac OS and Linux on desktop.
+
+240
+00:25:40,251 --> 00:25:44,421
+Those are our three primary platforms. They're they're all tier one platforms.
+
+241
+00:25:44,421 --> 00:25:53,391
+And how do you do that without having to maintain like three different UI UI stacks effectively?
+
+242
+00:25:53,391 --> 00:25:59,511
+You know, how do you if you were to implement a new button, how do you make it so that you don't have to implement that button for Windows and
+
+243
+00:25:59,511 --> 00:26:03,591
+then implement that button for Linux and then implement that button for Mac OS? How do you do that?
+
+244
+00:26:03,591 --> 00:26:08,991
+And the solution that was that was put together long before I joined Mozilla.
+
+245
+00:26:08,991 --> 00:26:16,341
+I think even maybe even long before Firefox existed, like probably during the the Mozilla suite days was too.
+
+246
+00:26:16,341 --> 00:26:24,861
+They chose to use the same engine that renders the Web content to render the browser UI.
+
+247
+00:26:24,861 --> 00:26:30,981
+So the same code that draws this stuff down here draws this stuff up here.
+
+248
+00:26:30,981 --> 00:26:37,111
+And the reason why that's interesting is that it means that you can kind of treat.
+
+249
+00:26:37,111 --> 00:26:44,341
+The browser user interface as a Web page, so if you step back for a second,
+
+250
+00:26:44,341 --> 00:26:49,951
+you can almost think that a browser window like don't don't think about the Web content over here,
+
+251
+00:26:49,951 --> 00:26:52,951
+like ignore the content that's being displayed here.
+
+252
+00:26:52,951 --> 00:26:59,821
+Imagine that this browser window is actually a Web page that is that goes to a single destination.
+
+253
+00:26:59,821 --> 00:27:08,881
+And that single destination is called browser dot HTML. And that that destination has access and script.
+
+254
+00:27:08,881 --> 00:27:15,931
+And what it does is it draws like the tabs and the toolbars and sets up event handlers and a user albar and all these things.
+
+255
+00:27:15,931 --> 00:27:22,231
+And then also within that Web page, it has something that's like an iFrame,
+
+256
+00:27:22,231 --> 00:27:27,091
+an iFrame that knows how to load things over the network and render and display them.
+
+257
+00:27:27,091 --> 00:27:34,531
+And as you navigate around, what you're doing is you're you're like changing the the iframe, you're like telling it.
+
+258
+00:27:34,531 --> 00:27:46,681
+Now go here now. Navigate here. And once you kind of like settle into that idea that this entire window is a single load of a Web page called browser,
+
+259
+00:27:46,681 --> 00:27:56,551
+dot the email, then, you know, suddenly the idea of styling your user interface using CSFs makes a lot more sense.
+
+260
+00:27:56,551 --> 00:28:01,141
+And using JavaScript to script it makes a lot more sense.
+
+261
+00:28:01,141 --> 00:28:06,481
+So, yeah, the platform knows how to lay things out and draw things like why reinvent the wheel?
+
+262
+00:28:06,481 --> 00:28:09,241
+Let's just reuse that to draw the front end.
+
+263
+00:28:09,241 --> 00:28:16,501
+So to some, you can think of the browser front end as being very similar to a local website or web application.
+
+264
+00:28:16,501 --> 00:28:24,031
+Like to be clear, when I said that this is a Web site up here in this window, I didn't mean that it's loaded over the network.
+
+265
+00:28:24,031 --> 00:28:26,641
+We don't load the browser UI over the network.
+
+266
+00:28:26,641 --> 00:28:36,811
+What we do is we load it out of a, you know, an asset, an asset pack that's installed on your machine that's like exists on your file system.
+
+267
+00:28:36,811 --> 00:28:41,701
+And oftentimes those assets are addressed by using the chrome you our eyes.
+
+268
+00:28:41,701 --> 00:28:52,801
+So, for example, that browser HTML document is let's see, it's this this is the this is the Auri for it.
+
+269
+00:28:52,801 --> 00:28:57,391
+And if you want to be if you want to like, blow your brains out a little bit.
+
+270
+00:28:57,391 --> 00:29:03,961
+Sorry, that was probably not the best analogy. But check this out. If you put that uteri in the URL bar, you can actually load it.
+
+271
+00:29:03,961 --> 00:29:08,161
+It's a thing. It's a document you can load now. It does not in functional, functional.
+
+272
+00:29:08,161 --> 00:29:13,691
+I don't believe like I think if I try and direct this thing to go to see Abkhazia, I think it like breaks.
+
+273
+00:29:13,691 --> 00:29:23,411
+It's it's not designed to be used in that way, but it it loads, you know, and that's kind of wild.
+
+274
+00:29:23,411 --> 00:29:29,281
+Um. Let's see, let's go back to our slide's.
+
+275
+00:29:29,281 --> 00:29:34,591
+So, yeah, guess what the browser is the browser UI is kind of like a Web application.
+
+276
+00:29:34,591 --> 00:29:41,131
+Now, to be clear, it's not like a normal Web application because obviously it needs to have higher privileges,
+
+277
+00:29:41,131 --> 00:29:49,351
+like normal Web applications aren't allowed to talk directly to the operating system or to write to the file system or to,
+
+278
+00:29:49,351 --> 00:29:54,601
+you know, see what other tabs are open and stuff like that.
+
+279
+00:29:54,601 --> 00:29:59,311
+But we can because we run in what's called a privileged space,
+
+280
+00:29:59,311 --> 00:30:05,911
+like a sort of a an elevated permission privilege level so we can talk directly to the OS,
+
+281
+00:30:05,911 --> 00:30:08,881
+we can write to the registry, the Windows Registry, if we want.
+
+282
+00:30:08,881 --> 00:30:14,311
+We can read and write to the disk if we want lots of other things that we definitely don't want to let websites do.
+
+283
+00:30:14,311 --> 00:30:26,411
+The browser front end can. So we have privileged APIs in our JavaScript, in our JavaScript execution scope that allows us to do these things.
+
+284
+00:30:26,411 --> 00:30:29,981
+So I'm just going to draw more of a distinction between the difference between a Web
+
+285
+00:30:29,981 --> 00:30:35,181
+application and the Firefox UI and like the different sort of technologies that support them.
+
+286
+00:30:35,181 --> 00:30:45,311
+So for a traditional Web application. Most people, when they're doing markup, are using are ultimately it ends up being HTML in some form or another.
+
+287
+00:30:45,311 --> 00:30:52,031
+For the Firefox UI. We use a blend of different markup languages, sometimes all in the same document.
+
+288
+00:30:52,031 --> 00:31:00,131
+We use HTML as well, but we also use a variation on HTML called HTML and that is mainly that.
+
+289
+00:31:00,131 --> 00:31:05,051
+That is something we're moving away from. We're trying to move away from HTML to HTML.
+
+290
+00:31:05,051 --> 00:31:13,361
+And if you want to know what the distinction is between the two, I believe HTML was an attempt to make HTML like fully XML compliant.
+
+291
+00:31:13,361 --> 00:31:25,571
+XML is a general markup language for structured data and I think HTML was an attempt to to like implement HTML,
+
+292
+00:31:25,571 --> 00:31:34,181
+but making it XML compliant and that gave us certain advantages, particularly with localization and translation.
+
+293
+00:31:34,181 --> 00:31:45,641
+The old way we use we did localization, used something called DTD or you know, DTD entities, XML entities or XML entities I think.
+
+294
+00:31:45,641 --> 00:31:54,131
+And now that we are using a new localization system, we can then move away from HTML two straight HTML thinker.
+
+295
+00:31:54,131 --> 00:32:04,881
+Oh hey thinker. There's someone in Matrix who, you know, worked on Firefox for a long time, worked on some really interesting performance tools.
+
+296
+00:32:04,881 --> 00:32:11,981
+There's one called Task Tracer, I believe, thinker. You know, you worked on Firefox so like lots of different stuff and is in Matrix.
+
+297
+00:32:11,981 --> 00:32:19,031
+It's nice to see you, thinker. And when I recognize browser dot html works in a tab, it blew my mind too.
+
+298
+00:32:19,031 --> 00:32:25,901
+Yeah, it's, it's kind of like it's a bit of a it's a bit of a back flip, you know, like suddenly thinking that the,
+
+299
+00:32:25,901 --> 00:32:33,281
+the browser UI as a web page, like a single instance of a web page that is only loaded once per window.
+
+300
+00:32:33,281 --> 00:32:42,851
+It really kind of changes things, or at least it changed things for me. So along with HTML like HTML, we use a markup language called Zuhal.
+
+301
+00:32:42,851 --> 00:32:52,991
+Now the reason we use a markup language called Zuhal is because whenever this decision to render the browser UI with the engine was developed,
+
+302
+00:32:52,991 --> 00:33:02,891
+HTML and HTML, we're not mature enough to to like to be the markup language for a desktop application.
+
+303
+00:33:02,891 --> 00:33:08,381
+You know, like there, there just wasn't enough stuff like I think when Zuhal was first invented.
+
+304
+00:33:08,381 --> 00:33:14,651
+I'm trying to think of what what HTML has that Zul did.
+
+305
+00:33:14,651 --> 00:33:21,221
+But like that at the time the tools invented HTML didn't have because I think at the time it was like HTML one or two,
+
+306
+00:33:21,221 --> 00:33:25,511
+which was not sufficient for making a browser UI.
+
+307
+00:33:25,511 --> 00:33:32,771
+And then when HTML five came around and with further additions to HTML, Zuhal has become less and less of a thing that we need.
+
+308
+00:33:32,771 --> 00:33:39,071
+Like I think there are certain layout things that we get with HTML now that are really powerful.
+
+309
+00:33:39,071 --> 00:33:40,691
+So back in the day, for example,
+
+310
+00:33:40,691 --> 00:33:49,271
+we would use like before we had fancy things like the flex grid and flex box model and see a grid and all these things.
+
+311
+00:33:49,271 --> 00:33:58,571
+We would use tables to layout complicated Web pages and that worked for Web pages back in the old school days of HTML.
+
+312
+00:33:58,571 --> 00:34:04,361
+But it it it's not what we wanted to do with the browser UI.
+
+313
+00:34:04,361 --> 00:34:06,611
+We wanted to use something different. We need something more flexible.
+
+314
+00:34:06,611 --> 00:34:16,571
+And so Zuhal had its own like layout model and its own layout, language or language for developing on that layout model.
+
+315
+00:34:16,571 --> 00:34:25,751
+And we have slowly but surely been moving away from Zul to HTML to to and HTML.
+
+316
+00:34:25,751 --> 00:34:28,871
+And that's been a multi-year effort. It's going to take a long time.
+
+317
+00:34:28,871 --> 00:34:35,291
+I don't know if it'll ever be done because there are certain things that Zuhal can do that we don't think HTML will ever be able to do.
+
+318
+00:34:35,291 --> 00:34:42,191
+So, for example, like this is a floating panel window that is able to exist outside of the content space.
+
+319
+00:34:42,191 --> 00:34:47,201
+You know, like it floats on top. If you can see, it's like it's rendering on top of the toolbar.
+
+320
+00:34:47,201 --> 00:34:51,041
+And I don't think that's something that we would want to add to HTML.
+
+321
+00:34:51,041 --> 00:35:00,481
+It might make sense to just sort of like boil things down until we have just those few things that only Zul can do and then just leave them be.
+
+322
+00:35:00,481 --> 00:35:09,961
+So, yeah, generally a Web page will be defined using HTML as its markup for Firefox, we will use a combination of ZUHAL, HTML and HTML for scripting.
+
+323
+00:35:09,961 --> 00:35:14,791
+We use JavaScript. We also use a we obviously use privileged JavaScript as well.
+
+324
+00:35:14,791 --> 00:35:23,371
+We have a way of creating modules that predate the ECMAScript six modules called Jayson's or JavaScript modules.
+
+325
+00:35:23,371 --> 00:35:29,071
+They're Mozilla specific. We're trying to move away from those as well so that we can use ECMAScript six
+
+326
+00:35:29,071 --> 00:35:36,661
+modules and all the goodness that the modern JavaScript ecosystem is used to now.
+
+327
+00:35:36,661 --> 00:35:50,101
+But JSM, if you ever see a file that ends with JSM, that is a JavaScript module like browser glued, GSM is a JavaScript module.
+
+328
+00:35:50,101 --> 00:35:59,371
+But the idea of the some of the nuances of of Jayson's and S6 modules, like there are some nuance differences between the two.
+
+329
+00:35:59,371 --> 00:36:09,471
+But the general idea of having like a Singleton module that is not tied to a particular dom.
+
+330
+00:36:09,471 --> 00:36:13,141
+I think that's the case for Essex modules.
+
+331
+00:36:13,141 --> 00:36:23,221
+I haven't used six modules enough, but the idea of sharing code and putting them in modules is generally the idea there for for styling.
+
+332
+00:36:23,221 --> 00:36:28,831
+We use CSFs. You know, all of the UI that you're seeing in the browser is styled using CSS,
+
+333
+00:36:28,831 --> 00:36:32,731
+although we have some extra abilities that aren't necessarily exposed to the Web.
+
+334
+00:36:32,731 --> 00:36:44,521
+So, for example, you'll notice that the icon colors in the in my toolbar are generally matching the theme, the theme that I've used.
+
+335
+00:36:44,521 --> 00:36:51,451
+And the if I switch themes like if I go into add ons and themes and choose a different theme,
+
+336
+00:36:51,451 --> 00:36:56,701
+if I choose dark theme, for example, it it keeps the the bright color.
+
+337
+00:36:56,701 --> 00:36:59,221
+And if I switch to, say, the light theme,
+
+338
+00:36:59,221 --> 00:37:11,221
+then they switch to a dark color and that is making use of a an extension to access that I don't think has been exposed to to other.
+
+339
+00:37:11,221 --> 00:37:17,491
+To the Web in general and the the idea is each of these graphics is actually an SFG,
+
+340
+00:37:17,491 --> 00:37:23,791
+so it's a scalable vector graphic that we raster eyes and make sure that it's scaled properly
+
+341
+00:37:23,791 --> 00:37:28,111
+for the display so they don't become pixellated if you have a high density display or something.
+
+342
+00:37:28,111 --> 00:37:35,071
+And then we have extensions to it so that in the event that the theme changes,
+
+343
+00:37:35,071 --> 00:37:41,071
+we can rewrite, pasteurize those SVG graphics with a new color that the theme can provide.
+
+344
+00:37:41,071 --> 00:37:42,631
+So that's not a certain thing.
+
+345
+00:37:42,631 --> 00:37:49,441
+That's not a thing that that SVG proper on the Web can do, but it's actually something that is going through the standards,
+
+346
+00:37:49,441 --> 00:37:54,241
+standards, efforts and eventually maybe will be something that Web pages can do.
+
+347
+00:37:54,241 --> 00:37:58,291
+But for now they can't. So for hang on a second.
+
+348
+00:37:58,291 --> 00:38:08,801
+I see a couple of questions here. How did chromium how does chromium handle such a case, or is it also using a similar thing like Zuhal?
+
+349
+00:38:08,801 --> 00:38:21,831
+So the last time I checked Chromium is writing has written most of its browser UI in native code, but it uses some kind of abstraction layer.
+
+350
+00:38:21,831 --> 00:38:31,701
+To like define it once and then have like implementations of that abstraction layer for the various operating systems they need to target.
+
+351
+00:38:31,701 --> 00:38:41,361
+It's been a couple of years since I looked at that. I think they called it aqua chromium aqua.
+
+352
+00:38:41,361 --> 00:38:49,621
+Was it called Aqua? Chromium aqua browser.
+
+353
+00:38:49,621 --> 00:39:01,271
+Uh, maybe it wasn't called Aqua Dots, like UI tool kit.
+
+354
+00:39:01,271 --> 00:39:09,841
+Or that's what is called or. So, oh, and it's got broken.
+
+355
+00:39:09,841 --> 00:39:14,821
+Broken links, and it's apparently obsolete or at least this document is obsolete,
+
+356
+00:39:14,821 --> 00:39:22,111
+but I believe it uses a language called Oura, but it's ultimately developed in native code.
+
+357
+00:39:22,111 --> 00:39:26,551
+I don't think, for example, that you can use JavaScript to.
+
+358
+00:39:26,551 --> 00:39:32,281
+I could be wrong. I haven't looked at the source code in a long time, and I've never written a patch for chromium.
+
+359
+00:39:32,281 --> 00:39:45,341
+But my impression is that it's actually quite difficult to change the UI and chromium compared to Firefox because it's mostly written in native code.
+
+360
+00:39:45,341 --> 00:39:51,911
+And, you know, you you have to you don't get the same sort of sugar that you get with cows,
+
+361
+00:39:51,911 --> 00:39:59,831
+for example, or the speed you get with developing with a scripting language like JavaScript.
+
+362
+00:39:59,831 --> 00:40:05,991
+And things may have changed since I last looked, but that's my impression. Akwa was the old Apple GUI.
+
+363
+00:40:05,991 --> 00:40:10,851
+That's right. That's what it was called. I got confused. Let's keep going.
+
+364
+00:40:10,851 --> 00:40:17,171
+So for widget tree, modern web pages tend to use, tend to develop.
+
+365
+00:40:17,171 --> 00:40:23,771
+Using various libraries that develop that have evolved over the past couple of years, like react and view,
+
+366
+00:40:23,771 --> 00:40:31,961
+to create these shared components and to structure their web applications into individual parts that can be tested and shared,
+
+367
+00:40:31,961 --> 00:40:40,161
+maybe between applications and some some sites if they're, you know.
+
+368
+00:40:40,161 --> 00:40:42,891
+If they're if you're running on a modern Web browser,
+
+369
+00:40:42,891 --> 00:40:52,401
+you can use custom elements which are Web standard that doesn't involve like virtual dom or anything like that, that uses, you know,
+
+370
+00:40:52,401 --> 00:40:59,901
+standard web APIs to create custom HTML like elements that have that are, you know,
+
+371
+00:40:59,901 --> 00:41:06,801
+can have its own internal shadow dom and can be bound to various types of scripting to create reusable components.
+
+372
+00:41:06,801 --> 00:41:13,281
+And for the Firefox UI, we use custom elements for the most part, although we do use react here and there.
+
+373
+00:41:13,281 --> 00:41:17,451
+That might surprise some of you, but our browser dev tools UI.
+
+374
+00:41:17,451 --> 00:41:24,441
+So this stuff down here is written using React and the new tab page also here written using react.
+
+375
+00:41:24,441 --> 00:41:30,531
+So if you are a react developer, is that if that's something that you are familiar with, then you already have the school,
+
+376
+00:41:30,531 --> 00:41:38,951
+the skills that you need in order to contribute to the dev tools or to the new tab page.
+
+377
+00:41:38,951 --> 00:41:50,051
+Oh, let's see. So, yeah, generally when we load resources in a Web page, you'll do it over, you know, breakups or maybe the local filesystem.
+
+378
+00:41:50,051 --> 00:41:54,281
+Whenever we're doing it for the browser UI, we use these special you URLs.
+
+379
+00:41:54,281 --> 00:42:03,371
+They usually start with Chrome or resource as the scheme. So let's take a quick taste.
+
+380
+00:42:03,371 --> 00:42:11,021
+Let's take a look at some Browsr UI code, some markup, and this is some some Zuhal that we're going to be looking at.
+
+381
+00:42:11,021 --> 00:42:17,891
+So what we're looking at here is the definition, the markup of this chunk of the app menu.
+
+382
+00:42:17,891 --> 00:42:21,221
+And it if you're used to HTML, this is going to look really familiar.
+
+383
+00:42:21,221 --> 00:42:28,841
+You know, like the general the general structure is is similar to HTML, where we've got like.
+
+384
+00:42:28,841 --> 00:42:37,421
+Tags are effectively and they can have IDs and classes, you know, query selecter and get element by ID that will work.
+
+385
+00:42:37,421 --> 00:42:46,571
+And a Zul document, you know, the dorm model is roughly is shared between ZUL documents and HTML documents.
+
+386
+00:42:46,571 --> 00:42:56,291
+And so we have these buttons here and they have IDs and they have classes and they we're exposing a new way of doing localization.
+
+387
+00:42:56,291 --> 00:43:02,651
+We're starting to use a new way of doing localization in our the browser front and using a library called Fluent.
+
+388
+00:43:02,651 --> 00:43:11,891
+And you can use it yourselves. Like Fluent is a this is actually an opportunity to plug the fluent project.
+
+389
+00:43:11,891 --> 00:43:18,581
+It's a kind of separate project, but is embedded deeply in the in the browser currently.
+
+390
+00:43:18,581 --> 00:43:23,831
+But it can be you can like you can localize your own Web page using fluent if you'd like.
+
+391
+00:43:23,831 --> 00:43:27,521
+It is an open source project. You can import the library.
+
+392
+00:43:27,521 --> 00:43:32,951
+You can you can internationalize, you can localize your separate product.
+
+393
+00:43:32,951 --> 00:43:41,201
+If you're running a desktop product, you could theoretically use fluent. And it's a way of having a very powerful localization system,
+
+394
+00:43:41,201 --> 00:43:49,061
+a very expressive localization language, which will and we've learned especially, you know,
+
+395
+00:43:49,061 --> 00:43:52,721
+we've got specialists who have been localizing or been part of the localization
+
+396
+00:43:52,721 --> 00:43:56,571
+community and internationalization community of Firefox for years and years and years.
+
+397
+00:43:56,571 --> 00:44:04,901
+And we've learned a lot about how to make a product that works across different works across borders and works in different locales,
+
+398
+00:44:04,901 --> 00:44:12,101
+in different regions and in different cultures. And we've embedded a lot of those lessons in fluent.
+
+399
+00:44:12,101 --> 00:44:16,241
+So I highly, highly recommend checking that out. In fact, let me add that to the agenda.
+
+400
+00:44:16,241 --> 00:44:25,101
+If you're curious, check out Project Fluent Dotcom Dawg, rather.
+
+401
+00:44:25,101 --> 00:44:31,461
+And maybe you can localize your website using it. I think there are some some bindings to make it easier.
+
+402
+00:44:31,461 --> 00:44:38,631
+For example, if you are using, say, Django, if you're here building a Django application,
+
+403
+00:44:38,631 --> 00:44:47,481
+I think you can use fluent on Django implementations in Python.
+
+404
+00:44:47,481 --> 00:44:57,401
+Python fluent. And so, yeah, you can like.
+
+405
+00:44:57,401 --> 00:45:06,811
+Fluent syntax, fluent runtime, you visit the GitHub project for the full list.
+
+406
+00:45:06,811 --> 00:45:14,471
+I'd love to see some examples dock's. Hmm.
+
+407
+00:45:14,471 --> 00:45:17,201
+Maybe this stuff has not been fleshed out just yet,
+
+408
+00:45:17,201 --> 00:45:25,031
+but I think the idea is ultimately you can use fluent for your you can use it for your Django application, for example.
+
+409
+00:45:25,031 --> 00:45:33,641
+Yeah. The runtime package includes the library required he's fluent to localizer Python application boom, there you go.
+
+410
+00:45:33,641 --> 00:45:38,501
+It's just I don't think I see any examples here. Anyways,
+
+411
+00:45:38,501 --> 00:45:45,011
+so that's that's us using fluent and then there are some special Zul specific attributes on
+
+412
+00:45:45,011 --> 00:45:51,611
+these toolbar button widgets that have been defined as custom elements like QI and command.
+
+413
+00:45:51,611 --> 00:45:52,781
+So elsewhere,
+
+414
+00:45:52,781 --> 00:46:02,471
+you can find the definitions for these toolbar buttons in our shared toolkit code because I believe Thunderbird uses toolbar buttons as well.
+
+415
+00:46:02,471 --> 00:46:07,111
+Yeah, I think and if you're here, I'll share the the slides.
+
+416
+00:46:07,111 --> 00:46:12,491
+I'll put a link to the slides here if you want to check those out.
+
+417
+00:46:12,491 --> 00:46:24,701
+Um. I think I don't think this talk is available to the public, unfortunately.
+
+418
+00:46:24,701 --> 00:46:31,031
+So I'm going to skip that slide and I'm just going to end it there, actually, so it's kind of an abrupt ending.
+
+419
+00:46:31,031 --> 00:46:40,551
+Questions, any questions from the audience about anything we went through today about, you know, the browser front end and how it all works?
+
+420
+00:46:40,551 --> 00:46:42,791
+I'll open the floor for questions about that.
+
+421
+00:46:42,791 --> 00:46:48,011
+And if there aren't any like once we reach the tail end of that, we can move to a different a different thing.
+
+422
+00:46:48,011 --> 00:46:56,451
+We can do other stuff. So I'll open the floor. And while I'm waiting for questions, let me just see how.
+
+423
+00:46:56,451 --> 00:47:04,941
+This thing's doing. And might not be done in time, so this these two builds.
+
+424
+00:47:04,941 --> 00:47:09,681
+Are part of this performance analysis that I'm doing, and I don't think they'll be done before the end of the stream.
+
+425
+00:47:09,681 --> 00:47:14,781
+So the question is, how does C++ connect with the front end? That is a great question.
+
+426
+00:47:14,781 --> 00:47:18,741
+Thank you. Sure. Fifty five. Thank you so much for asking that. That is a fantastic question.
+
+427
+00:47:18,741 --> 00:47:22,221
+So, yes, I kind of glossed over it. But you're right.
+
+428
+00:47:22,221 --> 00:47:27,741
+Like at some point we're writing stuff in JavaScript and, you know,
+
+429
+00:47:27,741 --> 00:47:33,051
+there's there's stuff in C++ and we need to be able to communicate back and forth between the two of them.
+
+430
+00:47:33,051 --> 00:47:38,061
+And there are a couple of different ways that this occurs.
+
+431
+00:47:38,061 --> 00:47:46,611
+The first way is from the JavaScript engine itself. When it's interpreting the JavaScript, depending on the like,
+
+432
+00:47:46,611 --> 00:47:51,471
+we might end up calling a JavaScript method or a JavaScript call that the JavaScript
+
+433
+00:47:51,471 --> 00:47:57,681
+engine knows how to execute and the JavaScript engine is written in C++, so it will execute some C++ to do something.
+
+434
+00:47:57,681 --> 00:48:05,151
+So, for example, I don't know if some of the math functions are implemented in Java, in C++.
+
+435
+00:48:05,151 --> 00:48:13,121
+I think they are like just math underscore sign I believe is implemented in C++.
+
+436
+00:48:13,121 --> 00:48:21,881
+Yeah, and so when you call math dot, sign the JavaScript engine, no sign of five,
+
+437
+00:48:21,881 --> 00:48:30,251
+the JavaScript engine knows to to call into this native like JavaScript.
+
+438
+00:48:30,251 --> 00:48:37,571
+This part of the JavaScript engine, which is written in C++. I don't think that is exactly what you were asking, but that's the first part.
+
+439
+00:48:37,571 --> 00:48:46,451
+So the second part is that because JavaScript is a scripting language, you we are able to like expose different things via globalize.
+
+440
+00:48:46,451 --> 00:48:58,901
+And, you know, effectively there's a part of Geko that knows how to expose things to JavaScript and connect them to things in native code.
+
+441
+00:48:58,901 --> 00:49:03,941
+There's a bridge effectively and there's an older bridge and there is a newer bridge.
+
+442
+00:49:03,941 --> 00:49:07,241
+And these kind of bridges are called bindings.
+
+443
+00:49:07,241 --> 00:49:14,171
+You know, whenever things are talking across different languages, I often hear them referred to as bindings.
+
+444
+00:49:14,171 --> 00:49:23,081
+And so the first kind of binding, the older kind of binding is powered by a system called Expec, Harm or XP Connect, rather.
+
+445
+00:49:23,081 --> 00:49:28,541
+And if you find if you just like, search for it on Wikipedia, you can find this.
+
+446
+00:49:28,541 --> 00:49:35,441
+If you if you're an old school Windows developer, you might remember something introduced by Microsoft called Calm and XP.
+
+447
+00:49:35,441 --> 00:49:41,861
+Com is like a version of calm that was developed to work across platform.
+
+448
+00:49:41,861 --> 00:49:46,131
+I believe that's what the XP stands for. Cross platform. Com.
+
+449
+00:49:46,131 --> 00:49:54,381
+Oh yeah. Cross platform component. Object model. And it's kind of like a design pattern for structuring an application, but part of XP.
+
+450
+00:49:54,381 --> 00:49:59,231
+Com was this thing called XP Connect and XP.
+
+451
+00:49:59,231 --> 00:50:05,441
+Kinect is a technology that enables interoperability between XP Calm and JavaScript so you
+
+452
+00:50:05,441 --> 00:50:11,381
+can like reflect information back and forth so that I'm going to show you some XP home.
+
+453
+00:50:11,381 --> 00:50:17,111
+It's a little crusty, it's a little weird to see it, but let's do some XP comp stuff.
+
+454
+00:50:17,111 --> 00:50:31,581
+So let me. Let me run a bill to Firefox and let's look at what XP looks like whenever I try and invoke some XP APIs,
+
+455
+00:50:31,581 --> 00:50:36,981
+so I say component's there's actually a shortcut to components, not classes.
+
+456
+00:50:36,981 --> 00:50:44,271
+Is this global that I have access to? And if I say and to be clear, whenever I'm running the multiprocessor browser console right now,
+
+457
+00:50:44,271 --> 00:50:51,531
+you can think of this as running the dev tools in the scope of that top level browser document.
+
+458
+00:50:51,531 --> 00:50:55,551
+You know, like the the the the top level window, the web page.
+
+459
+00:50:55,551 --> 00:51:02,991
+I'm running JavaScript for the top level Web page, which is browser, browser, dot com.
+
+460
+00:51:02,991 --> 00:51:09,501
+In fact, when I say window, that location, I'm pointing at browser dot html, which is this document.
+
+461
+00:51:09,501 --> 00:51:14,151
+And if I try and navigate it to a different location, I think it will break or maybe it won't break.
+
+462
+00:51:14,151 --> 00:51:23,961
+I don't know. But but let's not try and do that. But components start classes which has this shortcut c c I can like call functions
+
+463
+00:51:23,961 --> 00:51:31,821
+on it like or I can access a component using the dot com the way calm works,
+
+464
+00:51:31,821 --> 00:51:36,471
+which is like it's basically a hash table of things that were implemented in various languages.
+
+465
+00:51:36,471 --> 00:51:41,121
+It's a very sort of cumbersome contract language and interface language.
+
+466
+00:51:41,121 --> 00:51:45,441
+But basically you are able to register components with XP.
+
+467
+00:51:45,441 --> 00:51:52,191
+Com that are written in either JavaScript or C++. They have various IDs they have to implement.
+
+468
+00:51:52,191 --> 00:52:00,561
+They can implement one or more interfaces and then you can talk to them various components to can talk to one another over those interfaces.
+
+469
+00:52:00,561 --> 00:52:07,341
+And because they are using those interfaces, it doesn't matter what language that they're developed in,
+
+470
+00:52:07,341 --> 00:52:13,551
+the communication goes over XP Connect if there's like a language difference and the like,
+
+471
+00:52:13,551 --> 00:52:18,561
+you can implement and become component using either JavaScript or C++ and you can invoke a
+
+472
+00:52:18,561 --> 00:52:24,981
+JavaScript component or you can invoke an X become component using either JavaScript or C++.
+
+473
+00:52:24,981 --> 00:52:33,231
+Well, that was a lot. Let me see if I can show you an example, see if I can find some.
+
+474
+00:52:33,231 --> 00:52:47,481
+Some stuff. Yes, so here is a here is us getting access to a service called the Environment Service.
+
+475
+00:52:47,481 --> 00:52:57,921
+This is an example of us doing that, and I'm going to call it Let. Environment service, I spelled that wrong.
+
+476
+00:52:57,921 --> 00:53:03,891
+I don't know if you can read this environment service equal that and what we're doing is we're saying,
+
+477
+00:53:03,891 --> 00:53:10,401
+OK, give me the the thing registered at this special identifier.
+
+478
+00:53:10,401 --> 00:53:15,111
+And it starts with Mozilla, Oleg, because I think we want to make it one XP was first developed.
+
+479
+00:53:15,111 --> 00:53:26,061
+The idea was any you know, Mozilla and the Gecko platform was designed not just as a tool for building Web browsers,
+
+480
+00:53:26,061 --> 00:53:33,891
+but as a tool to build any kind of application. So, you know, it was supposed to be a Web application developer, an application development framework.
+
+481
+00:53:33,891 --> 00:53:40,041
+And so in theory, you could have different companies building different components that you could bring in.
+
+482
+00:53:40,041 --> 00:53:44,691
+And so you name them and then they have like a name space, et cetera.
+
+483
+00:53:44,691 --> 00:53:57,701
+And so we get this service and we're getting the service with this interface NECI environment and NECI environment.
+
+484
+00:53:57,701 --> 00:54:07,211
+Has this interface definition, and I believe, if I'm not mistaken, A.I. environment,
+
+485
+00:54:07,211 --> 00:54:17,031
+if I like, say, get, um, what's an environment variable that is safe to get.
+
+486
+00:54:17,031 --> 00:54:26,611
+I know. How about I check for one that's not there, like this is not their.
+
+487
+00:54:26,611 --> 00:54:32,041
+Returns the empty string, the environment service itself that implements this interface.
+
+488
+00:54:32,041 --> 00:54:42,821
+Let's see if we can find it. I spelled it wrong, is actually I believe it's implemented in C++ and we're going to find it.
+
+489
+00:54:42,821 --> 00:54:47,851
+Yeah, it's right here. NASA environment. And there's a whole bunch of boilerplate,
+
+490
+00:54:47,851 --> 00:55:02,221
+but effectively we use all these macros to implement this expection component in C++ and so when I called Environment Service doGet,
+
+491
+00:55:02,221 --> 00:55:20,281
+I eventually ended up in here. And then I could similarly use like environment service, environment service that set some new verver to test.
+
+492
+00:55:20,281 --> 00:55:30,811
+And that called into here, and that's calling into like the native layer and uses a library called NPR to
+
+493
+00:55:30,811 --> 00:55:34,471
+basically set an environment variable without having to care what operating system.
+
+494
+00:55:34,471 --> 00:55:40,681
+We were on NPR as a library that stands for Netscape Portable Runtime,
+
+495
+00:55:40,681 --> 00:55:45,871
+which is sort of like a library for having a shared interface for primitives
+
+496
+00:55:45,871 --> 00:55:50,081
+across a different desktop operating systems or different operating systems.
+
+497
+00:55:50,081 --> 00:55:53,491
+I don't even think it has to be desktop. I wonder if it has Android as well.
+
+498
+00:55:53,491 --> 00:56:06,991
+I'm not sure. But Asprey is a library that. No, not the stock and inspector.
+
+499
+00:56:06,991 --> 00:56:11,371
+Oh, come on, it's not very well documented and I don't know of too many places that use it,
+
+500
+00:56:11,371 --> 00:56:16,411
+I think Debian might use it sometimes for some of their code.
+
+501
+00:56:16,411 --> 00:56:26,161
+I don't remember. But it's got like abstractions on top of things like threads getting the time.
+
+502
+00:56:26,161 --> 00:56:34,641
+File file, Eyo, networking, that sort of thing.
+
+503
+00:56:34,641 --> 00:56:44,931
+So anyways, what what is this all trying to describe basically now if I try and get this.
+
+504
+00:56:44,931 --> 00:56:53,541
+I get that, and if I let's see whether or not this is I don't know if this is like an environment variable that will only be in this shell,
+
+505
+00:56:53,541 --> 00:56:58,341
+it might be. But let's find out some news. Are you going to shut down or.
+
+506
+00:56:58,341 --> 00:57:04,231
+Actually, I'll put in the background, echo some new var.
+
+507
+00:57:04,231 --> 00:57:14,661
+No, it was not exported. At any rate, it calls into native code to do it.
+
+508
+00:57:14,661 --> 00:57:20,721
+So I don't know if that answers your oh, there's one last way, there's one last way that JavaScript and C++ talk.
+
+509
+00:57:20,721 --> 00:57:26,391
+It's a one way thing like JavaScript talks to C++.
+
+510
+00:57:26,391 --> 00:57:34,991
+This way, C++ does not talk to JavaScript in a particular way, and it's called the Web IDL bindings, so.
+
+511
+00:57:34,991 --> 00:57:48,371
+All of the domme, so for example, navigator, navigator, that's a that's a damn API has a Web edell interface definition.
+
+512
+00:57:48,371 --> 00:57:58,211
+IDL stands, I believe, for interface definition language. And what it does is it defines what things are exposed on an object called navigator.
+
+513
+00:57:58,211 --> 00:58:05,651
+And, you know, it's got lots of fancy things that you can do with Web IDL to define the language,
+
+514
+00:58:05,651 --> 00:58:15,791
+but the idea is once you define the Web IDL and you define the implementation of the Web ideal, in this case, it's Navigator DOT,
+
+515
+00:58:15,791 --> 00:58:19,391
+keep the build system, will take the Web,
+
+516
+00:58:19,391 --> 00:58:27,371
+IDL and the implementation and create all of the bindings necessary all the necessary bindings
+
+517
+00:58:27,371 --> 00:58:33,281
+gonk in between so that JavaScript can call into navigator and it's all done automatically.
+
+518
+00:58:33,281 --> 00:58:43,991
+In fact, I believe if you look at what's let's find a an implementation like a method navigator,
+
+519
+00:58:43,991 --> 00:58:57,041
+that DKP like there's one I think called get accept languages. So let's look at get accept languages if we get accept languages.
+
+520
+00:58:57,041 --> 00:59:02,911
+One of the things that search Fox does is it will also look at the generated.
+
+521
+00:59:02,911 --> 00:59:10,231
+The generated code, I don't think actually get except languages is generated shoot, OK, that was a bad example.
+
+522
+00:59:10,231 --> 00:59:20,191
+Let's let's find different example, navigator dot vibrate, navigator to vibrate, which is like the the vibration API.
+
+523
+00:59:20,191 --> 00:59:29,671
+So navigator vibrate. I believe you can find the binding that got generated by our build infrastructure.
+
+524
+00:59:29,671 --> 00:59:34,441
+At build time for this particular snapshot of the of the code,
+
+525
+00:59:34,441 --> 00:59:44,791
+this was the generated code that allows JavaScript to talk to C++ and to be clear, C++ does not talk to JavaScript.
+
+526
+00:59:44,791 --> 00:59:50,131
+This way, you know, you don't implement a Web IDL binding in JavaScript.
+
+527
+00:59:50,131 --> 00:59:52,741
+You used to be able to, but we don't do that anymore.
+
+528
+00:59:52,741 --> 01:00:02,971
+You implement it using native code, either C++ or Rust, and then JavaScript talks to talks to it.
+
+529
+01:00:02,971 --> 01:00:11,221
+The other thing I mentioned that it's become is a way for C++ to talk to JavaScript, but also you can implement an X become component using rust.
+
+530
+01:00:11,221 --> 01:00:20,241
+That support was added a couple of years ago, which is nice. Storchak says that the VA is set only for the process.
+
+531
+01:00:20,241 --> 01:00:24,021
+I think you're right, I think that's what's going on, that the VA was only set for the process.
+
+532
+01:00:24,021 --> 01:00:34,631
+I think there's a way in NECI environment to set an environment variable.
+
+533
+01:00:34,631 --> 01:00:43,941
+System wide. Uh, but maybe I'm wrong.
+
+534
+01:00:43,941 --> 01:00:50,451
+Yeah, current process environment, there might be a different interface for accessing like the the shell environment
+
+535
+01:00:50,451 --> 01:00:54,831
+and then the operating like the default operating system environment.
+
+536
+01:00:54,831 --> 01:01:04,401
+OK, I have another question here from Surasak, another question, Chrome, ie, the browser uses CDPR to send network data to dev tools.
+
+537
+01:01:04,401 --> 01:01:12,291
+How does Firefox and similar data to the dev tools front end protocol CDPR?
+
+538
+01:01:12,291 --> 01:01:19,951
+I think that's the chromium developer tools protocol CEDP Chromium.
+
+539
+01:01:19,951 --> 01:01:25,571
+Dev tools protocol, I think we use a similar kind of protocol.
+
+540
+01:01:25,571 --> 01:01:31,961
+And there is a translation layer, we effectively how do we do it?
+
+541
+01:01:31,961 --> 01:01:38,711
+I believe we use a different protocol. But they're very similar.
+
+542
+01:01:38,711 --> 01:01:51,791
+Firefox, CDPR support. Oh, yeah, we use something called the Firefox Remote Protocol.
+
+543
+01:01:51,791 --> 01:02:02,711
+It's based on the CDC protocol. Is this what dev tools?
+
+544
+01:02:02,711 --> 01:02:13,371
+So I I can't say for certain, but it looks like it's possible that we use this something based on the CDPR protocol for dev tools.
+
+545
+01:02:13,371 --> 01:02:23,511
+I know that originally we didn't I think we used some sort of custom like client server protocol language,
+
+546
+01:02:23,511 --> 01:02:28,771
+but I think it looks like maybe it was this from.
+
+547
+01:02:28,771 --> 01:02:37,001
+Yeah, it's pretty recent, twenty nineteen to twenty twenty one, it seems like we use something based on CDPR now so.
+
+548
+01:02:37,001 --> 01:02:47,411
+Hopefully that helps and that allows us to be instrumented using modern tools like playwright and puppeteer.
+
+549
+01:02:47,411 --> 01:02:50,411
+Oh, yeah, the other questions, yes. Right, right, right.
+
+550
+01:02:50,411 --> 01:02:58,331
+So that's all to do with the the Firefox presentation intro to Firefox desktop engineering presentation.
+
+551
+01:02:58,331 --> 01:03:06,571
+Thank you for coming to my talk. Let us now go to some other questions that were asked in the.
+
+552
+01:03:06,571 --> 01:03:15,301
+In the in the form, so last week, some questions got sent to the to the rate this episode form,
+
+553
+01:03:15,301 --> 01:03:20,071
+and if you want your questions answered, you can rate this episode, fill it out.
+
+554
+01:03:20,071 --> 01:03:24,821
+There's a section at the end that allows you to ask a question, and I will do my best to answer it.
+
+555
+01:03:24,821 --> 01:03:32,251
+I'll do my best. So the question is, you're usually working on the rapid release of Firefox, correct?
+
+556
+01:03:32,251 --> 01:03:39,091
+Every four weeks, roughly, you know, minus things like holidays or or something like that.
+
+557
+01:03:39,091 --> 01:03:50,021
+Every four weeks, a new release of Firefox goes out. In fact, you can find the rapid release schedule right here.
+
+558
+01:03:50,021 --> 01:03:58,861
+Rapid release, I'll put a link to that here. You're usually working on the rapid release of Firefox if you write an important patch for a bug,
+
+559
+01:03:58,861 --> 01:04:03,331
+which is also applicable to Firefox S.R. with a much higher demand of stability.
+
+560
+01:04:03,331 --> 01:04:09,081
+That's right. How does Mozilla decide which of these patches will land in the usually much older code base?
+
+561
+01:04:09,081 --> 01:04:19,441
+That's a fantastic question. So the the idea is we've got this older branch, the long maintained branch of Firefox.
+
+562
+01:04:19,441 --> 01:04:22,591
+I think currently we've got one called ESR seventy eight.
+
+563
+01:04:22,591 --> 01:04:31,351
+And that's eventually going to be retired after it looks like Firefox 78 dot one five will be the last ESR before,
+
+564
+01:04:31,351 --> 01:04:36,271
+you know, everyone cuts over to Firefox ninety one point three and onwards.
+
+565
+01:04:36,271 --> 01:04:44,081
+And so we've got this like older branch and we've got another one that's coming up on the ninety one branch for ESR.
+
+566
+01:04:44,081 --> 01:04:53,801
+And we have people whose job it is to make the decision on whether or not a patch should be uplifted, the.
+
+567
+01:04:53,801 --> 01:05:02,261
+The requirements, the considerations, the criteria are much stricter for S.R., you know, you don't we don't land new features in ESR,
+
+568
+01:05:02,261 --> 01:05:13,181
+like if if we want to like if we fix if we like change how buttons work or we change the how the URL bar works and we refactor some code,
+
+569
+01:05:13,181 --> 01:05:19,001
+you know, that stuff definitely does not get uplifted, but we tend to uplift things like security fixes,
+
+570
+01:05:19,001 --> 01:05:30,011
+like if there is a crash or a major security problem in ESR build, we'll try and uplift the patch or adapt a fix for the earlier ESR.
+
+571
+01:05:30,011 --> 01:05:38,051
+And if it's something that tends to fix a broken experience in the Assab build, then we will consider it.
+
+572
+01:05:38,051 --> 01:05:44,201
+I think we try and reduce the number of patches that go into ESR like the bar is very high.
+
+573
+01:05:44,201 --> 01:05:48,341
+It's got to be a security thing, maybe a major performance issue.
+
+574
+01:05:48,341 --> 01:05:56,021
+Like we don't uplift just general performance fixes to ESR unless it's for something that's like horrendously broken performance wise and ESR,
+
+575
+01:05:56,021 --> 01:06:01,121
+then we might consider it. So the bar is generally higher and there's someone who's in charge of that.
+
+576
+01:06:01,121 --> 01:06:09,311
+There we have a team of people called release managers and their job like there will be a person whose job it is.
+
+577
+01:06:09,311 --> 01:06:21,461
+They are assigned an ESR to be responsible for and they make the call on what has has crossed the threshold to be applied to an older ESR build.
+
+578
+01:06:21,461 --> 01:06:30,581
+So hopefully that answers your question. They there's they use their instincts, but they have a very high standards bar on what gets back ported.
+
+579
+01:06:30,581 --> 01:06:35,231
+And it's usually crashes, stability, security, definitely.
+
+580
+01:06:35,231 --> 01:06:41,741
+And sometimes performance and fixes for broken things.
+
+581
+01:06:41,741 --> 01:06:45,941
+What books do you want to finish reading, read or finish reading?
+
+582
+01:06:45,941 --> 01:06:55,471
+I'm currently working on a book called The Anthropocene Reviewed. Anthropocene reviewed, I'm pretty sure that's how you spell it by John Green.
+
+583
+01:06:55,471 --> 01:07:03,601
+I finally it was it only came out a couple of months ago and I finally was able to get it from the library as an e-book copy from the library.
+
+584
+01:07:03,601 --> 01:07:08,551
+I'm reading it and I love it. I'm already like about a quarter of the way through after only a night's reading.
+
+585
+01:07:08,551 --> 01:07:13,741
+And I'm I'm really enjoying it. And I'm hoping to finish that in a couple of days.
+
+586
+01:07:13,741 --> 01:07:21,091
+And I have this long duration goal to finish reading The Count of Monte Cristo.
+
+587
+01:07:21,091 --> 01:07:28,021
+So my partner Emily and I, we started reading it and streaming ourselves reading it during the beginning of the pandemic.
+
+588
+01:07:28,021 --> 01:07:31,231
+And that's on my YouTube channel. If you want to go check it out.
+
+589
+01:07:31,231 --> 01:07:38,871
+I think we got up to let me see where we got to The Count of Monte Cristo.
+
+590
+01:07:38,871 --> 01:07:50,211
+Seventeen did we? Chapter 18, we got to Chapter 18 of The Count of Monte Cristo, and then we got distracted by other things.
+
+591
+01:07:50,211 --> 01:07:58,881
+We moved. We like some other stuff happened and we haven't gone back to that. And that was like almost a year ago, almost a year ago.
+
+592
+01:07:58,881 --> 01:08:06,921
+And so I'd like to get back to that at some point, maybe maybe later this month before we hit a year, we'll do Chapter 19.
+
+593
+01:08:06,921 --> 01:08:17,381
+But I'll have to review and catch up and remember what was going on, because I think we'd reached an interesting point where like the character.
+
+594
+01:08:17,381 --> 01:08:24,811
+What's his name, the detente, détente, is that his name?
+
+595
+01:08:24,811 --> 01:08:32,811
+I don't remember, but I was just about to break out of jail, I believe that was really interesting and I'd like to get back to that.
+
+596
+01:08:32,811 --> 01:08:41,221
+And I'm also reading I'm in the midst of the second book of the baroque cycle.
+
+597
+01:08:41,221 --> 01:08:51,241
+By Neal Stephenson I really enjoy Neal Stephenson, sort of a speculative science fiction author.
+
+598
+01:08:51,241 --> 01:08:59,911
+And writes very I don't know, it might it's not everyone's cup of tea how Neil Stephenson writes, because it's a very wordy, very verbose.
+
+599
+01:08:59,911 --> 01:09:04,651
+He writes very long books, but I like his sense of humor.
+
+600
+01:09:04,651 --> 01:09:09,151
+And I don't know, I enjoy those books. So I'm reading those dantas.
+
+601
+01:09:09,151 --> 01:09:15,721
+That's right, Don. Yes, that's the character's name. So hopefully there are.
+
+602
+01:09:15,721 --> 01:09:20,881
+I've always got a bunch of books on the go, but these are the ones that came to mind when I was thinking about this question.
+
+603
+01:09:20,881 --> 01:09:30,371
+What are some small things that make your day better? Water, tea, coffee.
+
+604
+01:09:30,371 --> 01:09:43,021
+I'm going outside. So water, coffee, tea, going outside, shooting hoops.
+
+605
+01:09:43,021 --> 01:09:47,161
+So I'm not like a basketball player, but I like we have a basketball.
+
+606
+01:09:47,161 --> 01:09:53,311
+We live near a place that has a basketball net. And I like to shoot hoops like I try and get the ball in the hoop.
+
+607
+01:09:53,311 --> 01:09:57,601
+I'm not like doing cool moves or anything, but I like to shoot hoops and I enjoy doing that.
+
+608
+01:09:57,601 --> 01:10:03,031
+And it's fun. It's satisfying when the ball goes through the hoop, especially because I'm not very tall.
+
+609
+01:10:03,031 --> 01:10:09,091
+So, you know, it's very satisfying when someone who is traditionally not been very good at basketball is able to get the ball through the hoop.
+
+610
+01:10:09,091 --> 01:10:13,141
+So I like doing that. I mean, obviously reading, I like reading.
+
+611
+01:10:13,141 --> 01:10:22,891
+I like what else makes my day better, cooking, cleaning, all of these small things make my day better,
+
+612
+01:10:22,891 --> 01:10:26,641
+although I say cleaning, but you should see the space I'm in.
+
+613
+01:10:26,641 --> 01:10:35,701
+It is it is a it is garbage and like I hang with my partner and playing games.
+
+614
+01:10:35,701 --> 01:10:41,281
+We just finished a computer game yesterday. We were playing a game called Broken Age, which is a point and click adventure game.
+
+615
+01:10:41,281 --> 01:10:47,361
+And we just finished it yesterday. Broken Age, highly recommended it was off on.
+
+616
+01:10:47,361 --> 01:10:56,241
+What have you created that you are most proud of? I mean, all of the stuff I've done on Firefox desktop,
+
+617
+01:10:56,241 --> 01:11:01,311
+I've been proud of the thing that comes to mind most recently is like the picture in picture feature,
+
+618
+01:11:01,311 --> 01:11:05,751
+like I'm always proud whenever like I didn't work on that alone.
+
+619
+01:11:05,751 --> 01:11:12,051
+Obviously, I worked on that with, like, designers, other engineers and, you know, product people.
+
+620
+01:11:12,051 --> 01:11:18,831
+And marketing's done a great job of talking about it. But I did a lot of the core engineering of that feature.
+
+621
+01:11:18,831 --> 01:11:25,011
+And I think it's the one feature of Firefox I can say that like I designed from the ground up,
+
+622
+01:11:25,011 --> 01:11:31,791
+the not not the user interface, like the not the visual design, but the actual implementation design.
+
+623
+01:11:31,791 --> 01:11:37,251
+I did that from the ground up and I'm very proud of that. So a picture in picture.
+
+624
+01:11:37,251 --> 01:11:44,451
+I'm very proud of the work we did with electrolysis, which was the multiprocessor Firefox project.
+
+625
+01:11:44,451 --> 01:11:51,261
+I'm also very proud of the upcoming vision project, which is out of process EPHRAM'S.
+
+626
+01:11:51,261 --> 01:11:55,191
+I haven't worked on that for a while. I've gotten pulled off into other things,
+
+627
+01:11:55,191 --> 01:12:04,071
+but that is actually coming to a head the out of process Ephram's project we're about to turn
+
+628
+01:12:04,071 --> 01:12:10,161
+out of process Ephram's on in release for a small subset of users in not too long from now.
+
+629
+01:12:10,161 --> 01:12:12,741
+A couple of weeks I think in the next major release I believe we're going to start
+
+630
+01:12:12,741 --> 01:12:18,081
+doing a very slow rollout and that's the culmination of several years of of effort.
+
+631
+01:12:18,081 --> 01:12:24,981
+And I must, I might add, not to brag, but chromium in the Chrome team at Google did something very similar,
+
+632
+01:12:24,981 --> 01:12:30,081
+what they call their site isolation project. And it took them, I think, four or five years to do it.
+
+633
+01:12:30,081 --> 01:12:38,271
+I think we were doing we're able we've been able to do ours in about three, which makes me feel pretty good because we're a lot smaller than them.
+
+634
+01:12:38,271 --> 01:12:47,301
+Like I believe our entire engineering organization is smaller and has less budget than all of Google's marketing team, that sort of thing.
+
+635
+01:12:47,301 --> 01:12:57,021
+That's a guess. Don't quote me on that. But that would be my guess. So, yeah, those are the things I this is just kind of like an honorable mention.
+
+636
+01:12:57,021 --> 01:13:08,911
+Mainly because honorable mention. I haven't worked on vision in a while, but that's going to be really nice to see that go at the door.
+
+637
+01:13:08,911 --> 01:13:12,751
+So hopefully, hopefully that answers your question. Oh, and the joy of coding.
+
+638
+01:13:12,751 --> 01:13:17,881
+Yes, I am proud of the joy of coding. I'm also really proud of all of the people I've mentored.
+
+639
+01:13:17,881 --> 01:13:23,251
+I haven't obviously I obviously did not create them.
+
+640
+01:13:23,251 --> 01:13:28,741
+But, you know, I've been able to help people grow as software developers.
+
+641
+01:13:28,741 --> 01:13:36,901
+You know, I am able to draw a very clear line from a starting point to an ending point that goes up into the right in terms of their abilities,
+
+642
+01:13:36,901 --> 01:13:38,221
+skills and confidence.
+
+643
+01:13:38,221 --> 01:13:46,171
+And I'm happy to say that for some people, I've been able to help influence that and to guide them to to improve their skills and to,
+
+644
+01:13:46,171 --> 01:13:53,591
+you know, become more effective and become better software developers. So I'm very proud of that.
+
+645
+01:13:53,591 --> 01:13:59,931
+So I think that's it. I think that's where I'm going to end my list.
+
+646
+01:13:59,931 --> 01:14:04,551
+So that, I think is it for the questions, did we get to this first thing,
+
+647
+01:14:04,551 --> 01:14:08,631
+I want to look at this performance issue, but I don't think these tribals ever finished.
+
+648
+01:14:08,631 --> 01:14:13,971
+They're just running the performance test now on this one, which is a bit of a bummer.
+
+649
+01:14:13,971 --> 01:14:19,361
+But while I'm waiting for this, I'm going to tell it to create a geko profile.
+
+650
+01:14:19,361 --> 01:14:27,891
+But I need to log in to do that lovely and we're going to go through the OOC dance and now.
+
+651
+01:14:27,891 --> 01:14:38,691
+Create a geko profile. Although it's possible now I've just created two, I don't know, but I think I'm going to end the stream here.
+
+652
+01:14:38,691 --> 01:14:45,891
+Oh, I see some I see some comments, Vinit Comi says your videos helped me to your dedication and consistency is infectious.
+
+653
+01:14:45,891 --> 01:14:50,511
+Hey, thank you so much. That's that. I love to hear that. That that means a lot to me.
+
+654
+01:14:50,511 --> 01:14:56,061
+Honestly, I'm it's very easy because I'm not in front of a whole bunch of people.
+
+655
+01:14:56,061 --> 01:14:57,921
+I don't know how many people are watching this right now.
+
+656
+01:14:57,921 --> 01:15:02,751
+I have a some sense of how many people watch the YouTube videos based on, like, the metrics I get.
+
+657
+01:15:02,751 --> 01:15:09,231
+But I don't know how many people are watching this. And I don't know how many people watch it on Amazon or Twitch and whatnot.
+
+658
+01:15:09,231 --> 01:15:15,411
+And and I don't know whether or not I'm just kind of shouting into the void except for the people I see in the chat.
+
+659
+01:15:15,411 --> 01:15:19,461
+So that's great. I'm glad to hear that, that this is useful.
+
+660
+01:15:19,461 --> 01:15:26,361
+I've heard from other people that at the very least, I'm sometimes pleasant to have on in the background when you're working,
+
+661
+01:15:26,361 --> 01:15:29,631
+because then you can hear, especially in the working from home environment,
+
+662
+01:15:29,631 --> 01:15:35,541
+where maybe you're more used to having colleagues talking in the background and you just want to hear someone working,
+
+663
+01:15:35,541 --> 01:15:41,931
+you know, sometimes that it's handy to have someone nattering in the background and saying things.
+
+664
+01:15:41,931 --> 01:15:47,241
+So anyways, I'm glad you enjoy this streams and that the videos are helpful for you.
+
+665
+01:15:47,241 --> 01:15:53,061
+Sarek says that they activated fishing yesterday on nightly. Yes, good stuff.
+
+666
+01:15:53,061 --> 01:15:56,811
+And Venet Kamei says, I've been watching you for three years at least.
+
+667
+01:15:56,811 --> 01:16:02,181
+Vinnicombe Me. Thank you so much for watching. That's almost the entire time I've been streaming.
+
+668
+01:16:02,181 --> 01:16:05,421
+Like, if you take a look at the agenda, let's see.
+
+669
+01:16:05,421 --> 01:16:13,071
+I started in twenty fifteen so three years. That's that's more than half the time I've been streaming and I think that's more than most.
+
+670
+01:16:13,071 --> 01:16:14,601
+So congratulations like. Thank you.
+
+671
+01:16:14,601 --> 01:16:21,381
+Thank you Vinnicombe me and I hope I'm pronouncing that correctly and I'm also the first person I watch live streaming code.
+
+672
+01:16:21,381 --> 01:16:29,181
+Hey I'm what what, what an honor. And Sarek says that they discovered my YouTube channel four months ago.
+
+673
+01:16:29,181 --> 01:16:35,721
+Here, let me just bring the chat up front so you can see what's what's being said here is such a complex thing.
+
+674
+01:16:35,721 --> 01:16:42,621
+I feel we're really, really lucky to have streamers like you. This is the first time I was here the whole time and I highly enjoyed it.
+
+675
+01:16:42,621 --> 01:16:46,431
+Hey, that's great. Thank you for the feedback. Take care.
+
+676
+01:16:46,431 --> 01:16:50,931
+And it's Venet. OK, I'll just call you Venet. Thank you, Venet.
+
+677
+01:16:50,931 --> 01:16:56,211
+And thank you all. I guess. I don't know. Hopefully I'm not encouraging people to start spamming by putting this in front of everyone.
+
+678
+01:16:56,211 --> 01:17:01,611
+But I wanted you to all see instead of me just sort of reading what's in the chat, I'm just bringing it up front.
+
+679
+01:17:01,611 --> 01:17:06,291
+Maybe at some point I'll have it so that we can have the chat overlay here in OBES.
+
+680
+01:17:06,291 --> 01:17:10,371
+I know there's a way to do that. All right. I think I'm going to end the stream here.
+
+681
+01:17:10,371 --> 01:17:17,961
+Thank you so much for watching. Let me know what you thought. Click on The Rate. This episode link in the agenda and and let me know your thoughts.
+
+682
+01:17:17,961 --> 01:17:25,161
+And if you have any more questions, I'll do my best to try and answer them next week during episode two hundred and sixty of the joy of coding.
+
+683
+01:17:25,161 --> 01:17:31,191
+Unfortunately, I don't have any music to play this out because Wacky Morning is broken, so I'm going to have to do it with my mouth.
+
+684
+01:17:31,191 --> 01:17:37,841
+Thank you so much for watching. The joy of coding. Take care, bye bye.
+
+685
+01:17:37,841 --> 01:17:55,086
+The joy of coding, see it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

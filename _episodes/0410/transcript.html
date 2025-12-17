@@ -1,0 +1,2930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 410 - July 16, 2025</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 410 - July 16, 2025</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6d4943ed-843c-45d5-a709-b30700fc7db7</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6d4943ed-843c-45d5-a709-b30700fc7db7">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,865 --> 00:00:14,355
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy. Oh, hello and welcome to episode 410 of the Joy of coding.
+
+2
+00:00:14,365 --> 00:00:18,805
+My name is Mike Conley. It's so good to have you here. We're going to be live hacking on some Firefox stuff,
+
+3
+00:00:18,955 --> 00:00:22,795
+going to be trying to fix some things and review some things, and who knows what's going to go on.
+
+4
+00:00:22,795 --> 00:00:26,514
+It's episode 410 the Joy of coding. No plan survives breakfast.
+
+5
+00:00:26,515 --> 00:00:29,574
+In fact, that's how I tend to start every episode.
+
+6
+00:00:29,575 --> 00:00:35,755
+No plan survives breakfast. I think I know what I might want to do. I think I know the general plan, but I don't know if it's going to work.
+
+7
+00:00:35,995 --> 00:00:39,505
+I don't know if it's going to work out. I even forgot to check to see if the bridge is working.
+
+8
+00:00:39,625 --> 00:00:42,684
+Let me just quickly test bridge test. Please ignore.
+
+9
+00:00:42,685 --> 00:00:49,195
+If you're in the Twitch chat, why don't you let me know? Uh, send something over the twitch chat and hopefully I'll be able to see it.
+
+10
+00:00:49,195 --> 00:00:52,764
+Then I'll know the bridge is working. Let's get right into it.
+
+11
+00:00:52,765 --> 00:00:57,834
+Well, uh, as per the last few episodes, uh, for episode 410, I'm going to do the thing where I,
+
+12
+00:00:57,835 --> 00:01:04,225
+uh, talk about the relevant Http code and show this image from a Keanu codes.
+
+13
+00:01:04,495 --> 00:01:07,705
+Oh, thank you crushed optimist for the ping pong. Much appreciate it.
+
+14
+00:01:08,125 --> 00:01:13,345
+So the bridge is working. So this looks to be a scene from I'm going to guess one of the matrixes.
+
+15
+00:01:14,275 --> 00:01:22,165
+Well no because that looks like Wick. Uh, and so this may be this image may be a bit of a spoiler because some people look to be dead.
+
+16
+00:01:22,555 --> 00:01:27,265
+But I'm going to guess this is from John Wick. And, uh, this is for Http code for ten.
+
+17
+00:01:27,745 --> 00:01:32,815
+Uh, gone. So let's see what that's all about. Http 410 gone.
+
+18
+00:01:33,535 --> 00:01:40,225
+This client error response status code indicates that the target resource is no longer available at the origin server,
+
+19
+00:01:40,225 --> 00:01:44,065
+which is different from not found. This has gone.
+
+20
+00:01:46,765 --> 00:01:51,505
+And that this condition is likely to be permanent. Um, and this is catchable by default.
+
+21
+00:01:52,405 --> 00:01:55,825
+And clients should not repeat requests for resources that return 410.
+
+22
+00:01:56,665 --> 00:01:59,785
+And in fact, website owners should remove or replace links that return this code.
+
+23
+00:01:59,785 --> 00:02:06,174
+If server owners don't know whether this condition is temporary or permanent, then you should use 404 not found instead.
+
+24
+00:02:06,175 --> 00:02:10,945
+But if you know that your resources gone for good, you're supposed to send a for ten.
+
+25
+00:02:10,945 --> 00:02:17,604
+Gone. Um, so in this case, the following get request is for a page with promotional content that's no longer valid.
+
+26
+00:02:17,605 --> 00:02:21,355
+So they go get some 2023 promo content at example.com.
+
+27
+00:02:21,535 --> 00:02:26,755
+They get a for ten gone promotion expired, but boom, there you go.
+
+28
+00:02:26,995 --> 00:02:30,235
+And that is Http code for ten.
+
+29
+00:02:31,735 --> 00:02:38,305
+Uh all right. So what are we doing today? Well I'm hoping that we can work on a little something related to a project I've been working on,
+
+30
+00:02:38,335 --> 00:02:41,905
+uh, with a couple of other colleagues to make it possible to ship.
+
+31
+00:02:42,325 --> 00:02:45,895
+Excuse me? Changes to new tab out of banned from the rest of the browser.
+
+32
+00:02:46,825 --> 00:02:57,595
+Um, I've codenamed this train hopping because, um, this is a, um, you know, we have the train model where, like,
+
+33
+00:02:57,595 --> 00:03:01,975
+even the nightly and the beta and the release train, and then, like, every four weeks, the trains run on time.
+
+34
+00:03:02,425 --> 00:03:04,045
+Train hopping. I call it train hopping,
+
+35
+00:03:04,045 --> 00:03:13,375
+because we're effectively going to be like moving some code from one train to another train without incurring the overhead of a dot release,
+
+36
+00:03:14,035 --> 00:03:16,915
+uh, and doing it using the extension mechanism.
+
+37
+00:03:17,215 --> 00:03:21,685
+And it's a little bit of a stunt, which is why I use train hopping, because it sound that sounds like a stunt.
+
+38
+00:03:22,165 --> 00:03:26,515
+It's not the sort of thing that, like, we want to do all the time with all kinds of different bits and pieces.
+
+39
+00:03:26,515 --> 00:03:31,315
+But for new Tab, it seems particularly important. And, um, we do it for something else as well.
+
+40
+00:03:31,315 --> 00:03:33,054
+The web compat interventions add on.
+
+41
+00:03:33,055 --> 00:03:41,065
+This is the extension that makes sure that your, you know, if there are things that we could be fixing, um, web compat wise, uh, it does.
+
+42
+00:03:41,065 --> 00:03:49,104
+So uh, using the uh, um, uh uh, you know, using the web compat extension.
+
+43
+00:03:49,105 --> 00:03:52,254
+If you're not familiar, let me actually pull that up. Hold on.
+
+44
+00:03:52,255 --> 00:03:56,905
+Just a quick set here. What's going on here?
+
+45
+00:03:58,225 --> 00:04:03,355
+Uh. Web compat. Uh, if you're not familiar with the web compat extension.
+
+46
+00:04:05,265 --> 00:04:11,715
+Check this out. So, uh, the web compat extension lives inside of browser extensions, web compat.
+
+47
+00:04:11,715 --> 00:04:15,975
+And it has, like, a whole bunch of, like, overrides for various sites.
+
+48
+00:04:16,425 --> 00:04:21,045
+And so the way that that's supposed to work is that, like, when you, um,
+
+49
+00:04:21,315 --> 00:04:26,594
+when you want to, you know, you want to make your websites work out in the wild.
+
+50
+00:04:26,595 --> 00:04:29,744
+And sometimes that means reaching out to the websites and saying, hey, you're doing this thing wrong.
+
+51
+00:04:29,745 --> 00:04:32,805
+It's not working in Firefox. Maybe it's working in other browsers, but you need to make this change.
+
+52
+00:04:33,225 --> 00:04:39,975
+We can sometimes before waiting for them to do that change, we can sometimes shim the issue.
+
+53
+00:04:40,005 --> 00:04:43,785
+We can like add little fixes. Like I'm going to pick one, for example.
+
+54
+00:04:44,415 --> 00:04:47,495
+Uh. This is some, uh.
+
+55
+00:04:48,905 --> 00:04:52,095
+Let's pick one. CBC, CBS news.
+
+56
+00:04:52,115 --> 00:04:59,914
+What does this do? It's an override for Android to use the JSP player spoofing as Chrome forces the sites logs.
+
+57
+00:04:59,915 --> 00:05:05,015
+Player native HLS is controlled by media HLS enabled, which defaults to false when false video doesn't play back at all.
+
+58
+00:05:05,015 --> 00:05:07,715
+When true, the video will play back for a minute or two before stopping with this override.
+
+59
+00:05:07,715 --> 00:05:12,485
+Video playback works consistently regardless of how media HLS enabled is configured.
+
+60
+00:05:13,685 --> 00:05:16,175
+So, uh, this is just a workaround.
+
+61
+00:05:16,595 --> 00:05:25,775
+Uh, and then it writes this, uh, you know, it says that I guess we're we're overriding the user agent, uh, in this particular case, uh, and,
+
+62
+00:05:25,775 --> 00:05:31,115
+you know, there are other different sites we'll do and we'll go talk to the website, be like, hey, hey, you should probably do it this other way.
+
+63
+00:05:32,045 --> 00:05:38,915
+Uh, anyways, that is shipped out of you don't necessarily have to wait until, um, that code in nightly makes it to release.
+
+64
+00:05:39,095 --> 00:05:44,405
+We can package up the code and we can send it, uh, in the current, uh, beta and release channels.
+
+65
+00:05:44,825 --> 00:05:51,275
+And the same is true for new Tab. So we've moved new tab into, uh, subdirectory under Browser Extensions, new tab.
+
+66
+00:05:52,025 --> 00:06:01,324
+And it is now possible for us to package up nightly as new tab and uh, in theory, deploy it, uh, into other instances of, uh, Firefox.
+
+67
+00:06:01,325 --> 00:06:07,745
+In fact, if you open up, uh, Firefox, this is a release instance of Firefox that I'm launching right now.
+
+68
+00:06:09,185 --> 00:06:16,325
+Uh, whoops. And I've got Wikipedia, uh, if you open it up and I guess 144 is the one that's out right now,
+
+69
+00:06:16,625 --> 00:06:23,315
+if you go to about support, you will actually see new tab listed as an extension under add ons.
+
+70
+00:06:23,675 --> 00:06:33,575
+Uh, at version 114 oh oh. Uh, so 140 was the first version where new tab shipped packaged as a built in extension.
+
+71
+00:06:34,355 --> 00:06:38,015
+So we've we've done that by default. It appears to be working.
+
+72
+00:06:38,555 --> 00:06:45,275
+Um, and you know that now we have like this pathway where we can like update it out of band.
+
+73
+00:06:47,345 --> 00:06:56,855
+So one of the things that we need to account for is the fact that, uh, you know, sometimes we add things in new tab that require strings that require.
+
+74
+00:06:56,855 --> 00:07:00,844
+And by strings I mean like the characters that like popular today, this is a string.
+
+75
+00:07:00,845 --> 00:07:09,485
+This is, uh, in English for me, but for, uh, like another instance, like, say, we were, uh, looking at the Italian version of, uh, Firefox.
+
+76
+00:07:09,695 --> 00:07:12,904
+This would not say popular today would say something else entirely.
+
+77
+00:07:12,905 --> 00:07:19,325
+In fact, it we can actually look that up. What it would say, uh, in, uh, in.
+
+78
+00:07:21,635 --> 00:07:26,584
+Actually, I actually don't think popular today comes I think it actually comes from the Marino endpoint.
+
+79
+00:07:26,585 --> 00:07:28,955
+But let me let me pick a different one. Let's pick a different string.
+
+80
+00:07:28,955 --> 00:07:38,225
+Let's pick, uh, um, uh, one of these context menu strings like open, uh, our sponsors in your privacy.
+
+81
+00:07:38,525 --> 00:07:44,705
+Let's do that. Our sponsors and your privacy.
+
+82
+00:07:45,395 --> 00:07:54,635
+And that exists, uh, uh, at this, uh, this string here is in English for, uh, Canada, the Great Britain in US English.
+
+83
+00:07:54,965 --> 00:08:07,025
+Um, and whenever, uh, we, like, translate it, we ship different styles, uh, and we happen to package those FTL files inside of the extension.
+
+84
+00:08:07,295 --> 00:08:13,955
+And that way it is possible for us to, um, because the strings arrive with the extension.
+
+85
+00:08:14,525 --> 00:08:16,174
+As soon as the translations are done.
+
+86
+00:08:16,175 --> 00:08:23,075
+We could, in theory, package up an extension with those updated strings and ship a feature that's relying on that string to that particular region.
+
+87
+00:08:24,485 --> 00:08:30,635
+Uh, so in this case, going back to our example of Italian, this is, uh, our sponsors and your privacy in Italian.
+
+88
+00:08:30,875 --> 00:08:34,325
+And this is, you know, those translations are done by our volunteer contributors.
+
+89
+00:08:34,355 --> 00:08:38,914
+Hey, do you speak more than one language? Do you speak more than one written language?
+
+90
+00:08:38,915 --> 00:08:42,125
+And you want to get involved with Firefox? Help us out.
+
+91
+00:08:42,395 --> 00:08:48,965
+Um, you may be interested in something called pontoon. Pontoon is a way that you can help localize our projects.
+
+92
+00:08:49,325 --> 00:08:58,265
+Uh, you can volunteer your time and help us translate strings. Um, you know, so that, like, if if, um, engineering, like developers,
+
+93
+00:08:58,265 --> 00:09:03,125
+Firefox developers will land strings in English and then to support all of the
+
+94
+00:09:03,125 --> 00:09:07,655
+localizations that Firefox supports and all the regions we need people to,
+
+95
+00:09:07,685 --> 00:09:12,935
+to, um, you know, who know the languages to translate from English to those target languages.
+
+96
+00:09:13,355 --> 00:09:18,575
+And so you yourself can volunteer to localize. Um, and, and it's really it's a big help.
+
+97
+00:09:18,755 --> 00:09:25,925
+So if you don't even if you know more than one language, written language, this may be, uh, contribution pathway for you.
+
+98
+00:09:26,075 --> 00:09:29,615
+You don't even know. You don't need to know how to code. Here. Let's see what it looks like.
+
+99
+00:09:29,645 --> 00:09:35,615
+Let me just sign in. Hang on. Let me sign in to the, uh, to my instance here.
+
+100
+00:09:36,035 --> 00:09:39,455
+And you can just, like, let's take a look at the different projects.
+
+101
+00:09:40,055 --> 00:09:43,115
+We'll look at Firefox because that's that's the thing I work on.
+
+102
+00:09:43,475 --> 00:09:48,184
+And let's see, are there any, uh, strings that are missing?
+
+103
+00:09:48,185 --> 00:09:53,255
+Yeah. Estonian. There are 75. There's only like, 75% coverage.
+
+104
+00:09:53,315 --> 00:10:00,695
+So, like, we'll have fallbacks. Um, I don't know exactly what the fallback is for Estonian, but the worst case scenario, it falls back to English.
+
+105
+00:10:00,965 --> 00:10:07,445
+But if we can get all of these up to 100, that'd be great. Do you know Fula? Do you know Gujarati or Hindi?
+
+106
+00:10:07,805 --> 00:10:10,745
+Maybe you can help us translate this. This one really needs help.
+
+107
+00:10:10,775 --> 00:10:20,765
+A loco, um, Excel Canada, uh, a bunch of these Kishwer really needs like, this one looks brand new.
+
+108
+00:10:20,795 --> 00:10:24,005
+So we're going to need some help there. This needs to be translated.
+
+109
+00:10:24,335 --> 00:10:28,265
+Koreans at 100. Uh, what else needs help?
+
+110
+00:10:29,045 --> 00:10:32,465
+Do you know Persian? Said 71%.
+
+111
+00:10:32,465 --> 00:10:38,645
+And you can help out. So this is what it looks like if I, let's say, uh, uh, where, uh, a Persian,
+
+112
+00:10:38,675 --> 00:10:43,505
+uh, someone who can read Persian and we can see sort of like what is required.
+
+113
+00:10:43,895 --> 00:10:51,245
+Um, we can see like, okay, well, these are the different files that are translated, and some of them maybe are at 0%.
+
+114
+00:10:51,875 --> 00:10:55,055
+Uh, let's let's look at one that's close to 100.
+
+115
+00:10:55,415 --> 00:10:58,925
+Uh, Gnss errors. So let's open up Gnss errors.
+
+116
+00:11:00,125 --> 00:11:05,675
+And the one that is not translated. Let's see where can we find one that's not translated.
+
+117
+00:11:06,785 --> 00:11:12,155
+Uh, there's got to be a way of just saying, uh, ones that are.
+
+118
+00:11:14,555 --> 00:11:19,775
+Not translated. I'm not used. I'm not really a heavy user of pontoon.
+
+119
+00:11:20,285 --> 00:11:26,705
+Oh, here it is. The certificate authority that issued the certificate was distrusted before the certificate was used.
+
+120
+00:11:27,485 --> 00:11:33,905
+And so, um, this is your opportunity to, like, supply a string and suggest a translation.
+
+121
+00:11:34,865 --> 00:11:40,595
+Um, and you can there are other tools that you can use, like this is a suggestion from Google Translate.
+
+122
+00:11:40,895 --> 00:11:44,465
+You could try and rephrase that. Let's see. Let's get a different rephrasing.
+
+123
+00:11:46,885 --> 00:11:52,505
+I'll go ahead and use Google Translate. So like maybe you read this language and, uh, the string looks good.
+
+124
+00:11:52,515 --> 00:11:56,925
+You could just, like, copy that in and suggest it. Or you could, like, write your own.
+
+125
+00:11:58,905 --> 00:12:07,455
+Uh, so. Yeah. There you go. There you go. Um, surely there's got to be a way of just filtering out the ones that are, uh, not translated.
+
+126
+00:12:08,055 --> 00:12:11,535
+Uh, but if there is, I don't know what it is. Anyways, if that's a thing that interests you.
+
+127
+00:12:11,745 --> 00:12:15,135
+Help us out. Okay, so we've got those strings.
+
+128
+00:12:15,135 --> 00:12:18,435
+Let's say they're translated. Then we have to bring them into the extension.
+
+129
+00:12:18,525 --> 00:12:23,685
+And so we have a command for that in our new tab code base marked new tab update locales.
+
+130
+00:12:25,425 --> 00:12:33,195
+And what that will do is it'll pull down the strings, um, the translated strings and make sure that, uh, they get packaged correctly.
+
+131
+00:12:33,915 --> 00:12:45,005
+And then we can land them in central. Uh, now, the problem is that I ran this the other day, and, uh, this is this is what I got.
+
+132
+00:12:45,015 --> 00:12:50,125
+So I'm going to run it and you'll see what happens. So first of all, it has to like, clone the localization.
+
+133
+00:12:50,145 --> 00:12:54,885
+It does a shallow clone of all of the localized strings. And then it pulls out just the right stuff.
+
+134
+00:12:59,975 --> 00:13:03,915
+So kind of a heavy operation here. And then.
+
+135
+00:13:07,555 --> 00:13:16,185
+Scans around. And then I get this exception.
+
+136
+00:13:17,865 --> 00:13:21,765
+I get this exception. And I need to figure out what's going wrong here.
+
+137
+00:13:22,425 --> 00:13:26,115
+It's under an indent. Other than two is not supported.
+
+138
+00:13:28,675 --> 00:13:32,725
+Under MOS file Json and dump s.
+
+139
+00:13:36,455 --> 00:13:41,585
+So I guess. Did we change how Jason works?
+
+140
+00:13:42,125 --> 00:13:51,844
+I think we might have. And you know what? I may have failed to review a thing properly because I think we changed from Jason to Mars.
+
+141
+00:13:51,845 --> 00:14:02,665
+File. Jason. Which uses a slightly, uh, I think it uses a more efficient algorithm.
+
+142
+00:14:04,615 --> 00:14:07,695
+It's considerably faster, so let's use it everywhere.
+
+143
+00:14:07,705 --> 00:14:14,035
+But it sounds like the indent depth needs to be changed to two rather than four.
+
+144
+00:14:15,475 --> 00:14:21,325
+So I'd like to do that. Let's change that. Now, I am not particularly proud of these Python scripts that I wrote.
+
+145
+00:14:21,355 --> 00:14:27,715
+Python is not my natural language, I'd say. But um, indent.
+
+146
+00:14:28,315 --> 00:14:32,185
+There it is. There's two instances of indent equals four.
+
+147
+00:14:32,875 --> 00:14:37,045
+I'm I say indent equals two. And let's see if it likes that better.
+
+148
+00:14:38,185 --> 00:15:09,565
+See if that goes through. Yeah.
+
+149
+00:15:09,615 --> 00:15:14,865
+Huh? Done. Okay, so that worked. Um.
+
+150
+00:15:15,375 --> 00:15:18,645
+And now let's take a look at the resulting death.
+
+151
+00:15:21,695 --> 00:15:25,865
+So it added a bunch of like mostly just an empty comment.
+
+152
+00:15:25,865 --> 00:15:28,865
+That's appears to be what's gone in for some things.
+
+153
+00:15:28,865 --> 00:15:30,995
+And then we've got some translations have gone in.
+
+154
+00:15:31,295 --> 00:15:38,945
+And then, crucially, there's this file that's like this massive report that gets generated to say what the current string snapshot.
+
+155
+00:15:39,065 --> 00:15:48,664
+Uh, what it's, um. What it's, uh, sort of string state is.
+
+156
+00:15:48,665 --> 00:15:55,505
+And it looks like that got overwritten. What's annoying is that it's a because it's a Json file, and I don't think I'm sorting it correctly.
+
+157
+00:15:55,505 --> 00:16:03,185
+It looks like it did a full like overwrite. And that's another thing I'd like to fix, if I can, in this patch so that it sorts it properly.
+
+158
+00:16:04,145 --> 00:16:08,895
+Um, let's see here. How far are we going to have to go?
+
+159
+00:16:13,275 --> 00:16:18,315
+Yeah, I think the locales are not in alphabetical order, which is why, um.
+
+160
+00:16:20,035 --> 00:16:28,135
+It comes back kind of in a non-deterministic order. And then yeah, so the locales need to be put alphabetical.
+
+161
+00:16:29,485 --> 00:16:34,105
+I think that's kind of important. So that's what I'm going to do next.
+
+162
+00:16:35,155 --> 00:16:42,085
+So, uh, let's let's start by, um, reverting.
+
+163
+00:16:42,085 --> 00:16:51,835
+Is that what I want to do? Revert. Yeah J-J revert browser extensions, new tab locales maybe.
+
+164
+00:16:51,835 --> 00:16:57,895
+Still not enough indent. Oh, that's the other thing. Yeah. Like the the indent has uh also changed.
+
+165
+00:16:58,345 --> 00:17:02,635
+So that's going to change the styling. But for the most part I'm pretty sure what's going on.
+
+166
+00:17:03,445 --> 00:17:06,475
+Uh, wait. Can I not supply a path for revert?
+
+167
+00:17:07,555 --> 00:17:13,135
+James River help apply the reverse of a given revision.
+
+168
+00:17:14,435 --> 00:17:18,195
+How do I like. Uh.
+
+169
+00:17:18,545 --> 00:17:24,095
+Uh, boy. Jiu jitsu. Revert changes to folder.
+
+170
+00:17:27,665 --> 00:17:34,235
+I'm sure. There I I've just forgotten. Uh, abandon.
+
+171
+00:17:34,235 --> 00:17:37,444
+Absorb. Bookmark. Describe. Diff.
+
+172
+00:17:37,445 --> 00:17:45,425
+Duplicate. Edit. Okay. Uh, operation.
+
+173
+00:17:47,835 --> 00:17:51,735
+To restore, maybe restore paths from. Yeah, that's what I want.
+
+174
+00:17:51,735 --> 00:17:54,975
+JJ. Restore, not revert.
+
+175
+00:17:58,465 --> 00:18:03,425
+Nothing changed. Bull.
+
+176
+00:18:03,445 --> 00:18:07,075
+Do I have to supply it? Maybe with the revision. Um.
+
+177
+00:18:07,615 --> 00:18:13,045
+So, JJ, restore from main.
+
+178
+00:18:16,185 --> 00:18:22,155
+Hmhm. If you like to modify the current version, use from.
+
+179
+00:18:24,405 --> 00:18:28,305
+From. Nothing changed.
+
+180
+00:18:29,835 --> 00:18:35,545
+What? Did you have a story for?
+
+181
+00:18:36,725 --> 00:18:42,744
+One defaults to the working copy. This is very strange.
+
+182
+00:18:42,745 --> 00:18:49,345
+So means that the paths get the same content in the destination as they had in the source.
+
+183
+00:18:52,745 --> 00:19:01,085
+JJ restore. Is it?
+
+184
+00:19:01,105 --> 00:19:06,685
+Do I have to supply like. Something like that?
+
+185
+00:19:07,555 --> 00:19:14,285
+No. Restore only these paths instead of all paths.
+
+186
+00:19:17,025 --> 00:19:27,345
+Preserve the content. Not this one. Rebasing tool from revision restore from EF main at origin.
+
+187
+00:19:27,975 --> 00:19:33,735
+Revision to restore into. To current one.
+
+188
+00:19:34,185 --> 00:19:37,575
+No match is found. Nothing changed, it says.
+
+189
+00:19:37,815 --> 00:19:41,985
+Which says that nothing has changed either under browse Browser extensions new tab.
+
+190
+00:19:43,465 --> 00:19:46,584
+Oh. Oh. You know what? Because I got the pads wrong. Doesn't. That's not a new tab.
+
+191
+00:19:46,585 --> 00:19:51,025
+Locales is web text glue locales. That's why.
+
+192
+00:19:53,465 --> 00:19:56,905
+Turns out user error. User error.
+
+193
+00:19:59,305 --> 00:20:05,455
+That's all I wanted. Okay, so first commit. Uh, I haven't filed the bug for this.
+
+194
+00:20:05,465 --> 00:20:11,485
+Uh, use two space indent, uh, for, uh, locales.
+
+195
+00:20:11,485 --> 00:20:19,735
+Report. Uh for locales, report and supported accounts Json files.
+
+196
+00:20:22,305 --> 00:20:27,015
+Okay. So that's the first one. And then the second one is I need to sort.
+
+197
+00:20:29,055 --> 00:20:41,754
+The actual locales. Saw each local list and missing message IDs alphabetically.
+
+198
+00:20:41,755 --> 00:20:46,435
+So right. I sorted the messages alphabetically.
+
+199
+00:20:51,875 --> 00:20:58,565
+Alphabetically, and then the list of missing message IDs alphabetically.
+
+200
+00:21:02,455 --> 00:21:07,945
+So. Uh, locales.
+
+201
+00:21:10,465 --> 00:21:14,265
+I need to. Basically sort a dictionary.
+
+202
+00:21:15,885 --> 00:21:20,655
+How do I do that? Um. Python sort dictionary.
+
+203
+00:21:21,825 --> 00:21:26,835
+How do you sort a dictionary? Sort dictionary by key.
+
+204
+00:21:30,035 --> 00:21:35,324
+Ordered decked. Standard Python dictionaries under review.
+
+205
+00:21:35,325 --> 00:21:39,975
+You saw the key value pairs when you saw them there. These ways use an order dictionary of the order in which the elements have been inserted.
+
+206
+00:21:46,025 --> 00:21:50,465
+For Python three users, one needs to use the items instead of or items.
+
+207
+00:21:52,935 --> 00:22:01,275
+Okay. Items print k. What am I seeing here?
+
+208
+00:22:05,105 --> 00:22:15,725
+That's going to give me insertion order. Oh, right.
+
+209
+00:22:17,375 --> 00:22:21,245
+So what I'll do is I'll sort the keys.
+
+210
+00:22:21,695 --> 00:22:25,385
+That makes sense. Um.
+
+211
+00:22:26,645 --> 00:22:33,305
+And then. Oh.
+
+212
+00:22:37,415 --> 00:22:41,735
+Uh, sort of dictionary by key for Jason.
+
+213
+00:22:43,055 --> 00:22:48,155
+I need to like. But sorry if I have.
+
+214
+00:22:50,615 --> 00:23:01,445
+If you do a standard. It's talking about, which has no inherent notion of ordering, is just a key to value maps.
+
+215
+00:23:01,455 --> 00:23:09,125
+Your items lose all ordering. Replacement of the values variable determined to deterministic order would be use sort keys.
+
+216
+00:23:09,815 --> 00:23:14,054
+That sounds. Interesting.
+
+217
+00:23:14,055 --> 00:23:24,045
+What sort? Keys. You can use dict items.
+
+218
+00:23:26,715 --> 00:23:30,935
+Only if the order of your dicks is important. You would want you to order dicks from the collections manager, didn't you?
+
+219
+00:23:30,945 --> 00:23:37,395
+Sort of. Pretty simply. Sorted ordered items for sorting the nested dictionaries.
+
+220
+00:23:41,545 --> 00:23:46,855
+Ordered dict has been long since unnecessary, starting with Python 3.6, dict keys are an order of insertion.
+
+221
+00:23:54,395 --> 00:24:04,265
+Hmhm Python dict json dump ordered keys.
+
+222
+00:24:08,485 --> 00:24:13,314
+Both Python dict and Json object are on our collections. You can pass sort keys parameter to sort keys.
+
+223
+00:24:13,315 --> 00:24:20,455
+That's exactly what I want. That's exactly what I want for Json dump s now.
+
+224
+00:24:28,535 --> 00:24:38,455
+Jason dump. Sort keys.
+
+225
+00:24:38,465 --> 00:24:45,065
+Do I have that on Mars? Most file.
+
+226
+00:24:48,815 --> 00:25:00,855
+Must file import Json. Sort keys.
+
+227
+00:25:01,055 --> 00:25:04,955
+It does have sort keys. Okay.
+
+228
+00:25:05,285 --> 00:25:11,915
+And that appears to just kind of like wrap. Skateparks.
+
+229
+00:25:14,435 --> 00:25:19,425
+Okay. Part.
+
+230
+00:25:25,035 --> 00:25:34,365
+Okay. So let's. I'm actually curious to know if I even need to do this step then, like, is it going to sort all keys?
+
+231
+00:25:35,415 --> 00:25:47,325
+Json sort keys. Python. If true, dictionaries will be outputted, sorted by key.
+
+232
+00:25:49,365 --> 00:25:54,345
+And what is the. What was the.
+
+233
+00:25:55,725 --> 00:25:58,845
+Oh, because these are arrays, not dictionaries okay.
+
+234
+00:25:59,235 --> 00:26:05,205
+So that's good. Um, so I still need to do this because these are, uh, arrays.
+
+235
+00:26:06,705 --> 00:26:11,174
+And then I'm going to do sort keys equals.
+
+236
+00:26:11,175 --> 00:26:20,625
+True. And might as well do it for this as well.
+
+237
+00:26:20,625 --> 00:26:27,605
+Sort. He's. It's true. And now let's run our command again.
+
+238
+00:26:35,815 --> 00:26:43,205
+Whoo! Sounds like we've got ourselves a spammer named nine year old Piper Neo.
+
+239
+00:26:43,235 --> 00:26:47,205
+Feel free to kick them. With prejudice.
+
+240
+00:26:49,225 --> 00:26:53,505
+Shame on you. Nine year old Piper doll ate like.
+
+241
+00:26:56,505 --> 00:27:03,825
+Shame. Shame. I was not aware of sort keys.
+
+242
+00:27:04,125 --> 00:27:10,575
+This is very interesting. Okay. Now, if we take a look at the diff, we should hopefully see.
+
+243
+00:27:12,795 --> 00:27:23,345
+Inside of that big report. The very first. Local.
+
+244
+00:27:28,415 --> 00:27:33,325
+Is ace. That's good. That's very good. And then it's also putting these in alphabetical order.
+
+245
+00:27:33,335 --> 00:27:36,995
+Ace. And what was the next one? Ack!
+
+246
+00:27:38,195 --> 00:27:43,715
+Okay, I feel much I feel pretty good about this. Okay.
+
+247
+00:27:43,715 --> 00:27:50,405
+So I'm going to revert the locales change again because I'm just going to say to sort the keys.
+
+248
+00:27:52,625 --> 00:27:55,744
+Bug. Uh bah bah bah bah bah bah.
+
+249
+00:27:55,745 --> 00:28:06,695
+That sort, uh, keys for locales, report and supported locales and Json files probably merge that into the prior one, actually.
+
+250
+00:28:07,835 --> 00:28:10,955
+In fact, let's just go ahead and do that. JJ squash.
+
+251
+00:28:11,645 --> 00:28:17,405
+Are you. Use to space indent and key sorting.
+
+252
+00:28:19,445 --> 00:28:24,485
+Keys sorting. So those are squashed together now.
+
+253
+00:28:27,425 --> 00:28:31,595
+And now let's actually like let's run the command again one last time.
+
+254
+00:28:31,595 --> 00:29:00,575
+And that's what we'll commit. Okay.
+
+255
+00:29:02,275 --> 00:29:11,215
+So then the second patch will be, uh baa baa baa baa baa uh, update, uh, new tab locales.
+
+256
+00:29:18,965 --> 00:29:23,315
+And. Let's file a bug.
+
+257
+00:29:25,265 --> 00:29:31,505
+So, um, new tab. Which is the the built in add on.
+
+258
+00:29:34,115 --> 00:29:43,604
+Independently. Uh, okay.
+
+259
+00:29:43,605 --> 00:29:45,195
+We're going to block this bug.
+
+260
+00:29:45,195 --> 00:30:01,815
+We're going to say, um, make uh, locales report dot Json and supported locales, dot Json, use um, to space indent and sorted keys for dicts.
+
+261
+00:30:03,495 --> 00:30:06,915
+Uh, okay. So, uh, in bug.
+
+262
+00:30:09,005 --> 00:30:15,135
+What was it? This one.
+
+263
+00:30:19,255 --> 00:30:29,115
+In bugs such and such, we swapped out the, uh, standard Json uh module in the new tab.
+
+264
+00:30:29,685 --> 00:30:38,565
+Mock commands script for, uh, the one supplied by Mars file.
+
+265
+00:30:41,315 --> 00:30:54,485
+Supplied by Mars file. It seems that the one supplied by Mars file expects two space indentation and raises exceptions when trying to use for.
+
+266
+00:30:55,775 --> 00:31:01,445
+Which is what we were supplying. While I'm here.
+
+267
+00:31:03,485 --> 00:31:15,455
+I'll also add the sort keys directive so that the, uh, keys for dicts are, uh, sorted alphabetically.
+
+268
+00:31:17,285 --> 00:31:25,565
+To make the differences, uh, between versions of the report less noisy and fabricator.
+
+269
+00:31:29,345 --> 00:31:33,334
+Submit. All right.
+
+270
+00:31:33,335 --> 00:31:38,255
+We'll go ahead and change a scribe.
+
+271
+00:31:38,825 --> 00:31:44,765
+Oh, I love this one. Check this out. JJ describe ah CVS colon colon.
+
+272
+00:31:45,695 --> 00:31:50,765
+So I'm going to change the commit messages of both of these. Single command brings up single editor.
+
+273
+00:31:53,165 --> 00:31:59,595
+Oops. Uh.
+
+274
+00:32:01,995 --> 00:32:08,835
+Done. So I'll go ahead and submit for review.
+
+275
+00:32:14,705 --> 00:32:44,035
+Not bad. Okay.
+
+276
+00:32:46,435 --> 00:32:49,855
+Um, let's take a look at our patches.
+
+277
+00:32:55,915 --> 00:33:06,925
+Easy peasy. And then it's this we're going to expand all the files.
+
+278
+00:33:13,055 --> 00:33:18,155
+And the one that's most important is the locales one supporter locales.
+
+279
+00:33:18,635 --> 00:33:24,035
+This one is going to be fairly large and annoying, but hopefully from here on forward it will be less large and annoying.
+
+280
+00:33:26,665 --> 00:33:33,235
+See like look in support locales. Um, it's just being d indented, so that's good.
+
+281
+00:33:34,375 --> 00:33:39,415
+Uh, sorry, it's not supported locales. It's locales. Report calls report.
+
+282
+00:33:39,445 --> 00:33:51,015
+This is the one that's going to be annoying. So now, um, we're just going to go ahead and.
+
+283
+00:33:53,455 --> 00:34:03,145
+Yeah, I have a much better situation there. So because the the locales are now sort of in order, they should in theory require less shifting around.
+
+284
+00:34:03,415 --> 00:34:07,375
+Um, in the Json file they will shift around as much. And so the diffs will be smaller.
+
+285
+00:34:08,395 --> 00:34:11,965
+So that's up for review. Who? Uh, we did it.
+
+286
+00:34:12,295 --> 00:34:18,264
+Um, next up review I want to review some patches.
+
+287
+00:34:18,265 --> 00:34:21,055
+We started reviewing some of these last week. I'm going to keep reviewing them.
+
+288
+00:34:25,015 --> 00:34:31,015
+So this is related to that thing that we started reviewing last week about, uh, using um.
+
+289
+00:34:32,145 --> 00:34:35,864
+Oh, you know what? I should actually, uh, review this one first.
+
+290
+00:34:35,865 --> 00:34:41,415
+Did I already review it? Did I already review it?
+
+291
+00:34:41,985 --> 00:34:48,855
+I hadn't reviewed it. I know I will review it.
+
+292
+00:34:51,225 --> 00:34:56,975
+Added a reviewer on the eighth. So I should review this one first.
+
+293
+00:35:00,365 --> 00:35:04,925
+And this is related to that like the preferences redesign and re rebuild.
+
+294
+00:35:06,335 --> 00:35:10,955
+So what is this. Convert zoom settings action section to config based prefs.
+
+295
+00:35:12,005 --> 00:35:19,084
+And that's using um. Uh this this patch having already been applied.
+
+296
+00:35:19,085 --> 00:35:24,545
+So let's apply that locally. Let's check the main.
+
+297
+00:35:27,995 --> 00:35:31,085
+Let's apply this locally. Mars fab patch.
+
+298
+00:35:31,655 --> 00:35:35,525
+Apply to here. Skip dependencies.
+
+299
+00:35:40,265 --> 00:35:46,715
+Actually, I could probably do this one and we'll get both of them if I don't do skip dependencies.
+
+300
+00:35:49,895 --> 00:35:55,115
+And what'll happen is it'll go get both. It's going to ask me if I want all the children.
+
+301
+00:35:55,625 --> 00:36:08,845
+I don't want all the children. Incredible.
+
+302
+00:36:09,775 --> 00:36:13,645
+So now we've got our two patches here.
+
+303
+00:36:15,055 --> 00:36:19,135
+And now let's build a tree using an artifact build.
+
+304
+00:36:25,025 --> 00:36:28,895
+I asked the chat last week about what people did for a living.
+
+305
+00:36:29,675 --> 00:36:33,935
+Let's let's, uh, I'm going to pull the audience, see what we got, audience wise.
+
+306
+00:36:34,835 --> 00:36:39,875
+Uh, any fun plans for the upcoming summer if you're in the Northern hemisphere?
+
+307
+00:36:40,175 --> 00:36:43,175
+Summer is, uh, here. We're in the thick of it.
+
+308
+00:36:44,015 --> 00:36:47,765
+Do you have any holidays coming up? If so, what are your plans?
+
+309
+00:36:47,765 --> 00:36:51,085
+What are you going to do? My holiday next week. I'm going to go into the woods.
+
+310
+00:36:51,095 --> 00:36:56,975
+I'm going. That's like a classic Canadian sort of summer thing to do is to just head into the woods, go to a cottage,
+
+311
+00:36:56,975 --> 00:37:04,354
+or go to, uh, a beach or go to a trail or, you know, head into the Muskoka or who knows, who knows.
+
+312
+00:37:04,355 --> 00:37:11,344
+But getting out of the city, heading into the woods, um, you know, I live amongst the Great Lakes,
+
+313
+00:37:11,345 --> 00:37:18,815
+so there's plenty of amazing wilderness and beaches and and trails and mosquitoes and black flies and and it's a good time.
+
+314
+00:37:18,815 --> 00:37:22,955
+So, uh, what are your plans? Uh, live hacking group.
+
+315
+00:37:23,435 --> 00:37:30,485
+Um, anyone going anywhere fun? You don't have to give specifics, but just, like, do you have any vacation coming up?
+
+316
+00:37:30,485 --> 00:37:37,295
+I guess is the question. For Simon's typing, Simon writes.
+
+317
+00:37:45,575 --> 00:37:48,605
+Sort of heading into the woods in Finland in two weeks. Hey. That's cool.
+
+318
+00:37:49,565 --> 00:37:53,585
+Finland's woods. Woods? Uh, forests in Finland.
+
+319
+00:37:55,115 --> 00:37:58,115
+Finland boasts extensive forests, according to the I overview.
+
+320
+00:37:58,505 --> 00:38:02,495
+Uh, but visit finland.com. Holy cow!
+
+321
+00:38:02,525 --> 00:38:09,035
+Look at this. Look at the bouquet. Look at the the sort of the wild, the lens artifacts going on here.
+
+322
+00:38:09,035 --> 00:38:14,315
+This is idyllic. Um, credit like this is beautiful.
+
+323
+00:38:14,315 --> 00:38:21,424
+This. This could have come from, like, lake on, like a, you know, a beach or, sorry, a lake or a river in, in Ontario.
+
+324
+00:38:21,425 --> 00:38:26,315
+This looks very familiar. These mountains are not exactly the sort of thing you'd see in Ontario.
+
+325
+00:38:26,315 --> 00:38:29,344
+That's beautiful. Um, this bottom half.
+
+326
+00:38:29,345 --> 00:38:34,685
+Like, if I covered everything from here down, I'm like, yeah, that looks like Ontario from here up.
+
+327
+00:38:34,685 --> 00:38:40,295
+It's like, Holy smokes, that's that's cool. It's more like the Rockies. Is this I, I have no idea.
+
+328
+00:38:40,445 --> 00:38:45,365
+This could be I, I have a hard time telling um, these days it's difficult to tell.
+
+329
+00:38:45,515 --> 00:38:51,665
+Would I put it past the Finland, uh, tourism office to generate these images from.
+
+330
+00:38:51,675 --> 00:38:54,935
+I mean, maybe they're quite beautiful, I don't.
+
+331
+00:38:55,085 --> 00:38:59,845
+How many fingers does this tree have? Um. Let's it.
+
+332
+00:38:59,855 --> 00:39:03,395
+One, two, three, four. It's the fingers. Trick. Still working. This person looks real.
+
+333
+00:39:03,815 --> 00:39:07,115
+This person looks real. Anyways, uh, that looks amazing. Cool.
+
+334
+00:39:07,445 --> 00:39:11,045
+Um, great. Uh, great. Great. Uh, trip.
+
+335
+00:39:11,045 --> 00:39:16,115
+It sounds like, uh. Simon. Um, maybe I'll visit Finland someday.
+
+336
+00:39:16,715 --> 00:39:20,225
+Things to do. So much things. So many things to do around the world.
+
+337
+00:39:22,625 --> 00:39:26,195
+Catherine says that there's more than five fingers on the tree and that it's fake.
+
+338
+00:39:26,645 --> 00:39:34,054
+Let's see. Let's count one, two, three, four, five, six.
+
+339
+00:39:34,055 --> 00:39:37,175
+You're right. Catherine, I think you've nailed it.
+
+340
+00:39:37,445 --> 00:39:44,074
+Cracked the case. Craig says not using vacation, but an Ottawa multi-day music festival is happening right now,
+
+341
+00:39:44,075 --> 00:39:49,715
+and I've been attending and watching bands almost every day. Tom Morello there just by by himself.
+
+342
+00:39:49,715 --> 00:39:53,675
+Or is does he have a band or is it just Tom Morello just soloing for for an hour?
+
+343
+00:39:54,215 --> 00:39:58,415
+Um, Ottawa music Festival, Tom Morello.
+
+344
+00:40:03,635 --> 00:40:10,035
+Raptor's badass one man show. Uh, the official website of Tom Morello, uh, Ottawa Blues Fest.
+
+345
+00:40:10,055 --> 00:40:13,715
+Is that what we're talking about here in July? Yeah, yeah, it must be what it is. Blues fest.
+
+346
+00:40:14,525 --> 00:40:18,845
+Yes, it's blues fest. Wow. Who's playing? Who's playing?
+
+347
+00:40:18,935 --> 00:40:22,775
+Uh, today's the 16th. Luscious Tom Morello, Def leppard.
+
+348
+00:40:22,785 --> 00:40:27,035
+Holy cow. Um. The Decemberists.
+
+349
+00:40:27,605 --> 00:40:32,285
+Uh. Funk yourself. That's great. Uh, I know some of these bands.
+
+350
+00:40:33,245 --> 00:40:38,215
+Let's see anyone else jump out at me. Uh, Kardinal official.
+
+351
+00:40:38,225 --> 00:40:42,565
+That guy is a legend in Canada. Uh, Green day classic.
+
+352
+00:40:43,445 --> 00:40:47,405
+Uh, Dwayne Gretzky, another legend, at least in Canada.
+
+353
+00:40:47,465 --> 00:40:54,675
+In Toronto, at least. Um. And, uh, yeah, this looks like, uh, like a really fun time.
+
+354
+00:40:54,695 --> 00:41:01,055
+Papa roach. Papa Roach is still around playing the Saturday on the RBC stage.
+
+355
+00:41:01,715 --> 00:41:05,915
+Wow. That's not Papa Roach. That's Papa Roach.
+
+356
+00:41:06,425 --> 00:41:09,755
+Very interesting. All right, let's get back to reviewing.
+
+357
+00:41:10,055 --> 00:41:13,174
+Uh, what what were we doing? So we've applied the patches.
+
+358
+00:41:13,175 --> 00:41:19,745
+We've got a build going, and let's take a look now and see what exactly the patch is doing, and we can test it out.
+
+359
+00:41:21,005 --> 00:41:28,115
+So if we recall from last week, um, one of the patches in the series made it so that, uh.
+
+360
+00:41:30,265 --> 00:41:33,504
+Oh, and it looks like this two today.
+
+361
+00:41:33,505 --> 00:41:38,915
+Actually, the parent revision was removed as unnecessary.
+
+362
+00:41:38,935 --> 00:41:43,945
+I've commandeered the patch and added the requested changes. Click changes. Both one and two are not enough to meet an acceptance criteria.
+
+363
+00:41:44,365 --> 00:41:47,785
+I guess we can leave that for part three. Uh.
+
+364
+00:41:49,435 --> 00:41:57,355
+I guess so. Thanks. I've come to the patch, added the requested changes so I have already reviewed this one, so this is good to go.
+
+365
+00:41:58,585 --> 00:42:03,475
+It's interesting that. The child revision was removed.
+
+366
+00:42:09,505 --> 00:42:14,775
+Huh? I guess it's maybe not a requirement. This may break our whole thing here.
+
+367
+00:42:14,785 --> 00:42:18,205
+Basic dialog, but open dialog. Okay, so where's this?
+
+368
+00:42:18,415 --> 00:42:23,305
+What does this actually do? This one disables the mods button if the parent is disabled.
+
+369
+00:42:23,575 --> 00:42:27,685
+So if a parent element is disabled of a mouse button, it will disable the mouse button.
+
+370
+00:42:27,685 --> 00:42:35,845
+That makes sense. And what this patch does is it instead of having the zoom controls, which let's take a quick,
+
+371
+00:42:35,905 --> 00:42:39,505
+uh, familiarity, let's get a quick familiarity of the zoom controls.
+
+372
+00:42:41,065 --> 00:42:46,435
+Um. Zoom box.
+
+373
+00:42:47,785 --> 00:42:51,555
+Uh, where's that going to be? Zoom.
+
+374
+00:42:51,555 --> 00:42:56,585
+Box. Zoom. Zoom right here.
+
+375
+00:42:56,635 --> 00:42:59,935
+That's these things. So these are the controls that we're changing.
+
+376
+00:43:00,775 --> 00:43:07,154
+And, uh. We are using a group ID in a setting group.
+
+377
+00:43:07,155 --> 00:43:13,395
+So these are the the new primitives that are being added so they don't have to do all the, the, uh, markup by hand.
+
+378
+00:43:14,175 --> 00:43:18,885
+And then. Oh yes, yes, yes, the Memoized stuff.
+
+379
+00:43:19,875 --> 00:43:23,774
+I remember this this was very confusing last time.
+
+380
+00:43:23,775 --> 00:43:28,635
+I think we've actually started reviewing this last time, and I was trying to get my head wrapped around this memoize function.
+
+381
+00:43:28,635 --> 00:43:35,835
+I eventually got it. Um, we have this, like, this is an interesting pattern for doing a singleton class,
+
+382
+00:43:37,365 --> 00:43:44,715
+and this is just sort of wrapping around the functionality for setting the preferences and getting values for the preferences.
+
+383
+00:43:47,185 --> 00:43:51,715
+Where's the memoize are used? Add once preferences add setting.
+
+384
+00:43:52,645 --> 00:43:58,345
+So we add the default zoom and then when you set the value.
+
+385
+00:44:00,485 --> 00:44:03,605
+Of default zoom. We do this when we get it.
+
+386
+00:44:04,535 --> 00:44:09,095
+It's a sync, will get the default zoom value and we'll round it.
+
+387
+00:44:09,545 --> 00:44:18,425
+And then to get the configuration for the control. We checked to see what the zoom values are and we return.
+
+388
+00:44:21,765 --> 00:44:25,035
+Oh I see individual. These are the the dropdown options.
+
+389
+00:44:25,035 --> 00:44:28,635
+These are these options. That's what it's doing.
+
+390
+00:44:29,355 --> 00:44:34,155
+And it wants to do it once rather than every time. That makes sense.
+
+391
+00:44:36,175 --> 00:44:41,105
+Preferences. Default. Zoom value. The value.
+
+392
+00:44:43,135 --> 00:44:48,055
+And then we add the setting zoom text. What's that one?
+
+393
+00:44:48,055 --> 00:44:55,475
+Zoom text. Default zoom.
+
+394
+00:44:57,005 --> 00:45:02,005
+Oh, that's this one. Whether or not to just zoom the text. Okay. Okay.
+
+395
+00:45:04,115 --> 00:45:08,945
+And that is using whether or not to use full zoom or um.
+
+396
+00:45:11,655 --> 00:45:16,455
+Text that is. Okay, so there's some DJs somewhere that's hooking that up.
+
+397
+00:45:17,565 --> 00:45:22,335
+We'll have to make sure that those are all map properly. And then we add a setting.
+
+398
+00:45:22,635 --> 00:45:25,815
+Zoom warning. Zoom warning.
+
+399
+00:45:29,195 --> 00:45:32,515
+Text zoom override warning. So if you select this to that.
+
+400
+00:45:32,525 --> 00:45:36,994
+Yeah okay. Zoom warning. Interesting. That shows this warning.
+
+401
+00:45:36,995 --> 00:45:41,525
+If you select zoom text all your default zoom is now set to 100. May cause some sites are content to break.
+
+402
+00:45:41,675 --> 00:45:46,865
+Interesting. That is true. So we add a setting called the zoom warning.
+
+403
+00:45:47,405 --> 00:45:51,905
+And it's a it's not really a I guess it's uh, it's not a control.
+
+404
+00:45:52,685 --> 00:45:59,645
+It's just a thing that may be visible. And then settings config.
+
+405
+00:45:59,645 --> 00:46:07,384
+We're adding zoom. So we have the zoom header preferences zoom header which that makes sense.
+
+406
+00:46:07,385 --> 00:46:10,434
+That's. Preferences.
+
+407
+00:46:10,435 --> 00:46:14,215
+Zoom header. Yeah. And then. Oh.
+
+408
+00:46:14,215 --> 00:46:18,445
+Zoom header two. Do we update some label?
+
+409
+00:46:20,515 --> 00:46:25,225
+So yeah, I agree we should be definitely doing a migration here.
+
+410
+00:46:25,255 --> 00:46:29,545
+Why? Oh, you know why. It's because, um.
+
+411
+00:46:33,995 --> 00:46:39,505
+They want to set the label on a header, like the way that they're doing this here with like a nested header,
+
+412
+00:46:39,515 --> 00:46:45,485
+I think they're trying to get not do that. And so they need to use the label attribute setter.
+
+413
+00:46:45,485 --> 00:46:51,575
+And I agree they should be using a migration. Okay.
+
+414
+00:46:51,915 --> 00:46:55,654
+Uh where was I. Where was I heading.
+
+415
+00:46:55,655 --> 00:46:59,105
+Level two. And then default zoom.
+
+416
+00:47:00,935 --> 00:47:04,985
+It's a selector zoom text.
+
+417
+00:47:05,975 --> 00:47:09,694
+And then the zoom warning happens underneath. So that's difference.
+
+418
+00:47:09,695 --> 00:47:14,165
+It's happening underneath. Now. Me that's important.
+
+419
+00:47:15,185 --> 00:47:20,885
+Uh, and so we can get rid of some of this logic here, which gets the existing zoom values.
+
+420
+00:47:24,115 --> 00:47:27,205
+Okay. So I just want to get the generalized shape of this thing.
+
+421
+00:47:29,275 --> 00:47:33,505
+Handle zoom. Default zoom change. Presumably that's happening now in the helper.
+
+422
+00:47:34,165 --> 00:47:39,145
+Yeah. Okay. So we can look more closely at that later.
+
+423
+00:47:39,805 --> 00:47:44,365
+And then setting control when we change.
+
+424
+00:47:47,185 --> 00:47:59,575
+We'll call on setting change, which is new because we're going to dispatch an event, a sinking set value, which we do the sync if we can.
+
+425
+00:48:03,525 --> 00:48:10,505
+What happened to get value. We don't need. Get value anymore.
+
+426
+00:48:13,975 --> 00:48:19,954
+Well, this is a little. Yeah.
+
+427
+00:48:19,955 --> 00:48:22,985
+What was used to get value to anything? Use and get value.
+
+428
+00:48:27,035 --> 00:48:34,895
+Get value. Uh.
+
+429
+00:48:34,895 --> 00:48:38,675
+Preferences. Browser. Comments. Preferences.
+
+430
+00:48:42,105 --> 00:48:45,525
+Looks. I know looks like nothing was using it, so. Okay.
+
+431
+00:48:48,715 --> 00:48:51,835
+But we do have set value. Let's change. And then.
+
+432
+00:49:03,075 --> 00:49:06,915
+Start setting. Well this is using this start setting target value.
+
+433
+00:49:06,915 --> 00:49:11,815
+But that I think is calling into this stuff up here.
+
+434
+00:49:11,835 --> 00:49:16,275
+Oh I'm getting a delivery boom of you. Thank you very much for the tea delivery.
+
+435
+00:49:16,305 --> 00:49:19,315
+Let me, uh, let me play, uh, an air horn. Uh.
+
+436
+00:49:21,425 --> 00:49:26,435
+Thank you very much for the tea delivery. She said.
+
+437
+00:49:26,435 --> 00:49:29,555
+Thank you. You're welcome. Uh.
+
+438
+00:49:33,195 --> 00:49:41,715
+Yeah. I scroll back down here, set value.
+
+439
+00:49:44,855 --> 00:49:47,945
+We are calling that on setting.
+
+440
+00:49:47,945 --> 00:49:54,785
+And the setting is going to be not the control but the actual setting.
+
+441
+00:49:58,065 --> 00:50:05,605
+Should be up in here. Right.
+
+442
+00:50:07,265 --> 00:50:11,225
+What is set value? This does set value.
+
+443
+00:50:13,805 --> 00:50:20,825
+Sorry. Get values 134. Get value. Where are we using get value here in preferences binding okay.
+
+444
+00:50:21,055 --> 00:50:24,545
+Okay. This is starting to make sense. I had to keep scrolling.
+
+445
+00:50:24,605 --> 00:50:30,095
+That was my problem. So it's coming. The setting binding will get the value for it.
+
+446
+00:50:30,605 --> 00:50:34,565
+And set our value in the UI from the binding.
+
+447
+00:50:35,255 --> 00:50:43,025
+And then I'll change. Mhm.
+
+448
+00:50:45,045 --> 00:50:59,595
+So is it a problem that the value that the start value might not have been set yet by the time we fire the setting change event?
+
+449
+00:51:01,815 --> 00:51:14,985
+Because this is a async. The setting group we're listening for setting change, get effect,
+
+450
+00:51:14,985 --> 00:51:18,584
+visibility or layout run through the render process to make any changes in this workaround for zoom text,
+
+451
+00:51:18,585 --> 00:51:22,485
+we're not being depended on the zoom text only setting. So yeah, that worries me.
+
+452
+00:51:26,275 --> 00:51:34,285
+Um. Or should we? Await set value for firing this.
+
+453
+00:51:42,135 --> 00:51:49,215
+Adding level preferences. Yeah, I agree we are going to want a, uh, migration.
+
+454
+00:51:52,365 --> 00:51:58,225
+And then preferences binding an async function. What the heck?
+
+455
+00:52:02,045 --> 00:52:06,005
+Constructor equals. Oh, it's checking to see whether or not.
+
+456
+00:52:10,835 --> 00:52:20,315
+A function is a sink. That's fascinating.
+
+457
+00:52:20,325 --> 00:52:25,305
+I had no idea you could do that. So like let x equal async.
+
+458
+00:52:27,495 --> 00:52:32,955
+Let Y uh, for just a normal function.
+
+459
+00:52:34,785 --> 00:52:40,695
+Uh async function. Let's say const async function.
+
+460
+00:52:41,745 --> 00:52:48,525
+So it's x dot constructor equal to async function.
+
+461
+00:52:49,665 --> 00:52:54,825
+Yes. Incredible. That's so interesting.
+
+462
+00:52:55,215 --> 00:52:58,875
+I did not know that. That's pretty neat.
+
+463
+00:53:01,065 --> 00:53:04,274
+It's kind of wild that there's not really a a built in way.
+
+464
+00:53:04,275 --> 00:53:09,045
+Like to say like is constructor dot.
+
+465
+00:53:12,465 --> 00:53:20,145
+Like is async or something. Um JavaScript check if function is async.
+
+466
+00:53:25,315 --> 00:53:32,244
+Okay. So one way is to. Do the two string.
+
+467
+00:53:32,245 --> 00:53:36,115
+And then this is the this is the other one by the async function constructor.
+
+468
+00:53:46,535 --> 00:53:49,685
+Huh? Okay.
+
+469
+00:53:52,905 --> 00:53:56,235
+And I think that's mainly just to be able to throw errors.
+
+470
+00:54:03,905 --> 00:54:22,525
+It's not okay. Is it necessary to throw in this case?
+
+471
+00:54:23,245 --> 00:54:28,135
+Can we not return promise that resolve?
+
+472
+00:54:31,225 --> 00:54:49,675
+Such and such. Or do we think it's necessary to fail loud in the event that we're by a binding and async setting?
+
+473
+00:54:52,165 --> 00:55:00,045
+With and, uh. Binding.
+
+474
+00:55:00,615 --> 00:55:04,755
+Async setting. An async configuration.
+
+475
+00:55:09,225 --> 00:55:12,375
+Okay. Good for you.
+
+476
+00:55:13,965 --> 00:55:18,475
+Oh. Right.
+
+477
+00:55:21,515 --> 00:55:27,865
+See little bit, simplify this bit and route everything through. Yeah.
+
+478
+00:55:33,295 --> 00:55:37,075
+Uh, on the getter. It's good value.
+
+479
+00:55:39,215 --> 00:55:42,815
+I agree with this one. Um.
+
+480
+00:55:42,815 --> 00:55:47,375
+Set value. Are we going to need unit tests?
+
+481
+00:55:52,865 --> 00:56:08,015
+Uh, same as above. Is are we are we certain it's necessary to throw in the event that that configuration is set up for async?
+
+482
+00:56:08,465 --> 00:56:11,675
+Right. But we can do a sync, right.
+
+483
+00:56:19,045 --> 00:56:22,375
+Mhm. User change. Have a great day Simon.
+
+484
+00:56:22,885 --> 00:56:31,225
+Take care. Use change if not async get or set and say that there was an async user change.
+
+485
+00:56:31,525 --> 00:56:37,375
+Sorry if we're using either of those. Or on user change.
+
+486
+00:56:42,805 --> 00:57:02,765
+You think you change? Get async value.
+
+487
+00:57:04,655 --> 00:57:11,645
+See this one. It's like it will happily accept, I guess the ace and get.
+
+488
+00:57:11,855 --> 00:57:15,815
+We may have an async get, but a sink set. I guess that's possible.
+
+489
+00:57:16,595 --> 00:57:20,805
+And so it's a little more flexible. Okay.
+
+490
+00:57:23,265 --> 00:57:27,285
+Uh, let's take a look at the what the implementation looks like whenever we run it.
+
+491
+00:57:27,495 --> 00:57:32,355
+So let's go to the zoom controls. So here they are.
+
+492
+00:57:33,105 --> 00:57:36,225
+Now it's putting the warning underneath that's new.
+
+493
+00:57:37,665 --> 00:57:43,575
+Uh, so. Uh, notably.
+
+494
+00:57:46,925 --> 00:58:05,105
+Uh. Zoom. Notably, this places the warning beneath the zoom text checkbox, whereas before it was above.
+
+495
+00:58:05,285 --> 00:58:16,625
+Is this intentional? Okay, and now I want to just double check that the actual binding is is set up correctly.
+
+496
+00:58:18,335 --> 00:58:22,475
+So we're going to take a look. You know what I might do is duplicate this tab.
+
+497
+00:58:23,935 --> 00:58:30,335
+And we're going to take a look at uh was it Main.js.
+
+498
+00:58:32,325 --> 00:58:36,905
+I want to make sure that the class here has been set up right.
+
+499
+00:58:41,795 --> 00:58:45,004
+Um, so here uh, right here.
+
+500
+00:58:45,005 --> 00:58:53,225
+So what are we doing? We get the content prep service, and then.
+
+501
+00:58:55,295 --> 00:59:00,245
+We create the load context. Or not private.
+
+502
+00:59:02,525 --> 00:59:07,084
+And then we say set global. Because our set global function takes an oppressed context.
+
+503
+00:59:07,085 --> 00:59:09,994
+And because we want to keep this property consistent across both private and private contexts,
+
+504
+00:59:09,995 --> 00:59:18,735
+we create create and so on that here we create a non private context and use that to set the property.
+
+505
+00:59:18,755 --> 00:59:23,414
+Oh this is. Preexisting spelling she use.
+
+506
+00:59:23,415 --> 00:59:29,865
+That said, probably regardless of our actual context. And then we say set global on private local load context.
+
+507
+00:59:30,675 --> 00:59:38,025
+And then. We actually have resolvers.
+
+508
+00:59:38,095 --> 00:59:42,654
+Handle completion. Handle result or resolve.
+
+509
+00:59:42,655 --> 00:59:45,955
+Under handle. Result. Set global.
+
+510
+00:59:47,125 --> 00:59:53,605
+I don't know if we actually want the do we don't we don't want that on the on handle completion set global.
+
+511
+00:59:58,825 --> 01:00:12,195
+Content prev callback to. For the retrieval methods is called once for each retrieve preference called when the method finishes.
+
+512
+01:00:24,845 --> 01:00:29,195
+Hmhm. Is not called.
+
+513
+01:00:29,215 --> 01:00:34,135
+It's only called for retrieval. And what are we doing here?
+
+514
+01:00:34,345 --> 01:00:38,245
+We're setting according to the documentation.
+
+515
+01:00:40,915 --> 01:00:44,965
+Handle result is only called for retrieval.
+
+516
+01:00:49,615 --> 01:00:55,695
+Uh. So called for retrieval.
+
+517
+01:00:57,105 --> 01:01:06,815
+Maybe this should be a no op instead. And then we return a promise.
+
+518
+01:01:06,815 --> 01:01:09,985
+So set default Zune will all be async.
+
+519
+01:01:09,995 --> 01:01:16,365
+Now that's new. And that one. Okay, that's the only color.
+
+520
+01:01:16,635 --> 01:01:24,345
+And then get default zoom also. That's going to get the global value.
+
+521
+01:01:24,375 --> 01:01:27,465
+Okay. So let's take a look at the functionality here. Default zoom.
+
+522
+01:01:27,465 --> 01:01:30,614
+Let's say our default zoom is going to be 200. Wow.
+
+523
+01:01:30,615 --> 01:01:35,175
+That's that's a big zoom. Let's actually make it smaller 30%.
+
+524
+01:01:35,505 --> 01:01:38,655
+No, let's make it half. Um.
+
+525
+01:01:41,165 --> 01:01:44,975
+50%. So this is now our default. Zoom is 50%.
+
+526
+01:01:45,725 --> 01:01:50,105
+Cool. Now let's change it to text only.
+
+527
+01:01:50,675 --> 01:01:54,185
+So now it's just the text that's at 50%.
+
+528
+01:01:54,185 --> 01:01:59,945
+And now I'm going to change. The text size to zoom.
+
+529
+01:02:03,555 --> 01:02:06,915
+Then we go back to our default, which is 50. That's so interesting.
+
+530
+01:02:12,255 --> 01:02:17,145
+It's powerful stuff. Uh, that seems to work properly.
+
+531
+01:02:17,265 --> 01:02:24,135
+Which is really cool. Um. So I'm pretty happy with that implementation.
+
+532
+01:02:24,465 --> 01:02:32,475
+Uh, I'm going to run the tests now. Browser compliance preferences test is there.
+
+533
+01:02:34,935 --> 01:02:43,285
+Um. Zoom. Let's hear anything in here about zoom.
+
+534
+01:02:45,955 --> 01:02:54,815
+No preferences. Search within preferences.
+
+535
+01:03:06,125 --> 01:03:14,925
+Having a sympathy now. So that still works nicely because I guess it's rendering properly.
+
+536
+01:03:17,745 --> 01:03:21,345
+Um. Okay. Is there anything else I wanted to check?
+
+537
+01:03:21,405 --> 01:03:27,495
+I think we still need some answers for some of this other stuff. Uh, I agree.
+
+538
+01:03:29,505 --> 01:03:35,145
+I agree that seems like the right move here since we're just moving strings around.
+
+539
+01:03:47,875 --> 01:03:52,345
+So I'm going to publish that review. I'm. I'm pretty happy with this.
+
+540
+01:03:53,995 --> 01:04:01,625
+Um. Let's go ahead and publish this review.
+
+541
+01:04:05,475 --> 01:04:18,585
+Sorry for the delay. Okay.
+
+542
+01:04:18,595 --> 01:04:24,325
+Next, uh, support control Atlas for custom control attributes.
+
+543
+01:04:29,325 --> 01:04:36,015
+What even is. Support arbitrary attributes properties for config based settings.
+
+544
+01:04:36,015 --> 01:04:38,805
+Some settings may not fit cleanly into config based zones.
+
+545
+01:04:38,805 --> 01:04:43,935
+They may be informational based on the current state, or simply be more complicated or dynamic.
+
+546
+01:04:44,265 --> 01:04:47,475
+We should allow a setting to have a custom control, which would be backed by a custom element.
+
+547
+01:04:47,475 --> 01:04:50,475
+By providing a tag name and control config, that element will be created.
+
+548
+01:04:50,835 --> 01:04:55,875
+Listing the settings that the component depends on could provide a nice hook for poking the component update when the settings change.
+
+549
+01:04:56,265 --> 01:05:08,405
+This could be handled directly in the custom element itself. I guess this is really just making it so that if they're we're just going to expand.
+
+550
+01:05:16,895 --> 01:05:20,695
+Is this the right way of doing that? What is?
+
+551
+01:05:20,785 --> 01:05:25,975
+These are props. Other settings. Control. Perhaps the control accepts.
+
+552
+01:05:30,835 --> 01:05:36,205
+Can you do things like let x equal or um.
+
+553
+01:05:38,335 --> 01:05:46,525
+Write config equal the object and we'll say uh data dot config.
+
+554
+01:05:48,325 --> 01:05:55,015
+Oops. Sure. Forgot about config got but y equal.
+
+555
+01:05:56,005 --> 01:06:03,025
+So nothing. So if control actors is undefined.
+
+556
+01:06:06,475 --> 01:06:11,335
+Is required from local testing.
+
+557
+01:06:13,165 --> 01:06:24,715
+If control archers is undefined, then the spread operator is not like let's let's double check here.
+
+558
+01:06:25,135 --> 01:06:31,254
+Um, let y y equals x five config.
+
+559
+01:06:31,255 --> 01:06:37,345
+Yeah. Then the spread operator is not insert anything into the props object.
+
+560
+01:06:44,355 --> 01:06:56,895
+So this is fine. But, uh, I think this can be simplified by removing the or probably probably the simple.
+
+561
+01:07:02,095 --> 01:07:16,925
+That's what settings control. Uh, and then support arbitrary options with nested items for config based settings.
+
+562
+01:07:22,325 --> 01:07:26,435
+And that thing that we just added was called control actors.
+
+563
+01:07:27,545 --> 01:07:34,145
+Is that used here settings control. Is not.
+
+564
+01:07:34,355 --> 01:07:37,385
+So what's happening in this one? Support arbitrary options.
+
+565
+01:07:39,125 --> 01:07:43,585
+Introduce support for mass radio group backed inputs in the config based settings architecture.
+
+566
+01:07:43,595 --> 01:07:47,395
+The Contrast Contrast control section uses candidate replies to use this feature.
+
+567
+01:07:47,405 --> 01:07:52,205
+Note the other option has a nested modal button. Here's an example config that looks like a word for contrast controls.
+
+568
+01:07:52,205 --> 01:07:56,614
+Setting config system supports control radio.
+
+569
+01:07:56,615 --> 01:08:01,145
+Group room control radio, which creates a popular two Mars radio group reader group and puts the underlying same correctly.
+
+570
+01:08:01,145 --> 01:08:05,825
+Test for the config options. So I know enough.
+
+571
+01:08:07,415 --> 01:08:11,525
+I've gone cross-eyed nested items for config based settings.
+
+572
+01:08:18,135 --> 01:08:25,784
+This is kind of annoying. It might make more sense to put it on the individual options as control modes option, but that'll be a decent matter.
+
+573
+01:08:25,785 --> 01:08:29,654
+Repetition could perhaps have a list of known options with controls fallback like we do for most checkboxes.
+
+574
+01:08:29,655 --> 01:08:38,295
+Default control. Control option control.
+
+575
+01:08:41,375 --> 01:08:46,715
+You can draw arbitrary options with nested items or config based settings.
+
+576
+01:08:47,975 --> 01:08:51,185
+So what would this do? Default zoom control.
+
+577
+01:08:51,485 --> 01:08:56,115
+Option control. The special case kind of thing.
+
+578
+01:08:56,125 --> 01:09:02,635
+We want value, not whether it's checked or not. For is. If the local name is Mars Radio, return the value.
+
+579
+01:09:06,715 --> 01:09:10,715
+For radios, I see. Turn the value.
+
+580
+01:09:14,075 --> 01:09:19,535
+Render. So for each item.
+
+581
+01:09:21,695 --> 01:09:27,915
+Item arts. Opt items.
+
+582
+01:09:29,115 --> 01:09:34,265
+We map a configured setting, prepare a nested item in that.
+
+583
+01:09:36,585 --> 01:09:44,045
+Fake items. And the template will be this.
+
+584
+01:09:45,835 --> 01:09:50,985
+And for each. Item arc we map to the template.
+
+585
+01:09:57,285 --> 01:10:04,035
+And then any other children. Her way of giving options or and config option control.
+
+586
+01:10:06,335 --> 01:10:09,745
+I can see the controls more select. So if there's an.
+
+587
+01:10:11,045 --> 01:10:25,375
+Option control. Then option tags will create the option control and then control children is for each options will map to the option tag.
+
+588
+01:10:29,005 --> 01:10:33,535
+Individual option tag, and in this case, that'll be Ma's option.
+
+589
+01:10:41,565 --> 01:10:46,035
+What's Ma's option again? Storybook. What's Moore's options?
+
+590
+01:10:56,175 --> 01:11:00,135
+Uh. Settings checkbox.
+
+591
+01:11:01,035 --> 01:11:05,924
+Smart option. Uh. Option. Settings.
+
+592
+01:11:05,925 --> 01:11:10,715
+Control. Mars select.
+
+593
+01:11:20,985 --> 01:11:24,815
+Option. So within here there is a mars option.
+
+594
+01:11:27,515 --> 01:11:32,855
+Mars. Select. Yeah.
+
+595
+01:11:32,865 --> 01:11:38,685
+Okay. Miles option. Okay, I understand. I understand what's going on here.
+
+596
+01:11:38,715 --> 01:11:44,345
+It's the difference between select and option. Let's go back to the beginning.
+
+597
+01:11:44,945 --> 01:11:47,945
+For each one, we're creating a mask option underneath it.
+
+598
+01:11:50,255 --> 01:11:53,855
+May put on the individual, but it makes more sense to put it on the individual options.
+
+599
+01:11:54,965 --> 01:11:57,065
+More sense than to put it on the individual options.
+
+600
+01:11:57,065 --> 01:12:04,655
+This control mask option that we add some repetition down options with controls fall back like we do for mask checkbox is the default control.
+
+601
+01:12:05,525 --> 01:12:17,345
+I mean, I'm trying. I'm wondering, is there ever a situation where we'd want another kind of option control.
+
+602
+01:12:21,815 --> 01:12:26,465
+Under control. Uh, particular control.
+
+603
+01:12:28,895 --> 01:12:40,035
+Um. In practice. Isn't it just, uh.
+
+604
+01:12:40,305 --> 01:12:50,175
+Isn't it always man's option beneath a man's select and always a, uh, radio under a radio group?
+
+605
+01:12:50,965 --> 01:12:58,195
+Radio? Mars Radio.
+
+606
+01:13:02,075 --> 01:13:06,235
+And then. What's under the radio.
+
+607
+01:13:06,445 --> 01:13:16,275
+Mars radio under a mars radio group. Mars.
+
+608
+01:13:17,295 --> 01:13:22,305
+Mars radio under a mars radio group.
+
+609
+01:13:31,125 --> 01:13:43,485
+Um. If so, then putting if if I'm if those assumptions are right and it seems to make sense.
+
+610
+01:13:46,875 --> 01:13:58,575
+To have it declared here at the top level, rather than repeat it for every individual option.
+
+611
+01:14:10,895 --> 01:14:17,015
+Okay. Set in control.
+
+612
+01:14:18,315 --> 01:14:23,895
+Option tag. Support page if it exists.
+
+613
+01:14:25,145 --> 01:14:28,385
+Control is each control.
+
+614
+01:14:30,435 --> 01:14:41,175
+Control. Is this at the top level? Get the properties for this element.
+
+615
+01:14:41,665 --> 01:14:51,625
+I'll show you the spread directive. Priority mapping right in this could include that config attrs.
+
+616
+01:14:55,575 --> 01:14:59,865
+Config control props which spreads.
+
+617
+01:15:01,495 --> 01:15:05,245
+Of the control. Makes sense.
+
+618
+01:15:05,605 --> 01:15:13,115
+So then if we apply this. Uh, like, what do we have right now?
+
+619
+01:15:13,475 --> 01:15:16,955
+Um. We have.
+
+620
+01:15:22,265 --> 01:15:27,125
+A select drop down of some kind. We have a mass select.
+
+621
+01:15:29,195 --> 01:15:40,855
+And we do have more options underneath it. And so this makes it.
+
+622
+01:15:41,125 --> 01:15:47,995
+Oh, I see it makes it less specialized. So this one, it's like hard coded in um.
+
+623
+01:15:50,545 --> 01:16:01,955
+That makes sense. I'm okay with that.
+
+624
+01:16:12,325 --> 01:16:23,055
+Uh. And then stories. Let's apply these to.
+
+625
+01:16:27,165 --> 01:16:30,885
+Uh. Uh, patch by two here.
+
+626
+01:16:33,675 --> 01:16:37,875
+Skip dependencies. I'm actually gonna need the one just above it.
+
+627
+01:16:38,445 --> 01:16:42,945
+I need, I need oops.
+
+628
+01:16:42,945 --> 01:16:50,715
+Whoopsie daisy I need. Uh.
+
+629
+01:16:52,335 --> 01:16:58,215
+This one. Then I'll need this one.
+
+630
+01:17:08,035 --> 01:17:34,185
+And then I'll need this one. Okay.
+
+631
+01:17:36,615 --> 01:17:54,895
+Build faster. And, uh, storybook.
+
+632
+01:18:11,455 --> 01:18:16,854
+Okay, so what do we just add stories for select and radio settings controls.
+
+633
+01:18:16,855 --> 01:18:20,695
+So that'll be done here. Radio.
+
+634
+01:18:23,645 --> 01:18:30,505
+Yeah. And then radio. It's a form of radio.
+
+635
+01:18:30,525 --> 01:18:34,365
+Learn more. Settings group.
+
+636
+01:18:41,825 --> 01:18:45,215
+Cool. So. Yeah. Um.
+
+637
+01:18:47,095 --> 01:18:51,645
+Description. Setting.
+
+638
+01:18:56,295 --> 01:19:01,535
+Options. Chose a mars option or Mars Select. Radio.
+
+639
+01:19:06,475 --> 01:19:11,035
+Yeah, that that works for me. Stories that MJ's.
+
+640
+01:19:11,875 --> 01:19:15,865
+Oh. That's interesting. We're doing, like, uh, fluent stuff. That's cool.
+
+641
+01:19:17,455 --> 01:19:33,295
+We can, like, have the the fluent built in. Today I learned we could put fluent in our stories.
+
+642
+01:19:33,505 --> 01:19:37,164
+Uh, but, um. Right.
+
+643
+01:19:37,165 --> 01:19:47,735
+Fluent in our stories. That's nice. And then Rosalind.
+
+644
+01:19:49,135 --> 01:19:55,305
+Browser layout. Example. While his radio group using a man's radio.
+
+645
+01:19:57,075 --> 01:20:01,605
+Yeah. Makes sense. Um, I'm into that.
+
+646
+01:20:03,735 --> 01:20:08,625
+Cool. And then the color.
+
+647
+01:20:09,075 --> 01:20:14,145
+We've got a couple minutes left. 224. Um.
+
+648
+01:20:19,035 --> 01:20:23,855
+We have time for this. We might not have time for this.
+
+649
+01:20:25,685 --> 01:20:29,135
+What should we do instead? Is there anything else we should do instead?
+
+650
+01:20:29,585 --> 01:20:32,795
+I think I've reviewed. What have I reviewed?
+
+651
+01:20:33,545 --> 01:20:37,025
+Uh, I think this one is done right.
+
+652
+01:20:39,425 --> 01:20:42,905
+Yeah, I reviewed that one. Can I turn these into.
+
+653
+01:20:50,535 --> 01:20:57,045
+Okay, well, whatever. They don't turn into nice checkboxes, but this one I have reviewed.
+
+654
+01:20:58,785 --> 01:21:12,425
+Oops. For this one, however, view that one.
+
+655
+01:21:17,075 --> 01:21:21,785
+This one I have reviewed. From this one.
+
+656
+01:21:24,185 --> 01:21:27,305
+I have not reviewed. So I'll have to deal with that later.
+
+657
+01:21:27,875 --> 01:21:31,025
+Um, maybe in the last minute.
+
+658
+01:21:31,035 --> 01:21:34,445
+I'll show you a neat demonstration.
+
+659
+01:21:36,735 --> 01:21:39,945
+Of train hopping is the all that work.
+
+660
+01:21:40,905 --> 01:21:47,775
+It might not work. I don't think it's actually going to work.
+
+661
+01:21:48,375 --> 01:21:53,215
+Um. Hmm.
+
+662
+01:21:53,235 --> 01:21:59,114
+Yeah. Because we've got, uh, I've got to get like. Well, actually.
+
+663
+01:21:59,115 --> 01:22:02,575
+Let's see. Let's try it. Uh, here's what I'm going to do.
+
+664
+01:22:02,595 --> 01:22:10,015
+I'm going to revert my changes. I'm going to shut down the Starbucks server.
+
+665
+01:22:10,025 --> 01:22:17,735
+I'm going to check out main. This is a fairly up to date version of Firefox and a build it.
+
+666
+01:22:18,035 --> 01:22:28,055
+I'm going to add some just something silly like a log, some logging into our JavaScript um, activity stream .6. Mjs.
+
+667
+01:22:30,425 --> 01:22:35,545
+And during like the construction phase, I'm going to have this thing go like console dot log.
+
+668
+01:22:37,685 --> 01:22:44,465
+Whoa. Check me out. Um, uh, from the new tab XP file.
+
+669
+01:22:46,055 --> 01:22:50,585
+All right. So we're going to build that once this artifact build is done.
+
+670
+01:22:55,495 --> 01:23:05,305
+Mhm. Holy cow.
+
+671
+01:23:05,315 --> 01:23:09,265
+What's going on here? What's going on?
+
+672
+01:23:09,275 --> 01:23:21,065
+Artifact build. Okay.
+
+673
+01:23:21,965 --> 01:23:31,835
+And then it packages up the XP. So then if we, uh, mark run, we should actually see that console log show up in our instance here.
+
+674
+01:23:36,695 --> 01:23:40,615
+Hey! Whoa! Check me out. I'm from the new tab XP file. Great.
+
+675
+01:23:41,065 --> 01:23:51,285
+Now, what I'm going to do is I'm going to take the XP that was generated under OBJ artifact, this XP stage, new tab a lot or XP.
+
+676
+01:23:51,295 --> 01:23:59,455
+I'm going to copy that into a different directory. I'm going to put it under a new tab Train Hop, and then I'm going to revert the change.
+
+677
+01:23:59,815 --> 01:24:05,725
+Um JJ restore browser extensions new tab.
+
+678
+01:24:07,975 --> 01:24:13,795
+So now if we mark bill faster we should no longer see the message.
+
+679
+01:24:13,885 --> 01:24:19,525
+I've removed it from the source code here. Now why would I do that?
+
+680
+01:24:20,215 --> 01:24:25,105
+Well, I just I'm trying to demonstrate the train operating because we took that XP file and we moved it somewhere.
+
+681
+01:24:26,635 --> 01:24:30,295
+I'm going to load it. So we're not seeing that message here anymore.
+
+682
+01:24:30,925 --> 01:24:34,645
+What I'll do is I'll, uh, manually install the extension.
+
+683
+01:24:35,065 --> 01:24:38,875
+Um, I'm pretty sure if I have to flip some press, though.
+
+684
+01:24:39,985 --> 01:24:45,755
+Um, do I have. Signature.
+
+685
+01:24:50,965 --> 01:24:55,704
+Uh. Required.
+
+686
+01:24:55,705 --> 01:24:59,844
+False. And then. Okay. I think that's the only thing I needed for this particular test.
+
+687
+01:24:59,845 --> 01:25:03,585
+I'm going to install the add on from new tab train hop.
+
+688
+01:25:03,595 --> 01:25:07,435
+I'm going to choose this one. Uh, or go okay.
+
+689
+01:25:07,495 --> 01:25:15,025
+And then I'm going to restart the browser. And if we take a look do we see it.
+
+690
+01:25:17,215 --> 01:25:22,135
+We do not. And I realize I know why I, um, it's actually in the.
+
+691
+01:25:27,295 --> 01:25:33,045
+Uh. And in this feature Unenrolled.
+
+692
+01:25:36,255 --> 01:25:40,035
+I started talking about on version on Nimbus feature Unenrolled.
+
+693
+01:25:41,445 --> 01:25:51,225
+I think it's because. The version number was different.
+
+694
+01:25:52,245 --> 01:26:01,625
+Um, let me let me actually go inside of new tab train, hop them new tab at Mozilla.
+
+695
+01:26:01,625 --> 01:26:09,705
+Uh, and I'm going to open up manifest Json. And I'm actually going to bump this version to uh, this one.
+
+696
+01:26:14,175 --> 01:26:25,635
+And now let's try again. And if this doesn't work, then maybe I need to go back to square one because we changed how the,
+
+697
+01:26:25,825 --> 01:26:29,985
+uh, I need to rethink maybe how manual testing works here.
+
+698
+01:26:30,735 --> 01:26:35,284
+All right. Add. Uh.
+
+699
+01:26:35,285 --> 01:26:45,195
+And restart. Oh, no, I installed it.
+
+700
+01:26:45,465 --> 01:26:50,415
+Oh, jeez. Um, that's a problem.
+
+701
+01:26:51,105 --> 01:26:57,465
+Now I need to figure out how to how to fix that.
+
+702
+01:26:57,795 --> 01:27:05,235
+It's for manual testing. I mean, the the other option is to use, uh, Nimbus dev tools.
+
+703
+01:27:06,045 --> 01:27:09,975
+Uh, it just makes manual testing so much more of a pain. I'm realizing now.
+
+704
+01:27:10,965 --> 01:27:15,345
+Hmm. Mhm. Okay.
+
+705
+01:27:15,375 --> 01:27:22,125
+That's the thing I have to think about. Well, thank you for being here. While I discovered that, uh, Danny Colon writes questions about fluid.
+
+706
+01:27:22,155 --> 01:27:25,965
+Can you load an FTL file dynamically? By that, I mean a file that isn't in the regular source tree.
+
+707
+01:27:25,965 --> 01:27:30,675
+For example, privileged extension, like the web compat one. Yes. In fact, that's what the new tab, uh, extension is doing.
+
+708
+01:27:31,575 --> 01:27:38,415
+Uh, the new tab extension has this thing called Resource Mapper and, uh, registers.
+
+709
+01:27:38,415 --> 01:27:43,215
+Uh, we register our dynamic fluent resources right here.
+
+710
+01:27:43,995 --> 01:27:52,935
+So we grab, um, the, uh, the list of supported locales, and then we, uh, set up the resource to,
+
+711
+01:27:53,295 --> 01:27:59,505
+uh, what's called the l10n file, uh, source to point at the files in the xpi in this case.
+
+712
+01:27:59,895 --> 01:28:06,104
+And then we call register sources. So then dynamically, they point to the right, uh, strings.
+
+713
+01:28:06,105 --> 01:28:10,905
+So they don't have to be in the source tree. They can be in the xpi, which is fairly exciting.
+
+714
+01:28:13,425 --> 01:28:17,745
+All right. I got to wrap it up. Hey, thanks for watching episode 410 of the Joy of coding.
+
+715
+01:28:18,075 --> 01:28:26,445
+Uh, I got a I got to think about what to do about that, uh, extension uninstall thing, because that's going to make, um, testing a pain in the butt.
+
+716
+01:28:26,895 --> 01:28:30,944
+But, uh, don't worry about that. Uh, worry, uh, don't worry about me at all.
+
+717
+01:28:30,945 --> 01:28:34,545
+I'm going on vacation. I will see you the week after next. Let me know what you thought of this episode.
+
+718
+01:28:34,545 --> 01:28:40,995
+There's a rate, this episode form here in the agenda. I'll put a link to that in the chat link to rate this episode.
+
+719
+01:28:41,895 --> 01:28:46,274
+Go ahead and fill that out. Let me know what you thought. Uh, tell me what you want to see less of.
+
+720
+01:28:46,275 --> 01:28:51,195
+What you want to see more of what you would like me to cover. Do you have any questions that I could try and answer?
+
+721
+01:28:51,585 --> 01:28:55,935
+You know, about the code base or Firefox or web browsers or Mozilla or anything?
+
+722
+01:28:55,935 --> 01:28:59,744
+Go ahead and send questions in. I'll do my best. If I have the answers, I can figure out the answer.
+
+723
+01:28:59,745 --> 01:29:02,805
+I'll try and answer it on the stream. Uh, I'll do my best.
+
+724
+01:29:03,285 --> 01:29:06,584
+And with that, I'll call it there. Thank you so much for watching episode 410.
+
+725
+01:29:06,585 --> 01:29:11,025
+I'll be back the week after next with 411, and we'll just we'll keep on truckin.
+
+726
+01:29:11,805 --> 01:29:15,555
+Have ourselves a great week. Everybody take care.
+
+727
+01:29:16,185 --> 01:29:22,455
+Bye bye. The joy of coding.
+
+728
+01:29:22,795 --> 01:29:23,145
+See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

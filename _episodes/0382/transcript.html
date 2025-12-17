@@ -1,0 +1,3006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 382 - November 6, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 382 - November 6, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=112f4c04-e978-495d-807a-b213013d6f13</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=112f4c04-e978-495d-807a-b213013d6f13">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,794 --> 00:00:09,204
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. To the joy. Oh, dear.
+
+2
+00:00:09,534 --> 00:00:13,974
+Hello and welcome to episode 382 of the Joy of coding.
+
+3
+00:00:14,004 --> 00:00:19,314
+My name is Mike Conley. It is so good to have you here. We're going to be live hacking on some Firefox stuff.
+
+4
+00:00:20,214 --> 00:00:26,694
+I'm going to be, uh, continuing our exploration, our documentation of a rather arcane part of the source code.
+
+5
+00:00:27,204 --> 00:00:33,074
+We're going to be, um, yeah, fleshing out the docs there and making sure that that's that's nice for maintenance,
+
+6
+00:00:33,084 --> 00:00:39,924
+nice for people who are coming in and making changes because, you know, changes are coming to to this particular component.
+
+7
+00:00:39,984 --> 00:00:43,494
+Uh, if you're not sure what component I'm talking about, you'll see shortly.
+
+8
+00:00:43,644 --> 00:00:51,924
+But let me, uh, let me start by sharing my screen. Hey, it's November 6th, 2024, episode 382.
+
+9
+00:00:52,164 --> 00:00:55,644
+I'm actually, uh, I'm going to try something. I think I've tried this a few times.
+
+10
+00:00:55,644 --> 00:00:59,363
+I'm not sure if I've tried this this year. I'm going to put on some background beats.
+
+11
+00:00:59,364 --> 00:01:05,874
+I happened to be in a live stream where someone was playing some background Lo-Fi beats, and I thought that was kind of nice.
+
+12
+00:01:05,994 --> 00:01:09,804
+So I'm going to turn on some background beats. If you don't like it, let me know in the chat.
+
+13
+00:01:09,804 --> 00:01:13,344
+If you'd rather I just shut them all off, let me know in the chat.
+
+14
+00:01:13,674 --> 00:01:16,733
+Uh, I hadn't actually checked to see whether or not the chat's working, by the way.
+
+15
+00:01:16,734 --> 00:01:20,304
+So if someone in in Twitch could just say something that might be helpful.
+
+16
+00:01:20,724 --> 00:01:26,843
+Uh, I'm just gonna have these, like, low fi beats kind of just playing in the background, just to see if that helps.
+
+17
+00:01:26,844 --> 00:01:31,314
+Ah, uh, helps the vibes. Helps the vibes.
+
+18
+00:01:31,554 --> 00:01:39,264
+Um, let me double check to see whether or not the Twitch chat is working with the bridge, because if it's not, I might have to quickly fix it.
+
+19
+00:01:39,954 --> 00:01:44,094
+Um. Bridge test.
+
+20
+00:01:46,854 --> 00:01:50,604
+Please ignore. See? Failing shows up in here.
+
+21
+00:01:52,434 --> 00:01:55,524
+Yes. Okay. The bridge is working. Good.
+
+22
+00:01:56,214 --> 00:01:59,694
+Uh. All right, so what are we working on today?
+
+23
+00:02:00,084 --> 00:02:09,444
+Well, uh, I wanted to show off something, because if you're using nightly, uh, there's something that's been in the works for a while.
+
+24
+00:02:09,684 --> 00:02:17,454
+That kind of reached a milestone yesterday. You were getting, like, a, uh, a sneak peek at something that is still very, very early.
+
+25
+00:02:18,244 --> 00:02:27,233
+It's going to have a lot of bugs, but in the same way that Vertical Tabs has been asked for for like forever and Tab groups,
+
+26
+00:02:27,234 --> 00:02:31,734
+which I think I showed off some tab groups, um, last week. Profiles.
+
+27
+00:02:31,734 --> 00:02:34,944
+User profiles is something that people have been asking for.
+
+28
+00:02:37,074 --> 00:02:41,394
+And just yesterday I think it's in today's nightly.
+
+29
+00:02:41,664 --> 00:02:51,384
+But just yesterday the the patch landed that flipped the build time flag to uh, enable switchable profiles.
+
+30
+00:02:51,834 --> 00:02:56,964
+So what does that mean? So if you go to about config and you have to be a nightly.
+
+31
+00:02:57,234 --> 00:03:03,864
+And again I'm going to disclaimer this, this is very, uh, still very buggy, mostly.
+
+32
+00:03:03,864 --> 00:03:08,974
+And uh, fairly incomplete. Totally a work in progress.
+
+33
+00:03:08,994 --> 00:03:13,014
+Your mileage may vary. Uh, disclaimer disclaimer disclaimer.
+
+34
+00:03:13,024 --> 00:03:20,964
+Um, uh. Buyer beware. Um, so this is only on nightly, and you have to flip this profit in about config.
+
+35
+00:03:20,964 --> 00:03:29,934
+You set that to true. And if you do then you will get a new item in your app menu here for profiles.
+
+36
+00:03:30,414 --> 00:03:34,494
+And I've got my profile. It's just called profile one by default I think.
+
+37
+00:03:34,854 --> 00:03:39,174
+But I had created another one uh, called Test Selectable.
+
+38
+00:03:39,504 --> 00:03:47,663
+And so I can launch that this is a different profile and it's got a complete lead distinct like, uh, set of theme.
+
+39
+00:03:47,664 --> 00:03:51,084
+And there are the add ons are completely distinct.
+
+40
+00:03:51,444 --> 00:03:56,184
+So I can have this, for example, be my testing profile. This could be my profile that I use for, uh.
+
+41
+00:03:57,784 --> 00:04:03,754
+Um, you know, uh. Trying different experiments or something.
+
+42
+00:04:04,204 --> 00:04:10,354
+Uh, but I can keep these profiles, uh, around.
+
+43
+00:04:10,474 --> 00:04:13,654
+I can have them running independently from one another.
+
+44
+00:04:14,134 --> 00:04:17,194
+Um, and I can, like, add another one. Let's try adding another one.
+
+45
+00:04:17,224 --> 00:04:22,244
+Let's add a new one. So a new one just got created, and I can.
+
+46
+00:04:22,264 --> 00:04:25,954
+It's called profile three by default. I'm going to update it.
+
+47
+00:04:26,644 --> 00:04:30,184
+I'm going to call this one like uh, ham sandwich.
+
+48
+00:04:31,274 --> 00:04:36,514
+Uh set this theme on it and I'm going to give it the all heart emoji.
+
+49
+00:04:36,964 --> 00:04:42,544
+I think there's like a missing save button here. Uh, I don't know how much of that is immediately applied.
+
+50
+00:04:42,574 --> 00:04:46,114
+The title doesn't appear to be applied. So, um.
+
+51
+00:04:47,344 --> 00:04:54,514
+Yeah, that bugs. There are still plenty of bugs. I'm in profile three, and, uh, now you can see.
+
+52
+00:04:55,624 --> 00:04:59,554
+Oh, there it is. Ham sandwich. So it did get updated as just it wasn't immediately obvious.
+
+53
+00:04:59,734 --> 00:05:04,804
+Again, there are bugs here. So I've got profiles here a I got profiles.
+
+54
+00:05:05,644 --> 00:05:08,974
+Um, and, you know, this is, uh.
+
+55
+00:05:10,594 --> 00:05:16,134
+Long time users of Firefox are probably watching this and going like, um,
+
+56
+00:05:16,134 --> 00:05:22,294
+or people who have used Firefox and are aware of the existing profile feature going like, what took you so long?
+
+57
+00:05:22,314 --> 00:05:29,244
+Like what? This is something this is a capability that we've had for a while with the old profile manager.
+
+58
+00:05:29,244 --> 00:05:33,984
+Like about profiles and like what took you so long and why is this so hard?
+
+59
+00:05:34,404 --> 00:05:41,034
+And the answer is because we had to change how the profile system worked in order to support this.
+
+60
+00:05:41,364 --> 00:05:49,794
+And that was this is more than UI work. This is like deep, deep level, like down in the guts of how profiles work, kind of work.
+
+61
+00:05:50,184 --> 00:05:58,164
+Uh, that had to take place in order for us to make this possible and smooth, um, and, and performant.
+
+62
+00:05:59,034 --> 00:06:05,844
+Uh, the other thing that I think is still a work in progress, and I don't think it actually works right now is that, uh,
+
+63
+00:06:06,654 --> 00:06:16,554
+you can configure, uh, the profile system to show up like this dialog to appear in a, in a top level dialog when nightly open.
+
+64
+00:06:16,554 --> 00:06:21,594
+So you can like on launch, you choose which one you want to use, which I think is kind of neat.
+
+65
+00:06:22,434 --> 00:06:29,514
+Uh, the other thing you'll note is that, like, I have a lot of other profiles, like if there are profiles, uh, that I.
+
+66
+00:06:31,424 --> 00:06:35,233
+Where's the full list? Okay. Whenever things are updated, kind of out of band.
+
+67
+00:06:35,234 --> 00:06:42,644
+It doesn't list them. But I have what you might consider, like classic profiles.
+
+68
+00:06:42,644 --> 00:06:44,454
+And there's a whole bunch of them, and they're not listed here.
+
+69
+00:06:44,474 --> 00:06:51,914
+That's because these new profiles are a different type of profile as part of the work that had to take place, they're a different type of profile.
+
+70
+00:06:53,234 --> 00:07:02,174
+Structurally, they're similar. But in fact, like there is there are significant differences between these profile directories and the one,
+
+71
+00:07:02,534 --> 00:07:08,084
+the ones you might be familiar with if you're aware of like about profiles and, um, the profile nature.
+
+72
+00:07:08,414 --> 00:07:18,854
+So for example, uh, if we look inside of where the profile folder is, um, we can see like I've got a ton of profiles in here,
+
+73
+00:07:18,854 --> 00:07:25,334
+but only some of them, some of them are, uh, are listed in my, in my list here.
+
+74
+00:07:25,784 --> 00:07:33,013
+And that's like, there's a logic to it. Uh, and we had to create profile groups and there's, like an SQLite database.
+
+75
+00:07:33,014 --> 00:07:37,544
+All these different things had to take place to make this stuff work properly.
+
+76
+00:07:38,234 --> 00:07:42,994
+And so, uh, I'm fairly excited for this stuff.
+
+77
+00:07:43,004 --> 00:07:49,634
+I know I'm going to be using, uh, these selectable profiles, uh, like a lot.
+
+78
+00:07:50,144 --> 00:07:53,864
+Uh, there's also like an interesting challenge here with like,
+
+79
+00:07:54,494 --> 00:08:02,324
+what people are going to expect with accounts, you know, like if you have two separate profiles,
+
+80
+00:08:03,104 --> 00:08:10,694
+are you are people going to be confused by the fact that when you sign into both profiles with the same account,
+
+81
+00:08:11,024 --> 00:08:14,414
+that they will share a bunch of their configurations by default?
+
+82
+00:08:14,594 --> 00:08:25,454
+And so the the utility of having the two separate profiles kind of goes away once you have like a synced Firefox across multiple profiles.
+
+83
+00:08:26,084 --> 00:08:33,104
+Um, and so we might need to down the line, think about adding like multiple profile support to accounts.
+
+84
+00:08:33,104 --> 00:08:37,394
+I don't know if that's in the cards, but that's all to say. I think this is all pretty neat stuff.
+
+85
+00:08:37,634 --> 00:08:46,004
+I'm excited to see where this goes. So so those are like the three big things that I'm aware of that the Firefox team has been working on, uh,
+
+86
+00:08:46,454 --> 00:08:55,603
+in 2024 and that we'll probably see go out to some set of users in either late 2024 or more likely, early 2025.
+
+87
+00:08:55,604 --> 00:08:59,804
+And that's vertical tabs with the sidebar. Um.
+
+88
+00:09:00,584 --> 00:09:06,764
+Tab groups, uh tab groups, and uh profiles.
+
+89
+00:09:06,794 --> 00:09:10,514
+Selectable profiles. Those are the big ones. So that's common.
+
+90
+00:09:10,664 --> 00:09:15,974
+That is common. So like I can quit this nightly and it will keep this other nightly alive.
+
+91
+00:09:17,264 --> 00:09:21,044
+Uh, let me again let me know if the music is distracting. I'm going to turn it down a little bit.
+
+92
+00:09:22,724 --> 00:09:27,224
+Uh, so what are we doing today? I've talked a little bit about, uh, profile management.
+
+93
+00:09:27,254 --> 00:09:31,634
+We're going to keep going with the documentation we were working on with, uh, customizable UI.
+
+94
+00:09:32,354 --> 00:09:35,503
+Uh, we had added a bunch of documentation last time.
+
+95
+00:09:35,504 --> 00:09:41,954
+Uh, I have not touched again, like, this is one of those projects where I'm not touching the code in between the streams.
+
+96
+00:09:41,954 --> 00:09:47,654
+So, uh, I'm not crossing the streams, and that's it's a little Ghostbusters reference for you.
+
+97
+00:09:48,254 --> 00:09:53,954
+So we can start by rebasing. So let me go and check out Bookmarks Central.
+
+98
+00:09:54,104 --> 00:10:00,844
+Make sure I've got the latest central. We're going to pull.
+
+99
+00:10:04,414 --> 00:10:07,954
+And then I'm going to rebase. This is the branch we were working on.
+
+100
+00:10:08,794 --> 00:10:17,594
+We're going to rebase. Okay.
+
+101
+00:10:20,804 --> 00:10:28,814
+Crushed optimist says hi. Hello. Uh, we're going to rebase.
+
+102
+00:10:30,624 --> 00:10:34,823
+All of these things onto, um, bookmarks central.
+
+103
+00:10:34,824 --> 00:10:40,434
+And I just need to remember how what the right incantation for that is, um, git rebase.
+
+104
+00:10:40,554 --> 00:10:46,074
+Maybe it's just bookmarks central. Uh, I'm gonna do interactive to see what it says.
+
+105
+00:10:47,274 --> 00:10:51,114
+Yeah, we're going to take all of these. Yep. Sounds good.
+
+106
+00:10:55,514 --> 00:11:02,624
+Good. Okay. And so we got all our patches in here, and we're going to just build, uh, artifact build real quick.
+
+107
+00:11:05,404 --> 00:11:08,944
+Crushed optimists. Hi. I crushed optimist. So good to have you here.
+
+108
+00:11:09,844 --> 00:11:13,084
+Uh, and thank you for verifying that the Twitch chat bridge is working.
+
+109
+00:11:14,634 --> 00:11:17,243
+You know, we really need. I don't know if we really need it,
+
+110
+00:11:17,244 --> 00:11:24,474
+but one thing I'd be interested in is if someone builds a matter most or matter bridge integration for YouTube chat,
+
+111
+00:11:24,924 --> 00:11:33,654
+because then we can kind of get into this nirvana of, um, bridging matrix, Twitch YouTube chat.
+
+112
+00:11:34,974 --> 00:11:42,414
+Um, and so all of the places where you might be watching this stream, if you're chatting, you can all be in the same room as one another chat room.
+
+113
+00:11:43,224 --> 00:11:49,974
+That's the hope. That's the nirvana. But no one, as far as I know, is working on a a matter bridge adapter for YouTube chat.
+
+114
+00:11:50,664 --> 00:11:55,374
+Maybe you should if you're listening to the stream. Maybe if you're looking for a project, you can do that.
+
+115
+00:11:59,604 --> 00:12:06,434
+Sweet jams. All right.
+
+116
+00:12:10,484 --> 00:12:13,604
+So, uh, what's next? Uh, so where do we get to?
+
+117
+00:12:13,634 --> 00:12:18,244
+We got to the point where we were, you know, let's collapse some of these things.
+
+118
+00:12:18,344 --> 00:12:22,634
+We had added documentation for, uh.
+
+119
+00:12:23,384 --> 00:12:30,664
+Uh. Panel. Multi-View. I thought we had done toolbar.
+
+120
+00:12:30,914 --> 00:12:35,204
+You know, we had started toolbar context menu. We need to finish it. That's one thing we need to do.
+
+121
+00:12:35,224 --> 00:12:39,394
+We need to finish this one today. I think that's totally in the cards. I think we definitely finish that.
+
+122
+00:12:39,634 --> 00:12:44,404
+And if we're lucky, maybe we can start on, uh, drag position manager.
+
+123
+00:12:44,734 --> 00:12:48,724
+That's that's the hope. So we're going to finish off toolbar. Uh, context menu.
+
+124
+00:12:50,884 --> 00:12:55,144
+Did you find out how to document callbacks? No, I didn't.
+
+125
+00:12:55,594 --> 00:13:02,464
+Not not in a way that like like there is a way to document a callback as a function parameter,
+
+126
+00:13:03,184 --> 00:13:08,854
+but I wasn't able to figure out a way of documenting the form of a callback,
+
+127
+00:13:08,854 --> 00:13:14,644
+like basically an interface, and then saying that this thing, this method implements this interface.
+
+128
+00:13:15,754 --> 00:13:21,804
+Um, or like, yeah, this function takes this. It has this interface, which is a callback interface.
+
+129
+00:13:21,814 --> 00:13:23,074
+I did not figure out how to do that.
+
+130
+00:13:23,074 --> 00:13:29,404
+So if you're watching this and you know how to do that, uh, let me know, because there are some things in here like, uh, what was it?
+
+131
+00:13:30,604 --> 00:13:34,804
+There was definitely, uh, one of these.
+
+132
+00:13:34,954 --> 00:13:39,364
+It was like I had to repeat myself. Uh, I can't remember where.
+
+133
+00:13:41,584 --> 00:13:47,944
+Uh, I can't remember where I had to repeat myself, but there's some somewhere in here I to repeat myself.
+
+134
+00:13:48,874 --> 00:13:52,923
+Oh, probably in the listener. For dorm change.
+
+135
+00:13:52,924 --> 00:13:54,004
+I had to repeat myself here.
+
+136
+00:14:00,274 --> 00:14:11,944
+Tomato Shadow two asks hey Mike recently, every time I update nightly it tells me hotfix, update XP intermediate, hotfix update xp intermediate.
+
+137
+00:14:11,974 --> 00:14:16,654
+Do you know how to fix this on Mac? I don't know, I don't know what that is.
+
+138
+00:14:16,684 --> 00:14:20,044
+Let's see what that's talking about. I've never seen that string before.
+
+139
+00:14:20,074 --> 00:14:25,114
+Uh, so I'm going to get a little distracted here. I'm getting I got Nerd Snake by tomato Shadow.
+
+140
+00:14:25,444 --> 00:14:30,274
+Let's see if we can figure out what this thing is. Hotfix update XP.
+
+141
+00:14:30,844 --> 00:14:36,304
+Oh, you know what that is? That's the intermediate, uh, root into root.
+
+142
+00:14:36,484 --> 00:14:42,334
+Uh, Mozilla Cert uh, blog. Uh.
+
+143
+00:14:42,494 --> 00:14:53,054
+Uh, that that, uh, this is this is recent, um, Mozilla, uh, certificate update add ons, Firefox 2024.
+
+144
+00:14:53,954 --> 00:14:58,004
+Yeah. So this went out two weeks, two days ago.
+
+145
+00:15:01,454 --> 00:15:05,833
+Hotfix update. So I don't know how it's telling you that. Hotfix update xp intermediate.
+
+146
+00:15:05,834 --> 00:15:12,824
+I'd love to see what that looks like when it's telling you that, because if it's just spitting out that string at you, that's a really bad experience.
+
+147
+00:15:13,274 --> 00:15:16,814
+But I am aware of the XP Intermediate cert.
+
+148
+00:15:17,354 --> 00:15:21,494
+I think that's what this is. What might be you're referring to.
+
+149
+00:15:22,334 --> 00:15:31,064
+Um, and what this does, this update allows us to keep your add ons working.
+
+150
+00:15:32,694 --> 00:15:38,014
+It says it's disabled in the extension list. Huh?
+
+151
+00:15:38,704 --> 00:15:44,644
+You're probably going to want to re-enable it. Uh, I don't know what version you have.
+
+152
+00:15:45,094 --> 00:15:50,044
+Uh, I don't know what version of what version of Firefox do you have?
+
+153
+00:15:55,814 --> 00:15:59,534
+Uh, let me see if there's other information about this.
+
+154
+00:16:18,234 --> 00:16:24,494
+Chemistry and I've never heard of it. If I had to guess, though, it's this and that.
+
+155
+00:16:24,494 --> 00:16:34,184
+You, uh. The worst case scenario is that if you don't have it enabled, your add ons will eventually stop working in March.
+
+156
+00:16:36,734 --> 00:16:43,424
+That is my understanding. Uh, but I could be wrong.
+
+157
+00:16:43,454 --> 00:16:46,874
+I've never heard of this. Hotfix. Update XP intermediate.
+
+158
+00:16:47,234 --> 00:16:50,714
+I don't know what it is. You're running nightly.
+
+159
+00:16:50,744 --> 00:16:54,074
+It's one quarter of nightly 130 for today's first build.
+
+160
+00:16:54,704 --> 00:16:58,634
+It's in your extensions list. Let's check my extensions list.
+
+161
+00:17:10,234 --> 00:17:26,694
+Let's see. In mine. It's caught. No, I don't see it.
+
+162
+00:17:27,414 --> 00:17:32,574
+Um. I kind of wonder. Tomato shadow too.
+
+163
+00:17:33,174 --> 00:17:42,354
+When you go into a bout preferences, does, uh. Does it say anything about your machine being under control of your organization?
+
+164
+00:17:42,924 --> 00:17:47,124
+I wonder if you've got, like, a group policy thing going on there. Is this your computer?
+
+165
+00:17:47,124 --> 00:18:00,974
+Is this a work computer, or is this your computer? Okay, well, while I'm waiting to hear about that, let's keep focusing.
+
+166
+00:18:00,984 --> 00:18:04,574
+Uh, let's see if we can finish off documenting toolbar context.
+
+167
+00:18:04,674 --> 00:18:09,814
+And this is a personal Mac. And this is not a new profile.
+
+168
+00:18:09,824 --> 00:18:15,554
+This is today's the updated. And you suddenly just notice this appear inside of about add ons or where is it appearing.
+
+169
+00:18:15,554 --> 00:18:19,664
+I'd love to see for example, a screenshot of of what it's telling you.
+
+170
+00:18:19,964 --> 00:18:24,614
+Um, this this experience that you're having. All right.
+
+171
+00:18:27,614 --> 00:18:35,864
+So let's start with on view toolbars pop up showing um, who calls this.
+
+172
+00:18:38,684 --> 00:18:48,624
+In about add ons. They're seeing it. Uh, this is called.
+
+173
+00:18:53,314 --> 00:18:57,124
+Uh, this is called when the.
+
+174
+00:19:08,774 --> 00:19:15,554
+Uh, the toolbar context menu. I'm pretty sure it's whenever it's just fired a view menu pop up.
+
+175
+00:19:18,084 --> 00:19:25,164
+When you pop up. Menu. Pop up. Oh, no no no, it's under view.
+
+176
+00:19:25,614 --> 00:19:32,983
+Toolbars. It's when this thing shows up. Okay.
+
+177
+00:19:32,984 --> 00:19:52,484
+And this is called when the. Uh, toolbars under view in the uh uh menu menu bar toolbars menu pop up under view, and then uh.
+
+178
+00:19:56,444 --> 00:20:03,184
+Uh, fires pop up show. And.
+
+179
+00:20:05,884 --> 00:20:09,714
+Uh, pop up showing event insert point.
+
+180
+00:20:09,724 --> 00:20:13,084
+Let me let me see more about this.
+
+181
+00:20:19,184 --> 00:20:22,244
+Toolbar. Context menu.
+
+182
+00:20:24,814 --> 00:20:29,044
+So it's also fired when the toolbar context menu shows up because.
+
+183
+00:20:29,044 --> 00:20:36,074
+Oh. Insert.
+
+184
+00:20:37,224 --> 00:20:44,374
+But. What's it going to do with the insert point?
+
+185
+00:20:48,484 --> 00:20:55,744
+Vertical tabs to make it interesting. Wow.
+
+186
+00:20:56,524 --> 00:21:02,014
+Wow. Okay, so let's let's read more closely and see what, uh, what this is doing.
+
+187
+00:21:02,164 --> 00:21:07,324
+Tomato shadow two. Would you mind showing me a screenshot of, uh, what it is that you're seeing in about add ons?
+
+188
+00:21:07,624 --> 00:21:13,173
+If you just take a screenshot. You can. I think it's like command control shift four will allow you to, like,
+
+189
+00:21:13,174 --> 00:21:17,224
+select a region of your Mac, and then it'll be copied to your clipboard, I think.
+
+190
+00:21:19,764 --> 00:21:25,784
+Okay, so what is this thing doing? It's getting the pop up. It gets all of these globals out of the pop ups.
+
+191
+00:21:25,794 --> 00:21:35,094
+Window scope. We look at the trigger node, what was the trigger node for opening the pop up?
+
+192
+00:21:40,134 --> 00:21:50,574
+If the. Oh, and it looks like we're we're going to work our way up the dorm from the con from the trigger node until we get to either a toolbar,
+
+193
+00:21:50,874 --> 00:22:01,424
+a palette item, or a menu pop up. In this case, if it's a menu pop up, we'll just bail out.
+
+194
+00:22:02,534 --> 00:22:14,934
+Nothing to do otherwise. To per item equals no.
+
+195
+00:22:16,044 --> 00:22:23,734
+Okay. So that will just keep working its way up. Split parent equals or a parent element.
+
+196
+00:22:23,744 --> 00:22:29,554
+If there's a parent and it is the customization target, or it's the.
+
+197
+00:22:32,044 --> 00:22:42,514
+Where in the overflow panel or a palette item which is taken care of here or we're in a toolbar.
+
+198
+00:22:44,394 --> 00:22:49,134
+Or if we realize we're in vertical tabs, there's a little bit of Belton suspenders going on here, I think.
+
+199
+00:22:51,384 --> 00:22:54,594
+Smurfd0, he says this is maybe something similar from 2019.
+
+200
+00:23:01,824 --> 00:23:10,414
+Yeah. Does it?
+
+201
+00:23:10,894 --> 00:23:13,834
+Does it look kind of like this tomato shadow?
+
+202
+00:23:14,134 --> 00:23:22,534
+And does it refer to a particular bug like if you go to about studies, is there something in there about, um, the hotfix?
+
+203
+00:23:29,184 --> 00:23:33,324
+All right. And then what we do is we empty the menu.
+
+204
+00:23:36,984 --> 00:23:40,324
+Of the pop up. We just.
+
+205
+00:23:40,834 --> 00:23:44,374
+Anything that has a toolbar ID, we remove.
+
+206
+00:23:46,954 --> 00:23:52,264
+The item. We were trying to figure out.
+
+207
+00:23:59,884 --> 00:24:05,034
+Okay. The insert point.
+
+208
+00:24:08,684 --> 00:24:14,814
+Concern. Point. Hidden equals. If we're in the vertical tab strip menu.
+
+209
+00:24:16,904 --> 00:24:21,534
+Our contact is customized. Hidden. Four, in the vertical death strip.
+
+210
+00:24:21,624 --> 00:24:26,834
+If we're not in the vertical tap strip, we start cutting our strings.
+
+211
+00:24:26,844 --> 00:24:37,984
+We insert them if we need them. And for each toolbar in the window.
+
+212
+00:24:40,414 --> 00:24:45,754
+We're creating items in this menu for each toolbar.
+
+213
+00:24:51,964 --> 00:25:01,514
+To toggle them. Okay.
+
+214
+00:25:08,104 --> 00:25:16,424
+And we show and hide some things. We set some strings. Oh, wow.
+
+215
+00:25:16,964 --> 00:25:20,114
+Show and hide more things. Lot of logic in here.
+
+216
+00:25:21,344 --> 00:25:29,234
+This is very complicated. Um, so what I think I'm seeing here in this menu.
+
+217
+00:25:30,134 --> 00:25:36,614
+What is this menu? I think that's important to understand is like there's the toolbar context menu.
+
+218
+00:25:36,644 --> 00:25:40,214
+That this can be for. We're going to take a look at that.
+
+219
+00:25:43,874 --> 00:25:49,484
+Uh so that's this item here this menu pop up the toolbar context menu.
+
+220
+00:25:50,534 --> 00:25:54,314
+So that's this. And then there's also.
+
+221
+00:26:01,964 --> 00:26:10,793
+That's the same thing. Customization toolbar menu.
+
+222
+00:26:10,794 --> 00:26:15,534
+So there's another menu and a menu pop up.
+
+223
+00:26:18,024 --> 00:26:23,424
+Right, right. Customize mode has something similar when we're in here this menu.
+
+224
+00:26:23,634 --> 00:26:28,464
+So what we have is a menu pop up that is like very similar.
+
+225
+00:26:28,764 --> 00:26:32,394
+It is uh Nexus Nightly can verify. Yes. That bug.
+
+226
+00:26:35,204 --> 00:26:38,634
+See what Mike says, but I'd say file new bug and refer to such and such.
+
+227
+00:26:39,354 --> 00:26:46,134
+Yeah, let's file a new bug to manage shadow, file a new bug, and see if you can kind of get this thing identified.
+
+228
+00:26:46,674 --> 00:26:49,733
+Um. Yeah.
+
+229
+00:26:49,734 --> 00:26:53,184
+I don't know what that could be, because the.
+
+230
+00:26:53,844 --> 00:27:01,134
+I don't see why nightly would need a hotfix. Um, because we can just, like, patch nightly.
+
+231
+00:27:01,144 --> 00:27:07,653
+It's updated twice a day. Um, unless your nightly is wildly out of date.
+
+232
+00:27:07,654 --> 00:27:11,194
+No it's not. It's 130 401, which is today's nightly.
+
+233
+00:27:12,034 --> 00:27:15,694
+So very interesting. Very interesting.
+
+234
+00:27:16,024 --> 00:27:22,864
+Let's get a new bug on file. So what we have here is a menu pop up.
+
+235
+00:27:22,864 --> 00:27:26,044
+That's the same. It's kind of similar.
+
+236
+00:27:26,044 --> 00:27:29,403
+It's got some of the same behavior in different contexts. And there are lots of different contexts.
+
+237
+00:27:29,404 --> 00:27:33,604
+It can be here. Here's one. Uh.
+
+238
+00:27:36,854 --> 00:27:44,554
+That's the tab context menu. Uh, if I open up a different toolbar.
+
+239
+00:27:48,304 --> 00:27:54,694
+There's this context menu. Uh, this is the it's kind of like the it's.
+
+240
+00:27:55,174 --> 00:28:00,233
+Yeah, similar. I'll bet you so.
+
+241
+00:28:00,234 --> 00:28:03,324
+If we're on windows, let's go to my windows machine for a second here.
+
+242
+00:28:09,454 --> 00:28:11,164
+Oh, it rebooted itself. Lovely.
+
+243
+00:28:17,464 --> 00:28:23,074
+So we might have to wait for this for a second, but I have a feeling the experience in this menu is a little different on windows,
+
+244
+00:28:24,154 --> 00:28:27,424
+because there are more toolbars that you have access to.
+
+245
+00:28:28,714 --> 00:28:30,693
+This menu may have made a lot more sense.
+
+246
+00:28:30,694 --> 00:28:38,313
+Whenever you could have a whole bunch of toolbars like there was, uh, you could have extensions, insert a whole bunch of different toolbars,
+
+247
+00:28:38,314 --> 00:28:41,824
+like if you remember that meme of like, you know, going to, uh,
+
+248
+00:28:42,244 --> 00:28:46,384
+a relative's house and opening up their browser and there's like two dozen toolbars or something.
+
+249
+00:28:46,804 --> 00:28:52,234
+This probably harkens from that era of, um, you know, uh.
+
+250
+00:28:56,674 --> 00:29:00,814
+Let's see here. View toolbars. Yeah. The menu bar.
+
+251
+00:29:01,174 --> 00:29:04,464
+And. I'm.
+
+252
+00:29:04,684 --> 00:29:10,264
+I'm fairly, uh. Wow.
+
+253
+00:29:10,274 --> 00:29:15,584
+Like, it seems like there's been some an effort to duplicate the behaviors here.
+
+254
+00:29:16,964 --> 00:29:21,074
+But look at the cost. And this is this is, I think, a recurring pattern.
+
+255
+00:29:21,404 --> 00:29:30,764
+Any time you try and do deduplication, um, is if the you've got a thing that can be reused in multiple contexts,
+
+256
+00:29:30,764 --> 00:29:39,194
+but those reuse regions the way it's reused is not consistent, then it needs to kind of be customized for each context.
+
+257
+00:29:39,434 --> 00:29:44,954
+You get stuff like this, which is like, okay, there are all these different ways that this reusable thing can be used.
+
+258
+00:29:45,674 --> 00:29:49,454
+And so your trade off is you have some common logic in one place,
+
+259
+00:29:49,454 --> 00:29:56,084
+but it has to have a bunch of conditions that it checks for to see what context it is in, to see how it should behave.
+
+260
+00:29:56,384 --> 00:30:02,264
+So it's a you know, now you've got, you've you've reduced the duplication,
+
+261
+00:30:02,414 --> 00:30:07,184
+but you've increased the complexity in one spot, which is kind of interesting.
+
+262
+00:30:08,264 --> 00:30:13,064
+So duplication drying up your code, don't repeat yourself.
+
+263
+00:30:13,604 --> 00:30:16,604
+It's at a high level makes a lot of sense.
+
+264
+00:30:16,604 --> 00:30:23,084
+But it can have trade offs like this. It depends on where the repetitions are occurring.
+
+265
+00:30:25,214 --> 00:30:32,804
+Uh, this is called for when the pop up for um.
+
+266
+00:30:35,414 --> 00:30:40,904
+Configuring toolbars. Uh, fires its pop up.
+
+267
+00:30:43,064 --> 00:30:46,994
+Showing event. So again there are two right.
+
+268
+00:30:46,994 --> 00:30:51,014
+Like there's the customization toolbar menu.
+
+269
+00:30:54,764 --> 00:30:59,354
+I shouldn't say that when a pop up for configuring toolbar as far as its pop up showing event.
+
+270
+00:30:59,714 --> 00:31:05,054
+There are multiple such, uh, menu pop and you pop up.
+
+271
+00:31:06,464 --> 00:31:10,644
+The menu pop ups. And this logic.
+
+272
+00:31:12,714 --> 00:31:15,894
+Tries to apply to all of them.
+
+273
+00:31:21,104 --> 00:31:32,684
+Uh. Work for all the pop up showing event for the menu pop up and then the insert point.
+
+274
+00:31:34,454 --> 00:31:39,974
+We use the insert point. Let's let's see if we can understand that.
+
+275
+00:31:43,854 --> 00:31:47,124
+I think I only saw one case of it being used as here.
+
+276
+00:31:49,074 --> 00:32:05,224
+And that's in toolbar context menu. So like if we go back to our windows over here.
+
+277
+00:32:07,204 --> 00:32:12,604
+Toolbar context menu. Right. So it inserts the items in here.
+
+278
+00:32:12,634 --> 00:32:23,704
+Okay. Um, so insert point will be an element or a Dom node.
+
+279
+00:32:24,274 --> 00:32:41,824
+Insert point. The point within the uh menu pop up to insert uh, toggles and controls for the insert, uh controls for each toolbar.
+
+280
+00:32:44,084 --> 00:32:49,224
+Uh, the menu fires.
+
+281
+00:32:49,534 --> 00:32:53,403
+Show me that there might, uh, try to work on the.
+
+282
+00:32:53,404 --> 00:33:13,024
+This method will insert menu items into will clear will insert menu items into the pop up to allow for controlling the toolbars within the gene.
+
+283
+00:33:13,054 --> 00:33:16,384
+The browser toolbox.
+
+284
+00:33:19,924 --> 00:33:25,444
+Returns alt. He returns anything. Yeah, it doesn't return anything.
+
+285
+00:33:27,694 --> 00:33:30,784
+That's interesting. Learn something today by exploring that.
+
+286
+00:33:36,334 --> 00:33:46,264
+Get unwrapped. Trigger node. Okay.
+
+287
+00:33:46,264 --> 00:33:54,754
+What is this? Unwrapped trigger node? Presumably that's a menu pop up.
+
+288
+00:34:07,724 --> 00:34:12,404
+The menu pop up to get the trigger.
+
+289
+00:34:12,644 --> 00:34:15,644
+The unwrapped trigger? No.
+
+290
+00:34:15,694 --> 00:34:23,734
+For. Okay.
+
+291
+00:34:24,364 --> 00:34:30,874
+Uh, given I see what's going on here. So whenever we're in customize mode, this is may be interesting for you to know.
+
+292
+00:34:36,104 --> 00:34:41,923
+If you're curious what like rapping means. And I don't mean like wrapping to these back beats.
+
+293
+00:34:41,924 --> 00:34:46,604
+I mean like, so if when you enter customize mode, we for each toolbar item,
+
+294
+00:34:46,604 --> 00:34:52,663
+we wrap them in a special kind of node so that they no longer respond to traditional mouse clicks anymore,
+
+295
+00:34:52,664 --> 00:34:54,584
+they just become these things that you can move around.
+
+296
+00:34:54,974 --> 00:35:01,423
+That's how it works, is we like go through all of the nodes, wrap them in these other nodes that are kind of transparent.
+
+297
+00:35:01,424 --> 00:35:08,384
+We like shrink wrap them, and those outer wrapping nodes capture all the events that would normally go to the underlying node.
+
+298
+00:35:08,564 --> 00:35:15,854
+And that allows us to like drag and drop and move them around. And that's how that's always worked, um, for customization.
+
+299
+00:35:16,424 --> 00:35:19,484
+And so given a, uh.
+
+300
+00:35:21,564 --> 00:35:26,034
+Uh, menu. Pop up. And opened.
+
+301
+00:35:27,234 --> 00:35:33,384
+Menu pop up. Uh, returns the trigger node.
+
+302
+00:35:35,874 --> 00:35:38,364
+That opened that menu. Pop up.
+
+303
+00:35:39,114 --> 00:35:55,074
+If customized mode is enabled, this will return the unwrapped underlying, uh, trigger node rather than the customizable mode wrapper around it.
+
+304
+00:35:57,744 --> 00:36:05,934
+Returns Dom node the uh, underlying uh node.
+
+305
+00:36:06,204 --> 00:36:11,003
+Uh triggering node. Uh, open the menu.
+
+306
+00:36:11,004 --> 00:36:19,254
+Pop up. Okay, get extension ID.
+
+307
+00:36:19,644 --> 00:36:28,524
+Okay, I know what this one is. So we're trying to determine if the node that we had that we maybe the trigger node for a menu pop up.
+
+308
+00:36:29,634 --> 00:36:34,614
+We try to figure out if there's an extension involved. If it's an extension widget or extension button.
+
+309
+00:36:35,484 --> 00:36:49,704
+And this will return the ID. If so, uh, returns uh for a venue pop up for an opened menu pop up.
+
+310
+00:36:51,184 --> 00:36:57,754
+Returns the ID of the extension widget.
+
+311
+00:36:59,074 --> 00:37:04,233
+Trigger node. If this happened to be, uh.
+
+312
+00:37:04,234 --> 00:37:11,734
+Returns the ID of the extension for an open menu pop up if it was opened.
+
+313
+00:37:12,664 --> 00:37:17,254
+If it was triggered by, uh.
+
+314
+00:37:19,784 --> 00:37:26,014
+If the trigger node. Was provided by an extension.
+
+315
+00:37:27,814 --> 00:37:32,074
+Return the extension ID. Otherwise return the empty string.
+
+316
+00:37:35,304 --> 00:37:40,714
+I don't know the menu pop up that was opened.
+
+317
+00:37:41,434 --> 00:37:48,274
+Turns string. The ID of the, uh, extension provided trigger node.
+
+318
+00:37:51,664 --> 00:37:56,194
+Oh, the ID of the extension that provided the trigger node.
+
+319
+00:37:57,874 --> 00:38:00,904
+Otherwise the or the empty string.
+
+320
+00:38:04,654 --> 00:38:08,944
+If the trigger node was not provided by an extension.
+
+321
+00:38:10,844 --> 00:38:20,644
+Okay widget ID. This is similar. This is the.
+
+322
+00:38:22,984 --> 00:38:26,374
+I.D. of the widget provided by.
+
+323
+00:38:29,784 --> 00:38:32,904
+The extension. So this gives you the extension ID.
+
+324
+00:38:34,524 --> 00:38:42,944
+This returns you the the ID of the widget for the button that was provided by an extension for.
+
+325
+00:38:42,954 --> 00:38:53,904
+If the trigger knows, it returns the. Returns the widget ID of the trigger node.
+
+326
+00:38:56,814 --> 00:39:13,654
+Otherwise returns the empty string. The ID of the widget of the extension provided widget.
+
+327
+00:39:17,014 --> 00:39:30,304
+Widget that was the trigger node. That was the trigger node or the empty string if the trigger node was not provided by an extension widget.
+
+328
+00:39:37,854 --> 00:39:47,254
+Sorry, I'm getting buzzed. Hey, how's everyone doing out there?
+
+329
+00:39:48,154 --> 00:39:56,014
+Let me know in the chat if you are digging these beats. Or if you can't stand these beats and you'd rather they go away.
+
+330
+00:39:56,134 --> 00:40:02,144
+Or if they're too quiet and you're not sure what these what I'm talking about. Okay.
+
+331
+00:40:02,174 --> 00:40:07,254
+Update extension. We've got four more to go here. Let's see what this one does.
+
+332
+00:40:07,274 --> 00:40:20,154
+Update extension. I see.
+
+333
+00:40:20,304 --> 00:40:27,984
+So we will also share the, um, let's install an extension for a second here.
+
+334
+00:40:31,974 --> 00:40:37,614
+Uh, I believe. Yeah, we can pin.
+
+335
+00:40:38,754 --> 00:40:42,534
+So. Yeah. Here we go. Here. This is the same context menu.
+
+336
+00:40:43,284 --> 00:40:52,914
+But, uh, you can have other things like it's this this is the same pop up for all of them, but this one has more things shown for it.
+
+337
+00:40:53,334 --> 00:40:58,524
+And I think this kind of updates the menu pop up in the event that you've right clicked on an extension.
+
+338
+00:40:58,974 --> 00:41:02,394
+Let's just let's just double check that toolbar context menu.
+
+339
+00:41:14,544 --> 00:41:19,794
+You know. Or if your.
+
+340
+00:41:24,504 --> 00:41:28,114
+Customization panel item. Context.
+
+341
+00:41:28,114 --> 00:41:39,534
+Menu. Where does that open up from each panel item?
+
+342
+00:41:46,594 --> 00:41:56,714
+Panel. Item. Context. Menu. Oh I see.
+
+343
+00:41:56,764 --> 00:42:01,804
+So that in the event that we're customizing, you can right click on this.
+
+344
+00:42:03,024 --> 00:42:07,954
+Hmhm. And it will show manage extension and stuff.
+
+345
+00:42:07,984 --> 00:42:16,444
+Okay I understand. And if you're not, it'll show these other things.
+
+346
+00:42:16,684 --> 00:42:20,254
+I understand. All right. Let's remove this extension now.
+
+347
+00:42:23,584 --> 00:42:30,884
+Who? Complicated? Um.
+
+348
+00:42:34,634 --> 00:42:45,434
+And this will probably use. Yeah. Get extension ID. And if there's an, if there's an ID it'll get the associated add on like metadata.
+
+349
+00:42:51,054 --> 00:42:55,884
+And if there is an add on associated with it, it will like expose the right things.
+
+350
+00:42:57,154 --> 00:43:07,804
+All right. Uh, updates the, uh, toolbar context menu.
+
+351
+00:43:17,974 --> 00:43:30,454
+Updates. The toolbar. Context menu. To show the right state if a and extension provided.
+
+352
+00:43:32,944 --> 00:43:46,154
+Widget was acted as the trigger node. Um.
+
+353
+00:43:47,394 --> 00:43:50,874
+This for this world, for example.
+
+354
+00:43:53,994 --> 00:44:00,594
+Show or hide items for managing the underlying add on.
+
+355
+00:44:04,464 --> 00:44:08,353
+A param Dom node. Pop up the menu.
+
+356
+00:44:08,354 --> 00:44:14,174
+Pop up for the toolbar context menu event.
+
+357
+00:44:18,364 --> 00:44:23,214
+What's that used for? To see.
+
+358
+00:44:33,774 --> 00:44:38,334
+Well. I normally supply the event to a bar contacts venue.
+
+359
+00:44:40,074 --> 00:44:45,254
+We supply the event. Itself here.
+
+360
+00:44:48,704 --> 00:44:51,734
+It's a little more information event.
+
+361
+00:44:55,184 --> 00:44:58,274
+Uh, so is the pop up showing event.
+
+362
+00:45:00,284 --> 00:45:04,844
+For the menu pop up. Okay.
+
+363
+00:45:14,954 --> 00:45:25,314
+Oh, I see, because there can be submenus. And it's possible, for example, that we're in a submenu.
+
+364
+00:45:26,124 --> 00:45:33,624
+And in that case, the pop up event pop up showing event target wouldn't be the toolbar context menu, it would be the submenu.
+
+365
+00:45:34,554 --> 00:45:42,694
+Okay. And this returns a promise that resolves with undefined.
+
+366
+00:45:42,714 --> 00:45:56,334
+Pretty sure. Uh, returns uh resolves once the, uh, menu pop up has been, uh, state has been set.
+
+367
+00:45:59,244 --> 00:46:03,464
+Okay. Remove extension for context.
+
+368
+00:46:03,464 --> 00:46:21,694
+Menu. Oh, so this is the what have.
+
+369
+00:46:21,704 --> 00:46:34,674
+Okay. Okay. Uh, the menu pop up. That, uh, triggered the extension removal.
+
+370
+00:46:39,164 --> 00:46:44,834
+Its promise when you define themselves.
+
+371
+00:46:44,864 --> 00:46:48,344
+When the, uh, extension.
+
+372
+00:46:50,684 --> 00:47:03,404
+And been removed. Um, handler for the context menu item for removing an extension.
+
+373
+00:47:10,764 --> 00:47:13,764
+And then this is similar down here. This is the.
+
+374
+00:47:15,194 --> 00:47:19,424
+Handler for the context menu. For reporting. For issuing.
+
+375
+00:47:21,234 --> 00:47:27,474
+A report on an extension. Triggered the extension report.
+
+376
+00:47:28,614 --> 00:47:32,844
+And then report entry point. I guess we can have multiple entry points.
+
+377
+00:47:37,854 --> 00:47:53,364
+And that's a string. Uh, a, uh, string describing the entry point for the report.
+
+378
+00:47:53,814 --> 00:48:01,884
+Uh, for the report. Like in this particular case, I think it's always one thing.
+
+379
+00:48:02,454 --> 00:48:10,404
+Isn't that like. He calls this toolbar context menu.
+
+380
+00:48:11,154 --> 00:48:14,784
+Is there another one? It's always toolbar context menu.
+
+381
+00:48:14,964 --> 00:48:20,423
+I feel like this could probably be simplified where you just like hard code passing toolbar context menu here.
+
+382
+00:48:20,424 --> 00:48:21,684
+And don't take this argument.
+
+383
+00:48:23,424 --> 00:48:41,334
+Uh, I'm going to, uh, to do file a, uh, to uh, remove the, uh, report entry point argument from, uh, report such and such and just hardcode.
+
+384
+00:48:43,644 --> 00:48:53,693
+Toolbar context menu. As the value passed to, uh, report.
+
+385
+00:48:53,694 --> 00:48:59,164
+Adam. Okay.
+
+386
+00:48:59,884 --> 00:49:04,414
+But for now, uh, describe the entry point for the report.
+
+387
+00:49:07,364 --> 00:49:10,454
+Uh. Uh.
+
+388
+00:49:10,454 --> 00:49:14,384
+Okay. UI and to.
+
+389
+00:49:18,304 --> 00:49:23,004
+And then we need one down here for open about add ons,
+
+390
+00:49:23,014 --> 00:49:30,934
+because I think that's the manage one because you can like right click and choose manage handler for the corresponding line for managing an extension.
+
+391
+00:49:33,594 --> 00:49:38,784
+The menu. Pop. That triggered the extension. Uh, management triggered extension management.
+
+392
+00:49:40,184 --> 00:49:46,814
+Has resolves when the extensions about add ons page that's been open.
+
+393
+00:49:49,684 --> 00:49:53,604
+Let's page for management manager page.
+
+394
+00:49:54,174 --> 00:50:02,334
+Quick sketch about mouse manager page has been opened. Okay, I think that's it.
+
+395
+00:50:03,084 --> 00:50:06,144
+Let's generate this, doc.
+
+396
+00:50:26,384 --> 00:50:29,714
+Wow. Downloading a lot of stuff. Cool.
+
+397
+00:50:33,414 --> 00:50:38,304
+It's going to blow my nose. Very treacherous when you have a beard is to blow your nose or mustache rather.
+
+398
+00:50:41,454 --> 00:50:47,294
+If you can't tell. I'm growing a mustache and a beard.
+
+399
+00:50:50,124 --> 00:50:53,844
+We're gonna see how that about how that plays out. Hey, did we have this problem last time?
+
+400
+00:50:56,164 --> 00:51:00,424
+What was the solution to this? We had a we had this problem last time.
+
+401
+00:51:04,154 --> 00:51:07,384
+Expected. Error.
+
+402
+00:51:07,394 --> 00:51:13,934
+Unexpected indentation. Oh, right. There was like an argument I need to pass about warnings.
+
+403
+00:51:15,584 --> 00:51:19,334
+Uh, and there's unexpected, uh, indentation online.
+
+404
+00:51:19,334 --> 00:51:26,804
+502 of customizable UI. And there's one unexpected indentation in 511.
+
+405
+00:51:26,984 --> 00:51:34,904
+I think all I wanted to do, though, was, uh, there's one that's like disable warnings.
+
+406
+00:51:34,904 --> 00:51:43,354
+Check. Here we go.
+
+407
+00:51:48,514 --> 00:51:53,974
+Panel of view customizable, so we need to add an entry for toolbar context menu now.
+
+408
+00:51:55,594 --> 00:51:59,914
+So we're going to add a new file toolbar context menu dot rest.
+
+409
+00:52:03,754 --> 00:52:08,104
+Uh and we're going to put stuff like this in their toolbar context.
+
+410
+00:52:27,704 --> 00:52:34,174
+All right. Rebuild. There it is.
+
+411
+00:52:34,254 --> 00:52:44,823
+Toolbar. Context. Menu. Very nice. Um.
+
+412
+00:52:44,824 --> 00:52:51,544
+The toolbar context menu. Uh, this, uh.
+
+413
+00:52:55,014 --> 00:53:03,444
+Singleton. This, uh, object manager is setting the state of the toolbar.
+
+414
+00:53:03,744 --> 00:53:17,954
+Context menu. Menu pop up. Handling events from that pop up and also.
+
+415
+00:53:19,694 --> 00:53:26,324
+Handles creating dynamic uh, toolbar.
+
+416
+00:53:29,174 --> 00:53:35,554
+Control menu items and other menu popups.
+
+417
+00:53:37,124 --> 00:53:40,724
+See on view toolbar.
+
+418
+00:53:40,994 --> 00:53:53,534
+Pop up showing. All right.
+
+419
+00:53:55,654 --> 00:53:58,834
+Nice. All right. So let's commit that.
+
+420
+00:54:01,574 --> 00:54:05,814
+Well I think. Yeah.
+
+421
+00:54:06,114 --> 00:54:09,924
+Good. I think we've got that stuff in there.
+
+422
+00:54:11,154 --> 00:54:35,444
+Let's go ahead and commit. No one said anything about the jams.
+
+423
+00:54:36,704 --> 00:54:41,983
+I presume you're ambivalent or they're inaudible. Um.
+
+424
+00:54:41,984 --> 00:54:45,284
+Or you don't care. You just don't care, and that's fine.
+
+425
+00:54:45,704 --> 00:54:53,964
+No one's asking you to care. All right, what's next?
+
+426
+00:54:54,624 --> 00:55:07,514
+Let's keep moving. So documented, documented, documented and drag position manager.
+
+427
+00:55:08,114 --> 00:55:11,954
+Not as documented. We're gonna we're gonna do this one.
+
+428
+00:55:12,464 --> 00:55:22,634
+Um. And if we can get that more or less done today, I'll be pretty happy because then we get into the big ones customize mode,
+
+429
+00:55:22,994 --> 00:55:30,614
+customize widgets, and all the missing pieces and customizable UI for which I don't know how many missing pieces there are.
+
+430
+00:55:30,614 --> 00:55:33,944
+There might not actually be that many. Uh, but we will find out.
+
+431
+00:55:34,544 --> 00:55:39,914
+Let's start with drag position manager. What is this thing? I think I remember what this thing is.
+
+432
+00:55:47,884 --> 00:55:52,734
+Um. Okay, so area position manager.
+
+433
+00:55:52,744 --> 00:56:02,574
+What does this do? Oh, yes, I remember this.
+
+434
+00:56:15,684 --> 00:56:24,284
+Okay, I remember this stuff. This all this is a helper for.
+
+435
+00:56:26,294 --> 00:56:34,904
+All of the drag and drop for customizable UI. So whenever we are customizing, we do this thing.
+
+436
+00:56:35,534 --> 00:56:46,084
+You may have noticed it. Where we'll like move items around is kind of similar to how like tabs when you're moving drags will like.
+
+437
+00:56:48,094 --> 00:56:51,814
+Do this with tabs and stuff like we'll move them around. We'll create space for them.
+
+438
+00:56:52,714 --> 00:56:57,724
+Uh, and what's interesting about this is that, yeah, we can we can create spaces, but also if,
+
+439
+00:56:57,724 --> 00:57:02,733
+like I move up here, then there's like a wrap around notes that wrap around like edit controls.
+
+440
+00:57:02,734 --> 00:57:08,134
+Move to the first line. There's like a grid behavior that needs to occur.
+
+441
+00:57:08,854 --> 00:57:15,574
+There's all this like zipping around. It's pretty pretty crazy, actually.
+
+442
+00:57:15,694 --> 00:57:21,214
+Um, and all of that is taken care of by area position manager.
+
+443
+00:57:23,164 --> 00:57:27,884
+And so that's what we're going to be documenting now. Uh, okay.
+
+444
+00:57:30,724 --> 00:57:40,054
+Um, a cash. So Jim Andrews, if I remember correctly, is a cache of area position managers maps to a specific area node.
+
+445
+00:57:44,314 --> 00:57:56,644
+A week, uh, a cache. Of area position managers associated with, uh, mapped weekly.
+
+446
+00:57:56,644 --> 00:58:01,623
+Mapped to. Area uh.
+
+447
+00:58:01,624 --> 00:58:10,334
+Customization area nodes. And I'm pretty sure whenever we've done mappings there's like a format for this.
+
+448
+00:58:12,094 --> 00:58:15,484
+Um, map? Yeah. Type map.
+
+449
+00:58:15,724 --> 00:58:21,644
+And then. Sweet charms.
+
+450
+00:58:24,284 --> 00:58:27,434
+Map. So it's like Dom node.
+
+451
+00:58:29,054 --> 00:58:41,164
+Aria. Position manager. For some reason we like hardcode the palette.
+
+452
+00:58:41,194 --> 00:58:48,333
+I feel like the palette ID is something that should be taken care of inside of either the customize mode module, but or customizable UI.
+
+453
+00:58:48,334 --> 00:58:51,724
+But for now, it's here that we just keep the ID here.
+
+454
+00:58:51,724 --> 00:58:55,414
+It's probably duplicated in a couple of other places. Let's just check out of curiosity.
+
+455
+00:58:58,934 --> 00:59:04,904
+Yeah. Here's another copy of it. How about over here? Yeah, there's another one.
+
+456
+00:59:05,444 --> 00:59:11,414
+Another instance. All right, well, here's another.
+
+457
+00:59:12,014 --> 00:59:15,344
+Uh, and then area position manager. Now it's time to document this thing.
+
+458
+00:59:16,394 --> 00:59:25,123
+Now, this is actually an interesting opportunity. We could, like, convert this thing to an Essex class because this lends itself nicely to that.
+
+459
+00:59:25,124 --> 00:59:29,644
+And then we could use like private methods here rather than underscore.
+
+460
+00:59:29,654 --> 00:59:36,884
+And so I'm compelled to do that. This looks like a good a good opportunity to do that instead of using these old prototype style classes.
+
+461
+00:59:36,914 --> 00:59:39,944
+So let's do this. Class area.
+
+462
+00:59:39,944 --> 00:59:46,874
+Position manager. Structure.
+
+463
+00:59:53,904 --> 01:00:13,884
+Sweet jams. Yeah.
+
+464
+01:00:14,004 --> 01:00:20,384
+So smooth. Okay.
+
+465
+01:00:21,074 --> 01:00:35,464
+So there there is the bare minimum conversion. And this is like a global managing.
+
+466
+01:00:35,704 --> 01:00:47,544
+Management mechanism. Mhm.
+
+467
+01:00:49,494 --> 01:00:53,284
+Okay. Let's see if they're.
+
+468
+01:00:53,304 --> 01:01:01,993
+Where are the tests for this? That we've done this. So of test for drag and drag to panel.
+
+469
+01:01:01,994 --> 01:01:05,323
+Drag at the toolbar. Drag to overflow. Drag and after move dragging.
+
+470
+01:01:05,324 --> 01:01:16,164
+Removable drag outside pallet. Let's quickly just run the customizable UI tests.
+
+471
+01:01:16,334 --> 01:01:21,824
+Now that I've converted this to a class. We can jam that a little bit.
+
+472
+01:01:22,154 --> 01:01:29,114
+Well, uh, I'm doing that. Any questions that about anything I'm doing in here or anything?
+
+473
+01:01:29,114 --> 01:01:36,014
+Uh, in the in the chat, feel free to drop some questions. I'll try and answer them when I drop stuff.
+
+474
+01:01:45,484 --> 01:01:48,544
+I hope everyone had a pleasant if you celebrate Halloween.
+
+475
+01:01:48,814 --> 01:01:52,084
+If that's the thing that you do in your area, I hope you had a pleasant one.
+
+476
+01:01:52,894 --> 01:02:00,214
+Um, we had a bunch of visitors at our door, which is nice because we don't normally we don't always get a lot of visitors.
+
+477
+01:02:00,994 --> 01:02:05,194
+We got a lot of visitors. We got cleaned out and got cleaned out this year.
+
+478
+01:02:06,184 --> 01:02:10,474
+So I don't know, the, uh. It was warm.
+
+479
+01:02:10,484 --> 01:02:15,374
+It was very warm in Toronto that day. And so I think, you know that stamina.
+
+480
+01:02:16,844 --> 01:02:19,864
+Of the of the children who were trick or treating was a lot higher.
+
+481
+01:02:19,874 --> 01:02:26,864
+Whereas there have been times in the past where like Halloween is either so cold or it's rainy or something that the kiddos,
+
+482
+01:02:26,954 --> 01:02:30,214
+the trick or treaters just like out of [INAUDIBLE] with it. It's cool. Really.
+
+483
+01:02:31,064 --> 01:02:37,334
+How many visitors did I get? I didn't, we didn't count, but if I had to guess, I would say it's definitely in the hundreds.
+
+484
+01:02:37,874 --> 01:02:41,384
+It's definitely in the hundreds based on how much candy we purchased.
+
+485
+01:02:41,384 --> 01:02:45,733
+If those numbers are are, um, are accurate.
+
+486
+01:02:45,734 --> 01:02:51,674
+We never did a count, uh, having open the boxes, but assuming that the numbers on the boxes are accurate and we gave one per,
+
+487
+01:02:52,184 --> 01:02:57,914
+I think there were times where we doubled up, but if I give a fuzzy estimate, I'll say in the order of hundreds.
+
+488
+01:02:58,874 --> 01:03:07,484
+And they came in big mobs, like kids are coming up to the door and they'll be like 12 of them all in a row because they're like, go in as teams, uh.
+
+489
+01:03:08,834 --> 01:03:15,224
+Which can be pretty intense. So this is all looking pretty good.
+
+490
+01:03:15,584 --> 01:03:21,944
+I would have expected, uh, you know, if I screwed up the class conversion, I would have expected a bunch of brokenness by now, but.
+
+491
+01:03:24,774 --> 01:03:28,074
+Craig says, uh, compared to you, we got very little, like 30 to 40 max.
+
+492
+01:03:28,284 --> 01:03:33,924
+Well, that's closer to what we used to get. Uh, or even less. Well, when I was growing up, I grew up in rural Ontario.
+
+493
+01:03:34,554 --> 01:03:40,044
+Um, and, you know, our house was if we got five visitors, we were.
+
+494
+01:03:40,314 --> 01:03:41,754
+That was we were ecstatic.
+
+495
+01:03:42,324 --> 01:03:50,004
+And, uh, you know, most of the time it was just like my cousins to to say like, hey, you check out our costumes, and then we'd, like, give a candy.
+
+496
+01:03:50,604 --> 01:03:58,344
+And so that was great because then, uh, my sisters and I, uh, we, my siblings, we would just get the leftover candy.
+
+497
+01:03:58,734 --> 01:04:02,934
+So that's nice. Although I think my parents got wise, and so they they knew.
+
+498
+01:04:02,934 --> 01:04:09,384
+Okay, well, we never get more than a couple of trick or treaters, so we'll just get, like, one small box of candy.
+
+499
+01:04:10,134 --> 01:04:16,224
+I will say whatever. I was in university when I was in, uh, post-secondary education, and I, uh,
+
+500
+01:04:16,974 --> 01:04:23,724
+when I was outside of residence, I lived in, um, uh, I rented a place with some friends.
+
+501
+01:04:23,904 --> 01:04:31,254
+So three friends and I and, you know, we were on a street that got trick or treaters, and this is our first time being responsible for that.
+
+502
+01:04:31,614 --> 01:04:35,454
+This is our first time, like, having our own place as adults.
+
+503
+01:04:35,454 --> 01:04:39,204
+And I put that in, like, I'm being very charitable because we were not adults.
+
+504
+01:04:39,684 --> 01:04:44,124
+Um, or, like, we should have been more adult when we were, we were old enough to know better.
+
+505
+01:04:44,124 --> 01:04:48,264
+But basically, you've got these four people who had never lived on their own.
+
+506
+01:04:49,194 --> 01:04:55,134
+Now all of a sudden grappling with trick or treaters. And we didn't we didn't even it didn't occur to us to be ready for trick or treaters.
+
+507
+01:04:55,614 --> 01:04:58,704
+And so we have kids coming up to our door going, trick or treat.
+
+508
+01:04:58,704 --> 01:05:03,983
+And we had nothing. And so we're giving them like cans of ravioli and like potatoes.
+
+509
+01:05:03,984 --> 01:05:07,734
+It's like, here's a potato. We're giving them groceries because it's all we had.
+
+510
+01:05:08,784 --> 01:05:12,083
+Um, I think I gave it some old CDs. I'm like, do you like Soundgarden?
+
+511
+01:05:12,084 --> 01:05:15,984
+Here's a Soundgarden CD because I had a bunch of copies of it.
+
+512
+01:05:16,104 --> 01:05:20,214
+Um, uh, yeah, I think I gave out, um.
+
+513
+01:05:22,464 --> 01:05:28,343
+I think, yeah, we gave out a lot of. I don't think we were very, uh, well-regarded by the trick or treaters.
+
+514
+01:05:28,344 --> 01:05:31,704
+Like, we saw a lot of confused children going, like, I got a potato.
+
+515
+01:05:32,304 --> 01:05:40,974
+Um, we we got wise. We lived there for a bunch of years, and then next the year following, we got fewer visitors, probably by reputation.
+
+516
+01:05:41,124 --> 01:05:46,314
+But we were also prepared. We we we bought candy. Okay, let's document this thing.
+
+517
+01:05:46,374 --> 01:05:52,584
+Um, the area position manager, let's really try and understand what this thing does.
+
+518
+01:05:53,214 --> 01:05:56,904
+So when we build it, we, uh.
+
+519
+01:06:01,574 --> 01:06:05,054
+We learn a lot about it. We figure out the dimensions of it.
+
+520
+01:06:07,664 --> 01:06:13,004
+And then we run an update. The update goes through each of the containers.
+
+521
+01:06:13,004 --> 01:06:24,054
+Children. Horizontal distance.
+
+522
+01:06:24,054 --> 01:06:27,054
+If there's no last, last is null.
+
+523
+01:06:28,214 --> 01:06:31,424
+So there's a loop here. All right, well, let's skip over this for now.
+
+524
+01:06:32,144 --> 01:06:36,014
+Keep the basic height. We don't have one by default.
+
+525
+01:06:36,914 --> 01:06:40,934
+Single item height. We'll get coordinates. Height.
+
+526
+01:06:43,004 --> 01:06:46,784
+Okay. So we'll like sample the height of the items in the container.
+
+527
+01:06:46,964 --> 01:06:51,104
+We'll just get like the first one that has height. We'll record that as the single item height.
+
+528
+01:06:51,704 --> 01:06:57,194
+And then at the very end at the very last one. Uh.
+
+529
+01:07:02,784 --> 01:07:10,364
+Cornets. Left. Last. Left. Just horizontal distance and last is set.
+
+530
+01:07:12,674 --> 01:07:18,914
+Then we'll take the coordinates of the current one and the previous one and.
+
+531
+01:07:22,394 --> 01:07:27,174
+Can't compare with. Horizontal distance a baseline.
+
+532
+01:07:28,174 --> 01:07:36,994
+So we'll presume that the distance. We'll just sample two nodes next to one another and use that as our like best guesses.
+
+533
+01:07:37,144 --> 01:07:44,844
+What the actual distances between nodes. Okay. Interesting. Apparently, according to the TikToks, giving kids potatoes now is hip.
+
+534
+01:07:45,384 --> 01:07:49,733
+Really? I'm not on TikTok. I'm not familiar with this, this trend.
+
+535
+01:07:49,734 --> 01:07:55,104
+But people are giving out potatoes. That's hilarious. Uh, what do the kids think of that?
+
+536
+01:07:55,104 --> 01:07:58,794
+Did the kids think it was fun? Uh, what are you doing with these potatoes?
+
+537
+01:07:58,794 --> 01:08:02,544
+Have you ever taken a bite out of a raw potato? It's very unpleasant. I did it on a dare.
+
+538
+01:08:02,544 --> 01:08:06,384
+I would not recommend it. Uh, height to width factor.
+
+539
+01:08:06,834 --> 01:08:09,984
+We then divide the width of the container.
+
+540
+01:08:14,654 --> 01:08:17,804
+Buy single items I hate.
+
+541
+01:08:19,454 --> 01:08:22,804
+What is that used for? Okay.
+
+542
+01:08:22,804 --> 01:08:26,434
+We'll come back around to that. So we'll run a single update.
+
+543
+01:08:26,494 --> 01:08:30,904
+Will scan will scan the container for all these nodes. We'll get a bunch of these metrics okay.
+
+544
+01:08:31,534 --> 01:08:35,554
+Next uh, we have all of these things that are exposed.
+
+545
+01:08:37,684 --> 01:08:42,903
+Like insert placeholder, find. Uh, some of these are documented.
+
+546
+01:08:42,904 --> 01:08:48,244
+That's nice. I think the next step I'm going to do is I'm going to make sure that none of these things are used externally.
+
+547
+01:08:48,574 --> 01:08:55,774
+And then I'm going to, um, uh, make them private diff with next.
+
+548
+01:08:58,714 --> 01:09:04,184
+Yeah, used only internally. Okay.
+
+549
+01:09:04,244 --> 01:09:09,154
+So we're going to make this private. Nice.
+
+550
+01:09:13,444 --> 01:09:18,394
+Uh. Move next. Based on previous. Good.
+
+551
+01:09:26,364 --> 01:09:31,164
+And then lazy store get all used to turn.
+
+552
+01:09:37,244 --> 01:09:40,304
+Please. Okay.
+
+553
+01:09:40,874 --> 01:09:56,664
+And first in row. And then last but not least, get visible sibling for direction.
+
+554
+01:09:58,254 --> 01:10:02,474
+Okay. Uh.
+
+555
+01:10:02,474 --> 01:10:05,814
+Or a place. Okay. Nice.
+
+556
+01:10:07,614 --> 01:10:12,084
+So, what are these things doing? Uh, drag position manager.
+
+557
+01:10:15,534 --> 01:10:21,144
+Who uses this? It's really just customize mode. Okay. I think we can be the area position manager.
+
+558
+01:10:22,794 --> 01:10:26,094
+And. And area position manager is used.
+
+559
+01:10:29,044 --> 01:10:35,584
+To, uh, power the drag and drop grid behavior.
+
+560
+01:10:38,404 --> 01:10:47,044
+Drag and drop the animated drag and drop grid behavior of each container.
+
+561
+01:10:47,194 --> 01:10:51,304
+Customizable area. Toolbars.
+
+562
+01:10:51,304 --> 01:10:56,314
+The palette. Um, the, uh, overflow panel.
+
+563
+01:10:57,424 --> 01:11:14,744
+Uh, well, in customize mode. Uh, each uh uh customizable area has its own area position manager.
+
+564
+01:11:17,654 --> 01:11:24,794
+Per browser window. That's because browser windows can be different sizes.
+
+565
+01:11:25,814 --> 01:11:31,364
+That means that the metrics will be slightly different. Craig says.
+
+566
+01:11:31,364 --> 01:11:34,634
+I'm not on there either. Just what people I know that use it have told me.
+
+567
+01:11:34,634 --> 01:11:38,474
+There was some TikToks where kids were given a choice. Candy or potato and potato was picked.
+
+568
+01:11:38,774 --> 01:11:45,224
+I mean, it's it is objectively funny to choose a potato over candy.
+
+569
+01:11:45,764 --> 01:11:49,124
+Um, I mean, it's nutritionally the wise choice.
+
+570
+01:11:49,124 --> 01:11:53,834
+I mean, a potato is fairly calorie dense.
+
+571
+01:11:54,614 --> 01:12:02,404
+So is candy. I would imagine that, and I don't know this to be 100% true, but I would imagine a cow,
+
+572
+01:12:02,414 --> 01:12:08,444
+uh, a potato has more nutrients and more useful calories than, say, a piece of candy.
+
+573
+01:12:09,344 --> 01:12:16,184
+That's my guess. They're both. You know, given the choice, I think the potato is almost certainly the healthier choice.
+
+574
+01:12:16,484 --> 01:12:21,944
+So good on those kids who are choosing potato. But it's also objectively funny to choose the potato.
+
+575
+01:12:22,514 --> 01:12:28,154
+Like, I don't think anyone could argue the opposite that somehow funnier to choose the candy.
+
+576
+01:12:30,304 --> 01:12:36,294
+Uh, okay. Uh, builds a constructs for other constructs.
+
+577
+01:12:36,304 --> 01:12:42,784
+An instance of area position manager for a, uh, customizable area.
+
+578
+01:12:47,504 --> 01:12:52,844
+A custom, uh, the, uh, customizable area.
+
+579
+01:12:52,844 --> 01:13:09,824
+Uh. Uh, container node for which to perform drag and drop animations for which drag and drop operate.
+
+580
+01:13:09,884 --> 01:13:16,514
+Uh, animations are to be calculated for sure.
+
+581
+01:13:17,654 --> 01:13:22,244
+Okay. Uh, this is another private, um, value.
+
+582
+01:13:22,244 --> 01:13:29,114
+I'm going to update node position store to be. Just it's private.
+
+583
+01:13:30,014 --> 01:13:36,254
+Uh, um. Double check. No one's using it. Yeah, okay.
+
+584
+01:13:39,704 --> 01:13:44,294
+So what is the node position. So it's going to be a weak map. Okay.
+
+585
+01:13:45,324 --> 01:13:48,584
+Now don't mind this being here. Uh type.
+
+586
+01:13:56,854 --> 01:14:06,604
+Um, a cache of position node positions.
+
+587
+01:14:08,614 --> 01:14:14,874
+Within the container. Uh, child node.
+
+588
+01:14:16,044 --> 01:14:21,764
+Position. Position. Size and position.
+
+589
+01:14:21,774 --> 01:14:29,034
+I think its size and position. Data. Cache of container.
+
+590
+01:14:29,034 --> 01:14:33,083
+Child node size and position data. Uh.
+
+591
+01:14:33,084 --> 01:14:37,164
+And the mapping is node position store.
+
+592
+01:14:42,064 --> 01:14:52,834
+When do we actually set it? We set it here when we get and it's a rect rect, left right, width height Dom.
+
+593
+01:14:52,834 --> 01:14:58,864
+But top bottom. And I'm pretty sure that is the same interface's Dom rect.
+
+594
+01:15:02,864 --> 01:15:08,394
+Uh, Dom rect. Not quite x y.
+
+595
+01:15:08,394 --> 01:15:12,083
+Width. Height. Left.
+
+596
+01:15:12,084 --> 01:15:15,194
+Right. Width. Height. Left. Right.
+
+597
+01:15:15,194 --> 01:15:20,654
+Width. Height. Top. Bottom. There's no XY0 there is an x into y okay.
+
+598
+01:15:28,144 --> 01:15:35,464
+A. So it's very similar to a read only to act.
+
+599
+01:15:37,714 --> 01:15:41,343
+But it's not quite. No.
+
+600
+01:15:41,344 --> 01:15:49,974
+What we could do, actually. Is actually just store a dorm racked.
+
+601
+01:15:50,634 --> 01:15:52,494
+Instead of creating one of these things.
+
+602
+01:15:56,004 --> 01:16:07,524
+That might actually be the right thing to do here instead of like, inventing something that's so similar is we take care of, uh.
+
+603
+01:16:14,264 --> 01:16:18,184
+Ranked top. With I.
+
+604
+01:16:21,414 --> 01:16:24,974
+Quite correct. Yeah. Here's what I do.
+
+605
+01:16:24,984 --> 01:16:28,884
+I'd like return a Dom rect read only. Can I how do I do that?
+
+606
+01:16:28,944 --> 01:16:34,254
+Dom rect read only. From.
+
+607
+01:16:36,024 --> 01:16:39,774
+Can I just do that Dom rect read only from rect.
+
+608
+01:16:43,084 --> 01:16:51,754
+Left zero. Right one. Width 20 height 20 top.
+
+609
+01:16:52,834 --> 01:16:57,564
+Um. Five.
+
+610
+01:16:59,094 --> 01:17:13,134
+Bottom five uh, x will be left plus the width divided by two, so x is ten.
+
+611
+01:17:15,044 --> 01:17:20,144
+And then why? I.
+
+612
+01:17:22,194 --> 01:17:39,583
+Top plus height divided by two top. Five plus height 25, but I divide by two that mass brackets, exponents, division and subtract.
+
+613
+01:17:39,584 --> 01:17:43,484
+So it's actually. Yeah the division occurs first. It's height divided by two.
+
+614
+01:17:44,024 --> 01:17:47,324
+Ten is 15 right.
+
+615
+01:17:47,804 --> 01:17:51,434
+Okay. So that's what we can do. And so then we don't have to freeze it.
+
+616
+01:17:52,004 --> 01:17:55,454
+We can just you can do this. Um.
+
+617
+01:17:58,304 --> 01:18:02,714
+Rect equals Dom rect read only from rect.
+
+618
+01:18:09,344 --> 01:18:14,744
+X. Left is client rect left.
+
+619
+01:18:18,714 --> 01:18:28,613
+Plus client correct width divided by two Y by correct.
+
+620
+01:18:28,614 --> 01:18:32,664
+Top plus client. Correct. Height five by two.
+
+621
+01:18:34,534 --> 01:18:44,314
+We don't need those things. We don't want that.
+
+622
+01:18:44,324 --> 01:18:47,324
+We want a snapshot with rank values. All right. So nothing else.
+
+623
+01:18:47,324 --> 01:18:52,394
+We have to clone the values. Could we get also just do this.
+
+624
+01:18:59,284 --> 01:19:03,554
+Down a client. Erect. In client.
+
+625
+01:19:03,554 --> 01:19:10,173
+Erect. What do we get back from you?
+
+626
+01:19:10,174 --> 01:19:15,304
+Go back. Dom wrecked. Dom wrecked. We get x y width.
+
+627
+01:19:15,304 --> 01:19:22,384
+Height. Which extends Dom rect read only.
+
+628
+01:19:26,094 --> 01:19:31,074
+Tom Recht and near. Is x y with height.
+
+629
+01:19:41,154 --> 01:19:57,724
+Maybe this is all you need is x y with height. At any rate, I suspect we can just do Dom react.
+
+630
+01:19:57,724 --> 01:20:08,764
+Read only from react. I think we can do that.
+
+631
+01:20:13,464 --> 01:20:19,193
+So we clone, uh, so that we have to clone values as a Dom.
+
+632
+01:20:19,194 --> 01:20:27,674
+Right to read. Okay.
+
+633
+01:20:42,244 --> 01:20:48,634
+Coordinates. Right.
+
+634
+01:20:48,814 --> 01:20:52,764
+So Dom node and then what is going to be on the other side of the Dom rectory.
+
+635
+01:20:52,764 --> 01:20:58,424
+Read only. So I should do that.
+
+636
+01:20:58,934 --> 01:21:02,564
+Let's actually just see if that works. I'm very curious to know if that'll work.
+
+637
+01:21:02,594 --> 01:21:18,634
+I suspect it will. Yeah.
+
+638
+01:21:25,264 --> 01:21:28,354
+Perfect. Happy with that?
+
+639
+01:21:29,494 --> 01:21:44,144
+Um. We can probably just initialize this because upon construction we're going to run update anyways.
+
+640
+01:21:44,144 --> 01:21:59,984
+So. That's fine. Uh, iterates the children of the container.
+
+641
+01:22:10,544 --> 01:22:13,634
+Uh, is afraid of a cult again?
+
+642
+01:22:15,494 --> 01:22:22,814
+Yes it is. Iterates the children of the container.
+
+643
+01:22:25,774 --> 01:22:32,104
+Well, this is another instance where we can just like. All right, we need only.
+
+644
+01:22:34,924 --> 01:22:42,034
+From wrecked. Start container info.
+
+645
+01:22:51,744 --> 01:22:56,404
+And we've got more of these. I forgot there are more of these RTL.
+
+646
+01:23:12,564 --> 01:23:19,454
+RTL is Boolean. RTL.
+
+647
+01:23:24,034 --> 01:23:29,714
+Container info. Snow.
+
+648
+01:23:31,424 --> 01:23:44,584
+Horizontal distance. I take your info.
+
+649
+01:23:45,274 --> 01:23:56,664
+You. I'm not sure what this music is, but it was quite a jam.
+
+650
+01:24:04,044 --> 01:24:09,144
+So we have to document these. Type.
+
+651
+01:24:10,804 --> 01:24:16,884
+Yes. True.
+
+652
+01:24:16,914 --> 01:24:21,774
+If the container is oriented from, uh, right to left.
+
+653
+01:24:24,364 --> 01:24:29,604
+Type okay. Container info.
+
+654
+01:24:32,284 --> 01:24:38,994
+The Dom rect read only. A Dom rect read only.
+
+655
+01:24:39,804 --> 01:24:46,923
+Uh, for the client. Uh, found in client.
+
+656
+01:24:46,924 --> 01:24:51,584
+Wrecked. For the container.
+
+657
+01:24:54,104 --> 01:24:57,794
+Collected once during construction.
+
+658
+01:25:02,324 --> 01:25:05,834
+She makes me wonder if it's only done during construction.
+
+659
+01:25:05,834 --> 01:25:10,634
+What happens whenever the container changes size?
+
+660
+01:25:14,584 --> 01:25:21,154
+Do we ever update? You only do during construction.
+
+661
+01:25:22,114 --> 01:25:25,624
+That's interesting. Oh, when we stop.
+
+662
+01:25:29,344 --> 01:25:38,134
+Track position manager. When would we stop? You're down.
+
+663
+01:25:38,134 --> 01:25:43,654
+Pallet dragging. When we stop dragging.
+
+664
+01:25:43,674 --> 01:25:47,544
+Oh, that's so interesting. Behavior across the area.
+
+665
+01:25:47,694 --> 01:25:52,583
+Each customer has an area. Position manager per browser, window and area.
+
+666
+01:25:52,584 --> 01:26:01,134
+The. Oh, that's so interesting. So these the drag position manager creates one of these things and they only exist while you are dragging.
+
+667
+01:26:03,774 --> 01:26:08,154
+That's so interesting. Uh, collected once during construction.
+
+668
+01:26:08,784 --> 01:26:14,454
+Uh, okay. Uh, so that'll be a Dom retreat only.
+
+669
+01:26:17,604 --> 01:26:25,264
+Uh. Or null. And this one will be the distance.
+
+670
+01:26:28,724 --> 01:26:35,714
+The calculated distance. Start with zero.
+
+671
+01:26:36,614 --> 01:26:45,074
+Actually, you can just. Not horizontal distance.
+
+672
+01:26:49,184 --> 01:26:54,674
+Uh, calculate a distance between the first two visible child nodes.
+
+673
+01:26:56,824 --> 01:27:01,434
+Of the container. Horrors!
+
+674
+01:27:01,444 --> 01:27:07,384
+Calculated horizontal distance. Yeah, okay.
+
+675
+01:27:13,184 --> 01:27:17,084
+Like whiplash. Was I rushing or was I drag? Nice.
+
+676
+01:27:19,814 --> 01:27:23,294
+Not quite my tempo. Okay.
+
+677
+01:27:23,334 --> 01:27:27,704
+Iterates the children of the container, sampling their, uh.
+
+678
+01:27:30,944 --> 01:27:34,484
+Sampling their bounding client rackets.
+
+679
+01:27:37,184 --> 01:27:44,344
+And. Storing them in a local cache.
+
+680
+01:27:47,634 --> 01:27:51,534
+Sam greets the visible children of the container.
+
+681
+01:27:53,064 --> 01:28:11,874
+Um also collects metrics like collects and stores metrics like the, uh, distance between the horizontal distance.
+
+682
+01:28:14,514 --> 01:28:21,924
+Between the first to, uh, children. The height.
+
+683
+01:28:24,304 --> 01:28:33,394
+Of the first. Item and a what is the height to width factor used for?
+
+684
+01:28:41,404 --> 01:28:49,444
+And a. Ratio between the.
+
+685
+01:28:49,444 --> 01:29:05,334
+Oh, okay. Ratio between the width of the container and the, uh, height of the first child.
+
+686
+01:29:05,484 --> 01:29:13,524
+Oh, that's so strange. Uh, Dom node, container node to collect, uh, metrics.
+
+687
+01:29:13,734 --> 01:29:18,104
+The measurements for. It does not return anything.
+
+688
+01:29:18,314 --> 01:29:28,584
+So we're going to update this. Hey, the width factor.
+
+689
+01:29:37,564 --> 01:29:49,864
+So what is this? This is the ratio. Ratio of the width of the container and the height of the first visible child zone.
+
+690
+01:29:52,624 --> 01:29:55,954
+This is used. What for? What do we use this for?
+
+691
+01:29:58,844 --> 01:30:04,454
+Common. Find the closest in the container in the coordinates. Closest is defined in a somewhat strange range.
+
+692
+01:30:04,454 --> 01:30:08,444
+We prefer nodes which are in the same row over nodes that are in different row.
+
+693
+01:30:09,944 --> 01:30:14,173
+In order to implement this, we use a weighted Cartesian distance where UI is more heavily weighted by a factor
+
+694
+01:30:14,174 --> 01:30:17,864
+corresponding to the ratio between the containers width and height of its elements.
+
+695
+01:30:18,554 --> 01:30:27,484
+Interesting. Uh, this is used so for the weighted Cartesian distance.
+
+696
+01:30:30,724 --> 01:30:34,954
+It's used in the weighted Cartesian distance calculation.
+
+697
+01:30:36,184 --> 01:30:45,424
+Uh used in the area of position manager find method.
+
+698
+01:30:49,244 --> 01:30:53,794
+I do see here see area position manager.
+
+699
+01:30:53,944 --> 01:30:59,664
+Um, I think that. Will it be happy with that? No, no.
+
+700
+01:30:59,684 --> 01:31:05,654
+Run tests for the dog. Oh, we are over time.
+
+701
+01:31:05,684 --> 01:31:11,224
+I think I'm going to stop there. Let me just see if this builds. Uh.
+
+702
+01:31:11,224 --> 01:31:15,634
+It built. Let's get it showing up real quick in our docs.
+
+703
+01:31:18,494 --> 01:31:22,304
+Record. Track position manager. Rusty.
+
+704
+01:31:32,604 --> 01:31:36,434
+Uh. There's two parts to it.
+
+705
+01:31:36,444 --> 01:31:41,334
+The first one is, uh, area position manager.
+
+706
+01:31:45,324 --> 01:31:55,544
+Rebuild, rebuild, rebuild. There we go.
+
+707
+01:31:57,914 --> 01:32:01,834
+See? Okay, so it doesn't know what I mean by that.
+
+708
+01:32:01,844 --> 01:32:05,414
+I'm going to. I just do this.
+
+709
+01:32:05,654 --> 01:32:12,664
+Is that better? Well, I built or will that aircraft.
+
+710
+01:32:13,694 --> 01:32:17,564
+It likes. Okay, here we go.
+
+711
+01:32:19,694 --> 01:32:25,154
+All right, well, I'm going to stop it there. Uh, we're almost done documenting.
+
+712
+01:32:25,364 --> 01:32:29,324
+Drag position manager. There's already some built in documentation, which is nice.
+
+713
+01:32:29,354 --> 01:32:36,974
+This is pretty sophisticated geometry stuff going on in here for the grid, but, uh,
+
+714
+01:32:36,974 --> 01:32:40,753
+I think a bunch of it's already documented, and we'll be able to take advantage of that.
+
+715
+01:32:40,754 --> 01:32:48,224
+And I think we can easily finish that off next week, and then we can start going into the next one, which will be probably customizable widgets.
+
+716
+01:32:48,224 --> 01:32:53,263
+And then we'll go into one of the big ones like customize mode. Hey, thank you so much for watching.
+
+717
+01:32:53,264 --> 01:33:00,014
+Let me just quickly, uh, commit. Dee doo doo doo doo doo doo get status.
+
+718
+01:33:01,724 --> 01:33:08,594
+We're going to get add that we're going to add that.
+
+719
+01:33:09,674 --> 01:33:21,824
+And then I'm going to create a new commit. Uh heist this one uh GTS documentation for.
+
+720
+01:33:25,004 --> 01:33:30,884
+Drag position manager. I'm also going to update the commit message.
+
+721
+01:33:30,884 --> 01:33:34,244
+Now that I've really realized what I just said. And commit amend.
+
+722
+01:33:45,404 --> 01:33:51,374
+Uh, we, uh, we also take the opportunity to convert.
+
+723
+01:33:51,884 --> 01:34:05,744
+Uh, area position. Manager to an Essex class and use proper private members as well as using, uh, Dom node.
+
+724
+01:34:06,164 --> 01:34:11,444
+Dom rect read only. Dom rect read only. Dom react.
+
+725
+01:34:11,444 --> 01:34:15,914
+Read only. Yeah.
+
+726
+01:34:16,334 --> 01:34:25,454
+Dom. React. Read only instead of the bespoke react like objects that we were using before.
+
+727
+01:34:28,364 --> 01:34:36,494
+Like frozen objects. Okay, done.
+
+728
+01:34:36,944 --> 01:34:42,434
+Hey, thank you so much for watching. Thank you so much for watching episode 382 of the Joy of coding.
+
+729
+01:34:42,734 --> 01:34:46,634
+Let me know what you thought. There's a forum here in the agenda to rate this episode.
+
+730
+01:34:46,634 --> 01:34:51,854
+I'm actually going to drop a link, uh, rate this episode link and drop it in the chat.
+
+731
+01:34:52,754 --> 01:34:55,934
+Let me know what you thought. Let me know what you thought of the Lo-Fi jams.
+
+732
+01:34:55,934 --> 01:35:00,494
+Is this distracting? Do you like it? Do you hate it? I keep coming back to it every now and then.
+
+733
+01:35:01,094 --> 01:35:04,063
+Um, you know it. Well. I'll decide to play some jams.
+
+734
+01:35:04,064 --> 01:35:07,574
+It's a little tricky because I gotta find, like, royalty free stuff that's not going to get me, like,
+
+735
+01:35:08,294 --> 01:35:15,164
+uh, copyright claimed on YouTube because, like, even stuff that is technically, um, royalty free.
+
+736
+01:35:15,794 --> 01:35:25,634
+If a song is, like, created that uses the royalty free track, um,
+
+737
+01:35:26,144 --> 01:35:31,783
+and sometimes automated copyright claims will go out based on the little the
+
+738
+01:35:31,784 --> 01:35:35,594
+fingerprint of the royalty free sample that's inside the non royalty free track,
+
+739
+01:35:36,194 --> 01:35:40,394
+which can be annoying, but hopefully this this episode will go up all right.
+
+740
+01:35:40,394 --> 01:35:44,083
+And I won't get it. Won't get blocked out if you couldn't.
+
+741
+01:35:44,084 --> 01:35:49,154
+If you're not able to watch this recording and I don't know how you'd be able to see this, maybe you're watching this on your Mozilla or something.
+
+742
+01:35:49,514 --> 01:35:55,483
+Um, if this didn't get posted to YouTube, it's because the I got a copyright claim violation or something.
+
+743
+01:35:55,484 --> 01:35:59,054
+Hopefully it doesn't occur. Fingers crossed. And with that, we're going to close this out.
+
+744
+01:35:59,294 --> 01:36:07,334
+Thank you again for having me. Uh, join you on this day, November 6th, 2024, and I will hopefully see you next week.
+
+745
+01:36:08,624 --> 01:36:12,974
+Take care everybody. Be good to each other. Bye bye.
+
+746
+01:36:14,864 --> 01:36:18,154
+The joy. Loading.
+
+747
+01:36:18,684 --> 01:36:18,994
+Did.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

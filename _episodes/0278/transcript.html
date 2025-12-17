@@ -1,0 +1,2981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 278 - February 09, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 278 - February 09, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=16804b5c-e1a7-4ba2-936a-ae2900fa0491</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=16804b5c-e1a7-4ba2-936a-ae2900fa0491">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:06,028 --> 00:00:12,178
+Welcome. Through the joy of coding.
+
+2
+00:00:12,178 --> 00:00:18,298
+Hello, and welcome to episode two hundred and seventy eight of the joy of coding.
+
+3
+00:00:18,298 --> 00:00:22,108
+My name is Mike Connelly. We're going to be doing some Firefox stuff today.
+
+4
+00:00:22,108 --> 00:00:32,638
+Going to do a deep dove into how I use native code to [INAUDIBLE] like El DB GDB in Visual Studio to debug Firefox.
+
+5
+00:00:32,638 --> 00:00:39,418
+That's that's the plan for today. So let's get to it. Let me share my screen right.
+
+6
+00:00:39,418 --> 00:00:46,888
+So I say that's my plan. But I mean, that's a, you know, planning is not usually part of how the stream works.
+
+7
+00:00:46,888 --> 00:00:54,448
+Like, I vaguely know what I kind of want to do today with this outline of doing things with LBB and GDB Visual Studio,
+
+8
+00:00:54,448 --> 00:00:56,488
+but I actually don't have a prepared talk.
+
+9
+00:00:56,488 --> 00:01:02,308
+I'm going to be doing this kind of as an improvised presentation, so things might go wrong, might get stuck.
+
+10
+00:01:02,308 --> 00:01:05,578
+Might you know, it's slow or sidelined or something?
+
+11
+00:01:05,578 --> 00:01:11,758
+And I apologize if it goes sideways. But that's kind of how that's how the stream rolls.
+
+12
+00:01:11,758 --> 00:01:18,118
+The second thing before we launch into stuff is that the agenda that we're looking at is available to you.
+
+13
+00:01:18,118 --> 00:01:25,948
+If you're watching this on air, Mozilla, check out the details section to the left of this left of this video.
+
+14
+00:01:25,948 --> 00:01:33,358
+If you're watching this on YouTube, it'll be down in the video description and you'll see Daisy.
+
+15
+00:01:33,358 --> 00:01:40,408
+And if you're watching this on Twitch, let me put the agenda in the Twitch chat.
+
+16
+00:01:40,408 --> 00:01:46,318
+There it is. So you can see that hopefully if anyone's in Twitch and they saw that,
+
+17
+00:01:46,318 --> 00:01:51,658
+let me know if they saw it, because I only know sometimes whether or not the bridge is working.
+
+18
+00:01:51,658 --> 00:02:00,388
+So hopefully the the bridge to the Twitch chat is working. OK, I want to get right into it because we've got a lot of material to cover.
+
+19
+00:02:00,388 --> 00:02:05,788
+I wanted to talk about debugging Firefox using native code teabaggers,
+
+20
+00:02:05,788 --> 00:02:10,888
+and we're going to start with LBB and then we'll go to GDB and we'll close with windows.
+
+21
+00:02:10,888 --> 00:02:15,478
+OK, great. It sounds like people are seeing it in the Twitch chat, so that's good.
+
+22
+00:02:15,478 --> 00:02:24,268
+Before we go into this, though, I need to talk a little bit about builds and the various kinds of builds that we have.
+
+23
+00:02:24,268 --> 00:02:33,178
+And, you know, all the trade offs that are made with these builds when it comes to like performance, but also debug ability.
+
+24
+00:02:33,178 --> 00:02:36,118
+So the kind of if you're a user of Firefox,
+
+25
+00:02:36,118 --> 00:02:45,118
+even if you know you're you've never used a debugger in your life and you've downloaded Firefox or if you've built it locally and you or you know you,
+
+26
+00:02:45,118 --> 00:02:50,428
+you're a developer and you use nightly or something, you're probably using what we call an optimized build.
+
+27
+00:02:50,428 --> 00:02:54,688
+An optimized build is a version of the browser that's been compiled,
+
+28
+00:02:54,688 --> 00:03:05,068
+but then the compiler optimizes it using like multiple passes of of like generated code optimization.
+
+29
+00:03:05,068 --> 00:03:15,268
+We use Ello VM, the like. How do I describe this are the compiler tool chain that we use involves a thing called clang.
+
+30
+00:03:15,268 --> 00:03:28,108
+Clang is a mechanism that will take your native C++ code, and it will compile it down into an intermediate representation called the.
+
+31
+00:03:28,108 --> 00:03:32,278
+I think it's just the LVM intermediate representation.
+
+32
+00:03:32,278 --> 00:03:33,538
+I think it's what it's called.
+
+33
+00:03:33,538 --> 00:03:40,708
+And then that intermediate representation can be optimized by like reorganizing things and getting rid of dead code and enlightening stuff.
+
+34
+00:03:40,708 --> 00:03:49,888
+And basically OPPT like really, really optimizing the build so that it executes more quickly whenever you actually run the binary.
+
+35
+00:03:49,888 --> 00:03:55,978
+And the the good news is that, you know, the the executable runs faster, you know, it's smoother.
+
+36
+00:03:55,978 --> 00:04:05,818
+It feels good. The trade off, though, is that whenever you try and debug the binary that has been optimized, like the way a debugger works,
+
+37
+00:04:05,818 --> 00:04:14,758
+is it attaches on to like a process and the machine addresses of the various instructions
+
+38
+00:04:14,758 --> 00:04:18,988
+have to get mapped back to the source code for the thing that you're debugging.
+
+39
+00:04:18,988 --> 00:04:29,728
+But because the machine addresses and like the the assembly language in the binary, like the ones in the zeros and stuff because it's been optimized,
+
+40
+00:04:29,728 --> 00:04:36,178
+there's not like a one to one mapping between the source code and the and the assembly that's been created right.
+
+41
+00:04:36,178 --> 00:04:40,988
+Like, you might end up jumping around a lot. If you're like stepping through the assembly,
+
+42
+00:04:40,988 --> 00:04:49,628
+what's like an optimized build you might find in your debugger that you like kind of hop around in a really?
+
+43
+00:04:49,628 --> 00:04:56,828
+NON-obvious way you might be confused, like why, why did I skip over this part now, why did I jump back that sort of thing?
+
+44
+00:04:56,828 --> 00:05:01,958
+And that's what happens when you have optimized builds. And so whenever we debug Firefox, you can do it.
+
+45
+00:05:01,958 --> 00:05:08,558
+You can attach debugger to an optimized build, but you'll find that it's a little trickier to debug.
+
+46
+00:05:08,558 --> 00:05:11,948
+And that's because of that optimization step.
+
+47
+00:05:11,948 --> 00:05:19,508
+The the other thing is that sometimes our builds are not built locally, like if you are a front end developer of Firefox,
+
+48
+00:05:19,508 --> 00:05:23,978
+maybe you've never built the binary like done a binary build of Firefox.
+
+49
+00:05:23,978 --> 00:05:28,058
+Maybe you've only ever done artifact builds where an artifact build is.
+
+50
+00:05:28,058 --> 00:05:32,648
+When you go and download all of the binary components of Firefox.
+
+51
+00:05:32,648 --> 00:05:36,908
+I think it's just like all the object files. I wonder if the linking occurs locally.
+
+52
+00:05:36,908 --> 00:05:42,458
+I don't actually remember if they like, if the linking happens locally or if you just go and get the libraries.
+
+53
+00:05:42,458 --> 00:05:50,738
+But like the pre compiled binary stuff is already done. But at any rate, when you do, when you have an artifact build.
+
+54
+00:05:50,738 --> 00:06:01,748
+There's some missing information by default, and your debugger won't necessarily know how to translate those machine addresses,
+
+55
+00:06:01,748 --> 00:06:11,478
+like the hardware addresses of like memory inside of the program to your source code because the compiler knows how to.
+
+56
+00:06:11,478 --> 00:06:16,308
+Because the compiler did the translation from C++ and Objective-C to assembly,
+
+57
+00:06:16,308 --> 00:06:22,908
+it knows how to do the mapping between those two things, even if it's been optimized, it knows how to, like, work backwards.
+
+58
+00:06:22,908 --> 00:06:28,248
+But we don't normally ship that information. These are what we called symbols. This information like debugging symbols.
+
+59
+00:06:28,248 --> 00:06:32,718
+And if you don't have debugging symbols for the binaries that you're working with,
+
+60
+00:06:32,718 --> 00:06:37,158
+then you're you're kind of sunk like you can step through the assembly and look at the assembly,
+
+61
+00:06:37,158 --> 00:06:44,118
+but there's no way for your debugger to kind of work backwards and figure out where you are in the source code.
+
+62
+00:06:44,118 --> 00:06:52,008
+And so that's why it's difficult to debug artifact builds, because normally you don't get the symbols along with the artifact build binaries,
+
+63
+00:06:52,008 --> 00:06:55,608
+you just get the the actual binary components and that's it.
+
+64
+00:06:55,608 --> 00:07:02,028
+Now it's possible. I've never tried this. It's possible that artifact builds actually include the symbols like you might be able to
+
+65
+00:07:02,028 --> 00:07:06,708
+go and download the symbols for the stuff that you've downloaded for your artifact build.
+
+66
+00:07:06,708 --> 00:07:11,328
+And then you can tell the debugger about them. And maybe you can make debugging work for an artifact.
+
+67
+00:07:11,328 --> 00:07:19,818
+But I've never done it. And so I'm going to focus on debugging what are called on optimized debug builds.
+
+68
+00:07:19,818 --> 00:07:27,468
+So debug builds like this. This is a basically a build configuration of for Firefox.
+
+69
+00:07:27,468 --> 00:07:37,018
+In fact, let's see if we can find some source docs about debug builds, because I think this is important if people want to try this out.
+
+70
+00:07:37,018 --> 00:07:42,958
+Benchmarking diva, debugging, debugging me with GDB.
+
+71
+00:07:42,958 --> 00:07:46,558
+Like, there's there's a bunch of documentation on a bunch of this stuff already, by the way.
+
+72
+00:07:46,558 --> 00:07:50,128
+Like, I'm not, I'm not reinventing, I'm not inventing anything new.
+
+73
+00:07:50,128 --> 00:07:54,658
+I'm demonstrating what, you know, stuff that's already kind of documented here.
+
+74
+00:07:54,658 --> 00:08:05,218
+But I thought it'd be kind of neat to see it. I understand artifact builds how to get to 01:58, how to make a debug build.
+
+75
+00:08:05,218 --> 00:08:10,988
+Maybe it'll just we'll just Google it Firefox Debug Build.
+
+76
+00:08:10,988 --> 00:08:15,488
+Because these are the ones that are the easiest to building with debug symbols.
+
+77
+00:08:15,488 --> 00:08:20,978
+Yeah, this is what we want. Well, no, it's not exactly what we want.
+
+78
+00:08:20,978 --> 00:08:29,678
+That's how you can create the debug symbol, the debug symbols that the the compiler and the debugger will understand.
+
+79
+00:08:29,678 --> 00:08:37,928
+I think this is what we want configuring build options and like saying enable, debug and disable optimize.
+
+80
+00:08:37,928 --> 00:08:42,698
+This is what this is what I normally do. I disable, optimizing, enable, debug.
+
+81
+00:08:42,698 --> 00:08:44,138
+This one is enabling optimize.
+
+82
+00:08:44,138 --> 00:08:52,148
+I disable Optimize to disable compiler optimization, and that's what's going to make it easier to step through things in the debugger.
+
+83
+00:08:52,148 --> 00:08:58,478
+And then if you enable debug, that's another step where like, you'll get a lot more logging in the console.
+
+84
+00:08:58,478 --> 00:09:06,968
+And that might slow the bill down quite a bit. But it's really, really valuable and you'll hit debug assertions and it's kind of nice.
+
+85
+00:09:06,968 --> 00:09:15,368
+So I normally add these two options whenever I whenever I'm using a debug build, I do disable, optimize and enable debug.
+
+86
+00:09:15,368 --> 00:09:16,718
+And if you're not sure what these symbols are,
+
+87
+00:09:16,718 --> 00:09:25,208
+I'm going to put this link for the this documentation and in the agenda here so people can check it out because I
+
+88
+00:09:25,208 --> 00:09:32,588
+think it's it's kind of important by default if you were to just download and like clone the repository and build.
+
+89
+00:09:32,588 --> 00:09:39,248
+It's going to use like probably the default settings, and that will not be a debug build.
+
+90
+00:09:39,248 --> 00:09:43,088
+It'll be an optimized build, maybe even an artifact built.
+
+91
+00:09:43,088 --> 00:09:49,958
+And so you have to kind of tell it, you have to opt in to getting debug builds and this documentation will describe how you do that.
+
+92
+00:09:49,958 --> 00:09:57,218
+You have to basically create a file in the source directory so that you can set these configuration flags.
+
+93
+00:09:57,218 --> 00:10:02,798
+OK. So let's pretend we have a debug build because I do. I do have a debug built locally.
+
+94
+00:10:02,798 --> 00:10:08,618
+Um, where's my? Yeah, here's my terminal. I finish my debug build earlier today.
+
+95
+00:10:08,618 --> 00:10:15,618
+Let's make up. Why did it move to the other window? Let's make sure it runs.
+
+96
+00:10:15,618 --> 00:10:25,148
+Now, the thing about debug builds is that they are super slow, super slow, and that can be that can be annoying.
+
+97
+00:10:25,148 --> 00:10:32,588
+That can be, you know, that can make debugging problems a little bit trickier.
+
+98
+00:10:32,588 --> 00:10:35,948
+One of the things you can do if you don't want it to be so slow is you can like,
+
+99
+00:10:35,948 --> 00:10:44,978
+disable, optimize or sorry, enable, disable, optimize, but disable, debug, basically.
+
+100
+00:10:44,978 --> 00:10:51,308
+So you have an a non debug build that is also not optimized, so it'll be a little bit slower,
+
+101
+00:10:51,308 --> 00:10:56,108
+but it won't be as slow as a full blown like debug build with no optimization.
+
+102
+00:10:56,108 --> 00:10:59,638
+That's like the slowest you can get, but it's also the easiest to debug,
+
+103
+00:10:59,638 --> 00:11:05,198
+and you get the most information in the terminal like this is the sort of stuff that we get from a debug build.
+
+104
+00:11:05,198 --> 00:11:12,878
+By the way, you get a lot of like logging information, which is useful sometimes warnings.
+
+105
+00:11:12,878 --> 00:11:16,118
+You know what else is interesting in here?
+
+106
+00:11:16,118 --> 00:11:21,668
+You know, it's talking about there's some like localization issues, and in certain things, that's interesting.
+
+107
+00:11:21,668 --> 00:11:26,138
+I don't think you'd normally see that if you run the OPPT build. But here we go.
+
+108
+00:11:26,138 --> 00:11:29,918
+We have our we have our build, and so it works.
+
+109
+00:11:29,918 --> 00:11:36,158
+Now what I'm going to do is I'm going to show you how I attach my debugger in Mac OS and we'll start with Mac OS.
+
+110
+00:11:36,158 --> 00:11:41,798
+Mac OS ships with a debugger built in a command line debugger,
+
+111
+00:11:41,798 --> 00:11:49,008
+and I'm going to pause there because I also wanted to mention that there are lots of different tools for what I'm about to do.
+
+112
+00:11:49,008 --> 00:11:52,658
+You know, there are lots of debugger is there aren't there isn't just one way of doing these things.
+
+113
+00:11:52,658 --> 00:11:56,948
+I'm about to show you the way I do these things, and it's not pretty.
+
+114
+00:11:56,948 --> 00:12:03,548
+It's not always pretty. And there are definitely alternatives. So you shouldn't watch this and think, Oh, this is how it's done.
+
+115
+00:12:03,548 --> 00:12:07,448
+This is a way it can be done, but there might be much better ways.
+
+116
+00:12:07,448 --> 00:12:12,008
+This is just the way I do it. OK? And it's, you know, cards on the table.
+
+117
+00:12:12,008 --> 00:12:18,908
+It's sometimes not pretty. Command line debugger in particular, are not pretty, and I'm about to show you what I mean.
+
+118
+00:12:18,908 --> 00:12:27,968
+So I'm going to open a new terminal and pump up the font a little bit here so you can really see what I'm doing.
+
+119
+00:12:27,968 --> 00:12:33,578
+And on Mac OS, we get a debugger tool.
+
+120
+00:12:33,578 --> 00:12:42,818
+By default, I believe, or I'm pretty sure you'll you'll get it either by default or if you run mock bootstrap whenever you whenever you build Firefox.
+
+121
+00:12:42,818 --> 00:12:49,898
+So chances are you have this tool. If you're building Firefox on Mac OS and you can find out by going to like if typing in L.D in your terminal
+
+122
+00:12:49,898 --> 00:12:56,078
+and if it spits something out like like if you press enter and it shows you this little command prompt,
+
+123
+00:12:56,078 --> 00:13:03,008
+then you know you've got LBB and then you can quit by saying, Quit, quit, just quit.
+
+124
+00:13:03,008 --> 00:13:07,688
+Sorry, not quit. Parentheses just quit. That's how you get out.
+
+125
+00:13:07,688 --> 00:13:14,538
+OK. So what we want to do what? I'm going to show you first is how to attach to a running process.
+
+126
+00:13:14,538 --> 00:13:22,488
+That is what I normally do. That's why I often do whenever I'm debugging the Firefox on Mac OS is I will attach to a
+
+127
+00:13:22,488 --> 00:13:27,768
+running process and you have to remember as well that Firefox is a multi process program.
+
+128
+00:13:27,768 --> 00:13:33,588
+And so you have to think about which process you want to attach to LBB as far as I understand.
+
+129
+00:13:33,588 --> 00:13:39,498
+Only attach to one process at a time. And you can have multiple LLV be instances attaching to different processes,
+
+130
+00:13:39,498 --> 00:13:44,658
+like if you want to attach to the parent process, you can do that and one you can attach the content process in another.
+
+131
+00:13:44,658 --> 00:13:49,518
+But you can't actually tell it to attach to multiple and like switch back and forth between them.
+
+132
+00:13:49,518 --> 00:13:55,428
+At least I've never seen anyone do that, and I don't know how to do that, but you can at the very least attach to one.
+
+133
+00:13:55,428 --> 00:14:09,558
+And what I want to do today is try to attach to the content process of a page like, for example, I'm going to go to CBC and it crashed.
+
+134
+00:14:09,558 --> 00:14:14,418
+Hang on, what happened here? I must have hit some kind of assertion.
+
+135
+00:14:14,418 --> 00:14:28,118
+Uh. That's what happens whenever you have a debug bill is your assertion sometimes assertion, failure in some kind of thing?
+
+136
+00:14:28,118 --> 00:14:36,848
+All right. Well, let's try running that again and uh, and see where we can get super cool.
+
+137
+00:14:36,848 --> 00:14:45,128
+Super cool. Great start. Great start. Let's see if we can get to a web page if we can get to a web page, where in finance,
+
+138
+00:14:45,128 --> 00:14:51,458
+if this is if it doesn't work and we can't get to a web page, I have a different plan in mind.
+
+139
+00:14:51,458 --> 00:15:06,578
+We can try something else. So let's go to example rt.com Maybe that's less intense for our debug builds to rationalize to to do something about,
+
+140
+00:15:06,578 --> 00:15:12,608
+OK, so we've we've loaded example dot com and our debug build and on Firefox Nightly,
+
+141
+00:15:12,608 --> 00:15:19,508
+one of the things that's really nice is if you hover the The tab, it will tell you some information about and that's kind of a hard to see tooltip.
+
+142
+00:15:19,508 --> 00:15:25,778
+But what it's saying after the the title of the tab is the process ID of the content,
+
+143
+00:15:25,778 --> 00:15:30,458
+and there's only one because we don't have any sub frames, nothing from other domains or anything.
+
+144
+00:15:30,458 --> 00:15:34,688
+It's just this one process and its process ID eight eight nine two five.
+
+145
+00:15:34,688 --> 00:15:41,648
+That's a key piece of information. And actually, if you were to look inside of the the terminal here,
+
+146
+00:15:41,648 --> 00:15:47,048
+you might actually see references to that process ID from the logging of that process.
+
+147
+00:15:47,048 --> 00:15:53,498
+Eight eight nine two five Like, do we see anything in here from 889 twenty five?
+
+148
+00:15:53,498 --> 00:15:57,428
+Um, I can just search eight eight nine two five.
+
+149
+00:15:57,428 --> 00:16:04,328
+Yes. So like, there's a little bit of logging from that process in here and there are other processes that are running as well.
+
+150
+00:16:04,328 --> 00:16:10,478
+Maybe it's like the privileged about content process, or maybe it's, you know, who knows what's running in the background,
+
+151
+00:16:10,478 --> 00:16:18,848
+but at least we have our content process for the tab that we care about, for example, dot com, and it's with Process ID eight eight nine two five.
+
+152
+00:16:18,848 --> 00:16:24,308
+So let's attached to it with LBB. So here's how I do that.
+
+153
+00:16:24,308 --> 00:16:38,048
+I go pseudo lbb and I needed to say pseudo because the the debugger needs elevated privileges in order to attach to another process.
+
+154
+00:16:38,048 --> 00:16:41,708
+I normally just say pseudo l l db in order to get those powers.
+
+155
+00:16:41,708 --> 00:16:49,958
+I'm pretty sure if you attempt to attach to another process and you haven't given it pseudo like you haven't used sudo.
+
+156
+00:16:49,958 --> 00:16:53,918
+Then when you attempt to attach it will then ask for your credentials.
+
+157
+00:16:53,918 --> 00:17:01,898
+But you know, I just generally do it right off the bat with pseudo lib, Orcus asks in the Twitch chat.
+
+158
+00:17:01,898 --> 00:17:08,738
+Is vision off? No vision is on, but example dot com is, you know, it doesn't have any sub frames in it.
+
+159
+00:17:08,738 --> 00:17:15,248
+So that's why we only have the one, the one tab, I think. OK, so let's attach to this process.
+
+160
+00:17:15,248 --> 00:17:19,538
+What was the idea? Again, it was eight eight nine two five.
+
+161
+00:17:19,538 --> 00:17:22,508
+So I'm going to say attach eight eight nine two five.
+
+162
+00:17:22,508 --> 00:17:33,278
+So it's going to attach to the content process of the example accom page and it's going to take a couple of seconds.
+
+163
+00:17:33,278 --> 00:17:39,488
+The you know, there's one kind of general lesson here is that debugging can be kind of slow,
+
+164
+00:17:39,488 --> 00:17:44,648
+at least in my experience, like having the debugger wake up and attach to things and having to have debug builds.
+
+165
+00:17:44,648 --> 00:17:53,348
+It can be pretty slow, and that's just kind of the way it is unless you use more powerful tools like our personal skill or something.
+
+166
+00:17:53,348 --> 00:17:58,658
+OK, so now we are attached to our process and I believe by default,
+
+167
+00:17:58,658 --> 00:18:06,638
+whenever you attach, it stops the process wherever it's wherever it is in execution.
+
+168
+00:18:06,638 --> 00:18:11,078
+So like the content process is probably now hung, it's not doing anything like it.
+
+169
+00:18:11,078 --> 00:18:19,208
+Notice that the the cursor isn't turning into the pointer finger whenever I hover more information because this content process is now stuck,
+
+170
+00:18:19,208 --> 00:18:24,938
+it's not doing anything. And that's on purpose because we have stopped it and we can actually look at the the back trace.
+
+171
+00:18:24,938 --> 00:18:32,168
+Beattie stands for backtrace. We can look to see where we are, what's on the stack at this point that we're currently stopped at.
+
+172
+00:18:32,168 --> 00:18:36,398
+And there's a bunch of really cryptic stuff, but this is the stack,
+
+173
+00:18:36,398 --> 00:18:45,218
+and it looks like we are just spinning the message loop on what threat are we in thread one the main thread.
+
+174
+00:18:45,218 --> 00:18:51,668
+That's where we're out, where we're currently stopped and we are spinning the message loop.
+
+175
+00:18:51,668 --> 00:18:57,458
+Maybe we are processing a message and then know what we're doing is we're we're waiting.
+
+176
+00:18:57,458 --> 00:19:01,268
+It looks like we're just kind of hanging out. We're idling, which doesn't surprise me.
+
+177
+00:19:01,268 --> 00:19:07,028
+You know, like, we weren't doing much. So we're idling. And if we are done pausing, we can continue.
+
+178
+00:19:07,028 --> 00:19:13,208
+And then the process resumes and now we get our pointer back. This content process is alive.
+
+179
+00:19:13,208 --> 00:19:25,058
+OK, so we are now attached to the content process. Let's see what happens whenever we when we do stuff like what happens, when we click on a link,
+
+180
+00:19:25,058 --> 00:19:31,688
+can we can we figure out, you know, and step through the process of clicking on a link and see what happens?
+
+181
+00:19:31,688 --> 00:19:35,948
+And I don't want to go too deep into the weeds, unlike what actually happens when you click on a link,
+
+182
+00:19:35,948 --> 00:19:39,758
+because that is a deep, deep deep hole or rabbit hole.
+
+183
+00:19:39,758 --> 00:19:53,618
+But at the very least, let's see if we can capture the stack when we do that and and then maybe do a little bit of stepping through and stuff.
+
+184
+00:19:53,618 --> 00:19:54,128
+So one of the.
+
+185
+00:19:54,128 --> 00:20:06,068
+The things about debugging is that it's a little bit of like it's helpful to know a bit about the code in order to know what to attach to.
+
+186
+00:20:06,068 --> 00:20:12,838
+I know that's a little. What am I trying to say here?
+
+187
+00:20:12,838 --> 00:20:18,898
+What we what generally the entry point into debugging is break points, you know,
+
+188
+00:20:18,898 --> 00:20:24,658
+basically you tell the program to stop and you have to tell it to stop at a certain point in the source code.
+
+189
+00:20:24,658 --> 00:20:32,278
+You can you can like add a bunch of conditions like stop whenever I reach this line, if these conditions are true, like that sort of thing.
+
+190
+00:20:32,278 --> 00:20:35,668
+Those are called conditional break points.
+
+191
+00:20:35,668 --> 00:20:43,348
+But in order to know where to stop, you kind of need to know where you want to stop, but you need to kind of know the source code.
+
+192
+00:20:43,348 --> 00:20:46,648
+And so a little bit of investigation can go a long way.
+
+193
+00:20:46,648 --> 00:20:56,158
+And I happen to know, for example, that whenever you click on a link, there is a method called called Link.
+
+194
+00:20:56,158 --> 00:21:01,828
+Click Sync, believe on Link, Click Sync.
+
+195
+00:21:01,828 --> 00:21:11,068
+Now, how did I know that? Because I've run into this code before, but oftentimes what I'll do, especially if I'm in unfamiliar code,
+
+196
+00:21:11,068 --> 00:21:19,468
+is I will use like search fox to search for interesting methods that might be related to the sorts of things I'm interested in.
+
+197
+00:21:19,468 --> 00:21:23,608
+And then I'll attach break points to all of those things and then go through the
+
+198
+00:21:23,608 --> 00:21:28,018
+actual actions inside the browser and see if I hit those break points to help me
+
+199
+00:21:28,018 --> 00:21:32,698
+validate my assumption that these things are that I've set break points on are involved
+
+200
+00:21:32,698 --> 00:21:36,838
+because sometimes things are poorly named and they seem like they're involved, but they're actually not.
+
+201
+00:21:36,838 --> 00:21:38,758
+You know, I've definitely done some episodes.
+
+202
+00:21:38,758 --> 00:21:47,698
+I think there were a couple of episodes back where we were working on this like Mac OS window restoration bug,
+
+203
+00:21:47,698 --> 00:21:53,698
+and I thought I'd found it found like the relevant code and I set a breakpoint on the line of code.
+
+204
+00:21:53,698 --> 00:21:56,968
+And then we weren't hitting it whenever we were attempting to restore a window.
+
+205
+00:21:56,968 --> 00:22:06,148
+And so, I mean, at that point, it's like, OK, well, clearly this thing is not involved in the code that I'm working with or it's supposed to be,
+
+206
+00:22:06,148 --> 00:22:10,868
+and we're not calling it and like, that's a useful piece of information.
+
+207
+00:22:10,868 --> 00:22:15,458
+OK, so I happen to know that clicking on a link, we we eventually get to hear.
+
+208
+00:22:15,458 --> 00:22:17,598
+So let us set a breakpoint on this function.
+
+209
+00:22:17,598 --> 00:22:27,998
+Nasdaq Shell on Link Click Sync There's a method of the Nasdaq Shell class, so I may say break be for break as Doc Shell on Link Click.
+
+210
+00:22:27,998 --> 00:22:36,098
+Now, if you if you are watching this and you happen to be familiar with LDV, you'll note that I'm not using some of the commands in a way that,
+
+211
+00:22:36,098 --> 00:22:47,178
+like you might be familiar with with the B, I'm actually I come from using GDB, which is the debugger that ships on like Linux boxes everywhere.
+
+212
+00:22:47,178 --> 00:22:55,588
+It's like the Ganiyu debugger and LBB attempts to re-implement a lot of those commands.
+
+213
+00:22:55,588 --> 00:23:00,178
+As part of its interface, so that people who are used to GDB can more or less use L L D B,
+
+214
+00:23:00,178 --> 00:23:06,088
+it's supposed to kind of be a drop in replacement and more like it's supposed to kind of extend what GDB can do.
+
+215
+00:23:06,088 --> 00:23:12,778
+So there is a way of expressing in a less cryptic way that you want to set a breakpoint, but this is how you do it in GDB.
+
+216
+00:23:12,778 --> 00:23:19,048
+So this is how I currently do it. So I say be for breakpoint and then you give it the the thing that you want to set a breakpoint on.
+
+217
+00:23:19,048 --> 00:23:24,448
+In this case, it's a class and this method. So I I hit enter. And this is a good sign.
+
+218
+00:23:24,448 --> 00:23:31,798
+You know, whenever it spits out this message like this, like, OK, I've set a breakpoint, it's giving it the number one and says, OK,
+
+219
+00:23:31,798 --> 00:23:39,148
+it's this function, and it's found the function signature, and it's found the line offset inside the file and the machine address.
+
+220
+00:23:39,148 --> 00:23:43,858
+It was able to resolve this symbol to this address.
+
+221
+00:23:43,858 --> 00:23:52,948
+That's good if you were to give it something that it doesn't recognize, like M Connelly rules rules like this.
+
+222
+00:23:52,948 --> 00:23:57,538
+Class in this method does not exist, it will like set a break point called Break Point two,
+
+223
+00:23:57,538 --> 00:24:03,178
+but it has no idea what this is and it will warn you it'll say, Hey, I don't know what that is.
+
+224
+00:24:03,178 --> 00:24:09,688
+And maybe if you're having a hard time setting a breakpoint and it's saying like, Hey, I can't resolve your breakpoint,
+
+225
+00:24:09,688 --> 00:24:15,628
+any actual locations in memory, it's possible that you need to supply more information like the namespace.
+
+226
+00:24:15,628 --> 00:24:22,198
+Or maybe the the library isn't loaded yet that that is rare, but it could happen.
+
+227
+00:24:22,198 --> 00:24:32,248
+Or you've misspelled the symbol or something. Yeah, that's so I'm going to I'm going to delete that breakpoint delete to break delete two.
+
+228
+00:24:32,248 --> 00:24:37,858
+Is that how you do it? Yeah. OK. I've deleted the second breakpoint and you can get your full list of break points.
+
+229
+00:24:37,858 --> 00:24:42,028
+Now I'll be with like break list. I think that will list your break points.
+
+230
+00:24:42,028 --> 00:24:47,008
+So now that we have a break point, I'm going to. I think I'm already.
+
+231
+00:24:47,008 --> 00:24:54,238
+Yeah, I'm already running. Let's click on our link and see what happens. So let's bring our, uh, our browser back up.
+
+232
+00:24:54,238 --> 00:24:58,438
+I'm going to click on more information. Hey, we hit our break point.
+
+233
+00:24:58,438 --> 00:25:03,628
+So the content process halts and now we can start doing stuff.
+
+234
+00:25:03,628 --> 00:25:12,178
+And this is a very kind of ugly can like sneak peek into where we are in the source code.
+
+235
+00:25:12,178 --> 00:25:17,428
+You know, we're looking at the snippet of Nasdaq Shell that CP and it's telling me the line number
+
+236
+00:25:17,428 --> 00:25:22,978
+in the column that I'm at and this is attempting to like point at it and it's saying,
+
+237
+00:25:22,978 --> 00:25:30,118
+OK, we are. We're at a breakpoint right here. So we haven't even invoked this is navigation allowed yet.
+
+238
+00:25:30,118 --> 00:25:35,778
+We're about to and that's where we've stopped at the beginning of this method. And so.
+
+239
+00:25:35,778 --> 00:25:43,848
+We can do a couple of things when we're in the state. We can look around. So L will look forward in the source code.
+
+240
+00:25:43,848 --> 00:25:52,188
+You can then specify if you want to look backwards l minus 10. I often do it in increments of minus 10 so I can look further back.
+
+241
+00:25:52,188 --> 00:25:57,168
+It's not great, you know, like this kind of little window into the source code.
+
+242
+00:25:57,168 --> 00:26:03,678
+It'd be nice if it was more integrated into like an I.D. and you can get that like if you were to use X code,
+
+243
+00:26:03,678 --> 00:26:08,748
+you can get it more integrated into an ID, and we'll show you an example of that with Visual Studio.
+
+244
+00:26:08,748 --> 00:26:15,438
+But this is how I'm used to it. I'm used to this kind of suffering so we can actually do some interesting things here.
+
+245
+00:26:15,438 --> 00:26:19,488
+We can print out variables like this, this function.
+
+246
+00:26:19,488 --> 00:26:23,568
+This method on Link Click Sync takes a number of arguments.
+
+247
+00:26:23,568 --> 00:26:31,018
+One of them is called a no opener implied. We can actually look at the value of that variable by printing it out.
+
+248
+00:26:31,018 --> 00:26:39,388
+P. A. Opener Implied P stands for print and then LDV is going to do its best to try and print out the value of this variable.
+
+249
+00:26:39,388 --> 00:26:44,968
+I don't know why it's taking so long. Um, it's thinking about it real hard.
+
+250
+00:26:44,968 --> 00:26:52,298
+Normally it doesn't take this long. There we go, so it's false that value was false,
+
+251
+00:26:52,298 --> 00:26:57,458
+and we can look at something a little more sophisticated like this is a pointer to something called NCAI content.
+
+252
+00:26:57,458 --> 00:27:07,688
+We can reference the pointer and see what it's pointed at, and you're going to get a big ball of information, a big, big ball of information.
+
+253
+00:27:07,688 --> 00:27:15,638
+This is kind of neat that the first child of the content happens to be the text that we clicked on more information.
+
+254
+00:27:15,638 --> 00:27:21,548
+That's kind of neat. And you know, the content happens to be a thing called NCAI node.
+
+255
+00:27:21,548 --> 00:27:24,908
+And you know, it's got these properties inside it.
+
+256
+00:27:24,908 --> 00:27:30,458
+You're basically looking inside stuff, and that's kind of neat.
+
+257
+00:27:30,458 --> 00:27:37,898
+The other thing you can do if we look back where we are in the code, if I if I remember correctly, let's look at the breakpoint.
+
+258
+00:27:37,898 --> 00:27:42,758
+We're online. Uh, we got to scroll up a little.
+
+259
+00:27:42,758 --> 00:27:54,638
+We are still on line 12, eight three one. And so if we look at 12, eight eight three one, so we're here, we're just about to execute.
+
+260
+00:27:54,638 --> 00:27:59,768
+Is navigation allowed? And normally you you have two choices.
+
+261
+00:27:59,768 --> 00:28:04,568
+When you're at a breakpoint, you can step over or you can step into.
+
+262
+00:28:04,568 --> 00:28:12,098
+And with what? Let's pretend that we're going to step into what step into means is let's enter this thing.
+
+263
+00:28:12,098 --> 00:28:17,318
+We're about to call. Let's let's go deeper into the call stack and enter into the execution of is
+
+264
+00:28:17,318 --> 00:28:21,098
+navigation allowed because I want to see what's going on there versus step over,
+
+265
+00:28:21,098 --> 00:28:30,578
+which is OK. Continue executing all of the stuff in this line and then move on to the next step within the same like function context.
+
+266
+00:28:30,578 --> 00:28:34,868
+So let's step into and that's with S. S four step into and now I'm inside.
+
+267
+00:28:34,868 --> 00:28:42,848
+Is navigation allowed have gone like a function deeper and I can start like next thing through this and see whether or not it's allowed,
+
+268
+00:28:42,848 --> 00:28:49,748
+it turns out it is allowed. Is there a content viewer? Yes, because I'm going to step over it firing before unload.
+
+269
+00:28:49,748 --> 00:28:53,078
+OK. This is an old school way of getting it out. Param with XP.
+
+270
+00:28:53,078 --> 00:28:59,218
+Com We're going to get this value of firing before and load and then we can we can actually look at that.
+
+271
+00:28:59,218 --> 00:29:03,878
+Firing before unload, we can look at it. See what the value is.
+
+272
+00:29:03,878 --> 00:29:09,898
+Yeah, we're not firing before on load, that's great, so we can we are allowed to.
+
+273
+00:29:09,898 --> 00:29:14,968
+This is going to return. This is navigational. I was going to return, not firing before and load.
+
+274
+00:29:14,968 --> 00:29:19,918
+So is navigation allowed? Is going to return true? And so we can step out of this.
+
+275
+00:29:19,918 --> 00:29:23,578
+I'm actually going to do like next because that will take us up next.
+
+276
+00:29:23,578 --> 00:29:28,438
+Next. And now we're at the order and it's going to execute this next thing.
+
+277
+00:29:28,438 --> 00:29:32,728
+And I don't care about executing is OK to load you or I like. I don't want to see what's going inside.
+
+278
+00:29:32,728 --> 00:29:37,558
+So I can just say next to go to the next block inside of on link, click sync.
+
+279
+00:29:37,558 --> 00:29:43,408
+And so now we go to the next line, we jump over a bunch of these comments and we go to this, this next line.
+
+280
+00:29:43,408 --> 00:29:51,458
+And this is it. This is the story. This is how you debug things in in something like LBB or GDB.
+
+281
+00:29:51,458 --> 00:29:56,398
+It's very similar. In fact, I'm going to GDB is going to be pretty quick because it's basically going to be the same thing.
+
+282
+00:29:56,398 --> 00:30:02,338
+I want to show you the same thing, but there's a lot of interesting, powerful things you can do inside of this debugger.
+
+283
+00:30:02,338 --> 00:30:15,798
+One of them is to set break points that are conditional. Like, one of the things I'll often do is I'll set a breakpoint like, Hey, set a breakpoint.
+
+284
+00:30:15,798 --> 00:30:27,348
+On Nasdaq Shell, such and such like internal load, if and then you can supply some conditions.
+
+285
+00:30:27,348 --> 00:30:37,038
+And I actually don't know if what the syntax is in it for LDV, I normally do this sort of thing in GDB, but conditional break points.
+
+286
+00:30:37,038 --> 00:30:47,258
+LBB. Yeah, so this is my translation sheet, conditional break points, so in GDB,
+
+287
+00:30:47,258 --> 00:31:00,098
+I'd say if I hear you say like you pass in some kind of expression with the Dash Dash condition or Dash see afterwards.
+
+288
+00:31:00,098 --> 00:31:11,568
+So if I know, for example, that internal load of Doc Shell, if we go to Doc Shell and find internal load.
+
+289
+00:31:11,568 --> 00:31:19,578
+And maybe I want a break on the in this in a situation where a slowed state is null now,
+
+290
+00:31:19,578 --> 00:31:23,778
+it's that can never occur will actually assert if that's the case,
+
+291
+00:31:23,778 --> 00:31:36,638
+but let's pretend that's not the case, then I could say like break on internal load on the condition that a load state equals the null pointer.
+
+292
+00:31:36,638 --> 00:31:42,808
+And it didn't like that for some reason this terminal, or did I say that right?
+
+293
+00:31:42,808 --> 00:31:47,508
+It shouldn't break, Point said. Points.
+
+294
+00:31:47,508 --> 00:31:53,868
+Name, food condition. So I have to put it in quotes.
+
+295
+00:31:53,868 --> 00:32:00,948
+It did put it in quotes. I don't know why it's upset about this.
+
+296
+00:32:00,948 --> 00:32:04,948
+Hmm. Well, there are definitely ways of doing conditional points.
+
+297
+00:32:04,948 --> 00:32:08,748
+Let's let's try and copy this and see what happens.
+
+298
+00:32:08,748 --> 00:32:16,878
+Break was asses for set. I guess this is like more of the be.
+
+299
+00:32:16,878 --> 00:32:25,518
+Well, like way of doing things internal load. And then the condition is.
+
+300
+00:32:25,518 --> 00:32:30,828
+A load state. Those null pointer, does it like that there?
+
+301
+00:32:30,828 --> 00:32:35,418
+All right. For some reason, that was enough. That's how we did it. We set a breakpoint.
+
+302
+00:32:35,418 --> 00:32:42,728
+And if we look at it, break list again. We can see that like, all right, we've got this break point, but the condition is load,
+
+303
+00:32:42,728 --> 00:32:46,298
+state is null pointer and we'll tell us how often we've hit these break points too.
+
+304
+00:32:46,298 --> 00:32:53,078
+I think it's kind of neat, so it knows that we've hit on link click sync once, which is kind of neat.
+
+305
+00:32:53,078 --> 00:33:01,678
+All right. Oscar says the interesting information for this episode might be how to get
+
+306
+00:33:01,678 --> 00:33:06,118
+readable backtrace when Firefox is in release mode crashes because on links,
+
+307
+00:33:06,118 --> 00:33:10,438
+you need to run some ruby script that translates raw addresses in the backtrace to function names.
+
+308
+00:33:10,438 --> 00:33:15,088
+Well, if Firefox and Release Note mode crashes, hopefully you submit a crash report,
+
+309
+00:33:15,088 --> 00:33:18,838
+and that's the easiest way to get the stack is to submit a crash report and then go to
+
+310
+00:33:18,838 --> 00:33:27,218
+about crashes because it's going to do all of the all of the work to symbolic hate.
+
+311
+00:33:27,218 --> 00:33:35,148
+OK, here, let's look at a recent crash report. Like this one?
+
+312
+00:33:35,148 --> 00:33:46,728
+This is one that I crashed on recently. And like it will do the work of resolving the crash report into a stack, which is nice.
+
+313
+00:33:46,728 --> 00:33:54,498
+Um, but yeah, I mean, if you really want it, if you can set a break point or attach to a crash process and it's sitting there crashed and it's like,
+
+314
+00:33:54,498 --> 00:34:07,278
+hey, attached to me, you can attach a debugger like of B or R GDB and you can ask for a back trace, and that's very helpful information at times.
+
+315
+00:34:07,278 --> 00:34:13,578
+OK, so. Oh, Amelia says when a local bill crashes, you need to run tools RB.
+
+316
+00:34:13,578 --> 00:34:17,868
+Fix stack, start pie or so. But yeah, usually a crash report on release.
+
+317
+00:34:17,868 --> 00:34:22,808
+Yes. Yes, that is correct.
+
+318
+00:34:22,808 --> 00:34:29,198
+All right. Let's let's proceed here, I think I've shown if there are like specific things people want to see out of these two [INAUDIBLE],
+
+319
+00:34:29,198 --> 00:34:33,698
+you know, drop it in the chat. I'm going to continue now.
+
+320
+00:34:33,698 --> 00:34:46,598
+I'm going to hit see for continue and press enter and the process will resume and we'll actually do the the loading of the next page.
+
+321
+00:34:46,598 --> 00:34:58,408
+And that might actually cause the process that we're in to, uh, to exit eventually because.
+
+322
+00:34:58,408 --> 00:35:01,558
+You know, we load this in a different, different process,
+
+323
+00:35:01,558 --> 00:35:09,298
+so eventually this process that we're in might just kind of like get recycled and it will tell us if it gets shut down.
+
+324
+00:35:09,298 --> 00:35:13,468
+But yeah, that's the general idea. That's how I attach.
+
+325
+00:35:13,468 --> 00:35:20,208
+That's how I said breakpoints. That's how I continue. And this sort of cheat sheet on how you can like, do various things.
+
+326
+00:35:20,208 --> 00:35:28,558
+It will probably be pretty handy. So I'm going to paste this in here as well, attaching to the parent process.
+
+327
+00:35:28,558 --> 00:35:33,718
+I didn't show people how to attach to the parent process.
+
+328
+00:35:33,718 --> 00:35:39,628
+But it's the same idea like you attached, you have to find the process ID of the parent process.
+
+329
+00:35:39,628 --> 00:35:45,598
+And the good news is, is that oftentimes that's very obvious from the logging like all you need to do is find in the
+
+330
+00:35:45,598 --> 00:35:51,328
+logging to the terminal the number after the word parent and that's your parent process ID.
+
+331
+00:35:51,328 --> 00:35:56,158
+So you can attach to that same idea. Same idea.
+
+332
+00:35:56,158 --> 00:35:57,878
+So that's that's one way of doing it.
+
+333
+00:35:57,878 --> 00:36:08,818
+I'm going to show you one other way of doing it that is useful for people who are on Linux or Mac OS, and that is using mock, debug, Mac run debug.
+
+334
+00:36:08,818 --> 00:36:19,318
+And this is particularly useful if you need to attach your debugger and set break points before the process is even started.
+
+335
+00:36:19,318 --> 00:36:21,598
+So let's finish the shutdown.
+
+336
+00:36:21,598 --> 00:36:27,448
+The shutdown is going to take a couple of seconds because it's the debug bill, but I can say mark, run, dash, dash, debug.
+
+337
+00:36:27,448 --> 00:36:33,508
+And what Mark is going to do is it's going to notice that I am on Mac OS and it's going to automatically
+
+338
+00:36:33,508 --> 00:36:39,748
+find my debugger tool LBB and it's possible you can configure it to to find a different one,
+
+339
+00:36:39,748 --> 00:36:41,458
+maybe within an environment variable or something.
+
+340
+00:36:41,458 --> 00:36:51,938
+But by default, on my machine, it finds LBB and it will prepare it to run our debug instance of Firefox, but it hasn't done it yet.
+
+341
+00:36:51,938 --> 00:36:58,318
+Like, I'm in the old DB terminal, like little little interface here, but I haven't actually run the browser yet.
+
+342
+00:36:58,318 --> 00:37:05,128
+And what's nice about that is it allows me to set breakpoints really early, like in the earliest parts of the lifetime of the browser.
+
+343
+00:37:05,128 --> 00:37:09,808
+And that's not necessarily like, I don't do that all the time, but it can be really,
+
+344
+00:37:09,808 --> 00:37:17,938
+really handy if you're trying to debug something that happens super early on and by default, it is attaching to the parent process when you do this.
+
+345
+00:37:17,938 --> 00:37:27,058
+And and so and that's usually what you want if you're trying to debug startup, if you're trying to debug content process start up,
+
+346
+00:37:27,058 --> 00:37:30,538
+there are some environment variables that you can set that will cause content
+
+347
+00:37:30,538 --> 00:37:37,888
+processes very early on to halt themselves and wait for you to attach a debugger.
+
+348
+00:37:37,888 --> 00:37:41,878
+And I think those that was that environment variable.
+
+349
+00:37:41,878 --> 00:37:52,038
+I mean, it's this one if you set this environment variable.
+
+350
+00:37:52,038 --> 00:37:55,788
+I wish I'd pace to that without styling. There we go.
+
+351
+00:37:55,788 --> 00:37:57,048
+If you set that environment variable,
+
+352
+00:37:57,048 --> 00:38:04,428
+then I believe every child process that launches will like halt on startup and wait for a debugger to get attached.
+
+353
+00:38:04,428 --> 00:38:09,168
+And so and then it will also omit the process ID for those content processes so
+
+354
+00:38:09,168 --> 00:38:13,248
+that you can attach and then set your breakpoint for there early in the lifetime.
+
+355
+00:38:13,248 --> 00:38:16,128
+But in this particular case, what I'm going to do is I'm going to say,
+
+356
+00:38:16,128 --> 00:38:24,858
+let's set a breakpoint on Doc Shell Internal Load and here, because it hasn't actually loaded the symbols or the binary yet.
+
+357
+00:38:24,858 --> 00:38:30,918
+It does not know what I'm talking about. It hasn't done any work to figure out what Doc Shell Internal Load is.
+
+358
+00:38:30,918 --> 00:38:38,298
+And that's OK. It's going to lazily like when the browser actually launches.
+
+359
+00:38:38,298 --> 00:38:47,268
+It will pull in all that simple information and binary information, and then if it finds this, it will allow the breakpoint to be hit.
+
+360
+00:38:47,268 --> 00:38:52,018
+So let's actually do that. Let's run our U.N. that's going to run our binary.
+
+361
+00:38:52,018 --> 00:39:00,178
+So it launches the the process, and it's going to because we're launching it within the debugger, it's automatically attached.
+
+362
+00:39:00,178 --> 00:39:08,518
+Don't have to do anything special there. And there's just a little bit of a delay because we're talking about debug builds here.
+
+363
+00:39:08,518 --> 00:39:15,958
+So it's going to take a second here for al-Libi to sort stuff out and for the debug build to sort of get its act together.
+
+364
+00:39:15,958 --> 00:39:18,748
+And then boom, we had our breakpoint. We don't even have a window yet,
+
+365
+00:39:18,748 --> 00:39:25,708
+which isn't super surprising because the first dock show that we probably want to load is either the hidden window on Mac OS,
+
+366
+00:39:25,708 --> 00:39:32,548
+which is the thing that gives us our toolbar at the top. Even when all the other windows are closed, or it's the, you know, the main browser window.
+
+367
+00:39:32,548 --> 00:39:41,698
+But we are inside our internal load method and we can start stepping through this like we like we were doing before.
+
+368
+00:39:41,698 --> 00:39:44,848
+And when we're happy with, you know, what's going on here,
+
+369
+00:39:44,848 --> 00:39:48,868
+we can hit continue and then the rest of the browser will, Oh, we're loading something else.
+
+370
+00:39:48,868 --> 00:39:57,968
+All right, continue. And we'll keep going, and eventually we should get a browser window.
+
+371
+00:39:57,968 --> 00:40:00,308
+Well, we have more dog shows to load.
+
+372
+00:40:00,308 --> 00:40:08,078
+And the thing about debugging the parent process is the whole thing, like the parent process is the thing that responds to user input events,
+
+373
+00:40:08,078 --> 00:40:13,328
+so the whole browser becomes unresponsive when you had a break point. That's the thing to keep in mind.
+
+374
+00:40:13,328 --> 00:40:18,818
+The content processes are still alive and there's still like kind of doing their thing if they're,
+
+375
+00:40:18,818 --> 00:40:21,578
+you know, just spinning their message loops, they'll just keep doing that.
+
+376
+00:40:21,578 --> 00:40:25,658
+If they're like waiting for information from the parent synchronously, they might halt.
+
+377
+00:40:25,658 --> 00:40:28,988
+They might get stuck, but otherwise they'll keep spinning their wheels,
+
+378
+00:40:28,988 --> 00:40:33,928
+though the whole tree of processes doesn't stop just the one that you brake on.
+
+379
+00:40:33,928 --> 00:40:40,798
+It's a little bit like stopping a single gear in a very sophisticated set of gearing machines and,
+
+380
+00:40:40,798 --> 00:40:50,338
+you know, others are spinning independently because those are threads. And eventually we should get our browser window and we did OK.
+
+381
+00:40:50,338 --> 00:40:53,698
+So that's LBB crash course anello db.
+
+382
+00:40:53,698 --> 00:41:05,038
+I hope that's useful. I'm going to quickly switch now to GDB and a sneak preview of RR because RR is a very powerful tool.
+
+383
+00:41:05,038 --> 00:41:09,808
+And I know that Amelia's watching. I know he's a big fan of RR and poor nasco.
+
+384
+00:41:09,808 --> 00:41:14,758
+Unfortunately, I don't think I have per nasco.
+
+385
+00:41:14,758 --> 00:41:23,398
+I'm not a poor nasco expert. That is a separate tool. You can think of it as like RR with a lot more.
+
+386
+00:41:23,398 --> 00:41:27,118
+But we'll get there. You know what? I'm getting ahead of myself. We'll get there.
+
+387
+00:41:27,118 --> 00:41:32,188
+Let's look at GDB. So let me shut down our browser here.
+
+388
+00:41:32,188 --> 00:41:36,208
+I'm just going to like, I'm just going to quit, quit LBB. It's going to kill everything.
+
+389
+00:41:36,208 --> 00:41:44,398
+OK, we're done. I'm going to switch over to my Linux machine, which is in which terminal this one.
+
+390
+00:41:44,398 --> 00:41:50,788
+So what we're looking at here, I have SS aged into my Linux box, excuse me,
+
+391
+00:41:50,788 --> 00:41:59,578
+and I'm going to do much the same that we did before just now where I'm going to launch
+
+392
+00:41:59,578 --> 00:42:04,618
+Firefox because I don't have a display attached or I do have a display attached,
+
+393
+00:42:04,618 --> 00:42:12,268
+I believe I can say display zero because I've got yeah, I should have.
+
+394
+00:42:12,268 --> 00:42:14,578
+Yeah, I'm in. I'm inside the window manager.
+
+395
+00:42:14,578 --> 00:42:25,108
+So if we actually I'm going to bring over the this is the remote machine that I'm signed, signed into with SSA.
+
+396
+00:42:25,108 --> 00:42:36,508
+And there's, you know, my Linux VM just sitting there so we can kind of watch it from the corner of our eye and there's some random memory.
+
+397
+00:42:36,508 --> 00:42:41,578
+And what I'll do is, I'm going to say mark, run, dash, dash, debug like before.
+
+398
+00:42:41,578 --> 00:42:50,098
+And this is going to do what we had talked about, which was it's going to find the operating system debugger in this case on Linux is GDB,
+
+399
+00:42:50,098 --> 00:42:53,368
+and then it's just going to wait for me to instruct it on what to do.
+
+400
+00:42:53,368 --> 00:42:59,008
+Do we want to run the process that we're debugging or do we want to set break points, that sort of thing?
+
+401
+00:42:59,008 --> 00:43:03,318
+So let's do that. Mark dashed above.
+
+402
+00:43:03,318 --> 00:43:11,708
+OK, we are in GDB very, very similar to LDV and and so what we can do here is we can set that same breakpoint
+
+403
+00:43:11,708 --> 00:43:16,628
+and stock shell internal load and it has no idea what I'm talking about now.
+
+404
+00:43:16,628 --> 00:43:24,968
+What GDB is going to do is like instead of LDP, we'll just warn and we'll go ahead and attempt to use those break points.
+
+405
+00:43:24,968 --> 00:43:31,868
+When the binary information is loaded here, it's it's asking me if I'm sure I know what I'm doing like, Hey, should I?
+
+406
+00:43:31,868 --> 00:43:39,218
+I couldn't find this thing. Should I attempt to set this breakpoint and hit this breakpoint in a future library load?
+
+407
+00:43:39,218 --> 00:43:44,588
+And I will say yes, because I know that this is coming. The Stock Shell Internal Load Things is coming.
+
+408
+00:43:44,588 --> 00:44:00,918
+Now let us run. Program. And so we should eventually see our debug build of Firefox appear here on my Linux machine.
+
+409
+00:44:00,918 --> 00:44:07,098
+Do scare. Take a second because it's a debug build.
+
+410
+00:44:07,098 --> 00:44:17,898
+It's got to load a bunch of stuff in a memory, all of them symbols.
+
+411
+00:44:17,898 --> 00:44:30,828
+While we're waiting for this, I'm going to briefly describe what RR is because this takes command line debugging into the stratosphere.
+
+412
+00:44:30,828 --> 00:44:41,088
+So if you've ever used a debugger before a JavaScript debugger or a a command line debugger like LBB or GDB or any debugger, really,
+
+413
+00:44:41,088 --> 00:44:49,998
+one of the things that you may have, you know, run into is the fact that it works in one direction when you execute the program.
+
+414
+00:44:49,998 --> 00:44:58,638
+You can break, but then you proceed into the future. Time works in One Direction forwards, and you can't really go back and see the way things were.
+
+415
+00:44:58,638 --> 00:45:04,578
+What RR is is a what's called a time travel debugger.
+
+416
+00:45:04,578 --> 00:45:10,728
+Which allows us to record an execution of Firefox or any number of binaries.
+
+417
+00:45:10,728 --> 00:45:19,578
+It will record the execution and then allow us to reenter that execution recording and like debug it.
+
+418
+00:45:19,578 --> 00:45:28,188
+So step through, go back in time, look at variables and like scrub forward, scrub backward, look at things, hop around,
+
+419
+00:45:28,188 --> 00:45:36,468
+switch between threads like all sorts of really, really great stuff that you can't necessarily do if you're only moving forwards in time.
+
+420
+00:45:36,468 --> 00:45:41,598
+And it's a really neat piece of technology and it is free and open source and you should check it out.
+
+421
+00:45:41,598 --> 00:45:47,718
+It was built by some friends of Mozilla, some xma, zillions Rock and Kyle Huey.
+
+422
+00:45:47,718 --> 00:45:53,418
+Work on it, and you can use it not just for Firefox, for any number of of programs on Linux.
+
+423
+00:45:53,418 --> 00:45:56,418
+That's the thing. You have to do it on Linux.
+
+424
+00:45:56,418 --> 00:46:05,148
+So whenever I, for example, have to debug a crasher on Linux, I'm very happy because I get to use RR, which is kind of like cheating.
+
+425
+00:46:05,148 --> 00:46:12,738
+That really is the best when I'm able to use RR. So if you're interested at all in our, you can check that out.
+
+426
+00:46:12,738 --> 00:46:16,998
+Think of RR as time travel GDB debugging. It's the best.
+
+427
+00:46:16,998 --> 00:46:18,708
+So anyways, back to GDB.
+
+428
+00:46:18,708 --> 00:46:26,538
+So I have attached here and like, it's reporting a bunch of stuff and it's waiting for me to like, accept all of this information.
+
+429
+00:46:26,538 --> 00:46:30,528
+I'm saying, yep, yep, all looks good and I've hit my breakpoint.
+
+430
+00:46:30,528 --> 00:46:38,688
+Great. Same situation as before I can next through. I can like step into functions like triggering principle.
+
+431
+00:46:38,688 --> 00:46:47,068
+We can look at that and it looks like this is just a simple getter, but we can print out the contents of some stuff.
+
+432
+00:46:47,068 --> 00:46:48,988
+This is some kind of raw pointer.
+
+433
+00:46:48,988 --> 00:46:54,988
+So what I like to do when I have a raw pointer is I'll just try and do reference and see what happens and then tells me like,
+
+434
+00:46:54,988 --> 00:46:58,348
+Hey, this thing that you just referenced is,
+
+435
+00:46:58,348 --> 00:47:09,508
+you know, I looked it up in the V table, which is how, you know, C++ and see how they organize things like virtual, like virtual functions and like.
+
+436
+00:47:09,508 --> 00:47:14,468
+V Table stands for virtual and it's how like, I don't understand it very well.
+
+437
+00:47:14,468 --> 00:47:22,048
+But under the hood, that's how it deals with things like inheritance and base classes and virtual methods and stuff.
+
+438
+00:47:22,048 --> 00:47:27,808
+And what this is telling me, what I've learned over the years is what this is telling me is that this thing called I'm triggering principle,
+
+439
+00:47:27,808 --> 00:47:34,828
+which was before this kind of opaque pointer thing is actually of type Mozilla system principle.
+
+440
+00:47:34,828 --> 00:47:42,298
+And what's useful about that is I can then cast, I can cast this pointer.
+
+441
+00:47:42,298 --> 00:47:53,878
+But trade was a triggering principle. Can cast it to a system principle and then de reference that and then I get a lot of more information,
+
+442
+00:47:53,878 --> 00:48:01,518
+you know, like I can really kind of look inside and see what's going on. And I can see that this principle is it's the system principle.
+
+443
+00:48:01,518 --> 00:48:07,408
+I guess we knew that because we knew that because we looked at the V table entry.
+
+444
+00:48:07,408 --> 00:48:09,778
+But like, you can start looking inside of it and seeing,
+
+445
+00:48:09,778 --> 00:48:15,328
+you know what members are set and stuff which we couldn't before when it was just this kind of opaque pointer.
+
+446
+00:48:15,328 --> 00:48:19,798
+So this is kind of this is kind of fun. What else can we do whenever we're doing internal load?
+
+447
+00:48:19,798 --> 00:48:23,878
+Let's let's step out. I believe that's f to step out.
+
+448
+00:48:23,878 --> 00:48:28,458
+We finish and we come back out. Oh, am I wrong?
+
+449
+00:48:28,458 --> 00:48:32,958
+How do we step zero to step out, step up?
+
+450
+00:48:32,958 --> 00:48:41,358
+You is to step up, we're going back up a level in the frame tree, same a lot of the same commands I was using before beat for a back trace.
+
+451
+00:48:41,358 --> 00:48:48,208
+I'm getting nice colors, colors here. That's nice, makes a little more readable.
+
+452
+00:48:48,208 --> 00:48:56,438
+Let's look at another variable. Where are we in the source code? Oh, I'm going to show you something really, really cool that you can do in GDB,
+
+453
+00:48:56,438 --> 00:49:05,008
+I don't think you can do this in Libby if you are not happy with the fact that you only get this little window of source code.
+
+454
+00:49:05,008 --> 00:49:08,488
+There is a mode of GDB, which I really like.
+
+455
+00:49:08,488 --> 00:49:20,278
+I don't know what it's called, but if you hit Control X a Control X release, then a you get put into this interface, which is great.
+
+456
+00:49:20,278 --> 00:49:24,268
+This is a lot more of what I want, which is like, OK, I can.
+
+457
+00:49:24,268 --> 00:49:30,898
+I've got the terminal down below and the source code above. And it it just like highlights where I'm at.
+
+458
+00:49:30,898 --> 00:49:39,328
+That's great. I love this. Now, sometimes this messes up. If, for example, I try and print out some stuff to the terminal and it like overflows.
+
+459
+00:49:39,328 --> 00:49:43,738
+I don't know if it's because it's not working well with Boubou, which is like my multiscreen thing.
+
+460
+00:49:43,738 --> 00:49:50,908
+Or or maybe it's just GDP has a hard time dealing with.
+
+461
+00:49:50,908 --> 00:49:56,308
+That but I love this view, and when I when I'm in GDB, I tend to use it.
+
+462
+00:49:56,308 --> 00:50:01,318
+And so I can like step next to this and we can take a look at this variable should take focus.
+
+463
+00:50:01,318 --> 00:50:06,778
+Let's look at the value. It's false. OK, let us try doing something else.
+
+464
+00:50:06,778 --> 00:50:13,498
+Let's let's look at a string. Notice how we're starting to like we've got this load state with a you or I,
+
+465
+00:50:13,498 --> 00:50:18,148
+and it's got this gets back speaker default or get and that's going to you.
+
+466
+00:50:18,148 --> 00:50:26,848
+Or I has this thing called the spec, which is the string representation of the you try and get will give us the pointer for it.
+
+467
+00:50:26,848 --> 00:50:31,348
+And so let's see if we can print this out ourselves. I'm very curious. I don't know if is going to work.
+
+468
+00:50:31,348 --> 00:50:38,818
+This might just crash the whole thing. Who knows? So I'm going to say, Hey, print that thing, go.
+
+469
+00:50:38,818 --> 00:50:48,648
+I think I've upset it. Um. Have I frozen, have I frozen it?
+
+470
+00:50:48,648 --> 00:50:52,248
+Did I upset it? A computer still running? There we go.
+
+471
+00:50:52,248 --> 00:50:56,388
+Eventually, it figured it out. It's about blank. That's what we're attempting to currently load.
+
+472
+00:50:56,388 --> 00:51:02,448
+Pretty cool. Amelia says control el refreshes that when the program prints or whatnot.
+
+473
+00:51:02,448 --> 00:51:10,348
+Oh, that's cool. So if I were to print out a load state and then like P?
+
+474
+00:51:10,348 --> 00:51:17,838
+Payload state. So that it does hasn't currently messed up for me, so that's good.
+
+475
+00:51:17,838 --> 00:51:23,658
+I'll note that the like the cursor is like cursor and backward and forward doesn't work properly,
+
+476
+00:51:23,658 --> 00:51:28,888
+like if I'm trying to, like work my way backwards inside the line that I just typed.
+
+477
+00:51:28,888 --> 00:51:37,148
+I'll then have to like Command Control X and an egg and exit so I can like cursor backwards and forwards like this.
+
+478
+00:51:37,148 --> 00:51:42,558
+I can't do that when I'm in this mode. Some reason.
+
+479
+00:51:42,558 --> 00:51:47,988
+But it's much more visual. I like being able to see what I'm doing. And so this is very handy.
+
+480
+00:51:47,988 --> 00:51:55,938
+So that's GDB now before. Oh, that's because it's IMAX key bindings.
+
+481
+00:51:55,938 --> 00:52:06,588
+That's why IMAX cool. Good to know, I guess this is some kind of Emacs tool that we're in.
+
+482
+00:52:06,588 --> 00:52:12,798
+Great. I guess I just need to learn Emacs computers. They were a mistake.
+
+483
+00:52:12,798 --> 00:52:22,268
+All right. Well, that's that's GDB in a nutshell. A lot of those same commands I showed you before are.
+
+484
+00:52:22,268 --> 00:52:27,428
+Oh, arrows, scroll. Oh, that's interesting, that's what the arrows are doing, they're scrolling.
+
+485
+00:52:27,428 --> 00:52:31,458
+And then I have to use control b or something to like work.
+
+486
+00:52:31,458 --> 00:52:36,258
+Oh, I see. Hmm, Troll B.
+
+487
+00:52:36,258 --> 00:52:42,048
+I don't know how to move forward. Interesting stuff. Delete just inserts a J.
+
+488
+00:52:42,048 --> 00:52:49,278
+Very bizarre. I don't know what Emacs key bindings are. I wish I didn't have to use them, but such is life.
+
+489
+00:52:49,278 --> 00:52:55,168
+That's GDB. Not pretty. Can get the job done.
+
+490
+00:52:55,168 --> 00:53:03,808
+OK. And there are maybe alternatives for Linux debugging their Linux probably has plenty of debugger.
+
+491
+00:53:03,808 --> 00:53:10,828
+But GDB is the one I was trained on how it's not pretty, but it gets the job done is my philosophy on it.
+
+492
+00:53:10,828 --> 00:53:16,798
+Let us quit this and we'll detach and like it'll shut down the browser and everything.
+
+493
+00:53:16,798 --> 00:53:23,688
+I want to show you briefly, RR. And.
+
+494
+00:53:23,688 --> 00:53:27,258
+The the thing about RR is it's not included by default.
+
+495
+00:53:27,258 --> 00:53:32,838
+You don't get to just kind of use it like GDP or but you have to install it
+
+496
+00:53:32,838 --> 00:53:38,238
+and you have to make it available in your path and you have to be on a like.
+
+497
+00:53:38,238 --> 00:53:45,498
+You have to be on an instance of Linux, where RR can get a lot of low level information about program execution.
+
+498
+00:53:45,498 --> 00:53:49,728
+So certain types of virtual machines it won't work with.
+
+499
+00:53:49,728 --> 00:53:55,488
+So, for example, my virtual machine is running inside of VMware.
+
+500
+00:53:55,488 --> 00:54:05,358
+VMware Workstation. And that does like the right kind of virtualization that RR will work properly with VirtualBox,
+
+501
+00:54:05,358 --> 00:54:10,098
+which is a open source virtualization framework, as I recall.
+
+502
+00:54:10,098 --> 00:54:18,438
+Doesn't do that kind of thing. So if you have a Linux instance running Linux VM running inside of VirtualBox,
+
+503
+00:54:18,438 --> 00:54:26,388
+it's possible that when you try and use RR, it's just not going to work. So there are some documentation on all of those sorts of things.
+
+504
+00:54:26,388 --> 00:54:34,608
+I highly recommend you check out our project. In particular, the GitHub Wiki will walk you through installation.
+
+505
+00:54:34,608 --> 00:54:41,778
+And yeah, running in a VM guest is supported as long as the VM supports virtualization of hardware performance counters.
+
+506
+00:54:41,778 --> 00:54:46,378
+That's the thing. You have to have virtualized the performance counters.
+
+507
+00:54:46,378 --> 00:54:53,058
+That's what it is. So VMware was the one I ended up using.
+
+508
+00:54:53,058 --> 00:54:56,808
+And yeah, check out the wiki on how to install it.
+
+509
+00:54:56,808 --> 00:55:01,458
+Build it, install it, get it. Available locally, it's pretty straightforward. Install process the building.
+
+510
+00:55:01,458 --> 00:55:06,018
+It only takes a couple of like on a modern machine. Make a couple of minutes.
+
+511
+00:55:06,018 --> 00:55:12,888
+It's a lot smaller than Firefox, that's for sure. And it's pretty great, and it's written in our R by our friends, rock and Kyle Huey.
+
+512
+00:55:12,888 --> 00:55:17,058
+And so let's try and do a recording. I'm going to show you what that's like.
+
+513
+00:55:17,058 --> 00:55:23,988
+Maybe you've seen me do this before, so I'm going to do is mock or display zero again because I'm again.
+
+514
+00:55:23,988 --> 00:55:29,478
+So into my my Linux box, I have to tell it would display to.
+
+515
+00:55:29,478 --> 00:55:36,548
+To put Firefox on in this case is zero and I must say mock. Debug.
+
+516
+00:55:36,548 --> 00:55:41,258
+Debugger, I think this is how it's going to work. Debugger know what I want to do is mock run.
+
+517
+00:55:41,258 --> 00:55:45,038
+I want to record mock run debugger equals RR.
+
+518
+00:55:45,038 --> 00:55:52,988
+This is how I do. I'm telling it we're going to run, but we also want to use a debugger when we're running,
+
+519
+00:55:52,988 --> 00:55:58,388
+and in particular, I want to use a specific debugger RR, which is available on my path.
+
+520
+00:55:58,388 --> 00:56:07,388
+So it's going to now run its RR is telling me, hey, we're saving our execution trace and then Firefox will run per normal.
+
+521
+00:56:07,388 --> 00:56:13,118
+It will eventually launch over here, so we should hopefully see it soon.
+
+522
+00:56:13,118 --> 00:56:28,418
+There it is. Um, and I just want to run for a second, then we're going to shut it down.
+
+523
+00:56:28,418 --> 00:56:43,218
+Scooby Doo, Scooby Doo. Yeah, this is the one trade off of of like debug build debugging is the speed, the speed.
+
+524
+00:56:43,218 --> 00:56:46,818
+It's a little tiny window. Good job.
+
+525
+00:56:46,818 --> 00:56:57,008
+OK, so what we're going to do here is we're going to let this run for a quick second and I'm going to shut it down.
+
+526
+00:56:57,008 --> 00:57:03,458
+Alvi Doodle says pretty amazing that it's running without legs. Sounds like a joke.
+
+527
+00:57:03,458 --> 00:57:09,768
+Sounds like that's a joke from Alva Doodle.
+
+528
+00:57:09,768 --> 00:57:17,118
+Nice. I like it, I like it, it's a it's like the refrigerator, you better go catch style humor.
+
+529
+00:57:17,118 --> 00:57:22,158
+I love it. It's like prank call humor.
+
+530
+00:57:22,158 --> 00:57:33,378
+OK, so we've got our instance of nightly running. I'm going to just shut her down now. And you want to you want to shut it down properly if possible,
+
+531
+00:57:33,378 --> 00:57:39,348
+so that or like or have it crash either or but I don't want to like exit using
+
+532
+00:57:39,348 --> 00:57:43,488
+control c or something over here because I don't know how RR would react to that.
+
+533
+00:57:43,488 --> 00:57:52,498
+But basically, the shutdown will proceed and the recording will be saved to my desk.
+
+534
+00:57:52,498 --> 00:58:06,478
+And so shut down, shut down, shut down, blah blah, blah, blah blah. Come on, come on, come on, come on, come on.
+
+535
+00:58:06,478 --> 00:58:09,268
+Shutting down sometimes takes time because it's writing steps to disk,
+
+536
+00:58:09,268 --> 00:58:17,008
+and it's like doing a bunch of debugging stuff and it might be waiting, OK, we're done. So let us now rerun the thing that we just ran.
+
+537
+00:58:17,008 --> 00:58:22,108
+We're going to we're not. We don't have to. We're not going to see Firefox open up.
+
+538
+00:58:22,108 --> 00:58:25,228
+We're not going to. It's not going to like, go and touch the network again.
+
+539
+00:58:25,228 --> 00:58:35,668
+It's all a recording that's in this little box that that will run in isolation and it will run deterministic Lee now.
+
+540
+00:58:35,668 --> 00:58:40,558
+So if it runs in a certain way, it will run it the same way, the next time and the time after that.
+
+541
+00:58:40,558 --> 00:58:44,908
+It's like this little deterministic box, and that's great for debugging.
+
+542
+00:58:44,908 --> 00:58:47,638
+You know, imagine you walk into a crime scene,
+
+543
+00:58:47,638 --> 00:58:54,868
+you imagine you're watching like a cop show or something and you walk into a crime scene and you can rewind time and watch like the the burglar,
+
+544
+00:58:54,868 --> 00:59:01,288
+come in and like, smash the window and break into the jewelry store or something or the bank.
+
+545
+00:59:01,288 --> 00:59:07,828
+And you can like watch them go running, you know, running backwards into their their car that they arrived in.
+
+546
+00:59:07,828 --> 00:59:13,228
+And then you can find the license plate number like you can get a lot of information that you could couldn't normally get.
+
+547
+00:59:13,228 --> 00:59:18,158
+When detectives normally show up at a crime scene, which is like just the aftermath,
+
+548
+00:59:18,158 --> 00:59:26,368
+you see all the broken glass and the tire tracks and like a bunch of missing money and jewelry here we can go back in time with our R. That's great.
+
+549
+00:59:26,368 --> 00:59:30,688
+That's great. So let's do it our replay. That is how you do it.
+
+550
+00:59:30,688 --> 00:59:34,678
+And here are as loaded. I'm going to do that same thing we did before.
+
+551
+00:59:34,678 --> 00:59:40,798
+Let's set a break point is the same interface and stock shell internal load.
+
+552
+00:59:40,798 --> 00:59:49,058
+Just my example. Classic example. Function or method call, and I'm going to say continue.
+
+553
+00:59:49,058 --> 00:59:56,828
+We're going to run and it's going to replay the recording.
+
+554
+00:59:56,828 --> 01:00:00,878
+And then I'm going to show you some superpowers that you can do with RR.
+
+555
+01:00:00,878 --> 01:00:04,958
+And then we're going to switch to Visual Studio and then I'm going to stop the stream.
+
+556
+01:00:04,958 --> 01:00:12,598
+But if people have questions, feel free to drop them in the chat. I hope this is interesting so far.
+
+557
+01:00:12,598 --> 01:00:16,378
+I'd like to get a sense of how interesting this is.
+
+558
+01:00:16,378 --> 01:00:23,188
+You know, if people are watching this and they're like bored out of their minds, if they think this is not useful, that's useful information to me.
+
+559
+01:00:23,188 --> 01:00:27,298
+If this is actually useful information, that's also useful information to me.
+
+560
+01:00:27,298 --> 01:00:33,778
+If it's middle of the road, maybe there's there's kind of like a variation on this presentation that you'd like to see in the future.
+
+561
+01:00:33,778 --> 01:00:39,408
+Let me know. Yeah.
+
+562
+01:00:39,408 --> 01:00:47,698
+OK, here we go. We're we're off to the races.
+
+563
+01:00:47,698 --> 01:00:56,488
+And we hit our internal load so we can, like look at variables just like before and we can like the reference it just like before.
+
+564
+01:00:56,488 --> 01:01:08,608
+But here's the really neat thing. We can go like we can step forward and get our, you know, step forward thing here.
+
+565
+01:01:08,608 --> 01:01:16,378
+But but our our gives us the ability to step back our end reverse next.
+
+566
+01:01:16,378 --> 01:01:22,678
+It's going to allow us to step backwards. It takes a little longer, but it did it.
+
+567
+01:01:22,678 --> 01:01:32,118
+First, next. Takes a little bit longer, but it does it.
+
+568
+01:01:32,118 --> 01:01:36,258
+We can reverse continue, we can reverse step. It's amazing.
+
+569
+01:01:36,258 --> 01:01:40,638
+Reverse continue. We're going to hit the very beginning of the function again and then we can do
+
+570
+01:01:40,638 --> 01:01:46,248
+interesting things like we know that the load state has this memory address.
+
+571
+01:01:46,248 --> 01:01:54,718
+So let's see if we can find out when it got constructed. So we can say like, Hey, break on next doc show.
+
+572
+01:01:54,718 --> 01:02:06,318
+Both state and the stock shall load state. If this equals I mean, I've done that before.
+
+573
+01:02:06,318 --> 01:02:15,798
+This is like, hey, break, when this thing gets constructed and it's like at this because it knows what its own
+
+574
+01:02:15,798 --> 01:02:19,818
+memory address is like when this thing gets constructed at this memory address break.
+
+575
+01:02:19,818 --> 01:02:23,958
+So now I can reverse, continue and find out when it got constructed. Boom, we hit it.
+
+576
+01:02:23,958 --> 01:02:28,308
+And now we can look, look at our we look at our backtrace,
+
+577
+01:02:28,308 --> 01:02:35,238
+so we know that that dog show load state got constructed when we were opening a window and like, This is the stack.
+
+578
+01:02:35,238 --> 01:02:40,128
+Pretty neat stuff. Pretty neat, handy stuff. That's useful information.
+
+579
+01:02:40,128 --> 01:02:50,598
+And so like all of these tools are really great for investigating. I often think of, um, I kind of romanticize it in my head.
+
+580
+01:02:50,598 --> 01:02:56,928
+This is walking a crime scene I often find, you know, if you're dealing with a crash or a weird bug,
+
+581
+01:02:56,928 --> 01:03:00,828
+you can think of using a debugger is like walking a crime scene,
+
+582
+01:03:00,828 --> 01:03:08,478
+and an RR lets you walk in two directions forwards and backwards and in time, which is pretty great.
+
+583
+01:03:08,478 --> 01:03:12,438
+Um, well, I guess you can walk in multiple directions at a crime scene normally,
+
+584
+01:03:12,438 --> 01:03:17,358
+but but RR gives us the ability to time travel, which is pretty awesome.
+
+585
+01:03:17,358 --> 01:03:19,728
+OK, so that's RR.
+
+586
+01:03:19,728 --> 01:03:27,708
+The other kind of neat thing about RR is that you can like pack up recordings of that you've taken and you can upload them to per nasco,
+
+587
+01:03:27,708 --> 01:03:33,318
+which is like a a a web based tool for analyzing recordings.
+
+588
+01:03:33,318 --> 01:03:41,398
+And I don't have a trace available for us to look at, and I will happily freely admit I am not an expert at Panopto.
+
+589
+01:03:41,398 --> 01:03:49,308
+Maybe someone else look at you, Amelio. Someone else could do a presentation to talk about, like all the things you can do with Panopto.
+
+590
+01:03:49,308 --> 01:04:04,688
+But if you're at all curious about per nasco and what it can do, you should check out their website, which is here, uh, from our good friends.
+
+591
+01:04:04,688 --> 01:04:12,608
+Rock and Kyle. All right. That is GDB, LBB and RR.
+
+592
+01:04:12,608 --> 01:04:20,498
+Let us now quickly check out Visual Studio, so I'm going to exit all this stuff.
+
+593
+01:04:20,498 --> 01:04:27,338
+Oh, the other really neat thing is that this recording will be there. Like if I shut down the computer, I start it up again.
+
+594
+01:04:27,338 --> 01:04:35,048
+The recording is still there and they're all stored like it tells me where it's stored in this local share our Firefox one.
+
+595
+01:04:35,048 --> 01:04:41,918
+And you can record multiple recordings. You can do it a bunch of times and then attach to particular ones.
+
+596
+01:04:41,918 --> 01:04:49,058
+Like, I didn't have to necessarily choose the latest one I could have, like provided a path to another recording,
+
+597
+01:04:49,058 --> 01:04:52,748
+and it will be like replay that once you can get a whole set of them.
+
+598
+01:04:52,748 --> 01:04:58,598
+And it's really, really great. It's just great. So highly recommended.
+
+599
+01:04:58,598 --> 01:05:08,258
+OK. Let us now look at Visual Studio. So let me enter the windows.
+
+600
+01:05:08,258 --> 01:05:15,818
+So Visual Studio is the only like visual I.D. debugger I normally use because I don't know.
+
+601
+01:05:15,818 --> 01:05:22,538
+I think there are command line to [INAUDIBLE] for windows, but for me,
+
+602
+01:05:22,538 --> 01:05:30,278
+the challenge is always setting up the the ID debugger as I never know how to do it properly in the symbols don't load and it's like it's it's hard.
+
+603
+01:05:30,278 --> 01:05:35,708
+And maybe maybe X code on Mac OS is better and maybe Eclipse has gotten better,
+
+604
+01:05:35,708 --> 01:05:39,188
+but I remember it just being such a pain when I was in school setting all those things up.
+
+605
+01:05:39,188 --> 01:05:42,308
+So that's why I'm I was trained up on GDB and LBB,
+
+606
+01:05:42,308 --> 01:05:47,928
+I say trained up as if someone some like I went to a dojo in like some sensei taught me how to use these things.
+
+607
+01:05:47,928 --> 01:05:56,948
+I basically just googled around and you know, I sat next to people who use GDB and LBB, and I just like, watched and took notes.
+
+608
+01:05:56,948 --> 01:06:02,558
+So again, I'm not an expert. I just I know enough to to get the job done.
+
+609
+01:06:02,558 --> 01:06:07,718
+So here I have launched Microsoft Visual Studio 2017,
+
+610
+01:06:07,718 --> 01:06:27,868
+and what I'm going to do is I'm going to go here to my my shell and I'm going to run my instance of Firefox, my debug instance of Firefox.
+
+611
+01:06:27,868 --> 01:06:38,338
+And like on the other platforms, it's a debug instance, so it's a little slow to get itself sorted, make itself appear.
+
+612
+01:06:38,338 --> 01:06:45,538
+But eventually it does. And then to the console, we get a lot of useful information like the parent process ID one three seven.
+
+613
+01:06:45,538 --> 01:06:56,578
+So in Visual Studio, what you can do, excuse me, is you can attach to a particular process with a particular ID.
+
+614
+01:06:56,578 --> 01:07:01,288
+And what's going to do is it's going to give us a list now instead of. I was about to attach the parent process ID.
+
+615
+01:07:01,288 --> 01:07:05,398
+I'm actually going to do the example I did before, which was the the content process.
+
+616
+01:07:05,398 --> 01:07:12,798
+Let's do that instead. So we'll go to example rt.com.
+
+617
+01:07:12,798 --> 01:07:18,708
+And and let's find the process idea of the content process like we did before, it's one four seven eight eight,
+
+618
+01:07:18,708 --> 01:07:27,508
+I don't know if you can see that is one four seven eight eight, so let's attach to one four seven eight eight.
+
+619
+01:07:27,508 --> 01:07:31,648
+I don't know what's taking oh, I've got a filter on one four, seven, eight eight.
+
+620
+01:07:31,648 --> 01:07:37,468
+There it is. That's the content process ID. And it just happens to have the name Firefox XY.
+
+621
+01:07:37,468 --> 01:07:42,628
+I guess that's what we call all of our content processes now. It used to be plugin container, but I guess we could rename them.
+
+622
+01:07:42,628 --> 01:07:47,938
+So we attach and I have this old breakpoint here.
+
+623
+01:07:47,938 --> 01:07:52,318
+I'm just going to get rid of and there we're attached to this process.
+
+624
+01:07:52,318 --> 01:08:02,608
+It's still running, but we can posited any time and we can take a look at the like the call stack down here and see where we're stuck right now.
+
+625
+01:08:02,608 --> 01:08:08,428
+It's like before we're just kind of like spinning in the event loop. That's what this says to me.
+
+626
+01:08:08,428 --> 01:08:12,538
+I know it's really cryptic. How do I know it's spinning in the event loop?
+
+627
+01:08:12,538 --> 01:08:24,478
+It's the sort of thing like I sometimes equate looking at stacks and looking at performance profiles where you just learn to recognize shapes.
+
+628
+01:08:24,478 --> 01:08:32,008
+And I would imagine I'm not a doctor, but I would imagine it's a bit like looking at my eyes or X-rays where if you look at enough of them,
+
+629
+01:08:32,008 --> 01:08:38,878
+eventually you start recognizing patterns of like, OK, this is what this means this this bone is broken, this bone is not broken.
+
+630
+01:08:38,878 --> 01:08:45,868
+This person is, you know, this this person has eaten a magnet and this is what it looks like.
+
+631
+01:08:45,868 --> 01:08:54,698
+Hopefully, they aren't in an MRI and they ate a magnet. That's a bad idea. Don't don't go to an MRI if you've eaten a magnet.
+
+632
+01:08:54,698 --> 01:09:07,648
+Yeah, I just freaked myself out. OK, so let us set a breakpoint at that sink link click thing, because that would be handy for our example.
+
+633
+01:09:07,648 --> 01:09:17,518
+So in Visual Studio, the way I do that is I go to the Break Points tab down here and I see a new function breakpoint and I say and ask, What was it?
+
+634
+01:09:17,518 --> 01:09:25,918
+What was that function? Sync Link? Click Doc Show on Link, click sync.
+
+635
+01:09:25,918 --> 01:09:36,878
+So close. And a hit, OK, and the thing about what's kind of nice about it is like,
+
+636
+01:09:36,878 --> 01:09:41,468
+I get a little more of a visual indication of whether or not it succeeded in attaching the breakpoint.
+
+637
+01:09:41,468 --> 01:09:46,358
+It's the red dot means, OK, you've got yourself your breakpoint set.
+
+638
+01:09:46,358 --> 01:09:51,008
+And if I double click on this, I think it'll jump me to that point in the code.
+
+639
+01:09:51,008 --> 01:09:56,828
+Yeah, and I can like reorganize this stuff and I can like look at the code and I can set other break points.
+
+640
+01:09:56,828 --> 01:10:02,738
+If I've got the source code open, I could like set another breakpoint here by just kind of clicking in the gutter here.
+
+641
+01:10:02,738 --> 01:10:07,868
+But now let us trigger our breakpoint by clicking this.
+
+642
+01:10:07,868 --> 01:10:15,608
+So here we are. We are at our break point and apparently the because we're at the very beginning of the function,
+
+643
+01:10:15,608 --> 01:10:21,868
+a lot of these variables are not available for us to look at. But if we start stepping in, they'll get populated.
+
+644
+01:10:21,868 --> 01:10:26,168
+We can start analyzing things like we can look at the principal again.
+
+645
+01:10:26,168 --> 01:10:29,978
+Who's the triggering principal? It's a content principal.
+
+646
+01:10:29,978 --> 01:10:34,688
+Oh, that's interesting. And then we can look at the you or I. Of that content principal.
+
+647
+01:10:34,688 --> 01:10:44,048
+It's an in a standard URL. Somewhere in here, we're going to find like what it actually is path query.
+
+648
+01:10:44,048 --> 01:10:50,678
+Where is the actual string representation of this thing? Scheme spec M spec to string.
+
+649
+01:10:50,678 --> 01:10:59,588
+It's a typical insider slash example. Dot com. Great. That's that's the information I maybe was interested in.
+
+650
+01:10:59,588 --> 01:11:03,488
+You can set other break points. You can step for the buttons, for stepping forward or up here.
+
+651
+01:11:03,488 --> 01:11:10,058
+Like, step over, you can step into that's this button here so we can check content is editable.
+
+652
+01:11:10,058 --> 01:11:17,048
+Let's step into that. OK, now we're inside this function and we can see like the decisions it makes to figure out if a thing is editable.
+
+653
+01:11:17,048 --> 01:11:23,678
+Uh, and it turns out, ultimately for this particular case, it will be editable.
+
+654
+01:11:23,678 --> 01:11:27,638
+If if we're in design mode, are we in design mode?
+
+655
+01:11:27,638 --> 01:11:33,818
+Let's step into that and find out. Um, step over.
+
+656
+01:11:33,818 --> 01:11:39,638
+We're going to return false, it looks like, because the owner document does not have the flag is editable.
+
+657
+01:11:39,638 --> 01:11:44,828
+OK. So let's step out of this step out, step out.
+
+658
+01:11:44,828 --> 01:11:50,288
+And then so it's not editable. So that means we're going to skip over this condition.
+
+659
+01:11:50,288 --> 01:11:55,598
+We're not going to return early. So we move on. And that is how I debug stuff in Visual Studio.
+
+660
+01:11:55,598 --> 01:12:01,778
+Now what's kind of neat about Visual Studio as compared to the other debunkers,
+
+661
+01:12:01,778 --> 01:12:07,058
+is that you can attach to multiple content process or a multiple processes.
+
+662
+01:12:07,058 --> 01:12:16,868
+If you go to debug, you can attach to another process I can attach to a content process in the same like session and then switch back and forth.
+
+663
+01:12:16,868 --> 01:12:21,548
+In fact, let's let's attach to the parent process as well.
+
+664
+01:12:21,548 --> 01:12:34,548
+The parent process is one three seven eight, so let's attach to that one debug attached to another process one three one three seven eight.
+
+665
+01:12:34,548 --> 01:12:41,448
+It's attached to that one, and then I can choose which one I want to be on.
+
+666
+01:12:41,448 --> 01:12:46,608
+These are threads. Oh, here's the process so I can choose which one I want.
+
+667
+01:12:46,608 --> 01:12:50,988
+And fortunately, they have the same executable name, but I can choose, for example,
+
+668
+01:12:50,988 --> 01:13:03,018
+to hop into the parent process and set a breakpoint in here of, like, I don't know, function breakpoint on, uh, Mozilla.
+
+669
+01:13:03,018 --> 01:13:11,948
+I don't know if this is going to work. Mozilla Uh, Dom canonical browsing context.
+
+670
+01:13:11,948 --> 01:13:15,308
+Well, you or I will that exist? OK, yeah, I guess it does.
+
+671
+01:13:15,308 --> 01:13:20,658
+All right. Let's let's see if what happens.
+
+672
+01:13:20,658 --> 01:13:29,918
+Well, I guess we didn't hit we didn't hit our break point, but maybe we will if I attempt to, like, change the URL.
+
+673
+01:13:29,918 --> 01:13:38,888
+Boom, we did inside the parent process one, three, seven eight, and we can like start examining stuff like let's step into the function,
+
+674
+01:13:38,888 --> 01:13:44,528
+we can look at the I that we were attempting to load and it's like a bunch of,
+
+675
+01:13:44,528 --> 01:13:48,858
+you know, cryptic stuff, but eventually you can unfold it and you can make sense of it.
+
+676
+01:13:48,858 --> 01:13:53,018
+Um, I think that's all I want to say about Visual Studio debugging,
+
+677
+01:13:53,018 --> 01:13:57,848
+except there's one more thing that you need to keep in mind about windows debugging.
+
+678
+01:13:57,848 --> 01:14:06,458
+And I actually, whenever I was doing some recent debugging on windows, I ran into this and and it was not obvious.
+
+679
+01:14:06,458 --> 01:14:15,638
+So on Windows, we have historically had challenges with third party software that attempts to hook into Firefox to like
+
+680
+01:14:15,638 --> 01:14:24,488
+inject DLLs hooks and like like third party software that's trying to manipulate the executable somehow.
+
+681
+01:14:24,488 --> 01:14:28,898
+And that is terrible for stability.
+
+682
+01:14:28,898 --> 01:14:36,188
+I mean, some of these things are trying to do the right thing. I guess they're trying to do what they think is the right thing,
+
+683
+01:14:36,188 --> 01:14:41,318
+like they're trying to protect you from like evil malware that you might download or something like.
+
+684
+01:14:41,318 --> 01:14:44,348
+I think often it's security software like antivirus software,
+
+685
+01:14:44,348 --> 01:14:50,738
+which I'm going to I'm going to just cards on the table tell you most antivirus software is garbage,
+
+686
+01:14:50,738 --> 01:14:56,618
+and you probably just want to use Windows Defender. That is the if you're on Windows, use Windows Defender.
+
+687
+01:14:56,618 --> 01:15:01,178
+Hard stop, that's all. You need a vast Avg McAfee Norton.
+
+688
+01:15:01,178 --> 01:15:04,898
+Like all of that stuff at this point in time, garbage use Windows Defender.
+
+689
+01:15:04,898 --> 01:15:11,858
+That's my opinion. That's not Mozilla's opinion. That's my opinion, and I'm sticking to it.
+
+690
+01:15:11,858 --> 01:15:21,218
+The reason I bring this up is because we put in a lot of protections to prevent third party software from injecting deals into our into our process,
+
+691
+01:15:21,218 --> 01:15:29,408
+because that's the thing you can do on windows as you inject deals. And the way we do that is using a thing called the launcher process.
+
+692
+01:15:29,408 --> 01:15:39,308
+And whenever you run whatever you run Firefox using Mark, Run, Dash, Dash, Debug,
+
+693
+01:15:39,308 --> 01:15:44,558
+unfortunately, what it's going to attach to is actually the launcher process,
+
+694
+01:15:44,558 --> 01:15:50,918
+which is less useful than you'd think because the launcher process goes away after a little while like it.
+
+695
+01:15:50,918 --> 01:15:57,188
+Its job is to be the bootstrap for actually launching the actual Firefox, and it doesn't have a very interesting way.
+
+696
+01:15:57,188 --> 01:16:03,608
+But I found that that was kind of like a weird gotcha.
+
+697
+01:16:03,608 --> 01:16:13,838
+And the way I've found to get around this is to attach is to disable the launcher process effectively whenever you whenever you attach,
+
+698
+01:16:13,838 --> 01:16:18,848
+when you use mark, run, debug. So let me show you how that works, and then we'll call the stream there.
+
+699
+01:16:18,848 --> 01:16:28,328
+So I'm going to shut everything down. We're going to detach from everything. We're shut this down and we're going to go back to our terminal.
+
+700
+01:16:28,328 --> 01:16:50,438
+I think the command will be there's a pref basically, that you want to set to disable the launcher process, and I have to remember what it is.
+
+701
+01:16:50,438 --> 01:17:00,798
+Browser launcher process enabled. This is the proof. And so if you're trying to attach very early on in the lifetime.
+
+702
+01:17:00,798 --> 01:17:07,178
+He'd do it this way to bug set PREF-. False.
+
+703
+01:17:07,178 --> 01:17:12,908
+Think this will do the right thing? Let's find out.
+
+704
+01:17:12,908 --> 01:17:24,268
+Oh, it's going to open another instance of Visual Studio. Then, uh, how do we start?
+
+705
+01:17:24,268 --> 01:17:33,038
+When I start debugging. And.
+
+706
+01:17:33,038 --> 01:17:46,098
+It will go ahead and load all the symbols. Yeah, that's what I needed to do in order to get it to run properly with.
+
+707
+01:17:46,098 --> 01:17:53,448
+OK, Ron, and it will find the things to attach break points to because before, when I wasn't running it without that proof set,
+
+708
+01:17:53,448 --> 01:18:00,648
+it wouldn't recognize any of the break points that I was setting because the launch process does not load lib zul,
+
+709
+01:18:00,648 --> 01:18:12,748
+which has most of the symbols that we need. Most of it, yeah, most of the things that you will likely want to attach to the other option along with,
+
+710
+01:18:12,748 --> 01:18:26,778
+you know, using that pref is you can set an environment variable. I discovered this recently and I wrote it down in our notes here of was it?
+
+711
+01:18:26,778 --> 01:18:38,278
+Launch a process, there's an environment variable. Mars debug browser pours.
+
+712
+01:18:38,278 --> 01:18:48,908
+So you can do this as well. And you pass it some number of seconds, I mean, a pass at 15,
+
+713
+01:18:48,908 --> 01:18:55,708
+that's the number of seconds that I want it to pause whenever it's about to launch the parent process.
+
+714
+01:18:55,708 --> 01:19:01,558
+And then you can use that it will spit out the process ID and then you can attach to it.
+
+715
+01:19:01,558 --> 01:19:07,198
+And it's very early on in the lifetime. So let's try that. Let's go Mazda debug browser.
+
+716
+01:19:07,198 --> 01:19:14,568
+Pause Mark, Ron. And then let's just kind of get ourselves ready here, will attach.
+
+717
+01:19:14,568 --> 01:19:25,308
+I've got 15 seconds. So, Ron, then two to three hundred two to three hundred, that's what we're going to attach to, you know, go, go, go, go.
+
+718
+01:19:25,308 --> 01:19:31,008
+Refresh two to three hundred. OK, attach. OK, we've set a breakpoint boom.
+
+719
+01:19:31,008 --> 01:19:34,538
+Um. I think.
+
+720
+01:19:34,538 --> 01:19:45,228
+And then eventually it will stop being paused and then these symbols will get loaded, and then any break points you had set will become active.
+
+721
+01:19:45,228 --> 01:19:51,638
+So if you needed to record something really early on in the lifetime of the Firefox process, that's how I do it on Windows.
+
+722
+01:19:51,638 --> 01:19:56,078
+Is that amazing? No, that is not super obvious and not super amazing.
+
+723
+01:19:56,078 --> 01:20:02,558
+But that's the that's the way I figured out how to do it. It might not be the right way, but it's the way I do it.
+
+724
+01:20:02,558 --> 01:20:07,778
+All right. I think I'm going to stop there. Are there any questions?
+
+725
+01:20:07,778 --> 01:20:15,218
+Uh, are there any questions about anything I talked about today or anything I showed today?
+
+726
+01:20:15,218 --> 01:20:21,068
+I'm eager to answer or try to answer your questions.
+
+727
+01:20:21,068 --> 01:20:28,748
+Go ahead and drop them in the chat if you have any. Otherwise, we might just call it here.
+
+728
+01:20:28,748 --> 01:20:39,738
+I mean, give people 10 seconds to ask any questions. And if you're watching this and you're not watching it live,
+
+729
+01:20:39,738 --> 01:20:46,728
+you're watching the recording and you have questions in the rate this episode field or form that is in the agenda.
+
+730
+01:20:46,728 --> 01:20:52,608
+You can ask there's a field in there for asking questions. So go ahead and ask in there and I'll attempt to answer them in a future stream.
+
+731
+01:20:52,608 --> 01:21:00,138
+Probably the next one. So go ahead and ask your questions. I'm going to give people 10 more seconds.
+
+732
+01:21:00,138 --> 01:21:06,028
+Nine. A. Seven.
+
+733
+01:21:06,028 --> 01:21:11,418
+Six. Five, four, three, two one.
+
+734
+01:21:11,418 --> 01:21:16,128
+All right, we're going to call it there. Hey, thank you so much for watching episode 278 of The Joy of Coding.
+
+735
+01:21:16,128 --> 01:21:24,528
+I hope that was an interesting and informative session. I know it was a bit of a whirlwind, you know?
+
+736
+01:21:24,528 --> 01:21:32,538
+Maybe one of these days, I've definitely done it where I do a stream, where I use these debugging techniques in order to actually debug something.
+
+737
+01:21:32,538 --> 01:21:40,788
+And if I had thought about it, I would have had like an actual scenario or an actual bug that we could have investigated using these the [INAUDIBLE].
+
+738
+01:21:40,788 --> 01:21:44,748
+But I didn't. I just want to show how to attach them and how to kind of use them.
+
+739
+01:21:44,748 --> 01:21:50,988
+So that's just the way it goes. So again, thank you for watching episode 278 of The Joy of Coding.
+
+740
+01:21:50,988 --> 01:21:56,928
+I will hopefully see you next week. Take care.
+
+741
+01:21:56,928 --> 01:22:11,524
+Bye bye. The joy holding the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

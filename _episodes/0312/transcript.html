@@ -1,0 +1,3257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 312 - January 18, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 312 - January 18, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=521b3430-7b44-4c4e-8dd2-af8000f1c6b6</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=521b3430-7b44-4c4e-8dd2-af8000f1c6b6">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,179 --> 00:00:07,509
+Welcome to the Joy Cup.
+
+2
+00:00:07,809 --> 00:00:14,699
+Oh, hello and welcome to Episode 312 of The Joy of Coding.
+
+3
+00:00:14,709 --> 00:00:17,379
+My name is Mike Connelly. It's so good to have you here.
+
+4
+00:00:18,069 --> 00:00:25,089
+We're going to be hacking on some Firefox stuff, getting down to the nitty gritty, maybe reviewing some patches, working on some stuff.
+
+5
+00:00:25,089 --> 00:00:30,609
+It's going to be great. Let's get started. I'll start by, as usual, sharing my screen.
+
+6
+00:00:31,059 --> 00:00:36,399
+Uh, let me just do that. Okay, so this is the agenda.
+
+7
+00:00:36,399 --> 00:00:39,968
+If this is your first time seeing this the stream before. Welcome.
+
+8
+00:00:39,969 --> 00:00:43,179
+Good to have you here. A reminder, no plan survives breakfast.
+
+9
+00:00:43,179 --> 00:00:47,378
+I think I know what I want to do today. I think I know how it's going to go, but it might go completely sideways.
+
+10
+00:00:47,379 --> 00:00:56,559
+Things might go horribly wrong. I haven't really planned much beyond knowing what it is that I want to do, and so it's possible we might get stuck.
+
+11
+00:00:56,559 --> 00:01:01,899
+Sideline rat, hold whatever you want to call it, or we might have great success.
+
+12
+00:01:02,109 --> 00:01:05,799
+We don't know. That's kind of the joy of coding.
+
+13
+00:01:05,799 --> 00:01:08,559
+We don't know what we're going to get. We're just going to see and find out.
+
+14
+00:01:10,299 --> 00:01:15,639
+The other thing I want to point out is that the agenda that we're looking at, there are links to it if you want to follow along,
+
+15
+00:01:15,639 --> 00:01:20,889
+because I will be updating this as the episode progresses and you know, it will slowly synchronize in the background.
+
+16
+00:01:20,889 --> 00:01:24,519
+So if you reload the agenda, you can get the most latest.
+
+17
+00:01:25,029 --> 00:01:31,839
+The links that I've put in here and the way you can get access to that is if you're on air Mozilla, it's in the details section of this video.
+
+18
+00:01:31,839 --> 00:01:34,238
+If you're watching this on YouTube, it'll be in the video description.
+
+19
+00:01:34,239 --> 00:01:40,359
+Same with Diode Dot Zone and if you're on Twitch, scroll down in the channel details for a link to today's agenda.
+
+20
+00:01:41,049 --> 00:01:44,589
+All right, I'm going to skip over the episode guide.
+
+21
+00:01:44,589 --> 00:01:49,328
+Although if you're curious, there is a viewer driven episode guide that you should check out if you want to know what
+
+22
+00:01:49,329 --> 00:01:52,929
+went on during this episode or previous episodes or future episodes for that matter.
+
+23
+00:01:53,259 --> 00:01:57,729
+And there are links to that in the agenda and you should contribute if you'd like to add your own notes.
+
+24
+00:01:57,969 --> 00:02:00,999
+I guess I didn't just skip over it. I just really went into it.
+
+25
+00:02:01,209 --> 00:02:05,439
+It's not so share it. Smurf D The prolific contributor to the episode guide.
+
+26
+00:02:06,639 --> 00:02:11,649
+I really should call him the episode guy. What are we doing today?
+
+27
+00:02:11,649 --> 00:02:17,799
+Well, originally I was going to hopefully work on this Windows Jump Live stuff that we've been hacking on for like the past,
+
+28
+00:02:17,979 --> 00:02:26,169
+I don't know, half dozen episodes. And you know, one of the things that I'd done is I'd moved my Windows Machine back to the the office,
+
+29
+00:02:27,039 --> 00:02:32,079
+and in theory, I'd be able to work on it both in the office and then from here by VPN in.
+
+30
+00:02:32,109 --> 00:02:36,249
+So I did a test today, VPN again and it is not very usable.
+
+31
+00:02:36,249 --> 00:02:39,368
+I think we would find that a very frustrating experience.
+
+32
+00:02:39,369 --> 00:02:49,989
+The, the latency on remote desktop with you know, over the VPN connecting to the office machine is far too there's too much latency.
+
+33
+00:02:50,289 --> 00:02:53,919
+And so I have to do either some tuning there and I didn't want to do that in front of you.
+
+34
+00:02:53,949 --> 00:02:59,499
+The tuning I'd be boring. So we're going to delay working on the windows jump list for one more week.
+
+35
+00:02:59,559 --> 00:03:04,599
+We'll try next week. We were getting somewhere last week, though, so we'll we'll see.
+
+36
+00:03:04,839 --> 00:03:07,959
+We'll see where we get next week.
+
+37
+00:03:08,169 --> 00:03:12,609
+And instead, I thought we'd work on some migration wizard stuff because that's that's also important.
+
+38
+00:03:13,059 --> 00:03:21,218
+So before we dive into the migration migrate or wizard, the migration wizard, whatever you want to call it, let's review a patch that's in my queue.
+
+39
+00:03:21,219 --> 00:03:25,239
+There's actually a copy link address.
+
+40
+00:03:25,239 --> 00:03:33,068
+There is a patch that we reviewed last week by Dany Colan who was woops, that's the episode guide link.
+
+41
+00:03:33,069 --> 00:03:37,839
+What in the world is this. This is the wrong that's the wrong link.
+
+42
+00:03:38,919 --> 00:03:42,849
+Let me get the actual link to the review request.
+
+43
+00:03:44,349 --> 00:03:51,279
+So Danny Colon had sent us a review request to review on the stream.
+
+44
+00:03:52,329 --> 00:03:56,259
+No, no, that's the right link. What's going on here? Why isn't it working properly?
+
+45
+00:03:58,329 --> 00:04:01,899
+Well, at any rate, we're going to we're going to review this patch today.
+
+46
+00:04:02,709 --> 00:04:06,279
+And this patch, if you recall, had to do with containers.
+
+47
+00:04:06,579 --> 00:04:11,919
+And, you know, there's this bug where you can it's too easy to create container with no name,
+
+48
+00:04:11,919 --> 00:04:16,749
+which looks very bizarre, if you like only name a container and you have just whitespace characters.
+
+49
+00:04:16,899 --> 00:04:21,069
+It looks strange. And so we had a solution. I suggested a solution.
+
+50
+00:04:21,069 --> 00:04:31,058
+Danny Colon got right in there with with the fix was great. And then I requested some tests and so let's there was a little bit of back and forth.
+
+51
+00:04:31,059 --> 00:04:36,909
+He added some tests. I gave him some feedback on the tests and so let's see where we're at.
+
+52
+00:04:38,349 --> 00:04:43,269
+So the first thing that we did was make it so that when you're updating the containers,
+
+53
+00:04:43,269 --> 00:04:48,009
+when you have the form in front of you for like setting the name of a container,
+
+54
+00:04:48,279 --> 00:05:01,509
+the accept button is the enabled or disabled state is conditioned on whether or not name value has some non.
+
+55
+00:05:01,609 --> 00:05:06,759
+Whitespace value, and we can do that by like coercing the trimmed string to a boolean.
+
+56
+00:05:06,909 --> 00:05:15,759
+And that's what we're doing here. And then so that that makes sense, we should we'll test this, but that makes perfect sense.
+
+57
+00:05:16,149 --> 00:05:22,209
+And then browser containers, name input. This is a test for containers where we're testing.
+
+58
+00:05:22,449 --> 00:05:28,449
+It looks like Dabney Coleman is, you know, putting in these Unicode whitespace characters.
+
+59
+00:05:28,449 --> 00:05:32,499
+There's a whole variety of them. And we make sure that the button is still disabled.
+
+60
+00:05:32,499 --> 00:05:35,649
+That done, but should be disabled with when the value contains only white spaces.
+
+61
+00:05:35,859 --> 00:05:39,369
+That's great. That's that's a good test.
+
+62
+00:05:39,939 --> 00:05:43,209
+And let's see.
+
+63
+00:05:43,659 --> 00:05:47,259
+This is the important part. Contextual identity names cannot contain only white space,
+
+64
+00:05:47,259 --> 00:05:54,199
+so we don't allow and whitespace only names to go through the create method for contextual identities.
+
+65
+00:05:54,519 --> 00:06:10,868
+And then the same thing for updating. And then I asked for a test that we assert that this method throws, calling, create,
+
+66
+00:06:10,869 --> 00:06:16,479
+and then we pass in some whitespace character only name and then some other values here.
+
+67
+00:06:16,479 --> 00:06:23,559
+And then yeah, we expect this message to come back. And then there was one for identity.
+
+68
+00:06:24,459 --> 00:06:34,059
+Identity like updating. So we check to make sure that identity exists and we throw and we try and update the name to be whitespace characters only.
+
+69
+00:06:34,719 --> 00:06:35,499
+That's great.
+
+70
+00:06:35,829 --> 00:06:44,829
+I think my only, my only suggestion here is to have this be assert talk, although it seems like throughout this file we're already using.
+
+71
+00:06:44,859 --> 00:06:55,209
+Okay, rather than a search out. Okay. So I think that's like consistency within a file is better than uh, is the right call.
+
+72
+00:06:55,209 --> 00:06:59,799
+So I think this is good. This works for me. This is a thumbs up for me.
+
+73
+00:07:00,249 --> 00:07:04,269
+So what I'm going to do is I'm going to now pull down these patches.
+
+74
+00:07:05,229 --> 00:07:08,229
+Let's pull.
+
+75
+00:07:08,409 --> 00:07:13,868
+What do we have on the top here? Okay, we're going to pull down this patch here.
+
+76
+00:07:13,869 --> 00:07:18,999
+Let me pump up the font. Pump the font, pump it up.
+
+77
+00:07:20,309 --> 00:07:33,939
+And we're going to apply to here. All right.
+
+78
+00:07:35,549 --> 00:07:38,669
+And let's see here that applied cleanly.
+
+79
+00:07:38,789 --> 00:07:41,819
+We are. We have it checked out. Let's build it.
+
+80
+00:08:02,369 --> 00:08:07,259
+Okay. And so I was just having to respond to someone who was asking a question.
+
+81
+00:08:10,199 --> 00:08:14,219
+And let's launch this thing and try it out and then we'll run the tests.
+
+82
+00:08:14,219 --> 00:08:17,239
+And then I think we're presuming this all passes.
+
+83
+00:08:17,249 --> 00:08:22,888
+I think we're good to go. So settings under privacy and security containers.
+
+84
+00:08:22,889 --> 00:08:32,339
+Containers. Which just search and stain or scan their container.
+
+85
+00:08:32,649 --> 00:08:35,939
+There we go. Here we go. We're going to add a new container.
+
+86
+00:08:35,969 --> 00:08:42,349
+We're going to say no name. I'll add a name, a settings or remove the name.
+
+87
+00:08:42,359 --> 00:08:49,289
+That's perfect. See, that's good. And pretty sure.
+
+88
+00:08:54,749 --> 00:08:59,299
+That is like the primary mechanism for managing containers.
+
+89
+00:08:59,309 --> 00:09:05,968
+Like I can't think of any other one that's built in. I think there's like an add ons dot missoula dot org.
+
+90
+00:09:05,969 --> 00:09:09,389
+There's like a containers ad on the multi account containers.
+
+91
+00:09:10,889 --> 00:09:17,429
+Let's just see what this is like. So we add that, um, and does that.
+
+92
+00:09:19,169 --> 00:09:22,979
+All right, we're going to pin that to the toolbar. Get started.
+
+93
+00:09:23,009 --> 00:09:26,759
+Okay, next. Next, next. Okay. Not now. Not now.
+
+94
+00:09:26,789 --> 00:09:31,589
+Okay. So manage containers. New containers.
+
+95
+00:09:31,589 --> 00:09:39,689
+So this is interesting. What happens if I don't give a container here? Um, I mean, this isn't so.
+
+96
+00:09:39,689 --> 00:09:42,719
+It just named it. It just named it for us.
+
+97
+00:09:43,019 --> 00:09:52,769
+So it seems like the the add on has also, like, solved this problem, although it's solution is to use like a generically named container number o one.
+
+98
+00:09:52,769 --> 00:09:56,489
+And that's fine. That's, that's the prerogative of this add on.
+
+99
+00:09:57,149 --> 00:10:00,239
+So, you know, that's fine. New container.
+
+100
+00:10:01,199 --> 00:10:06,659
+Nothing. Just whitespace. I'll see that that didn't work.
+
+101
+00:10:07,019 --> 00:10:10,769
+Um. I wonder if it's because I actually put in some whitespace characters.
+
+102
+00:10:12,299 --> 00:10:18,699
+Um. Uh. Yeah. Save.
+
+103
+00:10:18,709 --> 00:10:23,449
+I don't see a save button. So what happens if I go back? See, it keeps it.
+
+104
+00:10:23,539 --> 00:10:34,608
+Okay, well, that's the sort of thing that I think maybe maybe the multi account containers add on could be updated to have consistent behavior,
+
+105
+00:10:34,609 --> 00:10:40,279
+but that's really sort of external to what's actually happening here, which is the underlying platform support.
+
+106
+00:10:41,389 --> 00:10:46,219
+Um, so what I'm going to do now is I'm going to remove this add on.
+
+107
+00:10:52,069 --> 00:10:55,789
+And then I'm going to run the automated tests.
+
+108
+00:11:01,479 --> 00:11:04,579
+Uh, so let's run this one. This is a unit test.
+
+109
+00:11:06,429 --> 00:11:16,389
+And then we'll run this one. And I think I'm ready to give it an approval.
+
+110
+00:11:26,029 --> 00:11:30,439
+Passed. All right. How about this one?
+
+111
+00:11:47,909 --> 00:11:51,849
+Okay. It looks good to me.
+
+112
+00:11:51,879 --> 00:11:55,899
+I'm happy with this. So I'm going to say. Accepted.
+
+113
+00:11:56,169 --> 00:12:02,349
+Accept revision. Testing. Approved. Thanks so much SDK for your hard work here.
+
+114
+00:12:04,119 --> 00:12:08,599
+This fixes it wonderfully. Also.
+
+115
+00:12:08,599 --> 00:12:13,758
+Thanks. Thanks for the tests. What we're saying here.
+
+116
+00:12:13,759 --> 00:12:17,569
+Contributors. And now let's get this thing landed.
+
+117
+00:12:20,269 --> 00:12:24,649
+I got a log in. Uh, hold on a second.
+
+118
+00:12:26,119 --> 00:12:32,449
+Um, one moment. I guess I haven't logged in in a while to Lando.
+
+119
+00:12:39,719 --> 00:12:43,469
+Or password. It's going to make me two factor.
+
+120
+00:12:44,249 --> 00:12:49,769
+Let's find out. Now we're okay and preview landing.
+
+121
+00:12:51,149 --> 00:12:58,719
+Now, that is true. It has unresolved comments. I think just for FYI, if you're contributing to Mozilla and you're using fabricator.
+
+122
+00:12:58,739 --> 00:13:03,089
+One thing we do like to do is when we when we have these like issues brought up,
+
+123
+00:13:03,089 --> 00:13:11,158
+there's a like a done field that you can click to sort of say like, hey, I've addressed these and then you submit whenever those are done.
+
+124
+00:13:11,159 --> 00:13:20,719
+And that's what fabricators complaining about. Now I have verified let's verify these like manually.
+
+125
+00:13:20,729 --> 00:13:23,069
+Yeah, he like that that typo has been fixed.
+
+126
+00:13:25,169 --> 00:13:39,299
+The mock listing errors like the listing issues that had been in here have been fixed automatically and this is out of date.
+
+127
+00:13:39,989 --> 00:13:44,909
+So I think we can go ahead and just ignore like we'll do the override.
+
+128
+00:13:44,909 --> 00:13:49,619
+Just let it. We'll just let it land.
+
+129
+00:13:51,149 --> 00:13:55,198
+Go for it. Connect four. I see.
+
+130
+00:13:55,199 --> 00:13:59,599
+Ray seven is taping. What's up, Ray? Okay.
+
+131
+00:13:59,599 --> 00:14:03,349
+So that is now cued for landing. Great job. Great job, Danny.
+
+132
+00:14:03,349 --> 00:14:07,008
+Cool. I want to review something else.
+
+133
+00:14:07,009 --> 00:14:12,049
+So this is a patch from a student that we're working with from Cal State, L.A.,
+
+134
+00:14:13,279 --> 00:14:18,769
+who is helping us out with some migrate or wizard stuff, migration wizard stuff.
+
+135
+00:14:21,619 --> 00:14:24,259
+Ray seven says It's my first time watching a staff engineer work.
+
+136
+00:14:24,259 --> 00:14:29,059
+It's pretty crazy how quickly you're getting the context of these tests and requests, I mean.
+
+137
+00:14:31,249 --> 00:14:32,538
+That's one of the skills,
+
+138
+00:14:32,539 --> 00:14:43,999
+I think one you get as you become more and more familiar with a code base in the technology stack is recognizing shapes of solutions and problems.
+
+139
+00:14:43,999 --> 00:14:47,979
+And, you know, it's like, no, I think I've used this metaphor before.
+
+140
+00:14:47,989 --> 00:14:56,208
+It's like understanding if you think of a code base, like a city, a very big city,
+
+141
+00:14:56,209 --> 00:15:01,729
+like the one I'm in Toronto or like New York or, you know, Paris or London or something.
+
+142
+00:15:01,879 --> 00:15:09,618
+It's very difficult to know every square inch of a whole city, but you can get to know a neighborhood and you can get to know patterns in that city,
+
+143
+00:15:09,619 --> 00:15:16,849
+like how the transit system works, where parks are big parks and like, you know, where the popular places are.
+
+144
+00:15:17,179 --> 00:15:20,748
+And so over time, you kind of get to know the moves of the city.
+
+145
+00:15:20,749 --> 00:15:24,439
+And that takes time of just walking around and getting used to it and doing stuff in the city.
+
+146
+00:15:24,439 --> 00:15:36,768
+And that's the same thing with code I find is that speed comes with familiarity and, you know, noticing patterns and and getting used to stuff.
+
+147
+00:15:36,769 --> 00:15:39,709
+So for example, those monkey tests that Danny Colon wrote,
+
+148
+00:15:39,949 --> 00:15:45,139
+I'm I've written monkey tests before and I've definitely reviewed it, has been doing it for years.
+
+149
+00:15:45,139 --> 00:15:48,909
+And so I, I recognize I recognize the pattern.
+
+150
+00:15:48,929 --> 00:15:56,478
+Same thing with the contextual identity service, which I'm not deeply, deeply familiar with, but I did help review whenever it first got landed.
+
+151
+00:15:56,479 --> 00:16:00,109
+So like I help the privacy and security team get that stuff in the tree.
+
+152
+00:16:02,539 --> 00:16:08,299
+Oh, rea sevens in Mississauga. And if you're not familiar with Mississauga, that is a city near to Toronto.
+
+153
+00:16:08,989 --> 00:16:13,159
+It's it's like there's I would consider them almost like siblings, like ones right next to the other.
+
+154
+00:16:15,049 --> 00:16:18,618
+You start building maps. Yeah, mental maps. You quickly get what you're looking at.
+
+155
+00:16:18,619 --> 00:16:28,729
+That's exactly how I think about it. Yes. So in this bug, what we're dealing with is the migration wizard.
+
+156
+00:16:28,729 --> 00:16:31,909
+And let me show you the bug first.
+
+157
+00:16:34,209 --> 00:16:42,129
+So I'm going to go back to Central. We're going to build this Mississauga.
+
+158
+00:16:43,689 --> 00:16:47,319
+I've always liked. I've always liked Mississauga.
+
+159
+00:16:50,669 --> 00:16:56,759
+They've got a really nice restaurant. They're called Congee Queen, which I like that restaurant a lot.
+
+160
+00:16:59,369 --> 00:17:03,099
+We're going to a one on one. I want to show you I want to show you the bug.
+
+161
+00:17:03,119 --> 00:17:10,769
+So what I'm going to do to make it easy to kind of see the bug is I'm going to use a tool called Storybook.
+
+162
+00:17:12,209 --> 00:17:15,269
+Storybook is something we we now have built into the tree.
+
+163
+00:17:18,299 --> 00:17:21,359
+And, you know, it's not a Mozilla only tool.
+
+164
+00:17:21,509 --> 00:17:26,459
+What's happened here? I wonder if I need to like reinstall part of it.
+
+165
+00:17:28,859 --> 00:17:32,609
+Oh yeah. My, my remote desktop session that I was testing went down.
+
+166
+00:17:33,419 --> 00:17:37,319
+Let me storybook install. Do I need to redo this.
+
+167
+00:17:39,059 --> 00:17:45,109
+Oh yeah. Congee queen fans unite. So good.
+
+168
+00:17:45,119 --> 00:17:53,859
+And it's not just kanji like the candy is good, but like they've got so much good food, maybe too much good food.
+
+169
+00:17:53,879 --> 00:17:54,959
+That's always my problem.
+
+170
+00:17:56,589 --> 00:18:07,499
+If you're not familiar with the kanji queen, they serve like sort of traditional Chinese food, but also like the Canadian notion of Chinese food.
+
+171
+00:18:07,919 --> 00:18:17,669
+And so lots of rice, lots of vegetables, you know, chicken, pork, beef, noodles, rice, tofu.
+
+172
+00:18:19,229 --> 00:18:26,369
+And it's all delicious. And I have the. And it's sort of like buffet, kind of like family style, where everyone gets their own plates.
+
+173
+00:18:26,639 --> 00:18:28,259
+They bring out these big plays with the food.
+
+174
+00:18:28,409 --> 00:18:36,389
+And you and you put your portion on your own plate, which is great, except that I have this habit of ordering way too much food.
+
+175
+00:18:36,749 --> 00:18:40,769
+And then I have like a fridge full of leftovers for days and days after I say that, like,
+
+176
+00:18:40,769 --> 00:18:46,379
+it's a problem, but it's it's actually a great problem, what I call a high quality problem.
+
+177
+00:18:47,639 --> 00:18:53,819
+All right. Let's launch story book and then we're going to launch the instance of the browser here in a separate terminal.
+
+178
+00:19:00,959 --> 00:19:10,129
+Yeah. As a vegetarian, I think for most there are certain in my experience anyways, Chinese restaurants,
+
+179
+00:19:10,139 --> 00:19:17,369
+if you're a vegetarian or vegan that can be a you know, that really tightens the window of what you can order.
+
+180
+00:19:18,929 --> 00:19:22,749
+Yeah. Okay. So this is a storybook.
+
+181
+00:19:22,869 --> 00:19:24,608
+We didn't Mozilla didn't build a storybook,
+
+182
+00:19:24,609 --> 00:19:34,839
+but we're starting to tinker with using it as a way of like like having a gallery of UI components that the front end of our browser product uses.
+
+183
+00:19:35,589 --> 00:19:38,109
+And one of the things that we've put in here is the migration wizard.
+
+184
+00:19:39,939 --> 00:19:47,049
+And, you know, having it be existence storybook means that it's decoupled from the sort of the privileged stuff that it can do.
+
+185
+00:19:47,919 --> 00:19:57,249
+And that's nice because there are multiple contexts that we might want to use this migration wizard in, including not only like in the,
+
+186
+00:19:58,029 --> 00:20:04,869
+like in this dialog like form of a dialog, but also in content for like in about preferences or about welcome.
+
+187
+00:20:05,199 --> 00:20:09,369
+You know, I can see us embedding this in a couple of different places to help users migrate over.
+
+188
+00:20:10,389 --> 00:20:20,429
+And one of the things that we noticed was that the the click area for like these fields is too wide.
+
+189
+00:20:20,439 --> 00:20:27,399
+So, for example, if your mouse is over here, you know, you still get this click area, which is a little unusual.
+
+190
+00:20:27,849 --> 00:20:32,528
+And so we filed a bug about that. And that's what that's what this patch is about.
+
+191
+00:20:32,529 --> 00:20:36,939
+And the student, Bryan, as a patch. So let's take a look at what Bryan's patch does.
+
+192
+00:20:37,929 --> 00:20:47,829
+So Bryan's patch changes the label inside of the CSC file to be a display block rather than display flex.
+
+193
+00:20:48,159 --> 00:20:56,439
+So let's try applying this patch, actually, right away. You know, it's small enough that we can actually do it ourselves by hand.
+
+194
+00:20:56,439 --> 00:21:00,489
+And what's nice is storybook will automatically reload.
+
+195
+00:21:00,819 --> 00:21:06,969
+We don't have to like build a restart or anything. So let's, let's try applying this technique by hand and see what it's like.
+
+196
+00:21:07,749 --> 00:21:25,689
+So. Migration Wizard label display block and margin in the line and one M label that so save and then we go back here.
+
+197
+00:21:27,009 --> 00:21:38,108
+So already I see a little bit of an alignment issue when we do that because these don't become center aligned and it doesn't seem to fix the issue,
+
+198
+00:21:38,109 --> 00:21:49,479
+at least for me. Um, let's open up our dev tools and maybe we can debug this a little bit more and offer Brian, uh, some suggestions.
+
+199
+00:21:52,059 --> 00:22:04,349
+So our label. Um expands with display block.
+
+200
+00:22:06,709 --> 00:22:15,399
+And even with that margin, like if that margin isn't clickable, which is good, but the label does extend because it's a block element.
+
+201
+00:22:15,409 --> 00:22:19,219
+It's going to it's going to try and fill the whole block space.
+
+202
+00:22:21,379 --> 00:22:28,039
+Where should you be able to click only the text and the button? Yeah, the idea is like similar for I think we do the same thing for settings.
+
+203
+00:22:28,459 --> 00:22:32,538
+I think we only why is that.
+
+204
+00:22:32,539 --> 00:22:35,629
+But what do we do?
+
+205
+00:22:38,299 --> 00:22:46,559
+Maybe we have the same bug here. And is that a bug? Hmm.
+
+206
+00:22:47,509 --> 00:22:54,769
+I think I've I've definitely seen us fix this in the past where we want the just the
+
+207
+00:22:54,769 --> 00:23:00,858
+label text and the checkbox to be the click area so that you don't accidentally,
+
+208
+00:23:00,859 --> 00:23:04,669
+like, surprise yourself by enabling something.
+
+209
+00:23:06,009 --> 00:23:14,269
+Um, so what I'm going to do is I'm going to put this back display, flex, align items center.
+
+210
+00:23:15,229 --> 00:23:18,439
+But is there a way that we can flex it smaller? Like.
+
+211
+00:23:20,349 --> 00:23:24,289
+Like, can you tell it to shrink?
+
+212
+00:23:25,309 --> 00:23:32,039
+Like, flex shrink? There we go.
+
+213
+00:23:34,139 --> 00:23:37,949
+Mm hmm. And then the label is too wide.
+
+214
+00:23:39,239 --> 00:23:52,429
+Can we have this also flex shrink? Now, it's actually not a flex in a flex item.
+
+215
+00:23:56,079 --> 00:24:02,469
+Flex Direction column. But now it is so.
+
+216
+00:24:04,729 --> 00:24:08,299
+Hmm. So the label is shrink wrapped. That's good.
+
+217
+00:24:09,589 --> 00:24:15,559
+The input is shrink wrap, but the late the span is is shrink is like shrinking.
+
+218
+00:24:16,189 --> 00:24:19,429
+The input is shrinking, but the label extends the entire width.
+
+219
+00:24:21,259 --> 00:24:26,309
+Um. How about with men content? Mm.
+
+220
+00:24:29,299 --> 00:24:42,439
+See that's. That's kind of the idea except that we don't want the the the text to break white space and know rap.
+
+221
+00:24:46,559 --> 00:25:02,029
+See? That'll do it. But I.
+
+222
+00:25:02,249 --> 00:25:04,309
+I wonder what will happen if, like,
+
+223
+00:25:05,389 --> 00:25:16,459
+this gets really wide to have passwords and log into and save passwords and logins that'll end up pushing that out and it won't wrap.
+
+224
+00:25:25,219 --> 00:25:30,589
+What are my other choices here with fat content?
+
+225
+00:25:35,949 --> 00:25:43,109
+That seems like the right one fit content. Um.
+
+226
+00:25:45,319 --> 00:25:56,589
+I think we do eventually want us to wrap. But that would imply that we like supply some kind of like a hard limit on the width.
+
+227
+00:25:58,249 --> 00:26:06,929
+Yeah. I think that's what we want. We want. Something like that.
+
+228
+00:26:11,889 --> 00:26:16,629
+I think that's what I'm going to recommend to Brian.
+
+229
+00:26:16,989 --> 00:26:27,569
+So what are the changes? Oh.
+
+230
+00:26:28,379 --> 00:26:32,759
+Let's also see what happens. If I do, I need to have that flex shrink on the span.
+
+231
+00:26:36,429 --> 00:26:42,549
+Oh, I don't. I can just have. So let's remove some stuff here that we don't need.
+
+232
+00:26:52,509 --> 00:26:58,898
+The label. I don't need that. I don't need that. This is what's kind of doing the the work.
+
+233
+00:26:58,899 --> 00:27:07,419
+The hard work for us is fit content. And I think that's maybe all we need.
+
+234
+00:27:10,519 --> 00:27:15,779
+Let's look at the changes again. Fat content.
+
+235
+00:27:17,309 --> 00:27:24,109
+Oh, I put a flex box on the wizard deck once or on the dreaded on the field set.
+
+236
+00:27:24,119 --> 00:27:30,839
+Yeah, I did. On the field set. Let's get rid of that. Okay.
+
+237
+00:27:30,989 --> 00:27:38,339
+I think I'm happy with that. Yeah.
+
+238
+00:27:38,339 --> 00:27:41,609
+We're Danny Cohn. We're we're tinkering with it.
+
+239
+00:27:41,619 --> 00:27:46,139
+We're tinkering with the storybook. And we actually have a remotely hosted one.
+
+240
+00:27:47,199 --> 00:27:50,339
+Um. Here.
+
+241
+00:27:55,499 --> 00:28:02,129
+So that, you know, you can open this up inside your your browser and look at some of our design system stuff.
+
+242
+00:28:02,399 --> 00:28:12,659
+If you're eager to follow along, there is a reusable components matter bug that you can follow about all of this work that's currently underway.
+
+243
+00:28:13,639 --> 00:28:21,989
+Um, you know, let me put some links. Uh, reusable components matter bug.
+
+244
+00:28:24,879 --> 00:28:29,589
+Let's also put in the hosted storybook.
+
+245
+00:28:29,829 --> 00:28:40,719
+Hosted storybook. But also, you can run it run it locally with mock storybook in a separate terminal.
+
+246
+00:28:42,769 --> 00:28:58,099
+To launch the server, you'll need to do this if your if any resources that the component you're testing is local only.
+
+247
+00:29:00,509 --> 00:29:04,949
+Link in the agenda, please. Yes, it's going in there.
+
+248
+00:29:05,429 --> 00:29:08,099
+Hosted storybook reusable components matter bug.
+
+249
+00:29:08,639 --> 00:29:19,859
+There's also like during our biweekly meetings, you can see that like the Firefox meeting, I believe there is a section now for like uh,
+
+250
+00:29:20,339 --> 00:29:24,809
+storybook and reusable components where like we're giving updates on what's going on there.
+
+251
+00:29:25,439 --> 00:29:32,249
+So you can follow that as well. But this is where most of the activity is rooted this, this matter bug.
+
+252
+00:29:33,509 --> 00:29:37,049
+Okay. So I'm going to recommend.
+
+253
+00:29:40,709 --> 00:29:45,059
+Thanks, Brian. Thanks. Bee Fam 23.
+
+254
+00:29:45,089 --> 00:29:51,629
+Uh, I'm going to suggest a slightly different approach.
+
+255
+00:29:54,059 --> 00:29:59,299
+Can we give the label a width of fit content?
+
+256
+00:30:04,199 --> 00:30:11,339
+Instead that seems to do the job of shrink wrapping them.
+
+257
+00:30:13,829 --> 00:30:24,299
+For me. I've noticed I notice that this changes the alignment,
+
+258
+00:30:24,629 --> 00:30:38,849
+the vertical alignment of the labels with respect to the checkboxes and doesn't actually address the hitbox problem.
+
+259
+00:30:40,049 --> 00:30:47,899
+I'm going to select a slightly different approach. So let's double check and make sure that that's going to work.
+
+260
+00:30:47,899 --> 00:31:01,369
+So if I say label, we'll put this back Pops label label it will a label with fit content.
+
+261
+00:31:05,559 --> 00:31:09,249
+Yeah. I fixes it for me though.
+
+262
+00:31:10,929 --> 00:31:21,339
+So request changes and then I'm also going to change the project tags to be that this is only changing styling.
+
+263
+00:31:25,599 --> 00:31:31,219
+All right. Cool.
+
+264
+00:31:32,179 --> 00:31:47,269
+Let's move on. So related to the migration wizard, I can actually give you a sense of another thing that we're hoping to do.
+
+265
+00:31:47,299 --> 00:31:50,929
+So like the Migration Wizard currently, if you look at it here,
+
+266
+00:31:50,929 --> 00:31:59,249
+has this sort of like old basically a select dropdown from, you know, HTML, select dropdown.
+
+267
+00:31:59,269 --> 00:32:03,588
+It's just like a kind of like a restyled select dropdown and this is just a placeholder.
+
+268
+00:32:03,589 --> 00:32:07,248
+We actually want something a little fancier in particular.
+
+269
+00:32:07,249 --> 00:32:11,119
+We want to have uh oh, vinit comi.
+
+270
+00:32:11,839 --> 00:32:16,548
+Vinit comi. I still don't. I failed to remember if I'm pronouncing that correctly.
+
+271
+00:32:16,549 --> 00:32:19,819
+Asks what's my favorite coding music? Good question.
+
+272
+00:32:21,879 --> 00:32:25,819
+Uh, you know, some. I'll go through phases.
+
+273
+00:32:26,539 --> 00:32:35,719
+Vinit Nice to meet you. Vinit I think I've asked you that before, and so I apologize for forgetting my favorite music.
+
+274
+00:32:35,719 --> 00:32:40,519
+I don't have like, like coding music per se, and otherwise I think it depends on my mood.
+
+275
+00:32:40,519 --> 00:32:49,179
+If I'm stressed out, I'll listen to, like, classical music, try and calm me down, or I'll listen to, like, lo fi beats to calm me down.
+
+276
+00:32:49,189 --> 00:32:55,189
+But if it's like a normal day where I'm not, like super, super stressed, I'll listen to, like, music that I like.
+
+277
+00:32:55,189 --> 00:33:00,159
+And I tend to like, like rock music. What else?
+
+278
+00:33:00,969 --> 00:33:05,469
+I'm listening to something recently. There's a Canadian. This band does not exist anymore.
+
+279
+00:33:05,469 --> 00:33:08,499
+They were big in the nineties and they're a unique flavor.
+
+280
+00:33:08,499 --> 00:33:12,429
+I don't know if you'll like them and I believe I'm talking about everybody.
+
+281
+00:33:13,089 --> 00:33:19,628
+They're called Glen Davos. I think they're in title.
+
+282
+00:33:19,629 --> 00:33:27,039
+Here they are. They're called Zug and Davos, but I'm pretty sure they just called themselves Ken Davos.
+
+283
+00:33:27,489 --> 00:33:33,639
+But maybe I'm wrong. Yeah. Again, Davos and then Zug, I think they changed their name from Davos to Vogue in Davos.
+
+284
+00:33:34,299 --> 00:33:41,919
+But I've been listening to their first album, which is called Kicking in the Water, which I've been enjoying.
+
+285
+00:33:42,219 --> 00:33:44,559
+I listen to this one a lot when I was growing up.
+
+286
+00:33:44,859 --> 00:33:55,329
+I have an affinity I really enjoy, like nineties alternative Canadian rock, like local, local, Canadian rock.
+
+287
+00:33:55,329 --> 00:33:59,829
+And if you're looking for interesting track to for either these I.
+
+288
+00:34:00,459 --> 00:34:08,199
+I think drool is a pretty good one on kicking in the water and in soul for a smile.
+
+289
+00:34:08,709 --> 00:34:12,039
+I mean, the first day of spring was their big breakout hit.
+
+290
+00:34:12,909 --> 00:34:17,879
+You can find that on YouTube. I think a lot of these are hammered.
+
+291
+00:34:17,889 --> 00:34:20,959
+A shell is is pretty good. Yeah.
+
+292
+00:34:21,009 --> 00:34:26,138
+I'll give them a give me a listen. The band aavas, they don't exist anymore as a full band.
+
+293
+00:34:26,139 --> 00:34:30,669
+But I think the lead singer periodically continues to play in his in his spare time.
+
+294
+00:34:31,509 --> 00:34:36,638
+Okay, let's keep going. Oh. Songs with lyrics distract me.
+
+295
+00:34:36,639 --> 00:34:44,649
+Sometimes I listen to the language. I don't understand. Yeah, I get that I'm somehow able to, like, not pay attention to the lyrics.
+
+296
+00:34:44,859 --> 00:34:48,039
+I actually. It's mostly background.
+
+297
+00:34:48,039 --> 00:34:55,209
+It could be like the most intense music, but I can sort of just have it as background and it usually doesn't affect me.
+
+298
+00:34:55,479 --> 00:34:59,529
+I know for some people though, too many too. Like lyrics will distract them.
+
+299
+00:35:00,849 --> 00:35:04,838
+Okay. What was ah, what are we doing now?
+
+300
+00:35:04,839 --> 00:35:09,009
+Right. I was talking about the this bug panel lists.
+
+301
+00:35:09,429 --> 00:35:17,259
+So panel lists are a way of defining things like this.
+
+302
+00:35:17,829 --> 00:35:19,989
+Uh, here, let me, let me show you an example.
+
+303
+00:35:21,069 --> 00:35:29,169
+This is a panelist, and that might look kind of similar to this, but it's not because this is restricted to the content area.
+
+304
+00:35:29,169 --> 00:35:32,108
+A panelist is just like it's almost like a select dropdown.
+
+305
+00:35:32,109 --> 00:35:42,479
+And one of the things about like select dropdowns or pop ups in content is that they cannot break out of the boundary of the content area.
+
+306
+00:35:42,479 --> 00:35:45,909
+And that's for security reason, security reasons.
+
+307
+00:35:45,909 --> 00:35:53,139
+We don't want them to be able to like overlap things like the URL bar or any of the browser UI for a variety of reasons.
+
+308
+00:35:53,589 --> 00:35:58,868
+But whenever we're privileged, we do want to be able to do that in certain cases.
+
+309
+00:35:58,869 --> 00:36:00,999
+We do want to be able to have these things like overlap,
+
+310
+00:36:00,999 --> 00:36:07,629
+other things when we know that we are running in a privileged context, where we're running in the parent process.
+
+311
+00:36:07,899 --> 00:36:12,308
+And so what this means is what we want to do is be able to have the same markup,
+
+312
+00:36:12,309 --> 00:36:18,189
+be able to open inside what we consider a panel, which is like one of these things.
+
+313
+00:36:18,339 --> 00:36:21,629
+This, if you'll notice, can float over top of other stuff like it.
+
+314
+00:36:21,969 --> 00:36:26,889
+It can definitely break out of the content area. It's not restricted to the content area.
+
+315
+00:36:30,729 --> 00:36:42,039
+And so I wrote a patch to do that and that works and the first patches accepted this next one needs revision and I want to quickly do that revision.
+
+316
+00:36:43,869 --> 00:36:51,339
+So let's see, let's pull these patches down and look at the feedback for my reviewer, Mark Streamer.
+
+317
+00:36:52,869 --> 00:36:58,309
+Um. I'm looking for.
+
+318
+00:36:58,319 --> 00:37:02,339
+What am I looking for? What?
+
+319
+00:37:02,909 --> 00:37:06,568
+182 to 1 five? And I'm like blocking a whole stack of patches here.
+
+320
+00:37:06,569 --> 00:37:21,059
+So I want to do this today if I can. Yeah, this stuff is already land, so I'm going to rebase this and what's and this on central.
+
+321
+00:37:25,939 --> 00:37:29,669
+Oh, it. No, no problem. I happy to reply.
+
+322
+00:37:29,689 --> 00:37:34,999
+Thanks for the question. I hope it was interesting. Thanks for watching over the years.
+
+323
+00:37:36,859 --> 00:37:40,369
+I don't know how many live coding people there are out there.
+
+324
+00:37:40,789 --> 00:37:45,799
+I'm always astonished that there's like an audience for this stuff, but I'm happy to have people who've been watching.
+
+325
+00:37:45,799 --> 00:37:48,379
+I'm happy to have people with me while I do this.
+
+326
+00:37:49,039 --> 00:37:55,549
+If you're curious, if you want to hear about more live streamers, if this is a like a genre that you're into,
+
+327
+00:37:55,549 --> 00:38:00,169
+I've linked to a couple down here of people that have done live streaming in the past.
+
+328
+00:38:00,169 --> 00:38:06,619
+I don't know how many of them are still doing it, but you should check some of those people out.
+
+329
+00:38:07,519 --> 00:38:13,249
+I also I don't know if I talked about it. There was like a I was featured in a blog post.
+
+330
+00:38:17,709 --> 00:38:20,709
+As featured in a blog post where I talked about the joy of coding.
+
+331
+00:38:21,489 --> 00:38:25,179
+So a little bit of shameless self-promotion if you want to hear more about that.
+
+332
+00:38:28,239 --> 00:38:32,859
+You can read up on that, Mike. Shameless self plug.
+
+333
+00:38:37,369 --> 00:38:44,629
+Here's a careers dot mozilla dot org blog post about Mike and the joy of coding.
+
+334
+00:38:45,889 --> 00:38:50,269
+So you can hear a little bit more about the background of what got me doing this.
+
+335
+00:38:51,439 --> 00:38:55,209
+You know, the work I've done since joining the team, what I did, what's electronic.
+
+336
+00:38:55,339 --> 00:38:58,669
+I was working on electrolysis. What's next?
+
+337
+00:38:58,909 --> 00:39:02,569
+What's going on? That sort of thing. So check that out.
+
+338
+00:39:04,399 --> 00:39:09,319
+All right. So I have rebase those patches.
+
+339
+00:39:09,319 --> 00:39:15,769
+Let's build them and I'll show you what they can do. Link to this, please.
+
+340
+00:39:15,949 --> 00:39:20,299
+I've put it in the agenda. I can drop it into the into the twitch chat as well.
+
+341
+00:39:21,379 --> 00:39:22,639
+Boo boo boo. There you go.
+
+342
+00:39:24,529 --> 00:39:30,739
+Ray says that's the post that brought me here as someone actively seeking software engineering jobs is really encouraging and inspiring.
+
+343
+00:39:30,769 --> 00:39:33,949
+Hey, that's a great thing to hear. I'm glad it was encouraging and inspiring, Ray.
+
+344
+00:39:34,219 --> 00:39:40,999
+Thanks for watching the stream. Thanks for being here. You know, if you're seeking if you're seeking work,
+
+345
+00:39:41,539 --> 00:39:50,559
+it's an interesting time in the software engineering industry because there's like a lot of high profile layoffs happening, like, I think Microsoft.
+
+346
+00:39:50,569 --> 00:39:55,788
+What was the news today that like Microsoft just laid off like 10,000 people or something, something like that.
+
+347
+00:39:55,789 --> 00:40:04,559
+And so, you know, it's I think depending on where you're looking, it can be a little bit difficult right now to secure a job.
+
+348
+00:40:04,579 --> 00:40:07,189
+There's a lot of people who are probably looking for work,
+
+349
+00:40:08,929 --> 00:40:12,629
+but that's not to say that there aren't open positions, and that's not to say that you shouldn't apply.
+
+350
+00:40:12,649 --> 00:40:18,409
+I think, Ray, apply apply to stuff stuff that interests you and you should check it out.
+
+351
+00:40:18,439 --> 00:40:23,649
+Careers dot missoula dot org. Danny Colin points out, is that Missoula Dawg has some open position.
+
+352
+00:40:23,659 --> 00:40:29,989
+Oh, and it looks like it's been revamped. Let's look at some job listings real quick.
+
+353
+00:40:31,849 --> 00:40:35,059
+You could help us with common voice for that.
+
+354
+00:40:35,239 --> 00:40:40,669
+That's on the foundation side of things. Um, let's see.
+
+355
+00:40:40,699 --> 00:40:44,389
+Security staff. Security product. Data Scientist.
+
+356
+00:40:44,959 --> 00:40:48,799
+Privacy Engineer. Site Reliability.
+
+357
+00:40:49,399 --> 00:40:53,989
+Um. Site Reliability Engineer.
+
+358
+00:40:53,989 --> 00:40:59,599
+Marketing People. Partners Senior Lead Business Development Staff.
+
+359
+00:40:59,599 --> 00:41:03,618
+Software Engineer for Pocket a student worker.
+
+360
+00:41:03,619 --> 00:41:07,669
+If you're in Germany, everyone here is in Germany and you want to work on the VPN.
+
+361
+00:41:08,089 --> 00:41:11,089
+There's a student worker position here. Same with Dom Core.
+
+362
+00:41:11,089 --> 00:41:16,158
+If you're in Germany. Yeah, check, check these listings out here.
+
+363
+00:41:16,159 --> 00:41:25,369
+I'm going to put these listings in the direct link inside of the chat and I'll also put a link here in the.
+
+364
+00:41:28,249 --> 00:41:31,638
+Inside of the agenda. That'll sink in just a second.
+
+365
+00:41:31,639 --> 00:41:35,949
+Now, one thing that I think is happening now is, uh.
+
+366
+00:41:38,879 --> 00:41:42,869
+Yeah. Uh, yeah. You should just check these out.
+
+367
+00:41:43,679 --> 00:41:48,358
+I remember filing a bug because some of these, like, if you were to choose,
+
+368
+00:41:48,359 --> 00:41:55,169
+like, a particular location, sometimes the, like, things that said Toronto.
+
+369
+00:41:55,259 --> 00:41:57,149
+Like, I just chose Toronto, for example.
+
+370
+00:41:57,989 --> 00:42:06,689
+And I remember seeing a bug that like some were showing up when you filter them, but I think they may have fixed it remote.
+
+371
+00:42:06,689 --> 00:42:10,709
+Canada uh, I think they've fixed it.
+
+372
+00:42:14,329 --> 00:42:20,179
+So yeah, these are the places that we currently offer work like the Berlin office.
+
+373
+00:42:20,449 --> 00:42:26,989
+Remote in Canada. We're very remote friendly workforce like I think something that is a significant proportion of people at Mozilla who work remotely.
+
+374
+00:42:28,099 --> 00:42:33,079
+I do hybrid and sometimes in the office and sometimes home like especially during lockdowns, the pandemic,
+
+375
+00:42:34,039 --> 00:42:40,849
+the deepest part of the pandemic, when everyone was working from home, Mozilla was already set up to do it, which is really nice remote.
+
+376
+00:42:40,879 --> 00:42:46,089
+France, Germany, Spain, U.K., U.S. And then we've got the San Francisco office and the Toronto office and the Berlin office.
+
+377
+00:42:46,099 --> 00:42:49,459
+These are the ones that have open roles in them. So check it out. Check it out.
+
+378
+00:42:50,999 --> 00:42:55,558
+Um, okay. So I've. Built these patches.
+
+379
+00:42:55,559 --> 00:43:00,929
+What do they do? What's a good way of demonstrating what they do?
+
+380
+00:43:02,079 --> 00:43:05,798
+It's hard to demonstrate without actually having an example.
+
+381
+00:43:05,799 --> 00:43:12,179
+So I think there was like a. I think there was.
+
+382
+00:43:13,819 --> 00:43:20,819
+An example that I had somewhere and. And all.
+
+383
+00:43:22,209 --> 00:43:26,129
+Let's use panelist in the migration wizard. This was like my my demo.
+
+384
+00:43:29,829 --> 00:43:33,969
+So let's see if we can rebase that. No problem, Ray.
+
+385
+00:43:35,559 --> 00:43:42,729
+No problem. We hit some merge conflicts.
+
+386
+00:43:43,129 --> 00:43:48,609
+Oh really. Merging merging merging. Rebasing that committe again in the working copy uncommitted changes.
+
+387
+00:43:51,119 --> 00:43:55,889
+I had some uncommitted changes. I think we might have to try that again.
+
+388
+00:43:55,889 --> 00:43:59,878
+What we just did. We're going to abort our our rebase.
+
+389
+00:43:59,879 --> 00:44:03,179
+But I guess we had some uncommitted changes. Oh, you know what it was?
+
+390
+00:44:03,779 --> 00:44:07,919
+There's this thing. So I'm going to rebase. Abort.
+
+391
+00:44:09,439 --> 00:44:19,249
+And we're going to revert our one little change there and then we are going to attempt to rebase that one change again.
+
+392
+00:44:24,549 --> 00:44:30,669
+If the version control stuff, which is something if you're, you know, speaking to you,
+
+393
+00:44:30,669 --> 00:44:35,378
+Ray, but also to anyone who's like going to get into a career in software development.
+
+394
+00:44:35,379 --> 00:44:41,799
+The version control story is still pretty rough. Like version control is a get a tool that you will use.
+
+395
+00:44:41,799 --> 00:44:45,549
+You will use version control in software development almost certainly.
+
+396
+00:44:45,909 --> 00:44:48,579
+But the and like the dominant one is get.
+
+397
+00:44:49,149 --> 00:44:59,819
+You may have heard get and GitHub and sometimes I find that like it's a bit of a hurdle using get by just stick with it you'll figure it out.
+
+398
+00:45:00,069 --> 00:45:03,719
+There are lotsa lots of people just like you figuring it out too.
+
+399
+00:45:04,689 --> 00:45:08,589
+And I myself am only kind of used to get. Not really.
+
+400
+00:45:09,579 --> 00:45:14,289
+Okay. So this is proof of concept from a ways back.
+
+401
+00:45:14,859 --> 00:45:18,159
+Um. And so I'm going to.
+
+402
+00:45:21,629 --> 00:45:25,859
+A move that rebates. Rebates.
+
+403
+00:45:31,039 --> 00:45:38,659
+Then I put the items in the panel list. Okay. I think.
+
+404
+00:45:38,659 --> 00:45:45,289
+Why not do this like that? Okay.
+
+405
+00:45:45,739 --> 00:46:02,249
+So I'm going to resolve. Next one's this one raised like I recently built a Kafka consumer proxy with a remote team.
+
+406
+00:46:02,249 --> 00:46:06,238
+These get exclusively since it was the most familiar. It was a good experience, not only production level stuff.
+
+407
+00:46:06,239 --> 00:46:10,079
+We got the basics down. I can't imagine the struggles of massive code bases and hundreds of services.
+
+408
+00:46:10,409 --> 00:46:24,679
+Well, so one thing you can do, like if you're I don't know how much free, free time you have, but one thing you could do, uh.
+
+409
+00:46:26,039 --> 00:46:34,309
+Is. Anchor with some large code bases, open source code bases like Mozilla, for example.
+
+410
+00:46:34,939 --> 00:46:40,428
+You know, you happen to be here and not too darn hard, but we've got like a lot of work that's available for you.
+
+411
+00:46:40,429 --> 00:46:45,409
+If you want to work on a good first bug for Firefox, there is a code tribute.
+
+412
+00:46:46,439 --> 00:46:54,659
+Talked about this a couple of times on the stream, but this is a way for you to find things that, you know, mentored bugs to work on in some products.
+
+413
+00:46:54,959 --> 00:46:59,579
+Projects at Mozilla, including Firefox, if you care about like the desktop front end,
+
+414
+00:46:59,939 --> 00:47:04,829
+there's a big list here of like interesting mentored bugs that you could,
+
+415
+00:47:05,219 --> 00:47:09,899
+you know, get assigned to and work with someone on, but other things as well.
+
+416
+00:47:09,899 --> 00:47:15,419
+Like maybe you're interested in Perl bugs. It was written in Perl, you could work on that.
+
+417
+00:47:16,409 --> 00:47:20,489
+The Center for Rust Code I think is written in Rust, if you want to work on that.
+
+418
+00:47:21,539 --> 00:47:26,909
+Yeah. Web extension stuff. There's lots of different projects to to contribute to.
+
+419
+00:47:26,909 --> 00:47:30,628
+I don't know, my server is still on here I guess technically.
+
+420
+00:47:30,629 --> 00:47:38,579
+Yeah, I don't we servo is not a thing that Mozilla maintains anymore.
+
+421
+00:47:38,579 --> 00:47:45,958
+That's the the Linux Foundation currently maintains servo and recently got some people hacking on it from Agoglia.
+
+422
+00:47:45,959 --> 00:47:51,599
+So that's exciting. Contribute check that out if you want to.
+
+423
+00:47:53,979 --> 00:47:57,069
+Find some interesting things to work on. Thunderbird tree herder.
+
+424
+00:47:57,129 --> 00:48:02,699
+Lots of variety. And you can break it down based on like what language you maybe want to practice with SWIFT, C++,
+
+425
+00:48:02,719 --> 00:48:07,449
+we have a lot of different technologies we work with and you can pick and choose based on that.
+
+426
+00:48:09,729 --> 00:48:14,439
+And outside of Mozilla, there might be some interesting open source projects that you want to contribute to.
+
+427
+00:48:15,069 --> 00:48:23,859
+Like if I myself, let's say I had like infinite free time and, you know, an open source project I might want to work on is some VM.
+
+428
+00:48:25,099 --> 00:48:31,099
+Which is a, you know, a tool that allows you to play old school pointe, click adventure games.
+
+429
+00:48:32,269 --> 00:48:40,069
+And, you know, there are lots of people contributing like the last last commit was only an hour ago.
+
+430
+00:48:40,489 --> 00:48:46,669
+So the very active project lets people play games from back in the day on modern hardware.
+
+431
+00:48:48,169 --> 00:48:59,599
+And yeah, it's the lots of things you could contribute to out there to help, help, you know, expand your toolkit, build up your, your, your toolset.
+
+432
+00:49:00,679 --> 00:49:07,579
+Okay. And then there was this one as well, you know, was it dialog mode with.
+
+433
+00:49:12,699 --> 00:49:26,809
+Yeah. Keep that in there. Okay.
+
+434
+00:49:32,039 --> 00:49:35,279
+Let's take a look. Let's look at what we've got now.
+
+435
+00:49:35,309 --> 00:49:41,819
+Storybook has been running this whole time in the background. I'm not entirely sure I needed to build just now, but.
+
+436
+00:49:45,939 --> 00:49:50,199
+Kubernetes. I don't even know what that is. I've heard that term bandied about a lot.
+
+437
+00:49:50,209 --> 00:49:55,809
+I know there's like a lot of it's like some kind of microservice, docker or something or other.
+
+438
+00:49:56,109 --> 00:50:01,839
+Not. Not really. I think I'm too familiar with, but I know lots of it's important people are really interested in it.
+
+439
+00:50:02,769 --> 00:50:09,669
+So this is an example of the of a panelist appearing inside the migration wizard.
+
+440
+00:50:10,359 --> 00:50:19,239
+And what's interesting is, like we've got this instance in storybook that's restricted to this content area and then we turn on the.
+
+441
+00:50:21,349 --> 00:50:27,989
+Content modal I actually don't know if it's going to work. Let's find out. And we get this we get this version of it.
+
+442
+00:50:28,039 --> 00:50:31,189
+I think actually that's still that's not busted out.
+
+443
+00:50:31,189 --> 00:50:34,789
+I was expecting that to bust out a little bit more. What's going wrong here?
+
+444
+00:50:45,569 --> 00:50:51,138
+Inside of a panel. PANELIST Oh, right.
+
+445
+00:50:51,139 --> 00:50:54,979
+Because I there's one piece of missing.
+
+446
+00:50:55,879 --> 00:50:59,359
+One piece I'm missing, which is inside of migration dialog.
+
+447
+00:51:00,849 --> 00:51:04,809
+But jazz is this thing. Um.
+
+448
+00:51:06,429 --> 00:51:22,639
+Shoot. Uh, I have to find that chunk of code that was originally running in here.
+
+449
+00:51:22,659 --> 00:51:26,889
+This is what I want. We're going to. We have to do this little dance.
+
+450
+00:51:32,949 --> 00:51:51,029
+Yeah. All right. So we'll do that. And now, look, it busts out a.
+
+451
+00:51:51,049 --> 00:52:01,139
+That's what we want. This is the sort of thing that we want here. Now, this toggle is we don't we don't like want this toggle button here.
+
+452
+00:52:01,139 --> 00:52:08,759
+We want this to be anchored to this thing. But, you know, this affords us a lot of opportunity, this new kind of dropdown,
+
+453
+00:52:08,759 --> 00:52:15,089
+because we can style it more than we can style these, you know, these HTML select dropdowns.
+
+454
+00:52:15,539 --> 00:52:18,719
+There's a limit to what you can how you can style them.
+
+455
+00:52:18,719 --> 00:52:26,059
+Like browsers have kind of converged on the limits there. And the way it's it's powered is is very complicated.
+
+456
+00:52:27,359 --> 00:52:40,079
+But with the panel menu, you can add icons and badges and, you know, we get a lot of the power of your.
+
+457
+00:52:40,079 --> 00:52:45,209
+Why is it I wish I wish I wasn't in dark mode. Turn off dark mode.
+
+458
+00:52:48,019 --> 00:53:00,369
+Let's fake light mode. Here we go. We get a lot of the the the niceties that we expect from the normal panel, but we can run it in content.
+
+459
+00:53:00,379 --> 00:53:12,349
+So the advantage of all of this is that we can test, we can develop in storybook and have something that appears the same as it will appear here.
+
+460
+00:53:12,529 --> 00:53:16,969
+The only advantage is that, like when it appears here, it can bust out.
+
+461
+00:53:17,269 --> 00:53:24,528
+So we've got these two places where we can do our development, and that's going to be helpful for whenever we decide to embed this in other contexts,
+
+462
+00:53:24,529 --> 00:53:30,409
+like about welcome or about preferences or something where we're not necessarily allowed to bust out of the content area,
+
+463
+00:53:30,409 --> 00:53:36,829
+and so we'll fall back to using something like this. So that's a demonstration of what it is that I did.
+
+464
+00:53:37,669 --> 00:53:42,349
+I'm just going to, as it rebase, continue.
+
+465
+00:53:44,449 --> 00:53:50,589
+Oh, yeah. I'm going to resolve all of these conflicts.
+
+466
+00:53:54,899 --> 00:53:59,999
+And this one, too. Now, the thing that I'm resolving like this was just the.
+
+467
+00:54:02,549 --> 00:54:06,689
+This is just the demonstration. I could have run the tests, but it would've been.
+
+468
+00:54:06,839 --> 00:54:12,689
+It would've gone by so fast, it wouldn't have allowed me to sort of demonstrate what this patch is trying to do.
+
+469
+00:54:12,779 --> 00:54:18,179
+But ultimately, it power is being able to embed the panelist inside of a floating zoo or panel.
+
+470
+00:54:20,729 --> 00:54:29,459
+And this patch, the one that has review comments for me to address, has to do with like anchoring, anchoring logic.
+
+471
+00:54:29,639 --> 00:54:36,269
+So now let's finally get down to it. It seems to work with both the target, the panel in the same shot.
+
+472
+00:54:36,269 --> 00:54:40,738
+It would be nice to have a test for this, but for some reason the test I tried writing keeps failing with operation unsupported
+
+473
+00:54:40,739 --> 00:54:44,969
+and the styles are all messed up and I don't get what's happening there. Yeah, I agree.
+
+474
+00:54:48,959 --> 00:54:52,979
+I just tried this, worked in the other place and looked at the code.
+
+475
+00:54:52,979 --> 00:54:57,389
+Sure enough, there was a minor tweak there. Basically, we only want to find a new target. If we do already have one, then it works.
+
+476
+00:54:57,769 --> 00:55:01,078
+Oh, he means suggested. The logic is slightly different than one you had,
+
+477
+00:55:01,079 --> 00:55:04,979
+but I think it comes out to the same thing as to me wondering if we should use some different logic like this.
+
+478
+00:55:06,379 --> 00:55:11,009
+Let's hear. Oh, he has a actually a recommended set of changes.
+
+479
+00:55:12,809 --> 00:55:20,128
+All right. That works for me. I mean, uh, how's he doing it?
+
+480
+00:55:20,129 --> 00:55:23,729
+Instead of if the event is composed?
+
+481
+00:55:25,049 --> 00:55:28,469
+So, first of all, we prioritize returning the save compose target.
+
+482
+00:55:34,799 --> 00:55:37,139
+As opposed to overwriting it. Yeah, makes sense to me.
+
+483
+00:55:38,459 --> 00:55:43,559
+So we prioritize this step because that's what was happening before, is that we were like overwriting this in this step.
+
+484
+00:55:44,159 --> 00:55:51,929
+That's what my patch was trying to do here is like. But I like his idea of just prioritizing the existing saved compose target.
+
+485
+00:55:52,859 --> 00:56:05,139
+So what we'll do is will move this. And then if event composed, then we'll say.
+
+486
+00:56:08,579 --> 00:56:14,129
+Oh, yeah. It's just reorienting what we were doing before.
+
+487
+00:56:14,309 --> 00:56:18,569
+That's way better is just like flipping these two conditions around.
+
+488
+00:56:21,359 --> 00:56:25,409
+That's ultimately what he's doing. He's just taking this condition and putting it after this condition.
+
+489
+00:56:28,259 --> 00:56:34,079
+Uh, and then. Right.
+
+490
+00:56:34,529 --> 00:56:37,709
+Then this. So let's make sure that that works.
+
+491
+00:56:39,089 --> 00:56:42,089
+Uh. And. And next.
+
+492
+00:57:02,689 --> 00:57:11,499
+Um. Let's see here.
+
+493
+00:57:12,009 --> 00:57:19,779
+Mark, Ron. And then we're going to see whether or not we we can maybe write a quick test for this in our last half hour.
+
+494
+00:57:20,739 --> 00:57:28,119
+So that works for me, then? Well, yeah, that works, too.
+
+495
+00:57:29,319 --> 00:57:35,079
+And then all of the existing ones, like in ads and themes like that, anchors.
+
+496
+00:57:41,259 --> 00:57:48,329
+Yeah. Yeah.
+
+497
+00:57:50,759 --> 00:57:54,629
+Works. Works for me. Okay. I like it. Thanks, Mark.
+
+498
+00:57:56,129 --> 00:58:02,099
+Now, can we write a test for this? The issue that we're trying that this tries to solve.
+
+499
+00:58:03,959 --> 00:58:08,339
+Mark said he was running into, like, operation not supported.
+
+500
+00:58:08,369 --> 00:58:17,569
+Let's see if we run into the same thing. I think there are existing tests for panelists.
+
+501
+00:58:17,809 --> 00:58:23,749
+I had written one in test widgets, so we're going to add one here.
+
+502
+00:58:23,749 --> 00:58:28,039
+We're going to say mock add test tool kit, widgets.
+
+503
+00:58:28,939 --> 00:58:35,259
+Tool kit content tests widgets will say test panel list.
+
+504
+00:58:35,719 --> 00:58:41,329
+Shadow Dom Anchor Shadow Note Anchor maybe.
+
+505
+00:58:42,999 --> 00:58:55,049
+Uh, HMO. And then we have to specify that we're adding a Moki test, a crow moki test because it doesn't know which.
+
+506
+00:58:58,069 --> 00:59:06,379
+Okay. We'll add the test to our commit and let's open it up.
+
+507
+00:59:07,189 --> 00:59:11,278
+The first thing we need to do is we need to define ourselves something with a shadow.
+
+508
+00:59:11,279 --> 00:59:15,889
+Dom Like a like a custom element.
+
+509
+00:59:17,599 --> 00:59:21,169
+Class a test element.
+
+510
+00:59:22,699 --> 00:59:30,809
+Extends H html element. And then we'll say connected.
+
+511
+00:59:30,809 --> 00:59:34,039
+Call back. Um.
+
+512
+00:59:36,579 --> 00:59:44,169
+This shadow equals. What's the what's the what's the move?
+
+513
+00:59:44,499 --> 00:59:48,529
+It's like, oh, open shadow. Connect root. Attach shadow.
+
+514
+00:59:48,549 --> 00:59:53,549
+That's what we want to do. Attach a closed shadow. At Shadow.
+
+515
+00:59:57,039 --> 01:00:01,839
+And we want a slot.
+
+516
+01:00:06,759 --> 01:00:10,569
+Uh. Yeah.
+
+517
+01:00:10,779 --> 01:00:13,929
+I'm just trying to do something minimal here. Startup Mark.
+
+518
+01:00:14,229 --> 01:00:19,779
+Static markup. Immigration wizard.
+
+519
+01:00:19,789 --> 01:00:26,189
+You know, we'll use this as kind of like our our template. Something much simpler than this.
+
+520
+01:00:29,339 --> 01:00:37,589
+Um. So instead of all of this, we're gonna say you get, um.
+
+521
+01:00:40,499 --> 01:00:47,889
+Dave. Uh, style equals height.
+
+522
+01:00:49,059 --> 01:00:58,919
+400 packs. And then div id equals anchor.
+
+523
+01:01:03,979 --> 01:01:11,749
+Wrong as say button I equals anger. Anchor slot.
+
+524
+01:01:14,619 --> 01:01:19,989
+Uh. Is that how that goes? Sports.
+
+525
+01:01:28,129 --> 01:01:37,139
+Slot. Open closed. Slot. Open closed. And then we're going to fix that.
+
+526
+01:01:37,139 --> 01:01:47,349
+And we're going to say whenever you get. Pass from string template.
+
+527
+01:01:49,679 --> 01:01:58,929
+I wonder if a lot of this can probably be simplified. It's no template.
+
+528
+01:02:00,929 --> 01:02:05,969
+Tell me that. So let doc pass from string test element mark.
+
+529
+01:02:13,309 --> 01:02:20,609
+Uh. Temple people talk about.
+
+530
+01:02:25,079 --> 01:02:28,349
+Document. Talk. Let's talk. And.
+
+531
+01:02:28,799 --> 01:02:32,639
+Wow. No, that's not true. Doc. Porno doc.
+
+532
+01:02:32,639 --> 01:02:36,089
+We're not allowed to play. And then a fragment.
+
+533
+01:02:36,089 --> 01:02:39,899
+Equal test element.
+
+534
+01:02:42,789 --> 01:02:53,779
+Template content clone node. And this is invalid.
+
+535
+01:02:56,859 --> 01:03:06,009
+JavaScript. Graceland or.
+
+536
+01:03:13,599 --> 01:03:16,689
+We like proof. Fix the formatting here.
+
+537
+01:03:16,719 --> 01:03:19,839
+Gang. Yeah. Okay.
+
+538
+01:03:19,869 --> 01:03:25,929
+Import node, return the fragment. So we could probably simplify this even further.
+
+539
+01:03:28,199 --> 01:03:36,159
+Sort of. Yeah. We don't need that shadow. Connect root shadow, and then append the child to the shadow.
+
+540
+01:03:40,629 --> 01:03:44,139
+Shadow append child the fragment.
+
+541
+01:03:44,379 --> 01:03:47,829
+So we could probably combine these. Um.
+
+542
+01:03:52,899 --> 01:03:58,299
+And then what we're going to do, we need to import the panelists.
+
+543
+01:04:05,879 --> 01:04:12,059
+I guess it's already available to us. So what we're going to do is, um.
+
+544
+01:04:16,749 --> 01:04:20,809
+Tests panel list.
+
+545
+01:04:21,309 --> 01:04:34,639
+Anchor on Shadow. Let us start by let test our equals document create element.
+
+546
+01:04:35,669 --> 01:04:39,839
+Oh, we have to register it. Custom elements register.
+
+547
+01:04:41,299 --> 01:04:44,429
+Test element. Test, element.
+
+548
+01:04:44,479 --> 01:04:52,649
+I think it's how it goes. As well as define.
+
+549
+01:04:52,649 --> 01:04:57,719
+And then the name. And then the class. Define.
+
+550
+01:04:58,869 --> 01:05:12,339
+Then we're going to create our test element and we're going to say like content equals document element, the content content append child test l.
+
+551
+01:05:14,049 --> 01:05:24,339
+The other thing we want to do is let the panel list equal document create element panel list.
+
+552
+01:05:26,009 --> 01:05:29,589
+Uh, or, you know, we might be able to do, actually.
+
+553
+01:05:38,379 --> 01:05:41,509
+Panelists. Let's just put in.
+
+554
+01:05:42,939 --> 01:05:48,759
+Panel item. Item number one. Let's do this a few times.
+
+555
+01:05:50,489 --> 01:05:53,529
+Uh, two, three, four, five, six.
+
+556
+01:05:53,549 --> 01:06:01,199
+Okay, so we've got our items. We're going to get, uh, list test lists.
+
+557
+01:06:04,099 --> 01:06:10,569
+Uh, let. Test list equals document get element I.D.
+
+558
+01:06:10,689 --> 01:06:17,939
+Test list. And we're going to say test L and we're going to move it inside the test list.
+
+559
+01:06:17,949 --> 01:06:22,239
+Now, the reason I'm doing this is because I'm pretty sure if I.
+
+560
+01:06:22,689 --> 01:06:26,349
+Well, you know what? If I defined this in line, maybe I'd be okay. Just doing it this way.
+
+561
+01:06:26,949 --> 01:06:31,839
+Test element. We might be okay doing it this way.
+
+562
+01:06:33,929 --> 01:06:42,829
+Test element, and then I don't have to do all of this. That's going to cause it to be slotted in here.
+
+563
+01:06:48,059 --> 01:06:56,819
+And then I'm going to say this anchor equals this shadow.
+
+564
+01:06:58,229 --> 01:07:05,809
+Get queries, select her anchor, and then this to anchor add event listener.
+
+565
+01:07:05,819 --> 01:07:25,629
+Click. We will say. This panel equals this dot query selector panel list.
+
+566
+01:07:27,329 --> 01:07:32,909
+Uh, and then we'll say panelist Scargill.
+
+567
+01:07:33,119 --> 01:07:37,169
+I think that's what we can do to elicit a toggle.
+
+568
+01:07:37,169 --> 01:07:44,809
+And I would pass in the event. Okay.
+
+569
+01:07:47,039 --> 01:07:53,189
+So we don't have to do this. To play.
+
+570
+01:08:00,449 --> 01:08:11,729
+Thank. Something clicks on the button and then we want it to anchor on the button.
+
+571
+01:08:12,779 --> 01:08:17,269
+Right? And then we're going to.
+
+572
+01:08:17,749 --> 01:08:24,829
+So let's make it so that this awaits a new promise, a resolve, set time out for us all.
+
+573
+01:08:25,009 --> 01:08:30,119
+You know, actually. Everything we can do is just like to keep it open.
+
+574
+01:08:30,479 --> 01:08:36,559
+Let's run this test and see what it looks like. Yeah.
+
+575
+01:08:36,799 --> 01:08:41,269
+Regarding servo for the people who are interested. There was a blog post.
+
+576
+01:08:41,509 --> 01:08:49,878
+Servo to advance in 2023. A Gallia has I think.
+
+577
+01:08:49,879 --> 01:08:53,209
+I don't know if that's to the mention of Gallia here.
+
+578
+01:08:53,359 --> 01:08:58,339
+Not really. But I'm pretty sure it's people from a Gallia who are are working on servo.
+
+579
+01:08:59,679 --> 01:09:12,808
+Servo is. If you I think I've mentioned this a couple of times in previous episodes, but I think serves as a neat research project.
+
+580
+01:09:12,809 --> 01:09:16,529
+But in a way it kind of served its purpose, at least from my perspective.
+
+581
+01:09:16,539 --> 01:09:21,629
+Like there was probably maybe more potential, but I think it served its purpose by being a test bed.
+
+582
+01:09:22,979 --> 01:09:23,759
+Well, first of all,
+
+583
+01:09:23,759 --> 01:09:35,099
+as a practical project to develop the rust language with alongside it and was a place for us to innovate on things like CSC parsing multithreaded,
+
+584
+01:09:35,099 --> 01:09:42,508
+CSC parsing which you know, the Stylo engine which does multithreaded systems parsing was then airlifted out of servo and dropped into Gecko.
+
+585
+01:09:42,509 --> 01:09:46,899
+And same with the web render which was piloted in Servo and then dropped into Gecko.
+
+586
+01:09:47,819 --> 01:09:53,009
+And I don't think we identified much else that could be chopped out of Servo and brought into Gecko.
+
+587
+01:09:53,009 --> 01:10:01,559
+But in many ways we, you know, Firefox benefited greatly from from servos the work that was done on servo which it's really nice.
+
+588
+01:10:01,959 --> 01:10:05,698
+Okay. I want to not run this. What was I thinking? I don't want to run this.
+
+589
+01:10:05,699 --> 01:10:09,609
+I want to run the test. So the test is.
+
+590
+01:10:11,879 --> 01:10:42,199
+This test. Good anchors to the the actual anchor, which is which is right.
+
+591
+01:10:43,609 --> 01:10:54,679
+Because I think without the patch and we can verify this, it would have anchored to the the bottom of the.
+
+592
+01:10:54,679 --> 01:10:58,879
+The big box. Um.
+
+593
+01:11:00,189 --> 01:11:04,439
+And what's the best way of. Showing that.
+
+594
+01:11:08,589 --> 01:11:14,709
+So here's our test. Let's amend to commit our selves to this.
+
+595
+01:11:15,509 --> 01:11:18,949
+And then. No revert.
+
+596
+01:11:19,009 --> 01:11:27,719
+Part of the fix. Let's revert this part of the fix and put panelists.
+
+597
+01:11:28,099 --> 01:11:33,278
+Such as. Uh, we're going to revert this in the best.
+
+598
+01:11:33,279 --> 01:11:39,349
+The easiest way to do that is actually to uncomment. The change and then shelve it.
+
+599
+01:11:51,139 --> 01:11:54,859
+Come on, Mercurio. You can do it. All right.
+
+600
+01:11:56,889 --> 01:12:08,929
+Now run the test again. What?
+
+601
+01:12:12,829 --> 01:12:17,989
+Hmm. I need to build faster.
+
+602
+01:12:57,069 --> 01:13:02,289
+That is bizarre. Let's keep open and let's examine this a little bit.
+
+603
+01:13:03,369 --> 01:13:12,369
+That should not be happening. What I was expecting it to do is to show the bug where it anchors to the bottom of the the red rectangle.
+
+604
+01:13:12,819 --> 01:13:19,069
+But it's anchoring to the button still. Um.
+
+605
+01:13:19,179 --> 01:13:23,409
+So I'm going to open up the dev tools.
+
+606
+01:13:34,239 --> 01:13:40,359
+As our panelists. What we're going to do is we're going to use the debugger.
+
+607
+01:13:42,929 --> 01:13:47,169
+Uh, last anchor? No. Where did I see this happening?
+
+608
+01:13:47,249 --> 01:13:50,249
+It was in, like, set a line.
+
+609
+01:13:53,669 --> 01:14:02,899
+Okay. And then we get the target for the triggering event.
+
+610
+01:14:06,919 --> 01:14:10,579
+There's no event. What?
+
+611
+01:14:13,239 --> 01:14:17,859
+Triggering event is. No, that's unexpected triggering event.
+
+612
+01:14:21,709 --> 01:14:30,339
+Equals. Right.
+
+613
+01:14:30,819 --> 01:14:37,958
+This triggering event not being set properly. Okay.
+
+614
+01:14:37,959 --> 01:14:43,219
+Now it's set. Is it being cleared somehow?
+
+615
+01:14:48,159 --> 01:14:53,259
+And then. See, that's.
+
+616
+01:14:53,259 --> 01:14:57,009
+That's what I'm expecting. See how it's stuck there at the bottom.
+
+617
+01:14:57,819 --> 01:15:01,029
+Stop triggering event. See? Now it's there.
+
+618
+01:15:05,459 --> 01:15:14,589
+And then. And now we're in Hyde.
+
+619
+01:15:14,599 --> 01:15:28,589
+How do we get to Hyde? Handle event? Oh, because we've blurred focus.
+
+620
+01:15:37,439 --> 01:15:46,619
+A window, we focused away from the window. Okay.
+
+621
+01:15:46,629 --> 01:15:49,869
+Well, I think that means that we're going to have to do a little bit of logging, actually.
+
+622
+01:15:51,219 --> 01:15:55,989
+Instead of break points like this, which change focus.
+
+623
+01:15:56,499 --> 01:15:58,299
+I'm going to have this running in the background.
+
+624
+01:16:04,199 --> 01:16:17,069
+That's, uh, I want to find a way, and we're going to add some log points at log this dot triggering event.
+
+625
+01:16:19,269 --> 01:16:26,319
+And we'll pull this up. Okay.
+
+626
+01:16:26,459 --> 01:16:34,019
+So we do have a triggering event. And then in here at law, this triggering event.
+
+627
+01:16:38,399 --> 01:16:45,298
+Yeah. Still there. Oh. And then see. Yeah. The test element, the, the event target change.
+
+628
+01:16:45,299 --> 01:16:52,769
+So I would have expected the anchor to be test element and not the anchor button.
+
+629
+01:16:53,579 --> 01:16:58,649
+So what's happening in here? If not event event composed.
+
+630
+01:17:03,699 --> 01:17:16,149
+Um. Event composed target or event composed path.
+
+631
+01:17:17,149 --> 01:17:22,709
+You like that? Uh.
+
+632
+01:17:23,279 --> 01:17:31,859
+Returning saved composed target. And saved composed time.
+
+633
+01:17:38,249 --> 01:18:00,599
+The button. Hang on.
+
+634
+01:18:01,259 --> 01:18:08,819
+I wonder if this is. Composed target.
+
+635
+01:18:08,999 --> 01:18:11,999
+Um, I think I might know what's happening here.
+
+636
+01:18:22,749 --> 01:18:25,869
+Yeah. So composed target is not.
+
+637
+01:18:28,539 --> 01:18:33,669
+Well, let's see here. Mm hmm. The proposed target.
+
+638
+01:18:39,049 --> 01:18:40,909
+Because it's chrome only.
+
+639
+01:18:40,909 --> 01:18:49,519
+We're heading into a particular path because we're running inside of privileged code and in storybook we don't hit that privileged code, which is why.
+
+640
+01:18:51,679 --> 01:19:03,859
+Right, we're not hitting it. So I think we need to change this from being a mock test monkey, a crow monkey test to a plain monkey test.
+
+641
+01:19:05,149 --> 01:19:10,219
+So let's now do this mock ad test.
+
+642
+01:19:13,159 --> 01:19:19,609
+Oh, boy. What do we want to do here? We're going to rename this one test because let's keep it around for a second.
+
+643
+01:19:23,939 --> 01:19:27,539
+Shadow Note Anchor We're going to say Shadow Note Anchor to.
+
+644
+01:19:32,239 --> 01:19:35,329
+Panelist Shadow No.
+
+645
+01:19:35,329 --> 01:19:45,409
+To Anchor to shadow no to. Anchor to. And then we're going to go mock add tests.
+
+646
+01:19:48,999 --> 01:19:52,749
+And we're going to say it's what is the argument that it wants?
+
+647
+01:19:52,749 --> 01:19:57,409
+It's like it wants a flavor sweet equals, milquetoast plain.
+
+648
+01:19:59,709 --> 01:20:14,689
+Okay. And then we're going to add this. Uh, and now here is a shadow note anchor to we're going to update this.
+
+649
+01:20:19,169 --> 01:20:28,369
+I guess I could have probably kept a lot of that. Uh, let's see what happens if I just run this test now.
+
+650
+01:20:28,519 --> 01:20:35,099
+I guess I can delete the old one now. Widgets.
+
+651
+01:20:35,249 --> 01:20:39,989
+Test widgets chromed any anchor to.
+
+652
+01:20:44,479 --> 01:20:56,409
+We can get rid of. Tool kit contain tests, widgets tests.
+
+653
+01:20:57,479 --> 01:21:00,929
+Analyst at a moment. Anchor to.
+
+654
+01:21:05,559 --> 01:21:11,859
+Forget them. Fine. This. We never. Commend.
+
+655
+01:21:15,679 --> 01:21:20,059
+All right, now let's run the test that we've added.
+
+656
+01:21:27,569 --> 01:21:33,059
+Well. I guess we can remove.
+
+657
+01:21:36,299 --> 01:21:39,509
+And now I'll say, you know, run the test.
+
+658
+01:21:43,629 --> 01:21:55,689
+And we'll see what happens. Now I expected to anchor to the red box.
+
+659
+01:22:05,009 --> 01:22:10,819
+Oh, I have to. Faster, apparently to repackage tests.
+
+660
+01:22:20,789 --> 01:22:24,299
+All right. Come on, gang. Let's do it.
+
+661
+01:22:31,889 --> 01:22:35,549
+What are you talking about? Why are you complaining about this?
+
+662
+01:22:41,189 --> 01:22:52,199
+Do I have something somewhere that still uses anchor to export crap to.
+
+663
+01:22:53,989 --> 01:23:05,359
+You know. What would still be something to worry about?
+
+664
+01:23:07,199 --> 01:23:16,839
+Test, which is test panel anchored to. Uh, widgets.
+
+665
+01:23:21,019 --> 01:23:25,139
+Budgets. Uh, multicast, I.
+
+666
+01:23:28,669 --> 01:23:46,369
+Yeah. Who was she talking about? Building the test directory.
+
+667
+01:23:46,489 --> 01:23:49,519
+I wonder if there was like a a manifest that was out of date.
+
+668
+01:23:50,059 --> 01:23:56,599
+I think I may have confused it with like a bunch of my shenanigans with Mercurial there.
+
+669
+01:23:57,889 --> 01:24:03,469
+Let's see if this does the does the job. And if not, that's frustrating.
+
+670
+01:24:04,089 --> 01:24:07,458
+Well, we'll figure it out. All right.
+
+671
+01:24:07,459 --> 01:24:12,139
+Now, can you run the tests? Come on.
+
+672
+01:24:17,559 --> 01:24:24,349
+What is happening. Toolkit Content Test Grip anchor to reach HTML.
+
+673
+01:24:24,459 --> 01:24:30,109
+Where do we make reference to it? We don't. So then what are you talking about?
+
+674
+01:24:30,179 --> 01:24:35,589
+Am I gonna have to clobber? Uh, all right.
+
+675
+01:24:38,939 --> 01:24:47,339
+Need to add, except that like the file that it's complaining about is the one I removed on purpose.
+
+676
+01:24:48,479 --> 01:24:52,709
+Like, I don't expect this to exist. The problem is that it's. It's looking for it.
+
+677
+01:24:57,049 --> 01:25:00,919
+So I'm just clobber. I have a feeling some manifest got very confused.
+
+678
+01:25:05,239 --> 01:25:30,099
+See what happens. Come on, gang.
+
+679
+01:25:30,109 --> 01:25:36,859
+Let's go. While we're waiting. While we're waiting for, uh, for this to do its thing.
+
+680
+01:25:37,279 --> 01:25:44,659
+Any questions? Any. Anyone want a any one?
+
+681
+01:25:44,659 --> 01:25:48,769
+Any questions answered? Go ahead. Drop them in the chat while we wait for this.
+
+682
+01:25:57,689 --> 01:26:01,789
+What's going on here, Mark? We waiting for?
+
+683
+01:26:05,239 --> 01:26:06,579
+Oh, okay.
+
+684
+01:26:06,589 --> 01:26:15,349
+Well, while we're waiting for this one thing that you might find interesting, if you want to track what we're doing with the new migration wizard,
+
+685
+01:26:15,679 --> 01:26:22,279
+not only can you look at the like the storybook that's being published here, I don't know how often that gets updated.
+
+686
+01:26:22,579 --> 01:26:29,898
+You can flip a pref. This is very early days, by the way, but you can flip this pref browser migrate content,
+
+687
+01:26:29,899 --> 01:26:40,218
+modal enabled new migrate or migration wizard work is behind this pref.
+
+688
+01:26:40,219 --> 01:26:47,479
+This is like super early. It's not ready for people to test it yet, but if you were to flip that pref then you get the new.
+
+689
+01:26:48,229 --> 01:26:51,349
+Oh well yeah that's, that's not what you're supposed to be saying.
+
+690
+01:26:51,619 --> 01:26:59,989
+I need to apply an update but basically that's what is going to show you the, the new migrate or wizard, which is not functional right now.
+
+691
+01:26:59,989 --> 01:27:03,919
+It's fully broken, but we're getting close with the students.
+
+692
+01:27:03,919 --> 01:27:07,459
+I think we're getting close to something that might actually be able to migrate stuff soon.
+
+693
+01:27:09,019 --> 01:27:18,109
+And then we can start, you know, fitting in some of the nice things that project management and user experience want.
+
+694
+01:27:19,039 --> 01:27:27,289
+But the infrastructure's almost done. And like as a sneak preview, some of the things that I don't know if it's actually here now,
+
+695
+01:27:28,009 --> 01:27:34,459
+I can show you some of the different states that have been implemented in a sec.
+
+696
+01:27:35,389 --> 01:27:40,219
+Once we're done this build, I really hope that this fixes the issue because otherwise I don't know what's going wrong.
+
+697
+01:27:47,709 --> 01:27:57,599
+All right, try and run that test now. I think that's the important part.
+
+698
+01:27:57,599 --> 01:28:00,969
+The test configuration changed and it's regenerating the back end.
+
+699
+01:28:00,989 --> 01:28:12,499
+I think that's the thing that I needed to. Yeah.
+
+700
+01:28:12,499 --> 01:28:19,919
+It's kind of like rebuild a bunch of stuff. Here we go.
+
+701
+01:28:20,789 --> 01:28:33,589
+Yeah. What in the world type panelist toggle is not a function.
+
+702
+01:28:33,589 --> 01:28:37,219
+Does it not know that? Okay. I guess I have to bring in panelist.
+
+703
+01:28:43,729 --> 01:28:49,819
+Panelist. J.S. What's the that's the script.
+
+704
+01:28:54,909 --> 01:29:01,069
+Script. Source equals that.
+
+705
+01:29:03,159 --> 01:29:15,829
+All right. Try again. I mean and the stream in a second.
+
+706
+01:29:15,829 --> 01:29:23,499
+But I did want to show you the. Okay.
+
+707
+01:29:24,249 --> 01:29:29,589
+See, that's the bug that they show up down there. Yeah, it anchors wrong.
+
+708
+01:29:29,829 --> 01:29:34,289
+And these are all like styled incorrectly.
+
+709
+01:29:34,299 --> 01:29:40,269
+We need to get, like, panelist CC loaded as well.
+
+710
+01:29:42,249 --> 01:29:50,469
+So let's put that in here. What in the world?
+
+711
+01:29:53,609 --> 01:30:02,969
+Uh. Do you have? Panelists success.
+
+712
+01:30:05,279 --> 01:30:16,319
+That's right. Stay open.
+
+713
+01:30:25,619 --> 01:30:31,939
+So it is getting some of panelists. The panel item.
+
+714
+01:30:38,999 --> 01:30:42,179
+Oh. I also need a panel item that says. Okay.
+
+715
+01:30:50,199 --> 01:30:55,199
+Okay. What?
+
+716
+01:30:57,639 --> 01:31:01,659
+Still broken. I mean, I'm getting distracted.
+
+717
+01:31:04,219 --> 01:31:07,469
+Panelist and.
+
+718
+01:31:11,509 --> 01:31:14,989
+Now it's anchored way up here because stuff.
+
+719
+01:31:15,019 --> 01:31:21,749
+But where's this panel item? That's Mrs. Loder.
+
+720
+01:31:21,809 --> 01:31:32,528
+Yeah. Oh, you know what it is?
+
+721
+01:31:32,529 --> 01:31:42,039
+I think it's because. Yeah, there's just like. Some of the like remapping and special rules are in applying.
+
+722
+01:31:43,029 --> 01:31:48,479
+But. Display block button.
+
+723
+01:31:50,399 --> 01:31:58,879
+Do I also need to include panel item touch? Yes. No panel list.
+
+724
+01:32:01,099 --> 01:32:11,059
+Includes panel item. So what the heck?
+
+725
+01:32:22,539 --> 01:32:30,089
+It's like the panel items don't have. Don't get created properly.
+
+726
+01:32:31,319 --> 01:32:35,669
+I'm willing to let that go because really all I want to do is check the anchoring of the panelists.
+
+727
+01:32:35,669 --> 01:32:40,739
+So I don't need to have, like, a huge, um, dealio there.
+
+728
+01:32:41,219 --> 01:32:47,409
+What I need to do is synthesize a click on the anchor.
+
+729
+01:32:47,429 --> 01:32:54,209
+Like, I'm reproducing the issue, which is that it's anchoring on the the thingy, the the red box.
+
+730
+01:32:55,379 --> 01:33:00,479
+And what's the best way of testing that is probably like examining.
+
+731
+01:33:03,509 --> 01:33:08,999
+The top. The top value.
+
+732
+01:33:11,309 --> 01:33:16,259
+And we should expect it to be within a certain pixel range of the anchor.
+
+733
+01:33:21,319 --> 01:33:26,299
+So. Let's see.
+
+734
+01:33:27,529 --> 01:33:34,519
+What's the best way to do this? We need to click. Event utils lets me click using.
+
+735
+01:33:37,089 --> 01:33:40,179
+No. He dies. The email. Click.
+
+736
+01:33:45,519 --> 01:33:53,369
+I think I can get access to the. I mean, it's like.
+
+737
+01:33:54,799 --> 01:33:58,279
+Do click this dot anchored click.
+
+738
+01:34:01,039 --> 01:34:09,609
+Let's test element equal. Ackerman got gal and I the test element.
+
+739
+01:34:15,849 --> 01:34:28,349
+Also a test element du click. Flat panel list equal document got element by the.
+
+740
+01:34:33,969 --> 01:34:37,089
+I'm going to have do click also return the anchor.
+
+741
+01:34:41,259 --> 01:34:46,149
+Black anchor calls that panelist go by the.
+
+742
+01:34:48,089 --> 01:35:00,279
+Past list. Let Top Equal Panel list get founding client ranked.
+
+743
+01:35:05,429 --> 01:35:10,229
+Top console and then like console log top.
+
+744
+01:35:11,789 --> 01:35:14,849
+What happens then? I don't know if I'm going to be able to.
+
+745
+01:35:17,299 --> 01:35:21,579
+Operation is not supported. That task was not defined.
+
+746
+01:35:26,639 --> 01:35:39,979
+Can monkey tests not have had task. Milquetoast.
+
+747
+01:35:50,029 --> 01:36:01,979
+Kind of test. Is this some monkey test? How do I get at task from autofill com and maybe.
+
+748
+01:36:22,629 --> 01:36:26,049
+Simple test. Such as? I get that from here.
+
+749
+01:36:29,829 --> 01:36:37,389
+What do you mean? There's no such thing as add task. Not defined.
+
+750
+01:36:38,409 --> 01:36:42,638
+Oh. Not allowed to load this document.
+
+751
+01:36:42,639 --> 01:36:49,449
+Simple test dogs. Oh, I wonder.
+
+752
+01:37:06,849 --> 01:37:26,399
+Where all this accessibility. I see these relative paths.
+
+753
+01:37:28,379 --> 01:37:35,409
+So if I do it like that. Are you happy about that? Yes.
+
+754
+01:37:35,409 --> 01:37:44,659
+It's happy about that. I also suspect I don't need to do this and it's already included.
+
+755
+01:37:48,579 --> 01:38:05,179
+Except the ad task was not defined. So, yes, I do need that. All right.
+
+756
+01:38:05,179 --> 01:38:16,728
+Operations not supported at line 58. No, no line 50 years.
+
+757
+01:38:16,729 --> 01:38:21,829
+The logging operation is not supported. Where is that operation not supported happening?
+
+758
+01:38:23,649 --> 01:38:34,959
+Um. So we can get the anchor out.
+
+759
+01:38:46,789 --> 01:39:06,179
+What operation is not supported. Okay.
+
+760
+01:39:06,659 --> 01:39:16,439
+We expect. LB and client wrecked.
+
+761
+01:39:31,189 --> 01:39:39,859
+Of the panel list. Oh, I need to.
+
+762
+01:39:42,479 --> 01:39:46,679
+I need to stay open. You know, I.
+
+763
+01:39:48,869 --> 01:39:54,779
+Quick. Stay open.
+
+764
+01:40:10,729 --> 01:40:14,388
+I do? Click. Oh, I need to wait for the panelists to open.
+
+765
+01:40:14,389 --> 01:40:24,029
+That's what I need to do. Uh, await. But open promise equals.
+
+766
+01:40:24,839 --> 01:40:29,459
+I mean, the promise here is uh uh, that listener.
+
+767
+01:40:30,239 --> 01:40:34,109
+Uh, was it panel? This was the event dispatch.
+
+768
+01:40:36,969 --> 01:40:53,489
+Send event plots, of course, and events showing shown on shown at event, listener shown instead and listener shown so supports true and then do click.
+
+769
+01:40:53,489 --> 01:41:04,939
+Oh wait, open promise. And then we're going to. Get the panelist, get bounding erect or in a log it.
+
+770
+01:41:08,069 --> 01:41:13,978
+Top one or two. There we go. Really.
+
+771
+01:41:13,979 --> 01:41:22,489
+We expect it to be close. Ideally below the anchor.
+
+772
+01:41:26,559 --> 01:41:30,219
+So let's panel recht let and correct.
+
+773
+01:41:32,739 --> 01:41:38,129
+Get pounding, client wracked. Um.
+
+774
+01:41:45,069 --> 01:41:49,448
+We expect. Uh, I think it's like.
+
+775
+01:41:49,449 --> 01:41:59,339
+Is. It's like the delta between if we were to remove.
+
+776
+01:42:05,449 --> 01:42:08,539
+Panel. Wrecked. Top Minus Anchor.
+
+777
+01:42:08,539 --> 01:42:13,569
+Wrecked. Sought top. Minus.
+
+778
+01:42:15,929 --> 01:42:19,469
+Uh, and correct that height.
+
+779
+01:42:22,059 --> 01:42:32,899
+Let. You remove the top, uh, panel relative to anchor?
+
+780
+01:42:32,929 --> 01:42:39,669
+Top left equals. Handle top relative to anchor.
+
+781
+01:42:41,799 --> 01:42:47,169
+Top left is that. Going, I say is.
+
+782
+01:42:49,069 --> 01:42:53,949
+Okay. That is less than like five.
+
+783
+01:42:57,869 --> 01:43:01,079
+Flu virus. Just put something in there. All right.
+
+784
+01:43:01,169 --> 01:43:11,608
+Let's see what thinks about that. Failed because of an unknown DOM exception.
+
+785
+01:43:11,609 --> 01:43:16,449
+Which one is the uncut DOM exception? Like.
+
+786
+01:43:16,659 --> 01:43:31,049
+Yeah. Well, let me just start, like, commenting stuff over. The operation is not supported.
+
+787
+01:43:31,589 --> 01:43:53,679
+What are you talking about? Is.
+
+788
+01:43:53,739 --> 01:44:02,269
+There's something. But the style sheets.
+
+789
+01:44:05,779 --> 01:44:16,819
+Let's just get rid of this. Let's also get rid of this.
+
+790
+01:44:19,399 --> 01:44:24,289
+So it's it's really upset about me loading this this element.
+
+791
+01:44:24,649 --> 01:44:30,139
+That's what's going wrong. I wonder if I can just do like this instead.
+
+792
+01:44:30,289 --> 01:44:34,009
+Well, that can't find it.
+
+793
+01:44:35,779 --> 01:44:39,439
+So I'm going to have to, like, package it or something, but okay, I can work with that.
+
+794
+01:44:40,969 --> 01:44:44,779
+So let's put all this back and I'll figure that out.
+
+795
+01:44:45,649 --> 01:44:48,649
+But I'm going to do it outside of this episode. Hey, thank you so much for watching.
+
+796
+01:44:48,649 --> 01:44:51,948
+Episode 312 of The Joy of Coding.
+
+797
+01:44:51,949 --> 01:45:00,679
+I hope that was interesting. We covered a lot of ground and hopefully next week we can get back to that Windows
+
+798
+01:45:00,679 --> 01:45:04,969
+Jump live stuff because I know it's been long it's a long time running on that one.
+
+799
+01:45:05,449 --> 01:45:09,349
+Let's let's try and get it. Something shown up for the Windows jumpers next week.
+
+800
+01:45:10,429 --> 01:45:14,628
+Let me know what you thought. If you are if you're willing, you can rate this episode.
+
+801
+01:45:14,629 --> 01:45:16,788
+There's a link in the agenda to rate this episode.
+
+802
+01:45:16,789 --> 01:45:23,479
+I'll even put a link to that in the chat right now, and that's a good opportunity for you to let me know what you thought,
+
+803
+01:45:23,479 --> 01:45:27,979
+what you'd like to see more of, what you'd like to see less of, and ask me questions that I will answer on a later stream.
+
+804
+01:45:27,979 --> 01:45:31,089
+So go ahead and send your your ratings in.
+
+805
+01:45:31,099 --> 01:45:40,699
+There's also every rate this episode form has a fun photo of me, a unique photo of me that I've packed in as a thank you for filling out the form.
+
+806
+01:45:41,269 --> 01:45:45,708
+So check it out. Hey, all right, let's let's let's call beer.
+
+807
+01:45:45,709 --> 01:45:49,278
+Thanks again, everybody. Have yourselves a great week.
+
+808
+01:45:49,279 --> 01:45:52,609
+I'll hopefully see you next week with episode 13. Take care of everybody.
+
+809
+01:45:53,779 --> 01:45:57,769
+Bye bye. The joy.
+
+810
+01:45:58,719 --> 01:46:00,969
+0dd.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

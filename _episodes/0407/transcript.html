@@ -1,0 +1,3022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 407 - June 25, 2025</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 407 - June 25, 2025</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5734a601-e9d5-41d1-918d-b2eb010115b0</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5734a601-e9d5-41d1-918d-b2eb010115b0">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,168 --> 00:00:09,658
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:09,808 --> 00:00:13,707
+Hello and welcome to episode 407 of the Joy of coding.
+
+3
+00:00:13,708 --> 00:00:18,358
+My name is Mike Conley. It's so good to have you here. We're going to be live hacking on some Firefox stuff.
+
+4
+00:00:18,958 --> 00:00:23,638
+Let's get into it. What's going on today? Let me start by sharing my screen.
+
+5
+00:00:24,658 --> 00:00:30,208
+Hey, hey this is the agenda is June 25th, 2025, episode 407 A reminder.
+
+6
+00:00:30,268 --> 00:00:35,488
+No plan survives breakfast. I think I know what I want to do today, but how it goes, we'll see.
+
+7
+00:00:35,488 --> 00:00:38,277
+We're going to figure it out together. We may get stuck, sidelined.
+
+8
+00:00:38,278 --> 00:00:43,948
+I've got like a sort of a list of things I'm hoping that we could try doing today, and we'll see if we get through some of them.
+
+9
+00:00:44,128 --> 00:00:50,248
+Uh, we'll see if maybe we can get through all of them. We're not sure. Um, none of this has been really sort of pre sketched out.
+
+10
+00:00:50,248 --> 00:00:53,818
+We're just going to watch me do software development in the raw, so to speak.
+
+11
+00:00:54,808 --> 00:00:59,007
+That's the first thing. The second thing is that the agenda that we're looking at is available to you.
+
+12
+00:00:59,008 --> 00:01:02,788
+If you're watching this on air Mozilla check out the details section over on that side of the screen.
+
+13
+00:01:02,788 --> 00:01:05,697
+If you're watching this on YouTube, check out the video description down below.
+
+14
+00:01:05,698 --> 00:01:12,718
+And if you're watching this on Twitch, I just realized that I failed to update the, uh, the Twitch page with the updated links.
+
+15
+00:01:12,718 --> 00:01:18,568
+So let me let me quickly do that. Let me update Twitch just in case anyone there is.
+
+16
+00:01:18,718 --> 00:01:21,838
+Oh, I visited Twitch and now it's making sound.
+
+17
+00:01:22,288 --> 00:01:34,257
+Um, I need to update the channel links so that you've got the links to both the agenda as well as the rate this episode links.
+
+18
+00:01:34,258 --> 00:01:42,598
+So let me just update that real quick. And the rate this episode link, which is this one?
+
+19
+00:01:43,258 --> 00:01:46,888
+Sorry, you're watching me update this thing in real time and then we'll get to it.
+
+20
+00:01:48,178 --> 00:01:52,438
+Okay, so it's been updated if you, uh, refresh, I guess I don't know how Twitch works,
+
+21
+00:01:52,438 --> 00:01:57,538
+but it's possible that, um, that'll all be, uh, it may, it may be live.
+
+22
+00:01:57,538 --> 00:02:03,058
+It may not be, but hopefully if you didn't have an up to date link to the agenda now, you should on Twitch.
+
+23
+00:02:04,618 --> 00:02:09,398
+Uh, hey. Hey, nerdy.
+
+24
+00:02:09,808 --> 00:02:17,187
+It's it's nerdy. Okay, uh, let us get into it.
+
+25
+00:02:17,188 --> 00:02:25,768
+What are we working on today? Well, I wanted to, uh, focus in on something that showed up on our radar, um, recently, and, uh.
+
+26
+00:02:25,978 --> 00:02:32,877
+Yeah, about 13 days ago, this was filed by our QA people, uh, which is that importing from opera?
+
+27
+00:02:32,878 --> 00:02:41,158
+Not opera, but opera stopped working on all platforms, uh, windows, macOS and Linux and,
+
+28
+00:02:41,158 --> 00:02:45,328
+uh, you know, it was it wasn't like we just changed a thing on our side.
+
+29
+00:02:45,568 --> 00:02:51,238
+It's more likely, uh, just based on the, the, um, uh, rest of the conversation in this bug,
+
+30
+00:02:51,238 --> 00:02:55,708
+that opera changed how they store information about user profiles.
+
+31
+00:02:56,158 --> 00:03:04,047
+Uh, and so, uh, we can we can, um, infer that we need to make some adjustments.
+
+32
+00:03:04,048 --> 00:03:09,178
+We need to sort of, like, figure out what opera changed and then see if we can get importing working again.
+
+33
+00:03:10,108 --> 00:03:14,097
+And so I said I'd find some time to work on this. And I thought this would be a good opportunity to do that.
+
+34
+00:03:14,098 --> 00:03:17,728
+So let's start by reproducing the bug. I did install opera.
+
+35
+00:03:17,728 --> 00:03:21,418
+It's been a while since I've used opera. It's boy, it's changed a lot.
+
+36
+00:03:21,898 --> 00:03:25,918
+Uh, you know, uh, look at those separated tabs.
+
+37
+00:03:26,308 --> 00:03:30,238
+Often imitated, never duplicated. Firefox did it first.
+
+38
+00:03:30,958 --> 00:03:35,218
+Um, and yeah, they're really, uh, really dense tabs here.
+
+39
+00:03:35,458 --> 00:03:40,348
+But, you know, it's a fine browser. It does its job. It's weird to see the clothes on the left side.
+
+40
+00:03:41,038 --> 00:03:49,138
+Uh, but let's see if we can import some information. Um, so I've got a build of Firefox, a local build, I think.
+
+41
+00:03:49,198 --> 00:03:53,368
+Uh, yeah. Let me pump up the font so you can see what I'm doing.
+
+42
+00:03:54,148 --> 00:04:05,358
+Um, I have a local artifact build. And make sure it's up to date.
+
+43
+00:04:06,618 --> 00:04:14,988
+And then we're what we're going to do is making sure is make sure that we cannot see opera listed as one of the other browsers to import from.
+
+44
+00:04:16,628 --> 00:04:23,558
+Okay. So here's. Oh. Uh, this is broken because I was just testing some proxy stuff.
+
+45
+00:04:25,088 --> 00:04:29,848
+Yeah. No. Proxy. Please. Reload.
+
+46
+00:04:30,978 --> 00:04:36,178
+I have to reload the browser, actually. There we go.
+
+47
+00:04:37,768 --> 00:04:41,188
+Okay, so we want to, uh, try and import.
+
+48
+00:04:41,188 --> 00:04:44,698
+So import data. It's going to list all the browsers it can find locally.
+
+49
+00:04:44,698 --> 00:04:49,288
+And lo and behold it does not find opera and used to find opera.
+
+50
+00:04:49,618 --> 00:04:57,808
+And according to Bianca, our QA uh, from uh, desktop test engineering or QA person was telling us that the difference is that in this version,
+
+51
+00:04:57,808 --> 00:05:03,418
+opera was starting to, um, starting in version 1040494423.
+
+52
+00:05:03,838 --> 00:05:05,368
+An additional folder is created.
+
+53
+00:05:05,578 --> 00:05:13,498
+Now, the path that uh, Bianca is giving us here is, uh, for windows, but we can infer that there's something kind of similar going on on Mac OS.
+
+54
+00:05:13,858 --> 00:05:20,428
+And, uh, in prior times, um, you know, the, uh, a different folder was selected,
+
+55
+00:05:20,578 --> 00:05:26,428
+so it looks like the folder depth has changed, whereas before this is pretty close.
+
+56
+00:05:26,758 --> 00:05:32,578
+It's just that now there's a default folder that's underneath the opera stable, uh, root folder.
+
+57
+00:05:32,938 --> 00:05:38,308
+So opera I believe, will tell us where the the profile is stored under.
+
+58
+00:05:38,698 --> 00:05:42,928
+This is the path that I have locally. And lo and behold, yes, there is a default folder here.
+
+59
+00:05:44,368 --> 00:05:48,118
+And I guess that's not where, uh. Wow, there's so much going on.
+
+60
+00:05:48,328 --> 00:05:52,378
+That is not where, uh, Firefox is looking whenever it tries to import things.
+
+61
+00:05:53,248 --> 00:05:57,237
+Now, uh, I am curious. Default is also the name of.
+
+62
+00:05:57,238 --> 00:06:00,958
+Is that the name of the profile if I create a new profile?
+
+63
+00:06:01,228 --> 00:06:05,008
+Can I do that in opera? How do I do that in opera?
+
+64
+00:06:06,418 --> 00:06:11,618
+How do we create a new profile? Person.
+
+65
+00:06:13,748 --> 00:06:16,978
+No. How do I do that?
+
+66
+00:06:19,168 --> 00:06:24,178
+Opera. Create new profile. Not in.
+
+67
+00:06:24,208 --> 00:06:30,898
+Okay, here we go. Opera forums. Uh, opera doesn't support profiles.
+
+68
+00:06:32,348 --> 00:06:39,748
+Oh. Okay. Workspaces.
+
+69
+00:06:44,988 --> 00:06:48,468
+To create a first open offer, navigate to Easy Setup menu and scroll.
+
+70
+00:06:48,648 --> 00:06:53,358
+Gee, I'm not using GPS. Uh.
+
+71
+00:06:56,268 --> 00:07:03,858
+It's unclear. Like. Certainly it's not immediately apparent how to create multiple profiles in this browser.
+
+72
+00:07:05,088 --> 00:07:10,078
+Easy setup. There's so much going on here.
+
+73
+00:07:11,188 --> 00:07:14,938
+Full browser settings. Is there something in here about profile?
+
+74
+00:07:15,658 --> 00:07:19,218
+No. Features.
+
+75
+00:07:21,098 --> 00:07:25,778
+Oh my goodness. The kitchen sink.
+
+76
+00:07:32,558 --> 00:07:35,798
+Uh, lucid mode.
+
+77
+00:07:40,428 --> 00:07:44,508
+Oh, boy. Okay, I don't think they have profiles.
+
+78
+00:07:44,898 --> 00:07:50,898
+Um, I mean, I'm getting the impression that there's no sense.
+
+79
+00:07:50,898 --> 00:07:55,458
+There's no profiles in opera. Certainly. Maybe they don't call it that.
+
+80
+00:07:56,238 --> 00:08:01,458
+Workspace. Enable workspaces. Learn more. What are these first page tabs.
+
+81
+00:08:03,878 --> 00:08:08,768
+Turn to your workspaces. Uh, click on icon through the workspace.
+
+82
+00:08:08,978 --> 00:08:12,558
+I'd love to have you back like the icons to jump between them. Okay, so these are different workspaces.
+
+83
+00:08:12,578 --> 00:08:16,488
+Okay. So I think this is more just like it's almost like tab groups.
+
+84
+00:08:16,508 --> 00:08:20,498
+Oh, fancy animations, GPU powered animations.
+
+85
+00:08:21,248 --> 00:08:27,348
+Slick. Um, but, uh, yeah, I don't think these are profiles.
+
+86
+00:08:27,368 --> 00:08:31,448
+Certainly. Uh, if I create a bookmark here, let's create a bookmark.
+
+87
+00:08:33,448 --> 00:08:37,108
+Uh, done. So I've got features here.
+
+88
+00:08:37,138 --> 00:08:40,918
+Now I change workspaces. The bookmark is still here. This is the same profile.
+
+89
+00:08:41,838 --> 00:08:50,858
+Uh huh. So, uh, Swifty is suggesting I go here, uh, for side profile settings.
+
+90
+00:08:52,178 --> 00:08:57,578
+Uh. Side profiles.
+
+91
+00:08:57,668 --> 00:09:02,588
+Settings? No, that is not. I'm not seeing anything like that here.
+
+92
+00:09:03,608 --> 00:09:09,548
+So let's say for now that it doesn't seem like opera supports profiles.
+
+93
+00:09:10,328 --> 00:09:12,788
+Okay. Well, that makes our job easier.
+
+94
+00:09:13,178 --> 00:09:23,618
+And I think is consistent, if I recall correctly, is consistent with how, um, our my grader for opera, uh, for the older opera works.
+
+95
+00:09:24,008 --> 00:09:29,158
+Is it assume that there's just a single profile? Uh, let's actually, uh, let me close all these.
+
+96
+00:09:29,168 --> 00:09:32,198
+There's just too many open files. Don't know.
+
+97
+00:09:33,188 --> 00:09:36,758
+Close close close close close. Don't need any of this stuff anymore.
+
+98
+00:09:37,178 --> 00:09:44,168
+And we're going to go into. So because opera is really just a, um, a chromium browser, it's just another chromium browser.
+
+99
+00:09:44,198 --> 00:09:47,468
+Uh, our my grader is under Chrome profile. My grader.
+
+100
+00:09:48,038 --> 00:09:52,357
+Uh, and we're going to find opera. Opera profile.
+
+101
+00:09:52,358 --> 00:09:55,478
+My grader. Yeah.
+
+102
+00:09:55,478 --> 00:10:02,257
+For under get source profiles, it returns null, meaning that, uh, if we look at the base, uh,
+
+103
+00:10:02,258 --> 00:10:09,008
+migrate or base get source profiles override if and only if the source provides supports multiple profiles.
+
+104
+00:10:09,488 --> 00:10:14,898
+Um, for a single profile source, this returns null and not an empty array.
+
+105
+00:10:14,918 --> 00:10:18,218
+This is the default implementation. So. Right.
+
+106
+00:10:18,248 --> 00:10:22,868
+Um, our implementation assumes Opera does not, uh, support multiple profiles.
+
+107
+00:10:23,648 --> 00:10:32,018
+Uh huh. Now, uh, the lookup that it does is actually not in here in the class definition, which is, uh, a little bit of a pain.
+
+108
+00:10:32,288 --> 00:10:43,748
+It's over here in chrome migration utils, I believe there's like a mapping between, like, um, the platforms and then the identifiers of the, uh, uh.
+
+109
+00:10:45,608 --> 00:10:52,148
+Of the my greater um or the browser rather and then probable paths to look for the user profiles.
+
+110
+00:10:53,318 --> 00:10:58,818
+Um Chrome project name. Get data path.
+
+111
+00:10:59,148 --> 00:11:08,178
+Right. And that's mapping. That's matching on what the user data path suffix was that matching on get data path.
+
+112
+00:11:13,568 --> 00:11:26,498
+Chrome project name get local state which comes from git local state the Chrome user data path suffix which for opera is um.
+
+113
+00:11:28,118 --> 00:11:33,238
+Capital Opera. Okay. So, uh, it's going to look on macOS.
+
+114
+00:11:33,248 --> 00:11:42,758
+At least it will look here, uh, under you lib dir, which, uh, let's see what that actually is.
+
+115
+00:11:43,328 --> 00:11:49,178
+U lib dir is services. Dir. Service gets you lib dir.
+
+116
+00:11:52,928 --> 00:11:56,468
+Uh, path. That's just in my library directory.
+
+117
+00:11:59,938 --> 00:12:03,898
+And then it's going to be under application support. Calm opera software.
+
+118
+00:12:04,108 --> 00:12:16,408
+Opera. Okay, so maybe in order to make this more flexible, what we can do is we can look in two places.
+
+119
+00:12:17,728 --> 00:12:25,348
+We're going to look in two places because it's possible that some people will still have like the older, uh, the older opera around.
+
+120
+00:12:26,248 --> 00:12:38,188
+Uh, and so what I'll do is I'll make reference to the version number bug as, uh, opera, uh.
+
+121
+00:12:43,378 --> 00:12:58,978
+Uh, and, uh, profile data is stored under a, uh, a folder default under the, uh, main application profile directory.
+
+122
+00:13:01,558 --> 00:13:04,798
+Okay. So let's see if that's enough to get it working for our local build.
+
+123
+00:13:05,038 --> 00:13:06,448
+Let's see if we can find stuff.
+
+124
+00:13:07,498 --> 00:13:15,478
+While we're at it, let's actually let's put a password inside of our profile and make sure that importing the password works.
+
+125
+00:13:15,598 --> 00:13:21,798
+Um. Passwords. Password manager.
+
+126
+00:13:21,808 --> 00:13:26,638
+Here we go. I'm going to add a password. My password is for example.com.
+
+127
+00:13:27,608 --> 00:13:31,558
+My username is test. My password is test save.
+
+128
+00:13:31,588 --> 00:13:35,368
+Okay. So I've got a password here. And shut down opera.
+
+129
+00:13:48,578 --> 00:13:53,678
+Now let's see if we can find opera. We did not find opera.
+
+130
+00:13:54,578 --> 00:13:59,048
+No permissions for a local state folder. Let us see if we can find out why.
+
+131
+00:13:59,198 --> 00:14:03,398
+Let's use the debugger. We just need the parent process here.
+
+132
+00:14:03,938 --> 00:14:07,058
+I'm going to go. Chrome migration. Utils. Opera.
+
+133
+00:14:13,068 --> 00:14:16,468
+And let's see if we enter here.
+
+134
+00:14:17,068 --> 00:14:21,568
+Options. Chrome. Project name. Brave. No Canary, no.
+
+135
+00:14:22,198 --> 00:14:27,778
+Chromium, no edge. You know what I'm going to do is I'm going to, uh, add a condition.
+
+136
+00:14:28,168 --> 00:14:31,348
+Chrome project name equals opera.
+
+137
+00:14:32,218 --> 00:14:35,608
+Then we'll just continue. We didn't hit it at all.
+
+138
+00:14:36,898 --> 00:14:42,357
+What in the world? Um, let's add a log point here.
+
+139
+00:14:42,358 --> 00:14:46,438
+Add log. Chrome project name.
+
+140
+00:14:56,058 --> 00:15:03,638
+It doesn't look for opera at all. Maybe because it had already looked forward before and it has cached its notion of it.
+
+141
+00:15:03,648 --> 00:15:09,438
+That seems likely. Um, so I need to, like, restart.
+
+142
+00:15:11,328 --> 00:15:14,748
+With these breakpoints uh, around are these log points.
+
+143
+00:15:14,748 --> 00:15:19,358
+So I'm going to restart the browser. Yeah.
+
+144
+00:15:19,368 --> 00:15:23,418
+I'm fairly certain that, uh.
+
+145
+00:15:26,198 --> 00:15:31,988
+Yeah. Here we go. Now we hit it. Chrome project name is Opera Options.
+
+146
+00:15:32,408 --> 00:15:37,627
+So we've got our two arrays here for subfolder of options.
+
+147
+00:15:37,628 --> 00:15:47,568
+So we're going to go. The root dir.
+
+148
+00:15:49,468 --> 00:15:55,908
+Get the file path, we're going to get the target path is there.
+
+149
+00:15:55,918 --> 00:16:00,088
+We're going to see if it exists. Does it exist? Survey says.
+
+150
+00:16:02,238 --> 00:16:06,108
+Yes it exists. So we return the target path.
+
+151
+00:16:06,528 --> 00:16:10,758
+If it exists, we'll set the Chrome user data path to that path.
+
+152
+00:16:10,998 --> 00:16:16,518
+We're going to return that from get Chrome user path data path if it exists.
+
+153
+00:16:18,048 --> 00:16:22,278
+And now we're going to try and access its local state.
+
+154
+00:16:26,598 --> 00:16:30,378
+We're going to attempt to read and we fail.
+
+155
+00:16:34,608 --> 00:16:37,908
+So snap can check existence even without being able to read the file.
+
+156
+00:16:38,388 --> 00:16:46,608
+So does the local state file data path as a local state path.
+
+157
+00:16:47,478 --> 00:16:53,748
+Does it exist? No, it doesn't exist.
+
+158
+00:16:54,468 --> 00:17:02,238
+So that's a problem. So opera has also, uh, I think we need to actually examine the contents of this folder.
+
+159
+00:17:02,328 --> 00:17:09,468
+Let's take a look in here and see what's in here. Hmm.
+
+160
+00:17:14,148 --> 00:17:19,448
+Uh huh. There's nothing in here called local. State? What about at the top level?
+
+161
+00:17:20,198 --> 00:17:23,738
+So local states up higher. It's here.
+
+162
+00:17:27,298 --> 00:17:31,128
+Uh huh. Uh uh.
+
+163
+00:17:32,098 --> 00:17:35,788
+Okay. I'm sorry. I'm doing my best, Jeff Goldblum.
+
+164
+00:17:36,778 --> 00:17:40,138
+Uh oh. Uh, yes.
+
+165
+00:17:40,378 --> 00:17:43,798
+Uh, okay, I think I know what's happening.
+
+166
+00:17:44,368 --> 00:17:47,458
+Opera itself does not support profiles.
+
+167
+00:17:47,698 --> 00:17:52,558
+They may be trying to maneuver themselves so they can eventually support profiles.
+
+168
+00:17:53,378 --> 00:17:56,938
+Uh oh. Yes. Oh. Um.
+
+169
+00:17:57,448 --> 00:18:03,378
+And so what we need to do, I think. Is not do this.
+
+170
+00:18:03,388 --> 00:18:07,108
+This is pointing at the default profile. Or instead.
+
+171
+00:18:09,538 --> 00:18:13,648
+We go to our Chrome profile, migrate or get source profiles.
+
+172
+00:18:14,128 --> 00:18:22,558
+Let's see. Uh, I think we can just, like, remove this, uh, return null.
+
+173
+00:18:23,098 --> 00:18:30,118
+Maybe that'll work so that we use the sort of the base implementation that we, that we use for, uh, Chrome.
+
+174
+00:18:34,508 --> 00:18:38,498
+Uh oh. Uh. Very nice. Oh yes.
+
+175
+00:18:38,738 --> 00:18:43,478
+Mhm. Mhm. Uh. Mhm. Uh that's my Jeff Goldblum.
+
+176
+00:18:44,048 --> 00:18:47,978
+All right. Here we go. Opera. Hey look look at the look.
+
+177
+00:18:48,068 --> 00:18:54,848
+Look what we got here. Looky loo. Um, so let's try and import some stuff.
+
+178
+00:18:57,748 --> 00:19:03,088
+And then it wants me to provide my, uh, log and key chain.
+
+179
+00:19:03,628 --> 00:19:09,928
+Uh, can I do that over here? Uh oh.
+
+180
+00:19:09,938 --> 00:19:14,848
+And wants me to do it again because I got it wrong. Uh, there we go.
+
+181
+00:19:15,248 --> 00:19:19,258
+Got a bookmark? Password? Some history. There's the history.
+
+182
+00:19:19,588 --> 00:19:23,158
+Do I have the password? Yes. Okay.
+
+183
+00:19:23,878 --> 00:19:28,378
+Okay, gang. Uh, now, this is interesting, though, because.
+
+184
+00:19:32,538 --> 00:19:35,808
+Depending on the version of opera installed.
+
+185
+00:19:40,668 --> 00:19:47,718
+Hoo boy. Um. Get sauce profiles may need to be null or not.
+
+186
+00:19:48,318 --> 00:19:51,588
+So we can choose to to support modern opera.
+
+187
+00:19:55,528 --> 00:19:59,658
+It would force everyone who's got opera to make sure that they've got the most up to date version.
+
+188
+00:19:59,668 --> 00:20:04,198
+When did this up version that that is being mentioned come out? Opera 104.
+
+189
+00:20:05,128 --> 00:20:10,468
+Sorry, opera. Oh, here we go. These are there for.
+
+190
+00:20:10,888 --> 00:20:14,338
+Yes. Oh, so back in 2023, it looks like.
+
+191
+00:20:15,268 --> 00:20:19,348
+How. Why is this only breaking now? That seems crazy.
+
+192
+00:20:20,518 --> 00:20:26,208
+Four. Two. Three. Mac. 20. Did I misread this?
+
+193
+00:20:26,718 --> 00:20:30,558
+Starting with this. An additional default folder.
+
+194
+00:20:31,998 --> 00:20:42,027
+Versus this. This has been. That seems crazy when release.
+
+195
+00:20:42,028 --> 00:20:48,338
+Notes. Opera. Is from 2023.
+
+196
+00:20:48,578 --> 00:20:54,968
+I swear that we've been importing from opera since 2023.
+
+197
+00:20:54,998 --> 00:21:01,778
+Why would this suddenly be broken? Uh, I don't understand it.
+
+198
+00:21:02,138 --> 00:21:10,808
+I don't understand. I mean, in that case, if this is the way it's been doing it since 2023.
+
+199
+00:21:13,058 --> 00:21:17,528
+Like when? When when is this build from opera?
+
+200
+00:21:20,988 --> 00:21:29,078
+10349. 20, 2023 as well.
+
+201
+00:21:31,848 --> 00:21:37,998
+What's happening? October? Oh, these are two different branches.
+
+202
+00:21:38,538 --> 00:21:47,758
+They've been maintaining both. It looks like. But somewhere around the major version release somewhere.
+
+203
+00:21:47,968 --> 00:21:53,218
+Sometime during 104 they changed to where the profile directory was stored.
+
+204
+00:21:54,598 --> 00:21:59,648
+Huh? Huh? Very interesting.
+
+205
+00:21:59,658 --> 00:22:02,988
+Whoops. Didn't mean to open a black hole there.
+
+206
+00:22:04,248 --> 00:22:12,048
+All right, well, in that case, I personally feel okay just getting rid of the, uh, the sauce profiles restriction.
+
+207
+00:22:13,728 --> 00:22:17,778
+Um. And I wonder if we need to do the same thing with opera.
+
+208
+00:22:19,308 --> 00:22:22,718
+Uh, what? What is the bug reporter? Do they.
+
+209
+00:22:23,588 --> 00:22:27,938
+Oh, they were able to get stuff from opera geeks, so that's okay.
+
+210
+00:22:30,588 --> 00:22:36,918
+Even though get source profiles is null. This is something that we might need to eventually support.
+
+211
+00:22:37,698 --> 00:22:41,568
+Um, for opera geeks as well. But.
+
+212
+00:22:41,568 --> 00:22:48,858
+Okay. Um. Let's see what happens.
+
+213
+00:22:48,888 --> 00:22:52,158
+Do we have any? This is a really hard thing to write tests for,
+
+214
+00:22:54,138 --> 00:22:59,238
+because we in our test environments and our automated CI test of ours, we don't have like opera installed.
+
+215
+00:23:00,048 --> 00:23:05,208
+Um, so we might just have to eat this one without a test, unfortunately.
+
+216
+00:23:07,668 --> 00:23:11,438
+Uh. Let's see what happens if I run the test, though.
+
+217
+00:23:18,128 --> 00:23:29,118
+I think this is the sort of thing that we really rely on, like, uh, our, uh, our user base to help us detect a user base in QA.
+
+218
+00:23:47,708 --> 00:23:51,098
+Okay. Let's, uh, let's call it there. Let's.
+
+219
+00:23:51,128 --> 00:23:56,018
+Let's see if we can get that to work. Let's also see if that fixes it for our windows as well.
+
+220
+00:23:56,048 --> 00:24:02,498
+I've got, uh, I've got my windows built here. I installed opera on Windows and let's see if we can get this to work as well on windows.
+
+221
+00:24:03,128 --> 00:24:08,888
+So I'll post this for review. Um, I've just got the one change right now.
+
+222
+00:24:09,248 --> 00:24:15,638
+Just removing this to change a comment. Um, what is the bug number?
+
+223
+00:24:18,668 --> 00:24:22,027
+Uh, this bug number, but such and such.
+
+224
+00:24:22,028 --> 00:24:30,728
+Um, uh, update opera of my greater to account for the default user profile.
+
+225
+00:24:34,148 --> 00:24:35,708
+Default user profile.
+
+226
+00:24:36,458 --> 00:24:47,288
+Uh, and this is going to be migration of the users that's going to be reviewing that and then uh, get all right JJ bookmark create.
+
+227
+00:24:48,278 --> 00:24:52,268
+Are you, uh, on the call uh prefix. Yeah.
+
+228
+00:24:52,298 --> 00:24:58,877
+Check out our prefix. Uh, straps and that symbol.
+
+229
+00:24:58,878 --> 00:25:08,128
+Opera fix whip. So then we can post it up.
+
+230
+00:25:08,458 --> 00:25:13,778
+We can then go grab both. We're going to grab this patch here on our windows machine now.
+
+231
+00:25:13,798 --> 00:25:20,188
+So let's transition over to our windows machine where the first thing we should do is again reproduce the issue.
+
+232
+00:25:20,638 --> 00:25:23,757
+So I don't think I have jujitsu on this machine.
+
+233
+00:25:23,758 --> 00:25:27,448
+So I have to kind of switch my brain back to git mode.
+
+234
+00:25:28,048 --> 00:25:32,758
+Uh git pull rebase. We're going to do an artifact build.
+
+235
+00:26:00,328 --> 00:26:04,768
+Uh, care bills. Uh, in my building with artifacts.
+
+236
+00:26:04,828 --> 00:26:14,038
+Let's hope so. Okay. And build. While we're doing this, does anyone have any questions about my greeters or.
+
+237
+00:26:15,438 --> 00:26:21,738
+Um, I don't know anything. Uh, anything anyone want wants to talk about while we wait for this to build.
+
+238
+00:26:22,728 --> 00:26:28,518
+It shouldn't take too long. It's an artifact build. Uh, maybe I can talk a little bit about the second bullet.
+
+239
+00:26:29,088 --> 00:26:38,418
+Uh, new tab message plumbing. So we've got this ability right now to show, um, messages in new tab.
+
+240
+00:26:39,138 --> 00:26:44,267
+Uh. Uh, where is it?
+
+241
+00:26:44,268 --> 00:26:47,628
+Where is it? Where is it? Where is it? Uh, new tab, uh, message.
+
+242
+00:26:48,048 --> 00:26:54,527
+Um, like this, uh, to sort of, like, alert people about things.
+
+243
+00:26:54,528 --> 00:27:01,458
+This is just like a little test message interface over here, uh, to sort of, like, highlight things like, hey, you can set up new backgrounds.
+
+244
+00:27:02,958 --> 00:27:06,857
+And what is Ace router? Ace router is the, um,
+
+245
+00:27:06,858 --> 00:27:12,498
+messaging system built into Firefox that tries to make it so that we can show messages
+
+246
+00:27:12,498 --> 00:27:17,358
+to users about new features or things they need to know about at the right time,
+
+247
+00:27:17,508 --> 00:27:20,808
+without overloading them with a bunch of messages all at the same time.
+
+248
+00:27:21,198 --> 00:27:27,107
+So it will attempt to make sure that a message that we're sending out qualifies for the client, and that it's not going to,
+
+249
+00:27:27,108 --> 00:27:32,928
+like, collide with other messages because we don't want to like show 5 or 6 messages all at once.
+
+250
+00:27:33,468 --> 00:27:37,068
+Um, which is actually part of the problem we're trying to solve,
+
+251
+00:27:37,068 --> 00:27:44,898
+because that collision problem is actually something that's occurring for messages on the new tab page, because the new tab page is special,
+
+252
+00:27:45,318 --> 00:27:48,107
+because it runs out of process, it runs in a separate process,
+
+253
+00:27:48,108 --> 00:27:56,838
+and there does not yet exist a way for the Ace router system to know whether or not the foregrounded tab is a new tab that is showing a message.
+
+254
+00:27:57,348 --> 00:28:03,677
+And so, uh, I was asked to see if there was a, uh, like what would be the right way of of running that plumbing.
+
+255
+00:28:03,678 --> 00:28:05,688
+And I thought we could try and investigate that today.
+
+256
+00:28:07,008 --> 00:28:15,228
+But first is this is this this my, uh, artifact build's almost done as stands for activity stream, by the way.
+
+257
+00:28:15,678 --> 00:28:22,668
+And activity stream. The only like that's historical information, like activity stream used to be the code name for new tab.
+
+258
+00:28:22,998 --> 00:28:30,048
+And the only reason it's called, uh, Ace Router is because the messages originally used to only only show up on new tab,
+
+259
+00:28:30,378 --> 00:28:34,968
+and then, uh, it was like, uh, modified to work with the rest of the browser.
+
+260
+00:28:34,968 --> 00:28:39,677
+And then we stopped showing certain messages on new tab, the what we call the snippets on the bottom.
+
+261
+00:28:39,678 --> 00:28:45,708
+So we got rid of that mechanism. And now we've added a different new mechanism for showing messages on new tab.
+
+262
+00:28:45,978 --> 00:28:50,568
+And it's just the fact that it has ace in the in the name is just a historical artifact.
+
+263
+00:28:50,868 --> 00:28:57,318
+It's it's a real Rube Goldberg. All right, here we go. Let's see if, uh, we can reproduce the issue and make sure that, uh, opera.
+
+264
+00:28:58,008 --> 00:29:05,868
+Uh, what? I'll go ahead and do the same thing I did before where I'm going to create some, um, let's let's create some browsing history.
+
+265
+00:29:08,478 --> 00:29:11,868
+And then I'm going to, uh, create a password.
+
+266
+00:29:13,488 --> 00:29:17,988
+How do I do that? Password? Oh my goodness.
+
+267
+00:29:18,528 --> 00:29:21,758
+Passwords. Settings.
+
+268
+00:29:23,268 --> 00:29:30,148
+Go there. Okay. Password manager.
+
+269
+00:29:31,348 --> 00:29:35,038
+Add Centcom test. Test.
+
+270
+00:29:36,298 --> 00:29:40,288
+Okay, so we've got some history. Uh, I'm going to create a bookmark.
+
+271
+00:29:40,318 --> 00:29:43,558
+I'm going to bookmark. Was this bookmark? Bookmark.
+
+272
+00:29:44,458 --> 00:29:47,828
+Done. All right. So I've created a bookmark.
+
+273
+00:29:47,848 --> 00:29:52,708
+I've got some history and I've got a password. Uh, okay.
+
+274
+00:29:52,738 --> 00:29:56,278
+Quick. Yeah. Let's make sure that we don't see opera in the list.
+
+275
+00:29:57,788 --> 00:30:01,148
+Data. We do not see opera in the list.
+
+276
+00:30:01,178 --> 00:30:04,388
+Great. That is expected. Now.
+
+277
+00:30:07,808 --> 00:30:15,008
+Uh, let us try and get our patch that we just wrote applied and see if it fixes things.
+
+278
+00:30:17,278 --> 00:30:21,988
+Uh. Ouch! Whoops.
+
+279
+00:30:23,338 --> 00:30:29,098
+Uh, mas fab patch. I just need the last part. 25499 to apply to here.
+
+280
+00:30:29,548 --> 00:30:33,098
+Wow. That's happening. I'm going to boot up my, uh, Linux VM.
+
+281
+00:30:33,118 --> 00:30:36,658
+We want to make sure that, uh, we're going to have to install opera on this thing as well.
+
+282
+00:30:39,838 --> 00:30:53,388
+All right. Build faster. Also, for people who don't know, Firefox 140 just went out.
+
+283
+00:30:54,138 --> 00:30:58,608
+Um, and there's like a bunch of stuff in there. There's a in the release notes.
+
+284
+00:30:59,148 --> 00:31:05,208
+It's still we're still throttling it. Um, but like a bunch of interesting stuff under the hood.
+
+285
+00:31:05,808 --> 00:31:09,617
+Um, there's like a dragging, dropping thing for pinned tabs so you can.
+
+286
+00:31:09,618 --> 00:31:15,048
+Well, first of all, you can, like, create more space for pinned tabs by, like, moving that around.
+
+287
+00:31:15,528 --> 00:31:18,107
+And then you can there's some custom extension stuff.
+
+288
+00:31:18,108 --> 00:31:23,328
+There's the removing the extensions button, which I remember people were really excited about unloading tabs.
+
+289
+00:31:23,328 --> 00:31:28,158
+That's built in by default. Now you can like right click on a thing and unload a tab to reclaim some memory.
+
+290
+00:31:29,298 --> 00:31:38,958
+Uh, some improvements for translations, improvements to the, uh, built in, uh, to the Arabic build now comes with a built in Arabic dictionary.
+
+291
+00:31:39,368 --> 00:31:42,758
+Uh, and we've been able to address autofill for Italy, Poland, Austria, Austria.
+
+292
+00:31:42,768 --> 00:31:53,028
+That's good. Uh, disables pocket porn out and then, uh, improve the search feature in some of the inspector stuff web platform,
+
+293
+00:31:53,028 --> 00:32:02,658
+a bunch of stuff, including support for the cookie store API, the custom highlight API, um, uh, and some new events.
+
+294
+00:32:02,658 --> 00:32:05,987
+Service workers are now available in private browsing mode, so that's good.
+
+295
+00:32:05,988 --> 00:32:10,098
+That makes it harder for people to determine whether you're not in private browsing mode.
+
+296
+00:32:10,788 --> 00:32:14,538
+Uh, and that also means that more sites will be able to benefit from service workers.
+
+297
+00:32:15,288 --> 00:32:23,148
+Um, there's like changes to how you a user agent styles are applied to H1 elements to be more spec compliant.
+
+298
+00:32:24,348 --> 00:32:28,248
+Uh, this is an issue that we discovered yesterday actually,
+
+299
+00:32:28,248 --> 00:32:34,188
+is that if you have a dark theme installed, um, there may be some contrast issues in the sidebar.
+
+300
+00:32:34,458 --> 00:32:38,148
+And so there is a, there's work underway to to get that fix.
+
+301
+00:32:38,148 --> 00:32:42,168
+We're probably going to ship a dark release for 140 either this week or early next.
+
+302
+00:32:42,618 --> 00:32:48,228
+Um, so I one caught us off guard, but so it goes.
+
+303
+00:32:48,228 --> 00:32:52,458
+So it goes. That's why we do, uh, throttled rollouts.
+
+304
+00:32:52,698 --> 00:32:59,298
+Okay, so we've applied the patch. Let us now see if we can import from opera.
+
+305
+00:33:04,638 --> 00:33:08,508
+Import. Hey, there you are. There you are.
+
+306
+00:33:09,468 --> 00:33:12,878
+Import. Done. Done.
+
+307
+00:33:12,918 --> 00:33:16,638
+Like dinner. Nice.
+
+308
+00:33:20,478 --> 00:33:24,398
+Looking good. Okay. Well, we did it. Uh, let's make sure the password is there.
+
+309
+00:33:24,498 --> 00:33:32,088
+Uh, there it is. Okay. Feeling pretty good about that. Uh, let's now make sure that, uh, it's all going to work out on our Linux machine.
+
+310
+00:33:32,958 --> 00:33:36,858
+Now, how do I install? Uh, we cancel our.
+
+311
+00:33:36,868 --> 00:33:41,838
+Oh, yeah. Sorry. Close that down. Close that down.
+
+312
+00:33:42,648 --> 00:33:57,547
+I'm going to install opera for Linux. That's right.
+
+313
+00:33:57,548 --> 00:34:02,858
+I clicked on the sponsored link. So Google's going to get a little bit of money.
+
+314
+00:34:03,518 --> 00:34:07,778
+Maybe later. What happened? Got the deb.
+
+315
+00:34:10,318 --> 00:34:18,638
+Software install. Is that it may complain because I think this this VM is like pretty out of date.
+
+316
+00:34:20,348 --> 00:34:27,058
+Like I think there's a bunch of stuff that. Um, needs to be updated.
+
+317
+00:34:27,508 --> 00:34:36,158
+So maybe pretty upset with me. Like a wet version of.
+
+318
+00:34:38,978 --> 00:34:45,548
+Uh, you mean, uh. Let's be at least.
+
+319
+00:34:46,658 --> 00:34:52,788
+And, uh. V.
+
+320
+00:34:55,288 --> 00:34:59,328
+Are. See Jamie.
+
+321
+00:35:00,388 --> 00:35:05,008
+Hey, this is a bunch of 2204, so this is like, three years old.
+
+322
+00:35:06,148 --> 00:35:10,518
+It's the lights for Jamie. I don't know if it's still being maintained.
+
+323
+00:35:10,528 --> 00:35:15,448
+It's been a while since I've checked. So, opera stable installed size.
+
+324
+00:35:16,378 --> 00:35:22,468
+Uh. Do it. Okay.
+
+325
+00:35:24,708 --> 00:35:30,638
+Okay. Fine. How do I.
+
+326
+00:35:31,268 --> 00:35:36,698
+Is it just installed now? I can't. Installed.
+
+327
+00:35:39,898 --> 00:35:45,388
+That's user experience. What is it? Opera.
+
+328
+00:35:50,748 --> 00:35:53,818
+Up. What the heck?
+
+329
+00:35:53,838 --> 00:35:57,248
+Oh, it is installed. It's installed already. Wow.
+
+330
+00:35:57,258 --> 00:36:01,028
+Good for them. That so? And it's version 119.
+
+331
+00:36:01,038 --> 00:36:06,168
+Oh. Well, that's a problem. I need this to be up to date. Um, how do I.
+
+332
+00:36:06,858 --> 00:36:10,998
+Is that under the software updater updates? Here we go. Here we go.
+
+333
+00:36:11,508 --> 00:36:16,088
+Opera update. All right.
+
+334
+00:36:16,148 --> 00:36:21,638
+Um, uh, hang on a second. Uh, I got to move this.
+
+335
+00:36:43,488 --> 00:36:48,338
+One sack. I think everything about this computer is now obsessed with.
+
+336
+00:36:49,778 --> 00:36:53,228
+Okay. Done.
+
+337
+00:36:53,678 --> 00:36:58,508
+Okay, so it's installing what is now the version of opera.
+
+338
+00:37:03,648 --> 00:37:08,138
+All right. I'll wait for that to install. That may take a second.
+
+339
+00:37:10,948 --> 00:37:15,088
+But for now. Okay, there we go. Um.
+
+340
+00:37:16,528 --> 00:37:25,108
+So now I have. According to package manager, I have version.
+
+341
+00:37:28,478 --> 00:37:31,837
+One, 1905 497.
+
+342
+00:37:31,838 --> 00:37:36,308
+And the version that I really need is.
+
+343
+00:37:38,588 --> 00:37:45,838
+104. Oh, so I've got a much associative data.
+
+344
+00:37:46,408 --> 00:37:50,378
+Still not offered. Okay, so this should this should reproduce the issue.
+
+345
+00:37:50,398 --> 00:37:53,938
+119 okay. So I'm going to move this window back. Okay.
+
+346
+00:37:56,638 --> 00:38:02,958
+So we've got opera. Uh I'm going to try and find it here.
+
+347
+00:38:02,968 --> 00:38:06,508
+Opera. I've got two operas.
+
+348
+00:38:07,138 --> 00:38:16,618
+Let's see which one this is. Incredible.
+
+349
+00:38:18,388 --> 00:38:22,788
+This looks really old. This looks like old opera. Oh, wow.
+
+350
+00:38:22,798 --> 00:38:27,357
+Look at this. Okay.
+
+351
+00:38:27,358 --> 00:38:32,848
+Hold on. Uh, let's close that. Let's now, don't just quit opera.
+
+352
+00:38:34,018 --> 00:38:41,068
+Let's try the second one. What's the second opera going to do?
+
+353
+00:38:48,828 --> 00:38:53,388
+This looks more like it. No, thanks.
+
+354
+00:38:55,258 --> 00:39:03,448
+Okay, so, uh, we have a problem, actually, because we have two operas installed.
+
+355
+00:39:04,228 --> 00:39:07,408
+We run the. I need to be able to differentiate one from the other.
+
+356
+00:39:07,408 --> 00:39:10,588
+So I'm going to make sure that this one has gone to the CBC.
+
+357
+00:39:13,438 --> 00:39:19,408
+It has a bookmark@mozilla.org. Or C.
+
+358
+00:39:22,038 --> 00:39:26,928
+And then also, um, has a password set.
+
+359
+00:39:28,758 --> 00:39:32,078
+Man. This is. This is something.
+
+360
+00:39:40,088 --> 00:39:43,388
+Uh, sample back. Um. Test.
+
+361
+00:39:43,938 --> 00:39:48,758
+Test. Okay. Uh, now what happens?
+
+362
+00:39:49,058 --> 00:39:52,448
+I'll bet you Firefox can detect the other opera.
+
+363
+00:39:52,568 --> 00:39:56,707
+I'll bet it can. I'll bet it will. See it. Oh.
+
+364
+00:39:56,708 --> 00:40:02,388
+It doesn't. Oh, my. Oh, in this particular case.
+
+365
+00:40:04,428 --> 00:40:10,008
+Uh, yeah. It's definitely not seeing opera. And also this is this Firefox is installed as a snap.
+
+366
+00:40:10,518 --> 00:40:14,718
+So what I need to do is run, uh, normal Firefox.
+
+367
+00:40:14,718 --> 00:40:21,418
+I need to build it. Quit. Oops.
+
+368
+00:40:22,288 --> 00:40:28,868
+How come? Oh, man, this is going to be.
+
+369
+00:40:28,898 --> 00:40:34,178
+This is going to be brutal. When was the last time I pulled? Okay, March.
+
+370
+00:40:34,188 --> 00:40:38,528
+Not that long ago. Three months ago. Hi, Paul.
+
+371
+00:40:38,528 --> 00:40:42,068
+You all right? Do you know still how to mercurial?
+
+372
+00:40:50,578 --> 00:40:53,578
+I would be very surprised if I can get an artifact.
+
+373
+00:40:53,578 --> 00:40:57,228
+Build a working. With a mercurial clone.
+
+374
+00:40:57,238 --> 00:41:06,918
+We're going to find out. Yeah, one 119 is newer than 104.
+
+375
+00:41:06,938 --> 00:41:13,598
+That is correct. So while that's happening, maybe, uh, so this is going to take longer than I expected,
+
+376
+00:41:14,258 --> 00:41:19,898
+um, to get a build going, a modern build of of Firefox nightly working on this machine.
+
+377
+00:41:20,288 --> 00:41:22,048
+So we're just going to let that cook in the background.
+
+378
+00:41:22,048 --> 00:41:30,698
+And we can think a little bit more about this problem of querying the top most browser to see if it is a new tab,
+
+379
+00:41:31,028 --> 00:41:35,228
+and b whether or not it is, uh, showing a message.
+
+380
+00:41:36,038 --> 00:41:44,138
+And I think the second part is maybe the toughest part, because I'm pretty sure new Tab doesn't have any send query.
+
+381
+00:41:45,158 --> 00:41:49,208
+Uh, yeah. It's not using send query at all. And that's exactly kind of what we want.
+
+382
+00:41:49,238 --> 00:41:55,838
+We want to be able to ask a question of new tab, um, of a particular page.
+
+383
+00:41:59,268 --> 00:42:03,648
+Now, the way that new tab is, is so and so unusual.
+
+384
+00:42:05,068 --> 00:42:11,028
+Um. It because it's pretty uni directional.
+
+385
+00:42:12,128 --> 00:42:16,718
+But it isn't always uni directional. And what we're talking about is asking a question.
+
+386
+00:42:17,688 --> 00:42:23,108
+Asking a question. Thought ID.
+
+387
+00:42:27,158 --> 00:42:41,408
+Found you to have a parent message wrap her message. Message said.
+
+388
+00:42:42,578 --> 00:42:45,968
+So the child process can easily just update the single tab.
+
+389
+00:42:54,438 --> 00:43:00,278
+Okay. Shell message gets the port ID.
+
+390
+00:43:17,148 --> 00:43:19,758
+I wonder if the best model here.
+
+391
+00:43:20,808 --> 00:43:26,058
+I'm just going to think out loud for a second while we wait for this to update, just based on how new Tab already works,
+
+392
+00:43:26,988 --> 00:43:37,698
+because it does this kind of like, but it has this unusual structure because it was at one point pivoting towards being able to be run remotely.
+
+393
+00:43:38,938 --> 00:43:45,208
+Like over the web. And so the the communications pathway it uses is a little tortuous.
+
+394
+00:43:45,748 --> 00:43:50,968
+And. It's still possible that down the line the UI could be hosted remotely.
+
+395
+00:43:51,538 --> 00:43:57,538
+Um, which is really interesting. Uh, but it does mean that we have to kind of.
+
+396
+00:43:58,718 --> 00:44:02,678
+Twist ourselves into pretzels a little bit. When it comes to communication.
+
+397
+00:44:05,428 --> 00:44:19,328
+I think what I want to do. UN action.
+
+398
+00:44:20,318 --> 00:44:29,227
+How does UN action you know any of our feeds images, highlight feed places feed system.
+
+399
+00:44:29,228 --> 00:44:32,648
+Feed wallpaper. Feed places. Feed.
+
+400
+00:44:33,578 --> 00:44:44,958
+Discovery. Stream. Feed. Uh, let's just look at any of these on action.
+
+401
+00:44:46,368 --> 00:44:53,588
+Does the action include the browser? Action.
+
+402
+00:44:54,038 --> 00:44:58,687
+I'll bet it doesn't matter. From target.
+
+403
+00:44:58,688 --> 00:45:02,438
+Maybe at target. What is the target?
+
+404
+00:45:03,908 --> 00:45:13,288
+Only to one content. Where? The target. Two target.
+
+405
+00:45:21,588 --> 00:45:27,048
+It's an I. Yeah. Target I.D. is a it's a target ID get target by a ID.
+
+406
+00:45:27,588 --> 00:45:32,358
+Uh, get target by ID.
+
+407
+00:45:35,118 --> 00:45:39,198
+We go through a loaded. Tabs. If port IDs, ID, we get the actor.
+
+408
+00:45:43,528 --> 00:45:46,918
+At the actor values.
+
+409
+00:45:47,338 --> 00:45:56,088
+So okay. Target ID? I just want to see who calls that.
+
+410
+00:45:56,168 --> 00:45:59,428
+Anyone else? Search group. Target body.
+
+411
+00:46:04,508 --> 00:46:13,688
+Okay. And when it does a call, send async message with the outgoing message name.
+
+412
+00:46:15,648 --> 00:46:21,828
+But the target. Is the actor and the actor.
+
+413
+00:46:23,798 --> 00:46:32,558
+I believe if we get an about new tab, active browser, selected browser, um browse and context current window global.
+
+414
+00:46:34,718 --> 00:46:38,678
+Get. Actor. What is it? Get actor.
+
+415
+00:46:40,208 --> 00:46:44,108
+New tab. So it's called Get Actor.
+
+416
+00:46:46,628 --> 00:46:50,738
+Pretty loaded tabs.
+
+417
+00:46:54,038 --> 00:46:58,918
+That's a map. How do we add?
+
+418
+00:47:01,018 --> 00:47:05,598
+Things to loaded tabs. About.
+
+419
+00:47:06,498 --> 00:47:13,458
+About new tab. Parent loaded tabs G loaded tabs.
+
+420
+00:47:14,808 --> 00:47:19,248
+Browser to an actor, a browser, a browser and context a port.
+
+421
+00:47:19,488 --> 00:47:26,898
+Okay. And what is the actor called?
+
+422
+00:47:32,088 --> 00:47:35,598
+Tabs. Set. New browser tab.
+
+423
+00:47:35,598 --> 00:47:38,958
+Details. Tab. Details.
+
+424
+00:47:42,668 --> 00:47:46,008
+Actor. Is this the about new tab? About new tab.
+
+425
+00:47:46,028 --> 00:47:52,868
+Okay. It's really.
+
+426
+00:47:57,478 --> 00:48:07,888
+What we want to do. I think what might be best is anytime a new tab is showing a message.
+
+427
+00:48:10,288 --> 00:48:13,788
+It should fire in a, um, like an action.
+
+428
+00:48:13,798 --> 00:48:22,498
+That is, it's like in new tab parlance to the parent to alert that it's showing one, and then the parent will maintain a list of.
+
+429
+00:48:25,858 --> 00:48:31,438
+Browsers that are showing messages and then in order to do the check.
+
+430
+00:48:33,058 --> 00:48:41,298
+We would see whether or not. The browsers in this set.
+
+431
+00:48:47,548 --> 00:48:52,588
+And if the message goes away or the new tab unloads, we should remove it from that set.
+
+432
+00:48:58,098 --> 00:49:02,038
+Okay. Okay.
+
+433
+00:49:03,568 --> 00:49:10,128
+I think that's the model. So then we need to be able to transition from.
+
+434
+00:49:25,238 --> 00:49:34,037
+I detect. What do we receive a message on?
+
+435
+00:49:34,038 --> 00:49:37,338
+Message. House. Persuasion on message.
+
+436
+00:49:38,568 --> 00:49:41,688
+Action. Target. Target is used. X-Prize reference. That came.
+
+437
+00:49:41,788 --> 00:49:45,558
+The current should be used. Only used in feeds, not reducers.
+
+438
+00:49:46,218 --> 00:49:52,788
+The underscore target will be the tab details Prows. So we will have the browser so we can use that.
+
+439
+00:49:55,628 --> 00:49:59,368
+Okay. Okay.
+
+440
+00:50:00,448 --> 00:50:05,548
+And action from content. The action will go into the feeds the.
+
+441
+00:50:08,228 --> 00:50:12,698
+We need to know whenever the new tab unloads or goes away.
+
+442
+00:50:16,448 --> 00:50:20,258
+Um, and is there an action for that?
+
+443
+00:50:23,288 --> 00:50:26,688
+It'll be listed under here. Whoops, whoops.
+
+444
+00:50:28,508 --> 00:50:33,098
+New tab. I think it's actually ActionScript has.
+
+445
+00:50:37,038 --> 00:50:40,268
+A new tab unload. Perfect.
+
+446
+00:50:42,458 --> 00:50:45,848
+And is there one in here for message? Text message.
+
+447
+00:50:53,458 --> 00:51:01,648
+So every stream like new tab message has this work.
+
+448
+00:51:12,108 --> 00:51:25,218
+That's rather. Super.
+
+449
+00:51:27,418 --> 00:51:32,268
+Message. You can message here in new tab messaging under lid.
+
+450
+00:51:33,118 --> 00:51:36,958
+And when we see a message we'll send message set.
+
+451
+00:51:37,198 --> 00:51:40,558
+That's what we'll do. There's something called message set.
+
+452
+00:51:45,498 --> 00:51:49,128
+Yeah. Message toggle visibility.
+
+453
+00:51:49,488 --> 00:52:01,918
+I don't know what that one is. During dev data.
+
+454
+00:52:01,918 --> 00:52:06,398
+False. Okay. Okay. Okay, I think I have a plan.
+
+455
+00:52:06,418 --> 00:52:08,997
+I have a game plan, uh, for that.
+
+456
+00:52:08,998 --> 00:52:16,858
+But we've also got our build here, so let's, um, I think we've got build with a, um, masking tape wrapper here, right?
+
+457
+00:52:17,308 --> 00:52:25,988
+I spelled that wrong. Mask config l build with artifact build.
+
+458
+00:52:26,008 --> 00:52:29,888
+Well, first of all, I should clobber to reclaim some disk space.
+
+459
+00:52:29,908 --> 00:53:06,138
+I'll bet you this disk is pretty full. Okay.
+
+460
+00:53:06,208 --> 00:53:10,677
+And now let us, uh, build. Well.
+
+461
+00:53:10,678 --> 00:53:15,268
+Let's bootstrap. Make sure we've got everything we need just to do an artifact build.
+
+462
+00:53:24,178 --> 00:53:27,688
+Excuse me. Sorry. I just had lunch before the, uh.
+
+463
+00:53:32,128 --> 00:53:39,378
+Um, before the stream. Uh, yes.
+
+464
+00:53:45,468 --> 00:54:08,008
+Again. Get all the stuff. Okay.
+
+465
+00:54:08,698 --> 00:54:16,318
+So now. I go build with artifact build.
+
+466
+00:54:17,188 --> 00:54:25,858
+Should be able to mock build. All right.
+
+467
+00:54:40,168 --> 00:54:55,338
+I'm. Okay.
+
+468
+00:54:57,348 --> 00:55:03,498
+So it's downloading. It's just going to take a second here to unpack some stuff in the meantime.
+
+469
+00:55:03,828 --> 00:55:07,288
+Again any questions? Any questions about new Tab.
+
+470
+00:55:07,308 --> 00:55:13,818
+I've been, uh. So I don't know if people have known this. I've been working on the new Tab team for, uh, a number of months now.
+
+471
+00:55:13,818 --> 00:55:18,538
+Almost a year. I've been assigned as the is an engineer working on the new Tab team.
+
+472
+00:55:18,558 --> 00:55:23,088
+I'm doing a lot of, like, uh, principal engineer style work.
+
+473
+00:55:23,238 --> 00:55:31,308
+So I'm not always down in the sort of the the bowels of the code, and I'm doing, like, higher level architecture stuff, but, um.
+
+474
+00:55:32,998 --> 00:55:36,508
+Uh, but I have been working on new Tab. There's some neat stuff coming up.
+
+475
+00:55:36,578 --> 00:55:40,978
+Like, I'm really happy with the ability to do, like, the custom backgrounds.
+
+476
+00:55:41,038 --> 00:55:45,628
+Um, you know, these sections are really neat. I like the way they look.
+
+477
+00:55:46,168 --> 00:55:54,628
+Um. What else? Um, I think there's going to be some ongoing work regarding search, like this whole, like, handing off of search.
+
+478
+00:55:55,258 --> 00:55:59,518
+Uh, I think I think we're going to we're going to do try and do something better there.
+
+479
+00:55:59,608 --> 00:56:04,078
+Um, but being able to, like, pick and choose the topics that you want to see.
+
+480
+00:56:04,438 --> 00:56:08,398
+Um, you know, if story is interesting, you might want to see, like, oh, I want, um,
+
+481
+00:56:08,548 --> 00:56:13,468
+stuff around, you know, soccer or something, like being able to pick and choose and customize.
+
+482
+00:56:13,708 --> 00:56:15,448
+That is something we're very interested in.
+
+483
+00:56:15,838 --> 00:56:25,168
+Um, and, you know, alongside the other kind of customization you do with, like, turn on weather and shortcuts and how many shortcuts and etc., etc.
+
+484
+00:56:25,168 --> 00:56:29,248
+So, um, yeah, that that's that's where I'm at.
+
+485
+00:56:29,278 --> 00:56:36,618
+Okay. So let's, let's run this build. What?
+
+486
+00:56:36,918 --> 00:56:43,068
+Why does my root you are I did I have do I have a patch?
+
+487
+00:56:44,058 --> 00:56:49,158
+I bet you I have a patch applied. Uh, let's shutting down.
+
+488
+00:56:49,158 --> 00:56:52,188
+What death? Do I have a patch?
+
+489
+00:56:54,288 --> 00:56:58,008
+Why, yes, I do, uh, HG log.
+
+490
+00:57:00,318 --> 00:57:03,618
+Uh, okay, so H.G. River.
+
+491
+00:57:03,858 --> 00:57:07,158
+Uh, I don't want any of those changes.
+
+492
+00:57:07,668 --> 00:57:12,558
+I don't know what they were, but they're obviously not relevant, so we're gonna blow them away.
+
+493
+00:57:15,198 --> 00:57:20,748
+Um. HG.
+
+494
+00:57:20,778 --> 00:57:25,608
+So HG. Pull. Rebase.
+
+495
+00:57:30,998 --> 00:57:41,538
+Am I on the right? I should be on the right. Maybe I need to make sure I'm also on central.
+
+496
+00:57:44,148 --> 00:57:48,618
+Oh, there is some stuff there. So he update our central.
+
+497
+00:58:01,598 --> 00:58:05,798
+What is this stuff? Maybe I shouldn't have rebased these things.
+
+498
+00:58:06,458 --> 00:58:10,298
+I do not want it. Merge conflicts. Okay.
+
+499
+00:58:10,928 --> 00:58:14,198
+HG rebase. Abort. I do not want to rebase.
+
+500
+00:58:19,198 --> 00:58:28,438
+Okay. This is more like it. This is what I want. Just get to a modern tip of Mozilla, Central or Main, as we're calling it these days.
+
+501
+00:58:29,278 --> 00:58:34,498
+Um, Mozilla Central is the, uh, archaic terminology.
+
+502
+00:58:38,418 --> 00:58:39,018
+Oh, boy.
+
+503
+00:58:39,048 --> 00:58:49,848
+Okay, so I think I've got, uh, a solution for, uh, you know, this particular problem that I can start describing to my, uh, my colleague Nathan.
+
+504
+00:58:50,478 --> 00:58:53,508
+Um, let me let me just ask him.
+
+505
+00:58:56,788 --> 00:59:01,228
+Hey, I think I've got, uh. I've got a.
+
+506
+00:59:02,758 --> 00:59:10,348
+Well, I think I told them that I was, uh, going to create, like, a work in progress patch that he could, like, see and then take over the line.
+
+507
+00:59:10,918 --> 00:59:23,128
+So rebase. Abort. Um, so maybe we can do that on the main line here.
+
+508
+00:59:23,158 --> 00:59:30,368
+Uh, JJ Newman at origin. So what are we going to do?
+
+509
+00:59:30,398 --> 00:59:39,608
+We're going to make it so that if we. We're going to have a action that sister MJ's under.
+
+510
+00:59:40,448 --> 00:59:44,768
+Oh, this story's just mjs new tab.
+
+511
+00:59:45,038 --> 00:59:48,968
+Uh, message set. Uh, message.
+
+512
+00:59:52,108 --> 00:59:55,678
+Um. Message.
+
+513
+00:59:56,128 --> 00:59:59,158
+Uh. Notify visibility.
+
+514
+01:00:00,268 --> 01:00:19,928
+I'm going to add that. Um, and then where do we there's going to be code somewhere in one of our like JS things for messages message wrapper.
+
+515
+01:00:19,948 --> 01:00:23,598
+Here we go. Hey, Paul.
+
+516
+01:00:23,618 --> 01:00:27,398
+Intersection. There's a message impression.
+
+517
+01:00:28,808 --> 01:00:33,478
+Uh, visibility change. Handle close action.
+
+518
+01:00:33,488 --> 01:00:47,058
+Toggle visibility. It's hidden is false.
+
+519
+01:00:48,998 --> 01:00:55,108
+If not message. Okay.
+
+520
+01:00:56,158 --> 01:01:03,108
+When would we dispatch? The action will be.
+
+521
+01:01:05,438 --> 01:01:11,108
+And of course, toggle visibility. That is true.
+
+522
+01:01:13,668 --> 01:01:18,108
+That's weird. Okay. Toggle visibility. I don't know why that's true.
+
+523
+01:01:18,138 --> 01:01:23,628
+Whenever we're handling close unhandled dismiss type message dismiss.
+
+524
+01:01:25,368 --> 01:01:30,018
+Really? It's handle intersection, dispatch, message impression.
+
+525
+01:01:31,128 --> 01:01:39,528
+Whatever is visible. Um.
+
+526
+01:01:43,758 --> 01:01:47,658
+That's it. Handle intersection. Use effect.
+
+527
+01:01:54,668 --> 01:02:00,187
+Has run. Say. Headlined your section. Handle.
+
+528
+01:02:00,188 --> 01:02:05,698
+Block. Handle. Click. Message.
+
+529
+01:02:07,078 --> 01:02:10,407
+Maybe the action isn't toggled. Uh. Notify visibility.
+
+530
+01:02:10,408 --> 01:02:13,548
+Notify. Notify.
+
+531
+01:02:14,428 --> 01:02:24,728
+Um. Well, now that I think about it.
+
+532
+01:02:31,008 --> 01:02:34,548
+When would message set? Have is hidden. True.
+
+533
+01:02:34,548 --> 01:02:37,668
+Message sent. Message said.
+
+534
+01:02:37,788 --> 01:02:41,388
+Type. Message said. When would we have?
+
+535
+01:02:41,388 --> 01:02:46,398
+Is hidden. When is is hidden. Said is hidden.
+
+536
+01:02:47,088 --> 01:02:56,178
+Message is hidden. When were is hidden.
+
+537
+01:02:59,348 --> 01:03:04,748
+Message. Messages received from asteroid are initially visible.
+
+538
+01:03:09,968 --> 01:03:17,368
+Issues. It's hidden action data.
+
+539
+01:03:19,468 --> 01:03:23,908
+Oh, boy. So toggle visibility.
+
+540
+01:03:24,238 --> 01:03:27,778
+So this is actually toggling hidden state. That's what's going on.
+
+541
+01:03:28,498 --> 01:03:31,948
+Oh that's tricky. Okay. Um, I don't know how much I love that.
+
+542
+01:03:39,548 --> 01:03:45,428
+Darkness fell. And the action.
+
+543
+01:03:54,878 --> 01:03:57,878
+You bought it. Batch.
+
+544
+01:04:01,368 --> 01:04:05,028
+Otherwise. Also to main.
+
+545
+01:04:16,068 --> 01:04:32,828
+Toggle visibility. Is hidden, it'll change the year's hidden state.
+
+546
+01:04:36,548 --> 01:04:39,638
+Of the message. So, little Rube Goldberg gang.
+
+547
+01:04:41,708 --> 01:04:48,158
+But okay. I think it might be easier for me to describe what I'm envisioning.
+
+548
+01:04:50,348 --> 01:04:59,668
+Um. To, uh, to my colleague rather than write it.
+
+549
+01:04:59,878 --> 01:05:03,568
+Okay, so now the rebase is aborted to update our central.
+
+550
+01:05:22,908 --> 01:05:34,968
+However. Okay, so filled with I've already got the right.
+
+551
+01:05:35,108 --> 01:05:38,658
+So let's build faster. Okay.
+
+552
+01:05:38,658 --> 01:06:04,518
+So, uh. Okay.
+
+553
+01:06:14,198 --> 01:06:21,548
+Uh. So let me let me write up this plumbing idea so I can describe it to my colleague.
+
+554
+01:06:21,568 --> 01:06:29,128
+So the issue is that what was the module that knows.
+
+555
+01:06:29,218 --> 01:06:33,808
+Uh, it's like message set your new tab.
+
+556
+01:06:34,258 --> 01:06:44,818
+It's this component called the new tab messaging. New tab messaging knows that it has sent a particular new tab,
+
+557
+01:06:44,818 --> 01:06:51,838
+an instruction to show a message in the past, but doesn't actually know if it's visible or not.
+
+558
+01:06:52,348 --> 01:06:57,268
+It may have already been dismissed by the user.
+
+559
+01:07:02,398 --> 01:07:11,118
+Um. What we should do is what I think we should do.
+
+560
+01:07:13,698 --> 01:07:17,148
+Is have the a message rapper.
+
+561
+01:07:20,448 --> 01:07:23,868
+Uh, send an action to the to the parent.
+
+562
+01:07:26,208 --> 01:07:30,978
+If a message is shown and if a message is dismissed.
+
+563
+01:07:32,388 --> 01:07:40,218
+The parent will maintain a weak set of browser elements that are showing messages.
+
+564
+01:07:43,398 --> 01:07:51,338
+On adding on a message shown. It will add to the set on message dismissed or new tab unload.
+
+565
+01:07:52,208 --> 01:07:58,428
+It'll remove from the set when, um.
+
+566
+01:07:59,628 --> 01:08:06,948
+It comes time to check if a message is visible on the current, uh, selected browser.
+
+567
+01:08:08,808 --> 01:08:13,008
+Merely check if it's in the set of one.
+
+568
+01:08:18,398 --> 01:08:23,198
+Okay. So that's that's what I'm going to recommend. Okay. So we've got our bill at long last.
+
+569
+01:08:23,858 --> 01:08:33,038
+At long last I think we're going to finally, uh, be able to verify this opera business.
+
+570
+01:08:33,188 --> 01:08:40,238
+Uh oh. So, so, see, now we can so we can import from opera, but it's the other opera.
+
+571
+01:08:40,358 --> 01:08:44,018
+I've got two versions of opera installed here. I think that's the problem.
+
+572
+01:08:44,348 --> 01:08:49,898
+And so I can only, uh, import from the other one. And I need to remove that version of opera.
+
+573
+01:08:50,408 --> 01:08:54,788
+I need to remove the old version of opera. So how do I do that?
+
+574
+01:08:59,928 --> 01:09:04,638
+How do I find out what what opera this is and where it came from.
+
+575
+01:09:06,838 --> 01:09:10,548
+Because this is all. Oh, now this is. This is modern opera.
+
+576
+01:09:10,908 --> 01:09:14,898
+This is now modern opera. So what happens if I try running the other opera?
+
+577
+01:09:17,058 --> 01:09:22,488
+Is is boon to trying to be smart and reordering things?
+
+578
+01:09:22,758 --> 01:09:25,758
+It is. So let's find out about this opera.
+
+579
+01:09:27,948 --> 01:09:31,878
+Uh, help about opera.
+
+580
+01:09:31,878 --> 01:09:37,928
+This is 93. This is opera 93 and is way old.
+
+581
+01:09:38,858 --> 01:09:51,668
+And where is it installed? Mm.
+
+582
+01:09:54,628 --> 01:09:58,318
+Mike's cheating. I'm cheating on you. What do you mean?
+
+583
+01:09:59,648 --> 01:10:06,358
+So I think I may have installed this manually. Back in the day.
+
+584
+01:10:06,388 --> 01:10:09,728
+Oh, by using opera. Hey, Danny. You gotta. You must join this.
+
+585
+01:10:09,748 --> 01:10:18,088
+This, uh, stream late. Uh, Danny colon. We are, uh, we're trying to fix up, uh, importing into Firefox from opera.
+
+586
+01:10:19,868 --> 01:10:24,848
+Um. So the install is right here. So I must have.
+
+587
+01:10:26,658 --> 01:10:33,847
+How do I uninstall it? This particular version. Uh oh.
+
+588
+01:10:33,848 --> 01:10:45,308
+I'm getting a I'm getting a smurf d a smurf d uh, command, uh, or deep, deep PCGs gl grep opera.
+
+589
+01:10:48,528 --> 01:10:53,288
+All right, let's see what we just. Well, let's see what we've got here.
+
+590
+01:10:53,298 --> 01:10:58,698
+Opera stable 93. We're going to we're going to remove opera stable.
+
+591
+01:11:00,588 --> 01:11:07,908
+Quit opera. So sudo apt remove opera stable.
+
+592
+01:11:10,428 --> 01:11:14,268
+Uh, Rama rama rama rama rama rama rama rama.
+
+593
+01:11:14,268 --> 01:11:19,698
+Um uh. Get rid of it.
+
+594
+01:11:30,268 --> 01:11:34,398
+But this opera still exists, and that's good. Uh.
+
+595
+01:11:34,408 --> 01:11:40,918
+Quit opera. So we should only have one opera listed now. Now, did it also get rid of the profile directory?
+
+596
+01:11:41,068 --> 01:11:50,698
+That is worth finding out. I would actually be very surprising if it did.
+
+597
+01:11:53,488 --> 01:12:00,158
+It didn't, so we have to get rid of that as well. And I actually forgot where it was storing it.
+
+598
+01:12:00,178 --> 01:12:05,578
+Is it under C. Uh, my, um it's under.
+
+599
+01:12:07,708 --> 01:12:13,558
+Local opera. Local.
+
+600
+01:12:16,058 --> 01:12:19,198
+Uh. Aubra.
+
+601
+01:12:22,438 --> 01:12:25,948
+Uh, for, uh. You know what?
+
+602
+01:12:25,958 --> 01:12:29,108
+I could probably tell just by looking inside of the migration.
+
+603
+01:12:29,828 --> 01:12:33,698
+Um, utils. Where do we normally look on Linux?
+
+604
+01:12:34,388 --> 01:12:37,538
+We look inside a couple of different places, but. Home config.
+
+605
+01:12:37,988 --> 01:12:43,708
+Opera. Home config. C?
+
+606
+01:12:46,998 --> 01:12:50,868
+See the opera. There it is. Okay.
+
+607
+01:12:52,318 --> 01:12:57,478
+Now, if I get rid of this, where? Where is the other opera storing its profile directory?
+
+608
+01:13:02,868 --> 01:13:07,968
+Where is your profile directory? I realize now this is a menu that's really non-obvious opera.
+
+609
+01:13:10,188 --> 01:13:13,368
+Uh, where are you storing your profile directory profiles?
+
+610
+01:13:13,488 --> 01:13:17,838
+It's because it's a snap. It's storing it in a snap. That's how that works.
+
+611
+01:13:19,768 --> 01:13:23,058
+Okay. And so the.
+
+612
+01:13:25,868 --> 01:13:31,328
+Hmm. We're going to have to add, I think, to this list.
+
+613
+01:13:33,238 --> 01:13:42,658
+Because. Um, what I'm going to do is I'm going to get rid of Aubra here.
+
+614
+01:13:45,828 --> 01:13:51,607
+And then I think what we need to do. Yes.
+
+615
+01:13:51,608 --> 01:13:56,438
+We're going to go back to. Brazil central.
+
+616
+01:13:58,298 --> 01:14:01,718
+We're going to Mars. Patch our patch.
+
+617
+01:14:01,718 --> 01:14:08,558
+But we have to do a little bit of extra for Linux because it seems like opera is using snaps now.
+
+618
+01:14:11,378 --> 01:14:14,918
+And we need to add support for that. Um.
+
+619
+01:14:17,048 --> 01:14:23,078
+Which is a little awkward. Our whole the whole snap thing is kind of super awkward, but we can try it.
+
+620
+01:14:24,668 --> 01:14:28,378
+Um. Okay.
+
+621
+01:14:28,828 --> 01:14:32,578
+So Mars. Fat patch. Paste.
+
+622
+01:14:34,048 --> 01:14:40,258
+Paste. Oh, boy. Come on. D2549D4.
+
+623
+01:14:41,038 --> 01:14:48,148
+Hello. D254992.
+
+624
+01:14:49,978 --> 01:14:54,028
+Uh, also apply here. Apply to here.
+
+625
+01:14:57,428 --> 01:15:15,698
+We're going to figure it out, gang. We're going to figure this out. Okay with that applied.
+
+626
+01:15:19,608 --> 01:15:24,348
+Aren't built faster. We're also going to want to.
+
+627
+01:15:26,448 --> 01:15:30,308
+Uh, vim browser components.
+
+628
+01:15:30,318 --> 01:15:35,238
+Migrations. Uh, this is under the chrome migration utils.
+
+629
+01:15:39,248 --> 01:15:48,877
+Uh, snap. Oh, snap. So for opera, we can say that things are under home.
+
+630
+01:15:48,878 --> 01:15:52,028
+Opera like that.
+
+631
+01:15:53,228 --> 01:15:57,638
+But we can also say that they are under home.
+
+632
+01:16:00,158 --> 01:16:04,008
+Snap! Opera.
+
+633
+01:16:05,718 --> 01:16:15,078
+Um. And then let's actually, let's go through home CD.
+
+634
+01:16:16,038 --> 01:16:21,768
+Let's, uh. Snap! Opera.
+
+635
+01:16:23,508 --> 01:16:27,838
+And then. Carmen.
+
+636
+01:16:29,308 --> 01:16:35,548
+Carmen. And there's nothing there.
+
+637
+01:16:37,618 --> 01:16:40,918
+Current. Nothing.
+
+638
+01:16:40,918 --> 01:16:44,008
+There. Three. Eight. One.
+
+639
+01:16:44,458 --> 01:16:50,068
+Nothing there. Three. Eight. Three. Nothing there. Uh novelis.
+
+640
+01:16:52,258 --> 01:16:59,088
+Uh, opened. Comment.
+
+641
+01:16:59,518 --> 01:17:04,608
+Well there's empty. Let's double check here.
+
+642
+01:17:04,638 --> 01:17:10,728
+Let's run up again. Where does it think its stuff is?
+
+643
+01:17:14,768 --> 01:17:22,778
+It thinks that stuff is under snap opera. 33833.
+
+644
+01:17:25,528 --> 01:17:33,598
+It's now opera three, eight three. But I can't see under their dark config because there's an empty directory.
+
+645
+01:17:33,778 --> 01:17:38,398
+Got it. So can I do current dot config so I can.
+
+646
+01:17:39,088 --> 01:17:42,448
+And then uh default.
+
+647
+01:17:50,348 --> 01:17:53,378
+No such directory config. Opera. Default.
+
+648
+01:17:58,238 --> 01:18:01,418
+There we go. There's this stuff.
+
+649
+01:18:02,018 --> 01:18:06,738
+And. Whereas its local state in the parent directory.
+
+650
+01:18:08,868 --> 01:18:14,628
+Yes it is. Okay. So what we're going to do is we're going to say that you can get it out of home.
+
+651
+01:18:14,808 --> 01:18:19,008
+Snap. Opera. Common.
+
+652
+01:18:25,288 --> 01:18:30,788
+Uh, style. So snap.
+
+653
+01:18:30,788 --> 01:18:35,078
+Opera. Sorry. Current. Not common. Well, I guess you could probably use common.
+
+654
+01:18:35,078 --> 01:18:39,188
+Can use common. If I do this.
+
+655
+01:18:46,218 --> 01:18:49,818
+No. But. Current. Yes.
+
+656
+01:18:55,158 --> 01:19:01,128
+What happens if I shut down opera? Is it only available because opera is open?
+
+657
+01:19:02,268 --> 01:19:10,768
+I don't know how this works. What is calm and then calm and.
+
+658
+01:19:14,458 --> 01:19:20,698
+Cash. Uh, so that's interesting that for.
+
+659
+01:19:22,828 --> 01:19:27,957
+Um, chromium we can look under chromium common.
+
+660
+01:19:27,958 --> 01:19:31,408
+And chromium will be there. Like chromium.
+
+661
+01:19:33,268 --> 01:19:37,348
+Common. Chromium. Yeah.
+
+662
+01:19:37,588 --> 01:19:41,668
+That's weird. That's where its stuff is.
+
+663
+01:19:42,718 --> 01:19:47,878
+Okay, well, at least for opera. So opera is going to be different. Opera is going to be, uh, current.
+
+664
+01:19:56,708 --> 01:20:04,478
+Current. Uh, opera, not opera.
+
+665
+01:20:05,738 --> 01:20:10,238
+What was it again? Uh. Config config.
+
+666
+01:20:10,238 --> 01:20:18,398
+Dot config. An opera.
+
+667
+01:20:30,478 --> 01:20:34,588
+And. Fake opera.
+
+668
+01:20:36,828 --> 01:20:44,538
+There it is. Okay. And then also we need to do the one where if we're happened to be installed as a snap.
+
+669
+01:20:46,448 --> 01:20:56,098
+Snap. Chromium.
+
+670
+01:20:57,688 --> 01:21:02,138
+Oh, no. Not chromium. Uh, bro.
+
+671
+01:21:09,198 --> 01:21:14,168
+Current. Big opera.
+
+672
+01:21:15,888 --> 01:21:21,208
+Let's try that. Go faster.
+
+673
+01:21:25,718 --> 01:21:30,398
+Keeping snap folded right in the home folder. Good design choice. Yeah.
+
+674
+01:21:30,578 --> 01:21:36,158
+Arrow. Uh, eye snaps are are a thing that we must live with, I guess.
+
+675
+01:21:39,958 --> 01:21:43,778
+Import and it understands there's opera.
+
+676
+01:21:43,798 --> 01:21:47,308
+Let's see if it brings so it can't pull in the password, unfortunately.
+
+677
+01:21:47,308 --> 01:21:50,548
+Why? Why not where? I had a password in there.
+
+678
+01:21:52,138 --> 01:21:55,228
+Opera. Pretty sure I had a password in there.
+
+679
+01:21:59,078 --> 01:22:03,818
+Passwords. Where are passwords?
+
+680
+01:22:04,838 --> 01:22:08,678
+What are you doing? Opera password.
+
+681
+01:22:11,558 --> 01:22:17,618
+Yeah, there's a password in here. So something's going wrong with attempting to pull in the passwords.
+
+682
+01:22:17,988 --> 01:22:22,718
+Let's see if I can bring in the other stuff. Okay.
+
+683
+01:22:22,728 --> 01:22:27,848
+Brought in a bookmark. The CBC.
+
+684
+01:22:29,408 --> 01:22:35,918
+Her history. Yeah, CBC okay, so did that, but it could not bring in the password.
+
+685
+01:22:36,128 --> 01:22:39,168
+Oh, you know what? Password import is broken.
+
+686
+01:22:39,218 --> 01:22:43,908
+Uh, it just doesn't work straight up. We don't have the the cryptography stuff set up on Linux.
+
+687
+01:22:43,928 --> 01:22:48,128
+That's why I understand that way. Okay, now I know what's going on there.
+
+688
+01:22:49,568 --> 01:22:59,528
+All right, so we've got that working. Um, I'll need to test the nightly as a snap whenever, uh, that, um.
+
+689
+01:23:00,928 --> 01:23:06,598
+Whenever it lands in in central. But I'm fairly confident that we've got something that works here.
+
+690
+01:23:08,878 --> 01:23:21,238
+Sorry if. Um, let us quickly, uh, add some commentary here.
+
+691
+01:23:22,688 --> 01:23:30,928
+Um. Yeah.
+
+692
+01:23:31,048 --> 01:23:37,518
+You hope? So.
+
+693
+01:23:42,658 --> 01:24:00,468
+For install normally. If we're installed normally, we can look for opera installed as a snap.
+
+694
+01:24:01,228 --> 01:24:04,288
+I'm not going to or next by looking here.
+
+695
+01:24:06,598 --> 01:24:15,148
+If we're installed as a. Okay, I'll just copy this.
+
+696
+01:24:15,448 --> 01:24:22,888
+Um. Comment and apply it to opera.
+
+697
+01:24:32,198 --> 01:24:37,448
+For instance, now holds a special place at snap of our fingers. Given us and the opera data, it's not within it.
+
+698
+01:24:39,788 --> 01:24:43,738
+We want to instead start at the path on the environment. Variable Snap real home.
+
+699
+01:24:45,418 --> 01:24:53,938
+Yeah. And I say, is there like some special permission stuff we needed to do has permissions.
+
+700
+01:24:56,908 --> 01:25:04,287
+As permissions. This is based on the Chrome profile my greater local state.
+
+701
+01:25:04,288 --> 01:25:11,548
+If we can't read it no permissions for local state folder and we will return false.
+
+702
+01:25:12,988 --> 01:25:24,778
+And if I remember correctly. Uh, there's not much we need to do here to support if not has permissions.
+
+703
+01:25:29,288 --> 01:25:37,128
+Get permissions when? If not has permissions, no resources.
+
+704
+01:25:39,688 --> 01:25:43,678
+As permissions get permissions.
+
+705
+01:25:50,868 --> 01:25:56,148
+Conditions here. My creator get permissions.
+
+706
+01:25:57,738 --> 01:26:04,748
+Uh. And if I remember correctly, there's something about.
+
+707
+01:26:06,908 --> 01:26:12,208
+My boy, migration wizard and jazz singer.
+
+708
+01:26:12,218 --> 01:26:18,068
+We show a special message. Chromium permissions.
+
+709
+01:26:19,688 --> 01:26:27,888
+No permissions message. And then permissions instructions.
+
+710
+01:26:39,958 --> 01:26:50,258
+Grant access to its profile folder. So I continue.
+
+711
+01:26:52,258 --> 01:26:59,308
+Permission path. Okay. So this will be this will be this should be browser agnostic.
+
+712
+01:26:59,308 --> 01:27:05,768
+Branch rename access to its profile folder. She select.
+
+713
+01:27:07,478 --> 01:27:13,508
+Okay. Oh, me. Um, okay, so I think that'll work.
+
+714
+01:27:14,618 --> 01:27:17,648
+I'll just, uh, commit. Ah.
+
+715
+01:27:18,218 --> 01:27:24,658
+Post this up for review. HG diff. HG log.
+
+716
+01:27:24,668 --> 01:27:29,398
+I miss you, mercurial. It's GM and.
+
+717
+01:27:37,708 --> 01:27:44,308
+Did you check both windows, Mac and Linux? Yes, I have now at this point checked windows, Mac and Linux.
+
+718
+01:27:45,868 --> 01:27:56,337
+Uh, we've done all three. We're just having to do this kind of special little, uh, little turn of phrase was post this up for review,
+
+719
+01:27:56,338 --> 01:27:59,428
+and then I'm going to call the stream there, and then we've got, uh.
+
+720
+01:28:00,438 --> 01:28:07,428
+Will hopefully have this reviewed shortly, and then we can get this landed and people can start importing from from opera and that's good.
+
+721
+01:28:09,788 --> 01:28:12,738
+It's a bummer that that this has been broken for a little while.
+
+722
+01:28:12,758 --> 01:28:16,448
+It's weird that we're only hearing about it now, but it's possible this has been broken for a while.
+
+723
+01:28:17,498 --> 01:28:21,368
+Um. Submit single. No whip.
+
+724
+01:28:23,558 --> 01:28:30,948
+Let's go. No, not it's not a work in progress.
+
+725
+01:28:31,458 --> 01:28:34,578
+HG commit amend get rid of the.
+
+726
+01:28:38,348 --> 01:28:46,008
+Uh, let's get rid of the whip part. Man, this virtual machine is crazy slow.
+
+727
+01:28:46,028 --> 01:28:49,688
+This whole computer. This. Windows machine, I think is is toast.
+
+728
+01:28:50,588 --> 01:28:54,188
+Um, time to replace it. Uh, this also.
+
+729
+01:28:56,378 --> 01:29:02,078
+Adds support for importing from opera on up until Linux.
+
+730
+01:29:09,408 --> 01:29:14,178
+Open to Linux when opera.
+
+731
+01:29:17,508 --> 01:29:22,128
+Is installed as a snap package.
+
+732
+01:29:24,988 --> 01:29:29,638
+Okay. Submit. Single. Let's go.
+
+733
+01:29:30,178 --> 01:29:33,178
+And with that, I think we're going to call the episode there.
+
+734
+01:29:33,478 --> 01:29:40,408
+Hey, thank you so much for watching episode. Uh, what was this, 406, 407 of the Joy of coding?
+
+735
+01:29:40,738 --> 01:29:45,608
+We hopefully we're, uh, we're going to get this reviewed and landed, and people can, uh, import from opera.
+
+736
+01:29:45,628 --> 01:29:48,808
+That'll be good. And then they can use Firefox.
+
+737
+01:29:49,288 --> 01:29:55,138
+Uh, I'm biased, but having now used opera for, well, a little over an hour and a half, I've kind of like, tinkered with it.
+
+738
+01:29:55,498 --> 01:30:00,207
+It's fine. It's overwhelming. Uh, you know, uh, it is.
+
+739
+01:30:00,208 --> 01:30:07,138
+There's just a lot of information in that browser is very, very, uh, dense, I would say.
+
+740
+01:30:07,378 --> 01:30:15,538
+Um, and maybe I'm just I'm super biased because of, uh, my love for Firefox, but I definitely prefer Firefox.
+
+741
+01:30:15,778 --> 01:30:18,928
+And with that, I'm going to call the stream. Uh, thanks for watching.
+
+742
+01:30:18,958 --> 01:30:23,788
+Let me know what you thought of this episode. There's a rate this episode form here at the, uh, at the bottom of the agenda.
+
+743
+01:30:23,798 --> 01:30:35,398
+I'll put a link to that in the chat. Rate this episode form for to read this episode a and, uh, and let me know what you thought.
+
+744
+01:30:35,548 --> 01:30:39,458
+Do you want me to like, you want to know more about new tab stuff?
+
+745
+01:30:39,478 --> 01:30:42,207
+You want to do more about migration? Give me feedback.
+
+746
+01:30:42,208 --> 01:30:47,608
+Let me know what you're what you're thinking, what you'd like to see more of, what you want to see, less of what's important to you.
+
+747
+01:30:47,918 --> 01:30:51,537
+Or do you have any questions I can try to answer? Just let me know that way. Um.
+
+748
+01:30:51,538 --> 01:30:54,778
+And just. It takes only a minute or so. And with that, I'm going to call it there.
+
+749
+01:30:54,808 --> 01:30:59,218
+Thanks, everybody, for watching episode 407 of the Joy of coding. Take care.
+
+750
+01:30:59,278 --> 01:31:05,508
+Have a great week. Buh bye. The joy.
+
+751
+01:31:06,208 --> 01:31:08,728
+Oh, dang. See it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

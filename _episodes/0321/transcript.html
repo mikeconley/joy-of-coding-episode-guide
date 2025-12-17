@@ -1,0 +1,2813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 321 - April 12, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 321 - April 12, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=712e3991-d74a-44aa-8817-afc400faf1bc</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=712e3991-d74a-44aa-8817-afc400faf1bc">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:07,740 --> 00:00:11,040
+Welcome. Through the Joy Cup.
+
+2
+00:00:11,550 --> 00:00:18,110
+O D Hello, hello and welcome to Episode 321 of the Joy of Coding.
+
+3
+00:00:18,120 --> 00:00:23,309
+My name is Mike Connelly. It's so good to have you here. We're going to be hacking on some Firefox stuff today.
+
+4
+00:00:23,310 --> 00:00:26,730
+It's going to be great. We're going to be reviewing patches, maybe even writing some code.
+
+5
+00:00:26,730 --> 00:00:30,660
+It's going to be a good time. Thanks for being here. Let me start by sharing my screen.
+
+6
+00:00:31,200 --> 00:00:35,880
+One moment. Here we go. All right.
+
+7
+00:00:35,910 --> 00:00:40,590
+Agenda Episode 321 of the joy of coding the full screen.
+
+8
+00:00:41,850 --> 00:00:45,299
+Yes. So no plan survives breakfast.
+
+9
+00:00:45,300 --> 00:00:48,510
+Things might go wrong. I might have a little bit of trouble pulling up the agenda.
+
+10
+00:00:48,510 --> 00:00:52,110
+I might have a little bit of trouble full screening things. And that's okay.
+
+11
+00:00:52,320 --> 00:00:57,209
+We're capturing software development in the RAS here, so things might go sideways.
+
+12
+00:00:57,210 --> 00:01:03,450
+That's all right. That's the first thing. The second thing is that the agenda that we're looking at is available to you.
+
+13
+00:01:03,720 --> 00:01:11,040
+If you're watching this on air, Mozilla, check out the the details section over on that section over there.
+
+14
+00:01:11,280 --> 00:01:16,050
+If you're watching this on YouTube or diode diodes zone, check out the video description down below.
+
+15
+00:01:16,380 --> 00:01:23,220
+And if you're watching this on Twitch, there's down in the channel details links to the agenda so you can click on things.
+
+16
+00:01:24,120 --> 00:01:27,240
+Now, one thing you'll notice is I haven't put anything in the agenda today.
+
+17
+00:01:27,510 --> 00:01:34,410
+That's because I, I didn't add anything, but I know what I kind of want to work on today.
+
+18
+00:01:34,980 --> 00:01:37,050
+I have some things that I'd like to review.
+
+19
+00:01:37,320 --> 00:01:42,990
+Let's start there, especially because I think the person whose patch I want to review is actually may be watching this.
+
+20
+00:01:44,310 --> 00:01:52,710
+Will Durant has a patch that has been in my review queue for a few days and let me just pull that up here.
+
+21
+00:01:53,910 --> 00:01:57,389
+Here we go. So handle the case.
+
+22
+00:01:57,390 --> 00:02:00,660
+We're an extension widget is not visible and not in the extensions panel.
+
+23
+00:02:00,660 --> 00:02:07,200
+Now I, I had originally reviewed this, I hadn't accepted a version of this patch back in February.
+
+24
+00:02:07,470 --> 00:02:12,090
+But then this has gone through like a lot of changes like sufficiently.
+
+25
+00:02:15,220 --> 00:02:19,750
+The agenda is chatting. Is the agenda chatting?
+
+26
+00:02:22,650 --> 00:02:26,670
+Oh, the agenda is just us talking. Yeah, that's what we're going to do.
+
+27
+00:02:27,180 --> 00:02:34,440
+Well, hang on. Let me let me start by putting some putting the bug link into the agenda.
+
+28
+00:02:36,010 --> 00:02:41,730
+Um, yeah, I can just, like, copy markdown.
+
+29
+00:02:43,630 --> 00:02:52,600
+And then I can put that in here. Oh, come on. Copy, markdown down and put that in here and then the fabricator link.
+
+30
+00:02:53,620 --> 00:02:58,870
+I'll also put in here so you can follow along. Here, let me save.
+
+31
+00:02:59,140 --> 00:03:03,310
+And that should update the agenda, hopefully, if the agenda is working.
+
+32
+00:03:03,310 --> 00:03:08,990
+And it should be. Yeah, that should be that should be in here.
+
+33
+00:03:08,990 --> 00:03:12,830
+Now, though, I can probably do a little bit of a better job of making this into a link.
+
+34
+00:03:14,480 --> 00:03:19,400
+So let's turn this into a link that said work.
+
+35
+00:03:20,330 --> 00:03:26,270
+Now, do I actually. Seriously? Okay, there we go.
+
+36
+00:03:26,300 --> 00:03:33,640
+Okay. So Will's patch has been in my queue for a little while, but it it just recently kind of got revived.
+
+37
+00:03:33,650 --> 00:03:40,090
+There was this delay between when I last. I think Will's been working on this stuff, honestly, and maybe he can comment in here if he.
+
+38
+00:03:40,100 --> 00:03:47,510
+If he. I mean, I don't think this is like a high, high, high priority piece of work, but it's kind of like come back up.
+
+39
+00:03:47,930 --> 00:03:50,540
+It's been resurfaced as a thing to work on.
+
+40
+00:03:50,810 --> 00:03:57,920
+And so now I'm going to rereview the patch, especially because like it was a while since I looked at it last.
+
+41
+00:03:57,920 --> 00:04:00,229
+Like I said, the last time I looked at this was like February.
+
+42
+00:04:00,230 --> 00:04:08,240
+So it's been like a couple of months and it's been like rebased and tweaked and there's like a test file that's been changed and all sorts of things.
+
+43
+00:04:08,240 --> 00:04:16,399
+So I think it needs a another look. So that's what I'm going to do today. Now, the first thing we need to do before we review patches,
+
+44
+00:04:16,400 --> 00:04:24,740
+make sure that we understand the problem that the patch is trying to solve so that we can recognize whether or not the patch is solving it.
+
+45
+00:04:25,910 --> 00:04:30,080
+So this bug is bug 1801266.
+
+46
+00:04:30,080 --> 00:04:34,970
+Handle the case where an extension which is not visible and not in the unified extensions panel.
+
+47
+00:04:35,420 --> 00:04:36,770
+So I can explain that one.
+
+48
+00:04:38,150 --> 00:04:44,629
+I'll start by pulling up a build, but there are situations where extension widgets are not visible and are not in the extensions panel either.
+
+49
+00:04:44,630 --> 00:04:48,740
+And this can happen when we place a widget in the Bookmarks toolbar and then we hide this toolbar.
+
+50
+00:04:49,250 --> 00:04:50,900
+Right. So here's the thing.
+
+51
+00:04:51,800 --> 00:04:58,250
+You may or may not know that there is an extension widget button or sorry, an extension what we call the unified add ons button here.
+
+52
+00:04:58,730 --> 00:05:02,570
+When you install add ons, this is where they show up inside of a panel.
+
+53
+00:05:02,600 --> 00:05:07,489
+Let me install an extension real quick. Let's install you.
+
+54
+00:05:07,490 --> 00:05:14,180
+BLOCK, because that's a classic. You block origin ad to Firefox.
+
+55
+00:05:14,780 --> 00:05:20,559
+Do it. Okay. So this is the extensions panel.
+
+56
+00:05:20,560 --> 00:05:24,070
+This is where you can manage your extensions. Also, people might not know this.
+
+57
+00:05:24,180 --> 00:05:29,259
+You know, you can move this around now. You can move this this button around in nightly.
+
+58
+00:05:29,260 --> 00:05:32,440
+You can just like boop, boop, boop, boop, boop in customize mode.
+
+59
+00:05:32,980 --> 00:05:39,639
+So you can move that button around. You can't remove it. Can't remove it, but you can move it around if you'd like.
+
+60
+00:05:39,640 --> 00:05:43,030
+It has to stay in this toolbar and there's a reason for this, right?
+
+61
+00:05:43,030 --> 00:05:46,120
+Like I know some people have been frustrated about the presence of this button,
+
+62
+00:05:46,120 --> 00:05:54,460
+but there's a there's a point and it has to do with Manifest V three and how permissions are requested from users.
+
+63
+00:05:54,790 --> 00:05:58,389
+In order to have their extensions access Web pages,
+
+64
+00:05:58,390 --> 00:06:08,680
+we need to have a place to to anchor and to have a place where users can manage those, manage those permissions.
+
+65
+00:06:09,160 --> 00:06:13,209
+And like there is a natural anchor point for a lot of extensions.
+
+66
+00:06:13,210 --> 00:06:17,350
+The ones that add buttons and but not every extension adds a button.
+
+67
+00:06:17,590 --> 00:06:24,820
+But we still need to be able to manage and control their permissions for particular pages and grant and revoke them.
+
+68
+00:06:25,450 --> 00:06:29,950
+And so we needed an easy place for all of that management to occur, and that's happening in here.
+
+69
+00:06:29,950 --> 00:06:35,470
+So even if you install an extension that doesn't have a button, let's see if I can find one here.
+
+70
+00:06:37,090 --> 00:06:42,790
+What would be one that doesn't have a button? Uh.
+
+71
+00:06:47,770 --> 00:06:51,370
+So what's a what's a good extension that doesn't have a button?
+
+72
+00:06:52,120 --> 00:06:56,560
+Just trying to think of what do I have in my current profile? That might be a good example.
+
+73
+00:06:57,760 --> 00:07:03,440
+When I put the puzzle, here it is. Uh. Yeah.
+
+74
+00:07:05,090 --> 00:07:07,820
+Reddit comment collapse. Ah, that's a classic one.
+
+75
+00:07:09,380 --> 00:07:19,400
+If you happen to use Reddit, this is a an add on that will allow you to sort of like fold and unfold comment blocks on Reddit.
+
+76
+00:07:19,610 --> 00:07:21,930
+If you happen to use Reddit, it doesn't have a button, though.
+
+77
+00:07:21,950 --> 00:07:32,479
+But we need a place for it to like to manage and control, revoke and, you know, deal with its permissions for access on a particular page.
+
+78
+00:07:32,480 --> 00:07:33,920
+And that's what this is all about.
+
+79
+00:07:34,100 --> 00:07:42,710
+Now, the good news is that if if a button is provided like for you block origin, you can like put that in the toolbar, you can pin it there.
+
+80
+00:07:44,090 --> 00:07:51,600
+But we have a problem now. And that is suppose you customize this.
+
+81
+00:07:53,980 --> 00:07:57,910
+This button into your bookmarks toolbar, which you can do. You can put it there.
+
+82
+00:07:58,070 --> 00:08:03,820
+Yeah, it's right at the end of the bar. Now it's it's hidden in a collapsed toolbar.
+
+83
+00:08:04,600 --> 00:08:12,190
+It's here. Whenever I open up new tab by default, the Bookmarks toolbar goes away once you start browsing away from the new tab page.
+
+84
+00:08:12,760 --> 00:08:21,250
+So now we have a button, an add on button that is in a collapsed toolbar, which means we cannot anchor permission requests to it.
+
+85
+00:08:22,510 --> 00:08:27,490
+And that's what we want to be able to do. We always want these add on buttons to.
+
+86
+00:08:29,050 --> 00:08:32,860
+We want to be able to manage that. Like it's not showing up in here.
+
+87
+00:08:33,490 --> 00:08:40,600
+That's the problem. So what our solution is, is we still want users to be able to move these buttons wherever they'd like.
+
+88
+00:08:40,600 --> 00:08:44,110
+So we want them to be able to put them here inside of the Bookmarks toolbar.
+
+89
+00:08:44,770 --> 00:08:54,009
+But in the event that we detect that the bookmark or that the toolbar that that a button is in is collapsed, and that could be the bookmarks toolbar.
+
+90
+00:08:54,010 --> 00:09:01,120
+But there's also a menu bar that can be you can drag things in on Windows and Linux and that can also collapse if it's collapsed.
+
+91
+00:09:01,390 --> 00:09:04,840
+Then when you open the panel, we show the item in the panel.
+
+92
+00:09:05,260 --> 00:09:16,600
+That's what we want to be able to do. Is there any plan to allow the extensions add ons menu to be in the menu bar instead?
+
+93
+00:09:17,600 --> 00:09:26,630
+Allow Alan's menu to to put this add ons and themes in the menu bar like here.
+
+94
+00:09:29,610 --> 00:09:39,360
+I'm not sure what you mean. Okay, so that's what this patch is all about, making it so that if the button is in a collapsed toolbar,
+
+95
+00:09:40,950 --> 00:09:44,280
+that it will appear whenever you open up the add ons panel.
+
+96
+00:09:44,640 --> 00:09:49,410
+That's the idea. Okay, let's take a look and see how Wil is doing it.
+
+97
+00:09:51,800 --> 00:09:55,420
+Uh, I. Oh, I did mention that there was a bug.
+
+98
+00:09:55,440 --> 00:10:04,720
+That's the last thing I did in my. In my last reviews, I was like, Hey, there's this one bug that we should fix, but otherwise this looks good.
+
+99
+00:10:05,290 --> 00:10:09,730
+And so we should verify that this this bug is not reproducible.
+
+100
+00:10:12,410 --> 00:10:17,360
+And so maybe we'll start there. Actually, let's verify that that bug is not reproducible.
+
+101
+00:10:17,810 --> 00:10:23,870
+So the way we can do that is we can install the add on. We're going to install or install an add on with a button.
+
+102
+00:10:23,870 --> 00:10:35,060
+We've already done that. We have we have our you block button there pinned to the toolbar and then move to the Bookmarks toolbar.
+
+103
+00:10:35,090 --> 00:10:39,350
+That's done. Collapse the Bookmarks toolbar. So the item shows up in the panel.
+
+104
+00:10:39,470 --> 00:10:43,010
+Okay. Well, first of all, we have to apply this patch, so let's do that.
+
+105
+00:10:47,090 --> 00:10:52,760
+Let me check out Central. Apply this patch build and then we can test the behavior.
+
+106
+00:10:56,550 --> 00:11:15,520
+We can see what I'm writing. And then we are going to build.
+
+107
+00:11:34,960 --> 00:11:41,560
+Okay. And then we will run and we will run through these.
+
+108
+00:11:54,120 --> 00:12:01,439
+We'll run through these steps. Okay. So we've done the first two steps, collapse the bookmarks toolbar.
+
+109
+00:12:01,440 --> 00:12:05,410
+So the item shows up in the panel. Okay, so never show.
+
+110
+00:12:05,430 --> 00:12:08,910
+So we should see you block show up in here. We do. That's good.
+
+111
+00:12:10,170 --> 00:12:14,400
+Now, it should still appear like if I if I put it. If I expand it, it's here.
+
+112
+00:12:14,430 --> 00:12:18,460
+But. When I collapse it, then it anchors here.
+
+113
+00:12:20,470 --> 00:12:24,040
+Open the panel right. Click on the item and choose to unpin from the toolbar.
+
+114
+00:12:27,510 --> 00:12:30,600
+Open the panel, right click on the item and choose to pin to the toolbar.
+
+115
+00:12:34,530 --> 00:12:38,100
+Uh. There we go. Open.
+
+116
+00:12:38,730 --> 00:12:42,060
+I get this with the Facebook container. Yeah. So that has been fixed.
+
+117
+00:12:42,330 --> 00:12:46,760
+That problem has been fixed. That's good.
+
+118
+00:12:47,120 --> 00:12:52,640
+All right. Let's take a look and see how well is fixing this and what changes he made.
+
+119
+00:12:52,670 --> 00:13:00,020
+He's made. So this is a good choice. He's using a toolbar visibility change event listener.
+
+120
+00:13:00,020 --> 00:13:06,589
+So this is a an event that are toolbars fire whenever they're visibility state collapse show that sort
+
+121
+00:13:06,590 --> 00:13:15,379
+of thing when those states change so each window were the browser add ons much like sort of component
+
+122
+00:13:15,380 --> 00:13:20,690
+object in each window is adding a an event listener for toolbar visibility change that makes sense and
+
+123
+00:13:20,690 --> 00:13:29,809
+we tear down that event listener on on a net and then we handle that event here in a switch statement.
+
+124
+00:13:29,810 --> 00:13:38,750
+Presumably this is like a handle event. Yeah. And then we call into on toolbar visibility change and we break.
+
+125
+00:13:38,750 --> 00:13:43,070
+That's always the thing you want to check for a switch statement is make sure you're breaking out of each of your cases.
+
+126
+00:13:44,720 --> 00:13:48,260
+And here's where the I think the real meat of it is. Um.
+
+127
+00:13:50,590 --> 00:13:54,219
+It looks like you upended, but it still showed as pinned. You're right.
+
+128
+00:13:54,220 --> 00:14:01,209
+I think there is a bug on mac os. This is something I think is on file and if not I should double check.
+
+129
+00:14:01,210 --> 00:14:06,940
+But I think there is a bug on mac os in particular where if you.
+
+130
+00:14:09,190 --> 00:14:12,770
+Oops. If you right click like some.
+
+131
+00:14:12,790 --> 00:14:19,630
+I think there's like a race sometimes. Hang on.
+
+132
+00:14:19,720 --> 00:14:23,470
+Let's put this back in the Bookmarks toolbar.
+
+133
+00:14:26,900 --> 00:14:33,470
+And then collapse. So see, that should be.
+
+134
+00:14:34,100 --> 00:14:40,010
+See how there was a race there. Like at first didn't show the check and then it did.
+
+135
+00:14:40,490 --> 00:14:48,530
+I think there is like a little bit of a race there. Um, I think there is an open bug on that, but I'll see if I can hunt that down.
+
+136
+00:14:48,770 --> 00:14:58,040
+Let me add it to do. To to hunt down race bug for pin toolbar.
+
+137
+00:15:00,590 --> 00:15:06,170
+Okay. Here's where the real meat of the issue is. Sentient is now.
+
+138
+00:15:08,550 --> 00:15:14,400
+Point sent since you posted a screenshot of the app menu.
+
+139
+00:15:15,970 --> 00:15:20,790
+And then he's circled. They have circled. Sorry, the arrow on the right here.
+
+140
+00:15:21,880 --> 00:15:26,410
+And I don't know what you're saying. Sentient. Please elaborate.
+
+141
+00:15:26,440 --> 00:15:27,249
+Oh, wait. Sorry.
+
+142
+00:15:27,250 --> 00:15:33,490
+I meant, is there any plan where you would be able to open the extension's menu from the hamburger menu like, say, bookmarks in history?
+
+143
+00:15:33,520 --> 00:15:42,430
+Oh, I understand. So the idea being that, you know, this could be embedded kind of inside of the app menu.
+
+144
+00:15:43,780 --> 00:15:48,060
+I'm not aware of any such plans. Like we do.
+
+145
+00:15:48,070 --> 00:15:52,720
+You're right. We do embed sometimes other panels inside of this panel.
+
+146
+00:15:52,740 --> 00:15:58,710
+This is an example of one that we do that with. So for we have something called the library.
+
+147
+00:15:59,010 --> 00:16:03,960
+And we have like bookmarks. And that panel is also embedded in here.
+
+148
+00:16:03,990 --> 00:16:09,600
+Like, it's the same content. It's the same panel, effectively just in two different places.
+
+149
+00:16:14,000 --> 00:16:21,020
+I don't know, because I know that there's a lot of special behavior related to this panel.
+
+150
+00:16:21,050 --> 00:16:28,100
+One of the things that it needs to be able to do, for example, is it is what houses all of the collapsed items as the window gets smaller.
+
+151
+00:16:28,130 --> 00:16:35,480
+If I do this, all of the like sort of overflowed toolbar items that are add ons go into here
+
+152
+00:16:36,440 --> 00:16:41,479
+and all of the like built in ones go into here and then wherever it under flows,
+
+153
+00:16:41,480 --> 00:16:46,550
+they go back out in the same order. And something I had worked on a few releases ago.
+
+154
+00:16:47,360 --> 00:16:52,849
+And, you know, that's a tricky piece of of code.
+
+155
+00:16:52,850 --> 00:17:02,870
+And I'm not entirely certain I should I should just say I'm not aware of any such plans sentient of merging this into this.
+
+156
+00:17:03,740 --> 00:17:07,399
+I do know that like the app menu is, you know, pretty busy.
+
+157
+00:17:07,400 --> 00:17:13,070
+There's a lot that it does and I don't know if that's a good thing or a bad thing.
+
+158
+00:17:13,070 --> 00:17:18,100
+Adding yet another item to here, I think we'd have to think carefully about, um,
+
+159
+00:17:18,830 --> 00:17:23,720
+but that's more of a UX and product question I think than a, than a me question.
+
+160
+00:17:24,710 --> 00:17:28,010
+All right. So here's the bulk of the change.
+
+161
+00:17:28,340 --> 00:17:32,330
+The first thing we're going to do is we're going to get a list of extension widget IDs.
+
+162
+00:17:33,860 --> 00:17:42,169
+From a particular toolbar. I see. So we use the customizable UI API to get all of the widget IDs in a particular area
+
+163
+00:17:42,170 --> 00:17:50,300
+and then get just the ones that evaluate to being true for a web extension widget.
+
+164
+00:17:50,330 --> 00:17:53,990
+So we just get the ideas of widgets that belong to Web extensions.
+
+165
+00:17:54,080 --> 00:17:59,590
+That's a good start. If the area does not exist for some reason.
+
+166
+00:18:00,400 --> 00:18:07,210
+So I see if it's it's possible that the toolbar is not registered with customizable UI.
+
+167
+00:18:12,490 --> 00:18:17,140
+I mean, yeah, you can use a tri catch for that. I think there might be another way like you can.
+
+168
+00:18:19,500 --> 00:18:27,150
+Uh, is registered. It is registered.
+
+169
+00:18:30,970 --> 00:18:36,880
+What is the. You are here.
+
+170
+00:18:41,540 --> 00:18:47,779
+Widget within your place and will begin batch update, create widgets, destroy widget, get widget and use widgets.
+
+171
+00:18:47,780 --> 00:18:51,680
+Get widgets in area, get areas, get area type.
+
+172
+00:18:52,910 --> 00:18:59,720
+Get customizable target for area place which is widget removal.
+
+173
+00:19:07,030 --> 00:19:10,070
+Just looking for whether or not there's a better way to check whether or not
+
+174
+00:19:10,430 --> 00:19:19,580
+the toolbar that is collapsing happens to be registered with customizable UI.
+
+175
+00:19:21,110 --> 00:19:24,920
+Couldn't you add it to more tools overflow item that's already there?
+
+176
+00:19:25,370 --> 00:19:32,030
+That Chevron looks like it should be that for that anyway. Maybe there's already a lot in here.
+
+177
+00:19:33,420 --> 00:19:42,350
+The thing is, you know, add ons are the sort of thing that people might make use of all of the time.
+
+178
+00:19:42,350 --> 00:19:45,440
+Like they don't necessarily want to clutter up their nav bar.
+
+179
+00:19:45,440 --> 00:19:52,700
+But for example, if they need to turn on or off you block or toggle a thing, you want to make that relatively easy.
+
+180
+00:19:52,850 --> 00:19:55,330
+The easiest thing to do is to have that pinned to the toolbar.
+
+181
+00:19:55,340 --> 00:20:00,170
+But some people don't like to have a noisy toolbar, so having like a one stop shop of like, okay,
+
+182
+00:20:00,770 --> 00:20:08,390
+open up you block here and then like turn off I again, it's not these questions are really not for me.
+
+183
+00:20:08,600 --> 00:20:10,100
+I can I have opinions.
+
+184
+00:20:10,340 --> 00:20:17,930
+My personal opinion is that we'd want to make your add on buttons because you added them yourself and you know that you want them.
+
+185
+00:20:18,200 --> 00:20:25,850
+We should make them as available as we can, while at the same time trying to reduce the clutter of your toolbar.
+
+186
+00:20:25,970 --> 00:20:32,600
+Helping you to reduce the clutter of your toolbar. So I actually think we've got the right solution here, but that's my personal opinion.
+
+187
+00:20:33,290 --> 00:20:37,040
+X message asks Are native vertical tabs on the road map anytime soon?
+
+188
+00:20:37,040 --> 00:20:41,360
+Something similar to the wave of all the does it not that I'm aware of? Not that I'm aware of.
+
+189
+00:20:42,890 --> 00:20:50,150
+Okay, so let's see here. We bail out of here in the event that we don't.
+
+190
+00:20:51,170 --> 00:20:54,200
+Oh I'd cut some kind of. Yeah, I haven't submitted this comment. Yeah.
+
+191
+00:20:54,200 --> 00:21:03,229
+I had started a review yesterday, but there's like a small typo on the list of overflowed extensions in the extensions panel.
+
+192
+00:21:03,230 --> 00:21:04,070
+We're going to go.
+
+193
+00:21:05,270 --> 00:21:15,200
+Get that list and we're going to move all of the extension widgets we had DOM manipulation only so that the the nodes have moved but see why.
+
+194
+00:21:16,630 --> 00:21:18,220
+Still thinks that the widgets haven't moved.
+
+195
+00:21:18,230 --> 00:21:24,760
+We can move the extension widgets either from the toolbar to the extension panel or the other way around when the toolbar becomes visible again.
+
+196
+00:21:26,140 --> 00:21:30,220
+Okay. So for each widget that is in the toolbar.
+
+197
+00:21:33,810 --> 00:21:41,910
+We'll get it. We'll get it. And then if we are making the widget visible or the toolbar visible,
+
+198
+00:21:41,910 --> 00:21:46,320
+then we're going to move the widget node back, which I guess we'll review that next.
+
+199
+00:21:46,350 --> 00:21:58,469
+Otherwise we get the node and we set attribute set some attributes to it being a overflowed be artificially overflowed.
+
+200
+00:21:58,470 --> 00:22:05,190
+I think that's new. And then we change its anchor to be the unified extensions button.
+
+201
+00:22:07,170 --> 00:22:13,590
+And then we append it to the overflow list. And then no matter what we do is we update the widget class name.
+
+202
+00:22:15,830 --> 00:22:23,080
+Okay. So this is that more or less makes sense.
+
+203
+00:22:23,100 --> 00:22:26,670
+Now, this is going to be the reverse operation of this.
+
+204
+00:22:44,650 --> 00:22:50,560
+Since we already have the widget and less. Is there something else that calls maybe move widget you know back.
+
+205
+00:22:53,100 --> 00:22:57,250
+Oh here. Get wagered I'd.
+
+206
+00:23:06,670 --> 00:23:10,040
+One penny toolbar change, which i d.
+
+207
+00:23:16,030 --> 00:23:20,559
+All right. Well, this is a relatively cheap look up. This is just a a map.
+
+208
+00:23:20,560 --> 00:23:28,230
+Look up. So that's fine. We get the widget, we get the node.
+
+209
+00:23:32,430 --> 00:23:36,090
+We're using this as our state artificially overflowed.
+
+210
+00:23:38,200 --> 00:23:44,410
+Okay. And so if the node happens to not have that attribute, we're going to say.
+
+211
+00:23:44,440 --> 00:23:50,460
+All right, well. You know, I officially overflowed.
+
+212
+00:23:56,820 --> 00:24:00,960
+We get the position that C.I. thinks it's N in the area.
+
+213
+00:24:02,500 --> 00:24:06,579
+We get the container. This is where we are going to reinsert the extension widgets.
+
+214
+00:24:06,580 --> 00:24:10,960
+But we need to account for some hidden dominoes already present in this container when determining where to put the nodes back.
+
+215
+00:24:11,450 --> 00:24:14,980
+Remove the attributes set when we artificially overflow the widget.
+
+216
+00:24:21,460 --> 00:24:24,790
+Now. I just need to remember what exactly this means.
+
+217
+00:24:25,240 --> 00:24:38,140
+Um, could this have had some other value? Asset location attributes you.
+
+218
+00:24:38,900 --> 00:24:41,980
+Anchor I.D. What is this used for?
+
+219
+00:24:43,210 --> 00:24:47,380
+Anchor I.D.? Oh, I see. When we want to find out where to anchor the.
+
+220
+00:24:50,160 --> 00:24:58,520
+Widget if it has an anchor. Get placement, which eight grades can anchor?
+
+221
+00:25:02,030 --> 00:25:13,360
+And that's related to the zoo, which is single wrapper and was anchor used for show widget view.
+
+222
+00:25:14,350 --> 00:25:16,360
+I see. So it's possible.
+
+223
+00:25:16,510 --> 00:25:25,370
+That's what powers the fact that, like the anchor in the event that the button is in here actually gets anchored to the outer button here.
+
+224
+00:25:25,390 --> 00:25:32,530
+I understand. Okay. So, right. We're going to remove that because the anchor is going to become the button again.
+
+225
+00:25:33,040 --> 00:25:36,520
+That makes sense. And then what we do.
+
+226
+00:25:41,490 --> 00:25:46,980
+So we're going to go through each of the containers, child nodes, and we're going to find the position.
+
+227
+00:25:50,990 --> 00:25:55,970
+Oh, we're going to do this for each one a.
+
+228
+00:26:11,910 --> 00:26:16,230
+Now initially my gut is like for each one of these,
+
+229
+00:26:16,410 --> 00:26:24,510
+you're going through a bunch of widget ideas and for each one you will then go through the containers, the originating container.
+
+230
+00:26:26,560 --> 00:26:30,410
+The toolbar. All of the children.
+
+231
+00:26:31,700 --> 00:26:38,110
+And you're going to insert. However.
+
+232
+00:26:40,740 --> 00:26:44,130
+Realistically the number of items inside of a toolbar.
+
+233
+00:26:46,840 --> 00:26:57,090
+How? Over a very long time.
+
+234
+00:26:58,020 --> 00:27:04,020
+It is potentially possible. At that.
+
+235
+00:27:04,290 --> 00:27:12,000
+The list of widgets might get long, but the actual number of items in the toolbar.
+
+236
+00:27:13,370 --> 00:27:16,340
+It's probably on the order of like dozens maybe.
+
+237
+00:27:17,640 --> 00:27:27,630
+Less than 100 hundreds would be like very much in case you're talking about someone who's got hundreds of buttons in their toolbar.
+
+238
+00:27:28,020 --> 00:27:33,510
+I think that's probably it's probably not worth worrying about.
+
+239
+00:27:35,220 --> 00:27:40,140
+It unless the number of widget IDs.
+
+240
+00:27:42,430 --> 00:27:49,130
+It's quite long. Except that. We only do this if the widget is registered,
+
+241
+00:27:49,700 --> 00:27:53,149
+and that is only true if there is an extension installed and the number of
+
+242
+00:27:53,150 --> 00:27:57,260
+extensions that a user will have installed there may be on the order of dozens.
+
+243
+00:27:58,580 --> 00:28:01,790
+Certainly not hundreds. So we're really just looking at something like.
+
+244
+00:28:05,810 --> 00:28:13,250
+It's not huge. Like I'm just going to make a note of it. My performance.
+
+245
+00:28:13,250 --> 00:28:27,660
+Spidey sense. There's tingling here because we're looping all children once per.
+
+246
+00:28:28,890 --> 00:28:38,960
+Children of the container want all.
+
+247
+00:28:39,180 --> 00:28:48,510
+We're looping all of the children of the container each time for each widget web extension widget ID.
+
+248
+00:28:51,240 --> 00:29:11,760
+We find that was hidden. In practice, this is probably a small number of loops and instructions, but in theory, the number of steps is.
+
+249
+00:29:12,690 --> 00:29:24,090
+Can you be quite high? I wonder if it's worth seeing if we could do this in a single.
+
+250
+00:29:25,860 --> 00:29:36,100
+See if it's worth restructuring this. Structuring this in a follow up bug.
+
+251
+00:29:39,920 --> 00:29:56,360
+Worth investigating restructuring this in a follow up bug to see if we could do the insertions in a single pass through the containers nodes.
+
+252
+00:30:01,630 --> 00:30:05,620
+Someone should make an extension that just makes hundreds, hundreds of buttons for testing purposes.
+
+253
+00:30:06,010 --> 00:30:12,640
+I actually don't think you can. I think at most an extension can add one button, one browser action.
+
+254
+00:30:13,690 --> 00:30:18,249
+You know, old school add ons used to be able to just yeah. Do abusive things like that.
+
+255
+00:30:18,250 --> 00:30:27,100
+But thankfully things are a little more, um, we have a little more control now.
+
+256
+00:30:27,100 --> 00:30:37,360
+We can protect the user a bit more now. And so Web extensions are given one browser action, max, but that that browser action can, for example,
+
+257
+00:30:37,960 --> 00:30:42,100
+you know, open a panel that contains a bunch of stuff like an arbitrary number of things.
+
+258
+00:30:42,100 --> 00:30:50,230
+So you just, you have a single root browser action is all, okay, so I'm, I'm done reading this.
+
+259
+00:30:50,860 --> 00:30:55,840
+This I think makes sense. Like you loop through the child nodes, you skip the items.
+
+260
+00:30:57,170 --> 00:31:02,350
+That aren't counted in the toolbar set. If you find the position.
+
+261
+00:31:05,220 --> 00:31:11,290
+You insert. The node before it.
+
+262
+00:31:16,180 --> 00:31:21,730
+And if you've reached the last child you inserted after it, otherwise you just increment current position.
+
+263
+00:31:21,760 --> 00:31:31,120
+That makes sense to me. Okay, now where are we when the panel opens?
+
+264
+00:31:34,400 --> 00:31:53,580
+Overflow extensions placed in toolbars, if any. If there are any.
+
+265
+00:31:56,450 --> 00:32:01,180
+Toolbars that are collapsed in the window. We run this again.
+
+266
+00:32:04,380 --> 00:32:08,520
+Oh, I see. I remember. Why? Because we don't fire this event on start up.
+
+267
+00:32:09,360 --> 00:32:19,589
+We only fire this event. You only fire this event when the state changes.
+
+268
+00:32:19,590 --> 00:32:25,800
+But if it initializes as collapsed, that's why we're running this.
+
+269
+00:32:28,510 --> 00:32:34,600
+Okay. And then if we pin to the toolbar.
+
+270
+00:32:35,910 --> 00:32:38,670
+Obviously folks that are placed in clubs towards here does not know.
+
+271
+00:32:38,760 --> 00:32:41,729
+For end users, these widgets appear in the list of workflow extensions on the panel.
+
+272
+00:32:41,730 --> 00:32:45,809
+When we pin and then pin unpin and then pin one of these extensions to the toolbar,
+
+273
+00:32:45,810 --> 00:32:51,810
+we need to first move the DOM node back to where it was so that the c y can retrieve the domino and do the pinning correctly.
+
+274
+00:32:52,140 --> 00:32:56,760
+I see. And that's why we maybe move the widget node back before we then do the pin.
+
+275
+00:32:56,850 --> 00:33:03,110
+I understand. Okay. This has to do with this scoping classic.
+
+276
+00:33:03,120 --> 00:33:09,830
+That makes sense. And then test stuff.
+
+277
+00:33:10,040 --> 00:33:13,610
+Okay, let's let's. There are a couple of tests here.
+
+278
+00:33:14,030 --> 00:33:17,420
+Let's start by looking at the changes to the head file.
+
+279
+00:33:18,020 --> 00:33:25,489
+The head file are like the utilities that will be used to write tests and it looks like something new was exported.
+
+280
+00:33:25,490 --> 00:33:28,970
+Promise set toolbar visibility. Let's start there.
+
+281
+00:33:31,380 --> 00:33:37,240
+This is a function that waits for the collapsed mutation condition.
+
+282
+00:33:38,770 --> 00:33:43,730
+To change. I guess this is a synchronous.
+
+283
+00:33:46,190 --> 00:33:49,750
+To our physical. Undefined. What?
+
+284
+00:33:50,060 --> 00:33:53,810
+What is the API here? All right. What is the signature of this function?
+
+285
+00:33:56,830 --> 00:34:02,470
+Persist. Animated. Uh, persist.
+
+286
+00:34:04,660 --> 00:34:11,140
+That's true. Okay. So we're just going to default and then don't animate and then we'll do that.
+
+287
+00:34:11,170 --> 00:34:18,300
+Okay. And then we're changing this function for creating extensions.
+
+288
+00:34:18,310 --> 00:34:23,410
+We are adding a new default argument for files that will get created.
+
+289
+00:34:24,280 --> 00:34:28,390
+For the extension. I'm not.
+
+290
+00:34:31,670 --> 00:34:37,190
+Super familiar with this. Generate data.
+
+291
+00:34:39,730 --> 00:34:44,020
+Synch in test. Uh.
+
+292
+00:34:49,270 --> 00:34:56,500
+Generate data. Is there's something like data duck files.
+
+293
+00:34:56,530 --> 00:35:00,700
+Yeah. Okay. Generate files.
+
+294
+00:35:06,230 --> 00:35:10,200
+Generate XP, generate xp. I, I see.
+
+295
+00:35:10,220 --> 00:35:18,440
+Okay. So that's how that works. So you can now use this helper to dynamically create extensions.
+
+296
+00:35:18,440 --> 00:35:21,620
+You can now like supply some arbitrary files.
+
+297
+00:35:21,800 --> 00:35:27,960
+Got it. So this is a test I'm very familiar with.
+
+298
+00:35:31,240 --> 00:35:36,480
+We set this car seats and then we're going to add a new task.
+
+299
+00:35:36,490 --> 00:35:43,210
+I'm going to collapse this to get some more reading space. Here was this test to test overflow with extension and collapsed area.
+
+300
+00:35:43,690 --> 00:35:48,460
+The first thing to do is to open a new browser window. We get the Bookmarks toolbar.
+
+301
+00:35:49,780 --> 00:35:59,260
+We wait for the window to be overflowed. Oh, well, we begin this overflow task, and before we overflow it, we get the.
+
+302
+00:36:01,490 --> 00:36:12,030
+Extension ideas. Where to move the last time to the Visible Bookmarks Toolbar Move node.
+
+303
+00:36:13,080 --> 00:36:19,460
+We're going to ensure the toolbar is currently visible. Move an extension to the Bookmarks toolbar.
+
+304
+00:36:22,560 --> 00:36:27,750
+Exactly. Exactly. A because to our. Typo here.
+
+305
+00:36:33,080 --> 00:36:38,440
+It could. And then.
+
+306
+00:36:41,240 --> 00:36:45,560
+We're going to set the widget position here and then when things are overflowed
+
+307
+00:36:46,370 --> 00:36:50,270
+will ensure that the toolbar is currently collapsed to make sure that the.
+
+308
+00:36:52,100 --> 00:36:55,520
+Move node parent element ID is the overflow extension list.
+
+309
+00:36:57,760 --> 00:37:11,510
+Here's that same typo. And at this point, the extensions in the power because it was overflowed after the stores and class was also here.
+
+310
+00:37:11,540 --> 00:37:14,049
+But we're going to restore the initial wind assistance and the visibility of that,
+
+311
+00:37:14,050 --> 00:37:21,760
+because to override and change the extensions should still be in the panel. Yes, that makes sense because the toolbar is collapsed.
+
+312
+00:37:21,790 --> 00:37:29,010
+Good call out. So after we widen the window again, it should still be an extensions panel.
+
+313
+00:37:37,310 --> 00:37:43,130
+And then we make it visible again and we sure ensure that it's still in the Bookmarks toolbar.
+
+314
+00:37:44,600 --> 00:37:52,610
+And. It does not have that property.
+
+315
+00:37:52,910 --> 00:37:56,860
+And then the position is correct. Yeah.
+
+316
+00:37:56,890 --> 00:38:00,760
+That's a great test. Good job. I like that test a lot.
+
+317
+00:38:02,650 --> 00:38:08,110
+And then the other tests. All right.
+
+318
+00:38:08,110 --> 00:38:12,660
+There's been a lot of discussion in this one. Um.
+
+319
+00:38:15,790 --> 00:38:19,770
+Test extension. The classic test. Therefore, browser action is in a class toolbar like the bottom star.
+
+320
+00:38:19,780 --> 00:38:24,880
+That's Dominoes Overflow in the extensions panels. This is without the overflowing behavior.
+
+321
+00:38:26,350 --> 00:38:36,250
+So we create some extensions. Uh, there's this.
+
+322
+00:38:36,850 --> 00:38:40,569
+All this stuff in here, all this conversation, and where I say,
+
+323
+00:38:40,570 --> 00:38:46,600
+we're going to create an extension with this file called Pop Up that HTML that contains this stuff and this.
+
+324
+00:38:47,550 --> 00:38:54,180
+Script. And then we're going to start up the extension.
+
+325
+00:38:54,180 --> 00:38:57,540
+We're going to open the panel. For each extension.
+
+326
+00:38:57,540 --> 00:39:02,930
+We're going to get the unified extensions item. Not appear in the panel.
+
+327
+00:39:06,280 --> 00:39:12,010
+Right? Not yet, because the extension has not yet collapsed.
+
+328
+00:39:14,840 --> 00:39:27,470
+Default areas, the nav bar rate. So it's in the toolbar, the default toolbar, and then we're going to move the extensions to the Bookmarks toolbar.
+
+329
+00:39:36,140 --> 00:39:39,320
+We're going. Move it. Make sure it's collapsed.
+
+330
+00:39:39,350 --> 00:39:45,260
+Open the panel. Make sure the item is in the panel.
+
+331
+00:39:54,820 --> 00:39:56,559
+We would simply call it quick browser action.
+
+332
+00:39:56,560 --> 00:40:02,920
+Unfortunately, that does internally call show browser action which explicitly asserts the group area type.
+
+333
+00:40:03,160 --> 00:40:07,110
+And that would hit a failure in this test because we are moving it to area bookmarks.
+
+334
+00:40:07,120 --> 00:40:18,719
+Okay. So there's like an assertion built into that helper that we don't want to use promised panel browser.
+
+335
+00:40:18,720 --> 00:40:23,520
+We wait the extensions panel, wait for the test, pop up to open.
+
+336
+00:40:24,780 --> 00:40:31,800
+And then. Make the toolbar visible over the extensions panel.
+
+337
+00:40:31,830 --> 00:40:36,040
+The item should not be there, and we unload it and then we reset.
+
+338
+00:40:36,060 --> 00:40:41,730
+That is great. I think this is great. Let's run these tests locally and see what happens.
+
+339
+00:40:44,700 --> 00:40:48,930
+These are great tests. We're going to run this one first.
+
+340
+00:41:04,590 --> 00:41:07,350
+This is going to cause if you don't like flashing lights,
+
+341
+00:41:07,350 --> 00:41:12,660
+maybe look away because this is going to like make like there's going to be a lot of like flashing and changing and stuff here.
+
+342
+00:41:13,840 --> 00:41:18,550
+We like, change the width of windows a bunch and we test the overflowing behavior.
+
+343
+00:41:26,430 --> 00:41:31,010
+Well. Because my.
+
+344
+00:41:34,190 --> 00:41:37,190
+I have a feeling. Hang on.
+
+345
+00:41:37,340 --> 00:41:45,260
+Let me start over. Let me get my mouse out of the way. Sometimes the position of my mouse might affect the test.
+
+346
+00:41:58,870 --> 00:42:24,910
+Mm mm mm mm mm mm mm mm mm. All right.
+
+347
+00:42:24,940 --> 00:42:27,940
+Looks good. No answer on the other one. That's.
+
+348
+00:42:27,940 --> 00:42:33,520
+Yeah, that's a long test, unfortunately, but there is a lot to it.
+
+349
+00:42:43,250 --> 00:42:47,230
+All right. Do, do, do. Amazing. All right. So I'm pretty happy with this.
+
+350
+00:42:47,240 --> 00:42:52,190
+I think we should take it. Let's take this patch gang. Uh.
+
+351
+00:42:53,140 --> 00:43:00,930
+Thanks, Will. Accepted.
+
+352
+00:43:06,460 --> 00:43:15,980
+I mean. I didn't read Arpels review.
+
+353
+00:43:16,130 --> 00:43:21,050
+[INAUDIBLE] need to review and make sure that, like the thing he was concerned with is addressed.
+
+354
+00:43:21,530 --> 00:43:29,840
+It looks like that is related to the stuff that will added about, you know, the pop up.
+
+355
+00:43:30,170 --> 00:43:33,290
+So hopefully that's all sort of taken care of.
+
+356
+00:43:33,650 --> 00:43:45,650
+But we did it all right. I forgot to ask why unified extensions instead of a unified add ons,
+
+357
+00:43:45,660 --> 00:43:49,860
+it would be more consistent with how it was called the hamburger menu and potentially create less confusion for some users.
+
+358
+00:43:51,930 --> 00:43:59,330
+I think it just is called extensions. And the reason for that is because.
+
+359
+00:44:02,500 --> 00:44:11,860
+What is the add ons is more than just what you get from like the add buttons.
+
+360
+00:44:12,010 --> 00:44:20,380
+Here's the problem. Here's the problem. Add ons is a bigger umbrella than what you probably think of as extensions.
+
+361
+00:44:21,310 --> 00:44:26,230
+Themes, for example, is another type of add on dictionary packs.
+
+362
+00:44:26,830 --> 00:44:31,210
+GMP is like Wide Vine are a kind of add on.
+
+363
+00:44:31,750 --> 00:44:37,120
+These are things that the browser goes and gets and then installs internally.
+
+364
+00:44:38,000 --> 00:44:42,310
+Those are called add ons and we list all of those things in here, all those different things.
+
+365
+00:44:42,520 --> 00:44:49,300
+And then what you manage, what you probably think of as add ons are probably the extensions.
+
+366
+00:44:49,750 --> 00:44:55,650
+And that is what we list in here. So it's a it's a terminology issue.
+
+367
+00:44:55,660 --> 00:45:01,090
+I think we don't make it clear really that like add ons is this bigger umbrella.
+
+368
+00:45:01,360 --> 00:45:06,579
+But that's why I don't know if that's good justification,
+
+369
+00:45:06,580 --> 00:45:17,409
+but hopefully that helps sort of explain why there's that distinction between add ons and extensions and unified extensions and unified ends.
+
+370
+00:45:17,410 --> 00:45:20,740
+That's just like an internal name, though I think we you just used for the panel.
+
+371
+00:45:21,400 --> 00:45:24,910
+We just call the extensions panel here. We don't show the word unified or anything.
+
+372
+00:45:26,560 --> 00:45:33,940
+Okay. So what do I want to work on now? I was doing some stuff related to the migration wizard that I want to sort of wrap up.
+
+373
+00:45:33,940 --> 00:45:38,440
+I have some patches I need to land, so maybe we can do that right now.
+
+374
+00:45:39,550 --> 00:45:42,580
+The first one is this patch.
+
+375
+00:45:44,190 --> 00:45:47,400
+Who? Smurf. We may have found our.
+
+376
+00:45:57,160 --> 00:46:00,250
+It's hard to tell when that's looping. There we go.
+
+377
+00:46:02,690 --> 00:46:05,690
+The overflow may be related to that one.
+
+378
+00:46:08,180 --> 00:46:13,720
+Capris and fedora. Yeah, that might be related.
+
+379
+00:46:13,730 --> 00:46:26,220
+Let me put that in my notes here. Smurf d this one.
+
+380
+00:46:29,760 --> 00:46:34,100
+So the extension wizard, we talked a little bit about it and worked on it last week.
+
+381
+00:46:34,110 --> 00:46:38,780
+The thing that we worked on about the file, my graders, that stuff is ready to land.
+
+382
+00:46:38,790 --> 00:46:41,410
+I thought it would be cool if we will ended it together.
+
+383
+00:46:41,430 --> 00:46:46,980
+But I want to show you the patch and where it's at and what it looks like when it's being used.
+
+384
+00:46:49,410 --> 00:46:52,770
+Because, yeah, we had looked at that last week. We'd done a little bit of refactoring.
+
+385
+00:47:10,430 --> 00:47:15,260
+Keep the questions coming. I like all the chatter that's going on in the chat room here.
+
+386
+00:47:16,250 --> 00:47:20,990
+It's good stuff. How many people we have? 147 people in here.
+
+387
+00:47:21,230 --> 00:47:25,190
+I don't know how many of them are active. How many of them are watching the stream?
+
+388
+00:47:25,670 --> 00:47:29,060
+That is a shocking number of people in this room. I have no idea.
+
+389
+00:47:30,230 --> 00:47:34,070
+Wow. And that's not that's the Matrix channel. I actually don't know.
+
+390
+00:47:35,520 --> 00:47:43,290
+Who's watching this on Twitch? I don't know how many people a lot of the people commenting, for example, are coming through Twitch right now.
+
+391
+00:47:44,160 --> 00:47:50,819
+So that's probably like, I don't know. But normally I think I get something like less than a dozen people watching on Twitch.
+
+392
+00:47:50,820 --> 00:47:54,810
+But who knows? Who knows? Apparently there's two watching on YouTube.
+
+393
+00:47:55,110 --> 00:48:01,260
+That's exciting. Yeah, I was waiting for this to build.
+
+394
+00:48:01,570 --> 00:48:08,490
+It's done building. So let's take a look and let's take a look at the patch that we're going to land.
+
+395
+00:48:17,750 --> 00:48:29,960
+Right. So one of the things that we did last time was we split out the progress page for file my graders to have its own page and uh,
+
+396
+00:48:30,860 --> 00:48:40,639
+yeah, built out a bunch of infrastructure for doing generic file migration versus like, um, browser migration.
+
+397
+00:48:40,640 --> 00:48:49,940
+Now there's like a file migration type that will hopefully allow users to like, uh, migrate passwords and whatnot.
+
+398
+00:48:49,940 --> 00:48:55,880
+And I wrote a bunch of tests, so let's, let's take a look at the feature.
+
+399
+00:48:56,090 --> 00:48:59,149
+Sorry, I was just like zipping by the patch.
+
+400
+00:48:59,150 --> 00:49:05,960
+You probably weren't getting a whole lot out of it, but let's at least show you what it does just so you can refresh your memory.
+
+401
+00:49:06,530 --> 00:49:14,870
+Um, so here we will now have this new item passwords from CSV file and then I can like choose a CSV file.
+
+402
+00:49:14,870 --> 00:49:24,340
+Like what? I had some CSV files in here that's like add, add and up add passwords.
+
+403
+00:49:25,310 --> 00:49:37,800
+So one new password was added. Is that the right font?
+
+404
+00:49:38,070 --> 00:49:41,280
+Like the right appearance that might need to get fixed.
+
+405
+00:49:41,430 --> 00:49:46,050
+One added zero updated. Like whenever I do. Um.
+
+406
+00:49:46,990 --> 00:49:54,260
+Internal testing mean greater. Browser migrate.
+
+407
+00:49:55,400 --> 00:50:00,110
+Internal testing enabled. True.
+
+408
+00:50:03,840 --> 00:50:07,660
+Yeah. The font supposed to be smaller. I think I missed a step.
+
+409
+00:50:07,680 --> 00:50:11,460
+We might want to just fix that quickly before landing. Um.
+
+410
+00:50:13,460 --> 00:50:17,300
+And that's the sort of thing that we can see probably in storybook as well.
+
+411
+00:50:29,550 --> 00:50:38,790
+Someone says you can't pin an unpin pocket on current Firefox stable pinned to overflow menu.
+
+412
+00:50:40,720 --> 00:50:48,110
+Unpin from overflow menu. Firefox.
+
+413
+00:51:07,620 --> 00:51:11,200
+Hmm. Right click. There's no menu. It works on other extension icons.
+
+414
+00:51:12,070 --> 00:51:15,490
+So you've got a broken context menu on pocket.
+
+415
+00:51:17,540 --> 00:51:22,200
+It's interesting. Hmm.
+
+416
+00:51:22,850 --> 00:51:33,360
+Do I? I get. Mm hmm.
+
+417
+00:51:33,460 --> 00:51:36,600
+Mm hmm. What could that be about?
+
+418
+00:51:37,530 --> 00:51:42,290
+Jimbo? 2150. All right.
+
+419
+00:51:44,500 --> 00:51:48,100
+I want to look at a storybook here. Let's pull this up.
+
+420
+00:51:55,030 --> 00:52:00,009
+Migration Wizard. File import progress.
+
+421
+00:52:00,010 --> 00:52:04,290
+File input. Success. Success. So yeah, the font here is wrong.
+
+422
+00:52:04,300 --> 00:52:10,000
+What is the font being used here? It's called success text, de-emphasized text.
+
+423
+00:52:10,680 --> 00:52:13,900
+What are we using for success here?
+
+424
+00:52:16,040 --> 00:52:23,200
+Success text we should use de-emphasized. Text as well.
+
+425
+00:52:23,230 --> 00:52:36,230
+Yeah. Okay. So I'll just add that class. What's the name of the page?
+
+426
+00:52:36,230 --> 00:52:44,090
+Page progress. Page file. Import progress. Yeah, we just need the de-emphasize text class.
+
+427
+00:52:48,750 --> 00:52:54,990
+That should do it. Good.
+
+428
+00:52:55,440 --> 00:53:00,120
+And now if I restart here, I can just close this now.
+
+429
+00:53:02,810 --> 00:53:08,690
+Port passwords from CSV file. Let's go like this.
+
+430
+00:53:08,760 --> 00:53:12,980
+There's some in here called like update. Update passwords.
+
+431
+00:53:13,490 --> 00:53:17,750
+Yeah, that looks right. One added.
+
+432
+00:53:17,750 --> 00:53:22,640
+One updated. Dun dun dun. Okay.
+
+433
+00:53:25,960 --> 00:53:30,590
+One last thing we're going to. Just amend that.
+
+434
+00:53:33,560 --> 00:53:42,810
+I am right rear vision. Then we'll push this up to fabricator and land it.
+
+435
+00:54:07,190 --> 00:54:21,010
+Okay. Right.
+
+436
+00:54:21,460 --> 00:54:26,170
+It's just that. Okay. Land it there. Go ahead.
+
+437
+00:54:26,290 --> 00:54:38,680
+View the stack and Lando. And cue these up for landing up a landing for the regions and the stack is already in progress.
+
+438
+00:54:48,850 --> 00:54:58,800
+Looks like I'd already cue this. I'm going to cancel that landing request, actually, so that I can re request a landing of the new revision there.
+
+439
+00:55:00,150 --> 00:55:06,440
+Boom. That's lucky. Luckily the tree was closed.
+
+440
+00:55:13,440 --> 00:55:19,710
+It's just waiting for coverage. Okay. Now what?
+
+441
+00:55:21,840 --> 00:55:30,930
+Well, now that that's starting to go into the tree, I want to get to a nother patch that's related to accessibility.
+
+442
+00:55:32,760 --> 00:55:40,110
+We just landed some changes to improve the accessibility of the migration wizard.
+
+443
+00:55:40,140 --> 00:55:49,110
+The good news is that it was already it was designed using a lot of like built in HTML elements, things like.
+
+444
+00:55:51,260 --> 00:55:56,540
+You know, buttons like we didn't rebuild a lot of the widget tree from scratch,
+
+445
+00:55:56,540 --> 00:55:59,810
+which means that we get a lot of like accessibility capabilities for free.
+
+446
+00:56:00,920 --> 00:56:05,510
+That's just a pro tip for you Web developers, you know, if you need a checkbox.
+
+447
+00:56:07,720 --> 00:56:18,160
+Use a checkbox. You can style and theme the checkbox, but use a checkbox under the hood because accessibility tools will know what to do with it.
+
+448
+00:56:18,400 --> 00:56:20,080
+Now, there are ways you can get you know,
+
+449
+00:56:20,080 --> 00:56:29,319
+you can use ARIA attributes and roll the roll attribute to try and like hint to accessibility devices like screen readers that like,
+
+450
+00:56:29,320 --> 00:56:39,700
+oh, this button is actually a menu or something, but it's is better if you just use the built in stuff honestly.
+
+451
+00:56:40,480 --> 00:56:42,309
+And this is the one that I want to look at.
+
+452
+00:56:42,310 --> 00:56:50,770
+This is a related to Nvidia, which is the screen reader, like the premiere screen reader tool on Windows, it's called Nvidia.
+
+453
+00:56:51,520 --> 00:56:57,400
+And we actually employ someone who was one of the creators of Nvidia.
+
+454
+00:56:58,300 --> 00:57:02,050
+James Tay's a prolific contributor to the accessibility team.
+
+455
+00:57:02,410 --> 00:57:04,660
+Yeah, excellent, excellent developer.
+
+456
+00:57:05,860 --> 00:57:16,570
+And he's been looking at this with us and I, I was under the there's this conversation going on about like this part.
+
+457
+00:57:17,410 --> 00:57:20,920
+Let me show you let me show you the issue.
+
+458
+00:57:25,010 --> 00:57:34,610
+So this is a dropdown menu, ostensibly, but it's actually not.
+
+459
+00:57:35,690 --> 00:57:41,850
+Like I'm almost kind of contradicting the stuff I'd said earlier, which was like, Hey, use the built in form controls if you can.
+
+460
+00:57:41,870 --> 00:57:46,790
+Well, in this particular case, because of Oh, hey.
+
+461
+00:57:46,790 --> 00:57:50,209
+NARRATOR Thanks for the hug. I'm a hug.
+
+462
+00:57:50,210 --> 00:57:53,210
+You back over the Internet, so.
+
+463
+00:57:54,480 --> 00:58:01,470
+There is a like an HTML element that allows you to do dropdowns like this and it's called select.
+
+464
+00:58:02,850 --> 00:58:07,470
+You may have seen the select element before. It looks like this.
+
+465
+00:58:09,000 --> 00:58:12,310
+The problem is that there's not a whole lot you can do with it.
+
+466
+00:58:12,330 --> 00:58:18,270
+For example, you can't have like a multiple line select element here.
+
+467
+00:58:18,300 --> 00:58:21,980
+Like, I'm pretty sure I could say, like, appearance.
+
+468
+00:58:21,990 --> 00:58:29,190
+Could I do this? I don't think I can. Like, can I put different dom nodes the way the structure is?
+
+469
+00:58:29,190 --> 00:58:37,290
+Like, the options go inside it and you get like a single line and then you get your menu and you can't.
+
+470
+00:58:37,680 --> 00:58:47,490
+You can do some some CSS styling on some of these options, like I could say, like background color red on some of these styles.
+
+471
+00:58:47,850 --> 00:58:57,900
+Can't I? Option. That's one option, but clear Red Dog.
+
+472
+00:58:59,650 --> 00:59:06,940
+Can't I do background? There is a way for you to like style.
+
+473
+00:59:08,500 --> 00:59:11,900
+There is a way to style the select dropdowns. Um.
+
+474
+00:59:17,780 --> 00:59:21,240
+That's one. But there's a way to do the options as well.
+
+475
+00:59:21,270 --> 00:59:30,260
+I can't remember what it what they are like. You can do fonts, font color or just color yellow.
+
+476
+00:59:30,560 --> 00:59:34,910
+Can I do that without work? There's a way of doing it.
+
+477
+00:59:35,300 --> 00:59:46,400
+But the the requirements of from the UX specification are like, we need icons here and we can't do that with select dropdowns.
+
+478
+00:59:48,170 --> 00:59:52,430
+Now the good news is that the panel list, which is what we used for this dropdown,
+
+479
+00:59:52,730 --> 00:59:59,570
+has a lot of what we would expect from a select dropdown like keyboard accessibility.
+
+480
+01:00:00,320 --> 01:00:06,710
+And you know, if I were to like select something with the spacebar or enter that works,
+
+481
+01:00:07,100 --> 01:00:10,490
+you know, like that a lot of that we get for free from the panelist and that's good.
+
+482
+01:00:12,140 --> 01:00:16,330
+But the the issue is that screen readers, this is a button.
+
+483
+01:00:16,340 --> 01:00:20,749
+They're going to see this as a button and they see this as like this panel that
+
+484
+01:00:20,750 --> 01:00:27,950
+just appears and it's not semantically presented as a like dropdown menu list,
+
+485
+01:00:27,950 --> 01:00:34,309
+which is ultimately what it is. And so that's what this bug is about, is like, okay, well, how,
+
+486
+01:00:34,310 --> 01:00:42,320
+how do we negotiate trying to communicate to accessibility devices what this piece of wizardry is and how it works.
+
+487
+01:00:44,120 --> 01:00:48,199
+And so Jamie, who's one of our experts, has been working with us on this. Jamie is, like I said,
+
+488
+01:00:48,200 --> 01:00:54,319
+one of our experts on the accessibility team who knows a lot about how these what the right roles
+
+489
+01:00:54,320 --> 01:01:01,370
+are and how to make these things make sense to a screen reader and other accessibility devices.
+
+490
+01:01:02,410 --> 01:01:05,989
+Um, he first asked like, can we use a select here?
+
+491
+01:01:05,990 --> 01:01:17,450
+And unfortunately we cannot because of the specification. How do screenwriters deal with stuff like electronic apps like Discord?
+
+492
+01:01:17,630 --> 01:01:20,630
+That's a good question. I think it depends.
+
+493
+01:01:20,990 --> 01:01:25,500
+I know that, for example, uh, we have people who use screen.
+
+494
+01:01:25,520 --> 01:01:32,780
+Jamie uses a screen reader. There are a number of people at Mozilla who in the community who use screen readers and they use Matrix.
+
+495
+01:01:33,110 --> 01:01:39,650
+They use Slack. Slack the the app, both in the browser and probably the the electron app.
+
+496
+01:01:40,850 --> 01:01:45,590
+And they're able to get by. They use fabricator.
+
+497
+01:01:46,520 --> 01:01:49,790
+But for things like discord, I'm not actually sure it's a good question.
+
+498
+01:01:51,050 --> 01:02:00,470
+I know that for UNFOR, it's an unfortunate reality that many application authors, web application authors don't test with screen readers.
+
+499
+01:02:00,470 --> 01:02:05,000
+They don't even really consider it as part of like their their designs or anything.
+
+500
+01:02:05,000 --> 01:02:11,959
+So the stuff that we're doing now about the migration wizard, they often it's never like part of the conversation.
+
+501
+01:02:11,960 --> 01:02:13,490
+They always kind of like shove it to the side.
+
+502
+01:02:14,150 --> 01:02:22,850
+But I'm happy to work for a company, Mozilla and a community Mozilla, that takes accessibility seriously.
+
+503
+01:02:23,300 --> 01:02:27,990
+You know, it's part of the manifesto. The bug here.
+
+504
+01:02:27,990 --> 01:02:29,879
+Isn't that nvidia is in switching focus mode.
+
+505
+01:02:29,880 --> 01:02:34,110
+We need to have the button that is expected behavior since a button doesn't provide any interaction other than signal activation.
+
+506
+01:02:34,440 --> 01:02:38,910
+The real problem is that an nvidia user can't activate this button while in browse mode.
+
+507
+01:02:39,240 --> 01:02:45,360
+This is broken because Nvidia will programmatically click the deepest descendant under its Browse mode cursor.
+
+508
+01:02:45,840 --> 01:02:49,169
+As I understand that descendant is an inner div inside the button.
+
+509
+01:02:49,170 --> 01:02:51,790
+That Div isn't bubbling click events up to its button.
+
+510
+01:02:51,810 --> 01:02:56,070
+I'm not sure how the click event gets from the button text to the button, but I guess it doesn't v a bubbling.
+
+511
+01:02:56,100 --> 01:03:00,270
+Maybe the div has pointer events. None of that is true. The div does so.
+
+512
+01:03:01,620 --> 01:03:08,670
+What Jamie suspects is true. These children under the button have pointer events, none on them.
+
+513
+01:03:09,240 --> 01:03:16,980
+And that's so that the the anchoring works correctly so that like when you click on this thing,
+
+514
+01:03:17,640 --> 01:03:26,250
+the the target of the event happens to be like the whole button.
+
+515
+01:03:29,390 --> 01:03:36,170
+That's what we do. Like, if we didn't do that, if I got rid of that rule, then like I think, yeah, all of a sudden,
+
+516
+01:03:36,170 --> 01:03:45,350
+like anchoring button, like the panel starts making and makes less sense, like it starts not opening correctly.
+
+517
+01:03:45,350 --> 01:03:49,560
+And you can also then like select. Is that true?
+
+518
+01:03:55,030 --> 01:03:59,740
+Anyways. There are some ways around that fix the device that click events get rid of the button via bubbling.
+
+519
+01:04:00,950 --> 01:04:06,679
+Or mark the device presentational so that it isn't in the accessibility tree making the button the deepest to send it.
+
+520
+01:04:06,680 --> 01:04:11,150
+Note, however, that there are special cases where role presentation will be ignored, so this may not work.
+
+521
+01:04:11,600 --> 01:04:14,770
+So maybe there's a way we can get rid of that pointer events.
+
+522
+01:04:14,780 --> 01:04:19,070
+None rule and make the stuff work that might be possible.
+
+523
+01:04:19,790 --> 01:04:24,109
+Third is Nathan note the label is going to clobber the screen is user ability to perceive the current value.
+
+524
+01:04:24,110 --> 01:04:27,310
+A button cannot have a value. The only thing we can use is the label.
+
+525
+01:04:27,340 --> 01:04:32,419
+This must be a button instead of a proper combo box. My suggestion would be just drop the label changer all together.
+
+526
+01:04:32,420 --> 01:04:36,979
+Hopefully the browser name provide sufficient context. This allows the user to change the selected browser.
+
+527
+01:04:36,980 --> 01:04:42,830
+Okay, so instead of using a label, we just leave it be.
+
+528
+01:04:44,120 --> 01:04:55,770
+Okay. So let's take a look. We're going to I'm going to rebase this on top of this.
+
+529
+01:05:09,260 --> 01:05:14,120
+And Jamie suggests getting rid of the label that was added all together on the button.
+
+530
+01:05:16,450 --> 01:05:21,270
+So. Yeah, let's do it.
+
+531
+01:05:22,850 --> 01:05:26,800
+Was it? Profile selector.
+
+532
+01:05:34,040 --> 01:05:39,529
+We're going to get rid of that. And his roll menu.
+
+533
+01:05:39,530 --> 01:05:42,710
+Correct. Um, menu.
+
+534
+01:05:43,940 --> 01:05:47,750
+It does show the owners having a roll menu. I think that's just a minor oversight.
+
+535
+01:05:55,470 --> 01:06:00,480
+Menu is the wrong word to have on the button that expands menu. Rather, we should have a button with the default button roll that becomes the element
+
+536
+01:06:00,480 --> 01:06:05,280
+that is linked to the actual menu that pops up via aria has pop up equal menu.
+
+537
+01:06:05,550 --> 01:06:12,180
+Okay, that's what they want. So we get rid of roll menu and we say has pop up equal menu.
+
+538
+01:06:12,190 --> 01:06:16,030
+Now I have to refresh my memory on what this means.
+
+539
+01:06:17,970 --> 01:06:21,480
+Aria has pop up a voucher, indicates the availability and type of interactive pop.
+
+540
+01:06:21,630 --> 01:06:24,480
+And if you trigger by now in which the attribute is set in our interactive media,
+
+541
+01:06:25,800 --> 01:06:30,240
+see our power with one of 600 values menu list tree tree grid dialog or true indicates the
+
+542
+01:06:30,480 --> 01:06:35,490
+trigger problem probably displayed in turn that element pops up must be of the role indicated.
+
+543
+01:06:35,910 --> 01:06:42,390
+The value true is the same as menu. Any other value value including an empty string, is treated as a false reset.
+
+544
+01:06:46,630 --> 01:06:54,550
+So they were saying have it be has pop up equal menu which means then that this the
+
+545
+01:06:54,550 --> 01:07:02,070
+select the dropdown that appears should also have the role of menu as opposed to list.
+
+546
+01:07:09,120 --> 01:07:20,150
+Migration Wizard Durham Jazz. Roll menu and then like, what is the menu?
+
+547
+01:07:20,220 --> 01:07:33,990
+Roll. List of choices, manuals, appropriate lists, and then menu items include menu item.
+
+548
+01:07:34,680 --> 01:07:38,280
+Okay. So instead of list item.
+
+549
+01:07:39,150 --> 01:07:53,129
+The menu item. Uh.
+
+550
+01:07:53,130 --> 01:08:05,720
+Okay. Menu item.
+
+551
+01:08:08,770 --> 01:08:13,680
+And then. Little menu.
+
+552
+01:08:17,570 --> 01:08:21,020
+And then the question was whether or not we can make it so that this button.
+
+553
+01:08:22,310 --> 01:08:26,420
+It doesn't use pointer events. No, our pointer events, none on this stuff.
+
+554
+01:08:26,990 --> 01:08:30,650
+So let's see if we can make that work. Migration Wizard.
+
+555
+01:08:31,580 --> 01:08:36,110
+Of course, as pointer events, none is happening here.
+
+556
+01:08:39,020 --> 01:08:43,530
+Get rid of that. Then we might be able to do it if we.
+
+557
+01:08:44,960 --> 01:08:48,800
+Let's see here. Know.
+
+558
+01:08:51,960 --> 01:08:56,720
+Show. Show for event we say current target.
+
+559
+01:08:57,530 --> 01:09:03,260
+That might work because current target will map to where you are bubbling up to.
+
+560
+01:09:05,890 --> 01:09:16,690
+Let's see what happens if we do that. I'm curious, Naruto.
+
+561
+01:09:16,690 --> 01:09:24,740
+Or you're saying that discord is better than Matrix. What about Discord as better than Matrix?
+
+562
+01:09:25,490 --> 01:09:31,110
+Is that the discoverability problem? What's missing for you?
+
+563
+01:09:31,650 --> 01:09:37,760
+For Discord. For Matrix, rather. Oh.
+
+564
+01:09:37,860 --> 01:09:40,950
+Okay. Let's see here. Settings.
+
+565
+01:09:41,100 --> 01:09:44,310
+Import. So here. Okay. So this is the problem.
+
+566
+01:09:44,560 --> 01:09:50,370
+It's like the anchoring. Now can I.
+
+567
+01:09:50,670 --> 01:09:53,820
+Can I retarget maybe show event.
+
+568
+01:10:14,070 --> 01:10:19,710
+And all of the list show triggering event.
+
+569
+01:10:28,390 --> 01:10:40,760
+Could I synthesize a mouse event? Or.
+
+570
+01:10:59,060 --> 01:11:03,430
+It's always using the target for the event for the anchor node.
+
+571
+01:11:05,360 --> 01:11:08,660
+See, that's why I did this. Poynter events. None.
+
+572
+01:11:16,010 --> 01:11:19,880
+How do I like retarget that retargeting?
+
+573
+01:11:23,920 --> 01:11:45,790
+JavaScript. Can I I presume I cannot.
+
+574
+01:11:47,320 --> 01:11:53,330
+Yeah. Is read only. Had a event.
+
+575
+01:12:01,930 --> 01:12:05,320
+Current event. Related Target. Original target. Composed target.
+
+576
+01:12:07,240 --> 01:12:12,129
+Can I like. Uh. JavaScript clone event.
+
+577
+01:12:12,130 --> 01:12:25,140
+Change target. In order for a implement event delegation.
+
+578
+01:12:43,480 --> 01:12:49,209
+We might have to use role presentation here because I'm really reluctant to change.
+
+579
+01:12:49,210 --> 01:12:57,190
+Panelist For now. Was.
+
+580
+01:12:57,200 --> 01:13:09,550
+Remind me again what role presentation is. Being exposed to the accessibility tree.
+
+581
+01:13:12,540 --> 01:13:16,530
+Well, that. Will that be? All right? So.
+
+582
+01:13:26,040 --> 01:13:33,980
+Let's try this. Okay.
+
+583
+01:13:34,670 --> 01:13:38,560
+And I'm going to pop open voice over, see what it thinks of this.
+
+584
+01:13:38,570 --> 01:13:41,900
+I need just try and V-Day as well. But.
+
+585
+01:13:44,600 --> 01:13:49,250
+Let's see what, uh, voice over thinks. This is going to get pretty chatty, so hang in there, gang.
+
+586
+01:13:52,660 --> 01:14:00,000
+VOICEOVER UN System Obese. Obese 27.2 points menu at title title window 0bs0 yes.
+
+587
+01:14:00,040 --> 01:14:08,800
+Two Categories List Leaving Categories Link Link, Find and open import data button in Safari Menu Pop Up Button.
+
+588
+01:14:09,430 --> 01:14:15,579
+You are currently on a button inside of web content to click this button press control option space to exit this web area.
+
+589
+01:14:15,580 --> 01:14:22,330
+Press Control Option Shift Up Arrow Safari Menu Item Group Menu ten items nightly has new window.
+
+590
+01:14:22,870 --> 01:14:30,490
+You are currently on a menu item to interact chrome person one interactive chrome also another user interactive chrome canary
+
+591
+01:14:30,610 --> 01:14:37,719
+person one interactive app internal testing migrate or interactive internal testing migrate her menu pop a collapsed button
+
+592
+01:14:37,720 --> 01:14:44,050
+closing menu Internal testing migrate or menu pop up collapsed button Internal Testing Migrate or internal testing migrate or
+
+593
+01:14:44,080 --> 01:14:50,260
+saved Loggins and Passwords Saved Loggins and Passwords Browsing History Browsing History Formatting Fill Data Form to fill data.
+
+594
+01:14:50,680 --> 01:14:54,970
+Why you are currently on a button inside of web content to click this button Press Control
+
+595
+01:14:55,270 --> 01:14:59,620
+System Preferences VOICEOVER All is like repeating itself while it was going through this list.
+
+596
+01:15:00,010 --> 01:15:29,940
+Why is that? Because the button itself has a label saved logins and passwords.
+
+597
+01:15:29,970 --> 01:15:37,660
+I see. So I wonder what happens if we, for example, say that this is.
+
+598
+01:15:40,710 --> 01:15:49,000
+Role presentation. If we did that, what is the accessibility API?
+
+599
+01:15:51,520 --> 01:15:56,100
+So still sees that there's two of them. Text leaf.
+
+600
+01:15:59,620 --> 01:16:05,080
+So like, what does that what are you supposed to do with that that metaphor?
+
+601
+01:16:05,110 --> 01:16:10,860
+If you've got a. Label.
+
+602
+01:16:17,310 --> 01:16:27,550
+And was able. Input type equals checkbox span.
+
+603
+01:16:28,730 --> 01:16:33,260
+Test. One, two, three. And then you say.
+
+604
+01:16:39,350 --> 01:16:53,760
+Like. The check button. Nation is labeled by the label bookmarks, which is labeled by this text leaf.
+
+605
+01:16:54,540 --> 01:17:02,430
+So, like, is this just how it works? Like if I. Examine this voice over on Slate.
+
+606
+01:17:02,760 --> 01:17:08,820
+Jay has been collaborative JavaScript debugging window test 123 Unchecked CheckBox has keyboard focus.
+
+607
+01:17:09,390 --> 01:17:13,020
+You are currently on a checkbox test 123 unchecked checkbox.
+
+608
+01:17:15,790 --> 01:17:24,610
+Leaving J has been an attack system preferences voice over off so that's first of all I did is wrong span and then label close up the label.
+
+609
+01:17:25,240 --> 01:17:34,570
+Why is it voice over on the play? J has been collaborative JavaScript debugging window test 123 uncheck checkbox has keyboard focus.
+
+610
+01:17:35,140 --> 01:17:40,840
+You are currently on a checkbox inside of a frame out of J has been test 123 uncheck checkbox
+
+611
+01:17:41,890 --> 01:17:48,040
+system preferences nightly test one Check Test 123 CheckBox System Preferences VOICEOVER off.
+
+612
+01:17:48,070 --> 01:17:51,430
+So how come these ones are getting listed here?
+
+613
+01:17:51,430 --> 01:17:55,780
+Let me just like copy this entire chunk of HTML.
+
+614
+01:18:02,680 --> 01:18:11,850
+Sure. VOICE-OVER On that day, Jay has been collaborating bookmarks on Jack CheckBox.
+
+615
+01:18:12,420 --> 01:18:16,319
+You are currently on a checkbox inside of a frame to select or select list checked
+
+616
+01:18:16,320 --> 01:18:20,430
+bookmarks checkbox uncheck book system preferences voiceover off once here.
+
+617
+01:18:21,300 --> 01:18:26,320
+So what's the dealio? It's because it's inside of a field set.
+
+618
+01:18:30,250 --> 01:18:36,680
+What is the accessibility? Text leave check button.
+
+619
+01:18:36,890 --> 01:18:50,980
+Yeah, it has, like, the same structure. Grouping and.
+
+620
+01:18:54,660 --> 01:18:57,930
+If I put it inside of details. Let's.
+
+621
+01:18:57,930 --> 01:19:02,280
+Let's copy more. Let's copy more. Let's copy this entire structure.
+
+622
+01:19:05,090 --> 01:19:11,150
+Copy editor. HTML. Okay.
+
+623
+01:19:14,910 --> 01:19:18,720
+And voice over on that. Jasmine.
+
+624
+01:19:18,930 --> 01:19:22,290
+Internal testing migrate her menu. Import all available bookmarks.
+
+625
+01:19:22,290 --> 01:19:27,599
+Uncheck checkbox. You are currently on a checked bookmarks clickable bookmark j has been heading
+
+626
+01:19:27,600 --> 01:19:32,339
+level in heading up in text out of text import browser out of bookmarks.
+
+627
+01:19:32,340 --> 01:19:41,729
+Uncheck checkbox bookmarks clickable bookmarks uncheck checkbox you are saved log in and passwords uncheck checkbox you are saved
+
+628
+01:19:41,730 --> 01:19:50,220
+locked browsing history format data formatting fill data uncheck checkbox you are j has been frame system preferences voice over off.
+
+629
+01:19:51,210 --> 01:19:58,260
+All right now over here. VOICEOVER heading level one internal select the data you'd like to import bookmarks checked the
+
+630
+01:19:58,260 --> 01:20:03,899
+checkbox you are currently on bookmarks clickable you are currently on a text element book.
+
+631
+01:20:03,900 --> 01:20:07,860
+Select the data internal testing migrate her menu pop up system voiceover off.
+
+632
+01:20:08,310 --> 01:20:12,150
+So I think that whole readout happened only one of our I change the state here
+
+633
+01:20:12,180 --> 01:20:17,200
+like voiceover on my settings window settings where content has keyboard focus.
+
+634
+01:20:17,220 --> 01:20:21,090
+Opera Opera You are currently on web content to enter the web area.
+
+635
+01:20:21,090 --> 01:20:27,850
+Press Control Option Shift Down Arrow. Menu items closing menu so far.
+
+636
+01:20:28,540 --> 01:20:35,360
+Opera Internal Testing MODERATOR Menu Item Group Internal Testing Migratory Internal Testing Migratory Forms of data format of data.
+
+637
+01:20:35,920 --> 01:20:43,300
+You are currently on a group inside of web content. Internal Testing My Bookmarks checked checkbox saved Loggins and passwords check checkbox
+
+638
+01:20:43,480 --> 01:20:49,900
+browsing history checked checkbox forming fill data check checkbox you are cancel import button.
+
+639
+01:20:50,500 --> 01:20:54,819
+You are currently on a button inside of element element one vertical line live hacking
+
+640
+01:20:54,820 --> 01:20:58,720
+window element one vertical line live hacking where content has keyboard focus.
+
+641
+01:20:59,290 --> 01:21:07,899
+You are currently on web content to enter the web area nightly settings window import button import name safari menu pop of collapsed button internal
+
+642
+01:21:07,900 --> 01:21:14,680
+testing migrate or internal testing migrate or internal testing migrate or saved log in and passwords saved log in and passwords browsing history.
+
+643
+01:21:14,680 --> 01:21:16,460
+Browsing History for mobile data.
+
+644
+01:21:16,510 --> 01:21:24,430
+For Mobile Data You are currently on a button inside of web cons element element one vertical line move hacking system preferences voiceover off.
+
+645
+01:21:24,820 --> 01:21:33,700
+It happens whenever we change the state here. And that happens when when that happens, what do we do?
+
+646
+01:21:33,710 --> 01:21:38,090
+We change the browsers selection change.
+
+647
+01:21:51,200 --> 01:21:54,320
+I think there's, like, a way of, like, uh.
+
+648
+01:21:54,410 --> 01:21:59,860
+Ah, yeah. Play. Are you live regions in the channel and.
+
+649
+01:22:17,480 --> 01:22:22,200
+That might be useful. Aria live equals polite.
+
+650
+01:22:23,860 --> 01:22:32,720
+Like. Oh, the whole thing has aria alive equals polite.
+
+651
+01:22:36,080 --> 01:22:49,790
+Um. If I say, for example, that this field set.
+
+652
+01:22:55,290 --> 01:22:58,580
+And then. Turn on.
+
+653
+01:23:02,280 --> 01:23:07,560
+Fortnightly Bookmarks. Internal Microsoft beta probe nightly has a new window.
+
+654
+01:23:07,590 --> 01:23:11,970
+Microsoft has made a profile on menu pop a collapsed button. Microsoft has made a profile on.
+
+655
+01:23:12,000 --> 01:23:17,640
+Microsoft had made a profile one. You are currently on a button inside of web content to click this button.
+
+656
+01:23:18,060 --> 01:23:24,150
+So far, internal testing not only has new window internal testing moderator menu pop up collapsed,
+
+657
+01:23:24,150 --> 01:23:27,629
+but an internal testing by greater internal testing migrated bookmarks.
+
+658
+01:23:27,630 --> 01:23:32,760
+Bookmarks saved Loggins and passwords saved Loggins, and passwords form autofill data for mobile data.
+
+659
+01:23:33,330 --> 01:23:36,690
+You are currently on a button inside of web content to click this button.
+
+660
+01:23:36,690 --> 01:23:42,780
+Press System Preferences Voice Over Off. I think I'm going to have to ask our accessibility team about that.
+
+661
+01:23:46,420 --> 01:23:49,989
+It's it's just I don't have a problem with it reading out the items.
+
+662
+01:23:49,990 --> 01:23:56,470
+It's just it's repeating itself a lot. And that's going to be annoying to people using screen readers.
+
+663
+01:24:15,110 --> 01:24:19,219
+Okay. Uh.
+
+664
+01:24:19,220 --> 01:24:25,070
+So I need to test this on NVDA as well, see what it's like.
+
+665
+01:24:25,070 --> 01:24:30,670
+But I'm going to update my work in progress patch here. Presentation.
+
+666
+01:24:30,670 --> 01:24:40,160
+Presentation. And then I'm going to not do that.
+
+667
+01:24:52,390 --> 01:25:00,150
+You know, Mendez this I'm going to push this up to a fabricator, so and move it over to my windows machine so I can test it out.
+
+668
+01:25:00,160 --> 01:25:04,300
+But I'm also going to end the stream there.
+
+669
+01:25:05,290 --> 01:25:10,120
+Uh, submit to single. Whip.
+
+670
+01:25:13,650 --> 01:25:17,520
+Thank you so much for watching. Episode 321 of The Joy of Coding. I hope that was interesting.
+
+671
+01:25:18,420 --> 01:25:27,209
+We reviewed some patches, one patch really, and we looked at some migration wizard stuff and hopefully this stuff will land soon.
+
+672
+01:25:27,210 --> 01:25:33,240
+The the new migration wizard, if you're curious if you want to try it out, is enabled by default in nightly.
+
+673
+01:25:33,780 --> 01:25:36,749
+So if you want to test it out, there are a couple different ways of getting there.
+
+674
+01:25:36,750 --> 01:25:43,620
+My favorite way currently is to go to preferences and then choose import data and you can like report issues.
+
+675
+01:25:43,620 --> 01:25:47,910
+If there's something wrong with it, let us know. Um, yeah, there are.
+
+676
+01:25:48,210 --> 01:25:52,080
+There are bugs. There's a place where you can file bugs. I'll put a link in the agenda.
+
+677
+01:25:52,080 --> 01:25:55,350
+Um, right now, actually, let me show you how to do that.
+
+678
+01:25:55,350 --> 01:26:00,450
+Like, if I go to new bug migration, this is the component.
+
+679
+01:26:02,220 --> 01:26:07,830
+And then I'm going to say, remember these values, this book remarkable template, and then copy this link.
+
+680
+01:26:08,100 --> 01:26:14,759
+If you follow this link book, what is it?
+
+681
+01:26:14,760 --> 01:26:18,240
+Migration wizard bugs. File them here.
+
+682
+01:26:22,790 --> 01:26:27,139
+It's a big old link, but if you click on that, then you get a pre.
+
+683
+01:26:27,140 --> 01:26:31,340
+If you have a Bugzilla account in your logged in, you have all a lot of the stuff pre-filled out.
+
+684
+01:26:31,340 --> 01:26:35,660
+So you just fill in like the summary in the description and then get the bug file, you know, go in the right place.
+
+685
+01:26:36,410 --> 01:26:40,010
+And that's the first step to getting stuff fixed as making sure it's filed in the right place.
+
+686
+01:26:40,790 --> 01:26:43,939
+All right. Thanks again for watching. Episode 321 of The Joy of Coding.
+
+687
+01:26:43,940 --> 01:26:49,249
+I hope that was interesting. Let me know what you thought. You can click on the rate this episode, link in the agenda to give me feedback.
+
+688
+01:26:49,250 --> 01:26:53,560
+You can also ask me questions. Yeah, I.
+
+689
+01:26:55,920 --> 01:26:59,550
+I was just going to repeat it. Is it maybe reading the name of the checkbox and the label?
+
+690
+01:26:59,820 --> 01:27:05,030
+Yes, I'm pretty sure it is. I think that's true.
+
+691
+01:27:05,060 --> 01:27:13,910
+NARRATOR The question is like, why wasn't it doing that in the, uh, in the J.S. Bin I had open, which used the same markup.
+
+692
+01:27:13,940 --> 01:27:16,010
+Like, why, why does it read it out?
+
+693
+01:27:18,070 --> 01:27:25,180
+Just whenever I do like the full state change so that that's the question when I'm just sort of like navigating around on the checkboxes.
+
+694
+01:27:25,180 --> 01:27:29,560
+It doesn't read the label in the the checkbox. So what's the dealio?
+
+695
+01:27:30,280 --> 01:27:33,390
+All right. Well, thanks again for watching. Let me know what you thought.
+
+696
+01:27:33,400 --> 01:27:41,230
+Click on that. Rate this episode link and send me smash that bell or something and I will hopefully see you next week.
+
+697
+01:27:41,650 --> 01:27:44,650
+Take care, everybody. Bye bye.
+
+698
+01:27:46,120 --> 01:27:50,110
+Hold on. Here comes the music. The joy.
+
+699
+01:27:51,010 --> 01:27:53,350
+Oh, Dee. See it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,2497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 338 - September 13, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 338 - September 13, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=08fe9f1b-9308-410e-a859-b0760152df23</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=08fe9f1b-9308-410e-a859-b0760152df23">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,514 --> 00:00:14,434
+Welcome to the show. Jodie Hello and welcome to episode 338 of The Joy of Coding.
+
+2
+00:00:14,464 --> 00:00:20,094
+My name is Mike Connelly. It's so good to have you here. As usual, we're going to be hacking on some Firefox stuff today.
+
+3
+00:00:20,094 --> 00:00:24,414
+I'm very excited for that. Let's get started. Let me start by sharing my screen.
+
+4
+00:00:25,254 --> 00:00:31,284
+All right. So this is today's agenda. It's September 13th, 2023, Episode 338.
+
+5
+00:00:31,644 --> 00:00:35,724
+A reminder No plan survives Breakfast today is no no.
+
+6
+00:00:38,124 --> 00:00:44,514
+Case in point. I shall say what I had originally planned on doing, which was to keep going back to the Windows Jumpers stuff.
+
+7
+00:00:45,174 --> 00:00:49,734
+We're going to put that on the side real quick because I have something else I need to quickly jump on.
+
+8
+00:00:50,124 --> 00:00:53,693
+Before before getting back to the jump off. I'll expand on that in a second.
+
+9
+00:00:53,694 --> 00:00:58,794
+But that is the sort of thing that can happen where, you know, I had planned on doing one thing.
+
+10
+00:00:58,794 --> 00:01:03,894
+Another thing kind of like jumps out at the last minute and we just kind of deal with it.
+
+11
+00:01:04,884 --> 00:01:09,293
+That's all right. You know, software development is what we're trying to capture here,
+
+12
+00:01:09,294 --> 00:01:14,033
+like the real the real experience of writing software development for something like Firefox.
+
+13
+00:01:14,034 --> 00:01:19,284
+And sometimes things take suddenly priority a priority event will occur.
+
+14
+00:01:19,284 --> 00:01:21,834
+And that's what's happening today. I'll explain what's going on in a second.
+
+15
+00:01:23,124 --> 00:01:27,023
+So the agenda that we're looking at is something that you might find useful.
+
+16
+00:01:27,024 --> 00:01:28,524
+If you want to click on links or something,
+
+17
+00:01:29,364 --> 00:01:35,574
+you can find links to the agenda in the video description if you're watching on YouTube or diodes on if you're watching on your Mozilla,
+
+18
+00:01:35,574 --> 00:01:41,903
+check out the details section and if you're on Twitch, check out the channel description down below and you can follow along.
+
+19
+00:01:41,904 --> 00:01:46,434
+And as I update and add things to the agenda, you'll see this little spinny guy spin.
+
+20
+00:01:46,704 --> 00:01:50,844
+And then if you reload the page, you should see the the changes manifest.
+
+21
+00:01:51,774 --> 00:01:52,614
+So what's going on?
+
+22
+00:01:52,614 --> 00:02:00,354
+Well, first of all, let me start by sharing an interesting blog post that I saw fly by that I think maybe some of you might be interested in.
+
+23
+00:02:00,714 --> 00:02:05,454
+And that blog post has to do with a bunch of performance work that the Firefox team has been doing,
+
+24
+00:02:05,904 --> 00:02:14,483
+like the the core performance team has been focusing on, which is there's this benchmark called Speedometer three that, you know,
+
+25
+00:02:14,484 --> 00:02:19,124
+Mozilla is collaborating with some other browser vendors on to help us all kind of like
+
+26
+00:02:19,164 --> 00:02:24,893
+agree on what a good performance benchmark benchmark is for us all to sort of run towards
+
+27
+00:02:24,894 --> 00:02:31,463
+in the same way that Interop was a project to make it so that browsers are kind of heading
+
+28
+00:02:31,464 --> 00:02:36,584
+in the same direction when it comes to like interoperability for like DOM APIs and,
+
+29
+00:02:36,584 --> 00:02:45,084
+and web standards and the prioritization thereof. Speedometer three is like a similar effort, I would say, but related to performance.
+
+30
+00:02:45,354 --> 00:02:56,694
+So unlike micro benchmarks from the past that, you know, had questionable value when it comes to, you know, how much they impact real world usage.
+
+31
+00:02:56,694 --> 00:03:05,124
+Speedometer three is designed to really measure real world modern web application usage so that,
+
+32
+00:03:05,124 --> 00:03:08,814
+you know, if an improvement occurs and you can see it in speedometer three,
+
+33
+00:03:08,814 --> 00:03:14,394
+chances are you've actually improved the experience for real people using real web applications on the Internet.
+
+34
+00:03:15,054 --> 00:03:21,293
+And so this is a blog post by my colleague Brian, who talks about I'm not going to read this for you,
+
+35
+00:03:21,294 --> 00:03:31,943
+but basically it highlights how we were able to detect a regression after like via speedometer three.
+
+36
+00:03:31,944 --> 00:03:41,394
+We noticed when they updated the internal view dodges test inside of speedometer three from view two to view three there are performance issues.
+
+37
+00:03:41,394 --> 00:03:46,704
+It's like suddenly a big jump in sort of the amount of time to run the test.
+
+38
+00:03:47,154 --> 00:03:51,744
+And through some careful profiling, they realized that there was no room,
+
+39
+00:03:51,744 --> 00:03:57,623
+room for improvement related to our proxies, the implementation of proxies, which if you're not familiar with them,
+
+40
+00:03:57,624 --> 00:04:05,904
+there's a link here about proxies because apparently Vue three uses proxies rather than like other getters or something,
+
+41
+00:04:07,344 --> 00:04:14,514
+and we optimize those proxies. And so around was it the course of the year?
+
+42
+00:04:14,814 --> 00:04:19,404
+Yeah. Firefox is improved by about 40% on the Vue.js benchmark framework like this.
+
+43
+00:04:19,734 --> 00:04:27,774
+That's incredible. Like great job performance team. And this performance improvement will be in Firefox 118 that comes out in just a few weeks.
+
+44
+00:04:28,254 --> 00:04:35,394
+So we're pretty excited about that. And yeah, this makes reactivity in Vue.js applications significantly faster.
+
+45
+00:04:35,754 --> 00:04:44,004
+We also anticipate improvements on other workloads. So there's like if performance issues for web applications is something that you've been,
+
+46
+00:04:45,234 --> 00:04:48,773
+you know, if Firefox has struggled on certain web applications,
+
+47
+00:04:48,774 --> 00:04:55,224
+try 118 when it comes out because it might behave better now because we've made some optimizations.
+
+48
+00:04:55,434 --> 00:04:56,604
+Okay. So that's the first thing.
+
+49
+00:04:56,784 --> 00:05:03,714
+The second thing, this is the thing that I'm hoping we can jump in and look at instead of the the jump with stuff real quick.
+
+50
+00:05:04,734 --> 00:05:10,674
+And this is a bug related to the. Migration wizard. So do you remember long ago?
+
+51
+00:05:11,784 --> 00:05:16,674
+I like I think there were a couple of episodes where we worked on the migration wizard.
+
+52
+00:05:18,504 --> 00:05:21,844
+If you're not familiar with the migration wizard, it's this thing that's over here.
+
+53
+00:05:22,764 --> 00:05:25,194
+You can like import things from other browsers.
+
+54
+00:05:26,004 --> 00:05:31,944
+One of the things that we've added the capability of doing is importing extensions from other browsers.
+
+55
+00:05:32,274 --> 00:05:42,804
+And and another thing that we added is the ability for the the wizard to be embedded in other contexts.
+
+56
+00:05:42,804 --> 00:05:46,724
+In particular, it can be embedded in our onboarding page.
+
+57
+00:05:46,734 --> 00:05:51,234
+So this is our onboarding page. Let me start let me start right at the beginning.
+
+58
+00:05:52,134 --> 00:05:55,703
+We can embed the migration wizard right here in the onboarding page so we don't
+
+59
+00:05:55,704 --> 00:05:58,884
+have to like send the user to preferences or to a different window or something.
+
+60
+00:05:58,884 --> 00:06:01,524
+It can all happen in the page and that's great.
+
+61
+00:06:02,394 --> 00:06:15,564
+And it has the same powers as, you know, the actual like the, the one over here, these it has the same capabilities but we,
+
+62
+00:06:16,434 --> 00:06:23,423
+we noticed a bug so that one of our Kucha people noticed that one of the features that we added,
+
+63
+00:06:23,424 --> 00:06:26,783
+which is the ability to import extensions from other browsers,
+
+64
+00:06:26,784 --> 00:06:33,264
+this is something that we've been experimenting with and we're trying to do like a slow sort of controlled roll to see whether or not,
+
+65
+00:06:33,504 --> 00:06:40,374
+you know, it works properly. And I'm trying to get a sense of whether or not we have our our mapping,
+
+66
+00:06:40,824 --> 00:06:44,674
+comprehensive mapping of like Chrome extensions to Firefox extension equivalents.
+
+67
+00:06:47,244 --> 00:06:53,574
+So we're doing this experimentally and trying to to sort of gather information to make sure it's working as best as it can.
+
+68
+00:06:53,874 --> 00:06:57,224
+And they noticed an issue, and I wanted to show you what that issue is.
+
+69
+00:06:57,234 --> 00:07:06,624
+So when you import extensions from, say, Chrome, it does some work and then, oh, no matching extensions.
+
+70
+00:07:06,834 --> 00:07:10,224
+I might have to like reload. Yeah, let me start over.
+
+71
+00:07:10,404 --> 00:07:16,044
+Let me start over. Okay, let us do this.
+
+72
+00:07:16,314 --> 00:07:19,914
+We're going to import extensions.
+
+73
+00:07:20,604 --> 00:07:24,084
+Okay. So it imported one of three extensions.
+
+74
+00:07:24,504 --> 00:07:31,613
+And normally by clicking on this link here, you can like go to about add ons.
+
+75
+00:07:31,614 --> 00:07:39,414
+It would send you to about add ons to this page to allow you to like finalize the extensions that were were installed.
+
+76
+00:07:40,164 --> 00:07:43,223
+And and right now that's not working.
+
+77
+00:07:43,224 --> 00:07:48,714
+When I click on this, what actually occurs is an error is thrown inside of the.
+
+78
+00:07:50,044 --> 00:07:55,954
+The console you can see here about welcome that's the name of this page may not load or link to about add ons.
+
+79
+00:07:56,734 --> 00:08:03,184
+So that that is true. And that's true for most normal web pages like if I go to.
+
+80
+00:08:04,274 --> 00:08:10,853
+Um you know, example dot com. And let's update this link here about add ons.
+
+81
+00:08:10,854 --> 00:08:16,074
+If you're not if you're not familiar, is this page. This is the this is one of the internal pages.
+
+82
+00:08:16,494 --> 00:08:22,613
+And if I change the link here to be about add ons, we get the same same restriction.
+
+83
+00:08:22,614 --> 00:08:29,964
+Like web pages are not normally like normal web pages aren't allowed to link to most of our internal pages.
+
+84
+00:08:30,234 --> 00:08:33,594
+I believe it's possible to link to some of them.
+
+85
+00:08:33,594 --> 00:08:36,684
+Like it's possible maybe you can link to about support.
+
+86
+00:08:37,644 --> 00:08:41,724
+No. How about about you? Probably linked to about blank.
+
+87
+00:08:42,114 --> 00:08:45,834
+Yeah. That's. That's relatively safe.
+
+88
+00:08:45,834 --> 00:08:57,744
+Maybe about I doubt you can go to about preferences now how about about, uh, new tab?
+
+89
+00:08:57,984 --> 00:09:02,904
+I'm guessing not. Yeah. No. So for most most web pages aren't allowed to do that.
+
+90
+00:09:03,144 --> 00:09:09,324
+And that restriction is what we're running into here because about welcome is designed like a normal web page,
+
+91
+00:09:09,534 --> 00:09:16,044
+like it has a lot of the same the same characteristics of just a normal web page.
+
+92
+00:09:16,254 --> 00:09:21,114
+It has some advanced characteristics like the wizard doesn't It is able to do things that a normal web page can't do,
+
+93
+00:09:21,144 --> 00:09:26,424
+like bring bookmarks into your browser, but that's because it's embedding the wizard.
+
+94
+00:09:26,994 --> 00:09:36,744
+And as part of this embedding, if we inspect this, we can see that like it's just using a raw link here and that's not good enough.
+
+95
+00:09:36,744 --> 00:09:46,193
+You know, the, the embed dir might have, might not have the rights to actually send the user to about add ons.
+
+96
+00:09:46,194 --> 00:09:54,534
+And that's what's happening here. If we were in say about preferences and we were in here and we clicked on that link, then yeah, absolutely.
+
+97
+00:09:54,534 --> 00:09:56,154
+We could go to about add ons.
+
+98
+00:09:56,154 --> 00:10:03,894
+That's not a problem, but it's whenever we're embedded in like be in an environment like this where it's falling over and so there are,
+
+99
+00:10:04,704 --> 00:10:08,904
+there's a solution to this that I'm going to I'm going to try and work on during this episode,
+
+100
+00:10:08,904 --> 00:10:15,744
+which is to do basically what we do whenever we do any other privileged action with it within the migration wizard,
+
+101
+00:10:15,744 --> 00:10:22,224
+which is to send a message from the wizard up to the content up to the migration wizard parent.
+
+102
+00:10:22,794 --> 00:10:25,284
+And that's the thing that does most of the actual work.
+
+103
+00:10:26,034 --> 00:10:33,054
+A lot of the heavy lifting of getting migration started and getting the list of the other browsers and sending it down to the child.
+
+104
+00:10:33,354 --> 00:10:40,584
+So sending a message on click of this link and telling the parent, Hey, open,
+
+105
+00:10:40,584 --> 00:10:45,953
+I'll open the link and the parent will have the rights to do that and it will open, open the link.
+
+106
+00:10:45,954 --> 00:10:49,554
+So that's what I'm planning on doing. Let's get started on that right now.
+
+107
+00:10:49,554 --> 00:10:56,963
+The first thing I'm going to do, though, is I'm going to remove the my testing add on so that I can like continue to test this.
+
+108
+00:10:56,964 --> 00:11:02,664
+I'm going to close nightly for now. We're going to go into our definition of migration wizard.
+
+109
+00:11:03,294 --> 00:11:05,453
+And I'm just going to get get started here.
+
+110
+00:11:05,454 --> 00:11:19,434
+Now, this was made quite generic and maybe too generic where like, you know, the extensions success link is like there's only there's really only one.
+
+111
+00:11:19,734 --> 00:11:29,604
+There should only be one. We've got one message text anchor and that is.
+
+112
+00:11:30,674 --> 00:11:36,134
+Just this one, this one here.
+
+113
+00:11:36,584 --> 00:11:45,464
+And I think what I'm going to do is I'm going to call this extension's success link.
+
+114
+00:11:46,924 --> 00:11:54,304
+Give it an I.D. like that. And I'm going to update.
+
+115
+00:12:00,324 --> 00:12:03,204
+Some of our some of our scripting here.
+
+116
+00:12:04,584 --> 00:12:13,254
+So instead of selecting an every time, because it's only going to exist for one group, I'm going to say by extension success.
+
+117
+00:12:13,254 --> 00:12:16,254
+Link. Equal Progress Page.
+
+118
+00:12:16,884 --> 00:12:24,944
+Query Selector. Uh, extensions Success link.
+
+119
+00:12:26,684 --> 00:12:30,314
+Okay, now we have. We have it. We don't need this anymore.
+
+120
+00:12:31,574 --> 00:12:41,604
+We don't need this condition anymore. We can.
+
+121
+00:12:45,204 --> 00:12:49,764
+We don't have to be removing the draft anymore. I don't think we're going to use an RF anymore.
+
+122
+00:12:50,364 --> 00:12:55,644
+We do want to remove the text content at the very beginning of this.
+
+123
+00:13:00,004 --> 00:13:06,644
+And I think. Uh.
+
+124
+00:13:11,514 --> 00:13:19,174
+You can get rid of this. And if it's just plain.
+
+125
+00:13:20,314 --> 00:13:27,284
+You don't need anybody in this. On success.
+
+126
+00:13:30,854 --> 00:13:35,674
+And this one. Okay.
+
+127
+00:13:36,724 --> 00:13:43,504
+So I believe that should still pass our test because I think we have tests for this.
+
+128
+00:13:44,104 --> 00:13:52,264
+Let's take a quick peek. Migration tests, I think there was one for extension migration.
+
+129
+00:13:54,004 --> 00:13:57,094
+Uh, we're going to change this to also be the.
+
+130
+00:13:58,194 --> 00:14:06,524
+Tensions, success. And yeah, we make sure that.
+
+131
+00:14:07,094 --> 00:14:11,864
+I don't think we want to do this anymore because it's not going to link to about add ons directly.
+
+132
+00:14:14,784 --> 00:14:20,614
+Um. CalSTRS Extension's success link.
+
+133
+00:14:24,984 --> 00:14:29,834
+Description. Oh, that's interesting.
+
+134
+00:14:29,854 --> 00:14:34,054
+Description. Link Text. Link URL.
+
+135
+00:14:42,504 --> 00:14:47,803
+Mm. So I had forgotten about this.
+
+136
+00:14:47,804 --> 00:14:58,994
+Is there a case where we send. If state equals warning.
+
+137
+00:15:04,024 --> 00:15:08,594
+State equals info info here.
+
+138
+00:15:09,154 --> 00:15:17,044
+Then we expect the link URL to be about add ons. Okay. And it's info or uh.
+
+139
+00:15:18,574 --> 00:15:28,274
+So I actually think we don't want this either. Um.
+
+140
+00:15:34,184 --> 00:15:38,804
+Get rid of that. Wow. No, we do want that for the other one.
+
+141
+00:15:42,494 --> 00:15:45,554
+Support. Text Content. Description. Message.
+
+142
+00:15:54,434 --> 00:16:19,424
+Yeah. We want to get rid of this one. Then what I think we want to do is make sure that this runs correctly.
+
+143
+00:16:20,534 --> 00:16:25,394
+My test browser components migration test, browser, browser extensions migration.
+
+144
+00:16:25,454 --> 00:16:30,594
+Let's just run that. Hello. Smurf d. Hello?
+
+145
+00:16:33,984 --> 00:16:34,944
+Hello, everybody.
+
+146
+00:16:41,774 --> 00:16:55,744
+So for some, I suspect that part of what I'm doing right now is I'm cleaning up a little bit because that link only ever pointed to about add ons.
+
+147
+00:16:55,754 --> 00:17:06,703
+And so having that kind of be set every time or cleared every time doesn't make a whole lot of sense.
+
+148
+00:17:06,704 --> 00:17:14,144
+And we're not even using the ref anymore. I think the next step actually is to add an event handler to the link.
+
+149
+00:17:14,714 --> 00:17:20,734
+So. This.
+
+150
+00:17:26,434 --> 00:17:32,114
+Maybe success link. Event listener Rick.
+
+151
+00:17:33,944 --> 00:17:38,454
+This extension. Success Link.
+
+152
+00:17:38,844 --> 00:17:46,834
+Shadow Query Selector. Stench and success.
+
+153
+00:17:49,784 --> 00:17:55,914
+Right. Yeah. And so maybe we can put that up here.
+
+154
+00:18:03,774 --> 00:18:08,154
+And then we don't. We don't need this anymore.
+
+155
+00:18:18,144 --> 00:18:21,204
+Success link. One.
+
+156
+00:18:25,934 --> 00:18:30,434
+And then while that, let's make sure the test still runs.
+
+157
+00:18:34,634 --> 00:18:43,634
+Because then what I'm going to do is with our click event listener or we'll send a message to the parent to open about add ons.
+
+158
+00:18:47,734 --> 00:18:54,014
+Okay, So that past. Uh, click.
+
+159
+00:19:05,344 --> 00:19:10,884
+Prevent target equals this dot extensions success link.
+
+160
+00:19:12,434 --> 00:19:16,954
+I'm going to say this, that. Open about add ons.
+
+161
+00:19:19,664 --> 00:19:31,984
+Um. Actually, we can probably just do this like.
+
+162
+00:19:37,414 --> 00:19:43,164
+About add on. No detail then.
+
+163
+00:19:45,784 --> 00:19:54,884
+In the migration wizard child. Uh.
+
+164
+00:19:59,904 --> 00:20:04,124
+I think what we want is a patient who tells patients.
+
+165
+00:20:07,674 --> 00:20:12,234
+And it's all about add ons want untrusted.
+
+166
+00:20:12,384 --> 00:20:18,884
+True. And then we are going to.
+
+167
+00:20:21,824 --> 00:20:25,554
+Um. Uh, handle it here.
+
+168
+00:20:27,204 --> 00:20:32,664
+Case Migration. Reserved.
+
+169
+00:20:33,124 --> 00:20:39,724
+Open about add ons. We are going to send a message, a weight.
+
+170
+00:20:41,744 --> 00:20:44,984
+Don't even need to wait. I can just say this to send async message.
+
+171
+00:20:48,244 --> 00:20:56,224
+Great. Uh, and then in the parent we're going to do Hello, Canada Honk.
+
+172
+00:20:57,064 --> 00:21:01,864
+So good to have you here. We're going to receive the message.
+
+173
+00:21:12,884 --> 00:21:22,034
+And we're going to say this not open about add ons, do we have.
+
+174
+00:21:25,724 --> 00:21:31,334
+What we need is like the the browser that this came from.
+
+175
+00:21:31,874 --> 00:21:41,984
+So browsing context. So the way that we can resolve the.
+
+176
+00:21:44,684 --> 00:21:51,434
+Message that we just received to the like the actor that we are the parent actor to the browser that we got it from.
+
+177
+00:21:53,504 --> 00:21:58,574
+Um, I think we can go like browser equals we will look for.
+
+178
+00:21:58,754 --> 00:22:04,074
+Yeah. And better element that looks right.
+
+179
+00:22:04,514 --> 00:22:20,084
+The better element. Just browsing context, hot topic and better element.
+
+180
+00:22:20,604 --> 00:22:25,074
+So will say what browser equal?
+
+181
+00:22:25,414 --> 00:22:35,364
+Right? We'll pass that and then we will implement this method that open about add ons that will be down here.
+
+182
+00:22:40,084 --> 00:22:47,254
+Opens the about add ons page in a new tab in the same window.
+
+183
+00:22:49,294 --> 00:22:52,774
+As a browser.
+
+184
+00:22:56,214 --> 00:23:08,394
+Browser test browser pram element browser browser element for requesting that about add ons open.
+
+185
+00:23:09,644 --> 00:23:12,664
+Opens. It doesn't return anything.
+
+186
+00:23:14,434 --> 00:23:18,904
+Um, and the way we can open about add ons, maybe there's.
+
+187
+00:23:23,984 --> 00:23:27,224
+See if we can find an example of that open, trusted Lincoln.
+
+188
+00:23:27,434 --> 00:23:36,094
+Yes. Uh, something like that, I think just.
+
+189
+00:23:43,744 --> 00:23:50,394
+Oh or browser open add ons manager. Page by given view, I'd.
+
+190
+00:23:57,114 --> 00:24:01,304
+That's what we are. Do I have to pass?
+
+191
+00:24:02,534 --> 00:24:06,374
+Yeah, I can just, like, do this.
+
+192
+00:24:10,184 --> 00:24:28,644
+Top chrome window. Well, a window window equals browser dot on our global window dot browser open.
+
+193
+00:24:29,814 --> 00:24:33,614
+Add ons Manager. All right, let's see.
+
+194
+00:24:36,554 --> 00:24:41,534
+If that works. So let's build this. And if that works, we'll write a test for it.
+
+195
+00:24:41,804 --> 00:24:56,024
+And then I think we're we're done. It's.
+
+196
+00:25:14,984 --> 00:25:17,293
+Now that's I'm reading a little bit more.
+
+197
+00:25:17,294 --> 00:25:22,874
+I'm having a discussion with someone about how this should work, and we might need to adjust this a little bit.
+
+198
+00:25:24,914 --> 00:25:31,154
+But this should give us the theory like we've got all of the infrastructure.
+
+199
+00:25:31,634 --> 00:25:40,124
+The the one detail I'm trying to figure out is whether or not we open up about add ons in the same browser or we open it up in a new tab.
+
+200
+00:25:40,334 --> 00:25:45,014
+And does that tab take foreground or is it does it stay in the background?
+
+201
+00:25:46,004 --> 00:25:51,314
+That's what I think we're currently trying to figure out. So I'm monitoring that conversation.
+
+202
+00:25:52,674 --> 00:25:56,694
+All right. Let's see what happens whenever I import everything.
+
+203
+00:25:57,804 --> 00:26:01,974
+All the extensions click. Nothing.
+
+204
+00:26:04,584 --> 00:26:08,424
+Get it? Only property target online, 1264.
+
+205
+00:26:08,424 --> 00:26:11,764
+What is? Oh.
+
+206
+00:26:13,404 --> 00:26:20,994
+Oh. Fool. I had a single equals classic error.
+
+207
+00:26:21,744 --> 00:26:25,014
+Uh, remove extension. Okay.
+
+208
+00:26:26,124 --> 00:26:30,564
+I think I have to. I don't think I have to rebuild, actually, because this is not a pre processed file.
+
+209
+00:26:30,564 --> 00:26:35,574
+I don't think so. Let's try this again.
+
+210
+00:26:39,464 --> 00:26:47,654
+Yeah. Okay, so that works. Now we open, when we click on that, we open any, any new tab.
+
+211
+00:26:48,704 --> 00:26:51,674
+Now, it sounds like we'll probably be opening.
+
+212
+00:26:51,674 --> 00:27:01,454
+We actually want to open about add ons in a background tab, so let's see if there's an option to do that in here.
+
+213
+00:27:05,074 --> 00:27:10,714
+Wolf this it's pretty intense. Interested link in select.
+
+214
+00:27:12,574 --> 00:27:17,914
+Target. But trust like.
+
+215
+00:27:18,054 --> 00:27:22,344
+And what do we have here? Can I say.
+
+216
+00:27:25,824 --> 00:27:36,143
+Where params open link and can I say background tab and link and it looks.
+
+217
+00:27:36,144 --> 00:27:39,624
+I just saw the word background fly by so chances are yes.
+
+218
+00:27:42,354 --> 00:27:48,644
+Background wear equals current wear time.
+
+219
+00:27:48,654 --> 00:27:58,634
+We'll continue to have lone back params in background voting background params force background force foreground false.
+
+220
+00:27:59,814 --> 00:28:03,354
+Okay. I want in background. So let's try that.
+
+221
+00:28:06,024 --> 00:28:10,284
+So we'll say window to open link open trusted link in.
+
+222
+00:28:18,994 --> 00:28:26,354
+The URL is about add ons. And one of the var params is in background.
+
+223
+00:28:29,084 --> 00:28:32,654
+And where is Tab? I believe.
+
+224
+00:28:35,214 --> 00:28:46,274
+And let me just double check. Uh, what are the options that we can pass in here?
+
+225
+00:28:50,374 --> 00:29:05,464
+Open link. Where current tapped have shifted.
+
+226
+00:29:05,674 --> 00:29:10,054
+Same as tab, but in background if default is to select new tabs and vice versa.
+
+227
+00:29:10,684 --> 00:29:14,494
+New window save new tab.
+
+228
+00:29:15,884 --> 00:29:21,034
+Okay. I think we want tab. All right.
+
+229
+00:29:22,904 --> 00:29:28,094
+All right, let's let's try this now. You know.
+
+230
+00:29:28,484 --> 00:29:34,674
+Move you block. And.
+
+231
+00:29:41,144 --> 00:29:47,193
+Okay. That looked right. Yes.
+
+232
+00:29:47,194 --> 00:29:51,214
+Okay. Confirmed. We do want it to open in the background so we've got the behavior that we want.
+
+233
+00:29:51,484 --> 00:29:57,783
+Great. So now that we've got this working, a new background.
+
+234
+00:29:57,784 --> 00:30:02,934
+A new background tab. The same window as the past browser.
+
+235
+00:30:04,974 --> 00:30:08,754
+That's done. Now we just need a test.
+
+236
+00:30:09,414 --> 00:30:15,374
+What we can do is we can augment this test. Um.
+
+237
+00:30:15,394 --> 00:30:23,454
+Sort the progress state. Um.
+
+238
+00:30:30,634 --> 00:30:33,814
+What we should do actually, in here. Oh, sorry about that.
+
+239
+00:30:34,294 --> 00:30:40,194
+Because we need to. Ext success link.
+
+240
+00:30:44,764 --> 00:30:52,074
+We should ensure that the. Success link is hidden.
+
+241
+00:30:53,554 --> 00:30:57,834
+In this case. I think that's true, right?
+
+242
+00:30:57,864 --> 00:31:04,444
+Should be hidden in the warning case. Test and see.
+
+243
+00:31:23,294 --> 00:31:31,784
+Good. Okay. Uh, and then we should ensure that.
+
+244
+00:31:34,424 --> 00:31:44,214
+Um. Let's also make sure this looks right in those different cases.
+
+245
+00:31:44,724 --> 00:31:52,964
+Let's launch storybook. But I also after we're done this, we're going to assert.
+
+246
+00:31:59,734 --> 00:32:13,044
+Tension. Success. Link. Description. Message. Assert success link.
+
+247
+00:32:14,244 --> 00:32:22,054
+Works. Uh, um, Springsteen's stage.
+
+248
+00:32:27,414 --> 00:32:33,564
+Okay, I'm going to make this an async function because this next bit is going to be async.
+
+249
+00:32:36,844 --> 00:32:44,524
+This. So I can never remember it as a return or returns.
+
+250
+00:32:45,634 --> 00:32:49,564
+Turns. Okay. Promise.
+
+251
+00:32:51,374 --> 00:33:01,514
+Uh, resolves on. Resolves undefined.
+
+252
+00:33:04,524 --> 00:33:09,044
+This resolves. It's not.
+
+253
+00:33:10,154 --> 00:33:14,234
+Turns promise resolves when.
+
+254
+00:33:16,534 --> 00:33:34,184
+It's like that. Resolves when self-explanatory of the assertions complete um got a helper function here assert success link works.
+
+255
+00:33:34,784 --> 00:33:38,174
+We're going to await extensions for success link.
+
+256
+00:33:41,284 --> 00:33:53,744
+I do that here. And what we could actually do.
+
+257
+00:33:57,274 --> 00:34:02,034
+Is. Success link.
+
+258
+00:34:03,354 --> 00:34:12,144
+And then we'll also pass in the description. Message.
+
+259
+00:34:23,044 --> 00:34:40,004
+Uh. Past impact will pass this description message.
+
+260
+00:34:43,264 --> 00:34:51,634
+And then we'll have our helper function async Search Success link Link message.
+
+261
+00:35:00,934 --> 00:35:05,584
+And what we'll do is we will assert that the string.
+
+262
+00:35:07,764 --> 00:35:13,164
+Matches. Patches.
+
+263
+00:35:21,174 --> 00:35:27,324
+If message. Then we want to.
+
+264
+00:35:29,244 --> 00:35:34,764
+Oh. We actually need. Mm hmm.
+
+265
+00:35:42,764 --> 00:35:49,784
+Perhaps we undocumented with migration surge. I stay.
+
+266
+00:35:50,774 --> 00:36:00,284
+We need a reference to the window. Wait for me.
+
+267
+00:36:03,634 --> 00:36:08,644
+That's what we want. We want a browser test utils. Wait for new tab.
+
+268
+00:36:18,494 --> 00:36:30,724
+You are. So we need the TAB browser.
+
+269
+00:36:37,474 --> 00:36:46,084
+It's probably fine too. We're only testing the one window, so I think I'll just use the G browser global if message.
+
+270
+00:36:46,924 --> 00:36:51,873
+What about add ons open equals browser test utils.
+
+271
+00:36:51,874 --> 00:36:57,724
+Wait for new tab. G browser.
+
+272
+00:37:00,474 --> 00:37:07,994
+What load is the. The string, the URL that we want to load.
+
+273
+00:37:11,604 --> 00:37:14,934
+And then. We're going to click on the link.
+
+274
+00:37:16,174 --> 00:37:20,344
+Await about add ons open. Because.
+
+275
+00:37:22,584 --> 00:37:25,764
+Browser test utils remove tab pad.
+
+276
+00:37:29,524 --> 00:37:33,914
+Okay. Let's see what that does.
+
+277
+00:37:35,644 --> 00:37:40,294
+Oh, and I also want to take a quick peek at.
+
+278
+00:37:43,654 --> 00:37:50,704
+Storybook. Make sure that we look okay in our different scenarios here.
+
+279
+00:37:54,484 --> 00:38:01,204
+Accretion Wizard Extension. Partial Success Extension Import Failure.
+
+280
+00:38:03,444 --> 00:38:08,254
+Oops. Put feel failure.
+
+281
+00:38:11,234 --> 00:38:16,794
+Success. Okay, Good, good, good, good.
+
+282
+00:38:17,474 --> 00:38:20,514
+That should be success.
+
+283
+00:38:21,704 --> 00:38:24,794
+Yeah. Okay. Pretty happy with that.
+
+284
+00:38:26,884 --> 00:38:36,784
+In particular, it's hidden in the event that yeah, it's like it's a00 by zero element.
+
+285
+00:38:37,414 --> 00:38:42,004
+If there's no text in there. So that's good. All right, let's run our test now.
+
+286
+00:38:42,554 --> 00:39:09,224
+You can shut down storybook. Failures.
+
+287
+00:39:09,254 --> 00:39:17,654
+Okay. Isn't frozen. Current window global is null in migration with parent line 70.
+
+288
+00:39:23,614 --> 00:39:29,964
+But context war. Can't access property.
+
+289
+00:39:32,944 --> 00:39:54,044
+In search success link. What happened here?
+
+290
+00:39:57,024 --> 00:40:00,324
+Coming to a close now at the point where we.
+
+291
+00:40:06,114 --> 00:40:09,744
+Try and send the message to open about add ons.
+
+292
+00:40:13,894 --> 00:40:24,103
+Mm hmm. Oh, wait, we got a wait.
+
+293
+00:40:24,104 --> 00:40:27,404
+These. Got a wait these. Yeah.
+
+294
+00:40:38,124 --> 00:40:41,234
+Hello? Mo. Hit sing. Hello. Hello. Hello.
+
+295
+00:40:43,884 --> 00:40:51,614
+Glad to have you here. Good.
+
+296
+00:40:51,974 --> 00:40:57,144
+Hey, we did it, everyone. All right.
+
+297
+00:40:57,534 --> 00:41:07,354
+So let's take a look at the patch. Assignments to review it.
+
+298
+00:41:13,004 --> 00:41:21,203
+Um. Yeah.
+
+299
+00:41:21,204 --> 00:41:25,924
+I need to add documentation there. Do that right now.
+
+300
+00:41:30,564 --> 00:41:42,264
+Checks that the extension's migration success link has the right text content and if the text content is non blank.
+
+301
+00:41:43,634 --> 00:41:49,844
+Is that clicking on the link opens up about add ons in.
+
+302
+00:41:50,734 --> 00:42:05,694
+A background tab. And link the extension's success Extension's Migration Success Link Element Program Message.
+
+303
+00:42:06,144 --> 00:42:12,384
+String Message. The expected string to appear in.
+
+304
+00:42:13,294 --> 00:42:16,534
+The link text content if the.
+
+305
+00:42:18,724 --> 00:42:22,804
+Link is not expected to appear. This should be.
+
+306
+00:42:24,014 --> 00:42:28,504
+The empty string. Earns promise.
+
+307
+00:42:32,324 --> 00:42:42,114
+Uh. That the about add ons tab will be automatically closed before proceeding.
+
+308
+00:42:46,484 --> 00:42:50,064
+Okay, There we go. I think that's it.
+
+309
+00:42:51,164 --> 00:43:02,544
+Let's run that test again. Do one more manual test and then let's post it up for review and then we can go back to our jump list stuff.
+
+310
+00:43:04,954 --> 00:43:09,454
+It is a this is a reverse 360 dunk gang.
+
+311
+00:43:13,854 --> 00:43:18,014
+All right. Do you like fixing the bug quickly?
+
+312
+00:43:21,414 --> 00:43:27,384
+All right. So let's do this again. Um.
+
+313
+00:43:28,494 --> 00:43:32,214
+Let's do it in two cases. Let's. Let's do our import from here.
+
+314
+00:43:33,564 --> 00:43:37,584
+Which import?
+
+315
+00:43:39,794 --> 00:43:46,404
+Good. Okay.
+
+316
+00:43:52,404 --> 00:43:56,454
+And then let's do it again.
+
+317
+00:43:56,874 --> 00:44:04,854
+This time we'll do it from the other main entry point, which is over here.
+
+318
+00:44:15,564 --> 00:44:18,774
+Okay. Done. Feeling pretty good.
+
+319
+00:44:22,814 --> 00:44:26,354
+Uh, okay. Feeling pretty good about that?
+
+320
+00:44:26,954 --> 00:44:31,064
+Quick fix. Best fix. Agreed. Let's put this up for review.
+
+321
+00:44:38,024 --> 00:44:48,984
+All right. Such and such delegate the responsibility.
+
+322
+00:44:49,884 --> 00:44:54,564
+Of opening about add ons from the migration wizard.
+
+323
+00:44:56,854 --> 00:45:07,484
+To migration Wizard parent. I have to review this and then actually I should flesh out this commit message with more of an explanation.
+
+324
+00:45:09,674 --> 00:45:19,394
+Um. So let me preemptively commit amend.
+
+325
+00:45:21,494 --> 00:45:27,744
+I should I should add more. Okay.
+
+326
+00:45:30,534 --> 00:45:39,234
+Originally. We had we had had the Extension's Migrations Success link.
+
+327
+00:45:42,094 --> 00:45:50,984
+Work by using a normal anchor element with about add ons set as the ref.
+
+328
+00:45:51,424 --> 00:45:58,893
+This works on privileged pages like about preferences, but not for unprivileged pages.
+
+329
+00:45:58,894 --> 00:46:10,624
+Like about welcome. Which unprivileged pages are generally unable to directly link to about pages.
+
+330
+00:46:12,814 --> 00:46:29,824
+What's the vote page to the solution here is to continue to use an anchor element, but to use an event handler.
+
+331
+00:46:31,224 --> 00:46:35,804
+On it. Rather than a.
+
+332
+00:46:38,524 --> 00:46:43,244
+Ref attribute. And have the, um,
+
+333
+00:46:45,944 --> 00:46:54,944
+and handler on it rather than a ref attribute and have the migration wizard parent here that
+
+334
+00:46:55,484 --> 00:47:05,504
+click event such that here that click event and take responsibility for opening about add ons.
+
+335
+00:47:06,134 --> 00:47:14,354
+Part of this we're also choosing intentionally choosing to open about add ons in a background tab.
+
+336
+00:47:16,444 --> 00:47:26,554
+So that the user can continue to work through their onboarding flow uninterrupted.
+
+337
+00:47:29,514 --> 00:47:35,874
+Should they? Click. On the link while on about welcome.
+
+338
+00:47:38,804 --> 00:47:43,514
+All right. That is the message. Let's post it up for review.
+
+339
+00:47:45,794 --> 00:47:50,024
+Let's just take a look at our patch here.
+
+340
+00:47:50,564 --> 00:47:54,674
+Tailgate responsibility is based on Central from September 11th.
+
+341
+00:47:54,674 --> 00:47:57,844
+That should be fine. Miles. Fabs hit single.
+
+342
+00:47:57,854 --> 00:48:15,424
+Let's go. The same is true of the case.
+
+343
+00:48:15,424 --> 00:48:20,583
+No extensions are matched. Perhaps it's just like stopping the MLP at the same link.
+
+344
+00:48:20,584 --> 00:48:24,244
+So it should also. Work.
+
+345
+00:48:38,334 --> 00:48:44,024
+Okay. Note 4qa.
+
+346
+00:48:45,604 --> 00:48:50,574
+But we have. With this patch.
+
+347
+00:48:53,084 --> 00:49:02,594
+We also are choosing to open about add ons in a background tab rather than to overwrite the current document.
+
+348
+00:49:04,544 --> 00:49:14,794
+We are intentionally. You are also intentionally choosing.
+
+349
+00:49:15,924 --> 00:49:26,434
+This is. Mean only made you comment.
+
+350
+00:49:31,164 --> 00:49:57,054
+Okay, so here's the patch up for review. Um.
+
+351
+00:50:07,364 --> 00:50:21,084
+Just looking through my stuff here. And.
+
+352
+00:50:21,444 --> 00:50:53,264
+All right. Weight Description Message for value success Link your link Text message.
+
+353
+00:50:59,914 --> 00:51:04,764
+Message. Description dot message.
+
+354
+00:51:06,744 --> 00:51:11,754
+Oh, I can get I can get rid of this that superfluous.
+
+355
+00:51:15,424 --> 00:51:18,484
+Same with this one. And this.
+
+356
+00:51:18,534 --> 00:51:22,174
+Okay, so there's a little bit of clean up here. Hold on. I left.
+
+357
+00:51:22,174 --> 00:51:31,904
+There's some leftovers. Extension successfully.
+
+358
+00:51:48,064 --> 00:51:55,264
+From the test again. J.
+
+359
+00:51:56,074 --> 00:51:59,373
+JP As Nin zero says, it was a meaty message.
+
+360
+00:51:59,374 --> 00:52:02,464
+Yes, I do like me a meaty commit message.
+
+361
+00:52:02,824 --> 00:52:07,954
+Commit messages. There there is someone who's had to do their fair share of code archeology.
+
+362
+00:52:08,404 --> 00:52:13,384
+A solid commit message is very handy. It's a gift to yourself from the past to your future self.
+
+363
+00:52:15,844 --> 00:52:16,684
+Because who knows?
+
+364
+00:52:16,684 --> 00:52:24,214
+I'm in ten years I might look back and wonder what this patch was trying to do and my midi commit message might might help with that.
+
+365
+00:52:41,234 --> 00:52:47,174
+OC NAS fabs submit to single ALP in a message remove some redundant.
+
+366
+00:52:49,404 --> 00:52:53,064
+Assertions. Browser extension.
+
+367
+00:52:53,324 --> 00:52:56,784
+Migration, Yes. All right. And then let's move on.
+
+368
+00:53:06,474 --> 00:53:15,834
+All right. So we had just gotten to a pretty interesting point during what the heck, I do not want that.
+
+369
+00:53:16,134 --> 00:53:26,334
+An interesting point during our jump lists, test writing our jump list test, we we were getting to the point where.
+
+370
+00:53:28,044 --> 00:53:31,434
+Yeah. Yeah. I wanted to write a new kind of matcher.
+
+371
+00:53:32,334 --> 00:53:39,234
+So I've got this this, like, little test in here that's making sure that, like, our one task is going through.
+
+372
+00:53:39,594 --> 00:53:44,934
+And that's great, except that I'm using, like, these assertions such that if we fail,
+
+373
+00:53:44,934 --> 00:53:50,333
+we crash rather than like reporting a failure, and I would rather we fail properly.
+
+374
+00:53:50,334 --> 00:53:53,604
+Plus, I don't want I have to like, write this sort of thing again and again and again.
+
+375
+00:53:53,904 --> 00:54:00,684
+And so I think the understanding that I have is that the mock framework allows us to build matters.
+
+376
+00:54:02,384 --> 00:54:07,634
+And that's what I want to do here as well. Assert.
+
+377
+00:54:09,824 --> 00:54:16,184
+Well, why don't we call this? Tasks shall.
+
+378
+00:54:17,024 --> 00:54:25,444
+Link. Shell links equal and then.
+
+379
+00:54:28,704 --> 00:54:31,944
+Description descriptions.
+
+380
+00:54:39,124 --> 00:54:49,374
+Comparing. Was I shell link with or what did I call these dictionaries?
+
+381
+00:54:52,584 --> 00:55:04,384
+Uh, these things. With. Their description definitions.
+
+382
+00:55:10,624 --> 00:55:14,214
+Generated. Okay.
+
+383
+00:55:15,684 --> 00:55:19,124
+And then we say, okay. We're going to.
+
+384
+00:55:22,994 --> 00:55:33,254
+Return. Left returned, true or false to say if they match.
+
+385
+00:55:33,794 --> 00:55:38,564
+So we'll say we're going to first compare the length.
+
+386
+00:55:54,564 --> 00:56:01,194
+Um. We need that part.
+
+387
+00:56:05,244 --> 00:56:08,964
+Is all. Uh.
+
+388
+00:56:11,924 --> 00:56:23,384
+Argh! Get count. And then desks is a t array.
+
+389
+00:56:23,444 --> 00:56:28,004
+Right. And that's tiara. Yeah.
+
+390
+00:56:28,184 --> 00:56:33,644
+And so I believe, uh, and a t tiara.
+
+391
+00:56:34,904 --> 00:56:39,074
+As either I get length on it or get count on it.
+
+392
+00:56:43,294 --> 00:56:47,134
+Are there messages to yourself of ever putting that much effort into a commit? It's for others.
+
+393
+00:56:47,524 --> 00:56:55,354
+Oh, I mean, it's also for others. You know, it's also possible that someone else might might want that information as well.
+
+394
+00:56:57,064 --> 00:57:03,054
+You know, a good commit message. There's a there's a writing good commit messages.
+
+395
+00:57:03,064 --> 00:57:07,264
+Okay. So I. Review board.
+
+396
+00:57:07,624 --> 00:57:12,934
+I am a periodic contributor to, uh, to a piece of software called Review Board.
+
+397
+00:57:14,674 --> 00:57:18,094
+And, uh, where is the doc?
+
+398
+00:57:20,524 --> 00:57:23,794
+Maybe. Do I have.
+
+399
+00:57:24,544 --> 00:57:29,764
+Where is this product learning Explorer? Uh, documentation.
+
+400
+00:57:30,874 --> 00:57:36,244
+Uh, developer. I'm looking for, like, developer guide user's guide.
+
+401
+00:57:37,564 --> 00:57:46,104
+Whereas or like, developer stuff, basically there's like, um, like contributing wiki.
+
+402
+00:57:46,114 --> 00:57:59,514
+This is it. Uh, comment message, writing, good change descriptions.
+
+403
+00:58:00,504 --> 00:58:03,833
+So here, you going to put a link to this? This is kind of.
+
+404
+00:58:03,834 --> 00:58:09,504
+I've grown to adhere to this philosophy writing good commit messages.
+
+405
+00:58:12,764 --> 00:58:19,124
+Basically you want to, if you can, explain what you did and why.
+
+406
+00:58:21,254 --> 00:58:29,904
+Because I'm just writing like first commit did thing fixed such like that's not helpful in you
+
+407
+00:58:29,954 --> 00:58:35,324
+know in many years after you've forgotten the context of what occurred and why it occurred,
+
+408
+00:58:36,074 --> 00:58:41,563
+you want to leave breadcrumbs in evidence so that you can more easily decode archeology because especially
+
+409
+00:58:41,564 --> 00:58:46,514
+for older pieces of software code archeology is important to understand why things are the way they are,
+
+410
+00:58:46,514 --> 00:58:51,373
+and if they still need to be the way they are. Some of the asks What is the mass fab message thing?
+
+411
+00:58:51,374 --> 00:58:56,924
+So what that does is when I use dash am or dash dash message.
+
+412
+00:58:58,924 --> 00:59:03,393
+It includes a message to my to the other people in the review.
+
+413
+00:59:03,394 --> 00:59:06,544
+So I was basically saying, okay, here's what I did in this new revision.
+
+414
+00:59:06,844 --> 00:59:11,704
+I removed some redundant assertions. And so that's.
+
+415
+00:59:12,604 --> 00:59:19,594
+That's what that argument does. Okay. And as t array, I believe there is a either get length or get count.
+
+416
+00:59:20,634 --> 00:59:24,054
+Right. Length. There's just a length. I think I just saw it.
+
+417
+00:59:24,414 --> 00:59:36,544
+Length. It's probably right at the top.
+
+418
+00:59:39,614 --> 00:59:45,124
+Length. Hang on. Let's go right to the top again and let's look for the term length.
+
+419
+00:59:45,574 --> 00:59:49,174
+Here. Here it is. Return the number of elements in the array.
+
+420
+00:59:49,834 --> 00:59:54,064
+So that's what I want to use for the T array.
+
+421
+00:59:56,234 --> 01:00:02,004
+We're going to say get count. Um.
+
+422
+01:00:04,884 --> 01:00:14,254
+If. Count is not equal to desks.
+
+423
+01:00:17,094 --> 01:00:21,654
+I think. Return false.
+
+424
+01:00:24,764 --> 01:00:31,844
+And then we're going to go through every single item.
+
+425
+01:00:35,124 --> 01:00:43,164
+For. I think I can do this Auto desk.
+
+426
+01:00:44,784 --> 01:00:52,474
+How's this done for? You know this auto editor for auto.
+
+427
+01:00:59,524 --> 01:01:03,104
+Yeah. Uh, death.
+
+428
+01:01:06,414 --> 01:01:13,824
+Asks. Think I can do that? Um, except that I want the.
+
+429
+01:01:15,894 --> 01:01:20,274
+I want the index. I do want the index.
+
+430
+01:01:23,624 --> 01:01:30,224
+Okay, so. Four.
+
+431
+01:01:30,894 --> 01:01:36,114
+What's the. Array length.
+
+432
+01:01:36,124 --> 01:01:49,264
+We already have the counts, so. You and 32 T equals zero I less than guests length.
+
+433
+01:01:50,554 --> 01:01:55,474
+Minus one, plus, plus, plus, plus.
+
+434
+01:01:55,474 --> 01:01:58,504
+I doesn't really matter in practice.
+
+435
+01:02:07,884 --> 01:02:12,744
+Then we will get the shell link.
+
+436
+01:02:14,154 --> 01:02:19,254
+Um. Let's see here.
+
+437
+01:02:19,254 --> 01:02:25,853
+Jump on this bill. They're shelling. Ref pointer.
+
+438
+01:02:25,854 --> 01:02:30,594
+Yeah. Show link. I get the.
+
+439
+01:02:33,964 --> 01:02:43,774
+Tell link and then I believe we can get at the item at a particular index.
+
+440
+01:02:44,194 --> 01:02:48,994
+And I think we do that whenever we check for removals.
+
+441
+01:02:51,224 --> 01:02:56,954
+Do you check for removals is we get one of these collections back.
+
+442
+01:03:00,384 --> 01:03:06,514
+Jerry. And then over here. We have an obituary.
+
+443
+01:03:12,904 --> 01:03:16,174
+Oh, right. Sorry. Uh, what's this?
+
+444
+01:03:16,524 --> 01:03:19,884
+22 minus one. I it's less than.
+
+445
+01:03:21,554 --> 01:03:24,604
+Right. Is it difficult jumping between languages?
+
+446
+01:03:24,814 --> 01:03:33,934
+Sometimes. Sometimes I realize, like, my brain will be in like JavaScript mode and I have to remember C++ rules and vice versa.
+
+447
+01:03:34,954 --> 01:03:40,504
+Yeah, it is, but it's a little bit like jumping, but I would imagine it's a little bit like jumping between spoken languages.
+
+448
+01:03:40,504 --> 01:03:48,813
+I don't know if you're the person asking here is by or trilingual or if you have, you know, phrases in some other languages.
+
+449
+01:03:48,814 --> 01:03:54,994
+But I've found that like I'm not truly bilingual.
+
+450
+01:03:54,994 --> 01:04:01,504
+I can speak a little bit of French enough to be reasonably polite and to like order food and stuff.
+
+451
+01:04:01,654 --> 01:04:03,994
+I got to exercise some of that in Quebec recently.
+
+452
+01:04:05,794 --> 01:04:11,134
+But, you know, you end up having to sort of think in different way when you're using a different language.
+
+453
+01:04:11,764 --> 01:04:15,174
+Um, you know, different rules apply.
+
+454
+01:04:15,184 --> 01:04:28,144
+So for example, in French, you know, I have to think about the gender of certain nouns, which is, is interesting.
+
+455
+01:04:28,354 --> 01:04:42,784
+I have to think about, uh, the formality of pronouns or pronouns, the formality of, of things like you and them and us,
+
+456
+01:04:43,444 --> 01:04:48,514
+because there are very formal ones and then there are more, there are more informal ones.
+
+457
+01:04:48,514 --> 01:04:53,734
+And that's the sort of thing that you don't super need to care about as much in English.
+
+458
+01:04:55,564 --> 01:05:02,564
+This is what I want right here. So is it difficult?
+
+459
+01:05:03,494 --> 01:05:07,514
+It's not bad. The more you do it, the easier it becomes. I would say.
+
+460
+01:05:08,534 --> 01:05:15,194
+Um. Argh! Get at I.
+
+461
+01:05:18,704 --> 01:05:29,854
+Static cast jitter at refs. Return false.
+
+462
+01:05:34,164 --> 01:05:43,164
+Um. And now we're going to look at the different properties of this thing.
+
+463
+01:05:48,694 --> 01:05:58,864
+So the ones that must exist by default are the title and the path and the description.
+
+464
+01:06:01,714 --> 01:06:11,324
+So, um. You have to do a little bit of string comparison here.
+
+465
+01:06:15,824 --> 01:06:22,704
+Let's start with the title. So the jobless bill there, what does it do?
+
+466
+01:06:22,724 --> 01:06:28,314
+We get the arguments. Showing.
+
+467
+01:06:30,784 --> 01:06:34,234
+Whenever we create one of these things, what do we get? Title.
+
+468
+01:06:36,754 --> 01:06:42,934
+Set title. Set value.
+
+469
+01:06:43,774 --> 01:06:48,334
+Peak title. Oh boy. Peak title prob variant.
+
+470
+01:06:48,394 --> 01:06:51,484
+That's what it is. Okay, store the title of the app.
+
+471
+01:06:54,784 --> 01:06:59,144
+I don't see how title could be empty, by the way.
+
+472
+01:07:00,004 --> 01:07:04,144
+Title is required, but I guess I was just being very cautious.
+
+473
+01:07:07,414 --> 01:07:18,114
+The path. The description. If there are arguments.
+
+474
+01:07:19,584 --> 01:07:22,974
+So this is kind of like how all of this stuff works.
+
+475
+01:07:23,454 --> 01:07:27,324
+Let's actually start with path in description because those look easier.
+
+476
+01:07:27,324 --> 01:07:34,254
+I don't have to do all this stuff. So PSL is what PSL is a.
+
+477
+01:07:38,154 --> 01:07:42,474
+What is a PSL? It is a NCAI and I shall link.
+
+478
+01:07:42,894 --> 01:07:48,894
+So let's take a quick look at the definition of an I shall link interface.
+
+479
+01:07:50,754 --> 01:07:53,794
+Get description. That's what I want.
+
+480
+01:07:53,814 --> 01:07:57,024
+And then there's. There are two out params.
+
+481
+01:08:01,424 --> 01:08:06,384
+Do I? Never do that.
+
+482
+01:08:12,304 --> 01:08:17,584
+Um. Not really.
+
+483
+01:08:17,594 --> 01:08:30,014
+So this is going to be oh, this is going to be kind of new, this website and a string.
+
+484
+01:08:38,524 --> 01:08:42,814
+Okay, so let's do that.
+
+485
+01:08:44,104 --> 01:08:48,604
+Can I do that with a string and a string description?
+
+486
+01:08:51,484 --> 01:09:01,604
+Link, get description. What is the maximum?
+
+487
+01:09:10,424 --> 01:09:17,063
+Showing the maximum number of characters. The string return has a maximum length of info.
+
+488
+01:09:17,064 --> 01:09:23,424
+Tip size systems prior to the size of the string is limited by max path info.
+
+489
+01:09:23,424 --> 01:09:36,574
+Tip size. Maybe I can just use that get description.
+
+490
+01:09:37,684 --> 01:09:40,684
+Um. Do I do it like this?
+
+491
+01:09:41,734 --> 01:09:53,594
+Info tip size. And then I want to compare what does that return?
+
+492
+01:09:57,434 --> 01:10:00,884
+And h result. Um.
+
+493
+01:10:07,214 --> 01:10:13,594
+Are equals that. If, um.
+
+494
+01:10:19,364 --> 01:10:26,644
+And, you know. If. Failed H.R. or count?
+
+495
+01:10:27,574 --> 01:10:31,434
+Uh, false. Failed.
+
+496
+01:10:33,094 --> 01:10:37,824
+If failed. False.
+
+497
+01:10:40,724 --> 01:10:50,884
+And then we're going to compare description with desks at the desk at this index.
+
+498
+01:10:50,894 --> 01:10:57,624
+So. And it is of type.
+
+499
+01:11:02,904 --> 01:11:16,414
+Yeah, it would be a. Well, that's the chance value this shortcut Description desk.
+
+500
+01:11:17,104 --> 01:11:23,934
+Okay. So we're going to get a reference.
+
+501
+01:11:33,044 --> 01:11:36,254
+Uh, windows. Shortcut.
+
+502
+01:11:37,294 --> 01:11:42,534
+When does jump shortcut description? Um.
+
+503
+01:11:46,624 --> 01:11:49,874
+How do I get, uh. Get, uh.
+
+504
+01:11:52,294 --> 01:11:58,054
+And it's Tiara. I want to see what the right way is to get the Olympic element.
+
+505
+01:12:01,004 --> 01:12:05,174
+On an ad. Here we go. Let's see how many people.
+
+506
+01:12:07,394 --> 01:12:16,034
+So, yeah, I'm gonna say sure. Good description Desk equals, uh, desks element at.
+
+507
+01:12:19,914 --> 01:12:23,694
+If not, dusk falls.
+
+508
+01:12:26,854 --> 01:12:33,784
+Description. And now I'm going to compare desk and description.
+
+509
+01:12:37,424 --> 01:12:42,184
+Description. Get.
+
+510
+01:12:46,914 --> 01:12:50,874
+Uh, now, string comparison. Uh, string internal.
+
+511
+01:12:55,014 --> 01:13:03,964
+Comparison. How do I do that?
+
+512
+01:13:04,714 --> 01:13:15,784
+Equals. So I will do, uh, dot, cat, dot equals.
+
+513
+01:13:17,964 --> 01:13:22,084
+Description. If not.
+
+514
+01:13:24,234 --> 01:13:27,713
+The term false return.
+
+515
+01:13:27,714 --> 01:13:30,594
+True. Let's just do that for now. Let's see if this builds.
+
+516
+01:13:32,484 --> 01:13:37,014
+It's actually not being used just yet, but I'm curious to know if it will actually just compile.
+
+517
+01:13:38,584 --> 01:13:47,964
+And then we can worry about using it. Yeah.
+
+518
+01:13:49,164 --> 01:13:55,584
+So JP, as Ninja Zero says, my second language, I'm not very good at it is less strict than English,
+
+519
+01:13:55,584 --> 01:13:59,464
+but I'm aware that people have difficulties when going between languages with complex rules.
+
+520
+01:13:59,484 --> 01:14:06,634
+The same should be true and then with coding languages. I honestly like spoken language in programing language.
+
+521
+01:14:06,654 --> 01:14:10,254
+Are you? All you're doing is expressing thought.
+
+522
+01:14:11,154 --> 01:14:16,883
+And I would say that a programing language is very similar to a spoken or written languages.
+
+523
+01:14:16,884 --> 01:14:19,974
+It's you're expressing thought with maybe a different purpose.
+
+524
+01:14:19,974 --> 01:14:26,494
+You're expressing thought in a way that a machine can compile, but also that that a,
+
+525
+01:14:26,754 --> 01:14:33,174
+you know, another human who might also be talking to machines can read and make sense of.
+
+526
+01:14:35,594 --> 01:14:39,674
+But yeah, I'd say that there is definitely a relationship there.
+
+527
+01:14:39,824 --> 01:14:44,444
+And, you know, I'm no, uh, cognitive scientist, but, uh.
+
+528
+01:14:46,504 --> 01:14:52,504
+Morning. What happened? What happened? So we got some warnings.
+
+529
+01:14:56,324 --> 01:15:00,314
+But the build was successful, so that worked. Exception ignored.
+
+530
+01:15:03,314 --> 01:15:07,014
+Okay, that's okay. I think that's just a warning. So that worked.
+
+531
+01:15:07,034 --> 01:15:15,004
+So now what we can do is hopefully. We can use this.
+
+532
+01:15:17,074 --> 01:15:37,744
+So instead of saying, uh, expect call times one such and such, we'll use the same format that we used for LPC w ster e Q, which is we'll pass that in.
+
+533
+01:15:42,124 --> 01:15:46,384
+Here we'll say shellings equal and then.
+
+534
+01:15:49,594 --> 01:15:59,844
+To your right. Uh.
+
+535
+01:16:03,224 --> 01:16:07,184
+T array windows charm plus shortcut description.
+
+536
+01:16:09,974 --> 01:16:15,884
+Desks. Uh, desks.
+
+537
+01:16:17,984 --> 01:16:24,554
+Append element. I don't work right.
+
+538
+01:16:31,254 --> 01:16:34,464
+And. I.
+
+539
+01:16:38,554 --> 01:16:43,074
+Okay. I think that'll work. I think that'll work.
+
+540
+01:16:43,324 --> 01:16:52,704
+And then. I'll say that, and then we can get rid of this, I think.
+
+541
+01:16:55,544 --> 01:16:56,864
+Let's see what happens.
+
+542
+01:17:04,414 --> 01:17:12,334
+Danny Coleman writes, It's probably easier to code switch between programing language since they're almost all based on English words and logic.
+
+543
+01:17:14,734 --> 01:17:17,554
+That's probably true. I think that's probably true.
+
+544
+01:17:17,974 --> 01:17:25,383
+I will say that like certain someone at the door, if you're hearing that sound, that's my doorbell.
+
+545
+01:17:25,384 --> 01:17:28,834
+I have to answer the doorbell. I'll be right back.
+
+546
+01:17:28,834 --> 01:17:32,224
+One moment. It's my custom doorbell.
+
+547
+01:17:32,434 --> 01:18:30,954
+One more, please. I'm back.
+
+548
+01:18:31,344 --> 01:18:35,844
+Sorry about that. Someone was at the door and.
+
+549
+01:18:36,054 --> 01:18:43,654
+Yeah, that's. That's my custom doorbell. It can be shocking if people aren't used to it.
+
+550
+01:18:43,684 --> 01:18:48,243
+So what's going on here? There is. Oh, right.
+
+551
+01:18:48,244 --> 01:18:53,834
+Sorry. It's. It's not a pointer.
+
+552
+01:18:56,114 --> 01:19:00,814
+Um. See here.
+
+553
+01:19:00,844 --> 01:19:13,864
+Let's see how this is used out in the wild. And it's t array selected IDs selected by the dot append.
+
+554
+01:19:14,164 --> 01:19:29,314
+Okay, so that should work. Let's try that. Hmm.
+
+555
+01:19:29,344 --> 01:19:35,123
+Hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm
+
+556
+01:19:35,124 --> 01:19:37,824
+hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm
+
+557
+01:19:37,834 --> 01:19:46,324
+hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm hmm mm mm mm mm mm mm mm mm mm mm.
+
+558
+01:19:51,454 --> 01:19:54,783
+Okay. But I don't think that built correctly.
+
+559
+01:19:54,784 --> 01:19:58,264
+So let's not get. Yeah, okay.
+
+560
+01:19:58,564 --> 01:20:03,334
+Let's, let's get back up in here. So couple of warnings.
+
+561
+01:20:04,774 --> 01:20:08,074
+Error call two implicitly deleted copying instructor.
+
+562
+01:20:13,824 --> 01:20:18,864
+Oh, I might have to pass in a reference.
+
+563
+01:20:24,134 --> 01:20:29,854
+At which point. The value.
+
+564
+01:20:36,974 --> 01:20:53,764
+Might end up being more like that. Let's see if it likes that.
+
+565
+01:21:04,334 --> 01:21:13,934
+Yeah. One of the things I loved about the the doorbell that we got, we got a new doorbell is that we are able to upload.
+
+566
+01:21:14,324 --> 01:21:20,174
+It has like a bunch of built in doorbell sounds, but you can also upload your own custom ones and that's the one we chose.
+
+567
+01:21:24,984 --> 01:21:29,814
+Oh, down something at the door. Okay.
+
+568
+01:21:29,844 --> 01:21:34,733
+Can I initialize a prototype? L p w stir with a r value of s string.
+
+569
+01:21:34,734 --> 01:21:39,444
+So that's not good enough, apparently. Okay. Can't do that.
+
+570
+01:21:42,414 --> 01:21:45,864
+L p w stir. Get description.
+
+571
+01:21:51,254 --> 01:21:54,404
+LP w store description.
+
+572
+01:21:58,094 --> 01:22:01,094
+Let's see if that. I don't know if this will work.
+
+573
+01:22:01,184 --> 01:22:24,814
+We'll see. Come on.
+
+574
+01:22:25,444 --> 01:22:29,014
+Nope, nope, nope, nope. Not a fan.
+
+575
+01:22:29,044 --> 01:22:33,694
+So our Value of tape LP.
+
+576
+01:22:36,334 --> 01:22:39,484
+Oh, okay. So it doesn't want to reference. It wants.
+
+577
+01:22:54,914 --> 01:22:58,234
+It's already a pointer. I see. W chart T is already a pointer.
+
+578
+01:22:58,244 --> 01:23:14,504
+That's why OC. Mm hmm.
+
+579
+01:23:14,514 --> 01:23:23,883
+Mm. I'm getting pretty sick of this error message, so.
+
+580
+01:23:23,884 --> 01:23:27,484
+Well, while we're waiting for that to compile, I'm going to.
+
+581
+01:23:32,834 --> 01:23:35,894
+It is used I use here. What are you talking about?
+
+582
+01:23:38,954 --> 01:23:42,074
+Hmm. Okay. So still not a fan?
+
+583
+01:23:42,404 --> 01:23:45,764
+No member named equals in charge.
+
+584
+01:23:45,764 --> 01:23:53,154
+16 point or T charge, 16 point or oh.
+
+585
+01:23:55,814 --> 01:24:02,004
+Is it something like. Oh, you know what it is?
+
+586
+01:24:02,484 --> 01:24:08,184
+I'm pretty sure I don't want to get that. I'm pretty sure I just want to do this right.
+
+587
+01:24:11,594 --> 01:24:36,624
+Try that. Okay.
+
+588
+01:24:36,644 --> 01:24:39,674
+Now it's it complaining about. Okay.
+
+589
+01:24:39,674 --> 01:24:43,274
+Different complaints. No viable conversion.
+
+590
+01:24:44,374 --> 01:24:48,604
+Uh oh. Oh.
+
+591
+01:24:48,614 --> 01:24:56,834
+So it's actually going to give me not a point or two, but the actual description.
+
+592
+01:24:56,864 --> 01:25:00,014
+Okay. At that point. Desk.
+
+593
+01:25:03,104 --> 01:25:16,314
+It'll be like that then, I guess. If I can just get this to compile.
+
+594
+01:25:16,324 --> 01:25:25,444
+Even if it fails, I'll be happy to end the episode there because we're coming up on our hour and a half.
+
+595
+01:25:36,474 --> 01:25:42,904
+Oh, come on. That's brutal. Invalid.
+
+596
+01:25:43,174 --> 01:25:53,134
+Oh, right. That's not fallacy. Okay.
+
+597
+01:25:58,754 --> 01:26:11,074
+Going. The C instantiate or if failed, use that instead.
+
+598
+01:26:15,454 --> 01:26:19,374
+Maybe. 201.
+
+599
+01:26:37,704 --> 01:26:45,594
+Mm. I'll deal with that later.
+
+600
+01:26:46,824 --> 01:26:49,854
+Okay, We got it. Wait. What happened here?
+
+601
+01:26:52,314 --> 01:27:03,884
+Did it compile? Not really. Did not compile properly.
+
+602
+01:27:07,404 --> 01:27:15,424
+Oh, maybe it did. I'm.
+
+603
+01:27:15,634 --> 01:27:36,574
+I'm confused. Do that again, please. Hmm.
+
+604
+01:27:38,204 --> 01:27:45,744
+Planes about that. All right. Big complaint. The complaint is about line 50.
+
+605
+01:27:57,774 --> 01:28:04,374
+There are no matching descriptor for a new initialization note in instantiation or member function.
+
+606
+01:28:05,564 --> 01:28:15,804
+Not sure. Bunch of expansion not viable expects in our value first argument.
+
+607
+01:28:25,874 --> 01:28:29,114
+I don't think I fully understand. Does that mean that.
+
+608
+01:28:31,024 --> 01:28:39,724
+Somehow. There's so many macros that kind of get confused.
+
+609
+01:28:43,244 --> 01:28:49,544
+All right. One last chance, and then no matter what, I'm ending it and we'll investigate and figure this out next week.
+
+610
+01:29:01,374 --> 01:29:08,074
+Mm hmm. No.
+
+611
+01:29:08,084 --> 01:29:11,264
+Still doesn't like it. It is. Yeah.
+
+612
+01:29:12,634 --> 01:29:25,754
+I think we were right before, but. But there's more to do.
+
+613
+01:29:27,384 --> 01:29:30,554
+Okay. We're going to have to figure this out next week. All right.
+
+614
+01:29:30,554 --> 01:29:34,844
+Well, everyone, thank you very much for watching. Episode 338 of the joy coating.
+
+615
+01:29:34,854 --> 01:29:38,744
+Let me know what you thought. There's a link here at the bottom of the agenda to rate the episode,
+
+616
+01:29:38,744 --> 01:29:43,424
+and you can also use it to ask me questions or or let me know what you'd like to see more of.
+
+617
+01:29:43,424 --> 01:29:52,754
+I'm going to put a link in the chat. I read everything that comes in, so please do rate the episode and and I'll happily read your feedback.
+
+618
+01:29:53,294 --> 01:29:57,134
+All right. Thanks everyone for watching Episode 338. I'll hopefully see you next week.
+
+619
+01:29:58,244 --> 01:30:02,164
+Take care, everybody. Bye bye.
+
+620
+01:30:05,324 --> 01:30:09,644
+The Joy. Oh d it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,2830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 372 - July 10, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 372 - July 10, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=35f8d255-9881-4773-91d4-b18d0141e76d</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=35f8d255-9881-4773-91d4-b18d0141e76d">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,581 --> 00:00:09,081
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy. Oh, dang.
+
+2
+00:00:09,561 --> 00:00:15,621
+Oh! Hello and welcome to episode 372 of the Joy of coding.
+
+3
+00:00:15,651 --> 00:00:22,611
+My name is Mike Connelly. It's so good to have you here. As per usual, we're going to be, uh, hacking on some Firefox stuff today.
+
+4
+00:00:23,001 --> 00:00:26,681
+Uh, really looking forward to that. Let's get started. What are we doing?
+
+5
+00:00:26,691 --> 00:00:33,261
+Let me start by sharing my screen. This is the, uh, agenda.
+
+6
+00:00:33,261 --> 00:00:38,540
+It is July 10th, 2024. A reminder no plan survives breakfast.
+
+7
+00:00:38,541 --> 00:00:40,011
+I think I know how today is going to go.
+
+8
+00:00:40,011 --> 00:00:46,700
+I think, like, I think I know what I'm going to be tackling today, but I don't know how how it's going to like what the results are going to be.
+
+9
+00:00:46,701 --> 00:00:51,831
+I haven't pre-written any of the things I'm going to write today, um, in advance with like, uh,
+
+10
+00:00:52,071 --> 00:00:59,241
+I've seen people do that where they're like live demoing and they'll have like, uh, stuff like to their side and they're typing it all that stuff.
+
+11
+00:00:59,241 --> 00:01:07,220
+This is not that. This is me. Like thinking out loud and trying to write software, um, you know, uh, as, as you watch,
+
+12
+00:01:07,221 --> 00:01:10,671
+as you watch and, and we'll deal with it, deal with problems as they come.
+
+13
+00:01:10,671 --> 00:01:14,120
+That's the first thing. Second thing is there is an episode guide.
+
+14
+00:01:14,121 --> 00:01:19,041
+You should check it out. Um, the episode guys link to the agenda, which I realize I haven't talked about yet.
+
+15
+00:01:19,131 --> 00:01:23,391
+The agenda that we're looking at is something that you have access to if you're watching this on air.
+
+16
+00:01:23,391 --> 00:01:26,571
+Mozilla a link to is in the details section on YouTube.
+
+17
+00:01:26,571 --> 00:01:30,200
+It's down in the video description on, uh, Twitch.
+
+18
+00:01:30,201 --> 00:01:36,651
+I think it's down in the channel details. And if you click on the links, um, you should be able to, um, go to the places that I'm linking to.
+
+19
+00:01:36,741 --> 00:01:41,960
+And if I update the agenda, like if I add an exclamation mark here, eventually this little spinny will spin.
+
+20
+00:01:41,961 --> 00:01:46,520
+And if you reload the page, you should see the up to date agenda. Um, right.
+
+21
+00:01:46,521 --> 00:01:55,011
+So the episode guide, check it out completely if you were driven, uh, and if you want to add your own notes, uh, addenda, uh, corrections.
+
+22
+00:01:55,011 --> 00:01:59,031
+Who knows? Um, go ahead and send me a pull request to the repository.
+
+23
+00:01:59,121 --> 00:02:04,491
+Uh, the episode guys for you. It's to make things better for viewers just like you.
+
+24
+00:02:04,911 --> 00:02:09,710
+Okay. What are we working on today? Well, uh, it's still backup stuff.
+
+25
+00:02:09,711 --> 00:02:14,811
+I want to show, um, where we're at. We're actually in pretty decent shape with the UI.
+
+26
+00:02:15,231 --> 00:02:20,271
+Um, you know, this is this is the, uh, current.
+
+27
+00:02:20,901 --> 00:02:23,931
+Let me let me start over here.
+
+28
+00:02:24,261 --> 00:02:32,901
+Okay. So this is the current UI. If it was enabled in, uh, in nightly, uh, with the patches that I have applied, it would look like this.
+
+29
+00:02:34,221 --> 00:02:40,341
+And, you know, if you had a backup file, you could, like, use this to, like, restore from it.
+
+30
+00:02:40,701 --> 00:02:44,451
+Um, if you didn't have automatic backups enabled, this is how you could turn it on.
+
+31
+00:02:44,811 --> 00:02:48,561
+You could just, like, turn on backups. You could choose to, like, encrypt it with a password or not.
+
+32
+00:02:48,891 --> 00:02:53,210
+Uh, and where to place it? I'm going to go ahead and turn on backups, uh, without encryption.
+
+33
+00:02:53,211 --> 00:02:56,001
+And if I changed my mind, I could, like, enable encryption here.
+
+34
+00:02:56,421 --> 00:03:02,450
+Um, and then this is where, like, all my backups get positioned to get placed, and I can change location if I want.
+
+35
+00:03:02,451 --> 00:03:05,451
+I can turn backups off, like, that's that's how it's all working.
+
+36
+00:03:05,691 --> 00:03:09,891
+And the part that I just added was this chunk down here for restoring your data.
+
+37
+00:03:10,311 --> 00:03:17,751
+Um, and, uh, and so there's a patch for that, uh, here, there's like a work in progress patch for it.
+
+38
+00:03:17,751 --> 00:03:25,940
+And I'm pretty happy with the patch. Um, I think what I want I wanted to do today was to write tests, so.
+
+39
+00:03:25,941 --> 00:03:33,021
+Yeah. Um, uh, one of the things I started doing was, uh, I, I decided to use a CSS grid because one of the things I realized,
+
+40
+00:03:33,651 --> 00:03:39,711
+the patch adds this, like call to action down here underneath backup, whenever backup is off and it goes away whenever it's on.
+
+41
+00:03:39,951 --> 00:03:48,681
+And when the call to action is available, it's supposed to, um, not go underneath this button like the learn More.
+
+42
+00:03:48,681 --> 00:03:51,381
+Shouldn't like it should wrap before it reaches the button.
+
+43
+00:03:51,651 --> 00:04:02,181
+And so what I do is like I use, uh, CSS grid to, uh, to grid this sort of header indicator, the button and the call to action.
+
+44
+00:04:02,631 --> 00:04:06,950
+And then I can hide part of that, um, part of that grid like this.
+
+45
+00:04:06,951 --> 00:04:13,181
+So, yeah. Uh, and this is similar, uh, this chunk down here, uh, this call to action,
+
+46
+00:04:13,221 --> 00:04:21,380
+this description of what's going on is, uh, uh, is using CSS grid, um, and.
+
+47
+00:04:21,381 --> 00:04:25,401
+Yeah, the backup, uh, backup control is the class that I'm using for that.
+
+48
+00:04:26,061 --> 00:04:34,041
+Um, there, we've got to do, uh, two dos to finalize the, uh, support pages, but for now, it's not part of this patch.
+
+49
+00:04:34,791 --> 00:04:40,161
+And I think what I wanted to do was to write tests.
+
+50
+00:04:40,611 --> 00:04:44,571
+Yeah, this patch ended up being a lot smaller than I thought it would be, which is great.
+
+51
+00:04:44,841 --> 00:04:49,251
+And I wanted to write tests. That's what is blocking us from actually posting this for review.
+
+52
+00:04:49,521 --> 00:04:52,641
+So let us design some tests. What do we want to test?
+
+53
+00:04:53,091 --> 00:04:57,471
+Well, what exactly we added was the, um, the scheduled backup call to action.
+
+54
+00:04:57,711 --> 00:05:04,881
+That's this thing we want to make sure that it is, uh, visible whenever backups are off and invisible when it's on.
+
+55
+00:05:06,621 --> 00:05:10,991
+And then. We also want to make sure that, uh. Restore your data.
+
+56
+00:05:11,001 --> 00:05:14,931
+This section, um, is in two. It can be in two different states.
+
+57
+00:05:15,231 --> 00:05:22,281
+Uh, went back and forth. It mainly talks about restoring your data from a preexisting backup that you may have gotten from a different machine.
+
+58
+00:05:22,461 --> 00:05:30,171
+And when you turn on automatic make a backups, it's it sort of changes itself subtly to talk about restoring maybe from this backup,
+
+59
+00:05:30,171 --> 00:05:34,011
+the backup that you've been, um, uh, been running with.
+
+60
+00:05:34,221 --> 00:05:39,741
+And you can choose to restore from it. Um, it's subtle, but, um, there is a difference there.
+
+61
+00:05:39,741 --> 00:05:41,301
+And so I wanted to add tests for that.
+
+62
+00:05:41,601 --> 00:05:46,670
+We're going to be using, uh, monkey test Chrome tests for this because we're going to be testing the little widget tree.
+
+63
+00:05:46,671 --> 00:05:52,461
+And then we'll add, uh, we'll add tests for the buttons, doing the right thing.
+
+64
+00:05:52,911 --> 00:05:58,311
+Um, using a monkey test. Browser test. Um.
+
+65
+00:05:58,881 --> 00:06:03,321
+Well, first of all, do the existing test pass. That's maybe the first thing I should check.
+
+66
+00:06:03,771 --> 00:06:10,011
+Um, so I'm gonna pump up my font here a little bit, and then I'll go mock test browser components, backup tests.
+
+67
+00:06:10,221 --> 00:06:16,011
+Let's run the browser test first and see if these pass. Because they might not.
+
+68
+00:06:16,551 --> 00:06:20,151
+And if they don't? We got to fix them.
+
+69
+00:06:22,701 --> 00:06:27,081
+Oh. They do. That's good. And then, uh, let's do our Chrome test here.
+
+70
+00:06:30,151 --> 00:06:34,501
+He's are just testing the the widget tree, the individual widgets. They all pass.
+
+71
+00:06:34,861 --> 00:06:39,361
+So we're we're adding we're adding to the, uh, the existing tests.
+
+72
+00:06:41,371 --> 00:06:49,411
+Okay. So the tests that I'm thinking of writing are going to go inside.
+
+73
+00:06:49,411 --> 00:06:54,300
+Uh, we'll start with the Chrome test first. Uh, there's an existing test file for back up settings.
+
+74
+00:06:54,301 --> 00:07:02,791
+We'll just reuse this. And, uh, so we've got a bunch of different tests for like different states that it can be in.
+
+75
+00:07:03,151 --> 00:07:11,941
+I want to add a test that, uh, parser controls, edit location and show and folder back up location,
+
+76
+00:07:12,961 --> 00:07:21,421
+uh, back up time stamp, disable back up dialog, turn off scheduled backups and it widget.
+
+77
+00:07:22,441 --> 00:07:31,671
+Um. Okay, I'm going to write a test ad task.
+
+78
+00:07:32,721 --> 00:07:36,381
+Uh, async function tests. Um.
+
+79
+00:07:38,351 --> 00:07:43,931
+Uh. Content.
+
+80
+00:07:44,501 --> 00:07:48,101
+When scheduled. Scheduled. Backups.
+
+81
+00:07:48,101 --> 00:07:57,161
+Disabled. And so we'll say, uh, tests that the right content is displayed.
+
+82
+00:07:57,221 --> 00:08:00,581
+If backups are disabled. Uh. Scheduled backups.
+
+83
+00:08:00,851 --> 00:08:07,931
+Automatic. Scheduled, uh, automatic backups are disabled.
+
+84
+00:08:10,781 --> 00:08:20,111
+And so, uh, we will get the test one, and we'll basically do this thing.
+
+85
+00:08:22,991 --> 00:08:26,381
+For some reason paste is really slow with VS code.
+
+86
+00:08:26,891 --> 00:08:31,241
+Um, for me, which is really annoying. Uh, I don't know what what it's on about.
+
+87
+00:08:31,901 --> 00:08:35,801
+Is there, like a status? I can see what's going on the debug console.
+
+88
+00:08:36,731 --> 00:08:41,411
+Like what? What's it doing? Output.
+
+89
+00:08:43,321 --> 00:08:46,530
+Might be some kind of prettier thing. Uh, okay.
+
+90
+00:08:46,531 --> 00:08:51,811
+So, uh, we make sure instead of making sure we're not testing the password controls,
+
+91
+00:08:51,811 --> 00:08:57,241
+we're going to make sure that a few things, we're going to make sure that.
+
+92
+00:09:03,991 --> 00:09:09,351
+Oh, and this came back. What's one creek?
+
+93
+00:09:12,741 --> 00:09:15,861
+Backup of backup. Should've cleared that.
+
+94
+00:09:17,651 --> 00:09:24,631
+Turn off and delete backup. I'm back up.
+
+95
+00:09:33,171 --> 00:09:39,461
+Turn off. Backup. Restart. Why is this here 243 from.
+
+96
+00:09:41,051 --> 00:09:48,921
+That's an interesting. That's interesting. I'm going to have to look into why that might be, why this is still repopulating.
+
+97
+00:09:51,571 --> 00:09:55,441
+I might have a format on paste setting. That's true. That could very well be.
+
+98
+00:09:55,951 --> 00:10:00,241
+So there's a bug there. I'm not going to get distracted by that bug, but I will take a note.
+
+99
+00:10:00,961 --> 00:10:18,511
+Um, file a bug for the preexisting for, um, uh, uh, backup still being displayed as, uh, existing after having disabled backups and restarting.
+
+100
+00:10:19,531 --> 00:10:25,861
+Okay, so the tests are we're going to test that when backups are disabled.
+
+101
+00:10:26,011 --> 00:10:37,981
+So let's turn on turn off again so we can look at it. When backups are disabled we show the CTA under here.
+
+102
+00:10:38,821 --> 00:10:44,101
+And the restore section has the right strings.
+
+103
+00:10:45,751 --> 00:10:51,481
+Test that when backups are enabled we do not show the CTA.
+
+104
+00:10:52,171 --> 00:10:56,401
+The restore section has the right strings.
+
+105
+00:10:56,551 --> 00:11:05,311
+Okay. That's easy. So the first thing we are going to do, let's check that the CTA is visible.
+
+106
+00:11:05,311 --> 00:11:14,371
+And the node that will look at schedule backups CTA template.
+
+107
+00:11:15,761 --> 00:11:19,691
+Um. I can give it an ID.
+
+108
+00:11:22,091 --> 00:11:25,631
+Uh, scheduled backups CTA.
+
+109
+00:11:28,791 --> 00:11:33,831
+And, uh, create access for for it. Schedule.
+
+110
+00:11:36,231 --> 00:11:43,251
+Backups. CTA l. Paste.
+
+111
+00:11:46,071 --> 00:11:53,511
+Um. Right.
+
+112
+00:11:55,191 --> 00:11:58,991
+And then over here we'll say assert.
+
+113
+00:11:59,121 --> 00:12:05,541
+Uh okay. Settings dot schedule back up CTL.
+
+114
+00:12:05,581 --> 00:12:18,471
+We want to check visibility. And the way we do that is there is a like is hidden that we use is visible or is hidden visible.
+
+115
+00:12:20,571 --> 00:12:25,251
+What's the tool do we use just like a.
+
+116
+00:12:30,021 --> 00:12:34,151
+Of all in showing.
+
+117
+00:12:34,421 --> 00:12:38,011
+Let's think. I know we've got.
+
+118
+00:12:38,021 --> 00:12:41,261
+Or we've got one for the migration wizard. Migration wizard.
+
+119
+00:12:42,011 --> 00:12:45,511
+Uh, visible is hidden.
+
+120
+00:12:45,551 --> 00:12:51,401
+That's what it is in his head. Okay.
+
+121
+00:12:54,241 --> 00:13:01,861
+I can't believe you don't already use that in here. Um, okay.
+
+122
+00:13:02,881 --> 00:13:07,891
+Is. I'm guessing there's another one called is visible, but let's find out.
+
+123
+00:13:08,761 --> 00:13:13,861
+Um, CTA scheduled backups.
+
+124
+00:13:13,951 --> 00:13:22,141
+CTA should be visible. Okay, so it is not liking it.
+
+125
+00:13:27,451 --> 00:13:36,121
+So maybe not is hidden. Let's, uh, let's just run that and see what happens.
+
+126
+00:13:54,761 --> 00:14:02,091
+No. Should be visible.
+
+127
+00:14:02,111 --> 00:14:07,801
+Backup is disabled. So it should not be hidden.
+
+128
+00:14:10,091 --> 00:14:14,671
+So what's going on here? Um.
+
+129
+00:14:24,531 --> 00:14:35,261
+Can I like a weight? Oh, this look like, um.
+
+130
+00:14:38,981 --> 00:14:42,311
+Set timeout. That's not quite right.
+
+131
+00:14:45,011 --> 00:14:55,220
+Okay. Oh, I can't see it.
+
+132
+00:14:55,221 --> 00:15:00,291
+It's hidden. It's like hidden from me. Uh, okay.
+
+133
+00:15:00,441 --> 00:15:03,651
+Um. So it's saying it's not hidden.
+
+134
+00:15:07,971 --> 00:15:10,971
+Or it's saying it is hidden. This is failing.
+
+135
+00:15:11,781 --> 00:15:17,471
+So let's see what's going on here. Uh, scheduled backups.
+
+136
+00:15:17,481 --> 00:15:24,111
+And you're right. Um, uh, rendering CTA.
+
+137
+00:15:28,021 --> 00:15:38,401
+See what happened there. Yeah, rendering the CTA.
+
+138
+00:15:38,431 --> 00:15:46,801
+So did I. Is this better? Uh, dumb.
+
+139
+00:15:47,431 --> 00:15:56,281
+Uh, checking the getter. Settings scheduled backups Ctrl.
+
+140
+00:15:57,001 --> 00:16:13,201
+So that should be some Dom element. Yeah, it's a div and we're saying it should be visible.
+
+141
+00:16:19,591 --> 00:16:31,151
+Pad is hidden. His is visible working. His head has.
+
+142
+00:16:40,691 --> 00:16:45,521
+So it's saying that the bounding client rect happens to be zero zero.
+
+143
+00:16:47,051 --> 00:16:58,151
+Let's double check that. But rect equals settings scheduled backups CTL get bounding client rect.
+
+144
+00:16:59,231 --> 00:17:07,751
+Dump rect. Interesting.
+
+145
+00:17:20,391 --> 00:17:26,441
+Huh? So it is zero zero.
+
+146
+00:17:26,481 --> 00:17:29,601
+Why would that be? It's in the Dom.
+
+147
+00:17:35,581 --> 00:17:38,791
+Is there a way I can like debug this?
+
+148
+00:17:39,091 --> 00:17:42,270
+Mark test. Mark. Moki.
+
+149
+00:17:42,271 --> 00:17:47,191
+Test. Uh. Flavor. Chrome.
+
+150
+00:17:51,271 --> 00:17:54,331
+Jazz. Debugger. Let's see if it accepts that.
+
+151
+00:18:01,491 --> 00:18:05,301
+Um. Hmhm. It does not.
+
+152
+00:18:07,751 --> 00:18:10,751
+Why would the development be 0000?
+
+153
+00:18:12,791 --> 00:18:29,071
+Let's look at it in storybook. It's because the strings.
+
+154
+00:18:31,221 --> 00:18:34,761
+Wouldn't have been rendered yet. It'd be bizarre.
+
+155
+00:18:36,991 --> 00:18:40,801
+Backups disabled. So this should be here.
+
+156
+00:18:41,491 --> 00:18:44,641
+And it is. So.
+
+157
+00:18:46,281 --> 00:18:54,201
+Let's get access to backup settings. Backup scheduled backups.
+
+158
+00:18:55,671 --> 00:19:00,321
+CTL get bounding client correct.
+
+159
+00:19:01,371 --> 00:19:05,931
+Yeah. Has all those nice values. So is it possible that.
+
+160
+00:19:07,941 --> 00:19:13,361
+The strings haven't been. The translation hasn't occurred yet.
+
+161
+00:19:13,381 --> 00:19:16,921
+I guess that's possible because it will have just.
+
+162
+00:19:19,371 --> 00:19:22,761
+Rendered as opposed to have have been made visible.
+
+163
+00:19:24,121 --> 00:19:31,531
+Um hmm. L10n.
+
+164
+00:19:35,811 --> 00:19:41,431
+Is there a way I can, like, uh, await? Test.
+
+165
+00:19:46,051 --> 00:19:52,381
+Is there, like, um. Oh. And then. Oh, wait.
+
+166
+00:19:55,371 --> 00:19:58,561
+Um. Localization.
+
+167
+00:19:58,931 --> 00:20:06,361
+Oh. Look how there's a.
+
+168
+00:20:13,581 --> 00:20:22,271
+It's a way, I think, for me to await the stuff to, to, to, to, to return, to do.
+
+169
+00:20:22,281 --> 00:20:34,871
+How do I wait for the strings to be rendered? I'm certain there's a way of doing that Dom localization that web IDL.
+
+170
+00:20:37,121 --> 00:20:40,511
+Connect. Parse. Translate. Fragment. Translate elements.
+
+171
+00:20:40,511 --> 00:20:47,021
+Parse. Observing set attributes. I've seen it where it's like.
+
+172
+00:20:49,151 --> 00:21:00,711
+Um. Where have I seen it?
+
+173
+00:21:01,821 --> 00:21:08,091
+You know what? I think I was talking to someone about it recently. Let me just go through my notes, see if I can find.
+
+174
+00:21:09,621 --> 00:21:14,631
+I was talking to a colleague about this exact thing.
+
+175
+00:21:15,831 --> 00:21:19,401
+Let me see if I can find where we talked about it.
+
+176
+00:21:21,711 --> 00:21:29,751
+Has pending l10n mutations this await l10n finish promise.
+
+177
+00:21:29,751 --> 00:21:39,231
+L10n mutations finished. So let's see if we do that in our test.
+
+178
+00:21:42,921 --> 00:21:49,271
+Um. Let, uh.
+
+179
+00:21:49,521 --> 00:21:53,781
+Localization. Cool. Browser test utils.
+
+180
+00:21:55,701 --> 00:21:59,601
+Uh, wait for event.
+
+181
+00:22:02,901 --> 00:22:08,091
+Uh, settings. Mutations. Finished. I'll just still wait it.
+
+182
+00:22:10,101 --> 00:22:13,101
+And now let's see what its dimensions are.
+
+183
+00:22:30,381 --> 00:22:42,021
+Hmhm. Never fires that event while we're waiting.
+
+184
+00:22:44,541 --> 00:22:48,571
+Where is our. Content.
+
+185
+00:22:49,321 --> 00:22:54,271
+Oh, it's display none. So where is this thing?
+
+186
+00:22:54,451 --> 00:22:59,280
+Backup channel route. Schedule.
+
+187
+00:22:59,281 --> 00:23:05,971
+Backups. Kia.
+
+188
+00:23:06,971 --> 00:23:14,401
+Why would content be displayed? None. Tweet on purpose.
+
+189
+00:23:14,461 --> 00:23:17,701
+Content style display. None. I'm going to get rid of that.
+
+190
+00:23:24,971 --> 00:23:38,421
+Um. Hang on. Still.
+
+191
+00:23:38,421 --> 00:23:42,321
+Where is it? Content.
+
+192
+00:23:51,201 --> 00:23:54,860
+It has dimensions. Schedule.
+
+193
+00:23:54,861 --> 00:24:02,041
+Backups. CTA.
+
+194
+00:24:02,061 --> 00:24:07,741
+There it is. Why aren't you visible? Where are you?
+
+195
+00:24:09,931 --> 00:24:15,151
+Where are you? Body document frame.
+
+196
+00:24:17,721 --> 00:24:32,851
+Why? Why can't I see it? This is so bizarre.
+
+197
+00:24:44,051 --> 00:24:52,461
+Container. Compute is.
+
+198
+00:24:54,801 --> 00:25:00,951
+Sort of like some opacity on it or something like why? Why wouldn't I be able to see it?
+
+199
+00:25:01,561 --> 00:25:19,061
+I'm getting very confused here. And like.
+
+200
+00:25:21,521 --> 00:25:25,331
+CTA is there. It has the right dimensions.
+
+201
+00:25:27,221 --> 00:25:31,211
+So, like, do I still need to wait?
+
+202
+00:25:34,301 --> 00:25:49,861
+For the mutation event. Now I'm feeling something differently.
+
+203
+00:25:51,241 --> 00:25:56,101
+I feel like dialog should be opened up. Okay, here's what I'm going to do, I think.
+
+204
+00:25:58,381 --> 00:26:03,271
+I think what I'm going to do is I'm not going to check that. I'm not going to use the is hidden helper.
+
+205
+00:26:04,921 --> 00:26:10,651
+I'm just going to check that the the button, the the div is, uh, available.
+
+206
+00:26:11,161 --> 00:26:12,421
+I'm just going to say okay.
+
+207
+00:26:13,351 --> 00:26:22,140
+Um, schedule schedule backup CTA should be in the Dom because there's no like hide and show logic with like the display or anything.
+
+208
+00:26:22,141 --> 00:26:26,641
+Like we're not using CSS to, to hide it or something. It's just is it in the Dom or not.
+
+209
+00:26:26,641 --> 00:26:29,761
+And so maybe that should be enough. Um.
+
+210
+00:26:37,571 --> 00:26:41,501
+Yeah. Okay. First check. First check.
+
+211
+00:26:41,561 --> 00:26:45,041
+Uh. Yeah.
+
+212
+00:26:45,311 --> 00:26:50,731
+Should be in the dorm. And then what's the other part? Um, check that the.
+
+213
+00:26:55,271 --> 00:27:03,701
+We're going to check that the restore buttons have the right, uh, Dom element IDs or data.
+
+214
+00:27:03,731 --> 00:27:06,851
+L10n IDs. Um.
+
+215
+00:27:11,881 --> 00:27:16,831
+Restore header. The backup restore button.
+
+216
+00:27:20,601 --> 00:27:24,680
+Backup. Toggle restore. Button backup.
+
+217
+00:27:24,681 --> 00:27:36,121
+Toggle restore. Description. Toggle store button.
+
+218
+00:27:37,771 --> 00:27:41,971
+Wait. Back backup. Do I already have that restore button?
+
+219
+00:27:48,281 --> 00:27:53,571
+I bet I do. Yeah. Restore from back a button l so we can use that.
+
+220
+00:27:54,681 --> 00:28:04,581
+Okay. Settings dot that dot get attribute that, uh, l10n.
+
+221
+00:28:07,041 --> 00:28:11,181
+ID. Um, it should be.
+
+222
+00:28:11,181 --> 00:28:17,841
+Is. So this should be the string that is.
+
+223
+00:28:20,751 --> 00:28:25,511
+Whenever we're off. It should be. This one.
+
+224
+00:28:33,081 --> 00:28:36,591
+And then we also have to check that the description.
+
+225
+00:28:39,311 --> 00:28:43,541
+Description. L.
+
+226
+00:28:47,641 --> 00:28:51,201
+Uh, I don't know. Here. Okay.
+
+227
+00:28:51,211 --> 00:28:56,161
+Toggle, uh, back up.
+
+228
+00:28:59,001 --> 00:29:12,111
+Restore a description. Restore a backup toggle.
+
+229
+00:29:12,891 --> 00:29:20,401
+Just backup. Restore description is fine. I can get rid of that dumb statement.
+
+230
+00:29:20,431 --> 00:29:24,511
+The other thing I'm just remembering now is I also don't want to call this a CTA.
+
+231
+00:29:25,411 --> 00:29:32,701
+I'm going to call it a description. Even though sometimes it's used for a CTA.
+
+232
+00:29:34,741 --> 00:29:44,191
+And so now that we have this, uh, description, L, we can make sure that, um.
+
+233
+00:29:47,091 --> 00:29:51,861
+It's not. The string was the string that I'm looking for. It's this one.
+
+234
+00:29:59,501 --> 00:30:08,631
+Okay, let's test that. Beautiful.
+
+235
+00:30:08,901 --> 00:30:13,711
+Mhm. Let's also test that uh, or let's do the opposite.
+
+236
+00:30:13,731 --> 00:30:18,561
+Now let's test that when they are enabled backups are enabled.
+
+237
+00:30:21,231 --> 00:30:27,501
+Um. Or enabled.
+
+238
+00:30:29,451 --> 00:30:33,110
+True. Okay. Not scheduled.
+
+239
+00:30:33,111 --> 00:30:36,681
+Backups should not be in the Dom.
+
+240
+00:30:38,061 --> 00:30:42,501
+And then this should be on. And this should be on.
+
+241
+00:30:52,121 --> 00:30:59,061
+Perfect. And then. There's something else I want to add a test for.
+
+242
+00:31:00,861 --> 00:31:21,621
+What had this patch added? The button already has a test for it.
+
+243
+00:31:21,651 --> 00:31:26,031
+I saw it, so I think we might actually be good for for our tests.
+
+244
+00:31:29,211 --> 00:31:36,951
+So we might actually be done this patch. Um, let's run the whole test again.
+
+245
+00:31:44,231 --> 00:31:47,321
+Or the whole suite. Let's run browser.
+
+246
+00:31:47,321 --> 00:32:01,581
+The browser tests. All right, let's run the Zbc shall tests.
+
+247
+00:32:14,451 --> 00:32:19,071
+Okay. And let us test the marionette tests.
+
+248
+00:32:27,191 --> 00:32:32,111
+Her run the marionette tests, not test the marionette tests. So they're all passing.
+
+249
+00:32:32,111 --> 00:32:35,681
+I'm pretty happy about that. So what were our changes then?
+
+250
+00:32:35,771 --> 00:32:44,911
+Um. I changed the CTA to be a description for the grid template areas.
+
+251
+00:32:44,921 --> 00:32:52,571
+I added some getters, some IDs there, and then these two tests which.
+
+252
+00:32:54,561 --> 00:32:57,471
+I'm pretty happy about it. Okay. Let's amend.
+
+253
+00:33:00,531 --> 00:33:09,531
+And before I submit this for review, I wanted to take the time to really think about what's going wrong here.
+
+254
+00:33:09,951 --> 00:33:13,851
+Um, why? Backups are off. Why is this being shown?
+
+255
+00:33:15,651 --> 00:33:22,651
+The only reason that would be shown is if the last backup dot.
+
+256
+00:33:23,841 --> 00:33:33,021
+If these two prefs hadn't been cleared. And I'm pretty sure we clear those backup service.
+
+257
+00:33:40,801 --> 00:33:45,501
+That's backup file name. You know what?
+
+258
+00:33:45,511 --> 00:33:59,921
+We're not clear in them when we delete the last backup. We have to clear those prefs as well.
+
+259
+00:34:00,311 --> 00:34:04,211
+That's what's going on. Um, we have to clear both of these.
+
+260
+00:34:06,851 --> 00:34:11,771
+Because we have removed the file, but we forgot to to, uh, clear the prefs.
+
+261
+00:34:12,551 --> 00:34:17,501
+So I'm going to file a new bug for that. Uh, and I'll fix that separately.
+
+262
+00:34:19,811 --> 00:34:24,191
+We can write a patch for that now. Okay.
+
+263
+00:34:24,341 --> 00:34:27,341
+So let's let's post this up for review.
+
+264
+00:34:27,371 --> 00:34:33,741
+Delirium. And. Uh, okay.
+
+265
+00:34:34,161 --> 00:34:40,581
+Submit. Single. Let's go.
+
+266
+00:34:42,711 --> 00:34:47,301
+Take it out of whip. I'm seeing some chatter.
+
+267
+00:34:47,311 --> 00:34:51,061
+Anyone, uh, asks, can you search for it in the elements?
+
+268
+00:34:51,691 --> 00:34:59,661
+That was like ten minutes ago. I apologize, I didn't see your question, so I don't I don't know the context.
+
+269
+00:34:59,671 --> 00:35:02,731
+My apologies. And Booba asks, what is that?
+
+270
+00:35:03,481 --> 00:35:11,181
+Oh yeah, that was 17 minutes ago, so I, I don't know I don't know what it is that we were looking at 17 minutes ago.
+
+271
+00:35:11,191 --> 00:35:19,291
+I apologize, I wasn't looking at the chat. Um, if you're still curious, please ask uh, again with more context and maybe I can answer.
+
+272
+00:35:20,581 --> 00:35:24,061
+Okay, so our patch here is now up for review.
+
+273
+00:35:24,631 --> 00:35:32,761
+That's great. Um. And we can wait for that.
+
+274
+00:35:32,761 --> 00:35:40,170
+I want to file that other bug. Um, it's a fallout.
+
+275
+00:35:40,171 --> 00:35:43,761
+It's fallout from, uh, delete.
+
+276
+00:35:43,861 --> 00:35:49,231
+That's back up. Pretty sure. Whichever added this.
+
+277
+00:35:50,791 --> 00:36:02,141
+Which. Was 841171.
+
+278
+00:36:07,471 --> 00:36:18,811
+That was me. That's this stuff. Um, which is on auto land right now, but it looks like I missed a spot that, uh.
+
+279
+00:36:20,171 --> 00:36:35,511
+Depends on this bug. Uh, don't forget to clear the last backup file name timestamp preference when deleting the last backup.
+
+280
+00:36:38,271 --> 00:36:47,301
+Um. Uh, the delete.
+
+281
+00:36:47,761 --> 00:36:56,031
+Last backup, uh, method that I added in, uh, here.
+
+282
+00:36:58,431 --> 00:37:06,471
+Uh, cleared the, uh, uh, last backup file name and timestamp from the internet in memory state,
+
+283
+00:37:08,331 --> 00:37:13,701
+but didn't also clear it from the preference preferences.
+
+284
+00:37:13,941 --> 00:37:19,701
+Um, it should do that. So it reappears.
+
+285
+00:37:21,711 --> 00:37:28,101
+On, uh, after a restart, we should make sure to clear those preferences as well.
+
+286
+00:37:29,991 --> 00:37:54,981
+Okay. So I will take this. Okay.
+
+287
+00:37:56,961 --> 00:38:03,771
+So I'm going to go ahead and write a patch and the patch will be here.
+
+288
+00:38:03,801 --> 00:38:11,541
+We'll go. Um. Let's copy those two pref names.
+
+289
+00:38:14,601 --> 00:38:19,611
+Services prefs clear user press. And then the first one is.
+
+290
+00:38:22,881 --> 00:38:30,601
+Let's back up. Time stamp. Pref name. And.
+
+291
+00:38:35,891 --> 00:38:43,211
+So since perhaps every user pressed on this backup file name.
+
+292
+00:38:46,301 --> 00:38:51,281
+Name. All right.
+
+293
+00:38:51,491 --> 00:38:58,501
+Let's make sure that that fixes it. And then we'll write a test.
+
+294
+00:39:08,481 --> 00:39:11,811
+Um, so here it is. Off.
+
+295
+00:39:12,081 --> 00:39:15,591
+Turn it back on. Turn it off. Restart.
+
+296
+00:39:15,681 --> 00:39:19,101
+Those values shouldn't come back. Good. They're gone. That's what we wanted.
+
+297
+00:39:21,531 --> 00:39:25,071
+So what I think we should do is actually write a test for delete. Last back up.
+
+298
+00:39:25,611 --> 00:39:29,301
+Um. So, Mark add test, browser components.
+
+299
+00:39:29,301 --> 00:39:37,071
+Backup test. We're going to end xp c shell test test backup service delete last backup x.
+
+300
+00:39:40,291 --> 00:39:50,691
+Right tracking. Okay.
+
+301
+00:39:52,731 --> 00:40:01,281
+Test that deleting the last backup will attempt to delete the file pointed at by the um.
+
+302
+00:40:02,931 --> 00:40:10,011
+Lead the file. No backup file if it exists.
+
+303
+00:40:14,081 --> 00:40:18,901
+Will not attempt will delete the last known backup file if it exists.
+
+304
+00:40:24,111 --> 00:40:27,891
+And will, uh, clear the preferences.
+
+305
+00:40:29,361 --> 00:40:34,281
+Last backup, time stamp and file names.
+
+306
+00:40:34,281 --> 00:40:37,551
+State properties and preferences.
+
+307
+00:40:38,151 --> 00:40:43,641
+And the other one we're going to test is, um.
+
+308
+00:40:44,861 --> 00:40:50,651
+In the event that the user has manually deleted c paste is just hanging around.
+
+309
+00:40:50,811 --> 00:41:05,351
+Test that delete last backup will, uh, not reject if the last backup file does not exist and will still clear.
+
+310
+00:41:06,281 --> 00:41:10,031
+Yeah. So, uh, file exists.
+
+311
+00:41:11,951 --> 00:41:15,281
+Uh, delete uh, that.
+
+312
+00:41:15,551 --> 00:41:21,701
+I'll just say file exists. And then file does not exist.
+
+313
+00:41:30,151 --> 00:41:36,811
+Okay. Um. What's the best way to do this?
+
+314
+00:41:39,361 --> 00:41:45,391
+You want the internal last backup date to be set?
+
+315
+00:41:47,521 --> 00:41:54,711
+And that happens. In this method here.
+
+316
+00:41:54,711 --> 00:42:04,011
+This, uh, when you create a backup. But also if you init the backup scheduler, it'll load the last backup date.
+
+317
+00:42:07,251 --> 00:42:11,531
+And the last backup file name. So we're going to pretend to init the backup scheduler.
+
+318
+00:42:11,541 --> 00:42:15,951
+That's what we'll do to trick ourselves. We'll preload those.
+
+319
+00:42:17,871 --> 00:42:25,171
+Um. Uh, we're gonna have to also.
+
+320
+00:42:27,701 --> 00:42:41,661
+It's going to be annoying. Mhm.
+
+321
+00:42:42,221 --> 00:42:46,991
+Mhm. Okay.
+
+322
+00:42:47,001 --> 00:42:52,311
+What might be easier is to actually create a backup. An unencrypted backup.
+
+323
+00:42:54,381 --> 00:42:59,131
+Um, instead of the other the other way.
+
+324
+00:42:59,151 --> 00:43:03,601
+So let's let's do that. Tweet.
+
+325
+00:43:03,611 --> 00:43:06,791
+Let us back up. So. Well let's create.
+
+326
+00:43:11,081 --> 00:43:22,531
+Um. Create.
+
+327
+00:43:25,411 --> 00:43:32,501
+Fake path. Uh.
+
+328
+00:43:34,961 --> 00:43:38,801
+Uh, fake back up that.
+
+329
+00:43:40,751 --> 00:43:46,391
+That's back service. Can I just create a backup, like.
+
+330
+00:43:50,261 --> 00:43:54,851
+Hmhm. There's, like, I think a lot one has to do.
+
+331
+00:43:55,571 --> 00:43:58,691
+Stay where it thinks its is 1.5 by current profile.
+
+332
+00:44:00,101 --> 00:44:12,731
+Hmhm. Get back to file info.
+
+333
+00:44:14,191 --> 00:44:17,431
+I wonder if I should actually, instead of having a separate test like this,
+
+334
+00:44:17,791 --> 00:44:21,751
+I move it into here because there are a bunch of utilities I really need in here.
+
+335
+00:44:22,051 --> 00:44:25,921
+I actually like that a lot better. So let's move these.
+
+336
+00:44:28,831 --> 00:44:35,881
+Into here. Let's get rid of.
+
+337
+00:44:38,881 --> 00:44:43,381
+Delete. Let's back up. Or get.
+
+338
+00:44:50,171 --> 00:44:59,121
+Then remove it. Okay.
+
+339
+00:45:00,111 --> 00:45:03,471
+And then down here.
+
+340
+00:45:05,901 --> 00:45:11,390
+Let's see what we've done before. We create a unique directory that's check for post recovery test.
+
+341
+00:45:11,391 --> 00:45:18,931
+Create backup. Signed in. Test.
+
+342
+00:45:18,931 --> 00:45:25,200
+Create backup helper. What does that do again? Produces a backup of fake resources.
+
+343
+00:45:25,201 --> 00:45:35,161
+Recovers the backup into a new profile directory. Ensures that the resources have their backup recovery methods called.
+
+344
+00:45:38,421 --> 00:45:44,201
+A function that is run once all the default checks are done. After this function returns all resources, all of them be cleaned up.
+
+345
+00:45:51,811 --> 00:45:56,431
+So it does those things and it cleans everything up.
+
+346
+00:45:58,591 --> 00:46:03,181
+Yeah. I don't mind reusing this. Um, test.
+
+347
+00:46:03,181 --> 00:46:07,651
+Create backup helper. So we'll create a sandbox.
+
+348
+00:46:09,711 --> 00:46:18,231
+So sandbox. And box store.
+
+349
+00:46:18,231 --> 00:46:24,741
+And then. Have investigative profile backup can replace profile reset yet.
+
+350
+00:46:24,741 --> 00:46:27,861
+No I have not. Although we did file a bug about that.
+
+351
+00:46:29,421 --> 00:46:35,511
+Uh, so maybe in the future we will look at it. Um.
+
+352
+00:46:43,061 --> 00:46:46,661
+We don't eat the manifests at all. Accept it. And here.
+
+353
+00:46:47,921 --> 00:46:59,191
+Um. Uh, use the, uh.
+
+354
+00:47:08,001 --> 00:47:12,370
+It is a create a new backup service. I think it does.
+
+355
+00:47:12,371 --> 00:47:19,931
+Yeah. Okay. So we need to clear. The, uh, last, uh, clear.
+
+356
+00:47:19,931 --> 00:47:32,531
+Any last backup file names and, uh, timestamps that might have might be lingering from prior tests.
+
+357
+00:47:33,221 --> 00:47:37,391
+So services, perhaps clear user preference.
+
+358
+00:47:37,991 --> 00:47:41,621
+Um, we're going to copy the two definitions up here.
+
+359
+00:47:44,981 --> 00:47:49,861
+Don't need this file anymore. Close.
+
+360
+00:47:51,331 --> 00:47:55,291
+Let me close this file. The whole thing is broken.
+
+361
+00:47:55,891 --> 00:48:00,371
+VS code is broken is no longer responding. Oh, God.
+
+362
+00:48:00,391 --> 00:48:03,811
+Come on. VS code. Here we go.
+
+363
+00:48:04,681 --> 00:48:07,711
+Um. I'm gonna put these.
+
+364
+00:48:08,941 --> 00:48:24,671
+Don't save. I'll put these up here. Here and services.
+
+365
+00:48:24,671 --> 00:48:29,381
+Prefs. Clear. User pref. File name.
+
+366
+00:48:33,551 --> 00:48:42,711
+Okay. Now we will ensure, uh, assert.
+
+367
+00:48:42,721 --> 00:48:50,911
+Okay. Oh, and I'm going to want to do this in here, actually.
+
+368
+00:48:55,371 --> 00:49:03,511
+Async. That's function.
+
+369
+00:49:03,511 --> 00:49:07,621
+It just gets handed the backup helper.
+
+370
+00:49:09,721 --> 00:49:16,501
+I'm going to make sure it also gets past the. Backup service.
+
+371
+00:49:26,841 --> 00:49:42,541
+Um. In a first.
+
+372
+00:49:44,291 --> 00:49:54,421
+Say yes. Okay.
+
+373
+00:49:59,071 --> 00:50:04,141
+Don't use the manifest this time. Um, we'll make sure that.
+
+374
+00:50:04,381 --> 00:50:08,301
+Assert. Okay. Best, uh, state.
+
+375
+00:50:08,311 --> 00:50:15,031
+Uh, last backup date. Should have a last backup date recorded.
+
+376
+00:50:19,031 --> 00:50:23,201
+Sir. Okay. State last backup file name.
+
+377
+00:50:24,161 --> 00:50:28,211
+Should have a last backup file name recorded.
+
+378
+00:50:31,321 --> 00:50:41,901
+Those are the right ones, right? Just pasting in general, like pasting into this, uh, find input.
+
+379
+00:50:45,271 --> 00:50:50,641
+Caspian matrix is wondering if profile backup can remember favicon and open tabs position.
+
+380
+00:50:51,421 --> 00:51:03,411
+Uh, yes, yes it can. And then we should make sure that the prefs exists.
+
+381
+00:51:03,441 --> 00:51:11,301
+Uh, has. User preference as.
+
+382
+00:51:15,381 --> 00:51:26,751
+This branch. Has pref has user value.
+
+383
+00:51:26,781 --> 00:51:31,991
+That's what it is. Cert okay. Uh services prefs.
+
+384
+00:51:32,001 --> 00:51:35,991
+Pref has user value. Um.
+
+385
+00:51:41,761 --> 00:51:47,401
+Um. Last back up.
+
+386
+00:51:49,051 --> 00:52:00,121
+Date was cached in preferences. What's going on here?
+
+387
+00:52:04,651 --> 00:52:13,621
+Here we go. And last backup file name.
+
+388
+00:52:17,761 --> 00:52:25,051
+Was cached in preferences. And then we need to make sure that the file that got created.
+
+389
+00:52:26,951 --> 00:52:30,711
+Exists. Uh, assert.
+
+390
+00:52:30,731 --> 00:52:36,401
+Okay, a way I utils exists. Um.
+
+391
+00:52:39,461 --> 00:52:48,351
+That's back up phone. Back up Dr. Path. Uh.
+
+392
+00:52:48,351 --> 00:52:53,211
+Let backup file path. Const backup file path.
+
+393
+00:52:55,851 --> 00:52:59,271
+Equals path. Utils are joined by start state.
+
+394
+00:52:59,501 --> 00:53:06,320
+Uh uh. Come on, come on.
+
+395
+00:53:06,321 --> 00:53:09,411
+Come, come. Stay.
+
+396
+00:53:10,701 --> 00:53:18,501
+Career path. Okay.
+
+397
+00:53:20,721 --> 00:53:25,011
+And we will assert that it exists. Backup file path.
+
+398
+00:53:26,001 --> 00:53:33,021
+The backup file was created. And is still on disk.
+
+399
+00:53:35,301 --> 00:53:40,731
+Then we will await vs that delete past backup.
+
+400
+00:53:43,071 --> 00:53:59,361
+And we will make sure that this file was deleted. Uh, not the back of file was deleted.
+
+401
+00:54:03,761 --> 00:54:20,781
+Uh, let's see what happens when we run this test. It likes it.
+
+402
+00:54:21,561 --> 00:54:25,161
+Very good. I'm liking it.
+
+403
+00:54:25,821 --> 00:54:30,681
+So now we need to make sure that all of these preferences were cleared.
+
+404
+00:54:40,911 --> 00:54:45,261
+Uh, boys. Okay. Not.
+
+405
+00:54:54,321 --> 00:54:59,961
+Should, uh, should have, uh, are equal.
+
+406
+00:55:02,241 --> 00:55:05,701
+Yes. Uh, but the backup should be. No.
+
+407
+00:55:05,721 --> 00:55:09,321
+Should have here the last backup date.
+
+408
+00:55:16,801 --> 00:55:21,690
+Should have cleared the last backup file.
+
+409
+00:55:21,691 --> 00:55:30,451
+Name such to the empty string. And then.
+
+410
+00:55:34,061 --> 00:55:38,470
+Not and not last back.
+
+411
+00:55:38,471 --> 00:55:41,951
+Backup date was cleared preferences.
+
+412
+00:55:45,491 --> 00:55:54,721
+And then the back file was deleted. All right. Good.
+
+413
+00:55:56,441 --> 00:56:01,901
+Now we're going to do that exact same thing again, but we're going to delete the file ourselves.
+
+414
+00:56:03,011 --> 00:56:24,521
+Um. Before we delete the this file, now delete the file ourselves before we call delete last backup so that it's missing from the disk.
+
+415
+00:56:25,061 --> 00:56:29,591
+Wait, I told remove last back path.
+
+416
+00:56:33,901 --> 00:56:37,981
+Um, and that should all just pass.
+
+417
+00:56:43,831 --> 00:56:48,031
+Now, what we might be able to do is duplicate some of this.
+
+418
+00:56:50,401 --> 00:56:54,631
+Test. Delete.
+
+419
+00:56:54,641 --> 00:56:59,681
+Last backup. File exists.
+
+420
+00:57:00,761 --> 00:57:06,191
+Test. Delete. Uh, backup file does not exist.
+
+421
+00:57:06,671 --> 00:57:12,671
+I'm going to create a new helper. Um, async function.
+
+422
+00:57:13,751 --> 00:57:19,691
+Delete last backup. Helper.
+
+423
+00:57:20,321 --> 00:57:23,950
+What? Uh. Test. Delete.
+
+424
+00:57:23,951 --> 00:57:30,731
+Last backup helper. And then ask.
+
+425
+00:57:30,881 --> 00:57:33,901
+Function. Um.
+
+426
+00:57:36,841 --> 00:57:42,261
+What'll I do? Should delete.
+
+427
+00:57:43,671 --> 00:57:51,761
+No. Um. Test function. And then we'll do all of this stuff.
+
+428
+00:58:01,241 --> 00:58:10,381
+Then we'll call it from here. Um, async?
+
+429
+00:58:12,661 --> 00:58:15,661
+Uh, or even better, I'll just do nothing.
+
+430
+00:58:21,591 --> 00:58:25,311
+If. Task function. Wait.
+
+431
+00:58:25,511 --> 00:58:37,641
+Task function. Yeah. And then here we will clear this for the most part.
+
+432
+00:58:44,211 --> 00:58:56,851
+Instead. This function will pass in the backup file path.
+
+433
+00:58:59,861 --> 00:59:10,411
+And will go like this. Async uh, class backup file.
+
+434
+00:59:14,321 --> 00:59:18,940
+Uh. Kuwait.
+
+435
+00:59:18,941 --> 00:59:29,171
+Remove. Run that.
+
+436
+00:59:34,121 --> 00:59:39,911
+No. Good. What happened? Promise. Chain failed. To back up.
+
+437
+00:59:42,181 --> 00:59:46,650
+Failed promise and failed reject. It's a handle.
+
+438
+00:59:46,651 --> 00:59:53,051
+It's already wrapped. It's already wrapped in. Test.
+
+439
+00:59:55,981 --> 01:00:00,191
+Drive. Hang on, hang on, hang on. Hang on.
+
+440
+01:00:04,001 --> 01:00:13,141
+In line 99. Line nine.
+
+441
+01:00:14,931 --> 01:00:21,921
+Here. And passing in a sandbox is by not restoring the sandbox.
+
+442
+01:00:24,201 --> 01:00:27,681
+I call this create a sandbox. Do that. Do all of that.
+
+443
+01:00:29,601 --> 01:00:39,471
+Restore. Oh wait, this passing in the sandbox and restore the sandbox.
+
+444
+01:00:45,851 --> 01:00:49,211
+Oh, you know what? Yeah. This is, uh.
+
+445
+01:00:49,301 --> 01:00:59,051
+I have to await this. That's why. Let's try that.
+
+446
+01:01:03,701 --> 01:01:07,001
+Perfect. Okay, now we just need to document our helper here.
+
+447
+01:01:08,351 --> 01:01:13,331
+Um, where did the other helper go?
+
+448
+01:01:15,041 --> 01:01:20,321
+At the top. I think I'm going to put our helper here.
+
+449
+01:01:23,421 --> 01:01:39,871
+At the top as well. And then I'll copy the format.
+
+450
+01:01:50,721 --> 01:01:56,931
+Utility function for testing. Delete. Last backup produces a backup.
+
+451
+01:01:57,261 --> 01:02:01,071
+Uh, of. Uses.
+
+452
+01:02:03,291 --> 01:02:10,971
+Test. Create. Backup. Helper. Uh, to create a backup file.
+
+453
+01:02:15,901 --> 01:02:26,211
+Uh, that's the second part. Clears any prior state for, uh, prior.
+
+454
+01:02:27,231 --> 01:02:31,911
+Um. Preexisting preference.
+
+455
+01:02:33,231 --> 01:02:37,941
+Uh, cached preference values for last backup.
+
+456
+01:02:39,561 --> 01:02:44,061
+Uh, date and file name. Create a backup file.
+
+457
+01:02:44,061 --> 01:02:53,811
+Ensures that the uh state has been updated to reflect the created backup.
+
+458
+01:02:58,001 --> 01:03:02,381
+And that, uh, back.
+
+459
+01:03:04,751 --> 01:03:13,601
+File name and, uh, time stamp date and file name are cached to preferences.
+
+460
+01:03:16,361 --> 01:03:26,711
+Runs an optional task function calls delete optional async task function calls.
+
+461
+01:03:26,711 --> 01:03:33,731
+Delete last backup from the backup service on the.
+
+462
+01:03:36,851 --> 01:03:39,941
+Backup service. Uh instance.
+
+463
+01:03:45,191 --> 01:03:52,421
+Paste pasting. What a mistake I should never paste. Uh, test create backup helper.
+
+464
+01:03:52,471 --> 01:03:54,451
+Backup service instance.
+
+465
+01:03:55,651 --> 01:04:21,991
+And then, uh, checks that the, uh, state, uh, backup service state for the last backup date and file name have been cleared, and that the, uh, cached.
+
+466
+01:04:24,391 --> 01:04:31,741
+Preference, uh, preferences, caches of those values have also been cleared.
+
+467
+01:04:36,591 --> 01:04:41,631
+Uh, it doesn't take a sandbox. Function's run once.
+
+468
+01:04:42,021 --> 01:04:48,841
+Um. Know.
+
+469
+01:04:50,941 --> 01:04:54,631
+An optional function that is run once.
+
+470
+01:04:55,561 --> 01:04:58,681
+Uh. Test. Create.
+
+471
+01:04:58,921 --> 01:05:06,621
+Backup. Helper. Uh, run.
+
+472
+01:05:06,771 --> 01:05:11,421
+How would this run after we've created a backup.
+
+473
+01:05:12,291 --> 01:05:17,031
+But before calling, delete.
+
+474
+01:05:17,571 --> 01:05:22,221
+Last backup. But just before.
+
+475
+01:05:29,011 --> 01:05:34,681
+Turns problems undefined. And it's its past, not the backup manifest.
+
+476
+01:05:35,221 --> 01:05:44,941
+It's past string. It is past, uh, the path to the created backup file.
+
+477
+01:05:49,021 --> 01:05:52,021
+And then I have to update the doc string here.
+
+478
+01:05:54,151 --> 01:05:58,141
+Uh, backup service backup. Manifest void.
+
+479
+01:06:01,771 --> 01:06:05,311
+All right. And does it one more run.
+
+480
+01:06:13,861 --> 01:06:17,281
+All right, let's post that for review.
+
+481
+01:06:27,111 --> 01:06:38,141
+Don't forget to clear. Preference caches when deleting the last backup.
+
+482
+01:06:38,351 --> 01:06:50,131
+Backup for reviewers. Okay, post it for review.
+
+483
+01:06:52,561 --> 01:06:57,681
+Um, I can probably. Yeah.
+
+484
+01:06:57,711 --> 01:07:02,391
+Mas fab. Submit tips. Single. I'll do that.
+
+485
+01:07:05,441 --> 01:07:11,741
+Then all market blocking this or is dependent on this.
+
+486
+01:07:14,991 --> 01:07:19,371
+Which is D215543.
+
+487
+01:07:35,011 --> 01:08:11,001
+D2 one six 201. Here we go.
+
+488
+01:08:18,141 --> 01:08:25,731
+All right. Uh, what are we going to do now?
+
+489
+01:08:26,451 --> 01:08:31,791
+Uh. It is. We posted that we did this, uh, done.
+
+490
+01:08:31,791 --> 01:08:36,801
+And we, uh, posted a patch. And here are the links to those things.
+
+491
+01:08:38,121 --> 01:08:42,261
+Um. Here.
+
+492
+01:08:50,481 --> 01:08:56,721
+With that done? Yeah. The backup component is in getting in pretty good shape.
+
+493
+01:08:57,111 --> 01:09:04,551
+Um, there's still, uh, some, uh, quite a bit of polish to apply, but, uh, I'm getting pretty happy with it.
+
+494
+01:09:06,471 --> 01:09:12,721
+Um. Oh. Uh, there's a performance bug that I might want to look at.
+
+495
+01:09:13,921 --> 01:09:20,011
+We can talk about it briefly. We can. How about we start thinking about a performance issue?
+
+496
+01:09:20,401 --> 01:09:29,751
+Um. Related to backup. And then, uh, I'm just realizing I'm looking at this now as this.
+
+497
+01:09:31,751 --> 01:09:36,301
+Should this be? Center aligned.
+
+498
+01:09:38,741 --> 01:09:45,041
+Pest control. Line.
+
+499
+01:09:48,541 --> 01:09:52,501
+And suggest. Online.
+
+500
+01:09:54,761 --> 01:09:59,651
+Justify content center. How do I vertical line these things?
+
+501
+01:10:00,191 --> 01:10:04,931
+CSS grid. Vertical align center.
+
+502
+01:10:06,941 --> 01:10:17,201
+Centering in CSS grid. Grid I'm just looking for the property justify items.
+
+503
+01:10:17,201 --> 01:10:23,151
+Maybe that's what it is. Justify items. No.
+
+504
+01:10:23,781 --> 01:10:27,441
+Not quite. That's a horizontal centering.
+
+505
+01:10:27,861 --> 01:10:34,171
+A line items. That's more like it.
+
+506
+01:10:34,201 --> 01:10:37,951
+That's what I think. We want clean items. Yeah.
+
+507
+01:10:37,981 --> 01:10:41,341
+Okay, so I'm going to update one of my other patches here.
+
+508
+01:10:42,211 --> 01:10:47,431
+This one. Um, to fix that.
+
+509
+01:10:50,011 --> 01:10:54,481
+Um. Back up. Settings.
+
+510
+01:10:54,961 --> 01:10:59,321
+Tasks. Align items.
+
+511
+01:10:59,361 --> 01:11:03,971
+Center. Let's take a quick peek.
+
+512
+01:11:19,971 --> 01:11:26,121
+Mhm. Mhm. Mhm. Mhm mhm. That looks right.
+
+513
+01:11:28,581 --> 01:11:35,241
+Okay. So I'll amend next and then up to update both of those patches.
+
+514
+01:11:37,281 --> 01:11:43,081
+And let's talk about a performance issue. Um.
+
+515
+01:11:47,571 --> 01:11:55,851
+But let me post these up for review first. Um. Submit that to that.
+
+516
+01:11:58,341 --> 01:12:01,551
+Um. Fixed an alignment issue.
+
+517
+01:12:04,191 --> 01:12:07,891
+Uh, introduced by the switch to CCS.
+
+518
+01:12:15,121 --> 01:12:17,401
+Okay, so, uh, what is the issue?
+
+519
+01:12:17,431 --> 01:12:29,731
+Well, one of the things that we do, um, whenever we create a backup, is we copy all the data stores like a bunch of data stores, places,
+
+520
+01:12:29,881 --> 01:12:42,481
+fav icons, logins, payment methods, certificates, cookies, sessions, all sorts of data stores, uh, add ons, the add ons, database.
+
+521
+01:12:42,991 --> 01:12:48,301
+And these things get, um, copied at runtime, safely copied.
+
+522
+01:12:48,871 --> 01:13:02,881
+And then we compress them. We compress them using something called NSI zip writer, which is basically, um, uh, we have re did we re-implement deflate?
+
+523
+01:13:03,241 --> 01:13:10,201
+I think we it's basically an implementation of zip. Um, and we zip up the contents.
+
+524
+01:13:11,271 --> 01:13:20,151
+Of everything that was copied, and then after compressed, we encrypt and embed inside of the single file archive.
+
+525
+01:13:22,401 --> 01:13:31,161
+The compression has a problem, which is that I do not realize this whenever we were designing this, but that, you know, it's zip.
+
+526
+01:13:32,451 --> 01:13:44,241
+All of the IO for a zip rider happens off of the main thread, but the actual deflate compression algorithm occurs on the main thread.
+
+527
+01:13:44,901 --> 01:13:54,501
+That's bad, because what that means is if you have a really large profile directory and like the stuff that you've copied is is large,
+
+528
+01:13:54,681 --> 01:13:59,060
+then when we create a backup in the background. Now to be clear, when we do this,
+
+529
+01:13:59,061 --> 01:14:05,841
+normally speaking you should be you're probably in a state where you're not like using the computer like we wait for idle.
+
+530
+01:14:07,201 --> 01:14:11,221
+Um, but idle doesn't mean you're not using your computer. Maybe you're watching a video.
+
+531
+01:14:11,251 --> 01:14:19,381
+Maybe you're, uh, in a zoom meeting and, uh, you know, maybe there's some kind of animation occurring despite the fact that you're idle.
+
+532
+01:14:19,681 --> 01:14:23,820
+We don't want to jank that. Um, we don't want to drop frames.
+
+533
+01:14:23,821 --> 01:14:27,511
+So doing that compression on the main thread is bad.
+
+534
+01:14:27,541 --> 01:14:37,401
+We don't want to do that. Uh, so I was talking to Dave Townsend Mossop, who, uh, is very familiar with the zip rider stuff.
+
+535
+01:14:37,411 --> 01:14:41,460
+I think he actually owns it, and he may have even written the original implementation.
+
+536
+01:14:41,461 --> 01:14:44,821
+I don't know, but he I'd say at this point effectively owns it.
+
+537
+01:14:46,141 --> 01:14:52,951
+And yeah, he's like the background cue that's part of zip writer was really about avoiding disk IO.
+
+538
+01:14:53,281 --> 01:15:01,441
+Uh, it is assumed that the cost of compression would be small and that the deflation actually happens here on the main thread.
+
+539
+01:15:02,131 --> 01:15:05,101
+One can imagine instead pushing the data to a background thread to do the work, though,
+
+540
+01:15:05,101 --> 01:15:09,751
+since it may get called again while this is happening, I figure queuing the data and other fun multithreaded things.
+
+541
+01:15:10,651 --> 01:15:18,961
+Um, and then we went back and forth and uh, on some ideas, and he had an interesting idea that I think we might want to talk about.
+
+542
+01:15:19,591 --> 01:15:23,731
+And, uh, in the remaining time of this stream, maybe we can kind of think it through.
+
+543
+01:15:24,831 --> 01:15:29,901
+His idea was, well, you know, a zip.
+
+544
+01:15:29,991 --> 01:15:31,661
+The zip writer does two things.
+
+545
+01:15:31,671 --> 01:15:41,331
+It deflates files, it deflates, uh, streams of bytes, resonances, the deflate algorithm on streams of bytes, and then it, uh,
+
+546
+01:15:41,661 --> 01:15:50,030
+writes them in a format that is like an, like an archive, you know, um, it's not just, you know, a zip file isn't just one file.
+
+547
+01:15:50,031 --> 01:15:54,801
+It's been compressed. It can be folders of files. It has its own file structure internally.
+
+548
+01:15:55,281 --> 01:15:59,811
+Um, and that all of that construction of that, uh, that file structure,
+
+549
+01:15:59,811 --> 01:16:04,251
+directory and folder structure and whatnot is something that's a writer kind of maintains internally.
+
+550
+01:16:04,251 --> 01:16:10,701
+And all of that occurs off of the main thread there is we have the ability to um.
+
+551
+01:16:13,921 --> 01:16:22,020
+There are like this is long after zip writer NC zip writer was part of the gecko code base against size operators.
+
+552
+01:16:22,021 --> 01:16:31,381
+Quite old. Um, since then, web APIs have been introduced that allow us to compress streams of bytes off of the main thread.
+
+553
+01:16:31,741 --> 01:16:39,571
+These are called compression streams. Um, they are newly available and as of Firefox 113.
+
+554
+01:16:40,201 --> 01:16:46,501
+And so what happens is you can like pipe a stream of bytes through a compression stream.
+
+555
+01:16:46,501 --> 01:16:51,001
+With some algorithm you can use gzip or deflate or deflate rar.
+
+556
+01:16:53,311 --> 01:17:03,851
+And then uh. Once you've done that, the the other end of that, what comes out the other side are um, the compressed bytes.
+
+557
+01:17:05,321 --> 01:17:14,681
+And my thinking is, well, what if we modify zip writer so that it can accept a preexisting compressed
+
+558
+01:17:14,681 --> 01:17:19,601
+file so that it knows that something else has already done the compression?
+
+559
+01:17:19,811 --> 01:17:22,921
+It's already done the deflation. Um.
+
+560
+01:17:24,081 --> 01:17:29,391
+And then we'd just be handing it to the zip rider, saying, now put this in the archive.
+
+561
+01:17:29,781 --> 01:17:39,110
+It's already compressed. You don't have to deflate it. And once that's created, then it's a valid zip file, like you could unzip it.
+
+562
+01:17:39,111 --> 01:17:43,491
+If you had a copy of the zip file, you could unzip it and it would still be like a valid zip file.
+
+563
+01:17:43,791 --> 01:17:50,871
+But we have we will have moved the responsibility of running deflate to something outside of zip greater.
+
+564
+01:17:51,861 --> 01:17:55,151
+And what's nice about this is that it solves a bunch of problems.
+
+565
+01:17:55,161 --> 01:18:03,231
+First of all, it allows us to practically backport these changes to 115, because that is something that we are hoping to eventually do.
+
+566
+01:18:03,261 --> 01:18:06,170
+I mean, the jury's still out on whether or not we're going to be able to do that,
+
+567
+01:18:06,171 --> 01:18:11,511
+but we've been designing this backup solution with back porting to 115 in mind,
+
+568
+01:18:11,511 --> 01:18:16,550
+because a primary motivation behind all of this backup stuff is to make it easier
+
+569
+01:18:16,551 --> 01:18:21,321
+for people to move off of old versions of windows to newer versions of windows.
+
+570
+01:18:21,531 --> 01:18:25,011
+And keep using Firefox is to just make it easy to like here.
+
+571
+01:18:25,011 --> 01:18:33,531
+Export your data, copy it over to another machine, um, and then download Firefox and it re-import your data and keep, keep going.
+
+572
+01:18:33,741 --> 01:18:38,071
+Get on with your life. Um. So.
+
+573
+01:18:39,241 --> 01:18:46,320
+This changing zip writer is like, and making it multithreaded is very dangerous.
+
+574
+01:18:46,321 --> 01:18:49,411
+Like back porting something like that 115 is not.
+
+575
+01:18:49,501 --> 01:18:53,401
+That's not the sort of thing you'd backport is like, let's make zip writer multi-threaded.
+
+576
+01:18:54,121 --> 01:19:03,901
+Now, um, adding a simple method that skips deflation and presumes that the the bytes that you're handing it have already been deflated.
+
+577
+01:19:04,111 --> 01:19:12,111
+That is, um, I think, a lot simpler. And that is a much more practical and safer thing to backport to 115.
+
+578
+01:19:12,261 --> 01:19:18,531
+And compression streams already exist since 113, so we know they're already there, presuming they work.
+
+579
+01:19:19,641 --> 01:19:24,861
+This solution allows us like it gives us are off main thread compression deflation.
+
+580
+01:19:25,551 --> 01:19:34,341
+We don't have to change from using zip writer to something more exotic, and it should backport properly to 115 if and when we get there.
+
+581
+01:19:34,491 --> 01:19:46,821
+So it takes a lot of nice boxes. Um, it is sort of this, uh, it is a little gross that you're, you're, um, adding this new method to zip writer.
+
+582
+01:19:46,941 --> 01:19:57,981
+But the, the idea is like down the line, maybe we could make zip writer completely off main thread, and then we won't need to do this anymore.
+
+583
+01:19:58,371 --> 01:20:01,551
+Uh, that that this doesn't prevent us from doing that in the future.
+
+584
+01:20:01,551 --> 01:20:05,571
+This is like a nice solution for now that also backports nicely.
+
+585
+01:20:05,871 --> 01:20:17,931
+So that's why I'm thinking of doing, uh, it this way. Uh, so let's I'm going to start by saying, um, I really like this idea.
+
+586
+01:20:19,971 --> 01:20:35,631
+Um, by the way, I'm going to try to prototype this to see, uh, how difficult it would be to, um, adapt our existing.
+
+587
+01:20:36,471 --> 01:20:41,031
+Adapt. Difficult it would be to implement, let's say.
+
+588
+01:20:48,391 --> 01:20:54,270
+So his just so we can, uh, read it together. Let's let's say, uh, neither of these options sounds compatible with uplifting.
+
+589
+01:20:54,271 --> 01:20:57,241
+115 in the zip crate as an async anyway, so you'd have to figure out threading two.
+
+590
+01:20:57,271 --> 01:21:00,331
+There's another option that I think would work add a new method to zip, right?
+
+591
+01:21:00,331 --> 01:21:03,990
+Or something like add compress file. It should behave like add entry file with compression.
+
+592
+01:21:03,991 --> 01:21:09,691
+None is passed, but set the zip entry headers method field to zip method deflate.
+
+593
+01:21:10,021 --> 01:21:16,021
+Then for the files, you give it parser data through a compression stream first using Deflate raw compression.
+
+594
+01:21:16,351 --> 01:21:18,121
+Essentially do the compression for each file yourself.
+
+595
+01:21:18,301 --> 01:21:23,761
+Then have a zip writer just store the data, but market is compressed so it is handled correctly when extracting.
+
+596
+01:21:24,241 --> 01:21:27,481
+Sort of similar to your first suggestion, but you end up with a normal zip file.
+
+597
+01:21:28,891 --> 01:21:32,021
+I really like that. Um.
+
+598
+01:21:32,591 --> 01:21:37,371
+So how difficult would that be? Let's look at zip rider, the implementation of zip rider.
+
+599
+01:21:37,451 --> 01:21:45,011
+So, uh, at entry file, zip writer is here.
+
+600
+01:21:50,781 --> 01:21:57,021
+So it'd be very similar to calling an entry file with a compression set to none.
+
+601
+01:21:57,621 --> 01:22:00,761
+So. Um.
+
+602
+01:22:12,051 --> 01:22:17,411
+Hmhm. Well, it's not exactly an injury file because it's going to be a stream.
+
+603
+01:22:17,651 --> 01:22:24,101
+That's the other thing, like a compression stream. What you get out the other side is a stream.
+
+604
+01:22:25,181 --> 01:22:32,201
+Um. A stream of bytes.
+
+605
+01:22:32,861 --> 01:22:37,361
+So somehow zip writer needs to accept a stream.
+
+606
+01:22:38,621 --> 01:22:43,091
+That's the first challenge. Do we have.
+
+607
+01:22:46,091 --> 01:22:51,161
+An entry stream that takes an old school thing called an ncai input stream.
+
+608
+01:22:54,161 --> 01:23:01,681
+Um. Adds data.
+
+609
+01:23:03,151 --> 01:23:07,051
+So it'd be like. Add compression stream.
+
+610
+01:23:09,121 --> 01:23:12,181
+Add entry. Compressed stream.
+
+611
+01:23:14,491 --> 01:23:22,491
+Right. And then you need something.
+
+612
+01:23:26,401 --> 01:23:32,550
+Can we just, like, use a compression stream within, uh, whereby the, um, XP come idle?
+
+613
+01:23:32,551 --> 01:23:36,421
+Would it just go over, uh, compression stream? Whoops.
+
+614
+01:23:36,421 --> 01:23:39,841
+What sort of stops? Compression stream?
+
+615
+01:23:44,101 --> 01:23:47,191
+Is there any preexisting exp. Uh, compression?
+
+616
+01:23:47,581 --> 01:23:54,511
+Uh, that's just the web IDL. Um, the for platform tests, a compression stream.
+
+617
+01:23:58,741 --> 01:24:01,861
+It's a generic. It's just another transformed stream.
+
+618
+01:24:05,841 --> 01:24:13,221
+It's just another kind of generic transform stream which has a readable stream and a writeable stream.
+
+619
+01:24:20,401 --> 01:24:31,441
+So can I pass a readable, stream readable stream to something with XRP readable stream typedef?
+
+620
+01:24:33,061 --> 01:24:36,271
+These are again sorry, web platform tests. No. Um.
+
+621
+01:24:39,381 --> 01:24:43,221
+Readable stream to.
+
+622
+01:24:46,021 --> 01:24:51,171
+And as input. Input stream.
+
+623
+01:24:58,991 --> 01:25:12,921
+Is there maybe a. Utility that would allow us to get input stream from it.
+
+624
+01:25:15,831 --> 01:25:31,181
+Maybe get input stream. Interesting. Little stream party.
+
+625
+01:25:33,681 --> 01:25:39,321
+Stream readable stream. Maybe get input stream if unread.
+
+626
+01:25:54,661 --> 01:26:05,631
+Underlying source. Okay, that sounds plausible.
+
+627
+01:26:06,231 --> 01:26:11,331
+You can't pass a byte array to the zip thing because that is what a stream is, right?
+
+628
+01:26:12,171 --> 01:26:21,951
+Uh, not quite. Um, a byte array is like a fixed set of bytes that.
+
+629
+01:26:23,261 --> 01:26:36,411
+Um. You almost think of it as like a byte array is like an array, and a stream is sort of like a living pipeline of bytes that are coming through.
+
+630
+01:26:37,521 --> 01:26:42,321
+And that maybe sounds like a, uh, a meaningless distinction,
+
+631
+01:26:42,771 --> 01:26:54,351
+but it's helpful to think about the fact that sometimes these streams represent arrays of bytes that are hundreds of megabytes large.
+
+632
+01:26:54,951 --> 01:27:01,491
+So this is, um, this is why we would want a stream is like the files that we're, um, compressing here.
+
+633
+01:27:01,491 --> 01:27:05,721
+Some of them might be really, really large. We don't want to read the whole thing into memory at the same time.
+
+634
+01:27:06,021 --> 01:27:11,571
+So we stream the bytes in and compress them as we as bytes flow through the stream.
+
+635
+01:27:11,781 --> 01:27:19,221
+And the only memory overhead like you trades time for memory because you don't have to hold the whole thing in memory,
+
+636
+01:27:19,221 --> 01:27:26,331
+don't have to like read the whole file into memory, then compress it like with a copy, and then write that to disk and said you like.
+
+637
+01:27:27,081 --> 01:27:35,780
+You buffer some of the file, compress that, write that, compress the next chunk, write that you stream it that way.
+
+638
+01:27:35,781 --> 01:27:42,471
+And so the memory overhead and overhead ends up being your buffer, which can be significantly smaller than the thing that you're compressing.
+
+639
+01:27:43,191 --> 01:27:48,861
+Um, that's one of the principles of what we've been doing with backup is making sure that we don't ever have to read,
+
+640
+01:27:48,861 --> 01:27:52,221
+like, the entire archive into memory at the same time,
+
+641
+01:27:52,221 --> 01:28:03,201
+because be like hundreds of megabytes large, and we don't want to blow out, um, memory, especially if, like, um, you know, you there.
+
+642
+01:28:04,041 --> 01:28:13,071
+As soon as you allocate large blocks of memory, you start running into issues where you can out of memory, you can cause um's out of memory crashes.
+
+643
+01:28:13,071 --> 01:28:22,191
+So it's generally speaking, um, that happens more frequently if you're trying to allocate contiguous blocks of memory.
+
+644
+01:28:22,491 --> 01:28:29,690
+I don't know if we'd be doing that, but it's just not a good idea, performance wise, to allocate large blocks of memory if you can get away with it.
+
+645
+01:28:29,691 --> 01:28:33,861
+If you can make the trade for time, in this case, we definitely can.
+
+646
+01:28:34,491 --> 01:28:42,141
+So, um, what I'm seeing is I think we could probably pass a readable stream over XRP comm.
+
+647
+01:28:43,761 --> 01:28:50,150
+Uh, we've done passing web IDL constructs over XRP before.
+
+648
+01:28:50,151 --> 01:28:54,321
+In fact, we did it with the jump list stuff. If you look at, uh, jump list builder.
+
+649
+01:28:58,191 --> 01:29:06,651
+You can see that we, um. Well, yeah, it takes in a JZ val of task descriptions.
+
+650
+01:29:07,341 --> 01:29:10,791
+Um, but there's also you can.
+
+651
+01:29:13,621 --> 01:29:21,511
+Hmhm. Want this to be a JS file. Rather an array of JS files.
+
+652
+01:29:29,781 --> 01:29:36,171
+Task descriptions. When did we, like, uh, windows jump list.
+
+653
+01:29:37,791 --> 01:29:44,511
+Shortcut. Description. That was never part of the IDL.
+
+654
+01:29:44,541 --> 01:29:49,431
+Maybe during one of the first versions. Um.
+
+655
+01:29:53,241 --> 01:30:04,931
+Hmm. Okay, so I think we can do this, like, um, web idol.
+
+656
+01:30:06,881 --> 01:30:16,120
+Space, and then you can bring certain things in. So we might be able to say like web IDL, readable stream, um, which no one's ever done before,
+
+657
+01:30:16,121 --> 01:30:24,581
+but we could do it in zip writer for add compressed, stream compressed, maybe I'll call it add compressed.
+
+658
+01:30:24,581 --> 01:30:34,841
+Readable stream takes a zip entry, a mod time, the compression being used or not even, um.
+
+659
+01:30:37,181 --> 01:30:40,781
+The. Yeah, the compression that was used might be handy, actually.
+
+660
+01:30:41,561 --> 01:30:50,981
+And then, uh, the stream itself and then whether or not to queue it and then add entry stream.
+
+661
+01:30:59,121 --> 01:31:07,371
+There's a queue operation, you pass it, you get access to the other underlying input stream.
+
+662
+01:31:07,641 --> 01:31:13,191
+And you would do that? But it would already be compressed.
+
+663
+01:31:13,971 --> 01:31:22,341
+You'd say we need like a new zip queue item property to say like is already compressed or something.
+
+664
+01:31:23,601 --> 01:31:26,751
+Is compression stream. Is is yeah.
+
+665
+01:31:28,071 --> 01:31:33,141
+Is compression stream or maybe have a b m compression stream or something.
+
+666
+01:31:35,031 --> 01:31:39,201
+Um, and then over here initialize the header.
+
+667
+01:31:40,431 --> 01:31:43,431
+Write the header, get the zip data stream.
+
+668
+01:31:44,181 --> 01:31:48,501
+You would initialize the stream. You pass the stream with compression.
+
+669
+01:31:48,651 --> 01:31:54,051
+You'd say compression none, but you'd update the header.
+
+670
+01:31:56,451 --> 01:32:07,371
+Header. Right file header. A method.
+
+671
+01:32:14,441 --> 01:32:17,581
+Method. Separate data stream. Buffer position.
+
+672
+01:32:17,591 --> 01:32:21,221
+Write data stream. Write data.
+
+673
+01:32:24,591 --> 01:32:31,610
+Signs. Name, account. What is method and method right?
+
+674
+01:32:31,611 --> 01:32:36,801
+You would update method. For zip header.
+
+675
+01:32:37,431 --> 01:32:40,431
+So zip header gets initialized with these things.
+
+676
+01:32:43,261 --> 01:32:47,131
+And and method.
+
+677
+01:32:49,441 --> 01:32:55,871
+Equals. Compression method.
+
+678
+01:32:57,241 --> 01:33:06,291
+Write file header. Write method. It's reading the header.
+
+679
+01:33:06,621 --> 01:33:10,581
+How do you set? It's better.
+
+680
+01:33:11,121 --> 01:33:15,591
+It's probably in separator. Hmhm header.
+
+681
+01:33:15,831 --> 01:33:27,480
+There's just like a. Method method.
+
+682
+01:33:27,481 --> 01:33:33,211
+Method compression method. Check with their. Kind stored files.
+
+683
+01:33:37,831 --> 01:33:40,951
+And and tree file.
+
+684
+01:33:40,981 --> 01:33:51,720
+When you do a compression, you say m compression. Is that otherwise what you do with a compression a compression here at entry stream you
+
+685
+01:33:51,721 --> 01:34:03,871
+pass here or here you initialize the stream pass in compression created deflate converter.
+
+686
+01:34:08,051 --> 01:34:15,041
+And then you call set em header and method to sip method deflate.
+
+687
+01:34:16,721 --> 01:34:21,221
+Otherwise you just tell it. Store it. Got it.
+
+688
+01:34:26,371 --> 01:34:31,591
+Okay. I've been. I've been doing some thinking out loud here, but I'm starting to get a sense of what we would need to do.
+
+689
+01:34:31,951 --> 01:34:37,531
+Um, I think I'm going to pause. I'm going to end the stream. But maybe we can try something like this next week.
+
+690
+01:34:37,771 --> 01:34:42,071
+We'll see. Uh, I hope that was interesting. Let me know what you thought of the stream.
+
+691
+01:34:42,091 --> 01:34:47,481
+Um, yeah, there's a rate this episode link at the bottom of the, uh, of the agenda.
+
+692
+01:34:47,491 --> 01:34:51,361
+I'll just drop a link to that in the chat in case you want to fill that out.
+
+693
+01:34:51,781 --> 01:34:55,860
+Rate this episode link. Uh, I read everything that comes in.
+
+694
+01:34:55,861 --> 01:34:56,881
+That's a great opportunity.
+
+695
+01:34:56,881 --> 01:35:02,521
+If you're looking for a way to ask me questions or help shape the stream, let me know what you want to see more of, what you want to see less of.
+
+696
+01:35:02,971 --> 01:35:06,450
+Uh, I read everything that comes in, so please send me some stuff I want to.
+
+697
+01:35:06,451 --> 01:35:09,521
+I want to read what you got to say. And with that, we'll call it there.
+
+698
+01:35:09,541 --> 01:35:13,141
+Thanks, everybody, for watching episode 372 of the Joy of coding.
+
+699
+01:35:13,141 --> 01:35:16,321
+I hope that was interesting. And we will. Oh, we'll see you next week.
+
+700
+01:35:16,351 --> 01:35:21,061
+You will see me next week. There will be no stream the week after, but there will be a stream next week hopefully.
+
+701
+01:35:21,301 --> 01:35:25,081
+So I will hopefully see you then. Take care of it. Take care everyone.
+
+702
+01:35:25,081 --> 01:35:28,351
+Bye bye. The joy.
+
+703
+01:35:29,111 --> 01:35:31,421
+Oh, they see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,3201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding (mconley livehacks on Firefox) - Episode 5</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding (mconley livehacks on Firefox) - Episode 5</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=079943e6-67b5-4327-95f2-ac1600012f37</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=079943e6-67b5-4327-95f2-ac1600012f37">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:13,440 --> 00:00:19,190
+Hello, hello, everybody. Hopefully you can see and hear me.
+
+2
+00:00:19,190 --> 00:00:22,950
+I'm using a new Web cam today, so lots of new stuff.
+
+3
+00:00:22,950 --> 00:00:26,670
+I'm using OBSS stream. I'm using a new Web cam. Lots of lots of new equipment.
+
+4
+00:00:26,670 --> 00:00:31,500
+I've got a new monitor here. Everything's new and great.
+
+5
+00:00:31,500 --> 00:00:35,940
+So today is gonna be a little bit different over the past couple of weeks.
+
+6
+00:00:35,940 --> 00:00:40,660
+I've been doing a lot of like working on Linux printing. If have you been watching the previous streams?
+
+7
+00:00:40,660 --> 00:00:44,480
+I was like deep within the printing engine of Geko.
+
+8
+00:00:44,480 --> 00:00:48,300
+And that's not really what I'm going to be doing today.
+
+9
+00:00:48,300 --> 00:00:52,920
+I'm gonna be doing a lot of code review today because my review queue is humongous.
+
+10
+00:00:52,920 --> 00:00:59,670
+I've got a lot of code to review and I figured it might be interesting for you to see what that's like.
+
+11
+00:00:59,670 --> 00:01:03,990
+So let me just cut right to the chase and here's my screen.
+
+12
+00:01:03,990 --> 00:01:05,760
+So here's today's agenda.
+
+13
+00:01:05,760 --> 00:01:12,090
+If you scroll to the bottom of this of the video page that you're on, assuming you're not viewing it embedded on some other page,
+
+14
+00:01:12,090 --> 00:01:18,900
+but if you're actually viewing it on the air, Mazola at the amosite, the air Mazola, you are l at the very bottom of the page.
+
+15
+00:01:18,900 --> 00:01:23,040
+Those are your L that links to this document. You don't need to go there.
+
+16
+00:01:23,040 --> 00:01:25,200
+I'm kind of just going to describe what's going on.
+
+17
+00:01:25,200 --> 00:01:34,020
+So the first thing I always start with this just a reminder that while I kind of have a plan here, no plan survives breakfast there.
+
+18
+00:01:34,020 --> 00:01:39,760
+Who knows what will go wrong. Perhaps I'll get an I.R.S. message. Some something I wrote last week is totally busted.
+
+19
+00:01:39,760 --> 00:01:46,380
+I need to get to it ASAP. So this whole plan might just go go by the wayside.
+
+20
+00:01:46,380 --> 00:01:51,660
+We just kind of have to deal with it as we go. So just a reminder there.
+
+21
+00:01:51,660 --> 00:01:56,850
+First thing I'm gonna let you know is that the Linux printing stuff that we've been doing the last couple of weeks landed.
+
+22
+00:01:56,850 --> 00:02:06,030
+So if you're interested in using nightly with ETN s and you are on Linux and you want to print things now, you can do that with the latest builds and.
+
+23
+00:02:06,030 --> 00:02:12,930
+And it's using the code that we've been writing for the past couple of weeks. So that's pretty exciting. So let's talk about code review.
+
+24
+00:02:12,930 --> 00:02:18,660
+So I have a ton of bugs to review. Patches from a number of people.
+
+25
+00:02:18,660 --> 00:02:23,370
+And I'm going to I did a little bit of code review last week.
+
+26
+00:02:23,370 --> 00:02:28,110
+This week, it's mostly going to be code review and stuff's going to get by me.
+
+27
+00:02:28,110 --> 00:02:33,810
+I'm not a perfect code reviewer. I don't even know who a perfect code reviewer would be.
+
+28
+00:02:33,810 --> 00:02:37,560
+I'm pretty sure stuff gets by everybody. But I just want to flat out say that, like,
+
+29
+00:02:37,560 --> 00:02:44,750
+it's not like this is some exercise where I know what all of the defects are in these patches and I'm going to pretend to find them.
+
+30
+00:02:44,750 --> 00:02:49,290
+I'm. These are real patches. I don't know if there are any problems with them.
+
+31
+00:02:49,290 --> 00:02:55,440
+I'm going to show you exactly what I do whenever I'm reviewing real patches from real people for real code.
+
+32
+00:02:55,440 --> 00:03:00,470
+Also, code review is not a silver bullet. But it's better than nothing.
+
+33
+00:03:00,470 --> 00:03:04,740
+It's better than no bullets. So stuff might get by me.
+
+34
+00:03:04,740 --> 00:03:08,880
+There might be defects in the code that I miss, and that's life. And we have to learn to move on.
+
+35
+00:03:08,880 --> 00:03:14,280
+So the goal, just so we're all aware, is to make the software strictly better.
+
+36
+00:03:14,280 --> 00:03:19,440
+Learning side effects are nice. If if I learn something about what's going on in the code.
+
+37
+00:03:19,440 --> 00:03:22,650
+If the review we learn something about what's going on, the code, that's also nice.
+
+38
+00:03:22,650 --> 00:03:28,200
+But remember that the goal is to make the code, the software better. And that's what we're gonna aim to do.
+
+39
+00:03:28,200 --> 00:03:35,520
+So these are things I don't want to belabor the point or like go talk about like my methodology.
+
+40
+00:03:35,520 --> 00:03:38,550
+I want to actually do it, but I want to talk about it quickly.
+
+41
+00:03:38,550 --> 00:03:43,380
+Some things that I'll be doing as I review the code and then we'll go and and actually review it.
+
+42
+00:03:43,380 --> 00:03:49,950
+So the first thing I do is I make sure that the code does what it says it will do and I'm going to like run it.
+
+43
+00:03:49,950 --> 00:03:55,560
+Like, I'll actually apply the patches. I'll make sure try and make sure that it fixes what it says it will fix.
+
+44
+00:03:55,560 --> 00:04:01,890
+We're going to inspect it and test it sort of one than the other.
+
+45
+00:04:01,890 --> 00:04:04,620
+I like to think about the stuff I can't see in a code review.
+
+46
+00:04:04,620 --> 00:04:11,010
+So a def will show you ads, removals and changes, but it won't show you stuff outside of the diff.
+
+47
+00:04:11,010 --> 00:04:13,800
+That might be impacted by the stuff that's changed.
+
+48
+00:04:13,800 --> 00:04:19,860
+And so that's kind of like the dog that didn't bark in the hand of the Baskervilles story from Sherlock Holmes is you have to
+
+49
+00:04:19,860 --> 00:04:25,230
+think about like what are the things that are impacted that are not included in this diff that I kind of have to think about.
+
+50
+00:04:25,230 --> 00:04:32,130
+So I like to think about that. Is the code using any old stuff for which there are better alternatives?
+
+51
+00:04:32,130 --> 00:04:38,790
+And is there a simpler way? Like I like to go with the simplest solution is usually the best, in my opinion.
+
+52
+00:04:38,790 --> 00:04:43,440
+Sometimes more complicated solutions are necessary. But usually if that's the case,
+
+53
+00:04:43,440 --> 00:04:51,240
+then you want to document you like you want to include in line documentation to explain why things need to be complicated.
+
+54
+00:04:51,240 --> 00:05:00,540
+And last but not least, know your limits. My effectiveness as a reviewer decreases the more I review over time that's been shown.
+
+55
+00:05:00,540 --> 00:05:01,830
+There's a study that shows that.
+
+56
+00:05:01,830 --> 00:05:08,700
+So if by the end, like this is probably all the code review I'm going to do today and then I'll go back to writing some code,
+
+57
+00:05:08,700 --> 00:05:12,840
+because once I go past like an hour, an hour and a half of.
+
+58
+00:05:12,840 --> 00:05:18,240
+Of reviewing the my ability to find defects drops dramatically.
+
+59
+00:05:18,240 --> 00:05:21,990
+I don't think we'll get time to. To work on a bug today. But who knows?
+
+60
+00:05:21,990 --> 00:05:26,070
+Maybe all of these will be super, super easy and we'll get into writing code again.
+
+61
+00:05:26,070 --> 00:05:32,790
+But we'll see. So here's the rogue's gallery. The bugs that I am going to have, patches that I'm going to review.
+
+62
+00:05:32,790 --> 00:05:38,070
+Let's take a look at this first one. I think I already have it open in my browser.
+
+63
+00:05:38,070 --> 00:05:41,370
+That's one one four oh eight nine eight. Right. Yeah.
+
+64
+00:05:41,370 --> 00:05:54,870
+OK, so a lot of these are from this contributor named Ian Moody, who is doing a great job cleaning up some code that's using unsafe compounds.
+
+65
+00:05:54,870 --> 00:06:02,160
+Now, if you're not sure what I mean by that, you might want to go to my blog where I talk about unsafe compounds.
+
+66
+00:06:02,160 --> 00:06:06,510
+I also talked a little bit about it last week when I reviewed another patch from this fellow.
+
+67
+00:06:06,510 --> 00:06:15,780
+But basically, we're making it so that the parent process doesn't use synchronous messages to talk to content that's
+
+68
+00:06:15,780 --> 00:06:23,750
+running in a different process because that's bad for performance and it's potentially bad for for security.
+
+69
+00:06:23,750 --> 00:06:32,280
+I'm not entirely sure I understand the security implications, but the this is it's way better for performance if we use messages instead.
+
+70
+00:06:32,280 --> 00:06:37,980
+Asynchronous message passing from the parent to the child. And I believe that's what moms.
+
+71
+00:06:37,980 --> 00:06:45,960
+Ian sorry, Ian Moody is doing with this patch. So let's see if we can understand what the problem is that Ian is trying to solve.
+
+72
+00:06:45,960 --> 00:06:53,080
+Then we'll see if he's solved it. And then we will we'll make a judgment on the patch.
+
+73
+00:06:53,080 --> 00:06:56,260
+And rare is a judgment on the patch, not a judgment on the writer.
+
+74
+00:06:56,260 --> 00:07:01,810
+I mean, was that they say in basketball like hate, hate the game, not the player or something.
+
+75
+00:07:01,810 --> 00:07:07,960
+So critique, critique the code. Don't critique the coder.
+
+76
+00:07:07,960 --> 00:07:14,250
+So. It looks like. So what even is this switch page direction?
+
+77
+00:07:14,250 --> 00:07:20,370
+I'm not even familiar with that. That item is talking about views, switch page direction.
+
+78
+00:07:20,370 --> 00:07:22,770
+I don't know where that would be.
+
+79
+00:07:22,770 --> 00:07:32,350
+So the first thing I want to do is make sure I can reproduce the problem so that I can test to see whether or not this actually solves it.
+
+80
+00:07:32,350 --> 00:07:36,280
+Let's see here, so let's switch page direction.
+
+81
+00:07:36,280 --> 00:07:39,940
+I'm going to find out maybe this is only available on certain builds,
+
+82
+00:07:39,940 --> 00:07:46,000
+maybe like build's in certain locales where it's necessary to to change the page direction.
+
+83
+00:07:46,000 --> 00:07:52,140
+But let's find it so I can use the Exaro to search for the string. See if I can find where bi directional.
+
+84
+00:07:52,140 --> 00:07:58,950
+So. OK. This is the key for the string and I will search.
+
+85
+00:07:58,950 --> 00:08:08,210
+Four, who uses that? That's in two places, one in the context menu and one in the menu bar here because I'm using the menu bar to trigger it.
+
+86
+00:08:08,210 --> 00:08:14,630
+Let's take a look at the menu bar one. And so the idea for this element, so it's hidden by by default.
+
+87
+00:08:14,630 --> 00:08:18,290
+OK, that makes sense. So I'm not crazy. It's in here.
+
+88
+00:08:18,290 --> 00:08:24,590
+It's just hidden. So I have to find out what is the thing that makes it show so that I can get it to show.
+
+89
+00:08:24,590 --> 00:08:31,130
+So let's find out what makes it show. This looks like the code that is getting rid of that hidden equals.
+
+90
+00:08:31,130 --> 00:08:37,930
+True is bidi enabled is what?
+
+91
+00:08:37,930 --> 00:08:41,810
+What does the job and that's done on browser startup, where and where are we?
+
+92
+00:08:41,810 --> 00:08:46,860
+Or in delayed startup? And what informs is bidi enabled.
+
+93
+00:08:46,860 --> 00:08:51,050
+Is Bidi enabled? I don't.
+
+94
+00:08:51,050 --> 00:08:54,550
+Where does that even come from? So we'll search for this function.
+
+95
+00:08:54,550 --> 00:09:03,320
+It's in the utility overlay. Looks like there is a press.
+
+96
+00:09:03,320 --> 00:09:17,780
+That sets it. So I can like it does look like it looks through to see what local user is in.
+
+97
+00:09:17,780 --> 00:09:25,270
+And returns true if. The user is and look how that starts with one of these.
+
+98
+00:09:25,270 --> 00:09:30,110
+Prefixes. Yeah, substring.
+
+99
+00:09:30,110 --> 00:09:36,050
+OK, so I can override all this. We search for this browser bidi browser UI thing.
+
+100
+00:09:36,050 --> 00:09:38,480
+And if that's true, we just return.
+
+101
+00:09:38,480 --> 00:09:46,490
+We would just return to early so I can use that instead of having to, like, fool the browser into thinking I'm in a different locale.
+
+102
+00:09:46,490 --> 00:09:56,460
+Excuse me. So I have a build of Firefox here that I will run with E tennis and I'm going to flip this pref.
+
+103
+00:09:56,460 --> 00:10:00,270
+Bidi browser UI will flip.
+
+104
+00:10:00,270 --> 00:10:05,730
+Oh, if you heard some clicks just now, I have this add on installed that clicks look kind of like a Geiger counter.
+
+105
+00:10:05,730 --> 00:10:14,580
+Every time we use an unsafe kapow. So actually with Ian's patch, Malaysian's patch, it's possible we'll hear fewer clicks.
+
+106
+00:10:14,580 --> 00:10:22,710
+That's great. So I will set that to true and then I will restart the browser.
+
+107
+00:10:22,710 --> 00:10:28,870
+OK, so now. Yeah, I've got the switch page direction, menu item available.
+
+108
+00:10:28,870 --> 00:10:33,010
+Great. So he says that it doesn't work.
+
+109
+00:10:33,010 --> 00:10:39,590
+What's a great place to go to to test this? How about I go to watch people code dot com?
+
+110
+00:10:39,590 --> 00:10:44,900
+And if I switch page direction, nothing happens.
+
+111
+00:10:44,900 --> 00:10:48,920
+And that's probably what he's talking about. Yeah. This is the bug.
+
+112
+00:10:48,920 --> 00:10:53,330
+This is the bug. So this isn't actually an unsafe Kapow users. This is just flat out busted.
+
+113
+00:10:53,330 --> 00:10:58,320
+Code. So that's good.
+
+114
+00:10:58,320 --> 00:11:03,610
+And I'm being talked to.
+
+115
+00:11:03,610 --> 00:11:14,530
+Jim says I should post micropower clicks, patch some someplace if you're interested in like hearing clicks every time you are using an unsafe power.
+
+116
+00:11:14,530 --> 00:11:21,650
+I've actually posted the ad on Inside a Bug, this bug.
+
+117
+00:11:21,650 --> 00:11:28,410
+One one oh nine seven one three. I will pass that off to Jim.
+
+118
+00:11:28,410 --> 00:11:34,650
+And yeah, there's an add on in here that you can install to do it.
+
+119
+00:11:34,650 --> 00:11:39,010
+And the source code, there's a link to the source code in here if you want to mess around with it anyway.
+
+120
+00:11:39,010 --> 00:11:51,130
+So. His bug is more about actually fixing switching Paige direction than than just not using unsafe keypads.
+
+121
+00:11:51,130 --> 00:11:57,760
+So let's take an actual look at the patch now. Well, click on review and we'll see what he does.
+
+122
+00:11:57,760 --> 00:12:06,250
+So this is the command that fires whenever you click on the menu item and we're switching it from switch document direction.
+
+123
+00:12:06,250 --> 00:12:16,230
+So he's actually removing that function down here. And instead he is sending an async message down to the.
+
+124
+00:12:16,230 --> 00:12:27,100
+Down to the selected browser. And he's saying switch the document direction.
+
+125
+00:12:27,100 --> 00:12:33,000
+And. Interesting, like so.
+
+126
+00:12:33,000 --> 00:12:39,820
+So it we must already have some kind of message handler somewhere in the code that handles that.
+
+127
+00:12:39,820 --> 00:12:46,660
+Let's find it. I don't see it.
+
+128
+00:12:46,660 --> 00:12:50,650
+So who's going to respond to that?
+
+129
+00:12:50,650 --> 00:13:06,180
+That doesn't sound right. I don't think that's going to work. Maybe there's code that this attachment relies on that is not supplied or.
+
+130
+00:13:06,180 --> 00:13:16,640
+I think it depends on this other patch. He probably he probably said then the bug and I just I should have read the bug.
+
+131
+00:13:16,640 --> 00:13:20,630
+Relies on of course, I should just right the but it relies on this stuff. OK.
+
+132
+00:13:20,630 --> 00:13:28,830
+So let's see what this does. So let's just move.
+
+133
+00:13:28,830 --> 00:13:34,190
+Is the function. This is kind of a split up between two different patches.
+
+134
+00:13:34,190 --> 00:13:41,970
+This work. But it has moved the function from browser Dodgiest into content.
+
+135
+00:13:41,970 --> 00:13:51,040
+Yes, this will run in the content process with multi process Firefox and.
+
+136
+00:13:51,040 --> 00:13:58,480
+It looks right. Let me take a look at what's that's number eight.
+
+137
+00:13:58,480 --> 00:14:07,720
+I need to go back and see that the. I need to see the original patch we were looking at and compare these side by side.
+
+138
+00:14:07,720 --> 00:14:13,300
+So he's removed this old stuff in this patch and he's added new stuff in here.
+
+139
+00:14:13,300 --> 00:14:18,190
+So anyway, I kind of it's possible that I'm the one who told them to test to split this up.
+
+140
+00:14:18,190 --> 00:14:23,770
+I hope not. I hope it. And Liam down the garden path. It would have been nice to have this be a single patch.
+
+141
+00:14:23,770 --> 00:14:28,470
+That's probably my fault. Let's not worry about it.
+
+142
+00:14:28,470 --> 00:14:38,650
+But we are moving this from here over to here and let's make sure it does what it says it's supposed to do.
+
+143
+00:14:38,650 --> 00:14:52,340
+So I'm going to quickly do this sort of back and forth comparison. I can actually just probably tear this out and compare them side by side.
+
+144
+00:14:52,340 --> 00:14:58,260
+Can I click on. No, I don't want that.
+
+145
+00:14:58,260 --> 00:15:03,910
+I want that. I want this one. Yeah. Let's compare them side by side.
+
+146
+00:15:03,910 --> 00:15:11,020
+Oh, that's a tragedy. Come on, come on, come on, come on. Oh, splinter.
+
+147
+00:15:11,020 --> 00:15:19,820
+OK. Well, this will have to do. So that's what we're doing here.
+
+148
+00:15:19,820 --> 00:15:27,170
+We looked to see what the window document direction is, if it's left-to-right or it's nothing.
+
+149
+00:15:27,170 --> 00:15:34,610
+Then we set the dock in direction right to left. And that's the same thing that we were doing here before.
+
+150
+00:15:34,610 --> 00:15:38,920
+Yeah, this looks the same.
+
+151
+00:15:38,920 --> 00:15:50,550
+And if the window document was right to left, we said to left to right, and then we do the same thing for all the window frames.
+
+152
+00:15:50,550 --> 00:16:00,490
+Yeah, he switched over to let that's always a good idea. VAR it's the worst use let.
+
+153
+00:16:00,490 --> 00:16:09,310
+That looks right to me. So my one critique is that, well, no, I don't.
+
+154
+00:16:09,310 --> 00:16:13,870
+I don't know if I have a critique. This is normally we try and highlight like namespace.
+
+155
+00:16:13,870 --> 00:16:16,120
+We have the pseudo name spacing for these messages.
+
+156
+00:16:16,120 --> 00:16:25,260
+Like we say, if something has to do with the context menu that we do, like you, menu calling canvas call in to data your URL.
+
+157
+00:16:25,260 --> 00:16:35,440
+This isn't this is like at the top. So I'm wondering if maybe this belongs in side one of our pseudo name spaces.
+
+158
+00:16:35,440 --> 00:16:46,500
+Let me see if I can find an appropriate one. So going to hold off on the review for just a second, we're gonna see if I can find a better.
+
+159
+00:16:46,500 --> 00:16:51,790
+A better place for are a better name for this message. What am I doing?
+
+160
+00:16:51,790 --> 00:17:00,100
+I'm going to drag this back in here. And great.
+
+161
+00:17:00,100 --> 00:17:13,210
+OK, so let's look inside content out J.S., because that's where the message handlers will be and I'll use path that it takes me right to the file.
+
+162
+00:17:13,210 --> 00:17:22,740
+And so is there like an appropriate. Some of these these are event listeners, so there's not much we can do about that.
+
+163
+00:17:22,740 --> 00:17:29,320
+These are namespace second screen mixed content. So is there a better namespace?
+
+164
+00:17:29,320 --> 00:17:36,060
+Let me add a message. A listener will search with that reader.
+
+165
+00:17:36,060 --> 00:17:41,770
+So this one just that's at the top Web channel message to content.
+
+166
+00:17:41,770 --> 00:17:47,710
+So maybe it's not so bad content search finder, initialize page style.
+
+167
+00:17:47,710 --> 00:17:50,830
+Don, full screen. Web RTC waps.
+
+168
+00:17:50,830 --> 00:18:06,530
+I think I blasted past one browser app tab page metadata context menu context menu browser Hydes session restore button browser reload.
+
+169
+00:18:06,530 --> 00:18:19,980
+Browser SSL error report status. The only one I can think of is browser Colen like, and is there an advantage?
+
+170
+00:18:19,980 --> 00:18:25,830
+Does that actually make the code better? Is the question, is it worth?
+
+171
+00:18:25,830 --> 00:18:31,590
+Is it worth asking for that change? Switch, document direction.
+
+172
+00:18:31,590 --> 00:18:36,490
+I don't want to go home and how about too much? I'll get back to you later.
+
+173
+00:18:36,490 --> 00:18:44,370
+You know, actually I should probably change my neck so that people know have hacking.
+
+174
+00:18:44,370 --> 00:18:52,080
+And I'll get to you later, Heisse. Let's see here. So, yeah, here's what I'm going to do.
+
+175
+00:18:52,080 --> 00:18:57,650
+I'm going to ask him to because it's not a big change. In fact, maybe I can.
+
+176
+00:18:57,650 --> 00:19:02,320
+Just do it for him, like I'll just. That's usually the easiest.
+
+177
+00:19:02,320 --> 00:19:07,550
+Instead of, like, bouncing back my critique, this one liner or a Netflix or something saying like, hey,
+
+178
+00:19:07,550 --> 00:19:12,700
+fix this one thing, I just do it myself and land the patches form along with giving him an hour plus.
+
+179
+00:19:12,700 --> 00:19:20,490
+So I might do them. Content out windows right here.
+
+180
+00:19:20,490 --> 00:19:25,560
+See, I'm kind of reviewing two patches at the same time. These two split up patches.
+
+181
+00:19:25,560 --> 00:19:34,300
+This one and this one, because they're pretty much the same thing. They're just one relies on the other.
+
+182
+00:19:34,300 --> 00:19:41,040
+So how about the places that I'm not seeing I need because he removed this functions which document direction?
+
+183
+00:19:41,040 --> 00:19:46,420
+I have to make sure that there aren't any other things that rely on this function. So let's take a quick look.
+
+184
+00:19:46,420 --> 00:19:50,950
+Make sure that there is nothing else that calls it tests or anything.
+
+185
+00:19:50,950 --> 00:19:58,120
+So is menubar browser menubar. Wasn't there one like what was it?
+
+186
+00:19:58,120 --> 00:20:06,220
+We're looking at browser dash context menu and I guess that's here.
+
+187
+00:20:06,220 --> 00:20:17,720
+Switch page direction. OK. So he's taking care of that context menu and menu bar, both taking care of.
+
+188
+00:20:17,720 --> 00:20:25,350
+So this looks good. I'm actually. Pretty happy with this.
+
+189
+00:20:25,350 --> 00:20:31,320
+So but I. And the tree is open, so I could just land these.
+
+190
+00:20:31,320 --> 00:20:34,980
+So I'm gonna give this a thumbs up. This looks good to me.
+
+191
+00:20:34,980 --> 00:20:42,870
+Enough humming in high. So, I mean, I just briefly comment. This is nice because I'm kind of like getting two for the price of one.
+
+192
+00:20:42,870 --> 00:20:48,330
+I'm knocking out two reviews at the same time. Oh. Before I are blessed, I need to test it.
+
+193
+00:20:48,330 --> 00:20:55,410
+What am I doing? I need to test this stuff. So we already know that I should test one and then the other.
+
+194
+00:20:55,410 --> 00:21:08,590
+So we'll see if we can get rid of these unsafe kapow worn usage warnings.
+
+195
+00:21:08,590 --> 00:21:13,480
+It looks like I can only test it in this case by using the context menu.
+
+196
+00:21:13,480 --> 00:21:25,230
+So that's OK. I can do that. So let's apply this patch. We'll shut down this instance.
+
+197
+00:21:25,230 --> 00:21:34,150
+Import the patch. Doo doo doo doo.
+
+198
+00:21:34,150 --> 00:21:40,650
+It did not apply cleanly. So let's find out why.
+
+199
+00:21:40,650 --> 00:21:47,820
+Didn't put a rejections in there, so it's in this rejection file.
+
+200
+00:21:47,820 --> 00:21:56,380
+So it just flat out didn't like the fact that he was adding these lines.
+
+201
+00:21:56,380 --> 00:22:01,920
+Because I'll bet you something else was added in here in the meantime.
+
+202
+00:22:01,920 --> 00:22:18,210
+To data, you are what? Browser based content, that's exactly where this was supposed to go, wasn't it?
+
+203
+00:22:18,210 --> 00:22:23,550
+He was adding stuff for context menu.
+
+204
+00:22:23,550 --> 00:22:34,930
+Context, man, you say that you frame a new media command by type at Enron.
+
+205
+00:22:34,930 --> 00:22:42,630
+Huh? Well. Maybe, oh, you know what, I'll bet this also relies on other stuff he's done,
+
+206
+00:22:42,630 --> 00:22:46,780
+like he's got this big chain of patches to fix up these context menu items.
+
+207
+00:22:46,780 --> 00:22:50,130
+I'll bet she was not applying cleanly because this stuff contacts.
+
+208
+00:22:50,130 --> 00:22:54,720
+When you canvass two data, euro hasn't landed yet. Huh?
+
+209
+00:22:54,720 --> 00:23:01,590
+That's OK. It's OK. It's not dependent on.
+
+210
+00:23:01,590 --> 00:23:07,590
+One another. So I would just say that let's build.
+
+211
+00:23:07,590 --> 00:23:14,890
+What exactly did we change here? Oh, I'll commit.
+
+212
+00:23:14,890 --> 00:23:21,420
+What was this one one one four eight, seven, eight?
+
+213
+00:23:21,420 --> 00:23:28,130
+And what changed? Let's take a quick look. Make sure I got everything I needed to be applied.
+
+214
+00:23:28,130 --> 00:23:36,710
+Applied. It looks right.
+
+215
+00:23:36,710 --> 00:23:40,840
+OK, so I just need to rebuild the stuff under browser base, so I will do that.
+
+216
+00:23:40,840 --> 00:23:52,810
+Moqbel browser base. And now I'll run.
+
+217
+00:23:52,810 --> 00:23:58,870
+OK, so if I were to right, click here and switch page direction, if I hear any clicks in my ear,
+
+218
+00:23:58,870 --> 00:24:05,640
+I'm not sure if you can hear the clicks, but if I hear any clicks, that means that we're still using unsafe compounds and that's bad.
+
+219
+00:24:05,640 --> 00:24:14,530
+Hey. All right. I didn't hear any clicks and I believe we're switching the page direction.
+
+220
+00:24:14,530 --> 00:24:23,680
+I can tell from the total read, like the re rejigging of the Don, that the relaying out of the don that it's probably working.
+
+221
+00:24:23,680 --> 00:24:32,900
+Let me try a different page. Let's try the dot com watch people code.
+
+222
+00:24:32,900 --> 00:24:39,140
+And let's try here. Which page direction? Yeah. That's what we want, and I'm not hearing clicks.
+
+223
+00:24:39,140 --> 00:24:43,160
+This is great news. OK, so this to me is an hour plus.
+
+224
+00:24:43,160 --> 00:24:48,030
+It fixes the problem because I'll bet.
+
+225
+00:24:48,030 --> 00:24:59,450
+Let me just double check. I'm going to unemploy his patch and then I'm going to make sure I can hear the clicks.
+
+226
+00:24:59,450 --> 00:25:04,470
+In the in the case that we use the context menu without his patch.
+
+227
+00:25:04,470 --> 00:25:11,460
+So let's just make sure that. A bunch of clicks, I heard a ton of clicks just now.
+
+228
+00:25:11,460 --> 00:25:18,210
+So this is great. Is Patch definitely fixes that stuff. That's an hour plus for me.
+
+229
+00:25:18,210 --> 00:25:40,390
+So let's give him that. Let's call this message browser switch document direction.
+
+230
+00:25:40,390 --> 00:25:46,590
+I like to keep things kind of pseudo names spaced.
+
+231
+00:25:46,590 --> 00:25:51,590
+Pseudo pseudo names based. And what's my justification?
+
+232
+00:25:51,590 --> 00:25:56,310
+Well, like my gut says, I want that I'm not just doing that because I want to bring up a problem like it.
+
+233
+00:25:56,310 --> 00:25:59,970
+I'm actually honestly, I think it's better if we're. We have this namespace here.
+
+234
+00:25:59,970 --> 00:26:06,540
+I'm trying to come up with a justification which is weird, like heart cart before the horse.
+
+235
+00:26:06,540 --> 00:26:13,020
+But I honestly do believe that it's better this way.
+
+236
+00:26:13,020 --> 00:26:27,580
+I like to keep things kind of pseudo names based. I think we like to avoid top level or top or global namespace.
+
+237
+00:26:27,580 --> 00:26:37,510
+Pseudo namespace messages. I think it's more organized this way.
+
+238
+00:26:37,510 --> 00:26:48,850
+So, I mean, give that. An hour plus. And, of course, thank your thank your Khoder thank you, your contributor, because.
+
+239
+00:26:48,850 --> 00:26:53,650
+This dude took some time out of his data to make this fix.
+
+240
+00:26:53,650 --> 00:26:58,480
+That's great. Thanks so much, Ian. That's a publish.
+
+241
+00:26:58,480 --> 00:27:03,390
+That's an hour plus. Great.
+
+242
+00:27:03,390 --> 00:27:08,550
+So that one's done. Down to twenty two reviews. Oh, man.
+
+243
+00:27:08,550 --> 00:27:10,170
+OK, so now there's this other thing,
+
+244
+00:27:10,170 --> 00:27:20,060
+this original code that we were reviewing that we need to make sure that the menu item works and it relied on the code that I've just applied.
+
+245
+00:27:20,060 --> 00:27:30,070
+So I will now apply this code. So I will make sure we apply that code that we just our plussed.
+
+246
+00:27:30,070 --> 00:27:38,740
+And then I am going to import. If you're curious about how I am able to do this,
+
+247
+00:27:38,740 --> 00:27:49,240
+I have the Beezy import extension for material and that allows me to quickly apply patches like this from bookseller.
+
+248
+00:27:49,240 --> 00:27:52,790
+OK, so I've got. Where am I?
+
+249
+00:27:52,790 --> 00:27:58,310
+Where am I? My tip. Yes, I am. So I actually I have the code.
+
+250
+00:27:58,310 --> 00:28:08,770
+I haven't built with it yet. But we do we did see before that this was definitely broken.
+
+251
+00:28:08,770 --> 00:28:15,930
+Like the views which page direction was not working and.
+
+252
+00:28:15,930 --> 00:28:28,440
+Let's make sure that this fixes it. So we need to rebuild under browser base again.
+
+253
+00:28:28,440 --> 00:28:39,590
+And we will run. OK, so if I do this switch page direction, I don't hear any clicks.
+
+254
+00:28:39,590 --> 00:28:45,350
+And we definitely switch the page direction. This is great news. Great news.
+
+255
+00:28:45,350 --> 00:28:57,290
+OK. So that's that's a thumbs up for me.
+
+256
+00:28:57,290 --> 00:29:04,110
+It's a bit weird to like. Break it up like this is a big string in the HCM.
+
+257
+00:29:04,110 --> 00:29:10,780
+That's like with all the indentation stuff here. Do we do stuff like that in browser when you are?
+
+258
+00:29:10,780 --> 00:29:19,260
+Let's let's make sure. I didn't use the right name.
+
+259
+00:29:19,260 --> 00:29:30,440
+Dot Inc. Rouzer menuBar Dot Inc. We refer to we don't refer to G browser here.
+
+260
+00:29:30,440 --> 00:29:34,850
+We can assume that Gebreab is available because the browser menubar under a browser based content,
+
+261
+00:29:34,850 --> 00:29:42,680
+so it's not a tool kitty thing tool kit is like the the general Zuhal.
+
+262
+00:29:42,680 --> 00:29:52,520
+And UI stuff that other apps that might not have a G browser rely on, for example, Thunderbird or Instant Bird or sea monkey.
+
+263
+00:29:52,520 --> 00:30:11,840
+So I wonder if maybe instead of. He makes direct reference to G browser instead of calling this function.
+
+264
+00:30:11,840 --> 00:30:18,410
+That's probably OK. Look, I really don't see a problem with this, to be completely honest.
+
+265
+00:30:18,410 --> 00:30:26,010
+The only reason I might. Want to change things is to use like the command pattern.
+
+266
+00:30:26,010 --> 00:30:32,070
+But we weren't even using the command pattern before we were using on command.
+
+267
+00:30:32,070 --> 00:30:36,750
+So I'm not going to worry about it. And I'm going to say that this is probably OK.
+
+268
+00:30:36,750 --> 00:30:42,700
+So I'm going to give this. An hour plus now, another thing I want to think about is there.
+
+269
+00:30:42,700 --> 00:30:49,750
+Are there any pet tests that test for switching Paige direction that have not been working with tennis?
+
+270
+00:30:49,750 --> 00:30:59,830
+That might. Now all of a sudden start working. Because we are fixing switching Paige direction, document direction.
+
+271
+00:30:59,830 --> 00:31:05,020
+I somehow don't think so. That sounds like it. Kind of a hard thing to test.
+
+272
+00:31:05,020 --> 00:31:14,120
+And I don't see it in their. To say when manually click on this, for example.
+
+273
+00:31:14,120 --> 00:31:22,790
+No, I don't see it. So I don't think there are any actual tests for this, like automated tests for this.
+
+274
+00:31:22,790 --> 00:31:34,500
+We more or less will rely on a. We'll rely on our nightly testers in multiple locales to to make sure this is working for them.
+
+275
+00:31:34,500 --> 00:31:40,200
+But it's working for me and I like it. So, I mean, give this a thumbs up.
+
+276
+00:31:40,200 --> 00:31:53,030
+As a thumbs up situation, but I'm going to say. We'll want to use.
+
+277
+00:31:53,030 --> 00:31:59,360
+Since we renamed in the other patch, this looks good to me.
+
+278
+00:31:59,360 --> 00:32:04,920
+Thanks again, Ian. Our plus.
+
+279
+00:32:04,920 --> 00:32:10,950
+Making stuff work. That's great. So that's two down.
+
+280
+00:32:10,950 --> 00:32:16,030
+Not bad. And how are we doing on time or about half an hour in?
+
+281
+00:32:16,030 --> 00:32:19,840
+Let's keep going. So what have I what have I done? I've done this one.
+
+282
+00:32:19,840 --> 00:32:24,920
+I will knock that off. WAPs I meant to do.
+
+283
+00:32:24,920 --> 00:32:30,380
+That and I got rid of one that I didn't expect to get rid of right away.
+
+284
+00:32:30,380 --> 00:32:34,520
+One one four oh eight seven eight. That was the next one. So we're ahead of the game.
+
+285
+00:32:34,520 --> 00:32:40,300
+Next is one two six six five three one. What even is this? Oh, this one.
+
+286
+00:32:40,300 --> 00:32:45,130
+OK. So my good friend George Wright is working on this.
+
+287
+00:32:45,130 --> 00:32:51,820
+And this is complicated because let me kind of explain what's going on here.
+
+288
+00:32:51,820 --> 00:32:57,800
+Whenever we have. The content rendering in a different process.
+
+289
+00:32:57,800 --> 00:33:05,060
+There are sometimes timing issues. For example, the content process might not be ready to paint when we need it to paint.
+
+290
+00:33:05,060 --> 00:33:11,660
+And so we have to ask it like for an event or a message whenever it is ready to paint.
+
+291
+00:33:11,660 --> 00:33:19,580
+And then the parent can make a decision. So, for example, when we switch tabs, we have to ask the the content process like.
+
+292
+00:33:19,580 --> 00:33:24,650
+Are you ready to show this stuff yet? Let us know when you are. And then we wait for that message.
+
+293
+00:33:24,650 --> 00:33:30,020
+And then whenever is ready, then we actually show the content.
+
+294
+00:33:30,020 --> 00:33:34,940
+So what looks to be synchronous tab switching is actually asynchronous tab switching.
+
+295
+00:33:34,940 --> 00:33:38,840
+And I can actually demonstrate that a synchronicity. You've probably seen it yourself.
+
+296
+00:33:38,840 --> 00:33:48,320
+If you've been watching this for a while or you've been using that lately is if you have like a really heavy bunch of tabs.
+
+297
+00:33:48,320 --> 00:33:52,550
+Let me load up a bunch of heavy stuff, like a log file.
+
+298
+00:33:52,550 --> 00:33:59,690
+It's probably like a big log file. I can use ADX or page.
+
+299
+00:33:59,690 --> 00:34:03,200
+Sure, whatever. Sure.
+
+300
+00:34:03,200 --> 00:34:10,990
+This is this is nice and having now if I have enough.
+
+301
+00:34:10,990 --> 00:34:11,860
+Might not be have enough.
+
+302
+00:34:11,860 --> 00:34:19,300
+But if you've ever seen that big fat spinner in the middle and everything, just like you don't see the Web content for a couple of seconds.
+
+303
+00:34:19,300 --> 00:34:24,760
+That's because the content process hasn't told us that it's ready to paint yet. And so we're just kind of waiting for it.
+
+304
+00:34:24,760 --> 00:34:30,190
+Normally, we only show the spinner after like a 300 millisecond timeout waiting for that
+
+305
+00:34:30,190 --> 00:34:35,110
+event so that we show something instead of just showing the old Web content.
+
+306
+00:34:35,110 --> 00:34:40,420
+It's not a great experience and we're working on making that better. But for now, it's what we've got.
+
+307
+00:34:40,420 --> 00:34:47,590
+So what George is working on is making it so that.
+
+308
+00:34:47,590 --> 00:34:51,810
+What we're doing is we're we're switching the you can't really see my hands.
+
+309
+00:34:51,810 --> 00:34:59,950
+I'm drawing with my hands. But you can really see it here in this area that I am circling with my mouse like all this.
+
+310
+00:34:59,950 --> 00:35:04,030
+This is the Web content. And this is the stuff that we are switching asynchronously.
+
+311
+00:35:04,030 --> 00:35:10,660
+So every click up here, we we switch the UI element from this tab to this tab synchronously on the mouse down event.
+
+312
+00:35:10,660 --> 00:35:15,610
+But we change the stuff down here, the actual Web content asynchronously on that.
+
+313
+00:35:15,610 --> 00:35:17,140
+I'm ready to paint event.
+
+314
+00:35:17,140 --> 00:35:29,230
+And what George is working on is making it so that we change the the the UI showing, which is which tab is selected up here asynchronously as well.
+
+315
+00:35:29,230 --> 00:35:35,500
+And the reason for that is in the tab spinner case, one of we're actually going to show a spinner.
+
+316
+00:35:35,500 --> 00:35:44,930
+It's weird because. Leading up to the spinner, like like I said, there's that 300 millisecond window where we don't actually do anything.
+
+317
+00:35:44,930 --> 00:35:49,760
+We're waiting for the event. And then after we hit the three outer milliseconds, then we show the spinner.
+
+318
+00:35:49,760 --> 00:35:57,410
+So in that three other milliseconds, we've actually changed the tab. It'll show this tab up here, but we'll show this content.
+
+319
+00:35:57,410 --> 00:36:03,170
+And that's weird. It's like this disconnect between the tab and the Web content.
+
+320
+00:36:03,170 --> 00:36:15,020
+So George is attempting to fix this by making it so that we don't actually show the tab is being selected until we get the event back.
+
+321
+00:36:15,020 --> 00:36:21,170
+And that's going to probably break some themes for tennis,
+
+322
+00:36:21,170 --> 00:36:25,340
+and that's a thing we are going to have to worry about and do some outreach to
+
+323
+00:36:25,340 --> 00:36:29,300
+any theme developers out there if they want their themes to work with tennis.
+
+324
+00:36:29,300 --> 00:36:42,700
+That's but that's kind of life. Sue.
+
+325
+00:36:42,700 --> 00:36:48,080
+Let's see here. What's he doing?
+
+326
+00:36:48,080 --> 00:36:53,510
+Let me try and I've already reviewed this once, but it was a different iteration of this patch.
+
+327
+00:36:53,510 --> 00:36:56,540
+So let me break it down and see if I can understand what's happening.
+
+328
+00:36:56,540 --> 00:37:05,420
+So, first of all, in browser dog Zuhal, which is the layout like the document that he used to render the UI for the browser,
+
+329
+00:37:05,420 --> 00:37:09,440
+we have like an initial set, an initial tab and initial browser.
+
+330
+00:37:09,440 --> 00:37:13,240
+And this is the DOM, the Zuhal Dom node for the initial tab.
+
+331
+00:37:13,240 --> 00:37:17,510
+He's making it so that it is visually selected as well as selected.
+
+332
+00:37:17,510 --> 00:37:22,940
+So that's part of George's solution. This notion of visually selected versus selected.
+
+333
+00:37:22,940 --> 00:37:28,910
+And the reason he's making that distinction is because we have a whole bunch of tests and a
+
+334
+00:37:28,910 --> 00:37:34,370
+whole bunch of browser code that assumes that switching tabs is going to be synchronous.
+
+335
+00:37:34,370 --> 00:37:39,890
+Like it relies on it in order to function properly. And so we're not going to change that.
+
+336
+00:37:39,890 --> 00:37:44,600
+We're going to take advantage of the fact that in the background,
+
+337
+00:37:44,600 --> 00:37:50,000
+even though whenever we click this, we will not have updated the UI to show it has selected.
+
+338
+00:37:50,000 --> 00:37:55,010
+We'll still have the selected attribute set to true on it.
+
+339
+00:37:55,010 --> 00:38:04,280
+And then visually selected means. OK, now we actually changed the UI, so it's kind of a weird distinction, but that's just how it is, I guess.
+
+340
+00:38:04,280 --> 00:38:06,980
+I mean, we need these tabs to be asynchronous.
+
+341
+00:38:06,980 --> 00:38:12,710
+That's just the way it is whenever you have multiple processes and you don't want to block on the content process.
+
+342
+00:38:12,710 --> 00:38:17,790
+So he's added this visually selected equals true. I'm going to say that's a good idea.
+
+343
+00:38:17,790 --> 00:38:26,860
+And we'll move over here to Tab Browser. So he's having to pair up a whole bunch of stuff with selected, visually selected.
+
+344
+00:38:26,860 --> 00:38:32,100
+Also, he's applying the stuff on top of a previous patch that someone else wrote.
+
+345
+00:38:32,100 --> 00:38:39,610
+Bill M. wrote that I should probably apply to test this stuff on.
+
+346
+00:38:39,610 --> 00:38:45,640
+And where is that patch? Where is Billons Patch?
+
+347
+00:38:45,640 --> 00:38:56,580
+I have a reference to it in one of my notes. Hold on. Active coder use this one.
+
+348
+00:38:56,580 --> 00:39:01,290
+So, yeah, I'd sometimes take notes for a particularly complicated patches.
+
+349
+00:39:01,290 --> 00:39:14,110
+I will. Refactored Aspey didn't requestor if you.
+
+350
+00:39:14,110 --> 00:39:18,910
+I have a feeling that he wants me to review this. I'm going to.
+
+351
+00:39:18,910 --> 00:39:24,860
+He didn't follow him and make sure. Hey.
+
+352
+00:39:24,860 --> 00:39:35,140
+Was attachment. Eight, five, seven, five, six, two, two, ready for review.
+
+353
+00:39:35,140 --> 00:39:46,700
+Were you holding off on our for something? OK, I can still apply it, even though it has and hasn't gone through review yet.
+
+354
+00:39:46,700 --> 00:39:51,020
+I think it's pretty close. This is a pretty intense patch if you're if you're interested.
+
+355
+00:39:51,020 --> 00:39:54,500
+It kind of encapsulates all the tab switching and Sandy into one place.
+
+356
+00:39:54,500 --> 00:40:00,530
+This is like amazing documentation in here, kind of explaining how the async tab switching works.
+
+357
+00:40:00,530 --> 00:40:06,410
+That bill is adding and I'm pretty happy about that. So I'm going to apply this patch.
+
+358
+00:40:06,410 --> 00:40:14,230
+Here's what I'm going to do. I'm going to get rid of the stuff that we were just working on, like the.
+
+359
+00:40:14,230 --> 00:40:27,740
+Get rid of the two patches from Ian. Oh, I don't think I actually committed that other one when I applied, did I?
+
+360
+00:40:27,740 --> 00:40:32,460
+Oh, mercurial. Pull yourself together. OK.
+
+361
+00:40:32,460 --> 00:40:35,670
+Well, it's gone. I don't know where. Oh, right, right, right.
+
+362
+00:40:35,670 --> 00:40:43,870
+It's right here. I just gave it a very unhelpful name, so I will strip that off.
+
+363
+00:40:43,870 --> 00:40:51,780
+Strip off. I could have probably done that in a single command. But a.
+
+364
+00:40:51,780 --> 00:40:57,590
+OK, so now I'm back to the tip of inbound. And now I will apply.
+
+365
+00:40:57,590 --> 00:41:06,170
+Bill, Ms. Patch from here. Not to import import.
+
+366
+00:41:06,170 --> 00:41:10,750
+And then I will also apply George's patch. The one I'm actually trying to review.
+
+367
+00:41:10,750 --> 00:41:28,170
+Don't need that anymore. So there are actually two patches in here that I probably need to apply.
+
+368
+00:41:28,170 --> 00:41:35,180
+This one is down in like the native code for layer's.
+
+369
+00:41:35,180 --> 00:41:41,710
+And tab parent. Okay. Well, I will apply both. Hopefully they do.
+
+370
+00:41:41,710 --> 00:41:46,510
+They do not conflict great. They both applied. So now I should have them both on the top here.
+
+371
+00:41:46,510 --> 00:41:52,840
+Great. It only applied one of them.
+
+372
+00:41:52,840 --> 00:41:57,580
+I was really expecting it to apply both. But what do you expect?
+
+373
+00:41:57,580 --> 00:42:03,030
+Sometimes life happens. So now I want the first.
+
+374
+00:42:03,030 --> 00:42:15,610
+Oh. Had it applied. The other one.
+
+375
+00:42:15,610 --> 00:42:21,780
+What is going on? What? So what?
+
+376
+00:42:21,780 --> 00:42:29,130
+What even is this patch that's on the top of the. Parent.
+
+377
+00:42:29,130 --> 00:42:35,740
+Okay. How come this it just straight up didn't apply properly?
+
+378
+00:42:35,740 --> 00:42:40,810
+Why not? Huncke failed inside tab browser's.
+
+379
+00:42:40,810 --> 00:42:45,460
+Let's take a look at the three out of three hunk's failed.
+
+380
+00:42:45,460 --> 00:42:51,820
+Okay, let's see if we can find out why.
+
+381
+00:42:51,820 --> 00:42:59,170
+Content Tab Rouzer X-Mailer Reg. So all this stuff that he added did not apply.
+
+382
+00:42:59,170 --> 00:43:11,200
+Added changed. All of it. Now why not? Because it's already here.
+
+383
+00:43:11,200 --> 00:43:15,530
+Why is it already here? Where what?
+
+384
+00:43:15,530 --> 00:43:26,960
+Where's the stuff coming from? OK, OK.
+
+385
+00:43:26,960 --> 00:43:33,860
+So I had I had been reviewing his patch the other day, and I, I failed to.
+
+386
+00:43:33,860 --> 00:43:38,910
+I failed to pop it off here. OK? So I'm going to sew sanity restored.
+
+387
+00:43:38,910 --> 00:43:42,270
+I'm going to get rid of his old stuff because I'm pretty sure he updated it since then.
+
+388
+00:43:42,270 --> 00:43:52,350
+So I'm gonna get rid of this thing. I will drop it.
+
+389
+00:43:52,350 --> 00:44:09,260
+And then I will reapply his new one. So you were expecting code view and instead what you get is mercurial gymnastics.
+
+390
+00:44:09,260 --> 00:44:18,050
+Sorry about that, Beezy. Now will import the actual patch.
+
+391
+00:44:18,050 --> 00:44:22,100
+The first one that should apply cleanly. Fingers crossed, come on.
+
+392
+00:44:22,100 --> 00:44:26,830
+Yeah. And so I should have both of those on top.
+
+393
+00:44:26,830 --> 00:44:40,890
+Great. And now I need to apply Georgia's patch, which is over here.
+
+394
+00:44:40,890 --> 00:44:51,460
+And that applies cleanly. Great. Now I have to rebuild. Now a bunch of stuff changed between here and where we last did a proper build.
+
+395
+00:44:51,460 --> 00:44:56,260
+So let's. Let's take a look.
+
+396
+00:44:56,260 --> 00:45:01,580
+Jeff. 86 to 84.
+
+397
+00:45:01,580 --> 00:45:06,980
+Where are those changes happening? I think most of them are in tab browser, in browser base.
+
+398
+00:45:06,980 --> 00:45:11,750
+So, yeah. Both these changes are in browser base. And then there's like a chunk that's in this native code.
+
+399
+00:45:11,750 --> 00:45:17,570
+And I have a feeling it's under Dom IPC. Yeah.
+
+400
+00:45:17,570 --> 00:45:21,950
+Browser themes. He changes themes. So whenever you update themes,
+
+401
+00:45:21,950 --> 00:45:26,540
+one of the I'm not going to be able to fully review this patch because the
+
+402
+00:45:26,540 --> 00:45:31,670
+I've only got to like I've got my OSX machine here and I've got my Linux VM.
+
+403
+00:45:31,670 --> 00:45:38,000
+But I don't have a Windows VM that I can really use on this machine. So I won't have to find a Windows machine to test this on.
+
+404
+00:45:38,000 --> 00:45:45,980
+Okay, so yeah, under Dom IPC, you know, it's probably just safe, safer for me to just do mock build and it will build all the things I need.
+
+405
+00:45:45,980 --> 00:45:51,770
+And in the meantime I will inspect this patch before I test it.
+
+406
+00:45:51,770 --> 00:46:02,030
+So we'll do that. And I don't need these junk tabs anymore. So I will close the tabs to the right and I will review this stuff.
+
+407
+00:46:02,030 --> 00:46:08,960
+So I'll get a notification whenever the builds done and then we can actually run it through some paces and test it out.
+
+408
+00:46:08,960 --> 00:46:16,520
+See if we get any behavioral problems out of it. So that still looks good and makes sense.
+
+409
+00:46:16,520 --> 00:46:26,450
+We've applied this stuff. So, Bill, Ms. Patch kind of encapsulates, like I said, the insanity of our acing tabs, switching stuff into a single place.
+
+410
+00:46:26,450 --> 00:46:31,220
+And I really wish I could, like, show more context or use it.
+
+411
+00:46:31,220 --> 00:46:35,300
+We're eventually going to use a new code review tool here at Mozilla or we're going to try to called
+
+412
+00:46:35,300 --> 00:46:41,750
+Moore's review or based on review board that will allow us to like see more context around changes.
+
+413
+00:46:41,750 --> 00:46:47,630
+Far smarter diff, fewer than what we've currently got. Now, I can't wait.
+
+414
+00:46:47,630 --> 00:46:55,610
+So he's paired up every single case where I what seems to be every single case of underscore selected with visually selected.
+
+415
+00:46:55,610 --> 00:47:00,890
+True. True. Here selected. False. False. They're false.
+
+416
+00:47:00,890 --> 00:47:07,440
+True. Like. He's making them always be the same.
+
+417
+00:47:07,440 --> 00:47:15,820
+This is the only case, it seems, where. Oh, no, no, no, it's it's usually selected as false, visually selected equals true.
+
+418
+00:47:15,820 --> 00:47:25,400
+And then he gets rid of a new line there. So it seems like there's only one case where selected might be false.
+
+419
+00:47:25,400 --> 00:47:30,910
+And is there a case where selected is false and usually selected is true?
+
+420
+00:47:30,910 --> 00:47:36,270
+I mean, write that down. This is one of those bugs where in the review I'm going to have to write stuff down.
+
+421
+00:47:36,270 --> 00:47:44,110
+Six, six, five, three, one. I.
+
+422
+00:47:44,110 --> 00:47:51,360
+So is there a case where this is something on check later?
+
+423
+00:47:51,360 --> 00:47:58,240
+Selected equals false and visually selected gets set to true.
+
+424
+00:47:58,240 --> 00:48:04,900
+So we will look for that. What else? I have a feeling this review is going to take me a little while.
+
+425
+00:48:04,900 --> 00:48:11,550
+This is some complicated stuff. We're inheriting.
+
+426
+00:48:11,550 --> 00:48:18,310
+All this business is basically pairing up anytime you selected with visually selected as well.
+
+427
+00:48:18,310 --> 00:48:24,720
+All this is happening in the Tabb browser, biting on the tab context menu.
+
+428
+00:48:24,720 --> 00:48:30,750
+Oh, no, sorry, not top context, maybe this is on the tab element and the TAB element has a context menu.
+
+429
+00:48:30,750 --> 00:48:39,150
+Okay. This is probably just saw styling work properly.
+
+430
+00:48:39,150 --> 00:48:53,210
+And then we. In eatin' s wannna only pseudo select tab before its rendering is done so that the rest of the system knows the tab is selected.
+
+431
+00:48:53,210 --> 00:48:58,830
+But we don't want updates, visual stats, dislikes until after we receive confirmation that content is painted.
+
+432
+00:48:58,830 --> 00:49:07,200
+OK. So there's this difference between logically selected and visually selected.
+
+433
+00:49:07,200 --> 00:49:14,140
+Logically selected. Is logically selected, used anywhere else.
+
+434
+00:49:14,140 --> 00:49:20,020
+Logically selected. Yes, logically selected is used here.
+
+435
+00:49:20,020 --> 00:49:24,910
+This is something he's. Put into a box.
+
+436
+00:49:24,910 --> 00:49:31,510
+So that's under toolkit. So all the other Zuhal apps are going to get this as well.
+
+437
+00:49:31,510 --> 00:49:39,570
+Visually selected and logically selected. So he does have to update tool kit.
+
+438
+00:49:39,570 --> 00:49:43,250
+OK. Set or selected?
+
+439
+00:49:43,250 --> 00:49:46,790
+So in the. This is good. This is good.
+
+440
+00:49:46,790 --> 00:49:53,930
+So our tool kit apps like Thunderbird that don't have a sling tab switching will still function the same way.
+
+441
+00:49:53,930 --> 00:50:07,050
+We'll cite logically and visually at the same time. So that's good. OK, that makes sense to me.
+
+442
+00:50:07,050 --> 00:50:11,730
+I think we can not look at Tarbox now.
+
+443
+00:50:11,730 --> 00:50:21,570
+That makes sense. So let's go back to where we were in Tabb browser.
+
+444
+00:50:21,570 --> 00:50:29,760
+Selected time visually selected is true. You know, this whole section of stuff is probably the most complicated, I'm going to get back to this later.
+
+445
+00:50:29,760 --> 00:50:38,110
+I'm going to defer the more most complicated stuff till the end. But make note of it so closely.
+
+446
+00:50:38,110 --> 00:50:48,900
+Examine the logic of setting selected and visually selected.
+
+447
+00:50:48,900 --> 00:51:00,160
+OK. So now we've got like underscore selected.
+
+448
+00:51:00,160 --> 00:51:06,280
+Logically selected. Oh, I remember why, I remember why.
+
+449
+00:51:06,280 --> 00:51:16,770
+I remember why it's because underscore selected is what we're overriding in order to.
+
+450
+00:51:16,770 --> 00:51:21,780
+It's a little complicated, but so we've got logically selected, visually selected.
+
+451
+00:51:21,780 --> 00:51:30,120
+And then underscore selected. And underscore selected is what's being read by like.
+
+452
+00:51:30,120 --> 00:51:37,680
+Our tests and stuff, I believe, and.
+
+453
+00:51:37,680 --> 00:51:45,610
+And various other bits of code. And then over here in the E.
+
+454
+00:51:45,610 --> 00:51:54,570
+S case with special case visually selected so that it's not set until probably we get the event.
+
+455
+00:51:54,570 --> 00:52:04,570
+So we behave the same way as the tool kit case, unless we're G multiprocessor browser, in which case that we only set logically selected that.
+
+456
+00:52:04,570 --> 00:52:10,000
+Makes sense to me. So we will look at this stuff later. So I will come back to that.
+
+457
+00:52:10,000 --> 00:52:16,290
+So now he does a bunch of theme updating. Who?
+
+458
+00:52:16,290 --> 00:52:22,410
+So this is mostly just replacing usage of selected with visually selected.
+
+459
+00:52:22,410 --> 00:52:28,100
+This is kind of a pain in the butt, because you have. We have to make sure he hasn't missed anything.
+
+460
+00:52:28,100 --> 00:52:34,740
+And I. There's not an easy thing to check.
+
+461
+00:52:34,740 --> 00:52:42,410
+So, yeah, I just replacing all the usages of selected with visually selected.
+
+462
+00:52:42,410 --> 00:52:57,210
+Usually selected. So this isn't actually going to break.
+
+463
+00:52:57,210 --> 00:53:01,960
+Old style themes. It's just going to make it so that in old style themes.
+
+464
+00:53:01,960 --> 00:53:05,740
+If they're like like when I say old style, I mean complete themes.
+
+465
+00:53:05,740 --> 00:53:15,390
+It means that they'll have the same problem where that we're trying to fix with, like the switching of tabs being synchronous.
+
+466
+00:53:15,390 --> 00:53:22,030
+Even though the content hasn't flipped around. And I think that's actually OK.
+
+467
+00:53:22,030 --> 00:53:27,100
+And if the theme wants to, like, fix that, they should use visually selected instead.
+
+468
+00:53:27,100 --> 00:53:37,100
+So that's not bad, actually. That's a that's a pretty good solution or it's it's less evil than it could have been.
+
+469
+00:53:37,100 --> 00:53:43,860
+Don't want to [INAUDIBLE] off our theme, people usually selected.
+
+470
+00:53:43,860 --> 00:53:49,620
+So this all looks fine. He's just replacing, like I said, selected with visually selected everywhere we go.
+
+471
+00:53:49,620 --> 00:53:55,470
+This is the sort of patch that's like this type of change.
+
+472
+00:53:55,470 --> 00:54:03,450
+Sort of a mass rename or a mass change. It's easy for little things to slip by because my eyes kind of glaze over.
+
+473
+00:54:03,450 --> 00:54:10,680
+And so you kind of have to be really extra vigilant if you can be, because this is how defects can slip through.
+
+474
+00:54:10,680 --> 00:54:13,290
+It's almost like they say statistically, I've heard that,
+
+475
+00:54:13,290 --> 00:54:21,500
+like you're more likely to have a car accident within two kilometers of being at your destination because your guard goes down.
+
+476
+00:54:21,500 --> 00:54:24,680
+Or something like that. Don't quote me on those numbers, I might be making some of that.
+
+477
+00:54:24,680 --> 00:54:28,820
+But I think the idea is your guard can go down if you think you're safe.
+
+478
+00:54:28,820 --> 00:54:41,980
+And if I think that I'm safe, I might miss a defect here. But this all looks right.
+
+479
+00:54:41,980 --> 00:54:51,400
+I'm really just sort of comparing and making sure that the logic of the CSX is not changing except for the attribute,
+
+480
+00:54:51,400 --> 00:54:54,730
+the selected attribute, and then I'm going have to do a pass and make sure. OK.
+
+481
+00:54:54,730 --> 00:55:06,110
+This is gonna be a pain in the butt. You have to do a pass and make sure he hasn't missed anything which is going to blow.
+
+482
+00:55:06,110 --> 00:55:22,420
+OK. OK.
+
+483
+00:55:22,420 --> 00:55:30,400
+Select. And down here.
+
+484
+00:55:30,400 --> 00:55:37,550
+Let me just see what the.
+
+485
+00:55:37,550 --> 00:55:45,860
+So Matt Nurnberg, who I believe is watching I hope I pronounce his last name right, might be the first time I've ever said it out loud,
+
+486
+00:55:45,860 --> 00:55:50,330
+has just suggested that it might be easier for me to review this patch if I push it to Mars,
+
+487
+00:55:50,330 --> 00:55:54,710
+review myself, which might not be a bad idea,
+
+488
+00:55:54,710 --> 00:56:03,680
+because one of the things that most of you will do for me is it will allow me to see the individual changes.
+
+489
+00:56:03,680 --> 00:56:08,240
+Actually, that's a great idea. Let me. I like that idea, Matt.
+
+490
+00:56:08,240 --> 00:56:14,090
+I like it. So, I mean, do push review.
+
+491
+00:56:14,090 --> 00:56:23,370
+And I'm pretty sure I can say that there's no. I can give it some review I.D.
+
+492
+00:56:23,370 --> 00:56:26,510
+So I'm going to override the.
+
+493
+00:56:26,510 --> 00:56:36,620
+Review I.D. to point to Georges, because I don't even though I'm basing it on top of waiting and no, here's why I wanted to argue H.I.G. push.
+
+494
+00:56:36,620 --> 00:56:45,450
+I think Sea Review. And that will just. Do the work for the one hour, it's on tip, and I'm pretty sure the patch on tip has the bug.
+
+495
+00:56:45,450 --> 00:56:52,610
+It does not. So I'm going to put the bug number in there.
+
+496
+00:56:52,610 --> 00:56:58,400
+Even though I probably could have just supplied it may have been easier in the end.
+
+497
+00:56:58,400 --> 00:57:10,500
+So a little more mercurial dancing for you people. I should probably play some, like, circus music while I do it.
+
+498
+00:57:10,500 --> 00:57:16,500
+Now, I'm going to push C review, and I think that's going to do what I want.
+
+499
+00:57:16,500 --> 00:57:23,950
+It doesn't know what I'm talking about. OK, push our dot and then I'm going to say review.
+
+500
+00:57:23,950 --> 00:57:27,870
+I'm going to pass a review I.D. of this.
+
+501
+00:57:27,870 --> 00:57:36,200
+The only reason I tried C is because I saw someone mentioned it Niazi the other day.
+
+502
+00:57:36,200 --> 00:57:49,350
+So I'm doing this strictly to aid my reviewing. Can I go back to my car for.
+
+503
+00:57:49,350 --> 00:58:14,470
+OK. A bunch of stuff gets into the. Mario.
+
+504
+00:58:14,470 --> 00:58:21,780
+Actually, you know what I should have done now that I think about it. Is she rebase?
+
+505
+00:58:21,780 --> 00:58:27,890
+Are. Two, six to eighty five to destination.
+
+506
+00:58:27,890 --> 00:58:32,750
+Twenty. She's going to do a quick rebase here because there's some cruft in there that I don't
+
+507
+00:58:32,750 --> 00:58:37,340
+want to include in this thing and I'm pushing I really just want to look at the last one.
+
+508
+00:58:37,340 --> 00:58:47,340
+I don't know why. All right.
+
+509
+00:58:47,340 --> 00:59:13,390
+Done. So I should really just do like HGV push tip.
+
+510
+00:59:13,390 --> 00:59:18,160
+Matt is saying that I had to specify the revision as an argument to dash.
+
+511
+00:59:18,160 --> 00:59:31,800
+So that was my problem. OK.
+
+512
+00:59:31,800 --> 00:59:44,730
+So. I don't even need to, like, publish this or anything.
+
+513
+00:59:44,730 --> 00:59:50,240
+I just need to. Look at the stuff that George.
+
+514
+00:59:50,240 --> 00:59:55,070
+So this is nice because I don't know if you can see this, but only like the thing that he changed.
+
+515
+00:59:55,070 --> 00:59:57,530
+This line is yellow because he changed something in here.
+
+516
+00:59:57,530 --> 01:00:05,660
+But this area that he added stuff is what's highlighted so that I know he didn't change anything surrounding it, which is really, really helpful.
+
+517
+01:00:05,660 --> 01:00:09,110
+So I don't have to look at the whole line. So I actually I really appreciate the suggestion, Matt.
+
+518
+01:00:09,110 --> 01:00:15,870
+And I get the the fact that I can, like, extend and expand the context here, which is really great.
+
+519
+01:00:15,870 --> 01:00:22,350
+Like, if I need to see more. So this is also starting to turn into like an ad for Monzer View.
+
+520
+01:00:22,350 --> 01:00:30,620
+OK. So this is really useful. Um.
+
+521
+01:00:30,620 --> 01:00:37,550
+Yep, yep, yep, we're already there. He's just adding visually, visually, visually, visually.
+
+522
+01:00:37,550 --> 01:00:43,300
+See, this is so much faster. Good, good, good. Again, I appreciate the suggestion.
+
+523
+01:00:43,300 --> 01:00:47,030
+That was great. So this was under where was I?
+
+524
+01:00:47,030 --> 01:00:50,410
+Dev Ed. And I hope he got it all.
+
+525
+01:00:50,410 --> 01:01:00,200
+Let me extend the whole file. I'll just check the whole thing.
+
+526
+01:01:00,200 --> 01:01:12,160
+Like if I do selected. Yeah, I think he.
+
+527
+01:01:12,160 --> 01:01:16,020
+Yep, got that on. Yes.
+
+528
+01:01:16,020 --> 01:01:21,680
+OK. You got them all. So shrink that back down.
+
+529
+01:01:21,680 --> 01:01:26,270
+Blah, blah, blah. OK. And move forward. Which?
+
+530
+01:01:26,270 --> 01:01:36,410
+This is Tab's. This is like the main sort of shared tab styling CSX for a across like Windows Linux OSX.
+
+531
+01:01:36,410 --> 01:01:41,720
+There's a bunch of shared code and this is it. So this is pretty important because this is for the default theme.
+
+532
+01:01:41,720 --> 01:01:53,220
+Really needed this one. Right? That looks right.
+
+533
+01:01:53,220 --> 01:02:00,620
+Trying to think if there are any cases where we still want to use selected. And I can't think of one.
+
+534
+01:02:00,620 --> 01:02:32,240
+You didn't miss any in here. Did he? You might want to say that.
+
+535
+01:02:32,240 --> 01:02:38,080
+I probably need to publish that in order to make a comment. Here's the problem.
+
+536
+01:02:38,080 --> 01:02:45,250
+I can publish this to make my comments in here. I don't know if George has ever used Monzur before.
+
+537
+01:02:45,250 --> 01:02:57,900
+He'd probably feel like he figured out pretty fast. I don't.
+
+538
+01:02:57,900 --> 01:03:04,880
+Looks all fine, looks fine, it's fine, looks fine, it's fine, it's fine.
+
+539
+01:03:04,880 --> 01:03:15,540
+Fine. I don't see anything here that he missed.
+
+540
+01:03:15,540 --> 01:03:21,480
+Usually selected. It's true. It's interesting that.
+
+541
+01:03:21,480 --> 01:03:30,190
+Some of the time we're using visually selected equals true without quotes, and sometimes we use it with quotes around the true.
+
+542
+01:03:30,190 --> 01:03:34,910
+I'm certain both are valid, but there's a little inconsistency there.
+
+543
+01:03:34,910 --> 01:03:40,200
+But I'm not going to harp on it. I'm not going to make George fix things that.
+
+544
+01:03:40,200 --> 01:03:46,590
+Are not related. This actually looks like he got all them in here, as far as I can tell.
+
+545
+01:03:46,590 --> 01:03:53,770
+Then there's Zul, CSX. Now, this have to be really careful about.
+
+546
+01:03:53,770 --> 01:03:57,760
+Moore's user focused normal. Try to remember what that does.
+
+547
+01:03:57,760 --> 01:04:10,360
+Let me just refresh my memory. What does Moore's user focus do? Used indicate where the element of focus and the element can only have focus.
+
+548
+01:04:10,360 --> 01:04:15,680
+It seems whenever we have our visually selected, that makes sense.
+
+549
+01:04:15,680 --> 01:04:24,760
+So I think we're OK. They're. There's nothing else he missed in here with selected right now.
+
+550
+01:04:24,760 --> 01:04:33,990
+All right, away you go. Where was I?
+
+551
+01:04:33,990 --> 01:04:42,320
+So I'm getting too fancy, I'm doing this like expand collab stuff and I'm losing my spot, so I should probably.
+
+552
+01:04:42,320 --> 01:04:48,580
+Relax a little bit on that. Where was I? I was looking at.
+
+553
+01:04:48,580 --> 01:04:54,130
+Tab Zul, CSX. OK, so now he's in the TAB box binding.
+
+554
+01:04:54,130 --> 01:05:01,210
+This is the tool kit, XBRL binding that defines like all the shared tab stuff.
+
+555
+01:05:01,210 --> 01:05:07,030
+And he had to say visually selected here so that the styling will work.
+
+556
+01:05:07,030 --> 01:05:18,340
+This is the stuff we'd already looked at before. What's all this?
+
+557
+01:05:18,340 --> 01:05:24,200
+Make sure that this still makes sense. Yes, yes, it does.
+
+558
+01:05:24,200 --> 01:05:31,530
+This is all for like. Does this make sense before selected?
+
+559
+01:05:31,530 --> 01:05:40,650
+Match your for selected. I wonder if this stuff is supposed to be more for a logical selection than visual selection.
+
+560
+01:05:40,650 --> 01:05:53,320
+Like what is before selected used for. I wonder if we have a.
+
+561
+01:05:53,320 --> 01:05:59,820
+Documentation about that. Yeah.
+
+562
+01:05:59,820 --> 01:06:05,150
+This is set to true, the tab is mightly before the Curley's like the tab, said Mackley.
+
+563
+01:06:05,150 --> 01:06:11,820
+And you shouldn't adjust it mainly. It's probably useful for themes that they can adjust the appearance of the area around the site to tab.
+
+564
+01:06:11,820 --> 01:06:23,850
+OK. So it's probably all right. That'd be.
+
+565
+01:06:23,850 --> 01:06:40,740
+Just now, I was thinking, should this be before visually selected? But that's just going to break more stuff in themes.
+
+566
+01:06:40,740 --> 01:06:51,240
+I also wonder if maybe instead of having a themes change, we make it so that the rest of the browser logic uses like logically selected, but.
+
+567
+01:06:51,240 --> 01:07:01,610
+You had to pick one. I think we picked the theme one, and that's probably that is probably the best choice.
+
+568
+01:07:01,610 --> 01:07:12,790
+OK. So that's fine. This makes sense.
+
+569
+01:07:12,790 --> 01:07:18,470
+Uh, there's no. Geter for underscore selected.
+
+570
+01:07:18,470 --> 01:07:32,260
+So I just assume that it's going to. What if we try and get underscore selected and and try to remember what we do in that case?
+
+571
+01:07:32,260 --> 01:07:48,990
+If we only have a setter? Well, let's find out our build should be done so we can actually run this thing and take a look at what is up.
+
+572
+01:07:48,990 --> 01:07:55,760
+So first thing is that. I'm seeing.
+
+573
+01:07:55,760 --> 01:08:01,070
+I don't know if you can see this. Take a look. So we've reached.
+
+574
+01:08:01,070 --> 01:08:06,280
+I didn't finish the inspection. I'm now into like the testing.
+
+575
+01:08:06,280 --> 01:08:12,720
+But take a look at this up here where I'm sort of circling on us. I'm not sure if you're going to see it, but there's like a glitch.
+
+576
+01:08:12,720 --> 01:08:18,660
+There were the top. Is not being like the stroke is not being applied properly.
+
+577
+01:08:18,660 --> 01:08:24,300
+So that's a problem. So this. That's a problem.
+
+578
+01:08:24,300 --> 01:08:30,960
+Now, what is that the same case for? Like a new tab is not remote.
+
+579
+01:08:30,960 --> 01:08:36,540
+This is a remote tab. Is it also yet? Look at that.
+
+580
+01:08:36,540 --> 01:08:44,130
+That's a problem. It glitches out pretty hard.
+
+581
+01:08:44,130 --> 01:08:49,110
+Knows the font color changes as well.
+
+582
+01:08:49,110 --> 01:08:56,220
+Like I'm seeing a flash. In that small window of time.
+
+583
+01:08:56,220 --> 01:09:01,720
+So I should be writing this stuff down. Glitch.
+
+584
+01:09:01,720 --> 01:09:20,440
+So issues glitch in font tab, fun title font and top stroke when switching during.
+
+585
+01:09:20,440 --> 01:09:25,370
+Wait for. Paint.
+
+586
+01:09:25,370 --> 01:09:34,830
+Message from content. Maybe if I want if I can capture what that looks like.
+
+587
+01:09:34,830 --> 01:09:43,370
+How would I do that? I could hang the content process. I will do that. I will hang the content process by.
+
+588
+01:09:43,370 --> 01:09:49,580
+Attaching my debugger to it. So. Let's see.
+
+589
+01:09:49,580 --> 01:09:56,290
+Shoot. I've got to Knightley is running and I don't know which one is.
+
+590
+01:09:56,290 --> 01:10:03,340
+The one I'm testing. Did we mention the process number here?
+
+591
+01:10:03,340 --> 01:10:07,330
+No, I'm gonna have to make a guess. Which one is it? Which one is it?
+
+592
+01:10:07,330 --> 01:10:14,890
+Oh, you know, what I could do is I could like. Paul is one.
+
+593
+01:10:14,890 --> 01:10:21,340
+Mm hmm. Or you know what? I'm not using Flash. All right, might be using flash or shoot.
+
+594
+01:10:21,340 --> 01:10:27,520
+I don't know how to detect it. I'm gonna have to flip a coin and assume that this one is under less load.
+
+595
+01:10:27,520 --> 01:10:32,570
+Is the one that, uh. I'm just going to flip a coin.
+
+596
+01:10:32,570 --> 01:10:38,120
+All right. I mean, attach to that process. Here we go.
+
+597
+01:10:38,120 --> 01:10:43,030
+One oh three nine eight. Was I right?
+
+598
+01:10:43,030 --> 01:10:49,710
+If I'm right, then. Whenever I pause this.
+
+599
+01:10:49,710 --> 01:10:55,500
+Tab switching will probably high was not right. Hosn outright.
+
+600
+01:10:55,500 --> 01:11:02,330
+So let's choose the other one. Well, there's it, one three, 97, seven.
+
+601
+01:11:02,330 --> 01:11:14,200
+OK. In 1977. And I can probably detach from this one safely.
+
+602
+01:11:14,200 --> 01:11:22,800
+OK. So now if I hang this. Oh, see, that's.
+
+603
+01:11:22,800 --> 01:11:26,910
+That's fine. When is the glitch showing up?
+
+604
+01:11:26,910 --> 01:11:33,270
+When does the glitch show up?
+
+605
+01:11:33,270 --> 01:11:45,840
+I don't know how I was gonna have to ask him to, like, flip back and forth quickly between two tabs quickly to see what I mean.
+
+606
+01:11:45,840 --> 01:11:48,840
+OK, are there any other issues?
+
+607
+01:11:48,840 --> 01:11:58,380
+I was looking into something, I was looking into what happens whenever we try and set or get something that doesn't have a getter, just has a center.
+
+608
+01:11:58,380 --> 01:12:03,840
+Is it just undefined? I forget it's been a while since I've been up in XBLA.
+
+609
+01:12:03,840 --> 01:12:11,050
+And so let's find out. Chief Browser's selected.
+
+610
+01:12:11,050 --> 01:12:16,840
+That's the tab, and then if I try and get logically selected, I think.
+
+611
+01:12:16,840 --> 01:12:21,850
+I think I just get undefined. That's what I got there. Logically selected.
+
+612
+01:12:21,850 --> 01:12:27,620
+And is the same true for. Underscore, selected, probably.
+
+613
+01:12:27,620 --> 01:12:38,540
+Yeah, but. Here, let Tadi close G browser.
+
+614
+01:12:38,540 --> 01:12:47,540
+Logically, no. Selected tab, I'll set the tab to be that I will change the tab.
+
+615
+01:12:47,540 --> 01:12:56,980
+And now I will do tab dot logically selected equals true.
+
+616
+01:12:56,980 --> 01:13:04,250
+I see logically selected seems to affect.
+
+617
+01:13:04,250 --> 01:13:13,970
+A fact the font sized, the font weight or color or something.
+
+618
+01:13:13,970 --> 01:13:27,250
+So I should write that down. The selected attribute still seems to affect the font weight of the TAB title, at least on OSX.
+
+619
+01:13:27,250 --> 01:13:35,030
+So because there could be a whole host of other issues in the other platforms as well.
+
+620
+01:13:35,030 --> 01:13:48,300
+And then what about so logically selected, true and also backed false, and then what about tab dot selected equals?
+
+621
+01:13:48,300 --> 01:13:53,800
+False. That's just because, I mean, I'm basically just doing logically selective again.
+
+622
+01:13:53,800 --> 01:13:59,160
+But what about visually selected equals? True.
+
+623
+01:13:59,160 --> 01:14:09,770
+So, OK, so now I've re-created the problem. So that occurs whenever it's visually selected.
+
+624
+01:14:09,770 --> 01:14:17,420
+So that actually answers this question here. Is there a case when selected equals false and usually slightly get set to true?
+
+625
+01:14:17,420 --> 01:14:21,950
+There must be a case because that's what's causing this glitch.
+
+626
+01:14:21,950 --> 01:14:32,440
+So this appears to happen when selected equals false or logically selected.
+
+627
+01:14:32,440 --> 01:14:38,310
+It's false and visually selected is true.
+
+628
+01:14:38,310 --> 01:14:42,150
+So that's a thing. Glad I figured that out.
+
+629
+01:14:42,150 --> 01:14:51,750
+Now, actually, I can actually show him what that looks like now. I think I can.
+
+630
+01:14:51,750 --> 01:15:06,050
+Except that, yeah. There we go. And take a screenshot. And I will paste it in here.
+
+631
+01:15:06,050 --> 01:15:12,650
+That was just a link to. Oh, boy. I wanted.
+
+632
+01:15:12,650 --> 01:15:25,810
+I'm opening up a 90 10 window because. Can't copy images from shift right click allows me to get past the capture copy image.
+
+633
+01:15:25,810 --> 01:15:30,290
+Yeah. And eaten US window. Currently we can't copy images. We can only copy, like, text content.
+
+634
+01:15:30,290 --> 01:15:40,350
+So that's why I'm. What?
+
+635
+01:15:40,350 --> 01:15:43,980
+All right. Well, anyways, I've got a screenshot of it. I can supply it.
+
+636
+01:15:43,980 --> 01:15:51,020
+I can reproduce it pretty easily. I'll get a screenshot uploaded screenshot.
+
+637
+01:15:51,020 --> 01:16:01,780
+Let's go back to the patch. So already this is starting to look like it's going to be an hour minus because of these problems.
+
+638
+01:16:01,780 --> 01:16:06,270
+But I mean, a whole bunch of it works like, let's see.
+
+639
+01:16:06,270 --> 01:16:16,450
+False. So, like. This that works well.
+
+640
+01:16:16,450 --> 01:16:19,930
+It'd be nice. What was I what was it I wanted to do?
+
+641
+01:16:19,930 --> 01:16:28,710
+I want to, like, hang the content process that we're waiting on the paint and then.
+
+642
+01:16:28,710 --> 01:16:40,100
+In that small window of time. Like whenever we're waiting for a response.
+
+643
+01:16:40,100 --> 01:16:47,620
+We do hold. We do like not actually selected the tab until.
+
+644
+01:16:47,620 --> 01:16:52,870
+Until either the time out or the spent like or we actually got the message, so it's doing the job.
+
+645
+01:16:52,870 --> 01:17:03,750
+It's like it's delivering just patchworks. It's just that there are some rough edges still.
+
+646
+01:17:03,750 --> 01:17:13,770
+So, again, he's just changing visually, visually, visually. Usually.
+
+647
+01:17:13,770 --> 01:17:19,790
+This is for Lennix. I'm going to go through.
+
+648
+01:17:19,790 --> 01:17:37,540
+So after all this is done, I should right to do. Go through and make sure there aren't any selected, visually selected changes that missed.
+
+649
+01:17:37,540 --> 01:17:46,310
+Not mixed, missed. We're starting to get close to two, 30.
+
+650
+01:17:46,310 --> 01:17:52,890
+And that's about when I'm planning on capping it.
+
+651
+01:17:52,890 --> 01:18:01,380
+Kay. Should we select it?
+
+652
+01:18:01,380 --> 01:18:11,630
+That's a problem. That's a problem right there. Visually elected, usually elected.
+
+653
+01:18:11,630 --> 01:18:22,480
+OK. So that's a problem. I'm putting my notes here in this ether pad.
+
+654
+01:18:22,480 --> 01:18:29,630
+You know, I should just. Publish. And then show George this stuff.
+
+655
+01:18:29,630 --> 01:18:39,800
+So Alamy published this review request. Um.
+
+656
+01:18:39,800 --> 01:18:43,940
+Yeah, it's what we to do. I was thinking about that, like, do I really want to do this?
+
+657
+01:18:43,940 --> 01:18:59,170
+And yes, I do really want to do this. So now I can.
+
+658
+01:18:59,170 --> 01:19:06,480
+I have an R question mark. Myself, I didn't set myself as a reviewer, but I can now, like, make comments.
+
+659
+01:19:06,480 --> 01:19:15,010
+Visually elected. And open issues.
+
+660
+01:19:15,010 --> 01:19:21,900
+And whenever I published this, this is going to mirror a whole bunch of comments to bug Izola.
+
+661
+01:19:21,900 --> 01:19:31,650
+And if George has any questions about Mizer view, he can point them out to me or you can ask me and I can get more people using it visually elected.
+
+662
+01:19:31,650 --> 01:19:38,060
+I wonder if that's something that he did more than once. No. OK. So we're all right there.
+
+663
+01:19:38,060 --> 01:19:41,540
+Be vigilant. This is exactly the sort of thing that could have slipped by if I just was like,
+
+664
+01:19:41,540 --> 01:19:47,000
+yeah, it was a mass change of visually selected to slice individually selected.
+
+665
+01:19:47,000 --> 01:19:53,420
+And that could have totally slipped by if I'd just done inspection. I probably would have.
+
+666
+01:19:53,420 --> 01:19:59,060
+I probably would have noticed whenever I was manually testing. So.
+
+667
+01:19:59,060 --> 01:20:05,000
+But yeah, that's exactly the sort of thing that I could have missed. I would have left I was likely to have missed.
+
+668
+01:20:05,000 --> 01:20:08,360
+It's actually thanks to review board, because I don't know if you see this, but again,
+
+669
+01:20:08,360 --> 01:20:14,420
+it's highlighted the ass as saying that this is something that was removed and that caught my eye.
+
+670
+01:20:14,420 --> 01:20:19,790
+And that's something that Splinter and Bugs Ala does not do, is sub highlight within a day.
+
+671
+01:20:19,790 --> 01:20:26,750
+So this review board is saving my butt here and. And that's good.
+
+672
+01:20:26,750 --> 01:20:36,410
+So it's just a shadow to review board. Good stuff. So this looks the rest of it looks OK.
+
+673
+01:20:36,410 --> 01:20:46,060
+It's just now a matter of. So let's go back to the top.
+
+674
+01:20:46,060 --> 01:20:51,020
+I need to closely examine the logic of setting selected and visually selected and go through,
+
+675
+01:20:51,020 --> 01:20:57,370
+make sure there aren't a selected to visually select changes that GW 280 missed.
+
+676
+01:20:57,370 --> 01:21:05,250
+I can actually upload the screenshot to Mars review, actually.
+
+677
+01:21:05,250 --> 01:21:12,780
+I can, uh. I could do that. I could show him.
+
+678
+01:21:12,780 --> 01:21:29,300
+Screenshots. So Maseru is not without its bugs.
+
+679
+01:21:29,300 --> 01:21:35,300
+There are still problems. And apparently adding files is one of them.
+
+680
+01:21:35,300 --> 01:21:43,380
+I can't I can't just do that. Although apparently it's.
+
+681
+01:21:43,380 --> 01:21:47,980
+I do have a draft of something. Oh, so it did at it.
+
+682
+01:21:47,980 --> 01:21:51,840
+OK. So if I published this. It's going to be.
+
+683
+01:21:51,840 --> 01:21:57,690
+Associate. I don't want to. I don't really wanna get into this discard out.
+
+684
+01:21:57,690 --> 01:22:05,670
+I'll do I'll find some other way of showing him. I'll find some other way.
+
+685
+01:22:05,670 --> 01:22:18,480
+So this is the stuff I really kind of want more want to get into was like the logic of the switching of the.
+
+686
+01:22:18,480 --> 01:22:29,410
+What am I doing? Switcher. So it was called.
+
+687
+01:22:29,410 --> 01:22:34,330
+I basically just want to scroll down and find the change that he added,
+
+688
+01:22:34,330 --> 01:22:38,440
+but I expanded it out because I want to see all the context of the stuff above it.
+
+689
+01:22:38,440 --> 01:22:45,820
+I probably should've just gone up by instead of like every bit of code I should have asked for, just like a chunk.
+
+690
+01:22:45,820 --> 01:22:50,470
+The problem is that Moore's view does not understand XBRL at all.
+
+691
+01:22:50,470 --> 01:22:55,660
+Normally would have been able to like, figure out, oh, I will expand to the top of the function,
+
+692
+01:22:55,660 --> 01:23:04,120
+but it doesn't understand XBRL and what a function looks like. That's something we can maybe teach it.
+
+693
+01:23:04,120 --> 01:23:07,780
+So this is happening. This is happening when we remove a tab.
+
+694
+01:23:07,780 --> 01:23:15,280
+So after a tab is removed, if you remove a tab, there's this like sweet little transition that occurs.
+
+695
+01:23:15,280 --> 01:23:22,560
+And then we actually remove the DOM node and remove tab is what fires whenever the animation is done.
+
+696
+01:23:22,560 --> 01:23:24,330
+I'm pretty sure that's what goes on.
+
+697
+01:23:24,330 --> 01:23:34,560
+It's been a while since I've been in the tabs and he's made it so that we when we update that tab, positional properties and attributes.
+
+698
+01:23:34,560 --> 01:23:40,030
+Selected tab. Remove tab.
+
+699
+01:23:40,030 --> 01:23:44,440
+I guess remove tab by the time we've removed the tab, we've changed the selected tab.
+
+700
+01:23:44,440 --> 01:23:50,270
+And so now we are. Updating so that.
+
+701
+01:23:50,270 --> 01:23:59,800
+We've selected a new tab, having removed the old tab. Like, if I were looking at this one.
+
+702
+01:23:59,800 --> 01:24:05,630
+So I don't know if you saw that. But whenever I close this tab.
+
+703
+01:24:05,630 --> 01:24:09,410
+We don't choose this one right away, we wait until the transition is done and then we choose that.
+
+704
+01:24:09,410 --> 01:24:14,630
+Maybe that was a little fast. I don't know if the frame rate is good enough, but that's what's going on.
+
+705
+01:24:14,630 --> 01:24:23,900
+So after the transition is done, then we choose. But that we must figure out what the selected tab is supposed to be.
+
+706
+01:24:23,900 --> 01:24:27,890
+That must occur somewhere up here, I guess, or or maybe outside this functions.
+
+707
+01:24:27,890 --> 01:24:31,970
+Doesn't really matter. But then we have to set it to visually selected as true.
+
+708
+01:24:31,970 --> 01:24:40,700
+And that. That I don't know about.
+
+709
+01:24:40,700 --> 01:24:46,790
+I don't know if we want to do that, because what if this the tab that we're switching to isn't ready?
+
+710
+01:24:46,790 --> 01:24:56,290
+What if, like, when we closed the tab? We have to wait for it to get ready to paint, to switch to the other one.
+
+711
+01:24:56,290 --> 01:25:06,640
+So shouldn't we be waiting here? I think so.
+
+712
+01:25:06,640 --> 01:25:14,140
+When we close the tab. And switch to another one.
+
+713
+01:25:14,140 --> 01:25:20,220
+I should be more specific when we close the selected tab.
+
+714
+01:25:20,220 --> 01:25:27,000
+And switched to another one and and remove tab.
+
+715
+01:25:27,000 --> 01:25:34,410
+That's, uh. And remove tab. I had to escape the underlined or otherwise it was using it.
+
+716
+01:25:34,410 --> 01:25:43,730
+I should disable markdown. That's why. And remove tab.
+
+717
+01:25:43,730 --> 01:25:55,500
+Gets fired. When the. Transition ends.
+
+718
+01:25:55,500 --> 01:25:59,430
+We're switching to some other tab.
+
+719
+01:25:59,430 --> 01:26:07,380
+I think it's usually the last selected tab.
+
+720
+01:26:07,380 --> 01:26:15,040
+Don't we need to wait for that tab to be ready to paint?
+
+721
+01:26:15,040 --> 01:26:20,800
+Shouldn't. We are not set, visually selected.
+
+722
+01:26:20,800 --> 01:26:26,650
+True, until the content for that tab is ready.
+
+723
+01:26:26,650 --> 01:26:31,600
+Boom. That's what I think is the real problem.
+
+724
+01:26:31,600 --> 01:26:40,830
+So I think I can close that up now. And.
+
+725
+01:26:40,830 --> 01:26:46,000
+So I've learned my lesson. I'm going to pump up by 20. That's much better.
+
+726
+01:26:46,000 --> 01:26:51,180
+Move tab, too. Just so happens that this is the method header right here.
+
+727
+01:26:51,180 --> 01:27:00,320
+So that's good. Move tab, too. So we're going to be moving some tab to some index is how this one will work.
+
+728
+01:27:00,320 --> 01:27:09,620
+And then. We set selection to false when we move it.
+
+729
+01:27:09,620 --> 01:27:20,410
+I don't know why moved Hab to. Why would we do that?
+
+730
+01:27:20,410 --> 01:27:28,650
+We must do it for a reason. I don't know what the reason is right now. The current tab.
+
+731
+01:27:28,650 --> 01:27:33,150
+It's more like we don't show it being selected anymore.
+
+732
+01:27:33,150 --> 01:27:44,130
+And then we move the DOM node. And then we make it so that all of the tabs are not selected.
+
+733
+01:27:44,130 --> 01:27:49,680
+And then we. What? Why do we do this?
+
+734
+01:27:49,680 --> 01:28:00,290
+This isn't Georgia's fault. This is just weird. We like what we re index.
+
+735
+01:28:00,290 --> 01:28:05,220
+The tabs and make sure that they're not selected, I guess. When we move a tab.
+
+736
+01:28:05,220 --> 01:28:10,960
+This is kind of wacky. Now, because.
+
+737
+01:28:10,960 --> 01:28:16,640
+The current tab like moving a tab.
+
+738
+01:28:16,640 --> 01:28:22,930
+It doesn't. Like, if I do this, we don't actually change the content.
+
+739
+01:28:22,930 --> 01:28:31,180
+Like, I just move this around and the content doesn't need to change. So I think we're okay to set visually selected as true right away here.
+
+740
+01:28:31,180 --> 01:28:40,440
+That's not a problem. This is just weirdness. I don't know why that is.
+
+741
+01:28:40,440 --> 01:28:47,520
+OK, so now we're in the guts of the stuff that Bill Hemmer wrote in that previous patch.
+
+742
+01:28:47,520 --> 01:28:53,490
+This is intense and there's a bunch of documentation.
+
+743
+01:28:53,490 --> 01:28:57,930
+I might as well just expand all this. Here's the documentation.
+
+744
+01:28:57,930 --> 01:29:04,410
+I've read it if you're interested in reading it. Go read it. It's inside that bug that I was referring to.
+
+745
+01:29:04,410 --> 01:29:13,770
+What is it? I don't know. Some bug.
+
+746
+01:29:13,770 --> 01:29:21,950
+I remember what it was, but rewind the video, I referred to it.
+
+747
+01:29:21,950 --> 01:29:31,150
+That's key. That's key here. Looking at the time, it's almost to 30, I'm probably going to cap this in a second.
+
+748
+01:29:31,150 --> 01:29:38,740
+Let's let's just finish examining the logic of this stuff. Basically, I'm going to.
+
+749
+01:29:38,740 --> 01:29:43,300
+Finish this checkbox thing. I'm not finished. This is gonna be boring, this part.
+
+750
+01:29:43,300 --> 01:29:48,250
+I'm not going to show you that. I will cap the stream before that happens.
+
+751
+01:29:48,250 --> 01:29:52,300
+But we actually we did it a fair bit.
+
+752
+01:29:52,300 --> 01:29:56,470
+We didn't nearly review as many things as I thought we might review this one kind of.
+
+753
+01:29:56,470 --> 01:30:02,970
+Kind of ended up being more involved than I thought it'd be. But we had some defect, so that's good.
+
+754
+01:30:02,970 --> 01:30:08,990
+It's always good stuff didn't ship. So let's see, when is he updating this stuff?
+
+755
+01:30:08,990 --> 01:30:16,920
+This happens inside this method, which is update display. This function is called, after all, the main state changes to make sure.
+
+756
+01:30:16,920 --> 01:30:22,940
+All of the Maine state changes to make sure we display the right tab.
+
+757
+01:30:22,940 --> 01:30:31,630
+It chooses whether or not to show Spinner and Georgia's making itself the last of the last visible tab.
+
+758
+01:30:31,630 --> 01:30:36,670
+The last visible tab is not equal to this visible tab.
+
+759
+01:30:36,670 --> 01:30:43,360
+Then we make it so that the last visible tabs visually selected is false and visually selected as true.
+
+760
+01:30:43,360 --> 01:30:54,930
+I wonder if this is what's causing this glitch. I think this is causing a glitch.
+
+761
+01:30:54,930 --> 01:31:05,350
+I think this is putting us in a state. This is potentially this can.
+
+762
+01:31:05,350 --> 01:31:13,400
+Potentially put a tab in a state where it's selected.
+
+763
+01:31:13,400 --> 01:31:19,310
+It is. Not. Logically selected.
+
+764
+01:31:19,310 --> 01:31:28,230
+I turn off Mark down again, but is visually selected.
+
+765
+01:31:28,230 --> 01:31:39,450
+That's glitching so pretty hard when you switch back and forth between Tab's.
+
+766
+01:31:39,450 --> 01:31:57,210
+I can see this for a split second. The TAB title Color is wrong and the tab, the top of the tab appears to be missing.
+
+767
+01:31:57,210 --> 01:32:09,850
+You can easily reproduce the visual glitch by setting visually selected.
+
+768
+01:32:09,850 --> 01:32:22,520
+By setting visually selected to true on a tab that is not logically selected.
+
+769
+01:32:22,520 --> 01:32:29,310
+Issue opened. OK.
+
+770
+01:32:29,310 --> 01:32:34,690
+So I think. I'm going to cap it there.
+
+771
+01:32:34,690 --> 01:32:38,080
+I still have quite a bit to do to review this patch.
+
+772
+01:32:38,080 --> 01:32:45,010
+I'll probably do that this afternoon. I think that's what I just did.
+
+773
+01:32:45,010 --> 01:32:53,690
+I've written about that. I still need to write about this.
+
+774
+01:32:53,690 --> 01:33:00,170
+But I will do that after the stream. So let me go back to the agenda.
+
+775
+01:33:00,170 --> 01:33:05,500
+See see what we did. So here we are. We got this far.
+
+776
+01:33:05,500 --> 01:33:11,090
+We we got about three out of nine. We got a third of the way in.
+
+777
+01:33:11,090 --> 01:33:16,850
+Not bad. I kind of got a freebie here whenever I reviewed two things, basically at the same time.
+
+778
+01:33:16,850 --> 01:33:23,900
+And then we got bogged down pretty hard in this one. So I'm going to be reviewing probably for like the rest of these patches.
+
+779
+01:33:23,900 --> 01:33:28,190
+A good chunk of these today. And then I'll probably end up working on this bug.
+
+780
+01:33:28,190 --> 01:33:34,100
+You might see me working on this next week. But let me know, like I'm capping it here.
+
+781
+01:33:34,100 --> 01:33:37,520
+Let me know how this went like. Are you interested in seeing me review these patches?
+
+782
+01:33:37,520 --> 01:33:44,300
+Is this more interesting than, say, the the the actual hacking on patches?
+
+783
+01:33:44,300 --> 01:33:48,770
+Is it like do you want to see more of a mix? Because I mean, I've always got review.
+
+784
+01:33:48,770 --> 01:33:53,240
+Q I've always got reviews ready to like I'm ready to do so.
+
+785
+01:33:53,240 --> 01:33:57,140
+I can do more reviewing or I can do more hacking or I can do a mixture of both.
+
+786
+01:33:57,140 --> 01:34:01,700
+Really I am open for feedback. Let me know in the comments below this video.
+
+787
+01:34:01,700 --> 01:34:07,340
+If you're on air Mazola you can comment. You can also contact me on Twitter here.
+
+788
+01:34:07,340 --> 01:34:14,570
+For some reason I put in my GitHub account. Now you, I guess, could send me a pull request, letting me know where you'd like me to do.
+
+789
+01:34:14,570 --> 01:34:18,290
+And I also have a link to my blog. I guess this is just self promotion area down here.
+
+790
+01:34:18,290 --> 01:34:26,600
+I don't know why, but that's stuff. Okay. So I think I'm gonna call it there.
+
+791
+01:34:26,600 --> 01:34:36,140
+Thanks so much for watching. I hope this was interesting. I hope it kind of illuminated what goes on whenever a reviewer like reviews, patches,
+
+792
+01:34:36,140 --> 01:34:42,160
+or at least what I do when I review patches, I bet other bet other reviewers do other things.
+
+793
+01:34:42,160 --> 01:34:47,390
+I bet there are some other techniques out there that I'm not using that would be really useful and that I should use.
+
+794
+01:34:47,390 --> 01:34:56,000
+So let me know. Let me know if you saw bugs fly by like defects in these patches fly by that I should have caught and how like show me.
+
+795
+01:34:56,000 --> 01:35:05,040
+Teach me. And I think that's all I wanted to say.
+
+796
+01:35:05,040 --> 01:35:25,300
+Yeah. I'm calling it right here. So thanks a lot for watching. I'll see you next week, 1:00 p.m. Eastern Time.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

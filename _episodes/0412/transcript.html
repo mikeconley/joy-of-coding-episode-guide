@@ -1,0 +1,3462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 412 - August 6, 2025</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 412 - August 6, 2025</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=46b67c25-91e5-44bc-affb-b30700fd1723</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=46b67c25-91e5-44bc-affb-b30700fd1723">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:05:04,840 --> 00:05:10,260
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy. Oh, dear.
+
+2
+00:05:10,770 --> 00:05:14,540
+Hello and welcome to episode 412 of the Joy of coding.
+
+3
+00:05:14,550 --> 00:05:19,500
+My name is Mike Connelly. It's so good to have you here. Good to be live hacking on some Firefox stuff today.
+
+4
+00:05:19,500 --> 00:05:25,170
+Going to be, um, you know, digging into some, some interesting stuff related to last week's um,
+
+5
+00:05:25,650 --> 00:05:29,610
+oh, FTP thing that we, we investigated and successfully fixed.
+
+6
+00:05:30,030 --> 00:05:35,309
+Um, I'll give you updates on that in just a quick second, but let's start by sharing my screen.
+
+7
+00:05:35,310 --> 00:05:40,110
+Let's let's get going. Why the hold up. So here's my screen.
+
+8
+00:05:40,440 --> 00:05:44,669
+Hey it's August 6th, 2025. Episode 412 A reminder. No plan survives breakfast.
+
+9
+00:05:44,670 --> 00:05:49,110
+I think I know what I'm going to do today. I think I know how it's going to go, but it might go sideways and might go horribly wrong.
+
+10
+00:05:49,110 --> 00:05:52,950
+And that's okay. We're going to just do our best dealing with it as it comes.
+
+11
+00:05:52,950 --> 00:05:59,700
+We're you're watching me do software development in the raw, and there's not been a whole lot that's been pre-planned or pre-scripted here.
+
+12
+00:06:00,090 --> 00:06:02,430
+If anything, this is the only script is this agenda.
+
+13
+00:06:02,430 --> 00:06:08,999
+Uh, the second thing is that, uh, the agenda that we're looking at is something you have access to if you're watching this on air.
+
+14
+00:06:09,000 --> 00:06:13,889
+Mozilla. Uh, check out the detail section for a link to the agenda. If you're watching this on YouTube, it'll be down in the video description.
+
+15
+00:06:13,890 --> 00:06:17,310
+If you're watching this on, uh, Twitch, it's down in the channel. Details.
+
+16
+00:06:17,310 --> 00:06:21,660
+Um, and if you're watching this anywhere else, let me know. I don't know where else this is being streamed.
+
+17
+00:06:21,660 --> 00:06:25,020
+I'm very curious. Uh, let's see, what else is there to say?
+
+18
+00:06:25,020 --> 00:06:28,110
+There is, uh, an episode guide. It's completely viewer driven.
+
+19
+00:06:28,110 --> 00:06:33,030
+And in fact, after we do our Keanu codes, let us update the episode guide,
+
+20
+00:06:33,510 --> 00:06:38,309
+because I believe some pull requests have come in and we should take a look at some of those pull requests.
+
+21
+00:06:38,310 --> 00:06:40,410
+I believe that's from Smurf. So we'll take a look at those.
+
+22
+00:06:40,830 --> 00:06:47,580
+Uh, and, uh, the episode guide is a great resource for you to figure, uh, some, uh, to sort of like, see what has been covered in past episodes.
+
+23
+00:06:47,850 --> 00:06:53,700
+I did receive an email. A lot of permalinks are broken in the episode guide.
+
+24
+00:06:54,840 --> 00:07:02,430
+Not all of them, but a lot of them. So I have like a to do to sort of like figure out how to get that fixed.
+
+25
+00:07:02,430 --> 00:07:06,180
+I don't know what's gone wrong there, but I, I'm going to have to sort that out.
+
+26
+00:07:08,160 --> 00:07:15,980
+My apologies if you're watching this, uh, stream. And, um, you had to find some weird way of getting there because the permalinks were broken.
+
+27
+00:07:15,990 --> 00:07:20,130
+My bad. Um, you know, try not to break links, you know what I'm saying?
+
+28
+00:07:20,850 --> 00:07:24,600
+Um. Uh. Hang on, I've just to answer.
+
+29
+00:07:27,610 --> 00:07:37,250
+Um. Uh, I just had to answer someone's question.
+
+30
+00:07:37,730 --> 00:07:42,590
+Uh, all right, so let's, uh, let's get right into it. We'll start with our, uh, what we've been doing for the past couple episodes,
+
+31
+00:07:42,590 --> 00:07:45,889
+where we're going to look at a specific CCP code related to the episode number.
+
+32
+00:07:45,890 --> 00:07:55,310
+In this case, it's 412. The key auto codes image is, uh, it looks like John Wick with a knife having been thrown at his crotch.
+
+33
+00:07:55,310 --> 00:07:59,030
+I think that's what, uh, this is, I, I don't know which.
+
+34
+00:07:59,030 --> 00:08:02,329
+John, I gotta believe this is John Wick. He's in a suit.
+
+35
+00:08:02,330 --> 00:08:05,600
+He's kind of got long hair and a beard. I think that's John Wick.
+
+36
+00:08:05,810 --> 00:08:09,380
+There's violence ensuing. I think that's a knife.
+
+37
+00:08:09,830 --> 00:08:19,070
+Um, and this is for pre-condition failed. So let's look at what, 412, the, um, HTP code 412 means for our episode.
+
+38
+00:08:19,640 --> 00:08:29,750
+Uh, so 412 pre-condition failed. Uh, it's a error response status code indicates that access to the target resource was denied.
+
+39
+00:08:30,590 --> 00:08:35,329
+This can happen. This isn't, uh, necessarily like, uh, authorization failure.
+
+40
+00:08:35,330 --> 00:08:39,470
+This is just like a precondition failure. This happens with conditional requests.
+
+41
+00:08:40,430 --> 00:08:45,770
+Um, conditional requests? Uh, there's a bunch here.
+
+42
+00:08:46,010 --> 00:08:50,000
+Oh, yeah. Several Http headers lead to conditional access. These are if match.
+
+43
+00:08:50,300 --> 00:08:54,140
+If none match if modified. Since if unmodified. Since if range.
+
+44
+00:08:54,750 --> 00:09:00,620
+Um when the condition identified a by the if unmodified since or if match headers is not fulfilled.
+
+45
+00:09:01,640 --> 00:09:07,970
+In that case, the request, usually an upload or a modification of a resource cannot be made and this error response is sent back.
+
+46
+00:09:08,240 --> 00:09:13,150
+So for example uh here we have a and eater.
+
+47
+00:09:13,250 --> 00:09:17,030
+I don't know why precondition failed. This is not very explanatory.
+
+48
+00:09:17,030 --> 00:09:23,299
+What we're seeing here. When the help of the ETag in the if match headers, you can prevent conflicts from midair collisions.
+
+49
+00:09:23,300 --> 00:09:28,040
+For example, when editing some wiki pages contents hashed and put into an ETag in successful responses.
+
+50
+00:09:28,220 --> 00:09:29,750
+When saving changes to a wiki page,
+
+51
+00:09:29,750 --> 00:09:35,270
+the Post request will contain the if match header containing the ETag values that the client had stored from the last edit,
+
+52
+00:09:35,510 --> 00:09:38,419
+to make sure that it's not like blown away something uh,
+
+53
+00:09:38,420 --> 00:09:45,800
+to to check freshness of the resource on the server so it'll send like if match if the page hash is still this in the wiki example,
+
+54
+00:09:46,100 --> 00:09:48,499
+then go ahead and accept this post request.
+
+55
+00:09:48,500 --> 00:09:55,969
+And I guess if the hashes don't match, then the document had had changed in the interim and a for 12th May be said.
+
+56
+00:09:55,970 --> 00:10:06,140
+I didn't know that. That's neat. That's a neat thing. You know, a Http is more than just get post, delete and put um, you know,
+
+57
+00:10:06,140 --> 00:10:15,080
+there's a bunch of interesting stuff with headers and, and E tags and you know, this is a is it an amazing system.
+
+58
+00:10:15,770 --> 00:10:21,920
+Is it it like a, uh, it is the system that we have and is fairly robust given its age.
+
+59
+00:10:22,160 --> 00:10:25,700
+It is venerable. It's been around for a long time. It's built up a lot of cruft.
+
+60
+00:10:26,120 --> 00:10:35,720
+Um, but hey there, there are so many, uh, ways that it like, it's been battle tested and a lot of cases need to be considered.
+
+61
+00:10:36,020 --> 00:10:41,030
+And thank goodness, uh, it's the system we have today. Um, there's so much more.
+
+62
+00:10:41,030 --> 00:10:46,280
+There's so much more coming. Look at all these error codes I'm really excited for.
+
+63
+00:10:46,310 --> 00:10:49,490
+Uh, let's see, what's a what's a really exciting one?
+
+64
+00:10:49,700 --> 00:10:54,810
+I'm a teapot that's going to be an episode for 18. Let me, let me like I'll.
+
+65
+00:10:54,900 --> 00:10:58,610
+I won't spoil it, but for 18 it's going to be a good one.
+
+66
+00:10:59,120 --> 00:11:02,599
+Um, and we've got great mSDN pages on the error codes.
+
+67
+00:11:02,600 --> 00:11:12,620
+That's right. Special shout out to me and the Brazil web docs, which I think just celebrated a milestone anniversary, uh, since 2005.
+
+68
+00:11:12,620 --> 00:11:21,889
+So that's like 20 years, 20 years of, uh, Mozilla Developer Network, uh, mSDN, full, uh, volunteer contributors, paid staff,
+
+69
+00:11:21,890 --> 00:11:26,270
+all sorts of people from different from within Mozilla, from outside Mozilla, uh,
+
+70
+00:11:26,360 --> 00:11:30,980
+other browser vendors are all contributing to make the documentation for the web get better.
+
+71
+00:11:31,010 --> 00:11:35,090
+This is the place. If you're trying to become a web developer, you want to go here.
+
+72
+00:11:35,300 --> 00:11:41,240
+And this is the this is I'm here all the time, like I work on I work on a web browser.
+
+73
+00:11:41,240 --> 00:11:45,830
+But every now and then I'll, I'll use like a web technology, I'll use like a Dom API.
+
+74
+00:11:45,830 --> 00:11:51,020
+And where do I go to find out how it works or, or, you know, any sort of like details on it.
+
+75
+00:11:51,020 --> 00:11:55,130
+I'm going to look here. This is absolutely where I'm going to look. I'm here at least once a day.
+
+76
+00:11:55,610 --> 00:12:04,310
+Um, so special shout out to Madden. Uh, if you can uh, if you can consider if you want to help me out,
+
+77
+00:12:04,580 --> 00:12:09,870
+you can actually pay me and you can just give a little slice of money and you get a,
+
+78
+00:12:09,880 --> 00:12:14,840
+a, um, you can help me out and you get to do, uh, you get more stuff.
+
+79
+00:12:14,840 --> 00:12:18,829
+So let's see. I mean, plus you get to support mSDN and make it your own.
+
+80
+00:12:18,830 --> 00:12:23,630
+So what's included you enjoy MD and ads free with an MDM plus subscription.
+
+81
+00:12:24,410 --> 00:12:29,059
+You get real time assistance and support. No need to scroll through page after page to find your answers.
+
+82
+00:12:29,060 --> 00:12:33,620
+And introducing an AI system that can answer all your web development questions in real time, you get.
+
+83
+00:12:33,660 --> 00:12:38,430
+To write, test and share your code. So you get a playground to learn and share your amazing work with the world.
+
+84
+00:12:38,790 --> 00:12:43,470
+Um, so like, there's a, like a, uh, code pen sort of thing.
+
+85
+00:12:43,800 --> 00:12:47,430
+Uh, compatibility changes at a glance. The web doesn't have a changelog,
+
+86
+00:12:47,430 --> 00:12:53,220
+but mSDN can help you to personalize and filter compatibility changes based on browsers or the tech category you're interested in.
+
+87
+00:12:53,430 --> 00:12:57,059
+You can build a perfect library. No more haphazard hunting through the vast virtual library.
+
+88
+00:12:57,060 --> 00:13:01,560
+Unleash your inner curator and collect your favorite articles in one place for convenient consultation.
+
+89
+00:13:01,740 --> 00:13:05,330
+So you know you don't have to, but this is an opportunity for.
+
+90
+00:13:05,340 --> 00:13:08,450
+Thank you very much. You just got t delivery. I got tea and coffee.
+
+91
+00:13:08,470 --> 00:13:12,000
+I'm going to try a mixture. Are you ready? Are you ready for this? I got coffee on my right.
+
+92
+00:13:12,000 --> 00:13:19,030
+I got to my left. I'm going to do a mouthful. Coffee. Oh, and a tea chaser.
+
+93
+00:13:19,180 --> 00:13:22,840
+And I gotta say, that's a lot of bitter. One right after the other. Do not recommend.
+
+94
+00:13:23,170 --> 00:13:28,150
+Okay, so if you, uh, if you just, you know, if you're a casual user.
+
+95
+00:13:28,190 --> 00:13:30,880
+Free is probably fine. You get to do these things.
+
+96
+00:13:30,970 --> 00:13:36,970
+But if you pay some money per month, ads, free filter and sort of, uh, updates, collection of articles and I help.
+
+97
+00:13:37,380 --> 00:13:43,510
+If you pay $10 a month, you get all of that and more early access to new features, and you get pride and joy in helping to,
+
+98
+00:13:43,510 --> 00:13:50,140
+like, make the web better and helping the premier web development documentation resource do its thing.
+
+99
+00:13:51,040 --> 00:13:54,820
+So give it a yeah, consider it no obligation. You're not obligated.
+
+100
+00:13:55,000 --> 00:13:58,390
+But if you've got the money and if you use mSDN like I do, check it out.
+
+101
+00:13:59,320 --> 00:14:03,580
+All right. What's up next. Uh so we've talked about episode, uh Keanu.
+
+102
+00:14:03,610 --> 00:14:07,720
+Uh, Keanu codes, uh, and the, uh, 412 uh, Keanu code.
+
+103
+00:14:08,290 --> 00:14:11,640
+Uh, so we're going to move on to this next bullet, which is to update the episode guide.
+
+104
+00:14:11,650 --> 00:14:17,350
+So a, uh, like I mentioned, we have an episode guide, and that episode guide is completely viewer driven.
+
+105
+00:14:17,350 --> 00:14:19,330
+Whoopsie daisy. I had a parentheses there.
+
+106
+00:14:20,800 --> 00:14:26,950
+And if you look, the episode guide only goes up to episode 397 and we're already at 412, so like, um, behind.
+
+107
+00:14:27,250 --> 00:14:30,610
+And if we look at the, uh, GitHub, I've got nine pull requests.
+
+108
+00:14:30,980 --> 00:14:35,320
+A bunch of these are like, oh, I've got like bumped some depend upon stuff.
+
+109
+00:14:36,190 --> 00:14:39,960
+Oh, and it looks like there was a redesign, the homepage episode list that came in.
+
+110
+00:14:40,000 --> 00:14:43,840
+I don't know why I haven't reviewed this yet. We might want to look at this at some point.
+
+111
+00:14:44,140 --> 00:14:49,959
+Um, maybe today's the day, but let's take a look at, uh, merging these episode, uh, guides in first.
+
+112
+00:14:49,960 --> 00:14:56,250
+So we've got episodes 398 to 400, 401 to 403, 4 or 5, all the way to 410.
+
+113
+00:14:56,260 --> 00:14:59,530
+Let's see if we can get these in. Uh, let's just get it done.
+
+114
+00:15:01,060 --> 00:15:04,510
+So, uh, if you've never seen me do this before, this isn't very exciting.
+
+115
+00:15:04,510 --> 00:15:10,839
+But what I like to do, I'm fairly, um, uh, you know, this is a viewer driven resource.
+
+116
+00:15:10,840 --> 00:15:19,270
+I mainly just check links. Um, and in this case, I probably haven't been checking the, uh, uh, the IR Mozilla links to these.
+
+117
+00:15:19,270 --> 00:15:22,360
+Yeah, these links are wrong. These links don't work.
+
+118
+00:15:22,630 --> 00:15:27,940
+So this is, uh, this is a problem. We've got, uh, our permalinks busted.
+
+119
+00:15:27,940 --> 00:15:36,460
+I need to report some of these to, uh, to, uh, to my friend, uh, Andy, who helps us, uh, generate these things.
+
+120
+00:15:36,760 --> 00:15:41,020
+So, uh, I'm gonna send a quick message. Uh, hiya.
+
+121
+00:15:41,020 --> 00:15:49,330
+Is there a way to mention hair m.o, uh, short links?
+
+122
+00:15:50,590 --> 00:15:54,060
+It seems like. There you go.
+
+123
+00:15:55,180 --> 00:16:01,960
+Uh, permalinks? Uh, short links, like, never seen.
+
+124
+00:16:04,770 --> 00:16:08,349
+Okay, so I've asked about that. We're going to leave this for now, but it is a thing.
+
+125
+00:16:08,350 --> 00:16:13,149
+I'm going to have to fix the agenda. Uh, link looks right. Uh, 398.
+
+126
+00:16:13,150 --> 00:16:16,340
+We'll just make sure that that does work. Yep.
+
+127
+00:16:16,360 --> 00:16:19,839
+That's 398. Uh, what do we do? We updated the episode guide.
+
+128
+00:16:19,840 --> 00:16:25,660
+So that was back in April. So it's been a little while. And then let's keep going with our rest component.
+
+129
+00:16:25,690 --> 00:16:29,229
+Oh yeah we're working on a rest component. And uh and we did it.
+
+130
+00:16:29,230 --> 00:16:34,420
+We you know, it took us a while, but we finally did it. I'm not going to read all this, but this looks exactly right.
+
+131
+00:16:34,420 --> 00:16:38,469
+And I talked a little bit about how it can be used. Um, that all looks great.
+
+132
+00:16:38,470 --> 00:16:42,700
+So we're going to keep that. That was on April 16th, 2025.
+
+133
+00:16:42,730 --> 00:16:47,020
+Yep okay. April 23rd a week later was episode 399.
+
+134
+00:16:47,470 --> 00:16:51,700
+And this is also probably broken. Um, I'm just going to double check.
+
+135
+00:16:52,540 --> 00:16:56,770
+Yeah. Broken. Uh, the but the agenda link looks right.
+
+136
+00:16:57,280 --> 00:17:03,519
+And someone asked a question about filter adult component, uh, and more rust component stuff.
+
+137
+00:17:03,520 --> 00:17:06,970
+Let's generate rust within our rust. Haha. That's right. We did do that.
+
+138
+00:17:07,420 --> 00:17:11,049
+Okay, uh, what else did we do on May 7th?
+
+139
+00:17:11,050 --> 00:17:15,490
+It was episode 400. Like that was that was a big episode.
+
+140
+00:17:15,490 --> 00:17:20,050
+I like sang a song. If you haven't seen that episode, go back and check it out.
+
+141
+00:17:20,530 --> 00:17:23,290
+And uh, we have working on our filter shared rust component.
+
+142
+00:17:23,620 --> 00:17:30,340
+We made the adult set, uh, pub, we write a basic code that can import it and expose methods similar to filter, and we wrote tests.
+
+143
+00:17:30,880 --> 00:17:34,810
+This all looks great! I'm so happy with this pull request. I'm just going to merge it.
+
+144
+00:17:35,410 --> 00:17:38,470
+Merge it, do it. I'm going to say thanks.
+
+145
+00:17:40,090 --> 00:17:44,079
+Thanks always. Thank your contributors. All right.
+
+146
+00:17:44,080 --> 00:17:48,610
+What else. We have episodes 401, two and three.
+
+147
+00:17:50,670 --> 00:17:55,910
+Uh, it was May 14th. Um, I'm not even going to check that these are broken.
+
+148
+00:17:55,920 --> 00:18:02,070
+I'm going to assume these are broken. And this is just something I need to fix. Uh, but the, uh, the agenda link looks right.
+
+149
+00:18:02,700 --> 00:18:03,990
+We can just double check that again.
+
+150
+00:18:04,020 --> 00:18:11,129
+Yeah, these these are always fairly, uh, with the exception of last week, someone mentioned that the, um, agendas hadn't been sinking.
+
+151
+00:18:11,130 --> 00:18:15,600
+I had failed to put the exported tag in some of these, so that has been fixed.
+
+152
+00:18:16,950 --> 00:18:22,590
+Sometimes the administrative stuff goes by the wayside. Uh, and someone asked if I,
+
+153
+00:18:22,770 --> 00:18:30,030
+if I could make a fun video about reviewing and explaining how old shockwave flash games worked and why SWF was banned later from the internet.
+
+154
+00:18:30,450 --> 00:18:39,540
+And I talked a lot about, uh, flash, I think, um, and, uh, and then we did more on implementing filter and filter adult.
+
+155
+00:18:39,550 --> 00:18:43,290
+Uh, or it turns out it didn't want to do that. I did something else instead.
+
+156
+00:18:44,190 --> 00:18:48,900
+Uh, episode May 28th, 402. Uh, yes.
+
+157
+00:18:48,990 --> 00:18:58,010
+Uh, redoing the filter. Adult work. Because I lost the code. That was very, um, very unfortunate, but, uh, thankfully, thankfully, um,
+
+158
+00:18:58,020 --> 00:19:02,730
+I feel like I've gotten better at jitsu, and, uh, I haven't lost any code since.
+
+159
+00:19:04,140 --> 00:19:07,500
+Um. Yeah, that all looks fine. Uh, June.
+
+160
+00:19:07,560 --> 00:19:11,790
+June 4th. So we're getting closer. Closer and closer to to the current day.
+
+161
+00:19:12,240 --> 00:19:15,330
+Uh, episode 403. That looks right.
+
+162
+00:19:15,360 --> 00:19:23,939
+No questions. But got this comment on YouTube. Someone was saying that, uh, I helped guide them to a seven figure business model, which sounds wild.
+
+163
+00:19:23,940 --> 00:19:28,860
+I hope you do good things with that. Seven figures, uh, you know, help make the world a better place.
+
+164
+00:19:29,460 --> 00:19:32,760
+Help make the world a better place. So that all. That's great.
+
+165
+00:19:33,030 --> 00:19:37,850
+Thank you. Smurf d another fantastic contribution tonight.
+
+166
+00:19:37,860 --> 00:19:43,319
+Yeah. Comment. Thank you. We got two more.
+
+167
+00:19:43,320 --> 00:19:48,420
+I'm very excited. I don't know why I forgot this. Like, I guess I don't look at the episode guide very much.
+
+168
+00:19:48,810 --> 00:19:54,000
+Uh, and so I had forgotten that this had come in, so I should probably I should look at that sooner rather than later.
+
+169
+00:19:54,480 --> 00:19:58,530
+Uh, 401 is actually missing from both YouTube and agendas.
+
+170
+00:19:58,740 --> 00:20:01,950
+Not sure if this was an intentional pun or accidental. Uh, spoiler.
+
+171
+00:20:02,010 --> 00:20:06,839
+It was, uh, pure. Oh. Totally intentional. Uh, 404 is missing on purpose.
+
+172
+00:20:06,840 --> 00:20:12,569
+And then there's an error code joke. Um, June 11th, uh, 2025.
+
+173
+00:20:12,570 --> 00:20:19,050
+Yes, that all work. Starting in Firefox 140, users can remove the add ons toolbar button, which I myself have also done.
+
+174
+00:20:19,710 --> 00:20:25,140
+Uh, and then we, um, re attempted to re land the filter adult stuff,
+
+175
+00:20:25,410 --> 00:20:30,990
+maybe worked on some home and new type performance things discussion uh, over a possible fix.
+
+176
+00:20:31,350 --> 00:20:36,209
+Uh, Julius is the artist for testing background image. Uh, and then what else?
+
+177
+00:20:36,210 --> 00:20:41,360
+Uh, June 18th, 406. Uh, filter adult changes landed.
+
+178
+00:20:41,380 --> 00:20:45,850
+Yeah. I was happy to report that, uh, I talked a little bit about Json modules.
+
+179
+00:20:46,240 --> 00:20:50,290
+Uh, and then we were looking at the, uh, performance optimizations that I talked about.
+
+180
+00:20:50,290 --> 00:20:55,450
+Coach review. Okay, great. Yeah, I'm happy with that. Let's merge it in. Uh, no problems there.
+
+181
+00:20:55,900 --> 00:20:59,800
+Uh, I trust smurf. D uh, Smurf does the best.
+
+182
+00:21:00,970 --> 00:21:04,690
+Uh, one last one. Four, seven, eight, nine and ten.
+
+183
+00:21:13,520 --> 00:21:17,750
+Hmm. So Andy is saying that some of them work.
+
+184
+00:21:19,820 --> 00:21:23,480
+So the one for today works. Interesting.
+
+185
+00:21:24,980 --> 00:21:28,880
+That certainly works. That one certainly works.
+
+186
+00:21:30,680 --> 00:21:33,740
+But yeah, a bunch of the older ones don't.
+
+187
+00:21:37,100 --> 00:21:40,579
+Um, okay. So hopefully, uh, Aldi is on the case.
+
+188
+00:21:40,580 --> 00:21:47,480
+Uh, thanks for looking into that. Andy is on the case June 25th, 407.
+
+189
+00:21:48,200 --> 00:21:56,899
+Uh, hopefully this link will work out at some point. Uh, and we were fixing the opera, mark, my greeter, which has, uh, landed, uh, the opera.
+
+190
+00:21:56,900 --> 00:22:01,520
+My greater fix that we landed back in this episode, uh, whatever it was.
+
+191
+00:22:01,520 --> 00:22:07,819
+Episode 407, June 25th that went out and 142 oh, which is still on the beta branch.
+
+192
+00:22:07,820 --> 00:22:10,850
+So that'll actually be going if we look at what train is it now?
+
+193
+00:22:11,090 --> 00:22:15,049
+42 142 goes out to release on August 19th.
+
+194
+00:22:15,050 --> 00:22:21,920
+So in 13 days, 13 days, if you have been waiting and, uh, to import from opera,
+
+195
+00:22:22,250 --> 00:22:28,310
+uh, you can do it on the release channel when 142 goes out to release in 13 days.
+
+196
+00:22:29,930 --> 00:22:35,600
+Okay. Uh, I talked about some message plumbing, uh, that, that that, uh,
+
+197
+00:22:35,600 --> 00:22:40,640
+I was reviewing some stuff and, uh, more talk about image performance optimizations.
+
+198
+00:22:40,940 --> 00:22:48,499
+And then for 408. Uh, July 2nd job and agenda for.
+
+199
+00:22:48,500 --> 00:22:52,940
+Oh, yeah. Yeah, yeah, yeah. I'll text. We are talking about this is my first Keanu code.
+
+200
+00:22:52,940 --> 00:22:58,490
+Someone gave me the idea and I started doing it. Talk to a dot releases, uh, background images again.
+
+201
+00:22:59,210 --> 00:23:07,850
+Uh, talked about PNG. And then on episode 409, which is July 9th, shout out to people who have birthdays on July 9th.
+
+202
+00:23:08,360 --> 00:23:15,080
+Um, let's see here talked about, uh, QR code 409 wallpaper patch.
+
+203
+00:23:15,440 --> 00:23:20,360
+Uh, I went through a bunch of reviews and then I said I was going on holiday, which is true.
+
+204
+00:23:20,660 --> 00:23:31,610
+And then episode 410, which was, uh, July 16th, um, talked about Keanu code for ten, which is,
+
+205
+00:23:31,880 --> 00:23:37,190
+uh, I don't remember, uh, I don't remember what 410 is, but you can look it up if you care.
+
+206
+00:23:37,190 --> 00:23:43,640
+And then we did a bunch of reviewing. We didn't review this one. And then I did say that, yes, I was going to go on holiday, which I didn't do.
+
+207
+00:23:43,760 --> 00:23:50,840
+So that's great. Uh, thank you once again, Smurf d thank you for, uh, helping to keep the, uh, episode guide working,
+
+208
+00:23:51,230 --> 00:23:56,390
+uh, and to, uh, populate it with, you know, summaries that people can search and stuff.
+
+209
+00:23:56,420 --> 00:24:00,680
+I've actually used the episode guide myself to find episodes about certain things.
+
+210
+00:24:01,250 --> 00:24:05,120
+Uh, just so you know. So it's not just, uh, it's not just viewers.
+
+211
+00:24:05,390 --> 00:24:08,900
+411 is not on YouTube. Four Eleven's not on YouTube.
+
+212
+00:24:09,890 --> 00:24:15,650
+Four. Eleven's not on YouTube. Let me figure out what's going on here. Um, hold on for is not on YouTube.
+
+213
+00:24:18,200 --> 00:24:22,760
+Should be. Uh, for 11.
+
+214
+00:24:25,850 --> 00:24:29,720
+Episode 410 oh was a live video.
+
+215
+00:24:32,700 --> 00:24:38,640
+Episode 411 is public as 112 viewers.
+
+216
+00:24:42,130 --> 00:24:46,760
+It's in the playlist. Did I do it wrong?
+
+217
+00:24:47,690 --> 00:24:51,080
+Let me look at the playlist. Um.
+
+218
+00:24:51,410 --> 00:24:58,360
+Playlists. Joy of coding.
+
+219
+00:25:02,600 --> 00:25:07,580
+Hold on. I'm doing this off screen. I realize that, but yeah, 411 is in the playlist.
+
+220
+00:25:09,060 --> 00:25:12,300
+Um, I could use a better thumbnail, though.
+
+221
+00:25:12,330 --> 00:25:17,140
+Let me use a different thumbnail. Okay.
+
+222
+00:25:17,150 --> 00:25:20,360
+Uh, Smurf d are you absolutely certain it's missing for you?
+
+223
+00:25:21,110 --> 00:25:24,770
+It's not showing in the videos, but it is under live. Yes, that is true.
+
+224
+00:25:24,860 --> 00:25:28,160
+It was a live video I didn't re-upload.
+
+225
+00:25:28,280 --> 00:25:33,379
+There was some problem with my my my local setup, so I just kept the local, the live recording.
+
+226
+00:25:33,380 --> 00:25:37,640
+But if that's making things difficult, um, I can try and fix that up.
+
+227
+00:25:37,640 --> 00:25:40,910
+Like, could I move it out of live somehow? Um.
+
+228
+00:25:41,180 --> 00:25:45,380
+Let's see. Can I move that out of live somehow? Visibility.
+
+229
+00:25:45,980 --> 00:25:49,880
+Uh, what do I do? What do I do?
+
+230
+00:25:50,450 --> 00:25:56,330
+Um. Mhm mhm mhm mhm mhm mhm mhm mhm.
+
+231
+00:25:56,600 --> 00:26:03,140
+I don't know what to do. I don't know how to uh take it out of live and put it under videos.
+
+232
+00:26:04,550 --> 00:26:07,879
+Mhm. I might have to like download it and re-upload it.
+
+233
+00:26:07,880 --> 00:26:13,400
+That may be annoying. I'm not going to do that right now. Uh let's not worry about it.
+
+234
+00:26:13,700 --> 00:26:17,200
+Hey, let's take a look at Danny Colon's, uh, rethinking stuff.
+
+235
+00:26:17,210 --> 00:26:22,400
+Whoops. I didn't mean to open that. Um. Hey, did I close my browser?
+
+236
+00:26:22,400 --> 00:26:26,590
+I did close my work. New. New window.
+
+237
+00:26:26,600 --> 00:26:31,520
+New window. Here we go. Uh.
+
+238
+00:26:31,910 --> 00:26:38,430
+Episode guide. So Danny Colon sent me the re.
+
+239
+00:26:38,720 --> 00:26:39,680
+He's like this patch.
+
+240
+00:26:40,100 --> 00:26:47,480
+This patch groups each episode year in a details that can be expanded and collapsed on browsers supporting name on details which Firefox does.
+
+241
+00:26:47,750 --> 00:26:52,370
+Only one group is expanding. The other ones are auto collapse and group change. The assets directory is a special directory that Jekyll monitor.
+
+242
+00:26:52,380 --> 00:27:00,110
+Since I had an app dot css file, I remove all files we don't want Jekyll to monitor in a mix excuse me folder.
+
+243
+00:27:00,110 --> 00:27:04,670
+You might have to update your dev environment. Oh, it has been a while since I built the episode guide.
+
+244
+00:27:06,720 --> 00:27:12,060
+Look at this. The gem file gets updated. Bunch of bunch of updates there.
+
+245
+00:27:12,600 --> 00:27:16,590
+Um, this got renamed from contribute to contributing.
+
+246
+00:27:17,190 --> 00:27:21,900
+And then the episode list. Let's try building it and see what it looks like.
+
+247
+00:27:22,920 --> 00:27:29,100
+So the list details and then renames a bunch of renames.
+
+248
+00:27:29,790 --> 00:27:32,940
+I mean, that seems pretty innocuous to me. And I trust Danny Colon.
+
+249
+00:27:33,180 --> 00:27:35,230
+So let's let's see if we can pull this in.
+
+250
+00:27:35,250 --> 00:27:44,900
+Um, so what I'm going to do is I'm going to go to the Joy of coding episode guide and, uh, get Raj, where am I?
+
+251
+00:27:44,910 --> 00:27:51,510
+I'm on master, I'm going to. Oh, I want to JJ init co-locate.
+
+252
+00:27:52,020 --> 00:27:56,580
+Co-locate. JJ git in it.
+
+253
+00:27:59,910 --> 00:28:08,670
+Co-locate. Okay. Uh, JJ, bookmark track master 13.
+
+254
+00:28:10,530 --> 00:28:17,530
+Okay, cool. Uh, now, there is something here, uh, show wise.
+
+255
+00:28:17,910 --> 00:28:26,580
+I've got, like, a bunch of episodes that need to, like, changes that need to be merged in that go into just the the agenda list.
+
+256
+00:28:26,910 --> 00:28:30,540
+So what I'm going to do is I'm going to do JJ get fetch.
+
+257
+00:28:30,570 --> 00:28:38,760
+It's going to pull in the latest stuff, and I'm going to attempt to rebase r y s onto L.
+
+258
+00:28:39,960 --> 00:28:47,020
+Uh wait put commit is immutable.
+
+259
+00:28:48,910 --> 00:28:54,770
+4 or 5. Why?
+
+260
+00:28:54,950 --> 00:28:59,080
+Sorry. Why? It's not. Okay.
+
+261
+00:28:59,090 --> 00:29:03,950
+And then there were some conflicts. JJ status.
+
+262
+00:29:07,190 --> 00:29:17,350
+There's where there's a conflict here. Side one.
+
+263
+00:29:20,450 --> 00:29:24,049
+Conflict on one ends. Contents of side one.
+
+264
+00:29:24,050 --> 00:29:38,640
+Changes from peace. No terminating new line. Hmhm.
+
+265
+00:29:41,280 --> 00:29:49,960
+This was all added. This was, um, just trying to interpret this.
+
+266
+00:29:49,980 --> 00:29:54,020
+This is a list. So these the winners chocolates.
+
+267
+00:29:57,470 --> 00:30:05,280
+Why would three what's what's 398 supposed to look like? Yeah.
+
+268
+00:30:05,280 --> 00:30:08,609
+Okay. That looks that's what I want. I want those changes.
+
+269
+00:30:08,610 --> 00:30:12,540
+So I'll go ahead and manually accept.
+
+270
+00:30:13,710 --> 00:30:20,770
+This stuff. Um. Going to remove those things.
+
+271
+00:30:21,850 --> 00:30:29,440
+I'm going to go ahead and. Here.
+
+272
+00:30:29,440 --> 00:30:36,560
+Let's. This is better. I'm happy with that.
+
+273
+00:30:37,850 --> 00:30:42,050
+Uh oh. You know what? I need to get rid of all those.
+
+274
+00:30:44,990 --> 00:30:49,880
+000. Oh.
+
+275
+00:30:51,860 --> 00:30:56,179
+And then, um. Did you? I don't know why I have to do this in when?
+
+276
+00:30:56,180 --> 00:30:59,570
+Conflict resolution. Conflict resolution.
+
+277
+00:30:59,810 --> 00:31:05,390
+Resolving in jujitsu. That seems strange. Oh, I ain't got rid of a thing I shouldn't have.
+
+278
+00:31:06,110 --> 00:31:11,510
+Um, this seems superfluous. This seems like a waste of time.
+
+279
+00:31:12,500 --> 00:31:15,630
+Um. There must be a better way.
+
+280
+00:31:15,650 --> 00:31:23,390
+Someone's going to be like, I can. I can feel one of my colleagues coming out and be like, you should be using a diff tool, a three way merging tool.
+
+281
+00:31:23,660 --> 00:31:28,460
+And to that I say, no, uh, no, I don't want to do that.
+
+282
+00:31:29,690 --> 00:31:33,590
+Um, I'm just going to get rid of that. And that's that's probably fine for now.
+
+283
+00:31:34,160 --> 00:31:39,020
+Um, so we'll go ahead and just accept that rebase.
+
+284
+00:31:40,670 --> 00:31:52,220
+Um, what else am I going to do? Uh, I'm going to I'm going to send those in, actually, uh, uh, add a bunch of missing, uh, agenda documents.
+
+285
+00:31:54,440 --> 00:32:01,700
+Oh, right. And, uh, I mean, just. What am I going to do?
+
+286
+00:32:01,730 --> 00:32:05,150
+I'm going to push those git push.
+
+287
+00:32:06,620 --> 00:32:10,760
+Can I do that? Um. Git remote show origin.
+
+288
+00:32:10,930 --> 00:32:16,660
+Git push. I think that'll work.
+
+289
+00:32:17,350 --> 00:32:21,190
+No bookmarks found in default. Push. Rev set. Um.
+
+290
+00:32:21,880 --> 00:32:25,750
+Push. Y. Yes. No. Hmm.
+
+291
+00:32:26,650 --> 00:32:36,650
+What do I want to do here? JJ bookmark create.
+
+292
+00:32:37,130 --> 00:32:44,300
+Y s um you agendas and then.
+
+293
+00:32:46,230 --> 00:32:50,549
+Let's try git push and see what happens. Allow new to create a new bookmark.
+
+294
+00:32:50,550 --> 00:32:54,540
+Use remote to satisfy. Specify. I just want to push.
+
+295
+00:32:57,490 --> 00:33:00,850
+I don't want to create a new branch, I want to. I wanted to push to main.
+
+296
+00:33:01,510 --> 00:33:07,570
+Maybe it doesn't like me doing that. I can imagine it doesn't want me to do that.
+
+297
+00:33:08,350 --> 00:33:11,590
+Oh, boy. Maybe I have to go back to it to get now.
+
+298
+00:33:11,770 --> 00:33:25,230
+Git log. Inch get uh check out was new agendas get show new agendas.
+
+299
+00:33:26,760 --> 00:33:34,560
+It's nothing there. Get log new agendas. I don't want you missing agenda documents, okay?
+
+300
+00:33:35,990 --> 00:33:41,470
+Uh, get. Chair can.
+
+301
+00:33:41,680 --> 00:33:47,380
+Yeah. Genders. Uh, yeah.
+
+302
+00:33:47,480 --> 00:33:54,720
+Push. Origin. I want this to be main.
+
+303
+00:33:54,870 --> 00:33:59,400
+Get branch. Um.
+
+304
+00:33:59,450 --> 00:34:02,740
+Of. Is that right?
+
+305
+00:34:03,500 --> 00:34:10,010
+Get French. I want, I want to like, say, this is now the thing.
+
+306
+00:34:10,010 --> 00:34:15,380
+Get push or. Go get push.
+
+307
+00:34:16,220 --> 00:34:19,450
+Uh uh.
+
+308
+00:34:19,490 --> 00:34:22,520
+Boy, how do I do this? Help me out. Help me out!
+
+309
+00:34:22,520 --> 00:34:27,470
+Everyone remind me how to do this. Have I complete royally screwed myself?
+
+310
+00:34:28,040 --> 00:34:33,149
+Um. I've forgotten how to use.
+
+311
+00:34:33,150 --> 00:34:36,330
+Get. I've got. Oh, you know what I need to do?
+
+312
+00:34:36,360 --> 00:34:41,400
+Git checkout. Master. Uh, git merge new agendas or, uh.
+
+313
+00:34:43,030 --> 00:34:46,210
+Yeah, that's what I'm going to do. Conflict again.
+
+314
+00:34:47,770 --> 00:34:51,610
+We're just going to deal with that agenda.
+
+315
+00:34:53,260 --> 00:34:58,600
+Um, oh, and here's a here's a three way merge.
+
+316
+00:34:59,950 --> 00:35:04,780
+Wow. This is fascinating. I want. How do I how do I tell it?
+
+317
+00:35:04,810 --> 00:35:08,290
+Oh. Tools. Tools. Previous conflict.
+
+318
+00:35:08,410 --> 00:35:12,129
+Oh. Previous side. Next. Next change. Toggle collapse.
+
+319
+00:35:12,130 --> 00:35:15,610
+Split editor. More actions. I want to choose.
+
+320
+00:35:15,610 --> 00:35:22,120
+How do I choose? How do I choose a side I want?
+
+321
+00:35:22,160 --> 00:35:26,240
+I want to say what I want. Tell me how to do this.
+
+322
+00:35:29,110 --> 00:35:32,319
+Side. Previous conflict. Next conflict. Next change.
+
+323
+00:35:32,320 --> 00:35:36,100
+Show line trailing. Show me how I make choices.
+
+324
+00:35:36,100 --> 00:35:39,790
+Do I right click? How do I say that I want this one.
+
+325
+00:35:42,660 --> 00:35:47,520
+Does anyone know how I use this? How do I how do I do this?
+
+326
+00:35:48,690 --> 00:35:55,590
+This is intolerable. Um. Let's go back to basics.
+
+327
+00:35:55,980 --> 00:36:03,000
+What I really want to do is. What I want to do.
+
+328
+00:36:08,530 --> 00:36:16,520
+Is this, ultimately is this? Yeah, that's what I want.
+
+329
+00:36:25,670 --> 00:36:30,980
+That's all I want. I don't know what the deal is with that change.
+
+330
+00:36:35,660 --> 00:36:44,690
+That's all I want to add. I'm having to relearn how to do this stuff on the fly.
+
+331
+00:36:45,860 --> 00:36:49,120
+Uh. Get married.
+
+332
+00:36:49,550 --> 00:36:53,300
+Deal with merge conflict. Uh.
+
+333
+00:36:53,300 --> 00:36:56,630
+Git push origin. Master. There we go.
+
+334
+00:36:57,650 --> 00:37:01,370
+I'm so done with kids.
+
+335
+00:37:02,270 --> 00:37:05,660
+I do not like it. I'm so over it.
+
+336
+00:37:06,320 --> 00:37:09,770
+Uh, but let's take a look at what Danny Colon, uh, was suggesting here.
+
+337
+00:37:09,800 --> 00:37:20,240
+I'm going to go back to J.J. for a second. Can I go, J.J., get remote and, um, any colon, and then I'll put.
+
+338
+00:37:22,000 --> 00:37:27,460
+Uh, probably. I'll need to put his fork.
+
+339
+00:37:30,220 --> 00:37:36,920
+Here. Uh, JJ kit.
+
+340
+00:37:37,190 --> 00:37:41,790
+Fetch! Danny Cohen.
+
+341
+00:37:43,230 --> 00:37:49,730
+Such. Uh, remote.
+
+342
+00:37:55,160 --> 00:38:00,889
+Okay, JJ. New episode list at Danny.
+
+343
+00:38:00,890 --> 00:38:05,600
+Cool. Um.
+
+344
+00:38:07,130 --> 00:38:11,170
+And now remind me how to build this thing again.
+
+345
+00:38:11,180 --> 00:38:18,770
+Contribute. Installed.
+
+346
+00:38:18,770 --> 00:38:22,340
+Jekyll. I think. Do I have Jekyll on this machine?
+
+347
+00:38:25,120 --> 00:38:30,670
+Do I have jam on this machine? I do. Do I have Jacklin bundler?
+
+348
+00:38:36,920 --> 00:38:40,910
+Bundle. Install the dependencies.
+
+349
+00:38:42,270 --> 00:38:47,610
+Okay. Oh, boy.
+
+350
+00:38:47,620 --> 00:38:50,829
+It's been a while since I've done the stuff while I'm waiting. Uh, to do this.
+
+351
+00:38:50,830 --> 00:38:56,800
+While that's happening, I wanted to go back to the agenda, and I want to a shout out to Canova,
+
+352
+00:38:56,820 --> 00:39:00,250
+a colleague who's streaming himself hacking on the Firefox profiler.
+
+353
+00:39:00,340 --> 00:39:04,630
+Um, so check that out. If you're enjoying watching live streams of Mozilla stuff.
+
+354
+00:39:04,990 --> 00:39:08,770
+You may enjoy watching a fledgling streamer.
+
+355
+00:39:09,610 --> 00:39:15,760
+And I wanted to talk a little bit about advice for people who want to maybe start live streaming.
+
+356
+00:39:17,950 --> 00:39:19,899
+We're live hacking Mozilla or otherwise.
+
+357
+00:39:19,900 --> 00:39:25,690
+Like maybe you're you're a Firefox developer or Mozilla developer, or maybe you're you're there's other stuff you want to live stream.
+
+358
+00:39:25,870 --> 00:39:31,200
+And so do I have any I've been doing this for ten years or so, half the lifetime of me.
+
+359
+00:39:31,220 --> 00:39:34,629
+And it seems, uh, do I have any advice or tips?
+
+360
+00:39:34,630 --> 00:39:39,730
+And I do, I do, so let's see here. Uh, did you say.
+
+361
+00:39:40,150 --> 00:39:43,390
+Did I say flatulent? Did I say it?
+
+362
+00:39:44,050 --> 00:39:47,230
+Oh, sorry. Did I make a noise?
+
+363
+00:39:47,230 --> 00:39:52,180
+I don't know what you mean, Smurf d no, I don't think so.
+
+364
+00:39:52,180 --> 00:39:57,579
+Okay, I, I don't, I don't I don't know what we're talking about here.
+
+365
+00:39:57,580 --> 00:40:02,830
+Uh, hopefully, hopefully I didn't make a body sound that somehow made it onto the internet.
+
+366
+00:40:02,830 --> 00:40:09,430
+That'd be highly embarrassing. So, uh, advice tips for people who want to start live hacking, uh, Brazilians or otherwise.
+
+367
+00:40:09,430 --> 00:40:14,650
+First of all, um, uh. Let's see one of my tips.
+
+368
+00:40:15,820 --> 00:40:18,220
+Practice. This takes muscle.
+
+369
+00:40:19,660 --> 00:40:28,300
+So, uh, one thing I've noticed is that whenever I haven't live stream for a while, say I go on holiday for a couple weeks and then I come back,
+
+370
+00:40:28,720 --> 00:40:35,860
+I cannot do it as long I cannot talk to the camera, work on code, and speaking at the same time.
+
+371
+00:40:35,860 --> 00:40:41,260
+I can't do that as long. So there is a muscle that is being exercised, at least for me.
+
+372
+00:40:41,680 --> 00:40:52,480
+And so, uh uh, see uh, if you can do one hour, 1.5 hours, um, and see what it does to your voice,
+
+373
+00:40:54,220 --> 00:41:00,790
+uh, see if you can concentrate and actually do things as painful as it is.
+
+374
+00:41:00,820 --> 00:41:05,980
+Watch the recording, watch the recording afterward. Afterwards.
+
+375
+00:41:06,610 --> 00:41:15,610
+Where there big periods of silence, where you were thinking in your head and not speaking.
+
+376
+00:41:16,420 --> 00:41:21,549
+I feel like that happens sometimes, still to this day with me, is that all of a sudden I'll be working on a problem, and then I'll be reading,
+
+377
+00:41:21,550 --> 00:41:25,660
+and then I'll like go into my mind palace and I'll come out of it and go, like,
+
+378
+00:41:25,660 --> 00:41:30,370
+have I been just sitting here silently for five minutes and, you know, the chat's blowing up, like, are you dead?
+
+379
+00:41:30,370 --> 00:41:33,720
+Like that sort of thing. So like, just notice your own behaviors.
+
+380
+00:41:33,730 --> 00:41:37,330
+Uh uh, but practice, practice, practice, practice.
+
+381
+00:41:37,330 --> 00:41:42,490
+And that means doing do a pilot episode, uh, and don't make a big deal out of it.
+
+382
+00:41:44,500 --> 00:41:48,780
+Just to try it out. Um, and maybe don't even post it.
+
+383
+00:41:48,790 --> 00:41:53,260
+Post it if you want, but record yourself, work on it, watch it.
+
+384
+00:41:53,530 --> 00:41:58,540
+As painful as that can be. Uh, and then try again and see what adjustments you want to make.
+
+385
+00:41:58,930 --> 00:42:06,700
+Uh, hardware. Uh, get a good microphone. Um, uh, a yeti a Blue Yeti is a classic.
+
+386
+00:42:06,700 --> 00:42:11,380
+I'm using, uh, classic USB mic that podcasters use.
+
+387
+00:42:11,770 --> 00:42:19,540
+Uh, I'm using a road and with a USB interface, I don't do a whole lot of processing.
+
+388
+00:42:19,540 --> 00:42:23,560
+The interface is really just, uh. It's an old, old Roland.
+
+389
+00:42:24,100 --> 00:42:30,100
+It's actually, uh. Hey, uh, Roland, you A25X is way outdated.
+
+390
+00:42:30,100 --> 00:42:35,500
+Is an ancient, ancient piece of hardware, but it still works, and it just acts as a USB interface.
+
+391
+00:42:35,920 --> 00:42:42,910
+Um, get a decent camera. Um, I'm using an OBS bot.
+
+392
+00:42:43,180 --> 00:42:47,350
+Tiny, uh, which is great.
+
+393
+00:42:47,560 --> 00:42:52,299
+Uh, and I can do things like change the zoom on the fly, and I can pan it around.
+
+394
+00:42:52,300 --> 00:42:57,280
+That's very nice. Uh, what else? Use OBS and explore it.
+
+395
+00:42:57,490 --> 00:43:00,700
+So OBS is not the same thing as OBS. OBS, but tiny.
+
+396
+00:43:00,850 --> 00:43:07,030
+They unfortunately have similar prefixes, but OBS uh stands for uh Open Broadcasting.
+
+397
+00:43:07,030 --> 00:43:16,660
+So I think software um, it's, it's the tool, uh, that I'm using to open broadcaster software.
+
+398
+00:43:16,870 --> 00:43:25,689
+This is what I'm using to stream right now. Uh, and it's got a very, uh, you know, flexible set of tools for having different scenes.
+
+399
+00:43:25,690 --> 00:43:32,290
+So like, this is one scene, this is an oh, this is another scene, but it's appears to be broken in this scene.
+
+400
+00:43:32,650 --> 00:43:36,070
+Uh, I don't know why this is broken. What happened?
+
+401
+00:43:36,070 --> 00:43:43,480
+Where's my splash image? Oh, you know what? Uh, because the splash image is part of the Joy of coding episode guide.
+
+402
+00:43:43,810 --> 00:43:49,750
+Uh, and the image is probably moved. Uh, uh, you're gonna have to get that sorted.
+
+403
+00:43:50,110 --> 00:43:53,229
+Um, er, while executing a gem.
+
+404
+00:43:53,230 --> 00:43:58,600
+I don't have right permissions to do some stuff. Uh, did I need to do that with system permissions?
+
+405
+00:43:59,680 --> 00:44:03,160
+That would be a pain. But do I already have Jekyll installed?
+
+406
+00:44:03,340 --> 00:44:06,460
+Maybe I do. Let's just see what happens if I do this.
+
+407
+00:44:07,840 --> 00:44:13,810
+Um. Can I find bundler?
+
+408
+00:44:14,900 --> 00:44:20,760
+To update the latest version. Bundle update. Bundler.
+
+409
+00:44:22,020 --> 00:44:27,820
+You must use bundler two or greater with this lock file. So maybe I do need to do this.
+
+410
+00:44:27,840 --> 00:44:33,240
+And do I need to like use system? Probably you do.
+
+411
+00:44:34,110 --> 00:44:40,660
+That's kind of scary, but I'll go ahead. Um.
+
+412
+00:44:40,900 --> 00:44:44,860
+Okay, so, uh, what other tips do I have? Uh. Yeah.
+
+413
+00:44:44,890 --> 00:44:48,660
+Get get a copy of OBS. It's a great piece of software.
+
+414
+00:44:48,670 --> 00:44:52,479
+I love this piece of software. Um, and it's rock solid.
+
+415
+00:44:52,480 --> 00:44:58,240
+I've never had problems with it. Get used to it, explore it, learn how to do different scenes.
+
+416
+00:44:58,630 --> 00:45:02,530
+Uh, you know, there are lots of different plug ins and, like, try it out.
+
+417
+00:45:02,530 --> 00:45:09,370
+Try it out, um, and come up with some, some, some scenes for yourself and practice, uh, change them.
+
+418
+00:45:09,640 --> 00:45:19,390
+Have a separate display display for OBS so you're not looking I have OBS right here.
+
+419
+00:45:19,390 --> 00:45:21,820
+I can bring it on screen and I'm going to put it off screen again.
+
+420
+00:45:22,040 --> 00:45:28,030
+That's because you don't want to have that on screen whenever you're working or switching between, um, switching between um, scenes or something.
+
+421
+00:45:28,120 --> 00:45:32,589
+I've got a secondary display here and, uh, you know, that's that's probably a good idea.
+
+422
+00:45:32,590 --> 00:45:38,169
+It's also a great place to put stuff that you definitely don't want on screen, like, uh, I've got, um,
+
+423
+00:45:38,170 --> 00:45:44,110
+I've got the chat over there because I don't want to, you know, accidentally have a spam or just like, spam stuff.
+
+424
+00:45:44,110 --> 00:45:47,589
+And it's in the video forever. Uh, so I have the chat off screen.
+
+425
+00:45:47,590 --> 00:45:52,690
+I know some people embed the chat in their streams, and maybe someday I do that, but not right.
+
+426
+00:45:52,780 --> 00:45:55,929
+Uh, not right now. Uh, what else? What else?
+
+427
+00:45:55,930 --> 00:46:01,840
+What else? Uh, turn off notifications on your software, uh, when streaming.
+
+428
+00:46:02,410 --> 00:46:07,060
+Uh, so thankfully you don't tend to see, like, you know,
+
+429
+00:46:07,510 --> 00:46:11,500
+messages from Slack or Matrix with like the full text of the questions coming in from the side.
+
+430
+00:46:11,740 --> 00:46:17,230
+That's bad. Uh, because, like, if someone's asking me like, hey, there's the security problem and there's like details in the message,
+
+431
+00:46:17,470 --> 00:46:24,470
+you don't want that suddenly going out over the open internet, like, oh, no, there's like this the, uh, you know, security threat.
+
+432
+00:46:24,520 --> 00:46:25,209
+We have to deal with it.
+
+433
+00:46:25,210 --> 00:46:34,030
+Like, you don't want those details to be leaking out, uh, and then shut down, uh, a unnecessary software, uh, that you don't want stream.
+
+434
+00:46:34,030 --> 00:46:38,230
+So if you'll notice, uh, I've got a copy of Thunderbird here.
+
+435
+00:46:38,350 --> 00:46:43,899
+I actually write Thunderbird beta. I am a, um. I'm a beta tester of Thunderbird, and I never have it.
+
+436
+00:46:43,900 --> 00:46:47,229
+Or I rarely, if ever have it open. It shouldn't have it open during a stream.
+
+437
+00:46:47,230 --> 00:46:50,980
+I think I've made a couple of mistakes where it's been open in the background, but, uh, I,
+
+438
+00:46:51,340 --> 00:46:56,799
+I don't want my email, um, work email, um, you know, foregrounded or anything like that.
+
+439
+00:46:56,800 --> 00:46:59,590
+So shut down anything you don't need. That's one of my checklists.
+
+440
+00:46:59,590 --> 00:47:03,969
+Whenever I'm before I start, the stream is like, make sure I'm only running the absolute necessary stuff.
+
+441
+00:47:03,970 --> 00:47:04,960
+Shut down everything else.
+
+442
+00:47:05,980 --> 00:47:15,370
+Um, let's see, depending on if you do for work for universal or this is from Smurf, depending if you do it for work or from your personal PC.
+
+443
+00:47:15,400 --> 00:47:19,809
+If you do it from personal, create a new user, uh, specific for streaming to avoid leaking.
+
+444
+00:47:19,810 --> 00:47:27,520
+Yeah, it's a good idea. I mean, that's just a good idea. In general, I would say, uh, if you have, um, a work machine, do work on your work machine,
+
+445
+00:47:27,520 --> 00:47:30,129
+if you have a personal machine, try and keep those things separate.
+
+446
+00:47:30,130 --> 00:47:35,440
+That's just a good idea in general, for a long time, I didn't keep those things separate.
+
+447
+00:47:35,770 --> 00:47:43,330
+And I would like, uh, my first laptop was actually one that I got from not Mozilla, but from a job that I had.
+
+448
+00:47:43,600 --> 00:47:50,409
+And so I was using it for like personal stuff. I have like video games and stuff on it, and that's actually a really bad idea, uh, in my opinion.
+
+449
+00:47:50,410 --> 00:47:54,760
+Anyways, um, you, you know, work is for work, personal is for personal.
+
+450
+00:47:54,760 --> 00:47:59,229
+And I've got a, uh, dedicated personal machine and I've got dedicate this is my dedicate work machine.
+
+451
+00:47:59,230 --> 00:48:04,180
+And try and never the twain shall meet. Uh, I don't try. I try to avoid doing any personal stuff on this machine.
+
+452
+00:48:05,530 --> 00:48:10,660
+Uh, what are the other tips? Well, first of all, today, this install error installing bundler.
+
+453
+00:48:13,000 --> 00:48:16,750
+Uh, my version of Ruby is too old.
+
+454
+00:48:19,310 --> 00:48:23,240
+I'm. Everything I have is out of date. You know what we might have to look at?
+
+455
+00:48:23,660 --> 00:48:28,680
+This this, uh, um, pull request from, uh, Danny Colon later.
+
+456
+00:48:28,700 --> 00:48:32,270
+Unfortunately. Uh, so that's a bummer.
+
+457
+00:48:32,720 --> 00:48:37,880
+That's a bummer. Um, I'm going to have to, like, figure out how to update all my my stuff.
+
+458
+00:48:38,270 --> 00:48:42,840
+Uh, but, um, hopefully soon. Maybe we'll do that for the next episode.
+
+459
+00:48:42,860 --> 00:48:48,890
+I'll try and have all my packages updated next time. Um, because it looks like my my Ruby is way out of date.
+
+460
+00:48:50,990 --> 00:48:57,150
+Um, or maybe I need to, like, follow Danny Colon's instructions.
+
+461
+00:48:57,170 --> 00:49:00,840
+I can't even do this step. It's always a cause.
+
+462
+00:49:00,840 --> 00:49:04,170
+I can't do a jam. Install bonfire two. I want to do that.
+
+463
+00:49:06,180 --> 00:49:13,020
+Maybe I want to just follow the instructions on the screen. Um, then update the bundler itself.
+
+464
+00:49:13,140 --> 00:49:19,590
+There's like a bootstrapping problem. Maybe I have to get an older version of the bundler to update to a newer version of the bundler.
+
+465
+00:49:19,980 --> 00:49:24,240
+Maybe, maybe maybe. Uh, okay. What else do I have for tips?
+
+466
+00:49:31,130 --> 00:49:40,280
+Hmhm. I have a green screen if you can't tell. I've got this fabric behind me, and OBS has some nice, uh, chroma key filters to key out.
+
+467
+00:49:40,280 --> 00:49:45,380
+Like the green color. It does a fairly decent job, and it doesn't make my computer spin up too badly.
+
+468
+00:49:45,800 --> 00:49:48,920
+Uh, so that's nice. Um.
+
+469
+00:49:48,920 --> 00:49:51,950
+What else? Uh.
+
+470
+00:49:54,670 --> 00:49:58,660
+Do I have any other tips for streamers? Oh, this is a big one.
+
+471
+00:49:58,900 --> 00:50:04,720
+Uh, have a consistent schedule. Um, if you can.
+
+472
+00:50:05,380 --> 00:50:09,010
+Uh, so mine is 1 p.m. eastern on Wednesdays, and every now and then I'll go on vacation.
+
+473
+00:50:09,010 --> 00:50:16,120
+I can't do it. But oftentimes 1 p.m. eastern on Wednesdays is when I stream, and I block that time out in my calendar, and that's when I stream.
+
+474
+00:50:16,390 --> 00:50:22,430
+And that's how you can. And this is true for anything. But if like if you have a consistent schedule, you're more likely to do a thing.
+
+475
+00:50:22,450 --> 00:50:26,230
+It just becomes habit. So if I don't stream on a Wednesday, it feels weird.
+
+476
+00:50:26,560 --> 00:50:30,970
+It feels like it's part of my life now. I've been doing this for ten years and it just feels weird if I don't do it.
+
+477
+00:50:31,270 --> 00:50:39,580
+So I have a consistent schedule if you can. Um. And try and reduce how much, uh, overhead there is to produce an episode.
+
+478
+00:50:39,790 --> 00:50:46,810
+Like, I don't want to spend a whole hour, two hours, five hours, any time really editing an episode.
+
+479
+00:50:47,080 --> 00:50:50,740
+I when I'm done streaming, I want to not think about it until a week later.
+
+480
+00:50:50,920 --> 00:50:57,730
+So one of the reasons I'm able to have this consistent schedule, and I've been able to do this for ten years, is that I don't really think about much.
+
+481
+00:50:58,060 --> 00:51:02,260
+I don't think about the stream until like maybe 5 to 10 minutes before I do it.
+
+482
+00:51:02,500 --> 00:51:07,500
+I work, I do the stream, and then when I end it, I upload it, and I don't think about it again till the week after.
+
+483
+00:51:07,510 --> 00:51:15,910
+Like, I it's just not a big part of the outside of streaming is not, um, like I, I don't do a lot of planning and that's by design.
+
+484
+00:51:16,030 --> 00:51:17,510
+I don't do a lot of post-production.
+
+485
+00:51:17,530 --> 00:51:23,080
+That's also by design, because if this was like a really heavy weight process where I've got to do a lot of post-production,
+
+486
+00:51:23,260 --> 00:51:27,520
+maybe I'm editing the video. So it's just like I'm making super cuts or like I'm just getting to the good stuff.
+
+487
+00:51:27,790 --> 00:51:31,020
+That would take way too long. I'm not interested in doing that.
+
+488
+00:51:31,030 --> 00:51:35,340
+I just want to get the stream out there raw and buy.
+
+489
+00:51:35,350 --> 00:51:38,920
+Um, thank you very much for, um, working on banning that person in the chat.
+
+490
+00:51:39,250 --> 00:51:46,760
+Um, the the less work and this is me, maybe other people out there who have much bigger audiences and they're,
+
+491
+00:51:46,780 --> 00:51:52,810
+they're looking to, like, have, uh, really, um, more polished productions.
+
+492
+00:51:53,080 --> 00:51:54,040
+They're going to be doing editing.
+
+493
+00:51:54,040 --> 00:51:58,719
+Maybe they've got whole teams of people editing or they've got fancy tools or, you know, who knows what they're they're doing.
+
+494
+00:51:58,720 --> 00:52:06,700
+I have no interest in doing that. My, my goal is not to have a humongous audience and like, uh, polished, produced episodes.
+
+495
+00:52:06,700 --> 00:52:10,090
+Like, I start each episode saying that no plan survives breakfast,
+
+496
+00:52:10,210 --> 00:52:16,890
+breakfast and that things might go wrong as a way of of giving myself like a parachute in case things inevitably do go wrong.
+
+497
+00:52:16,900 --> 00:52:21,550
+Like I say, like, hey, guess what? That's part of the plan. And you get you're going to get to watch me deal with it.
+
+498
+00:52:22,060 --> 00:52:31,150
+Um, and so trying to reduce the how much you, how much I'm putting on myself in order to do this makes it more likely for me to continue doing it.
+
+499
+00:52:31,150 --> 00:52:36,340
+And that's the key is and that's true for anything not just streaming for like going to the gym, working out,
+
+500
+00:52:36,340 --> 00:52:45,639
+trying to change your lifestyle is having a consistent schedule and sticking with it by not making it too challenging at the beginning.
+
+501
+00:52:45,640 --> 00:52:51,730
+Like you need to sort of like dip your yourself into a thing and make it easy for yourself to do a thing.
+
+502
+00:52:51,730 --> 00:52:56,230
+Like if if you're trying to go to the gym to, I don't know, um, make yourself healthier,
+
+503
+00:52:56,230 --> 00:53:01,030
+uh, build some muscle or like, um, I don't know, get more flexible or something.
+
+504
+00:53:01,300 --> 00:53:06,580
+Uh, don't go to a gym for, like, eight hours and, like, just destroy yourself.
+
+505
+00:53:06,880 --> 00:53:15,030
+Uh, um, and then you're just never going to go back, get your get your gym membership and then go for half an hour,
+
+506
+00:53:15,040 --> 00:53:21,189
+go for an hour, go once a week, then maybe twice a week, like work yourself up and get used to it.
+
+507
+00:53:21,190 --> 00:53:27,310
+So it becomes part of your lifestyle. And I think in my opinion anyways, that is a much more sustainable path.
+
+508
+00:53:27,730 --> 00:53:35,980
+Um, to like changing your behavior as opposed to like just going all in on something and just like Overcommitting because,
+
+509
+00:53:36,340 --> 00:53:39,249
+um, you know, I've seen people do this with diets as well.
+
+510
+00:53:39,250 --> 00:53:46,930
+Like, I know people who have like, done these huge crash diets and they'll, like, just completely change what they're eating for a month or something.
+
+511
+00:53:46,930 --> 00:53:53,160
+And then when it's done, they get like they gain all their weight back or like they're, you know, it's just it doesn't stick.
+
+512
+00:53:53,170 --> 00:53:56,560
+It just doesn't stick unless you can, like, change your lifestyle.
+
+513
+00:53:56,830 --> 00:54:02,710
+And I find that the easiest way to change my lifestyle is to make it easy for myself to change my lifestyle because I'm lazy.
+
+514
+00:54:03,310 --> 00:54:09,129
+So take advantage of your own behaviors. Um, and I think those are all my tips.
+
+515
+00:54:09,130 --> 00:54:13,390
+If there are any other questions about, uh, streaming, let me know.
+
+516
+00:54:13,390 --> 00:54:18,670
+Yeah, this did not work out. My version of Ruby is too old, so I need to update my Ruby.
+
+517
+00:54:19,750 --> 00:54:24,760
+I'm down by, like, a full major version, so, uh, I better I better figure that out.
+
+518
+00:54:25,870 --> 00:54:28,959
+All right. Uh, well, we're almost an hour in.
+
+519
+00:54:28,960 --> 00:54:34,030
+I wanted to get down to, uh, uh, the the thing that we were talking about last week.
+
+520
+00:54:34,030 --> 00:54:38,260
+So we fixed that bug, that FTP thing.
+
+521
+00:54:38,350 --> 00:54:51,330
+Um, uh. I wrote a patch for it and that patch got reviewed and this is what I wrote, so we can kind of review quickly what happened last week.
+
+522
+00:54:51,750 --> 00:54:56,310
+Um, let me get to the operative part, which is here.
+
+523
+00:54:56,580 --> 00:55:01,100
+We exposed the content character set, uh, because apparently we hadn't been doing that.
+
+524
+00:55:01,110 --> 00:55:06,839
+We should have. And then, um, most importantly, whenever I, uh, cache, uh,
+
+525
+00:55:06,840 --> 00:55:15,059
+cache content that has been retrieved over http, uh, I make sure to write that to the, um, to the cache.
+
+526
+00:55:15,060 --> 00:55:23,060
+I write the original response headers to the cache, and then whenever we're pulling from the cache, um, I try and, uh,
+
+527
+00:55:23,070 --> 00:55:32,399
+I get the headers out from the, uh, that have been stored in the cache, and then I apply them to that, the cache to escape protocol handler.
+
+528
+00:55:32,400 --> 00:55:41,459
+And what's interesting is that the content type, um, uh, Http header sometimes contains more than the content type.
+
+529
+00:55:41,460 --> 00:55:44,880
+It'll also sometimes contain the character encoding, the character set.
+
+530
+00:55:44,880 --> 00:55:51,750
+Um, and thankfully there is a, uh, there is a utility for parsing it out because I did not know that,
+
+531
+00:55:52,110 --> 00:55:57,989
+uh, if you look at http, um, let's go to uh, let's go to mSDN.
+
+532
+00:55:57,990 --> 00:56:06,330
+We're going to look up content type header. Uh, we can see that sometimes the content type header will have like uh a parentheses.
+
+533
+00:56:06,330 --> 00:56:14,100
+And then like other information like the character set or in this case if it's multipart form data, the boundary between the different parts.
+
+534
+00:56:14,220 --> 00:56:18,690
+So it's like it's not just telling you the content type.
+
+535
+00:56:18,690 --> 00:56:23,639
+It's like bound with other information. That's semi semicolon separated which is kind of awkward.
+
+536
+00:56:23,640 --> 00:56:25,530
+And thank goodness, thank goodness.
+
+537
+00:56:25,530 --> 00:56:34,170
+There was a um a utility that, um, you know, Neco uses to parse those things that is exposed to JavaScript that I could just reuse.
+
+538
+00:56:34,410 --> 00:56:39,569
+And I was able to do that. And if there's a content chars character set, I set that as well.
+
+539
+00:56:39,570 --> 00:56:44,130
+And that fixed our SVG problem because that was the issue before, is that we did, um,
+
+540
+00:56:44,220 --> 00:56:51,560
+we didn't have the, uh, the content type properly recognized, uh, cached or um, um, uh,
+
+541
+00:56:51,570 --> 00:57:00,299
+we weren't pulling we first of all, we weren't caching the content types and we weren't taking from the cache the content type and re,
+
+542
+00:57:00,300 --> 00:57:03,990
+uh, um, applying it to the headers of the channel we were creating.
+
+543
+00:57:04,140 --> 00:57:08,800
+So that all got fixed and I wrote a test. So there's a, uh, there's a test.
+
+544
+00:57:08,820 --> 00:57:18,040
+Where is it? Um, here, uh, down here where I like, uh, I say that, hey, I'm expecting to use a specific, uh,
+
+545
+00:57:18,120 --> 00:57:23,580
+content type header, and then I am expecting the test content type in the test content charset to come out.
+
+546
+00:57:23,820 --> 00:57:27,990
+And that was, uh, like image Jpeg with a character set of UTF eight.
+
+547
+00:57:28,200 --> 00:57:32,220
+So that all that all got tested and it worked in Atlanta. And so that fixed our issue.
+
+548
+00:57:33,240 --> 00:57:41,399
+And that was blocking a particular bug, which was, uh, one that a colleague Scott is working on,
+
+549
+00:57:41,400 --> 00:57:48,150
+which has not yet landed, but is, I think is reviewed and is slated to land soon.
+
+550
+00:57:48,750 --> 00:57:56,790
+Uh, I don't know, uh, what the story is for landing this, but, uh, this is should probably be landing, uh, real soon.
+
+551
+00:57:56,790 --> 00:58:05,519
+Now, I'm going to apply this patch right now, actually, um, because I want to demonstrate the issue.
+
+552
+00:58:05,520 --> 00:58:11,400
+Scott basically reached out to me and said that there's one more, there's another bug that he's noticed, and I want to check it out with you.
+
+553
+00:58:11,850 --> 00:58:18,390
+So I've not actually, uh, seen this bug myself. Um, I figure we can look at it together and sort of trying to understand what's going wrong.
+
+554
+00:58:19,350 --> 00:58:24,930
+I do have his steps to reproduce. Um, so anyways, let's pull down his patch.
+
+555
+00:58:25,530 --> 00:58:31,499
+Uh, does not apply. Okay. Um, so did nothing happen there?
+
+556
+00:58:31,500 --> 00:58:35,670
+So I'm going to instead of apply to here I'm just going to patch normally.
+
+557
+00:58:36,240 --> 00:58:42,660
+So I'll check out the reversion. The reversion. Check out the right revision that he was working on and apply it.
+
+558
+00:58:47,190 --> 00:58:51,920
+Which is from July 31st, so a few days ago.
+
+559
+00:58:51,930 --> 00:58:54,989
+But after my patch landed.
+
+560
+00:58:54,990 --> 00:59:02,090
+Right. My patch landed on the 15th.
+
+561
+00:59:03,780 --> 00:59:14,310
+No. No. Sorry. Um. This one, the content type one landed on August the 2nd, so I actually need to rebase Scott's patch.
+
+562
+00:59:15,150 --> 00:59:18,600
+So I'm going to change rebase. Uh.
+
+563
+00:59:19,760 --> 00:59:28,639
+JJ log. JJ rebase are cover on two main at origin and this may cause.
+
+564
+00:59:28,640 --> 00:59:37,010
+Oh and it worked. Uh yeah that's great JJ new cover.
+
+565
+00:59:41,540 --> 00:59:47,660
+So now we'll go ahead and build. We're going to I'm going to do an artifact build just so that, um, we can do this faster.
+
+566
+00:59:48,500 --> 00:59:53,390
+And we're going to try and reproduce his steps. Let me let me just yank those steps out that he was mentioning.
+
+567
+00:59:58,340 --> 01:00:03,110
+Mhm mhm. Okay.
+
+568
+01:00:04,890 --> 01:00:12,810
+So there's some set up steps he, uh, that we'll have to apply in order to enable the, uh, Okta image retrieval stuff.
+
+569
+01:00:19,900 --> 01:00:35,000
+Oops. All right.
+
+570
+01:00:35,000 --> 01:00:39,860
+Just waiting for this artifact build to complete in the meantime.
+
+571
+01:00:40,370 --> 01:00:46,700
+In the meantime, I'm curious. Ruby. I'm working with Ruby 2.6 Mac OS.
+
+572
+01:00:47,060 --> 01:00:56,240
+Which version of Mac OS am I on? I'm on Sonoma mac OS, Sonoma update Ruby and install the latest Ruby on Sonoma.
+
+573
+01:01:01,710 --> 01:01:10,520
+Start. Ruby on Rails on Sonoma. Install homebrew and then you install Ruby via homebrew.
+
+574
+01:01:15,890 --> 01:01:24,510
+Install Ruby using a version manager called Asdf for Ruby, and ami is asked if you manage other languages like node.
+
+575
+01:01:24,530 --> 01:01:27,620
+Oh, I do not. I do not want that. Um.
+
+576
+01:01:30,050 --> 01:01:46,850
+Mac OS install guide for Ruby. Bruins star Ruby.
+
+577
+01:01:50,500 --> 01:01:53,750
+Hmhm. That seems reasonable.
+
+578
+01:01:54,020 --> 01:01:58,700
+Which? Ruby. So this is the one that I think comes with Mac OS.
+
+579
+01:01:59,480 --> 01:02:03,379
+Uh, all right. Anyways, well, uh, our build is done. We'll get back to that in a second.
+
+580
+01:02:03,380 --> 01:02:11,840
+So we've got Scott's patch applied. I need to, uh, do a few things in order to, um, get ourselves to the point where we can reproduce this issue.
+
+581
+01:02:12,710 --> 01:02:16,040
+Um, but I may have actually already done them. Do I have them?
+
+582
+01:02:16,670 --> 01:02:20,510
+Do I have? Uh, let's see here.
+
+583
+01:02:21,320 --> 01:02:25,310
+Are these images being requested over or HTP? They are not.
+
+584
+01:02:25,490 --> 01:02:28,830
+Okay. So we have to still apply some of his steps here.
+
+585
+01:02:28,850 --> 01:02:41,020
+One of them is to install this extension. To, uh, enroll in a particular configuration.
+
+586
+01:02:42,670 --> 01:02:48,370
+You to, um, uh, which type images we're going to say was enabled?
+
+587
+01:02:50,170 --> 01:02:55,710
+Enabled. True. Enroll.
+
+588
+01:02:56,990 --> 01:03:01,190
+Okay, so now if we take a look at.
+
+589
+01:03:01,700 --> 01:03:05,420
+If I reload this. Yeah.
+
+590
+01:03:05,720 --> 01:03:09,050
+Uh, that is not using CPP images yet.
+
+591
+01:03:09,530 --> 01:03:13,850
+Oh, you know, there are other preferences I need to apply. Sorry, I've jumped ahead.
+
+592
+01:03:14,210 --> 01:03:19,500
+Um. I need to set this pref.
+
+593
+01:03:26,830 --> 01:03:29,860
+To true. I need to set this to true.
+
+594
+01:03:32,380 --> 01:03:40,930
+I need to set this to true. Whoa, that's looking pretty broken.
+
+595
+01:03:44,020 --> 01:03:48,370
+That's looking pretty broken, everybody. And then we're far over.
+
+596
+01:03:48,370 --> 01:03:55,280
+Find cards out. And then.
+
+597
+01:03:57,120 --> 01:04:04,100
+Merino. Merino wool which enables.
+
+598
+01:04:04,200 --> 01:04:15,170
+Okay, so now let's restart. And are these images being retrieved over http?
+
+599
+01:04:16,330 --> 01:04:19,930
+Not yet. Not yet. Uh.
+
+600
+01:04:19,930 --> 01:04:25,100
+Why not? Do I have to set up this other stuff?
+
+601
+01:04:30,040 --> 01:04:36,790
+Oh, boy. Uh, architecture trend.
+
+602
+01:04:43,350 --> 01:04:48,060
+You know what it is. It's not. One of the things is that the popular today images aren't sent.
+
+603
+01:04:48,300 --> 01:04:51,480
+Um. Yeah. Here we go. Here we go.
+
+604
+01:04:51,510 --> 01:05:02,340
+We have one that's working. Okay, so we've got one that works. Uh, so the steps right click on an image and open the image in the new tab.
+
+605
+01:05:02,490 --> 01:05:10,410
+Okay. So if I right click on this image open image in new tab nothing happens.
+
+606
+01:05:11,280 --> 01:05:14,580
+So he's saying have the multi process browser console open.
+
+607
+01:05:16,110 --> 01:05:21,630
+Do that again open image new tab. Nothing happens.
+
+608
+01:05:23,480 --> 01:05:29,360
+That looks pretty broken. Oh, oh, maybe the image is going there to the console.
+
+609
+01:05:29,360 --> 01:05:33,230
+Not, uh, to this one. Not to the other one.
+
+610
+01:05:33,290 --> 01:05:38,550
+Right click open image new tab. Still nothing.
+
+611
+01:05:39,930 --> 01:05:44,100
+What about this one? Open image in new tab. Reload.
+
+612
+01:05:45,660 --> 01:05:51,860
+Open image in new tab. What's the deal?
+
+613
+01:05:51,980 --> 01:05:55,470
+Why? Oh, here we go.
+
+614
+01:05:55,490 --> 01:06:02,819
+Here we go. Load of it is denied on a URL.
+
+615
+01:06:02,820 --> 01:06:12,860
+Security check. Loader looked.
+
+616
+01:06:22,750 --> 01:06:28,480
+May not load or link to. And that's on here.
+
+617
+01:06:29,230 --> 01:06:40,080
+Check. Would you agree with the principle? From the script security manager.
+
+618
+01:06:40,200 --> 01:06:44,210
+I see. All the flags.
+
+619
+01:06:44,220 --> 01:06:50,160
+So let's right click on that. What are the principal?
+
+620
+01:06:53,190 --> 01:07:00,890
+And the principal. Is like the passport.
+
+621
+01:07:00,900 --> 01:07:03,900
+It's like the identity of a of a of a site.
+
+622
+01:07:03,990 --> 01:07:08,100
+A URL is that. And a flags is eight.
+
+623
+01:07:09,780 --> 01:07:19,580
+Um. And that's coming from view media disallow script.
+
+624
+01:07:20,060 --> 01:07:24,080
+So we're going to be going into something called check load uri stir with principal.
+
+625
+01:07:24,440 --> 01:07:33,920
+Let's take a look at what that does. What we do is we make sure that we can create an NSI you or I.
+
+626
+01:07:37,630 --> 01:07:39,370
+And then we delegate to here.
+
+627
+01:07:42,710 --> 01:07:48,440
+If someone passes a flag that we don't understand, we should fail because they meaning a security check we don't provide.
+
+628
+01:07:51,610 --> 01:07:57,400
+Here in principle. If we're the third for the system principle, then we always allow otherwise.
+
+629
+01:08:02,430 --> 01:08:08,690
+Tax policy. If we're an expanded principal?
+
+630
+01:08:08,710 --> 01:08:16,430
+No, that's not the case because we are not an extension. Of certain protocols.
+
+631
+01:08:16,450 --> 01:08:19,720
+If either Ursinus or I get the base Uri.
+
+632
+01:08:26,320 --> 01:08:29,540
+How does that work? I'm sorry. Okay. In her most.
+
+633
+01:08:32,740 --> 01:08:51,600
+An NSI nested Uri. Opening a channel.
+
+634
+01:08:52,110 --> 01:08:55,470
+Starfruit sanitizer. Charge the sanitizer I should implement.
+
+635
+01:08:55,560 --> 01:09:00,450
+Since you write and return example as in r u r I uh.
+
+636
+01:09:06,850 --> 01:09:10,960
+Okay. Not quite. So we are not a nested Uri.
+
+637
+01:09:13,370 --> 01:09:18,960
+Target scheme. Some cultures now allow lone JavaScript to f.
+
+638
+01:09:19,290 --> 01:09:26,830
+Okay, check with you guys a little about pi principles that subsume them. Loadable by subsume Zoomers.
+
+639
+01:09:28,750 --> 01:09:32,410
+Oh, I wonder if this is going through our protocol handler.
+
+640
+01:09:32,980 --> 01:09:38,620
+So hang on. Mars cached Http parent us.
+
+641
+01:09:41,460 --> 01:09:49,300
+Just. Cached or used to be protocol handler.
+
+642
+01:09:50,240 --> 01:09:53,680
+There are some kind of like flags.
+
+643
+01:09:53,690 --> 01:09:59,299
+Flags, flags. Our protocol handler is.
+
+644
+01:09:59,300 --> 01:10:10,370
+It's supposed to be. I was supposed to be able to say what can access it?
+
+645
+01:10:19,180 --> 01:10:30,049
+Oh how poor! Protocols.
+
+646
+01:10:30,050 --> 01:10:33,590
+I wish to return different files depending on you or I should implement this interface.
+
+647
+01:10:36,630 --> 01:10:42,810
+Okay scheme. What about.
+
+648
+01:10:43,170 --> 01:10:48,490
+So. Flags. Constants for the protocol.
+
+649
+01:10:48,500 --> 01:11:03,829
+Flags clients and use terminate. So how does one I presume that the created channel is ultimately, um, what's going to have its load flags set?
+
+650
+01:11:03,830 --> 01:11:11,120
+Probably on load info. I think what we might need to do actually here.
+
+651
+01:11:15,800 --> 01:11:23,870
+You know they're linked here. You might actually need a debug build or an op to build.
+
+652
+01:11:23,870 --> 01:11:31,260
+Let me see. I've got a fairly recent on off build. I'd hate to have to reset all those configurations, but I'll do it if I need to.
+
+653
+01:11:31,280 --> 01:11:37,250
+Let's see how long it will take to do an opt build. Let's see how much I break my system by trying to update Ruby.
+
+654
+01:11:37,700 --> 01:11:40,760
+Um, brew. Install Ruby. Let's see.
+
+655
+01:11:41,030 --> 01:11:45,019
+Let's see what happens. Um, uh, what does it say?
+
+656
+01:11:45,020 --> 01:11:50,150
+Uh, don't use Mac system. Ruby. Mac OS comes with a system Ruby pre-installed.
+
+657
+01:11:50,660 --> 01:11:54,680
+Uh, it's a bad idea to use the max system. Ruby. Uh, you can see the system.
+
+658
+01:11:54,680 --> 01:11:58,729
+Ruby. With which Ruby. Write user been.
+
+659
+01:11:58,730 --> 01:12:02,030
+Ruby. Uh, that's the one I'm using. Leave the system.
+
+660
+01:12:02,030 --> 01:12:14,090
+Ruby in place. Install the newest Ruby using a homebrew. Okay, so start with brew doctor, brew doctor and then install Ruby.
+
+661
+01:12:15,770 --> 01:12:20,030
+So we're going to wait for Brew Doctor to run. Meanwhile. Oh boy this is going to take forever.
+
+662
+01:12:20,810 --> 01:12:24,920
+We're we're compiling a bunch of stuff. This is not so good.
+
+663
+01:12:24,920 --> 01:12:29,270
+I'll, um. Wait. No, maybe I'm wrong. Maybe I'm wrong. We've skipped over a bunch of things.
+
+664
+01:12:31,430 --> 01:12:36,620
+All right. We're we're compiling a bunch of rust, but maybe we're not going to compile a bunch of C plus.
+
+665
+01:12:36,620 --> 01:12:44,060
+Plus, let's not lose hope just yet. Meanwhile, brew doctor run and there are some warnings, and Xcode is outdated.
+
+666
+01:12:44,480 --> 01:12:49,640
+Um, but I'm not going to worry about that just yet.
+
+667
+01:12:50,270 --> 01:12:58,210
+Uh, let's install Ruby. Should probably update my tax code.
+
+668
+01:13:07,940 --> 01:13:11,660
+What? My Firefox crashed. Um.
+
+669
+01:13:13,580 --> 01:13:16,750
+Ignore. Which one?
+
+670
+01:13:16,770 --> 01:13:19,830
+Not this one. It's a different one. Running Hmhm.
+
+671
+01:13:28,700 --> 01:13:35,160
+So it's going to get Ruby. Another Firefox running in the background.
+
+672
+01:14:09,580 --> 01:14:15,610
+Okay. Uh, pouring Ruby. That's the one. Meanwhile, we're compiling Dom.
+
+673
+01:14:15,610 --> 01:14:22,930
+Uh, it's going to take forever. All right, so we're switching back to, um, looking at, uh, getting Jekyll and stuff installed,
+
+674
+01:14:24,220 --> 01:14:31,360
+um, so that we can try merging in, uh, Danny Collins, uh, pull request.
+
+675
+01:14:31,660 --> 01:14:39,390
+Now, that's still the wrong version of Ruby. Um, brew list.
+
+676
+01:14:39,400 --> 01:14:46,330
+Oh, I then I might need to. Check that homebrew hasn't saw Ruby with brew list.
+
+677
+01:14:47,350 --> 01:14:53,980
+Yeah, there it is. Uh, homebrew requires that you explicitly set the path to override the Mac OS system.
+
+678
+01:14:53,990 --> 01:15:02,050
+Ruby. Okay, I have to set the path. So edit either my zsh, r, c and z profile files Cmac path, for instance, a shortcut to open the file in TextEdit.
+
+679
+01:15:02,230 --> 01:15:14,380
+So I'm not going to open that on screen. I'm going to open up a separate uh, dialog, uh, separate terminal CSR r c I'm going to add Ruby to my path.
+
+680
+01:15:16,540 --> 01:15:20,890
+So um, I am on Apple Silicon.
+
+681
+01:15:23,140 --> 01:15:31,209
+Uh, so I'm going to put that down here. Okay.
+
+682
+01:15:31,210 --> 01:15:35,260
+And then source. So that's h r c.
+
+683
+01:15:38,470 --> 01:15:50,250
+And now if I type in okay, so now if I'm over here and I type in Ruby version 3.45, that's that's the right one.
+
+684
+01:15:50,260 --> 01:15:56,110
+Okay. So now we're going to go to projects Joy of coding episode guide.
+
+685
+01:15:56,110 --> 01:16:03,010
+We're going to try following those instructions again for um updating the bundler.
+
+686
+01:16:03,760 --> 01:16:11,070
+Um. So first of all.
+
+687
+01:16:14,620 --> 01:16:24,190
+There's something in here about bundle install I may need to, like make sure that Jekyll and bundlers up to date.
+
+688
+01:16:25,330 --> 01:16:28,510
+Um, so pseudo.
+
+689
+01:16:29,350 --> 01:16:32,470
+I don't like using pseudo. Let's see what happens if I don't use pseudo.
+
+690
+01:16:35,490 --> 01:16:40,720
+Let's just see. Go fetch all these things. And then it's installing things.
+
+691
+01:16:40,740 --> 01:16:44,370
+That's. That's great. That's what I want. I didn't want to use sudo.
+
+692
+01:16:47,970 --> 01:16:51,420
+You know what? It's probably because before I was using the system. Ruby.
+
+693
+01:16:53,280 --> 01:16:57,390
+And this is not a system Ruby. So I feel good about that.
+
+694
+01:17:00,830 --> 01:17:05,360
+Uh. All right. Meanwhile, back at the ranch, still building.
+
+695
+01:17:05,360 --> 01:17:13,700
+Building. Dom. Uh, and we're done with, uh, a new version of Ruby gems is available.
+
+696
+01:17:13,750 --> 01:17:17,690
+I'm gonna. You want to update your installation? Sure.
+
+697
+01:17:17,690 --> 01:17:26,090
+Why not? Let's get the latest Ruby gems. And now I'm going to go back.
+
+698
+01:17:26,330 --> 01:17:30,560
+Having installed Jekyll. I'm going to run this command.
+
+699
+01:17:32,840 --> 01:17:36,169
+So there's a bunch of text in here. I'm sure that's fine.
+
+700
+01:17:36,170 --> 01:17:41,180
+And bundle install. List path.
+
+701
+01:17:41,180 --> 01:17:51,470
+Vendor bundle. What bundle?
+
+702
+01:17:54,730 --> 01:17:58,210
+Oh, maybe that's where I'm telling it's to install. Okay. Bundle. Install.
+
+703
+01:18:00,280 --> 01:18:03,520
+Cannot load such file. Bundle. Load error.
+
+704
+01:18:05,170 --> 01:18:08,620
+What? Um.
+
+705
+01:18:10,150 --> 01:18:14,020
+Bundle. Help!
+
+706
+01:18:15,220 --> 01:18:18,310
+It doesn't like kernel load.
+
+707
+01:18:18,340 --> 01:18:24,010
+No, can't do it. Um, gem.
+
+708
+01:18:24,430 --> 01:18:32,530
+Do it again. Install bundler again. There we go.
+
+709
+01:18:32,740 --> 01:18:38,170
+I don't know why that failed before, but let's install, uh, Jekyll as well.
+
+710
+01:18:42,830 --> 01:18:46,310
+Okay. Uh, now let's run this command.
+
+711
+01:18:50,570 --> 01:18:56,490
+Okay. And then bundle exact Jekyll's serve.
+
+712
+01:18:56,510 --> 01:19:01,400
+Oh, wow. There's. Now there's a bunch of other stuff going on. Okay, well, we'll let that do its thing.
+
+713
+01:19:02,510 --> 01:19:19,669
+Meanwhile, over here. Still building Dom. Hmm hmm hmm hmm hmm hmm hmm hmm hmm.
+
+714
+01:19:19,670 --> 01:19:22,680
+Okay, so that's done. Uh, bundle. Exact.
+
+715
+01:19:22,700 --> 01:19:33,130
+Jekyll. Serve. Okay.
+
+716
+01:19:33,310 --> 01:19:37,870
+So let's see. Here it is.
+
+717
+01:19:37,870 --> 01:19:43,000
+And hey we've got our sections here. This looks great Danny Colon.
+
+718
+01:19:43,330 --> 01:19:47,650
+Great job. Oh look great. I like it a lot.
+
+719
+01:19:48,910 --> 01:19:52,840
+Well that's very nice. Looks good.
+
+720
+01:19:53,080 --> 01:20:01,420
+Looks good. So let's go. Um, let's go back to the contributing, uh, the the, uh, pull request here.
+
+721
+01:20:02,260 --> 01:20:05,950
+Uh, I like it. Let's just do it. Why not?
+
+722
+01:20:06,160 --> 01:20:13,620
+Why wait? Uh, again. Once again. Well, first of all, uh, exclude contributing that MD, because that's what it's called, right?
+
+723
+01:20:13,640 --> 01:20:16,940
+Contributing to RMD and not yeah,
+
+724
+01:20:17,050 --> 01:20:26,709
+it's contributing derived uh contribute and and then miss what's going into masks like various things various things.
+
+725
+01:20:26,710 --> 01:20:31,600
+So he had to move things out of utils. Oh that's interesting.
+
+726
+01:20:32,740 --> 01:20:35,650
+Which is probably. Oh, that is definitely screwed up.
+
+727
+01:20:36,130 --> 01:20:51,760
+My, uh, some of my scripts, uh, my, my local script pulled up, um, see misc, uh, see agenda for, uh, because that's going to work.
+
+728
+01:20:54,130 --> 01:20:57,490
+Yeah. No such failure. Oh, boy, oh, boy.
+
+729
+01:20:58,780 --> 01:21:09,080
+See? Uh, I need to copy my configurations.
+
+730
+01:21:09,230 --> 01:21:12,900
+So he's moved utils. I had some stuff in there that I didn't commit.
+
+731
+01:21:12,920 --> 01:21:18,260
+It's like my configuration key in my some of my keys and stuff, and I'm going to need to move that.
+
+732
+01:21:18,290 --> 01:21:25,320
+Um, but I can make that work. So utils goes under and becomes mrx.
+
+733
+01:21:27,730 --> 01:21:31,510
+And then I've got these old Evernote notes. And now why?
+
+734
+01:21:34,250 --> 01:21:36,580
+If you ask this directory as a special directory that charcoal matters.
+
+735
+01:21:36,590 --> 01:21:41,270
+Since I had an abscess, I had to move off as you didn't want Jekyll the mod or into miss.
+
+736
+01:21:41,810 --> 01:21:45,290
+Okay, I'm fine with that. I'm fine with that.
+
+737
+01:21:46,280 --> 01:21:50,360
+Uh, smurfd0 asks will be adding episodes still be the same?
+
+738
+01:21:50,810 --> 01:22:02,060
+It looks like it. It looks like. Yeah, it doesn't look like that changes at all.
+
+739
+01:22:03,140 --> 01:22:06,920
+Um, so I think we're okay.
+
+740
+01:22:07,970 --> 01:22:12,800
+I think we're okay. So I'm going to go ahead and merge this. Uh, I'm gonna I'm going to think, uh.
+
+741
+01:22:15,330 --> 01:22:24,620
+Thanks so much. And that's that.
+
+742
+01:22:25,610 --> 01:22:30,380
+Good, good, good. Thank you so much. Uh, Danny colon, um.
+
+743
+01:22:32,600 --> 01:22:42,530
+Meanwhile, this build still going. Uh, now I need to, like, fix stuff up because I've a bunch of stuff has just gotten repaved.
+
+744
+01:22:42,980 --> 01:22:46,850
+So let me let me just like this is tricky, I need to.
+
+745
+01:22:54,090 --> 01:22:59,820
+Yeah. These are like, tokens and stuff. Okay, so I need to, uh, scrapbook.
+
+746
+01:23:02,280 --> 01:23:06,390
+Um, I need to copy these.
+
+747
+01:23:08,590 --> 01:23:13,150
+I need to. Rather, I need to move them. Um.
+
+748
+01:23:16,930 --> 01:23:21,380
+Um, just one second. I'm doing this off screen.
+
+749
+01:23:21,400 --> 01:23:32,650
+I apologize. Oh.
+
+750
+01:23:35,660 --> 01:23:40,810
+Okay. That's done. So I've moved some files around.
+
+751
+01:23:41,050 --> 01:23:45,930
+Now, if I do, uh, JJ log got these things I going to, um.
+
+752
+01:23:45,940 --> 01:23:53,060
+When does. Has this merged yet? Did, uh. Episode guide merge change merge in.
+
+753
+01:23:53,070 --> 01:23:56,070
+Yes it did. So I'm going to do JJ get fetch.
+
+754
+01:23:58,500 --> 01:24:03,720
+JJ knew master at origin. Okay.
+
+755
+01:24:05,260 --> 01:24:08,380
+Get a log. Okay.
+
+756
+01:24:08,770 --> 01:24:15,550
+And now I need to move a bunch of stuff back. Um, so in order.
+
+757
+01:24:19,290 --> 01:24:25,140
+You need to remove the utils directory then under misuse agenda.
+
+758
+01:24:27,210 --> 01:24:34,560
+I'm going to copy everything that I had under here.
+
+759
+01:24:39,790 --> 01:24:47,509
+Uh. It's directory copy.
+
+760
+01:24:47,510 --> 01:24:50,510
+Recursive. Okay, done.
+
+761
+01:24:50,990 --> 01:24:54,800
+Now, I can, uh, rerun this.
+
+762
+01:24:56,600 --> 01:24:59,840
+And so now, uh. Ah, the agenda should be updating again.
+
+763
+01:25:00,170 --> 01:25:03,650
+So if I do this, that runs. So we should be sinking.
+
+764
+01:25:04,190 --> 01:25:09,290
+Let's make sure that the episode guide is sinking properly. 412.
+
+765
+01:25:09,500 --> 01:25:15,710
+I put an exclamation mark. Yes. That worked. And I need to update the obs.
+
+766
+01:25:16,400 --> 01:25:19,940
+Uh, apologies. Apologies. Everybody going here?
+
+767
+01:25:20,390 --> 01:25:25,880
+You can't. Where's the splash image? I got to change the splash image because we've changed where it's pointed.
+
+768
+01:25:26,300 --> 01:25:30,610
+Uh, so I'm going to just change that real quick. It's now under masks.
+
+769
+01:25:32,920 --> 01:25:37,300
+Uh. And I believe it's this one.
+
+770
+01:25:39,220 --> 01:25:42,220
+There it is. Uh.
+
+771
+01:25:43,920 --> 01:25:47,670
+Yeah, yeah. All right, so that's all fixed now.
+
+772
+01:25:47,940 --> 01:25:52,620
+Yay yay yay yay. And now if we go back to the episode guide, the actual episode guide.
+
+773
+01:25:53,100 --> 01:25:56,250
+Uh, Joy of coding episode guide. Has it deployed?
+
+774
+01:25:56,550 --> 01:26:01,080
+It has. So we did it, everybody. We updated the episode guide.
+
+775
+01:26:01,140 --> 01:26:04,320
+We fixed it all up. It's got this cool new accordion thing.
+
+776
+01:26:04,320 --> 01:26:07,710
+This accordion is not using any JavaScript. Did you notice that?
+
+777
+01:26:08,190 --> 01:26:14,490
+Heads up everybody that you can do accordions without JavaScript anymore because you can do like details.
+
+778
+01:26:15,180 --> 01:26:16,770
+Yeah. Let's go back to MDA and check this out.
+
+779
+01:26:19,050 --> 01:26:30,990
+The details um the details element does has like expand collapse, um, capabilities that you can style with CSS and stuff.
+
+780
+01:26:31,320 --> 01:26:38,790
+But if you use the name attribute, that means that you can have multiple details elements and only one is open at a time.
+
+781
+01:26:39,240 --> 01:26:43,590
+So let's see. Um, let's see this one.
+
+782
+01:26:44,340 --> 01:26:49,170
+Yeah. Like this one. This is like a little accordion. Now this is like default CSS.
+
+783
+01:26:49,410 --> 01:26:53,280
+It's not very pretty, but you can definitely fix this up and make it look nice.
+
+784
+01:26:53,490 --> 01:27:00,690
+And that is exactly what, uh, what Danny Colon did. We got our nice accordion here so that, you know, episode 225.
+
+785
+01:27:00,780 --> 01:27:04,320
+When we're. When. Oh, sorry. Wrong, uh. Wrong image.
+
+786
+01:27:04,590 --> 01:27:10,380
+When, uh, when we're done 20, 25, we can close the book on it and you can go all the way back to 2015.
+
+787
+01:27:10,650 --> 01:27:14,969
+Look at episodes one through 38. Um, wow.
+
+788
+01:27:14,970 --> 01:27:18,750
+What a what a thank you so much, Danny Colon for the contribution.
+
+789
+01:27:18,750 --> 01:27:22,590
+I really appreciate it. Um, and, uh, that worked out.
+
+790
+01:27:23,010 --> 01:27:26,700
+Uh, unfortunately, I don't think given how much time we have remaining,
+
+791
+01:27:26,700 --> 01:27:32,220
+that we're going to be able to really dive too deeply into that Molly's cache FTP thing.
+
+792
+01:27:33,030 --> 01:27:42,270
+I think we have determined, however, that is a script security problem where it doesn't seem as if about new Tab has the rights to use that,
+
+793
+01:27:42,330 --> 01:27:46,260
+uh, Mars cache to always keep, uh, protocol.
+
+794
+01:27:46,590 --> 01:27:56,280
+And I think we need to figure out, uh, um, how best to, um, allow it.
+
+795
+01:27:56,280 --> 01:28:02,609
+So, for example, uh, I believe there is a, uh, static.
+
+796
+01:28:02,610 --> 01:28:08,759
+Yeah. This is where it's defined. It's possible that one of these needs to be changed.
+
+797
+01:28:08,760 --> 01:28:15,180
+Like the flag needs to be changed. I need to figure out, um, what it needs to be like.
+
+798
+01:28:15,180 --> 01:28:19,829
+Uri dangerous to load. What is what even is, uh.
+
+799
+01:28:19,830 --> 01:28:23,370
+You are. If this protocol are unsafe, loaded by untrusted web content. That's true.
+
+800
+01:28:26,740 --> 01:28:30,400
+Part of the appeal to research that part of the application's user interface.
+
+801
+01:28:33,980 --> 01:28:43,860
+Um. This is true.
+
+802
+01:28:43,890 --> 01:28:48,090
+Your eye opening execute script. That is true. I should probably add that.
+
+803
+01:28:54,620 --> 01:28:57,830
+So we need to, like, figure out what the right flags should be.
+
+804
+01:28:59,330 --> 01:29:06,270
+Um. For our for our particular protocol handler here.
+
+805
+01:29:06,270 --> 01:29:10,649
+And unfortunately, yeah, I don't think we're gonna have time to figure out that.
+
+806
+01:29:10,650 --> 01:29:15,140
+But I can talk to the Neko team and and then the security team and figure out what the right move is.
+
+807
+01:29:15,210 --> 01:29:27,120
+There are definitely other, um, uh, there are definitely other, uh, protocol handlers that we can probably, um, draft off of.
+
+808
+01:29:27,120 --> 01:29:30,840
+Like, is there one for the resource protocol?
+
+809
+01:29:34,290 --> 01:29:38,910
+Mhm. Uh, res.
+
+810
+01:29:41,430 --> 01:29:48,970
+Protocol. Rest protocol handler.
+
+811
+01:29:51,010 --> 01:29:55,870
+Neco. Network. Protocol.
+
+812
+01:29:57,970 --> 01:30:01,840
+Where is the Rez protocol handler? Here it is.
+
+813
+01:30:03,220 --> 01:30:09,430
+So Res network protocol. Res. What flags does it use?
+
+814
+01:30:14,200 --> 01:30:20,110
+Allow content to access. What is that?
+
+815
+01:30:20,130 --> 01:30:24,180
+Something special on race protocol in there? Okay, sure.
+
+816
+01:30:24,230 --> 01:30:28,000
+Flag substitution. Substitution.
+
+817
+01:30:28,000 --> 01:30:32,440
+Where is this registration occurring? And in his protocol handler.
+
+818
+01:30:34,090 --> 01:30:40,170
+Who does that mapping? Stick around.
+
+819
+01:30:46,340 --> 01:30:58,870
+Hmhm might be here. Who you are.
+
+820
+01:30:58,900 --> 01:31:04,560
+I okay. That's protocol handler H.
+
+821
+01:31:05,880 --> 01:31:08,970
+Oh, here it is. Here's where it gets constructed. So you or I.
+
+822
+01:31:10,950 --> 01:31:18,390
+No, that's not true for us. Like, this is why it's a little bit tricky, because we're not just loading local UI resources.
+
+823
+01:31:18,660 --> 01:31:24,390
+That's why we can't use resource as a as a sort of a a model, unfortunately.
+
+824
+01:31:26,450 --> 01:31:30,910
+Hmm. Okay. I'll have to talk to some people about what's best to do here.
+
+825
+01:31:31,100 --> 01:31:37,820
+You know what page icon or, um, uh, is page icon?
+
+826
+01:31:41,470 --> 01:31:47,050
+It's maybe a better one. Yes. Again, it's not a local resource, though.
+
+827
+01:31:48,880 --> 01:31:54,880
+Okay. I'm going to have to talk to some networking people about what the right move is there, but let's not worry about it.
+
+828
+01:31:54,910 --> 01:31:58,750
+Hey, thank you so much for watching episode 412 of the Joy of coding.
+
+829
+01:31:58,750 --> 01:32:04,840
+I realized that was all over the place. Uh, you know, we we we talked about Keanu.
+
+830
+01:32:04,840 --> 01:32:08,470
+I talked about the episode guide. We've got some broken, uh, permalinks.
+
+831
+01:32:08,770 --> 01:32:12,190
+Uh, we fixed up the episode guide a lot today. I wasn't planning on doing that.
+
+832
+01:32:12,400 --> 01:32:17,620
+I talked about live streaming. I came up with some off the top of my head sort of advice on the sorts of things that you can do.
+
+833
+01:32:17,860 --> 01:32:24,280
+I talked about some of the hardware that I'm using. Um, I talked a little bit about, you know, the hardware and stuff.
+
+834
+01:32:24,280 --> 01:32:27,630
+But I want to be clear, this is pretty stapled together.
+
+835
+01:32:27,640 --> 01:32:35,620
+Like, I've got two, uh, microphone stands with rubber bands holding this green screen up, and and it's just, like, spit and duct tape.
+
+836
+01:32:36,070 --> 01:32:39,900
+Uh, and that's because I didn't want to, you know, make this complicated.
+
+837
+01:32:39,910 --> 01:32:48,790
+I just do whatever works. And the most important part, I think of my whole diatribe on live streaming is to just try and make it easy on yourself,
+
+838
+01:32:48,790 --> 01:32:51,580
+and this is a thing that you want to do, have a good schedule.
+
+839
+01:32:51,760 --> 01:32:57,070
+And if if you want to have a good schedule, make it easy on yourself so that you don't dread doing it.
+
+840
+01:32:58,000 --> 01:33:05,079
+Make it something that is easy to do. Um, this is, you know, I, I used to teach guitar, and this is always, uh, I found been the case as well.
+
+841
+01:33:05,080 --> 01:33:13,850
+Is, um, to make it easy to do a thing to to pick up and do a thing is important to to make it part of your lifestyle.
+
+842
+01:33:13,870 --> 01:33:16,299
+So whenever I had guitar students, I would tell them, like, don't leave your guitar.
+
+843
+01:33:16,300 --> 01:33:19,500
+In your case, if you can avoid it, don't leave your guitar in your case.
+
+844
+01:33:19,510 --> 01:33:22,210
+Like I know some people would be like, no, you gotta humidify the wood and stuff.
+
+845
+01:33:22,660 --> 01:33:29,200
+Um, have the guitar out in a place that you frequent so that when you walk by and you see it,
+
+846
+01:33:29,200 --> 01:33:32,859
+you touch the guitar, you pick up the guitar, you play the guitar have.
+
+847
+01:33:32,860 --> 01:33:38,709
+It's so easy. You pick it up, turn on the amp. If it's an electric and you can play a bit and then you can put it away, but you keep it as plugged in.
+
+848
+01:33:38,710 --> 01:33:44,560
+You don't want to have to like, drag out the amplifier from a closet and plug it in and get your effects pedals pulled out.
+
+849
+01:33:44,560 --> 01:33:50,170
+Or get the cables and get the guitar like that will make it so that when you go, I want to play guitar, but it's such a hassle.
+
+850
+01:33:50,200 --> 01:33:53,950
+You want to make it so easy to do, and that does the same thing for streaming.
+
+851
+01:33:54,160 --> 01:34:00,350
+Make it as easy as possible for you to just like, get up and go like set yourself up so that that is the case and,
+
+852
+01:34:00,390 --> 01:34:04,000
+and take it easy on yourself so that you set up a good schedule.
+
+853
+01:34:04,360 --> 01:34:08,040
+And I think I'm going to stop there. Hey, let me know what you thought of this episode.
+
+854
+01:34:08,050 --> 01:34:14,770
+Uh, there's a forum here to rate this episode. I'm going to drop that in the chat link to rate this episode.
+
+855
+01:34:15,160 --> 01:34:18,940
+Uh, if you yourself have questions or comments or things you want me to know about,
+
+856
+01:34:18,940 --> 01:34:22,090
+or things you want me to try to answer on stream, this is a great way of getting through to me.
+
+857
+01:34:22,130 --> 01:34:27,670
+Just fill out the form. I read everything that comes in. Uh, and I will see you next week for episode 413.
+
+858
+01:34:27,880 --> 01:34:32,070
+And with that, I will call it there. Have yourselves a great week, everybody.
+
+859
+01:34:32,080 --> 01:34:35,230
+Take care. Bye bye.
+
+860
+01:34:37,850 --> 01:34:41,170
+The joy of. Oh, dang.
+
+861
+01:34:41,590 --> 01:34:41,920
+See?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

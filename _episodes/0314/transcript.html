@@ -1,0 +1,2773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 314 - February 1, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 314 - February 1, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=0be2fa26-d480-467a-9576-af8000f2658c</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=0be2fa26-d480-467a-9576-af8000f2658c">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,185 --> 00:00:09,285
+Welcome. Through the Joy Cup O.
+
+2
+00:00:10,245 --> 00:00:14,645
+Hello and welcome to Episode 314 of the Joy of Coding.
+
+3
+00:00:14,655 --> 00:00:21,015
+My name is Mike Connelly. It's so good to have you here. Episode 314 That's the first three digits of PI.
+
+4
+00:00:21,375 --> 00:00:33,135
+I'm sure that's special. You know, if you have access to PI, either sweet or savory, I encourage you to investigate that pi maybe try eating some.
+
+5
+00:00:33,705 --> 00:00:41,205
+I myself do not currently have access to pi, but maybe later tonight I'll get access to a pizza pie and I'll eat that.
+
+6
+00:00:41,895 --> 00:00:45,255
+Yes. It's episode 314. So good to have you here.
+
+7
+00:00:46,125 --> 00:00:50,085
+A reminder, no plan survives breakfast. This is your first time watching the stream.
+
+8
+00:00:50,325 --> 00:00:53,384
+We're going to be live hacking on some Firefox stuff and who knows what's going to happen.
+
+9
+00:00:53,385 --> 00:00:57,044
+You know, like I have a vague idea of what I want to work on today and what I want to do.
+
+10
+00:00:57,045 --> 00:01:01,575
+But things might get sidelined or sidetracked or rabbit hole and that and that that's okay.
+
+11
+00:01:01,575 --> 00:01:08,445
+That's what we're trying to capture here. Software development in the raw, warts and all, the successes and the failures.
+
+12
+00:01:08,685 --> 00:01:13,185
+That's the first thing. The second thing is that the agenda that we're looking at is available to you.
+
+13
+00:01:13,905 --> 00:01:16,275
+Depending on where you're watching this video, it'll be in a different place.
+
+14
+00:01:16,275 --> 00:01:19,965
+So if you're watching this on air, Mozilla, it'll be in the details section over here.
+
+15
+00:01:20,265 --> 00:01:27,255
+That way, if you're watching on YouTube or on diode zone, it's in the video description down below.
+
+16
+00:01:27,495 --> 00:01:32,865
+And if you're watching this on Twitch, then it's down in the channel description down down there.
+
+17
+00:01:33,345 --> 00:01:41,834
+And as I update the the agenda and type stuff in here, this will synchronize and then the agenda should update.
+
+18
+00:01:41,835 --> 00:01:47,714
+You just hit reload. Let's actually just make sure that that's working. I didn't I didn't actually test to see if that was working.
+
+19
+00:01:47,715 --> 00:01:50,925
+Let's double check. 314 There it is.
+
+20
+00:01:51,135 --> 00:01:54,885
+So yeah, as I update this, you just hit reload and this will update.
+
+21
+00:01:55,995 --> 00:02:02,714
+So what are we working on today? Well, I wanted to review, first of all, a patch that just entered my review queue.
+
+22
+00:02:02,715 --> 00:02:06,885
+So I wanted to start there and then I thought we'd get back to the windows jump lists.
+
+23
+00:02:06,885 --> 00:02:11,595
+I've got the VPN open, I'm connected to my Windows machine.
+
+24
+00:02:12,315 --> 00:02:15,525
+Last I checked, it was performing. Okay, the connection.
+
+25
+00:02:15,525 --> 00:02:23,894
+I don't know if by streaming I'm going to end up ruining it at all, but we'll see and we'll see if we can get some some work done there.
+
+26
+00:02:23,895 --> 00:02:28,425
+We've been working on this for a while. Last week was a very exciting episode, episode 313.
+
+27
+00:02:28,425 --> 00:02:31,605
+We actually got something to show up in the jump lists. That's that's nice.
+
+28
+00:02:32,235 --> 00:02:37,095
+What I wanted to do this week is to, you know, clean up some stuff.
+
+29
+00:02:37,125 --> 00:02:43,725
+We made a discovery sort of late in that episode that we need to refactor things a little bit or change the API design a little bit.
+
+30
+00:02:43,725 --> 00:02:50,294
+So we're going to do that. And then there's a little piece I want to finish off before we start thinking about tests and
+
+31
+00:02:50,295 --> 00:02:56,415
+testing and how we might make the the whole thing more testable than than the existing stuff.
+
+32
+00:02:57,165 --> 00:03:04,305
+All right. But let's start with the review. What do I want to review? And that is this patch.
+
+33
+00:03:05,475 --> 00:03:12,825
+So I'm one of several people working with a set of students from Cal State, L.A. on improvements to the migration wizard.
+
+34
+00:03:12,825 --> 00:03:21,735
+If you're not familiar with the migration wizard, this is you know, there's a dialog that if you go to like file import from another browser,
+
+35
+00:03:22,065 --> 00:03:26,804
+I think there are a couple of different entry points to it, but it's not, it's not a very pretty dialog.
+
+36
+00:03:26,805 --> 00:03:33,165
+Like it's, it looks like a window, like a native window,
+
+37
+00:03:33,375 --> 00:03:38,385
+and it's just like checkboxes and it's a wizard that hasn't changed much since it was first implemented.
+
+38
+00:03:38,385 --> 00:03:42,374
+And we've we thought it was high time we start investing in improving it.
+
+39
+00:03:42,375 --> 00:03:45,195
+And we're working with these students from Cal State, L.A. to actually do that.
+
+40
+00:03:46,245 --> 00:03:50,775
+And I wanted to review a patch from one of those students who's helping us experiment
+
+41
+00:03:50,775 --> 00:03:55,455
+between two different variants of how we want the the new dialog to look.
+
+42
+00:03:55,965 --> 00:04:00,705
+So let's take a quick peek. We can start by applying the patch.
+
+43
+00:04:05,365 --> 00:04:14,605
+Let's hope it applies cleanly. It does.
+
+44
+00:04:14,935 --> 00:04:18,414
+We're going to build it. And I'm also going to launch Storybook.
+
+45
+00:04:18,415 --> 00:04:21,215
+If it's not already running, I don't think it is. Okay.
+
+46
+00:04:21,325 --> 00:04:30,865
+Storybook is the thing that we use to sort of like exorcize the migration wizard and other shared components that we're starting to write for Firefox.
+
+47
+00:04:31,945 --> 00:04:38,815
+So I'm going to launch Storybook and it's going to do a bunch of fun startup stuff.
+
+48
+00:04:45,935 --> 00:04:50,885
+And then I'm going to run. While that's booting, I'm going to run the build.
+
+49
+00:04:53,765 --> 00:05:02,135
+And we're going to browse to this address. Okay.
+
+50
+00:05:02,145 --> 00:05:06,645
+And in here we're going to find it under migration wizard. This is variant one.
+
+51
+00:05:06,645 --> 00:05:11,325
+So this is this is a a version of the migration wizard.
+
+52
+00:05:11,325 --> 00:05:15,255
+It's still very early days. This is not the final what it's supposed to look like.
+
+53
+00:05:15,255 --> 00:05:22,154
+Exactly. But we're we're wanting to try two different variants of the migration wizard where the first
+
+54
+00:05:22,155 --> 00:05:28,155
+variant offers right away the user the ability to like check which items they want to import.
+
+55
+00:05:28,155 --> 00:05:32,474
+These should all be checked by default, by the way, like they start checked and then the user can say like,
+
+56
+00:05:32,475 --> 00:05:34,605
+okay, I don't want you to bring those in, that sort of thing.
+
+57
+00:05:36,255 --> 00:05:46,695
+And then the other variant is this one, and the idea is it's supposed to have this like select all, it's supposed to be selected all by default.
+
+58
+00:05:47,055 --> 00:05:53,745
+And then if you want to like, you'll have a list like you can choose to import from a particular browser.
+
+59
+00:05:53,985 --> 00:06:02,535
+And then we'll just like by default say, hey, we're importing all available data and if you want to do like drill down and be more specific,
+
+60
+00:06:02,715 --> 00:06:08,985
+you can expand this and choose which data you actually want to import.
+
+61
+00:06:09,615 --> 00:06:17,145
+So that's the second variant. And I'm already seeing a couple of things that I think we should be addressing here just in the UI.
+
+62
+00:06:17,355 --> 00:06:21,825
+Like that icon is not the right color in dark mode. Let's, let's change the theme.
+
+63
+00:06:27,215 --> 00:06:31,175
+So that looks right a little more. Right. The alignments a bit busted.
+
+64
+00:06:31,205 --> 00:06:39,965
+We're going to I'm going to need to do a deeper dive there and maybe we that can be a separate thing.
+
+65
+00:06:39,965 --> 00:06:44,165
+And I'm also I'm unsure now that I see this whether or not like what we're
+
+66
+00:06:44,165 --> 00:06:48,874
+supposed to do with select all if the user uncheck something that's selected,
+
+67
+00:06:48,875 --> 00:06:52,385
+I think I'm not sure if this is able to be a tri state.
+
+68
+00:06:52,865 --> 00:06:59,704
+I don't know if we have a tri state checkbox here. And that would actually be interesting to determine if we could put this in like
+
+69
+00:06:59,705 --> 00:07:04,095
+the sort of the tri state if you're not familiar with tri state checkboxes.
+
+70
+00:07:04,625 --> 00:07:19,335
+Uh. It's whenever a checkbox has like it's either checked unchecked or is in like a half way state.
+
+71
+00:07:21,255 --> 00:07:34,755
+That's a like the indeterminate state. And this person's like in 2011, they're like, hey, hey, if you can set indeterminate set to true.
+
+72
+00:07:38,085 --> 00:07:42,735
+I actually need to, like, dig into this to determine whether or not this actually works.
+
+73
+00:07:47,565 --> 00:07:53,535
+Yeah. For example, that does not work that I'm not in the inter indeterminate state.
+
+74
+00:07:55,185 --> 00:07:59,564
+So I don't know if if we actually support that or if that's generally supported anymore.
+
+75
+00:07:59,565 --> 00:08:06,405
+But I want to look into that and to see whether or not there's some kind of like tri state that we could use here, because that would make sense.
+
+76
+00:08:06,405 --> 00:08:08,054
+I think if you like unci like this,
+
+77
+00:08:08,055 --> 00:08:17,385
+then this should probably either go into the tri state or be unchecked entirely and and unchecked without on checking all the other ones.
+
+78
+00:08:18,555 --> 00:08:22,575
+Okay. So that's the variant. That's the second variant. And then this is the first variant.
+
+79
+00:08:23,985 --> 00:08:30,015
+All right. I think we now can start taking a look at the patch and see how our student here.
+
+80
+00:08:30,045 --> 00:08:33,765
+Nolan, thank you, Nolan, for working on this. We're going to see how Nolan is doing this.
+
+81
+00:08:34,575 --> 00:08:38,265
+And the first thing is doing is is adding a pref to switch between the two states.
+
+82
+00:08:39,675 --> 00:08:44,895
+That's the right call. And then in the migration wizard child.
+
+83
+00:08:47,925 --> 00:08:51,105
+Yeah. We determine which which one to use.
+
+84
+00:08:51,915 --> 00:08:56,205
+That's right. Yeah. Import all pref. Yeah.
+
+85
+00:08:56,865 --> 00:09:02,895
+That works for me. Um.
+
+86
+00:09:08,475 --> 00:09:19,895
+Okay. I actually think we can do this in one shot as opposed to see we're not including the page here.
+
+87
+00:09:19,905 --> 00:09:23,535
+So that's I'm actually curious to know how that's working properly.
+
+88
+00:09:23,625 --> 00:09:27,685
+If it doesn't know what page to.
+
+89
+00:09:27,685 --> 00:09:39,135
+Uh, I'll, I'll keep reading. I'll keep reading. The way this is being done is we wrap our form fields with the details and summary.
+
+90
+00:09:48,345 --> 00:09:55,815
+And a select all. Okay.
+
+91
+00:09:56,475 --> 00:10:05,025
+And then the logic for this stuff is all down here. Presumably in the event that the user clicks on select all, we're going to change the event.
+
+92
+00:10:05,025 --> 00:10:08,685
+This should probably be an idea. I don't see why we need to have a class for this.
+
+93
+00:10:08,715 --> 00:10:12,045
+We're not going to more than one select all. But.
+
+94
+00:10:13,715 --> 00:10:16,725
+In fact, maybe. Maybe I'll do that now. Um.
+
+95
+00:10:21,425 --> 00:10:26,725
+It's like all. Oh.
+
+96
+00:10:31,085 --> 00:10:41,835
+Oh, I see. Select all label. Yeah. So. Um.
+
+97
+00:10:43,695 --> 00:10:54,045
+I don't know why fabricator is being so slow there. I think we can use the more direct I.D. by using.
+
+98
+00:10:55,295 --> 00:11:01,235
+Let's select all checkbox equals shadow query selector.
+
+99
+00:11:02,045 --> 00:11:07,895
+Select all control and select all checkbox.
+
+100
+00:11:09,125 --> 00:11:12,725
+An event listener change this.
+
+101
+00:11:14,565 --> 00:11:26,165
+Uh, anyway. Yes. Then do we even need the class on the.
+
+102
+00:11:29,255 --> 00:11:37,635
+On the check box. To ever use the class again.
+
+103
+00:11:49,895 --> 00:11:53,705
+Only for determining the state.
+
+104
+00:11:58,575 --> 00:12:04,415
+Uh, and yeah seeing if we're on the select all.
+
+105
+00:12:08,245 --> 00:12:15,785
+Tames of the classes contains select all. Oh.
+
+106
+00:12:15,785 --> 00:12:30,355
+And then we get at the select all again. Class.
+
+107
+00:12:30,375 --> 00:12:35,745
+Let's see, this is a little awkward because there's an ID of select all here and a class of Select all.
+
+108
+00:12:35,755 --> 00:12:40,165
+And that's a little confusing, which is why I was suggesting to use the I.D. here.
+
+109
+00:12:50,815 --> 00:12:55,435
+I would select all label. You can just use the I.D. instead of select all label.
+
+110
+00:13:00,545 --> 00:13:13,505
+Uh, we can use select all rather than select our label here and then remove that class from the original node.
+
+111
+00:13:28,395 --> 00:13:37,275
+So I got all the label. And then.
+
+112
+00:13:42,065 --> 00:13:46,205
+Yeah. There's, like, just a little bit of collision here between this class name.
+
+113
+00:13:46,835 --> 00:13:53,375
+Like, there's a class. This is a similar class. This thing has a class, but it also has an I.D. and.
+
+114
+00:14:00,345 --> 00:14:06,375
+I think I prefer using the I.D. Yeah.
+
+115
+00:14:10,195 --> 00:14:15,164
+Hiding and showing. And for the test.
+
+116
+00:14:15,165 --> 00:14:19,605
+So he added to test two. That's great. Okay, let's I'm going to zoom out a little bit.
+
+117
+00:14:19,605 --> 00:14:24,285
+It's kind of hard to read. Hopefully it's I'm trying to find a balance.
+
+118
+00:14:24,285 --> 00:14:28,935
+I want you to find it easy to read and me to find it easy to read.
+
+119
+00:14:30,915 --> 00:14:36,435
+Let's call this show import all instead.
+
+120
+00:14:38,625 --> 00:14:49,185
+Um. Uh.
+
+121
+00:14:52,575 --> 00:14:55,725
+And then instead of doing this in two steps.
+
+122
+00:15:00,105 --> 00:15:07,035
+Um. Instead of doing this in two steps, we can do it in one.
+
+123
+00:15:08,655 --> 00:15:17,295
+And then here is the suggestion set component state with import all being the value.
+
+124
+00:15:19,155 --> 00:15:24,665
+Well. Of Lazy Dot.
+
+125
+00:15:25,245 --> 00:15:28,245
+Um. And then what was my suggestion? Show import all.
+
+126
+00:15:33,615 --> 00:15:45,975
+Maybe we should call it with import all. It's kind of.
+
+127
+00:15:46,665 --> 00:15:51,665
+Now I wish this was called with import. ALL Ah, show import. ALL Um.
+
+128
+00:16:00,235 --> 00:16:03,975
+It also might be nice to rename with import.
+
+129
+00:16:04,315 --> 00:16:24,195
+Oh. Here. I'm going to. It might be nice to rename with import all used elsewhere to show import all to make the relationship clearer.
+
+130
+00:16:27,545 --> 00:16:31,415
+Yeah. Okay.
+
+131
+00:16:32,615 --> 00:16:35,015
+And then let's get into the nitty gritty down here.
+
+132
+00:16:35,735 --> 00:16:49,325
+So we at our event listener and then when we show the page, we determine we get our selection page and we toggle.
+
+133
+00:16:53,655 --> 00:17:01,515
+Well, we should also update this. In part all.
+
+134
+00:17:04,585 --> 00:17:13,925
+And. To. Okay.
+
+135
+00:17:20,045 --> 00:17:30,225
+Great. And then we're going to check to see what the event.
+
+136
+00:17:34,225 --> 00:17:37,765
+And we can actually put this.
+
+137
+00:17:38,815 --> 00:17:43,704
+Hang on. Let's show handling and change event here.
+
+138
+00:17:43,705 --> 00:17:47,575
+And then we break and then we enter here. I think we can put this inside.
+
+139
+00:17:51,105 --> 00:17:56,835
+We can actually put this condition inside of the switch statement.
+
+140
+00:17:58,205 --> 00:18:07,415
+Above, which handles the change event type by adding your second condition.
+
+141
+00:18:11,585 --> 00:18:16,625
+As and if. Um.
+
+142
+00:18:17,065 --> 00:18:22,685
+Hang on. And then for this line, the target.
+
+143
+00:18:27,395 --> 00:18:53,145
+Um. Think we can eliminate the select class entirely and just use the fact that form elements and labels refer to each other so we can, uh, see below.
+
+144
+00:18:55,645 --> 00:18:59,455
+Event target.
+
+145
+00:19:00,325 --> 00:19:12,635
+And then I think it's like a label. I.D. equals select all.
+
+146
+00:19:22,125 --> 00:19:28,475
+Yeah. That's how it works. If you have a.
+
+147
+00:19:31,625 --> 00:19:36,185
+Label and checkbox.
+
+148
+00:19:38,675 --> 00:19:44,935
+Text. And I get an access to the checkbox.
+
+149
+00:19:48,425 --> 00:19:55,915
+Okay. Let's execute some JavaScript. Very selector.
+
+150
+00:19:57,375 --> 00:20:01,655
+Thank. Dot label. Only bulls.
+
+151
+00:20:15,815 --> 00:20:49,265
+Mm. All right.
+
+152
+00:20:49,265 --> 00:21:02,345
+Well, maybe it's better than just to keep to help differentiate this from the select all I.D. being used for the label.
+
+153
+00:21:03,165 --> 00:21:08,795
+Ancestor. Let's maybe call this class select all checkbox.
+
+154
+00:21:15,095 --> 00:21:27,965
+Uh. And I check boxes of all the different check boxes.
+
+155
+00:21:41,635 --> 00:21:44,665
+The checkbox is not equal to select all.
+
+156
+00:21:47,395 --> 00:21:53,625
+I mean. Okay.
+
+157
+00:21:54,075 --> 00:22:02,145
+We could just, like, store this value and then just have them all be set to that.
+
+158
+00:22:05,495 --> 00:22:19,445
+Um. You can also iterate as like for let checkbox of checkboxes.
+
+159
+00:22:23,485 --> 00:22:28,845
+And then this can be. There are specific.
+
+160
+00:22:34,405 --> 00:22:39,655
+If we get any label with a data resource type, we can get their underlying checkbox.
+
+161
+00:22:40,075 --> 00:22:56,365
+So like. Um, I'm going to suggest label data.
+
+162
+00:22:56,365 --> 00:23:02,845
+Resource type. Input type equals checkbox.
+
+163
+00:23:05,055 --> 00:23:11,215
+If we make sure that the parent label has a data resource type attribute, we don't.
+
+164
+00:23:11,235 --> 00:23:22,454
+We all know that we're just getting the resource type checkboxes rather than the select all rather than all the checkboxes,
+
+165
+00:23:22,455 --> 00:23:28,105
+including the select all one. And then.
+
+166
+00:23:38,405 --> 00:23:49,505
+With the earlier tip about querying for just the checkboxes that have a parent label with data resource type,
+
+167
+00:23:50,825 --> 00:23:55,145
+we can skip this check and instead stash the.
+
+168
+00:23:56,825 --> 00:23:59,915
+And instead, yeah, we can skip the skip this check entirely.
+
+169
+00:24:03,575 --> 00:24:09,265
+Okay. I think it's really quite, quite far along.
+
+170
+00:24:11,035 --> 00:24:19,105
+It's nice that we have this this variant here. Um, let's selection page.
+
+171
+00:24:22,095 --> 00:24:25,665
+So here's his test. This is great selection patient toggle attribute.
+
+172
+00:24:26,985 --> 00:24:32,995
+He's going to set it to false. Far, too.
+
+173
+00:24:44,835 --> 00:24:53,685
+Instead of hand applying this attribute directly, we should pass, uh,
+
+174
+00:24:54,075 --> 00:25:06,765
+with import all or show import all if we rename when you rename it to the set state method above.
+
+175
+00:25:07,995 --> 00:25:15,495
+To have it do the work of putting that component into the state.
+
+176
+00:25:18,655 --> 00:25:22,975
+With the variant one state.
+
+177
+00:25:25,495 --> 00:25:50,215
+Okay. Uh, we know that this test is for variant one so we can skip this conditional check and should very much assert skip the conditional check.
+
+178
+00:25:51,595 --> 00:25:58,145
+So get the select all. In summary, it should be hidden.
+
+179
+00:25:59,895 --> 00:26:05,685
+Yeah. We should also check that details.
+
+180
+00:26:06,135 --> 00:26:10,515
+We should also ensure that that details are expanded.
+
+181
+00:26:19,735 --> 00:26:26,815
+This is where we can pass with import all or show import all.
+
+182
+00:26:27,295 --> 00:26:34,095
+True. To put us in the variant to state.
+
+183
+00:26:39,415 --> 00:26:46,825
+Uh, we won't need we won't need the above. Above, uh, these two lines.
+
+184
+00:26:48,115 --> 00:26:53,185
+Lines. If we have sets, do the work for us.
+
+185
+00:26:57,975 --> 00:27:01,305
+Such a shortage. Yeah. Which type list?
+
+186
+00:27:21,015 --> 00:27:35,625
+We don't need this condition either. We won't need this condition either, because we assume this test is for variant two and not variant one.
+
+187
+00:27:43,905 --> 00:27:52,155
+All in all, pretty happy with where this is going. The last thing I wanted to check, actually, is to see what it looks like in the build.
+
+188
+00:27:52,155 --> 00:27:56,625
+So like if I that's how it actually.
+
+189
+00:27:56,895 --> 00:28:00,075
+It's a little like we're going to have to fix up the styling here.
+
+190
+00:28:00,945 --> 00:28:09,094
+That's interesting. But. What all enabled is false.
+
+191
+00:28:09,095 --> 00:28:14,895
+And yet. That's showing it.
+
+192
+00:28:18,665 --> 00:28:27,265
+Um. Yeah.
+
+193
+00:28:27,565 --> 00:28:32,215
+That's why, like, we're going to have to do this part.
+
+194
+00:28:36,835 --> 00:28:42,625
+Thanks, Nolan. So request changes. Thanks, Nolan.
+
+195
+00:28:44,215 --> 00:28:52,895
+I really appreciate the great work here. And especially the test that you added.
+
+196
+00:28:54,505 --> 00:29:04,075
+I have some suggestions and changes to request, but otherwise this is really coming together.
+
+197
+00:29:05,665 --> 00:29:14,935
+The way you can test your lazy preference is by one going to about config and setting.
+
+198
+00:29:19,305 --> 00:29:22,935
+Content moral enabled to true. To true.
+
+199
+00:29:25,375 --> 00:29:32,395
+To enable the new dialog and then to uh, while still in about config.
+
+200
+00:29:33,295 --> 00:29:37,015
+Oh, that uh triggering the import dialog.
+
+201
+00:29:38,845 --> 00:29:49,195
+To file import alert, go to file import from another browser.
+
+202
+00:29:52,225 --> 00:29:57,655
+And ensure that variant one is displayed by default.
+
+203
+00:29:58,345 --> 00:30:05,095
+Three. Go back to about config and set up what's it called?
+
+204
+00:30:05,095 --> 00:30:09,535
+What's the preference import all enabled.
+
+205
+00:30:10,115 --> 00:30:18,575
+It's true. To turn on the variant to.
+
+206
+00:30:21,025 --> 00:30:26,095
+Repeat. Um. Then hit escape to close the dialog.
+
+207
+00:30:28,315 --> 00:30:39,845
+Escape or cancel to cancel press cancel close the dialog repeat step to.
+
+208
+00:30:40,435 --> 00:30:44,935
+But we expect variants to to be displayed.
+
+209
+00:30:47,245 --> 00:30:50,574
+Okay. Uh, I changed the project.
+
+210
+00:30:50,575 --> 00:30:53,815
+Tags, testing approved. He's added a test, which is really nice.
+
+211
+00:30:58,695 --> 00:31:05,535
+All right. I like my CSIS, like Karl Marx, like his economic system.
+
+212
+00:31:05,535 --> 00:31:10,065
+Classless. That suggests edit is a very good feature.
+
+213
+00:31:10,095 --> 00:31:13,575
+Yeah, it is a very good feature in Fabricator. It's very nice.
+
+214
+00:31:13,815 --> 00:31:24,645
+There was a there was a suggestion at one point of updating one of our tools that we use Mas Fab to communicate with fabricator,
+
+215
+00:31:24,915 --> 00:31:33,045
+to be able to pull down those code snippets and apply them to the repository, which I don't know if we'll ever get that, but it's pretty neat idea.
+
+216
+00:31:34,125 --> 00:31:45,175
+And I, I don't. So when it comes to classless CSS, my only the reason that I prefer IDs in particular cases is if something is.
+
+217
+00:31:45,405 --> 00:31:51,825
+There's only ever one. If there's only ever one. Unless there's a good reason for it to have a class.
+
+218
+00:31:52,125 --> 00:31:56,085
+I prefer to give it an ID to make it clear like there is only one.
+
+219
+00:31:56,475 --> 00:31:59,715
+But if there's something that's being repeated a bunch, then that's when I use a class.
+
+220
+00:32:00,165 --> 00:32:03,015
+That's what I that's my philosophy behind it anyways.
+
+221
+00:32:03,255 --> 00:32:11,895
+I know there's like some intricacies and different philosophies related to things like the op CSS selector precedence.
+
+222
+00:32:13,155 --> 00:32:20,015
+You know, IDs are extremely specific or more specific than classes, but in practice I've never really been burned by that.
+
+223
+00:32:20,025 --> 00:32:27,555
+I prefer the implicit information I get when I use a hash to know, Oh, there's only one of these, which is really nice.
+
+224
+00:32:29,925 --> 00:32:33,165
+All right. Let us now move on to the windows jump list.
+
+225
+00:32:37,425 --> 00:32:44,355
+So I actually I cheated just a tiny little bit in that I did a little bit just before the stream started.
+
+226
+00:32:44,355 --> 00:32:54,345
+And I'm going to show you what I did. I did this first part where, like, I wanted I want to get the method that we'd been working on called Populate.
+
+227
+00:32:54,975 --> 00:33:02,355
+We had two methods populate jobless tasks and populate jump list custom, and turns out we need to merge them into one method.
+
+228
+00:33:02,355 --> 00:33:05,685
+We have to do them at the do population at the same time.
+
+229
+00:33:06,645 --> 00:33:08,835
+Excuse me and I want to get a build going.
+
+230
+00:33:08,835 --> 00:33:15,075
+I didn't want you have to sit through a giant build while I change those those function, those interface, end points.
+
+231
+00:33:15,525 --> 00:33:19,515
+And so I did those in advance and did just the bare minimum to get it to compile.
+
+232
+00:33:20,115 --> 00:33:23,984
+So I haven't actually done the work except change the interface end points.
+
+233
+00:33:23,985 --> 00:33:31,925
+And then I changed like the the header or like the the method so that it'll build.
+
+234
+00:33:31,945 --> 00:33:44,325
+I commented out a bunch of code. Yeah, I commented out this, this and then I commented out this and that.
+
+235
+00:33:45,135 --> 00:33:48,705
+And there's even more in here that I haven't committed.
+
+236
+00:33:49,575 --> 00:33:53,985
+Okay. And then yeah, I have this other populate jump plus two that I think I'm going to get rid of.
+
+237
+00:33:59,255 --> 00:34:08,245
+All right. So populate what we actually had before was these two different end points that we specialized into,
+
+238
+00:34:09,455 --> 00:34:15,845
+like one helper, and we're basically reversing that. Like we discovered that we actually have to do that, do it at the same time.
+
+239
+00:34:16,205 --> 00:34:22,355
+So what I had done before, which was to like have this helper that could do either the custom or the tasks category,
+
+240
+00:34:23,885 --> 00:34:31,745
+I was going to reverse all that and so I can get rid of this method, for example.
+
+241
+00:34:33,635 --> 00:34:43,685
+Or rather what I'm going to do is I'm going to take the what's going on and populate jump list, and we're just going to do it over here.
+
+242
+00:34:44,615 --> 00:34:58,445
+Like, Here's what I'm going to do. I'm going to copy this and I'm going to do this and get rid of this.
+
+243
+00:35:02,135 --> 00:35:05,885
+We are going to need to change descriptions in here to custom descriptions.
+
+244
+00:35:05,885 --> 00:35:09,635
+We're basically going to have to to do it twice.
+
+245
+00:35:10,655 --> 00:35:18,905
+Maybe, actually, maybe we do want to keep this this helper around, but do it all.
+
+246
+00:35:24,035 --> 00:35:27,815
+Off of the threat. Okay. I've changed my mind here.
+
+247
+00:35:28,205 --> 00:35:36,155
+I like the fact that we have these two different things happening separately.
+
+248
+00:35:37,265 --> 00:35:45,695
+I like that. But the change is that this will happen off of the main thread.
+
+249
+00:35:49,765 --> 00:36:01,995
+Like. Yeah.
+
+250
+00:36:02,005 --> 00:36:06,385
+What I want is, like to pass enough information to populate jump lists to.
+
+251
+00:36:10,155 --> 00:36:17,865
+So that the do populate, jump, populate jump list over here with do populate jump list.
+
+252
+00:36:27,705 --> 00:36:39,725
+Hmm. What do I want to do here? Do I want to do things like we're looking at these categories?
+
+253
+00:37:01,675 --> 00:37:07,585
+Custom. What were you doing with the custom?
+
+254
+00:37:13,245 --> 00:37:27,015
+The custom descriptions. Where we in when we adding those here we build the list in the collection.
+
+255
+00:37:28,105 --> 00:37:46,235
+It's only when we're. This is the once removed your eyes to remove Ray.
+
+256
+00:37:57,355 --> 00:38:01,045
+Now your eyes turn to those come from.
+
+257
+00:38:05,315 --> 00:38:08,985
+Oh, no. I'm wrong.
+
+258
+00:38:15,595 --> 00:38:19,285
+It's done with passing the period of catechism.
+
+259
+00:38:19,975 --> 00:38:31,225
+Here is. Just new category.
+
+260
+00:38:49,385 --> 00:38:59,195
+Oh, right. We query interface. The thing that we created into one of these and then instead of calling it user tasks, we call.
+
+261
+00:38:59,315 --> 00:39:09,535
+Okay, I see. I see what's happening. Okay.
+
+262
+00:39:09,535 --> 00:39:15,865
+So we basically have to put our loop back or like we have to do one than the other.
+
+263
+00:39:16,765 --> 00:39:27,505
+Um. So what we're going to do is we're going to say.
+
+264
+00:39:30,775 --> 00:39:36,935
+Um. Let's get all this gunk.
+
+265
+00:39:45,685 --> 00:39:51,055
+My head is spinning. This we only want to do.
+
+266
+00:39:54,895 --> 00:39:58,435
+In the event that we're. Shoot.
+
+267
+00:39:58,435 --> 00:40:09,575
+I've already forgotten. When do we want to do that? Uh, a sink, Dylan.
+
+268
+00:40:13,915 --> 00:40:19,455
+In populate jump list tasks. That's when we want to.
+
+269
+00:40:22,345 --> 00:40:34,105
+Now get rid of. And what was custom.
+
+270
+00:40:35,235 --> 00:40:38,565
+Right. Um.
+
+271
+00:40:41,905 --> 00:40:46,105
+And I want to make sure I get this right.
+
+272
+00:40:48,175 --> 00:40:53,095
+We do this when we're dealing with the customer list, right?
+
+273
+00:40:53,125 --> 00:40:56,275
+Category. Customer list. Yes. Yes.
+
+274
+00:40:56,425 --> 00:41:01,345
+Okay. That's when we delete the fab icons.
+
+275
+00:41:05,465 --> 00:41:10,955
+And we'll always do that because we're passing both. So I don't know what I'm worried about.
+
+276
+00:41:22,415 --> 00:41:28,365
+Okay. Do you populate jump lists? I populate jumpers to shoot.
+
+277
+00:41:28,385 --> 00:41:36,895
+I had something in my clipboard. Yeah, it was this. We're going to put this here instead.
+
+278
+00:41:43,095 --> 00:41:51,045
+When you get rid of tasks or this going to get rid of this.
+
+279
+00:41:57,425 --> 00:42:03,075
+Um. And how is this how is this going to work?
+
+280
+00:42:03,085 --> 00:42:06,425
+So we are getting our task descriptions and our custom descriptions.
+
+281
+00:42:07,495 --> 00:42:11,215
+Get rid of the old icons. We don't have to do this. Assert anymore. We're going to create.
+
+282
+00:42:14,525 --> 00:42:19,565
+We have to do this twice, basically. We're creating task desks.
+
+283
+00:42:28,615 --> 00:42:41,345
+Uh. Um. And then.
+
+284
+00:42:46,355 --> 00:43:02,025
+Custom desks. Be nice to the dupe that a little bit.
+
+285
+00:43:02,025 --> 00:43:11,185
+But, um. Let's start there.
+
+286
+00:43:20,265 --> 00:43:23,925
+Uh. Okay. She says.
+
+287
+00:43:25,795 --> 00:43:31,855
+So instead of passing the category type, we're going to pass.
+
+288
+00:43:45,915 --> 00:43:49,455
+West. Originally it was the.
+
+289
+00:43:55,945 --> 00:44:04,705
+Category, which we're not going to pass any more than the custom title, and then we get and then the promise that we're going to resolve.
+
+290
+00:44:05,245 --> 00:44:08,995
+And then the descriptions were to remove the category.
+
+291
+00:44:09,005 --> 00:44:18,375
+We don't have that anymore. Instead, we are going to pass the.
+
+292
+00:44:21,165 --> 00:44:25,755
+Tasks. Uh.
+
+293
+00:44:25,755 --> 00:44:29,535
+So that's. Another one of these.
+
+294
+00:44:40,205 --> 00:44:44,315
+Uh. Right. Standard.
+
+295
+00:44:44,405 --> 00:44:53,185
+Uh. The cost tasks.
+
+296
+00:44:53,185 --> 00:45:01,525
+And I actually think we should try and keep this sort of resembling the, the external call structure.
+
+297
+00:45:01,525 --> 00:45:10,225
+So like it's tasks and custom title, then custom descriptions and then the promise and then.
+
+298
+00:45:15,455 --> 00:45:21,155
+Down here. First of all, do we get rid of all usages of category here?
+
+299
+00:45:22,655 --> 00:45:29,985
+Think so? Get rid of this.
+
+300
+00:45:30,165 --> 00:45:33,705
+And instead, we're getting.
+
+301
+00:45:41,385 --> 00:45:54,075
+Custom title, a custom desks and then also task desks.
+
+302
+00:46:04,795 --> 00:46:08,845
+Yes, I should say. I could say descriptions. Maybe that's better.
+
+303
+00:46:09,925 --> 00:46:21,605
+That's what I used up here. Custom desk.
+
+304
+00:46:22,705 --> 00:46:34,045
+Options. Uh.
+
+305
+00:46:35,255 --> 00:46:38,275
+Uh, so far, so good as Carmen.
+
+306
+00:46:41,395 --> 00:46:45,715
+And then this is where things start to.
+
+307
+00:46:48,205 --> 00:46:51,835
+We basically want to do this twice. We want two different collections.
+
+308
+00:46:53,235 --> 00:47:07,165
+Um. Task collection. And then custom collection.
+
+309
+00:47:19,145 --> 00:47:25,295
+Fans is so annoying. Do I want to do it this way?
+
+310
+00:47:27,215 --> 00:47:31,445
+Do I want yet another helper that uses the category thing?
+
+311
+00:47:46,465 --> 00:47:49,675
+I think I do. I'm hating all this repetition.
+
+312
+00:47:53,455 --> 00:47:57,445
+I think what I want I want to keep this structure.
+
+313
+00:48:01,785 --> 00:48:14,775
+Um. But then I want to call into a helper, want to basically say like, do populate jump list helper and then pass in like a category.
+
+314
+00:48:19,725 --> 00:48:29,685
+Like. And as a result are vehicles that I'm going to pass in a category I'm going to pass in like the task category and then the task descriptions.
+
+315
+00:48:32,695 --> 00:48:45,754
+Um. And then the other one will be like, uh, and then like insure RV is and it's okay.
+
+316
+00:48:45,755 --> 00:48:51,285
+And then to populate, just help her and the other one. Uh, yes.
+
+317
+00:48:51,285 --> 00:48:56,524
+Someone to pass in, like, empty string. Task descriptions.
+
+318
+00:48:56,525 --> 00:49:01,445
+Category. Uh, a custom.
+
+319
+00:49:03,255 --> 00:49:14,825
+Descriptions and custom title. Uh.
+
+320
+00:49:14,925 --> 00:49:25,595
+And sure, RV is okay. And then o resolving.
+
+321
+00:49:26,045 --> 00:49:29,105
+Resolve. And we normally resolve the you arise to remove.
+
+322
+00:49:38,655 --> 00:49:55,945
+Um. If doing that.
+
+323
+00:50:14,155 --> 00:50:17,275
+I'm waffling. Waffling, gang.
+
+324
+00:50:18,055 --> 00:50:23,995
+Now, I don't know if I want this help, or maybe I do want to repeat myself just a little bit.
+
+325
+00:50:35,355 --> 00:50:41,365
+Because so many of these things we actually can only do once in this whole batch.
+
+326
+00:50:43,535 --> 00:50:52,725
+Then the promise thing is so annoying. We build the descriptions, add them to a collection, and then we just add them.
+
+327
+00:50:52,995 --> 00:51:11,685
+Add the tasks to the jump list manager. And then we commit.
+
+328
+00:51:25,565 --> 00:51:28,565
+And then we always resolve the eyes to remove.
+
+329
+00:51:32,205 --> 00:51:35,295
+Yeah. All right. Not my favorite.
+
+330
+00:51:40,745 --> 00:51:46,175
+Okay. Let's back. Let's go back to what we were doing. Task collection.
+
+331
+00:51:52,215 --> 00:51:58,005
+I mean, we might be able to factor this out into a helper so we don't have to.
+
+332
+00:52:01,025 --> 00:52:11,765
+He's so repetitive. But let's worry about that later and then start building.
+
+333
+00:52:13,945 --> 00:52:31,645
+The task list. Um, task collection.
+
+334
+00:52:51,305 --> 00:52:53,315
+P task array.
+
+335
+00:53:00,746 --> 00:53:06,776
+MAXINE. Okay. Reconnection. Successful, reconnected.
+
+336
+00:53:10,946 --> 00:53:16,545
+All right. Can you. Can you all see this? Uh, hang on.
+
+337
+00:53:16,546 --> 00:53:24,066
+Everything is just starting to wake back up. Hello?
+
+338
+00:53:24,076 --> 00:53:28,186
+Can you see me? Can you see me? Is this working?
+
+339
+00:53:29,896 --> 00:53:33,846
+Oh, man. The joy of Cody.
+
+340
+00:53:35,326 --> 00:53:39,346
+The. Just let me know.
+
+341
+00:53:39,496 --> 00:53:42,916
+Oh, that's a yes. All right. You can see me. Fantastic.
+
+342
+00:53:42,946 --> 00:53:46,846
+All right. Well, that was a thrilling couple of minutes. My bad.
+
+343
+00:53:46,956 --> 00:53:53,536
+Like, I hope, shout out to my Internet provider for, you know, the outage.
+
+344
+00:53:53,536 --> 00:53:57,376
+But we're back. We're back. And if you were watching the recording, I apologize.
+
+345
+00:53:57,676 --> 00:54:04,156
+That probably wasn't very fun if maybe hopefully you tracked forward through that big gap.
+
+346
+00:54:05,056 --> 00:54:11,296
+All right. So where were we? Do we can I am I still am a VPN?
+
+347
+00:54:13,906 --> 00:54:17,216
+I'm disconnected. I have to reconnect to the VPN.
+
+348
+00:54:17,986 --> 00:54:22,666
+Just give me a quick second. Uh, hold on to.
+
+349
+00:54:22,666 --> 00:54:23,145
+To do,
+
+350
+00:54:23,146 --> 00:54:37,516
+do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do do.
+
+351
+00:54:38,086 --> 00:54:42,106
+Reconnecting to the vibe ended ba ba ba ba ba boom.
+
+352
+00:54:42,416 --> 00:54:49,545
+Do do do do do do do do do do do do do do do do do do do do do do do do do.
+
+353
+00:54:49,546 --> 00:54:55,386
+Do do do do. All right.
+
+354
+00:54:55,416 --> 00:54:58,746
+All right, we're back. We're back, everyone.
+
+355
+00:55:00,126 --> 00:55:05,336
+All right, let's keep going. Let's keep going. Where were we?
+
+356
+00:55:05,376 --> 00:55:09,316
+So. Maybe we shouldn't keep all this.
+
+357
+00:55:09,346 --> 00:55:18,886
+It might make sense and make it easier to duplicate some of the stuff if we keep the individual categories kind of bundled together.
+
+358
+00:55:19,516 --> 00:55:25,546
+So like we started with tasks and then like then build.
+
+359
+00:55:30,156 --> 00:55:39,326
+The customer lists. Uh, custom collection.
+
+360
+00:55:41,376 --> 00:56:07,086
+And then we have to do this loop. And then we're going through the a custom descriptions.
+
+361
+00:56:10,206 --> 00:56:20,966
+And. And we put in the custom collection the object, and then we get out the custom array.
+
+362
+00:56:28,356 --> 00:56:32,635
+And then, you know what? We can get rid of the switch statement altogether.
+
+363
+00:56:32,636 --> 00:56:40,036
+We're going to put this here. P task or a.
+
+364
+00:56:45,036 --> 00:56:48,156
+Uh. And then this.
+
+365
+00:56:53,446 --> 00:56:58,206
+Then build the custom list. An object.
+
+366
+00:56:59,426 --> 00:57:17,046
+We do this part. P customer.
+
+367
+00:57:21,166 --> 00:57:32,006
+And this thing. And then.
+
+368
+00:57:34,486 --> 00:57:44,176
+Rid of all that we commit the list, at least the air handler and then we always return the you are assuming, you know that's not that bad.
+
+369
+00:57:45,466 --> 00:57:49,846
+I thought like, man, that's going to be a lot of repetition, but it's not that bad.
+
+370
+00:58:00,216 --> 00:58:03,216
+Let's see if it compiles. I got a feeling it's not.
+
+371
+00:58:03,246 --> 00:58:06,756
+I have a feeling I've forgotten something. Let's see if it compiles.
+
+372
+00:58:09,256 --> 00:58:12,386
+Fargo goes, whew. And I go, Whoa.
+
+373
+00:58:13,486 --> 00:58:22,906
+If you're from Toronto, you may be familiar with a a local vendor of diamonds called Spence Diamonds.
+
+374
+00:58:23,356 --> 00:58:30,436
+And they have these, like, really obnoxious radio commercials where it's like their catchphrase is just who?
+
+375
+00:58:32,296 --> 00:58:37,936
+And I find it so obnoxious that I thought of that whenever that I saw that.
+
+376
+00:58:38,146 --> 00:58:41,536
+Okay. We got a really cryptic. Cryptic.
+
+377
+00:58:46,136 --> 00:58:51,006
+Compiler error. Let's go to the very top as per usual.
+
+378
+00:58:51,806 --> 00:58:58,526
+Scroll up to the very first error that we get error use of undeclared identifier title.
+
+379
+00:58:58,526 --> 00:59:41,675
+It should be a custom title. That's on 812. Man was worried about some match any declaration do populate jump list.
+
+380
+00:59:41,676 --> 00:59:57,786
+Right. So I changed the structure. It occurs to me, too, that we might need to relax some of the some of the Thunderbird.
+
+381
+00:59:58,176 --> 01:00:05,446
+Thunderbird has custom tasks. Or just test it doesn't have, like, any custom items.
+
+382
+01:00:05,466 --> 01:00:12,876
+Maybe that's okay. I'm just thinking about the other things that might end up using this mechanism that we have to consider.
+
+383
+01:00:14,496 --> 01:00:18,406
+So we change the structure of this of this method.
+
+384
+01:00:18,426 --> 01:00:24,576
+We're going to bring that over to the header to populate jump list.
+
+385
+01:00:33,606 --> 01:00:37,186
+And that was instead of using the category.
+
+386
+01:00:37,926 --> 01:00:44,366
+Yeah, we're just. Keep all of this.
+
+387
+01:00:44,366 --> 01:00:50,126
+I guess it probably would be best if they kind of wrapped around.
+
+388
+01:00:52,436 --> 01:00:55,966
+Know what the preferred style is.
+
+389
+01:01:03,396 --> 01:01:10,426
+Something like that. Actually, I'm seeing from up here, the preferred style might be this.
+
+390
+01:01:17,166 --> 01:01:30,116
+So we'll go ahead and do that. Then the parentheses get after round.
+
+391
+01:01:30,476 --> 01:01:41,276
+Okay. Now will you build? Let me see if I can find the Spence diamonds.
+
+392
+01:01:41,406 --> 01:01:59,356
+Well, while we're waiting for this build. SPENCE two Hammond's makes the worst ads listing the most annoying Spence Diamonds ads.
+
+393
+01:02:00,496 --> 01:02:09,736
+Oh, there. They air them in Vancouver as well. How do I find the Spence Diamonds guy is a total moron.
+
+394
+01:02:10,936 --> 01:02:14,206
+Wow. Anyone have any link to some Spence Diamonds ads?
+
+395
+01:02:14,716 --> 01:02:19,066
+All right. What? What went wrong now?
+
+396
+01:02:19,336 --> 01:02:23,986
+So we were building. We were building. And then it starts to complain.
+
+397
+01:02:24,166 --> 01:02:27,946
+And right at the top of the complaints like this is all very unintelligible.
+
+398
+01:02:27,976 --> 01:02:32,325
+I like to start from, like, the very first problem that it highlights.
+
+399
+01:02:32,326 --> 01:02:38,266
+And in this case, it's. Oh, yeah, of course you don't like that.
+
+400
+01:02:38,536 --> 01:02:42,816
+I, uh. Don't have my name space there.
+
+401
+01:02:46,836 --> 01:02:50,556
+And you probably want dome promise as well.
+
+402
+01:02:55,236 --> 01:03:17,486
+All right, let's try again. Okay.
+
+403
+01:03:19,016 --> 01:03:22,856
+Not a fan. Not a fan.
+
+404
+01:03:23,286 --> 01:03:29,126
+And what's it not a fan of? Uh.
+
+405
+01:03:29,156 --> 01:03:32,966
+Right. I forgot to rename some things. 943.
+
+406
+01:03:40,216 --> 01:03:48,406
+That should be a task collection. And then.
+
+407
+01:03:53,036 --> 01:04:05,176
+This should be custom collection. All right.
+
+408
+01:04:05,596 --> 01:04:09,406
+Try that. Try that on for size.
+
+409
+01:04:12,866 --> 01:04:17,076
+Yeah. Any like. I don't want to hear a Spence Diamond commercial.
+
+410
+01:04:17,186 --> 01:04:33,486
+I just want to hear the Wu. I'm not going to make you listen to.
+
+411
+01:04:34,766 --> 01:04:37,766
+I will make you listen to. Maybe.
+
+412
+01:04:41,686 --> 01:04:46,696
+You know what? This is a waste of time. Now what?
+
+413
+01:04:49,366 --> 01:04:54,946
+Easily distracted category can't move category because there's no okay, of course.
+
+414
+01:04:54,956 --> 01:04:58,936
+Yeah, we can remove that thing. So online 1001.
+
+415
+01:05:02,886 --> 01:05:07,016
+We are calling in to do populate jump list.
+
+416
+01:05:08,626 --> 01:05:14,536
+We don't need to pass this anymore. It doesn't exist, dog.
+
+417
+01:05:43,796 --> 01:05:47,036
+Also upset by something else.
+
+418
+01:05:47,996 --> 01:05:55,106
+Um, now you are upset by. Constructor.
+
+419
+01:05:55,546 --> 01:06:01,816
+Okay, now we're getting into the real nitty gritty. The constructor doesn't match.
+
+420
+01:06:07,186 --> 01:06:23,716
+And it's complaining about the constructor for. Here.
+
+421
+01:06:47,576 --> 01:06:55,816
+Uh. Custom title.
+
+422
+01:06:56,296 --> 01:07:01,466
+Custom descriptions promise. That's.
+
+423
+01:07:05,766 --> 01:07:11,616
+To populate Chandler's task descriptions. Custom title.
+
+424
+01:07:12,946 --> 01:07:17,196
+Customs descriptions. Promise.
+
+425
+01:07:25,196 --> 01:07:30,746
+Pass the short description. A string.
+
+426
+01:07:34,506 --> 01:07:40,626
+Oh, yeah. I got this out of order. Promise comes last.
+
+427
+01:07:46,996 --> 01:07:50,026
+All right. How do you like me now?
+
+428
+01:07:55,416 --> 01:07:58,926
+Who and how are we going to test this thing?
+
+429
+01:07:58,956 --> 01:08:07,776
+I've been thinking about that kind of off and on and I spoke to some people are like Windows specialists and they basically told me,
+
+430
+01:08:09,156 --> 01:08:12,636
+oh, here's the moment of truth linking.
+
+431
+01:08:14,966 --> 01:08:19,786
+Like gang. It linked?
+
+432
+01:08:20,386 --> 01:08:29,896
+Very nice. They basically told me that what we probably want to do is find a way of marking out these like com these calls,
+
+433
+01:08:32,566 --> 01:08:51,156
+you know, down where we're, like calling. Begin list in passing at these things and then, uh, add user tasks.
+
+434
+01:08:52,266 --> 01:09:03,516
+So basically all of the calls to jump list manager we might want to mock out like have it be a thing that can be marked, uh, this jump list manager.
+
+435
+01:09:08,566 --> 01:09:16,886
+And, you know, supply that either at runtime we can override it.
+
+436
+01:09:16,936 --> 01:09:24,436
+We can market by constructing a jump list builder, like composing it with the mock.
+
+437
+01:09:28,236 --> 01:09:33,846
+Or find some way of indicating into it that, hey, we want to use this mock object instead and that mock object,
+
+438
+01:09:35,196 --> 01:09:42,166
+we need to find a way of getting information out of it. That's that's kind of the other end of things after you register it.
+
+439
+01:09:42,186 --> 01:09:47,586
+What good is it? Well, I need it to be able to to report back.
+
+440
+01:09:48,726 --> 01:10:05,536
+Um. So I might need like another XP half interface for this.
+
+441
+01:10:07,876 --> 01:10:16,036
+Mm. Because I want to expose it. Well no I don't want to expose to JavaScript but I want to hear.
+
+442
+01:10:18,436 --> 01:10:24,466
+And create. Can I call? From a G test.
+
+443
+01:10:35,826 --> 01:10:39,666
+You have to populate things. I don't want to think about it.
+
+444
+01:10:40,866 --> 01:10:45,546
+All right. Where is the horn that was blowing?
+
+445
+01:10:47,076 --> 01:10:52,306
+Where is the rider? That's a Lord of the Rings reference.
+
+446
+01:10:53,686 --> 01:10:59,356
+Um. So let's see here.
+
+447
+01:10:59,536 --> 01:11:07,806
+We're going to create our builder. Builder populate.
+
+448
+01:11:09,956 --> 01:11:17,456
+Jobless. Now, we actually have in our history here probably some preexisting forms we can use.
+
+449
+01:11:18,596 --> 01:11:25,706
+Yeah. So we're going to say populate jump lists and I'm going to say.
+
+450
+01:11:31,386 --> 01:11:34,566
+Title. Test task.
+
+451
+01:11:36,946 --> 01:11:42,716
+Half. That path.
+
+452
+01:11:48,476 --> 01:11:59,506
+Description all are. Fallback icon index zero arguments.
+
+453
+01:12:00,596 --> 01:12:04,436
+Through Barbas. All right.
+
+454
+01:12:04,456 --> 01:12:07,756
+What happens if I call that? Do we crash?
+
+455
+01:12:09,696 --> 01:12:12,996
+Missy. Uh, I didn't. Just didn't do it right. Okay.
+
+456
+01:12:15,366 --> 01:12:25,586
+All right. And then a comma here. And we got back an empty array.
+
+457
+01:12:25,616 --> 01:12:29,366
+Let's see. We got. There it is. Hello, world.
+
+458
+01:12:30,056 --> 01:12:33,456
+Hello world again. Okay.
+
+459
+01:12:33,666 --> 01:12:43,326
+That's good. So we have something that could, in theory, now be used by the front end to populate this thing.
+
+460
+01:12:44,596 --> 01:12:47,795
+Smurf asks, Can you like check how many items are on the list?
+
+461
+01:12:47,796 --> 01:12:52,026
+Add three items, remove one item and then check how many items are in the list. But how is another question?
+
+462
+01:12:52,296 --> 01:12:58,986
+Well, exactly right. Like an automated test ideally would be able to interrogate.
+
+463
+01:12:59,406 --> 01:13:02,856
+Well, it depends.
+
+464
+01:13:03,666 --> 01:13:11,316
+It's like we're bumping up against, like, test philosophies here. Like a full integration test would basically ask Windows, Hey,
+
+465
+01:13:11,346 --> 01:13:16,476
+now that I've called this method with these arguments, can you tell me what's in this list?
+
+466
+01:13:17,466 --> 01:13:22,056
+Unfortunately, I don't think Windows there's a way of asking Windows what's in this list.
+
+467
+01:13:22,836 --> 01:13:27,786
+Like, I don't think there's an API that allows us to, like get that information back out again.
+
+468
+01:13:29,436 --> 01:13:33,276
+Now, there are potentially ways like we were kind of last week,
+
+469
+01:13:33,276 --> 01:13:42,036
+you saw me leafing around and GitHub looking at like a mechanism for like, like Windows automated testing framework.
+
+470
+01:13:42,036 --> 01:13:46,175
+And I don't think we're going to like use that any time soon for Firefox.
+
+471
+01:13:46,176 --> 01:13:49,266
+So I think that's a nonstarter, at least for now.
+
+472
+01:13:49,836 --> 01:14:00,966
+What might be what might make more sense is not testing the windows part of it like we will assume that Microsoft has tested these API endpoints.
+
+473
+01:14:01,386 --> 01:14:05,616
+I don't want to or need to test that they function properly.
+
+474
+01:14:05,976 --> 01:14:15,635
+What I need to test is that we call them properly and that means plugging in some kind of mock object in place of the Win32 stuff.
+
+475
+01:14:15,636 --> 01:14:23,406
+And I can actually augment it with additional information that lets us interrogate like what was passed to you.
+
+476
+01:14:25,266 --> 01:14:28,626
+So we would likely write these as G tests.
+
+477
+01:14:29,046 --> 01:14:33,726
+G tests are that's how we write tests for C++ or in C++.
+
+478
+01:14:33,726 --> 01:14:36,305
+We have a bunch of G tests, excuse me.
+
+479
+01:14:36,306 --> 01:14:43,266
+And along with the G test framework, there's something called Google Mock and there is some documentation of how to use it.
+
+480
+01:14:43,776 --> 01:14:51,485
+And basically the way it works is, you know, what we've been doing up until now, if you if you'll observe,
+
+481
+01:14:51,486 --> 01:14:56,586
+is like when we call some of these functions, these Win32 functions the way we do it.
+
+482
+01:14:58,256 --> 01:15:08,506
+As we just like. We just like reach into the ether and say, like, hey, co-create instance this thing or.
+
+483
+01:15:12,246 --> 01:15:17,616
+Well, that's that's that's one example of this global method that's available to us as a global function.
+
+484
+01:15:17,826 --> 01:15:21,186
+There are definitely others. Sometimes they they start with double colons.
+
+485
+01:15:21,186 --> 01:15:26,436
+That's a way of indicating it's like in like not a particular namespace.
+
+486
+01:15:27,006 --> 01:15:30,456
+Um. Oh, thank you. I just got coffee delivery, everyone.
+
+487
+01:15:30,726 --> 01:15:40,596
+Thank you very much. Delicious. Uh, and so the idea is, instead of calling directly into this thing.
+
+488
+01:15:42,506 --> 01:15:44,816
+I call into an interface.
+
+489
+01:15:46,636 --> 01:15:57,556
+That calls into basically I add a delegate something that delegates like an intermediary and I can mock out the back end of that intermediary
+
+490
+01:15:57,946 --> 01:16:04,876
+so that by in the default case it's calling it just delegates and passes it along to the Win32 stuff is like a pass through channel.
+
+491
+01:16:05,146 --> 01:16:13,096
+But when I'm testing, I can plug in something else that implements that interface and then augment it with additional information.
+
+492
+01:16:13,096 --> 01:16:22,726
+Like, for example, having it return the items that were passed to it or have it be prepared to return a certain set of items.
+
+493
+01:16:23,566 --> 01:16:32,566
+And mock objects are one way of doing that. And this is Google tests documentation for doing this sort of thing.
+
+494
+01:16:32,566 --> 01:16:35,506
+Like it's not possible to directly mark a free function.
+
+495
+01:16:35,926 --> 01:16:43,276
+You can rewrite your code, use an interface abstract class like that, an interface a.k.a an abstract class.
+
+496
+01:16:43,276 --> 01:16:45,946
+So instead of calling a free function, say open file,
+
+497
+01:16:46,936 --> 01:16:55,395
+introduce an interface for it to have a concrete subclass that calls the free function and then have your code talk to file interface to open a file.
+
+498
+01:16:55,396 --> 01:16:57,136
+Now it's easy to mock out the function.
+
+499
+01:17:02,206 --> 01:17:06,046
+If you're concerned about the performance overhead incurred by virtual functions before providing the firms you consider,
+
+500
+01:17:06,066 --> 01:17:09,226
+you combine this with a recipe for mocking non virtual methods.
+
+501
+01:17:10,336 --> 01:17:12,405
+Tentatively, instead of introducing a new interface,
+
+502
+01:17:12,406 --> 01:17:18,676
+you can rewrite your code to accept a standard function instead of a free function and then use mock function to mock the standard function.
+
+503
+01:17:22,496 --> 01:17:32,416
+Working non virtual methods. High perf dependency injection in this case, instead of sharing com based class the real class in our class B unrelated,
+
+504
+01:17:32,436 --> 01:17:40,476
+the real class B methods with the same signatures syntax for marking non-visual methods the same as mocking virtual methods just don't add override.
+
+505
+01:17:48,886 --> 01:17:53,686
+Next, we need to find a way to say that you want a concrete packet stream and production cones mark pack stream test.
+
+506
+01:17:53,686 --> 01:17:57,736
+As the functions are not virtual and two classes are unrelated, you must specify your choice at compile time.
+
+507
+01:17:58,606 --> 01:18:03,366
+Template your code. Oh geez. Um.
+
+508
+01:18:14,006 --> 01:18:20,156
+Yeah. I don't think we necessarily need to to do this for like for.
+
+509
+01:18:22,896 --> 01:18:27,906
+We're already off of the main thread. This isn't a super hot path.
+
+510
+01:18:27,916 --> 01:18:31,326
+This is a thing that's called once every couple of minutes.
+
+511
+01:18:33,156 --> 01:18:38,866
+Off of the main thread. So. Let's see how we've used.
+
+512
+01:18:39,136 --> 01:18:44,546
+Mocking, um, mocking for dummies.
+
+513
+01:18:44,566 --> 01:18:52,566
+How does it work? All right, we're going to read this for a couple of minutes, and I'm going to spend the week thinking about it.
+
+514
+01:18:52,906 --> 01:18:58,726
+And then maybe next week we can try implementing some of this, although where do we get to.
+
+515
+01:18:58,756 --> 01:19:02,446
+Let me go back to our list here. Yes, we did this.
+
+516
+01:19:04,586 --> 01:19:09,006
+And then the URL removal thing. Basically, if an item is removed, the next call that pen category.
+
+517
+01:19:09,296 --> 01:19:15,075
+This call needs to displace something else entirely. Yeah.
+
+518
+01:19:15,076 --> 01:19:18,316
+The URL removal thing will have to happen like it works.
+
+519
+01:19:19,126 --> 01:19:24,906
+Let's. Let's demonstrate. So, like, hello world again.
+
+520
+01:19:24,916 --> 01:19:32,986
+I'm going to remove that item from the list. And then over here, I'm going to pass in.
+
+521
+01:19:36,276 --> 01:19:41,286
+Something different. Here is Johnny. To food to.
+
+522
+01:19:42,786 --> 01:19:45,996
+And we should get back food.
+
+523
+01:19:46,026 --> 01:19:49,386
+Yeah. Which was the arguments in the event of a URL.
+
+524
+01:19:49,506 --> 01:19:52,836
+The arguments will be a url. So that's working.
+
+525
+01:19:55,476 --> 01:19:59,076
+So good stuff. I think I'd check that box.
+
+526
+01:20:00,336 --> 01:20:07,366
+And then we're here. And then we need to greatly clean.
+
+527
+01:20:07,386 --> 01:20:13,625
+We have made a mess. If this. If you want to use, like, a workshop as a metaphor, we've got, like,
+
+528
+01:20:13,626 --> 01:20:18,815
+a gaping hole in the side of the building, and there's, like, a car that's been smashed through it.
+
+529
+01:20:18,816 --> 01:20:23,046
+And we've got the. The hood open and the engine is half lifted out.
+
+530
+01:20:23,376 --> 01:20:28,616
+And I've got, like, shims and, you know, things precariously.
+
+531
+01:20:28,626 --> 01:20:34,716
+We got to clean up. And now that we have sort of like converged on something that seems to work,
+
+532
+01:20:34,716 --> 01:20:46,716
+we need to start cleaning up a little bit and then maybe make sure that everything is plausibly working.
+
+533
+01:20:49,066 --> 01:20:53,296
+By actually doing this. Now, here's the other thing.
+
+534
+01:20:54,316 --> 01:20:59,385
+It might be worth keeping both mechanisms, the old one and the new one,
+
+535
+01:20:59,386 --> 01:21:07,996
+and then having a pref to switch between the two to make it easier to revert in the event that we've gotten something wrong here.
+
+536
+01:21:08,866 --> 01:21:14,176
+That's the thing to keep in mind. So actually, what I'll do is.
+
+537
+01:21:17,566 --> 01:21:24,126
+Um. Make our approach preferable.
+
+538
+01:21:24,456 --> 01:21:36,396
+Put all the old stuff back. Gulp and update windows jump list to use the new mechanism on a pref.
+
+539
+01:21:42,056 --> 01:21:47,546
+And then all of the remove the old implementation, maybe all of this stuff might have to wait.
+
+540
+01:21:48,746 --> 01:21:53,096
+Once we roll this out and we are confident that it works, we can remove the old implementation.
+
+541
+01:21:57,296 --> 01:22:00,626
+But this is important. So this is the next thing. Let's keep reading.
+
+542
+01:22:01,556 --> 01:22:04,226
+Often is not feasible wise to rely on real objects entirely.
+
+543
+01:22:04,226 --> 01:22:09,566
+A mock object implements the same interface as a real object, but lets you specify at runtime how be used and what it should do.
+
+544
+01:22:10,736 --> 01:22:15,266
+It's easy to confuse the term fake objects with mock objects, fakes, mocks or actually mean very different things.
+
+545
+01:22:15,266 --> 01:22:22,226
+Fake objects have working implementations usually take some shortcut which makes them not suitable for production like an in-memory file system.
+
+546
+01:22:23,156 --> 01:22:27,146
+Okay. Um. Oh.
+
+547
+01:22:27,956 --> 01:22:34,176
+Smurf d just linked to this. Windows Jump List Help Library.
+
+548
+01:22:36,116 --> 01:22:39,326
+In Python. How does it work?
+
+549
+01:22:41,596 --> 01:23:00,406
+Um. It basically exposes the.
+
+550
+01:23:06,166 --> 01:23:10,696
+I is using one theory to calm oc python calm.
+
+551
+01:23:13,606 --> 01:23:24,066
+It's basically exposing what we did with our old XP com implementation, which is to expose this stuff to to the callers.
+
+552
+01:23:26,366 --> 01:23:33,116
+It's a thin python, sugary layer over top of the the actual Win32 APIs.
+
+553
+01:23:36,026 --> 01:23:39,476
+Do they have a way of testing?
+
+554
+01:23:41,186 --> 01:23:43,886
+So this is a like this is an example.
+
+555
+01:23:48,996 --> 01:23:58,656
+He's tinker to counter decay, enter the counter to create a window, and then they just like run the window main loop.
+
+556
+01:23:59,076 --> 01:24:02,396
+What is this spec? No.
+
+557
+01:24:03,906 --> 01:24:13,396
+Um. Windows jump list testing.
+
+558
+01:24:18,506 --> 01:24:38,536
+Automated testing. Links.
+
+559
+01:24:38,876 --> 01:25:13,926
+Jumpers, spurs. What's this? Hmm.
+
+560
+01:25:15,106 --> 01:25:18,136
+It's like a forensic tool to.
+
+561
+01:25:24,356 --> 01:25:29,546
+Where is that? That's an idea. I mean, we could mark the stuff out or we could actually, like,
+
+562
+01:25:30,176 --> 01:25:37,645
+use it and then see if Windows stores the jump loss data somewhere that we can get access to.
+
+563
+01:25:37,646 --> 01:25:41,186
+It's that's more like an integration test, but.
+
+564
+01:25:44,336 --> 01:25:48,446
+And we won't be able to test the removal scenario. That's that's the difference.
+
+565
+01:25:48,896 --> 01:25:56,016
+We wouldn't be able to test the removal. Hmm.
+
+566
+01:25:58,416 --> 01:26:01,296
+Okay. Anyway, so let's go back to this documentation.
+
+567
+01:26:03,966 --> 01:26:11,795
+Sometimes we also call it a framework to make it our COO, creating more classes and using them to create some simple macros to describe the interface.
+
+568
+01:26:11,796 --> 01:26:13,926
+When a mock creates mock object,
+
+569
+01:26:13,936 --> 01:26:20,046
+specifies expectations of behavior using intuitive syntax and you exercise could use the mock objects catch any violation.
+
+570
+01:26:21,816 --> 01:26:25,656
+Um. Mock turtles.
+
+571
+01:26:25,686 --> 01:26:33,986
+Let's look at an example. So using the turtle interface as an example.
+
+572
+01:26:36,296 --> 01:26:41,126
+Define a class mock turtle from turtle. Take a virtual function of turtle.
+
+573
+01:26:45,086 --> 01:26:49,356
+Because for part, you take the functions, things you cut and paste into the macro and add two commas,
+
+574
+01:26:49,356 --> 01:26:56,916
+one between the return type of the name, another between the name and the argument list. Mark method return value name.
+
+575
+01:26:58,116 --> 01:27:07,336
+Arguments. It expects. And then. Since you're over 18, we suggest adding the override p to all virtual function.
+
+576
+01:27:07,386 --> 01:27:12,216
+Want a marker done? All pure virtual methods must be either marked or overwritten.
+
+577
+01:27:13,116 --> 01:27:17,795
+After the process, you shared something like this to find this mark method somewhere else.
+
+578
+01:27:17,796 --> 01:27:21,096
+The mark the macro will generate the definitions for you. It's that simple.
+
+579
+01:27:21,336 --> 01:27:28,236
+And when you do find them on class, you decide where to put its definition. Uh, I know you can.
+
+580
+01:27:28,416 --> 01:27:33,666
+Okay. Generally, you should not mark classes you don't own. If you must mark such class known by others.
+
+581
+01:27:33,666 --> 01:27:37,266
+Define the mark class in Fu's basil package.
+
+582
+01:27:39,446 --> 01:27:46,076
+And put it in your agency. Saliva test only choose to test for what?
+
+583
+01:27:46,226 --> 01:27:50,186
+Hang on a second. Some people put it in underscore test shows.
+
+584
+01:27:50,196 --> 01:27:53,206
+He says he tested cc. This is fine with the interface being marked.
+
+585
+01:27:53,216 --> 01:27:56,516
+A few is owned by the same person or team otherwise in the owner food changes your test
+
+586
+01:27:56,516 --> 01:27:59,756
+could break you really expect food amateur to fix every test that uses food can you.
+
+587
+01:28:07,546 --> 01:28:10,876
+Right. Okay, General, you should not my classes you don't own.
+
+588
+01:28:15,086 --> 01:28:20,516
+Thin layer food adapter on top of food and coat. This new interface is your own food adapter.
+
+589
+01:28:20,516 --> 01:28:23,725
+You can absorb changes in food much more easily. While this is more work,
+
+590
+01:28:23,726 --> 01:28:26,846
+initially carefully choosing adapter interface can make a code easier to read and be
+
+591
+01:28:26,846 --> 01:28:31,555
+more readable as you can choose food app to fit your specific domain much better.
+
+592
+01:28:31,556 --> 01:28:38,396
+Okay, using marks and tests import the mac needs to test namespace its mark how to specify our expectations.
+
+593
+01:28:38,546 --> 01:28:42,626
+So some code that use the marks the mark as instructed.
+
+594
+01:28:42,806 --> 01:28:46,886
+Okay, here's some examples. Test create a mock turtle.
+
+595
+01:28:49,146 --> 01:28:53,106
+Expect that turtle pen down times.
+
+596
+01:28:53,466 --> 01:28:58,716
+And then we pass. We create a painter, and we pass in the turtle.
+
+597
+01:28:59,826 --> 01:29:03,856
+Okay. So that's the way it works.
+
+598
+01:29:03,856 --> 01:29:10,456
+Is that like it's it's part of the construction. So I wonder if.
+
+599
+01:29:13,496 --> 01:29:22,136
+When we construct a jump list builder. Um, I mean, I just do this on my local machine for a second jump list builder.
+
+600
+01:29:43,426 --> 01:29:51,366
+Builder. Right.
+
+601
+01:29:55,636 --> 01:30:02,156
+Can we? Pass in some kind of like.
+
+602
+01:30:06,736 --> 01:30:10,486
+Mark. Uh.
+
+603
+01:30:11,916 --> 01:30:15,426
+So like create jump list builder. Let's look at the implementation of this.
+
+604
+01:30:20,786 --> 01:30:26,476
+So we're going to create an instance. Of the cage homeless bill there.
+
+605
+01:30:40,076 --> 01:30:43,466
+I wonder if here is where if depending on.
+
+606
+01:30:45,916 --> 01:30:49,486
+We're testing if we could pass in.
+
+607
+01:30:55,796 --> 01:30:59,246
+We don't want this exposed to XP. Come, I think.
+
+608
+01:31:00,616 --> 01:31:07,906
+So if we have like a helper function that this calls that our test could call, that's like create jump list builder native.
+
+609
+01:31:09,896 --> 01:31:15,206
+Something that forwards over to this. And you can pass it a reference to a thing.
+
+610
+01:31:20,516 --> 01:31:31,566
+The object, the. The thing that we're eventually going to.
+
+611
+01:31:42,216 --> 01:31:48,476
+Call methods on. We want to move that thing.
+
+612
+01:31:50,516 --> 01:31:55,596
+Off of the main thread. It's basically a thing that wraps jump list builder.
+
+613
+01:31:57,896 --> 01:32:04,166
+Like the the jump list thing. Inside here.
+
+614
+01:32:05,786 --> 01:32:09,656
+That's what we're effectively doing. Jump list manager or whatever, like.
+
+615
+01:32:11,496 --> 01:32:20,306
+We're wrapping this. Begin list.
+
+616
+01:32:20,666 --> 01:32:34,356
+You pass these things. And then add user tasks.
+
+617
+01:32:36,556 --> 01:32:40,336
+Append category and then commit the list.
+
+618
+01:32:40,576 --> 01:32:47,086
+That's, I think, what we want to mark out. We want to mark out this jump list manager thing.
+
+619
+01:32:47,086 --> 01:32:53,146
+We want to wrap it with an abstract class. Okay, let's write down a potential plan here.
+
+620
+01:32:55,246 --> 01:33:07,306
+Let's update when taskbar to to have a new method that can be accessed from native code.
+
+621
+01:33:08,086 --> 01:33:16,806
+So not through XP become. Called like create jump list builder.
+
+622
+01:33:18,636 --> 01:33:23,556
+Uh, how do you create jump list builder or something?
+
+623
+01:33:25,686 --> 01:33:29,286
+Have it take. And, uh.
+
+624
+01:33:31,886 --> 01:33:40,136
+Have it taken argument. That is a reference to something that implements jump lists.
+
+625
+01:33:41,306 --> 01:33:44,336
+A jump list manager interface.
+
+626
+01:33:48,596 --> 01:33:54,986
+Have jump. List builder. Move that thing to the background thread.
+
+627
+01:33:58,566 --> 01:34:07,986
+The background thread owns it. Then in our tests.
+
+628
+01:34:09,616 --> 01:34:21,216
+Have. Uh RG Test call do create jump list builder passing.
+
+629
+01:34:21,226 --> 01:34:24,846
+It's something that mocks out jump list manager.
+
+630
+01:34:27,736 --> 01:34:34,726
+Yeah. And from there. And then have.
+
+631
+01:34:34,756 --> 01:34:42,786
+And then call it. Populate jump lists.
+
+632
+01:34:43,746 --> 01:34:48,056
+Method. For testing.
+
+633
+01:34:54,706 --> 01:34:57,866
+Okay. I like that. I like that now.
+
+634
+01:34:58,246 --> 01:35:02,536
+It's been a long time since I've. I've written a G test.
+
+635
+01:35:02,816 --> 01:35:06,736
+I've never written one from scratch. That's going to be really interesting.
+
+636
+01:35:07,516 --> 01:35:11,266
+And we can start maybe trying to do that next week.
+
+637
+01:35:11,746 --> 01:35:17,416
+So I don't think I'm ready to check this one off just yet to make the above testable and write tests.
+
+638
+01:35:17,656 --> 01:35:26,176
+But we have a vague idea of a plan. Um, and so next week, let's see if we can make some headway on that.
+
+639
+01:35:26,206 --> 01:35:29,596
+Maybe we can get started on a g test and start writing some tests.
+
+640
+01:35:32,326 --> 01:35:38,416
+And then, uh, I think we need to start cleaning up once it's testable.
+
+641
+01:35:39,226 --> 01:35:44,916
+Uh. Oh it doesn't have to be so much lazy stuff since.
+
+642
+01:35:44,916 --> 01:35:49,956
+No we don't want to do that. Make our approach profitable.
+
+643
+01:35:49,966 --> 01:35:55,846
+Put the old stuff behind a pref use new mechanism on a pref.
+
+644
+01:35:55,866 --> 01:35:59,166
+That's what we want to do. And then.
+
+645
+01:36:00,396 --> 01:36:05,936
+Yeah. Clean it all up and be profitable and then see if it works.
+
+646
+01:36:05,946 --> 01:36:09,916
+Turn on the new one. But we got to clean up.
+
+647
+01:36:09,936 --> 01:36:14,886
+We're getting really close. Like, we're. I'd say the hardest part is over.
+
+648
+01:36:15,516 --> 01:36:19,616
+The. The next challenge is the the testing.
+
+649
+01:36:19,626 --> 01:36:24,606
+That's going to be interesting and a real stretch for my C++ abilities.
+
+650
+01:36:25,266 --> 01:36:33,825
+But. I'm willing to give it a shot, and then the rest of it is just kind of like cleanup, which is very satisfying when it's done,
+
+651
+01:36:33,826 --> 01:36:40,186
+done right, clean up to make it so that we can have these both of these states run, both of these mechanisms run.
+
+652
+01:36:42,046 --> 01:36:45,976
+And then that might be an interesting challenge.
+
+653
+01:36:46,486 --> 01:36:55,496
+And then we can put it up for review, hopefully get it landed, and then we could try turning it on for some people in nightly.
+
+654
+01:36:56,626 --> 01:37:03,186
+We'd have people opt into it just to test it out. We could ask our people to start testing it and then we can start doing some controlled rollouts.
+
+655
+01:37:03,196 --> 01:37:13,376
+And as soon as we're confident that we have got the behavior that we want, we might even be able to do some like tests to make sure that the hangs.
+
+656
+01:37:13,396 --> 01:37:17,236
+Ultimately this is to reduce hangs and reduced main threat to IO.
+
+657
+01:37:17,716 --> 01:37:21,706
+So if we can show that like that's coming down. Um.
+
+658
+01:37:22,426 --> 01:37:29,846
+Then. We can do a controlled roll out, get it all out there, and then we can start removing the old mechanism.
+
+659
+01:37:31,636 --> 01:37:35,136
+Uh oh. Before I do this, there's one last thing.
+
+660
+01:37:35,156 --> 01:37:45,086
+See how Thunderbird uses jump list builder in case there are things we need to support there.
+
+661
+01:37:45,476 --> 01:37:48,566
+I don't think it does anything to. Um.
+
+662
+01:37:49,586 --> 01:37:53,596
+Special. Let's. We can actually do that right now. Actually conceptual.
+
+663
+01:37:55,406 --> 01:38:01,476
+Still there. Male.
+
+664
+01:38:01,986 --> 01:38:09,396
+Um, yeah. It's really short here. Perhaps add some tasks.
+
+665
+01:38:15,376 --> 01:38:19,246
+Just build some tasks. Yeah.
+
+666
+01:38:19,486 --> 01:38:28,026
+It's just very simple tasks. Uh, I said, Oh, I did this back in, uh, back in the day.
+
+667
+01:38:34,156 --> 01:38:43,276
+Yeah. So it's a very simple usage. We might actually be able to have Thunderbird use the mechanism very simply, which would be cool.
+
+668
+01:38:47,196 --> 01:38:50,705
+All right. I'm going to stop the episode there. Thank you so much for watching.
+
+669
+01:38:50,706 --> 01:38:54,396
+Episode three one for the PI episode. I hope that was interesting.
+
+670
+01:38:54,966 --> 01:38:59,716
+I apologize for the network hiccup in the middle. Thanks for sticking it out if you happen to stick it out.
+
+671
+01:38:59,736 --> 01:39:04,926
+I appreciate that. If you happen to be watching the recording, I'm sorry for the big gap in the middle there.
+
+672
+01:39:05,556 --> 01:39:08,656
+But, you know, we got somewhere interesting in the end.
+
+673
+01:39:08,676 --> 01:39:14,196
+I think we've got an idea for how we can write a test for this jump plus stuff.
+
+674
+01:39:14,796 --> 01:39:21,866
+I'm pleased about that. And again, if you're worried that this is taking shape, like, man, we've been working on this for months.
+
+675
+01:39:21,876 --> 01:39:24,876
+Is this how long it takes to to do stuff with Firefox?
+
+676
+01:39:25,056 --> 01:39:28,086
+Remember that I'm only really working on this during the stream.
+
+677
+01:39:28,086 --> 01:39:34,596
+So like an hour, hour and a half at a time and not including on an off ramp.
+
+678
+01:39:35,166 --> 01:39:38,396
+I probably means I've done less than three days total work on this.
+
+679
+01:39:41,816 --> 01:39:45,596
+Less than a week, certainly. So, yeah, this is fully realistic.
+
+680
+01:39:45,836 --> 01:39:49,356
+Fully realistic. Thanks again for watching. Episode 314.
+
+681
+01:39:49,376 --> 01:39:54,006
+Let me know what you thought. There is a link in the agenda to this episode.
+
+682
+01:39:54,086 --> 01:40:01,726
+I read everything that comes in. I if you've got questions, suggestions, things you want to see, more of things you want to see less of.
+
+683
+01:40:01,736 --> 01:40:04,766
+This is the best way to reach me is to rate this episode.
+
+684
+01:40:04,976 --> 01:40:11,396
+I highly appreciate those coming in. It helps me know whether or not I'm giving you any value in this stream.
+
+685
+01:40:11,726 --> 01:40:16,075
+It helps me craft the stream so that it's it's useful for you.
+
+686
+01:40:16,076 --> 01:40:20,276
+So if there's anything that you'd like changed or you're like, Man, this is really bugging me, I wish you do this instead.
+
+687
+01:40:20,276 --> 01:40:23,605
+Let me know. I read everything that comes in. So thanks again for watching.
+
+688
+01:40:23,606 --> 01:40:27,026
+Episode 314. I will see you next week.
+
+689
+01:40:27,446 --> 01:40:36,176
+Take care, everybody. Bye bye. The joy of holding the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

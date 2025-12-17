@@ -18,8 +18,10 @@
 * Document Picture-in-Picture in today's most recent Nightly
 	* https://mdn.github.io/dom-examples/document-picture-in-picture/
 * Tab notes! Still a work-in-progress.
-* 
+* Q: "Release notes for Firefox 146 mention a ""Windows 10 backup"" i assume this is a subset profile backup https://bugzil.la/1883052 previously covered in JOC? Is it actually Windows 10 only and what features of the profile backup have yet to be implemented? "
+	* https://firefox-source-docs.mozilla.org/browser/components/backup/docs/index.html
 * Today is the last episode for 2025! See you in the New Year! (Next episode is Jan 7 2026!)
+
 
 **[Rate this episode](https://forms.gle/ZdnbNZm5Mq5dh8jB9)**
 

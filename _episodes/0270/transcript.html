@@ -1,0 +1,2557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 270 - November 17, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 270 - November 17, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=82a2781b-56b5-4ca1-9f7a-add501127b67</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=82a2781b-56b5-4ca1-9f7a-add501127b67">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,292 --> 00:00:10,202
+Welcome. To the joy of coding.
+
+2
+00:00:10,202 --> 00:00:14,822
+Hello, and welcome to episode 270 of The Joy of Coding.
+
+3
+00:00:14,822 --> 00:00:18,482
+My name is Mike Connelly. We're going to be hacking on Firefox stuff today.
+
+4
+00:00:18,482 --> 00:00:21,992
+We're going to be answering questions from needin INFOSAN,
+
+5
+00:00:21,992 --> 00:00:30,902
+from the audience and talk a little bit about what's going on in in in like whenever you land patches, that sort of thing.
+
+6
+00:00:30,902 --> 00:00:38,582
+That's what we're doing today. Let me share my screen. Well, that's wacky morning, T.J.
+
+7
+00:00:38,582 --> 00:00:43,292
+Let me switch to the agenda, right? Today is November 17th, 2021.
+
+8
+00:00:43,292 --> 00:00:46,782
+I'm just going to eat this carrot. Sorry, I've been holding this carrot for a couple of seconds.
+
+9
+00:00:46,782 --> 00:00:51,752
+I'm going to eat it. A reminder.
+
+10
+00:00:51,752 --> 00:01:02,022
+Sorry for talking with my mouth full well. Carrot. Hopefully, the crunching is not distorting the signal too much.
+
+11
+00:01:02,022 --> 00:01:08,522
+Well, I probably should time that better. Oh man.
+
+12
+00:01:08,522 --> 00:01:15,872
+All right. Try this again. November 17, 2021 Episode 270 A reminder no plan survives breakfast.
+
+13
+00:01:15,872 --> 00:01:23,912
+Periodically, you eat a carrot and an inopportune time, and that's a metaphor for life.
+
+14
+00:01:23,912 --> 00:01:27,302
+So I apparently I did.
+
+15
+00:01:27,302 --> 00:01:34,052
+I scary. I scared Danny calling me too loud. Is it way too loud or something?
+
+16
+00:01:34,052 --> 00:01:39,932
+Let me know if the levels are off. Hopefully it's not too loud or something, right?
+
+17
+00:01:39,932 --> 00:01:46,322
+No plan survives breakfast. Things could go wrong. I my plan is to go through some headphones and talk about some stuff.
+
+18
+00:01:46,322 --> 00:01:50,432
+But who knows what will happen? Maybe a bug will land in our lap that we can start investigating.
+
+19
+00:01:50,432 --> 00:01:57,392
+We're just kind of easy, breezy walking through stuff. And if things get distracting, like if we get distracted by something, we might look into it.
+
+20
+00:01:57,392 --> 00:02:03,422
+If we get blocked on something, we might move on to other stuff. There's just a vague plan of what's going on, but we might not stick to it.
+
+21
+00:02:03,422 --> 00:02:08,642
+That's the first thing. The second thing is that the agenda that we're looking at is something you have access to.
+
+22
+00:02:08,642 --> 00:02:16,562
+If you're watching this on air. Mozilla, check out the details page or the details section over here on YouTube.
+
+23
+00:02:16,562 --> 00:02:21,122
+There will be a link in the video description and on Twitch.
+
+24
+00:02:21,122 --> 00:02:27,002
+There is a link that is about to be dropped into the Twitch chat.
+
+25
+00:02:27,002 --> 00:02:31,412
+This one right here. Here we go.
+
+26
+00:02:31,412 --> 00:02:35,882
+Agenda boom, right?
+
+27
+00:02:35,882 --> 00:02:38,072
+And with regards to the Twitch chat,
+
+28
+00:02:38,072 --> 00:02:46,412
+I should mention that the there's this bridge that I have set up that tries to bridge the Matrix chat channel and Twitch,
+
+29
+00:02:46,412 --> 00:02:54,362
+and it's currently only working one way. So right now, Matrix users, whenever you speak, the Twitch channel sees it.
+
+30
+00:02:54,362 --> 00:03:00,662
+But whenever the Twitch channel folk speak, whenever people in the Twitch chat speak, it's not.
+
+31
+00:03:00,662 --> 00:03:10,382
+It's not sent over to Matrix. So that's yeah, copying from Twitch for The Matrix only, folks.
+
+32
+00:03:10,382 --> 00:03:15,632
+Yeah, thank you very much, Dennis, for doing that. Yeah, this is a technical limitation.
+
+33
+00:03:15,632 --> 00:03:20,372
+I'm not entirely sure what's going on. I've been trying to debug it because this was a problem last week as well.
+
+34
+00:03:20,372 --> 00:03:25,532
+I haven't really figured it out yet, but it seems like what I've narrowed it down to is that for some reason,
+
+35
+00:03:25,532 --> 00:03:30,392
+the matter bridge system that I'm using isn't relaying Twitch messages,
+
+36
+00:03:30,392 --> 00:03:37,412
+which are really just I.R.S. messages to Matrix, and it seems specific for that particular pair.
+
+37
+00:03:37,412 --> 00:03:46,652
+So Twitch to Matrix like I can send messages to Twitch and I can send messages to Matrix from different platforms, different chat platforms.
+
+38
+00:03:46,652 --> 00:03:54,692
+But for some reason, Twitch going to Matrix is not working, and I have not figured it out yet, but hopefully soon that's the first thing.
+
+39
+00:03:54,692 --> 00:03:59,522
+And the second thing I wanted to mention there are there are times whenever people are like,
+
+40
+00:03:59,522 --> 00:04:03,662
+Hey, I want to support Firefox development, what can I do, you know?
+
+41
+00:04:03,662 --> 00:04:12,572
+And maybe they realize for, you know, I think I mentioned this last time that like donations to the foundation while perfectly like righteous,
+
+42
+00:04:12,572 --> 00:04:18,122
+perfectly good, they don't directly go to Firefox desktop development because the Mozilla Foundation,
+
+43
+00:04:18,122 --> 00:04:22,262
+which accepts donations, does different work from the Mozilla Corporation,
+
+44
+00:04:22,262 --> 00:04:29,612
+which works on products like Firefox and like Firefox for Android and like Hubbs and
+
+45
+00:04:29,612 --> 00:04:33,722
+and the VPN and all those sorts of things like that's all in the domain of products.
+
+46
+00:04:33,722 --> 00:04:38,642
+That's all the domain of the Mozilla Corporation, which does not receive donations.
+
+47
+00:04:38,642 --> 00:04:43,292
+So if you are interested in funding like more directly funding desktop development,
+
+48
+00:04:43,292 --> 00:04:48,092
+if you want to like monetarily support Firefox OS up development, there's a way to do it.
+
+49
+00:04:48,092 --> 00:04:53,732
+And that is to send like to purchase some of our services and a new one just went out.
+
+50
+00:04:53,732 --> 00:04:58,802
+I talked about VPN last week. This is a plug. I'm not going like I wasn't asked to do this.
+
+51
+00:04:58,802 --> 00:05:04,922
+This isn't like a sponsored video or something, but this just came out yesterday and I thought the people on this call are now on this call.
+
+52
+00:05:04,922 --> 00:05:11,672
+People watching. The stream might be interested. So there is a service that we have called Relay.
+
+53
+00:05:11,672 --> 00:05:16,322
+Maybe you've heard about it. Let me just put a link here, relay.
+
+54
+00:05:16,322 --> 00:05:18,182
+You can go to relay that fire Vox.com.
+
+55
+00:05:18,182 --> 00:05:32,102
+And what it is is is basically an email bouncing tool where or maybe there's more precise language, it's like and I'm a forwarding service for email.
+
+56
+00:05:32,102 --> 00:05:35,702
+So whenever you sign up for things like especially during the holiday season,
+
+57
+00:05:35,702 --> 00:05:46,142
+I'm doing this right now where I'm like doing a lot of online shopping and I'm trying to do a lot of online shopping with smaller vendors and smaller,
+
+58
+00:05:46,142 --> 00:05:48,932
+smaller stores, local stores in Toronto in the area.
+
+59
+00:05:48,932 --> 00:05:56,852
+And so they will usually ask for my email address as part of like the like, I have to create an account with them or something.
+
+60
+00:05:56,852 --> 00:06:05,882
+And it is handing out this email address is gets riskier and riskier the more you do it, because periodically,
+
+61
+00:06:05,882 --> 00:06:11,942
+like some of these databases with users in them, like user email addresses can get compromised or they might get sold.
+
+62
+00:06:11,942 --> 00:06:20,282
+Or, you know, this company might get bought by someone, or the company might just start sending you spam on their own or,
+
+63
+00:06:20,282 --> 00:06:23,042
+you know, abusing your email address in a way that you don't want. Like,
+
+64
+00:06:23,042 --> 00:06:28,202
+sometimes it's nice to be able to sever that connection whenever you're done with some service that you sign up for with an email address to just say,
+
+65
+00:06:28,202 --> 00:06:33,632
+OK, we're done now, and I'm going to just like, throw away the email address and that's what you can do with Relay.
+
+66
+00:06:33,632 --> 00:06:38,732
+It's basically like it allows you to create disposable email addresses,
+
+67
+00:06:38,732 --> 00:06:43,862
+and you can do this right now for free, like there is a free version of Relay and you can get it.
+
+68
+00:06:43,862 --> 00:06:51,752
+You can get this optional browser extension if you want, which makes it a lot easier to use it because it like it puts.
+
+69
+00:06:51,752 --> 00:06:55,832
+Like if I find an email field, let me show you an example because I've got the add on installed.
+
+70
+00:06:55,832 --> 00:07:04,592
+If I go to like, um, where would I if I just go to Gmail, where I think you will ask for your email address?
+
+71
+00:07:04,592 --> 00:07:11,762
+Uh oh, it doesn't seem to work on this one. Let me let me find a simpler form like not a sign in form.
+
+72
+00:07:11,762 --> 00:07:16,892
+How about a new email? Let's go to a store of some kind.
+
+73
+00:07:16,892 --> 00:07:25,082
+Like in Toronto, we have the book city store. And if I wanted to create an account, I'm a big fan of this store.
+
+74
+00:07:25,082 --> 00:07:32,282
+And if I wanted to create an account, uh, create an account, I could sign up now.
+
+75
+00:07:32,282 --> 00:07:37,682
+It looks like it's actually is it not? Oh, you know what? Because I'm in a private, I'm in a private browsing window.
+
+76
+00:07:37,682 --> 00:07:45,602
+That's why doesn't work. All right. Let's try doing that over here in a normal browsing window still doesn't work.
+
+77
+00:07:45,602 --> 00:07:49,862
+Do I not have to really add on enabled? This is a very embarrassing demo.
+
+78
+00:07:49,862 --> 00:07:57,062
+Hang on a second. Do I know what I've really Firefox or is it really, really, really private?
+
+79
+00:07:57,062 --> 00:08:06,092
+Really private? No, that's private network. Private relay relay is enabled.
+
+80
+00:08:06,092 --> 00:08:08,912
+I don't know why it's not showing up in here. Maybe I have.
+
+81
+00:08:08,912 --> 00:08:15,962
+I saw a worst demo ever, but basically they're supposed to be this little thing that shows up inside of the email address.
+
+82
+00:08:15,962 --> 00:08:19,352
+And maybe it's currently broken in nightly, I don't know.
+
+83
+00:08:19,352 --> 00:08:23,942
+But if you click on it, it allows you to quickly and easily create a disposable email address.
+
+84
+00:08:23,942 --> 00:08:28,212
+If you really want one and you don't have to use the web extension, you don't have to use the add on.
+
+85
+00:08:28,212 --> 00:08:34,262
+You can just create the address in the in the interface and the relay interface, the web, the website.
+
+86
+00:08:34,262 --> 00:08:39,242
+Here you can create one and that's for free. You can get up to five of them for free and you can throw them away.
+
+87
+00:08:39,242 --> 00:08:42,992
+Whenever you're done with them, you just delete them and then create another one up to five,
+
+88
+00:08:42,992 --> 00:08:45,812
+and then you can delete those five and create another five, et cetera, et cetera.
+
+89
+00:08:45,812 --> 00:08:51,602
+So that's a nice way of sort of creating these disposable identities. Now, if you decide that that's useful to you,
+
+90
+00:08:51,602 --> 00:08:57,902
+maybe you want a little bit more and you want to also support the development of like Firefox related products.
+
+91
+00:08:57,902 --> 00:09:02,042
+Then for right now, there's like this it's a limited time only deal.
+
+92
+00:09:02,042 --> 00:09:03,842
+I don't know actually how long this runs for.
+
+93
+00:09:03,842 --> 00:09:10,052
+I don't I'm not really privy to the timing or the the sort of the decisions on on how long it goes or anything like that.
+
+94
+00:09:10,052 --> 00:09:14,702
+But for now, it is 99 cents. It's basically a dollar per month.
+
+95
+00:09:14,702 --> 00:09:21,992
+It's also one euro per month, depending on if you use the euro, but otherwise it's like a dollar per month USD to sign up.
+
+96
+00:09:21,992 --> 00:09:26,582
+And that gives you unlimited email aliases. And of course, you can still use the browser extension.
+
+97
+00:09:26,582 --> 00:09:32,432
+But the part that I'm really excited about because the email addresses that it generates are usually pretty.
+
+98
+00:09:32,432 --> 00:09:37,862
+They're very obfuscated, like they look like. Does this page show you an example?
+
+99
+00:09:37,862 --> 00:09:41,702
+It'll look kind of like what is being illustrated back here?
+
+100
+00:09:41,702 --> 00:09:47,402
+Like this series of letters and numbers followed by like at Moore's gmail.com,
+
+101
+00:09:47,402 --> 00:09:54,992
+like, it's a real sort of hard to remember, you know, random series of characters.
+
+102
+00:09:54,992 --> 00:09:57,302
+And that's fine, you know, if you're just doing a one and done,
+
+103
+00:09:57,302 --> 00:10:05,112
+but maybe you're trying to really manage a particular disposable identity or you want to map a.
+
+104
+00:10:05,112 --> 00:10:15,942
+Aye. You want to map a particular store to an identity or something like if I want to book City email address,
+
+105
+00:10:15,942 --> 00:10:27,102
+then I could define my own custom domain so I could choose like, uh, I don't know what's what's a good one like Mike in Toronto?
+
+106
+00:10:27,102 --> 00:10:35,652
+Dogmas, Malcolm, I can choose that, and then I get to choose what I put over here like I can choose to say Book City at Mike in Toronto,
+
+107
+00:10:35,652 --> 00:10:43,152
+Dot Maus Malcolm, and that can be the alias. And and that's really handy, and I can dispose of that when I'm done with it.
+
+108
+00:10:43,152 --> 00:10:48,012
+Like if, for example, book City to they shut down or I don't want their services anymore or something like that,
+
+109
+00:10:48,012 --> 00:10:52,932
+God forbid, I really love Book City, then I can revoke that email address easily.
+
+110
+00:10:52,932 --> 00:10:56,622
+And apparently with this, you can also reply to forwarded emails. I've never done that before.
+
+111
+00:10:56,622 --> 00:11:02,772
+I've never had occasion to do it because usually the emails I get from the services that I sign up for with the relay service,
+
+112
+00:11:02,772 --> 00:11:07,922
+it's it's usually just like I need the confirmation email and that's it.
+
+113
+00:11:07,922 --> 00:11:12,292
+Then I throw the email address away, but this might be handy for some of you.
+
+114
+00:11:12,292 --> 00:11:19,452
+So for now, for 99 cents, a.k.a. one dollar or one, you, dude.
+
+115
+00:11:19,452 --> 00:11:24,522
+Is that what it's called? No. What's the EU are one euro per month.
+
+116
+00:11:24,522 --> 00:11:31,722
+You can sign up for Firefox Premium, really, and that is a good way of supporting Firefox and its products.
+
+117
+00:11:31,722 --> 00:11:35,652
+OK, that is my commercial. Thank you for listening to my commercial.
+
+118
+00:11:35,652 --> 00:11:39,822
+Let's move on. Going through some neat info. That's why I'm hoping to do today.
+
+119
+00:11:39,822 --> 00:11:46,542
+And actually, what's really interesting is one of these neat info is, I know for a fact is from Dan Schwab, who is in Matrix right now.
+
+120
+00:11:46,542 --> 00:11:54,342
+So you're going to watch me go through your need info right now, and I hope I hope I get to answer the question that you care about.
+
+121
+00:11:54,342 --> 00:12:06,052
+Let's actually do that one first. So I decide to eat another carrot.
+
+122
+00:12:06,052 --> 00:12:12,322
+All right. So this is a webcam ballot, Pat Zero, a man stuck in my throat.
+
+123
+00:12:12,322 --> 00:12:21,322
+Sorry. This is in the web compatibility product and in what's called the interventions like this is basically the web combat system.
+
+124
+00:12:21,322 --> 00:12:26,422
+Add on component on Mac OS and the summary is turning on.
+
+125
+00:12:26,422 --> 00:12:29,452
+Slack Huddles creates an XML error warning.
+
+126
+00:12:29,452 --> 00:12:36,532
+I'm not actually familiar with Slack Huddles, but we'll see what this is all about, and it's currently assigned to Ben Chubb.
+
+127
+00:12:36,532 --> 00:12:39,892
+And this was filed 13 days ago.
+
+128
+00:12:39,892 --> 00:12:49,522
+So if you go into Mac OS on your Mac OS Catalina, if you have a device like that, I presume that's not necessarily a requirement.
+
+129
+00:12:49,522 --> 00:12:55,672
+I mean, that's just what the reporter Benson Wang was using. But let's see toggle slack huddle on now.
+
+130
+00:12:55,672 --> 00:13:04,642
+I don't know what that is, but I'm presuming it's some sort of like chat system it's actually looked at or like video conferencing.
+
+131
+00:13:04,642 --> 00:13:12,352
+Video conferencing system solve problems aloud with slack huddles.
+
+132
+00:13:12,352 --> 00:13:18,262
+Six ways to create, recreate quick, informal office discussions and work from anywhere world cycles are lightweight
+
+133
+00:13:18,262 --> 00:13:21,472
+audio first way to communicate inside a slack channel and direct message.
+
+134
+00:13:21,472 --> 00:13:29,762
+So like, um OK with the huddle is open, a member of the channel or DM can come and go as they please.
+
+135
+00:13:29,762 --> 00:13:37,012
+So basically it's like a voice channel inside a channel where you can, like, quickly chat with one another verbally.
+
+136
+00:13:37,012 --> 00:13:42,142
+You know, they kind of have like they have that with discord, those like voice specific channels.
+
+137
+00:13:42,142 --> 00:13:45,922
+I think that's my interpretation of what's going on.
+
+138
+00:13:45,922 --> 00:13:54,382
+I'm seeing some chatter from Dan Chubb here saying, Um, I almost ping me about this yesterday, and that's the thing in the slack.
+
+139
+00:13:54,382 --> 00:13:58,132
+You are in the bottom left corner like an automated voice chat room they can use in channels, right?
+
+140
+00:13:58,132 --> 00:14:02,422
+OK. Makes sense when you use it.
+
+141
+00:14:02,422 --> 00:14:06,382
+Firefox asks for device permissions. So they're they're doing this in the browser.
+
+142
+00:14:06,382 --> 00:14:13,252
+Allow. I allow the access to a Yamaha USB speakerphone and then an arrow window pops up in the top left hand corner of the screen.
+
+143
+00:14:13,252 --> 00:14:18,022
+The window cannot be dragged or closed. The window goes away when huddles is disabled.
+
+144
+00:14:18,022 --> 00:14:26,272
+Uh, OK. And the huddle feature does work as I was able to have a conversation.
+
+145
+00:14:26,272 --> 00:14:29,752
+I don't see any global ever c indicator if I turn on the weather c global mute toggles.
+
+146
+00:14:29,752 --> 00:14:34,582
+I do see the global indicator, but I don't see the error message. You recently worked on the file that has an error here.
+
+147
+00:14:34,582 --> 00:14:38,812
+Do you know what might be causing this, or if there is another indicator that's not enabled by default?
+
+148
+00:14:38,812 --> 00:14:49,942
+No, this is this is the this is the current web RTC indicator, and we actually we actually open that window even if it's not visible because.
+
+149
+00:14:49,942 --> 00:14:57,202
+And we for viewers from like, not the previous stream of the stream before we actually worked with that,
+
+150
+00:14:57,202 --> 00:15:03,622
+we worked with that window because it's the one that manages the icons in the menu bar when you're sharing.
+
+151
+00:15:03,622 --> 00:15:11,542
+So for example, if I go to a web RTC experiment here, let's do this.
+
+152
+00:15:11,542 --> 00:15:20,362
+Uh, and let's share.
+
+153
+00:15:20,362 --> 00:15:26,692
+Let's share something screen sharing. Let's just basic.
+
+154
+00:15:26,692 --> 00:15:34,192
+Get user media. Let's open the camera. I'm going to use my face time camera so you can see me at a different angle.
+
+155
+00:15:34,192 --> 00:15:45,802
+OK, so this little guy here is opening. You see my green screen. Hey, this little guy here is a toggle that allows you to mute, unmute the camera.
+
+156
+00:15:45,802 --> 00:15:53,992
+You know, I hopefully that didn't break obvious, you know, get mute and unmute the camera in the browser.
+
+157
+00:15:53,992 --> 00:15:56,722
+And it's this this capability is not enabled by default.
+
+158
+00:15:56,722 --> 00:16:03,052
+That's actually an experimental capability that you can enable if you go to about preferences and under nightly experiments,
+
+159
+00:16:03,052 --> 00:16:09,202
+choose the Web RTC Global Mute toggles because what it allows you to do is just it's like a global cut off
+
+160
+00:16:09,202 --> 00:16:14,872
+switch to your camera when it's being shared in the browser and there's one for your microphone as well.
+
+161
+00:16:14,872 --> 00:16:21,052
+And you can move this little window around. You can minimize it and you can like if you're sharing your display,
+
+162
+00:16:21,052 --> 00:16:26,302
+it will tell you and you can quickly stop sharing your display and that sort of thing.
+
+163
+00:16:26,302 --> 00:16:32,752
+But when this when this toggle is not available, when it's hidden by default, like whenever the experiment is off,
+
+164
+00:16:32,752 --> 00:16:38,872
+we still actually use that window because it's used to to manage this menu item right up here,
+
+165
+00:16:38,872 --> 00:16:44,782
+which allows you to control the sharing of the of the camera.
+
+166
+00:16:44,782 --> 00:16:49,942
+I'm trying to remember what this does. Yeah, so it allows you to, like, revoke the permission or something.
+
+167
+00:16:49,942 --> 00:16:56,242
+So I'm going to close this and we're going to go back to the bug.
+
+168
+00:16:56,242 --> 00:17:02,482
+Now this error that we're looking at here is what we would call the the yellow screen of death.
+
+169
+00:17:02,482 --> 00:17:12,462
+And this thing has. This is interesting because in this particular case, this yellow screen of death is less about the outdoors,
+
+170
+00:17:12,462 --> 00:17:16,962
+which normally when we see a yellow screen of death, it's because it's not being translated properly.
+
+171
+00:17:16,962 --> 00:17:23,202
+It's using like old school DVDs stuff, and maybe the user has a different language pack installed or something.
+
+172
+00:17:23,202 --> 00:17:28,902
+But this is a case where it's actually not able to find the root element of the indicator.
+
+173
+00:17:28,902 --> 00:17:34,812
+And this actually reminds me of I've seen this error before.
+
+174
+00:17:34,812 --> 00:17:40,842
+I think I've seen this error before in bugs like someone's been talking about this, and so I'm going to dig through my email.
+
+175
+00:17:40,842 --> 00:17:46,062
+I'm not going to do that on screen, but I'm going to see if I can find the bug where this is being referred to.
+
+176
+00:17:46,062 --> 00:17:52,242
+Because because I have a feeling this is a dupe.
+
+177
+00:17:52,242 --> 00:18:04,722
+So let's see here. Just give me a quick second. No, no, this isn't very exciting, but I don't want to show you my email address.
+
+178
+00:18:04,722 --> 00:18:18,812
+Mm-Hmm. One second.
+
+179
+00:18:18,812 --> 00:18:38,012
+Um, but up. And if you are leaving the world, it's like Web RTC indicator and ZB was chatting to me about this.
+
+180
+00:18:38,012 --> 00:18:47,392
+They're bugs, where are the bugs? Broken UI.
+
+181
+00:18:47,392 --> 00:18:52,792
+Web RTC. The most common taxation of oil.
+
+182
+00:18:52,792 --> 00:19:05,192
+It is these. So it's like known it's one of the more frequent ones, but the most frequent one is apparently 70.
+
+183
+00:19:05,192 --> 00:19:12,932
+It's the network error page and does it say why?
+
+184
+00:19:12,932 --> 00:19:27,772
+Why it's not loading? OK, I can't find the associated bug, but this looks like it's less about the web RTC indicator itself.
+
+185
+00:19:27,772 --> 00:19:39,502
+And more about the XML parser having a hard time pulling the document out of the Omni Dot a properly,
+
+186
+00:19:39,502 --> 00:19:50,642
+I think this there's a dupe of this bug somewhere, but I can't remember where it is.
+
+187
+00:19:50,642 --> 00:19:57,532
+Ziva, do you remember if there's a dupe of this somewhere?
+
+188
+00:19:57,532 --> 00:20:03,482
+I swear we've talked about this before. OK.
+
+189
+00:20:03,482 --> 00:20:16,052
+Redirect to ZB, a.k.a. Gandalf ZB.
+
+190
+00:20:16,052 --> 00:20:22,682
+See. There we go. I don't know why that was matching before.
+
+191
+00:20:22,682 --> 00:20:28,262
+OK, so I've redirected the info and hopefully is able to answer your question then Jeb.
+
+192
+00:20:28,262 --> 00:20:34,632
+Sorry, I was able to be a little more directly helpful, but SBY is definitely the right person to talk to you about this.
+
+193
+00:20:34,632 --> 00:20:39,152
+The yellow screen of death is kind of at his domain, and I apologize.
+
+194
+00:20:39,152 --> 00:20:46,532
+This is 13 days ago, two weeks. I almost two weeks and I failed to respond to this, so I'm glad I got to it.
+
+195
+00:20:46,532 --> 00:20:51,932
+But I'm sorry it took so long. All right. Next up, string length is to shorten down.
+
+196
+00:20:51,932 --> 00:20:59,392
+Oh, this is a closed bug is a bug that I closed three months ago.
+
+197
+00:20:59,392 --> 00:21:01,652
+Oh, this is an uplift request.
+
+198
+00:21:01,652 --> 00:21:18,892
+So someone asks whether or not we should request uplift for this patch because what it does is, um, what is this patch do?
+
+199
+00:21:18,892 --> 00:21:26,092
+Well, it does change a kind of a string.
+
+200
+00:21:26,092 --> 00:21:37,732
+This is a special kind of string that we use where we allow local ICER's to set a particular width on something.
+
+201
+00:21:37,732 --> 00:21:47,122
+In this case, the downloads panel, they set the minimum width and I've got like a minute here.
+
+202
+00:21:47,122 --> 00:21:56,182
+And the items have a width here. And let's see.
+
+203
+00:21:56,182 --> 00:22:05,222
+Normally, an uplift with a string change would not be approved, but.
+
+204
+00:22:05,222 --> 00:22:14,002
+We would need to bump l10n change, that's just an extra step to be mindful of if we do.
+
+205
+00:22:14,002 --> 00:22:26,472
+OK, I think we can request uplift for this.
+
+206
+00:22:26,472 --> 00:22:45,122
+And. Let's quickly note the the string that was changed, so it was download panelist on Style.
+
+207
+00:22:45,122 --> 00:23:03,712
+Was removed and replaced with download, what did I call it, download panel items style.
+
+208
+00:23:03,712 --> 00:23:22,582
+Is not a high or critical bug, but this makes it easier for users on Non E and US locales to see more information about ongoing downloads.
+
+209
+00:23:22,582 --> 00:23:23,902
+User impact If declined,
+
+210
+00:23:23,902 --> 00:23:40,012
+certain locales will find that the downloads panel is too narrow to display enough information about ongoing or completed downloads,
+
+211
+00:23:40,012 --> 00:23:48,322
+and the fix landed in version 93, so it's already out there.
+
+212
+00:23:48,322 --> 00:23:52,162
+This is a low risk patch. This is a style only patch.
+
+213
+00:23:52,162 --> 00:24:05,122
+This is mainly a style only patch, and it's been out in the wild now for like, how long has it been since Firefox 93 has been out?
+
+214
+00:24:05,122 --> 00:24:16,042
+Release calendar Firefox 93 was released back in October, over a month now over a month.
+
+215
+00:24:16,042 --> 00:24:35,422
+It's been out in the wild now on the release channel for over a month, so this should be fairly stable, so this should be fairly safe to take.
+
+216
+00:24:35,422 --> 00:24:44,782
+Presuming it applies cleanly. All right, request.
+
+217
+00:24:44,782 --> 00:24:59,512
+Here we go. And the last need info is something I set for myself, actually, I set this needed info on myself because there's a patch.
+
+218
+00:24:59,512 --> 00:25:11,052
+So this is a. This is a bug that was filed seven years ago about there's this little notification
+
+219
+00:25:11,052 --> 00:25:16,902
+bar that will open up on Firefox if you haven't used Firefox in a while.
+
+220
+00:25:16,902 --> 00:25:28,952
+I'm pretty sure it's still there. Let's actually double check that it's still there. I don't think we removed it.
+
+221
+00:25:28,952 --> 00:26:01,642
+Stay here. I think we can find the source code for it.
+
+222
+00:26:01,642 --> 00:26:14,692
+Profile age now, where is this notification bar?
+
+223
+00:26:14,692 --> 00:26:22,692
+Reset profile notification, do we do we show that?
+
+224
+00:26:22,692 --> 00:26:34,602
+So that when it's called the reset and use profile reset uninstalled message.
+
+225
+00:26:34,602 --> 00:26:42,692
+Is there another place where we would append notify unsigned add ons?
+
+226
+00:26:42,692 --> 00:26:54,472
+Hmm. Well, is this one? It was unused. If not, disable reset prompt, what is this thing?
+
+227
+00:26:54,472 --> 00:26:59,242
+Reset profile, what does it mean whenever it's unused?
+
+228
+00:26:59,242 --> 00:27:10,872
+What is this message reset unused profile? It looks like you haven't started in a while, do you want to clean it up?
+
+229
+00:27:10,872 --> 00:27:27,872
+Uh, right. And it sounds like the way that we're calculating whether or not to do this is by looking at the sorry,
+
+230
+00:27:27,872 --> 00:27:33,942
+I'm getting a phone call, getting a phone call from Book City, everybody.
+
+231
+00:27:33,942 --> 00:27:42,192
+Hang on. I'm just going to I'm going to answer this, but I'm going to mute just one second.
+
+232
+00:27:42,192 --> 00:27:47,572
+Well, actually, I don't know how to mute. I missed the call. I didn't really one.
+
+233
+00:27:47,572 --> 00:27:53,992
+I have a feeling there's a delivery available for me from Book City. I'm going to have to call them back.
+
+234
+00:27:53,992 --> 00:27:59,692
+I didn't know how to mute my microphone mid-stream. I should probably have a cutoff switch somewhere for safety.
+
+235
+00:27:59,692 --> 00:28:08,842
+OK. It looks like the way we calculate the last time the profile was in use was by looking at the replaced lock time.
+
+236
+00:28:08,842 --> 00:28:16,072
+And is that the case? Like, is this changed recently? Is that always how this is worked?
+
+237
+00:28:16,072 --> 00:28:24,952
+Because this patch was written five years ago and the reason that I'm looking is because this patch I said Anita info on myself because I want
+
+238
+00:28:24,952 --> 00:28:34,822
+to know whether or not it's possible that a this is still a bug and b we can bring this patch back from the dead because that might be useful.
+
+239
+00:28:34,822 --> 00:28:43,322
+So let me let me take a look and see the version that this patch was written against.
+
+240
+00:28:43,322 --> 00:28:54,172
+Um, it would be a line on like on first window loaded.
+
+241
+00:28:54,172 --> 00:29:02,722
+Go wait for material to get a sense of it.
+
+242
+00:29:02,722 --> 00:29:10,432
+No, did I. Oh, here, sorry, it was in the wrong window on first window loaded we.
+
+243
+00:29:10,432 --> 00:29:17,092
+When do we do it? Track slow start up. Profile reset interval.
+
+244
+00:29:17,092 --> 00:29:21,022
+We get the last modified time on the profiles of any.
+
+245
+00:29:21,022 --> 00:29:29,332
+So this is actually changed since then. So we used to look at the last modified time on the profiles dot any file.
+
+246
+00:29:29,332 --> 00:29:35,782
+But now what we're doing is we are looking at the replaced lock time of app info.
+
+247
+00:29:35,782 --> 00:29:46,792
+So let's see when this change occurred, because that might invalidate this entire patch.
+
+248
+00:29:46,792 --> 00:29:57,452
+Offered to say user's profile was last used more than two months ago or replaced, but what replaced long time?
+
+249
+00:29:57,452 --> 00:30:04,112
+Oh oh no, it was always using replace log time.
+
+250
+00:30:04,112 --> 00:30:17,702
+But what we did was we took the maximum of the last modified time and replaced lock time of app info and what replaced log time does.
+
+251
+00:30:17,702 --> 00:30:40,142
+Let's just double check what this is. Replaced lock time, and that's on app info.
+
+252
+00:30:40,142 --> 00:30:52,002
+What it does is it gets replaced lock time on the profile.
+
+253
+00:30:52,002 --> 00:30:57,492
+Which gets there's this thing called em lock, get replaced, lock time.
+
+254
+00:30:57,492 --> 00:31:08,002
+Is there a documentation of this inside here? The time stamp of an existing profile lock at lock time.
+
+255
+00:31:08,002 --> 00:31:14,272
+So the time like of acquiring the lock.
+
+256
+00:31:14,272 --> 00:31:20,762
+So the problem is that the last use if we look at the.
+
+257
+00:31:20,762 --> 00:31:36,772
+The time stamp of an existing profile lock at the time of locking it, so it was like if we open up the browser and we will look at the time that.
+
+258
+00:31:36,772 --> 00:31:46,732
+This is basically the last long time, and if the browser session was open for a long time,
+
+259
+00:31:46,732 --> 00:31:53,932
+like it's almost like what we want is not the replace lock time, but like when the lock was released last time.
+
+260
+00:31:53,932 --> 00:32:03,262
+That's really what we want the time stamp of an existing profile lock at lock time.
+
+261
+00:32:03,262 --> 00:32:14,492
+What I want to know is like what was the release of the lock?
+
+262
+00:32:14,492 --> 00:32:21,572
+And what what is the original patch trying to do this patch switches to using the
+
+263
+00:32:21,572 --> 00:32:26,822
+last modified time of profiles that any file to check the last five box use time.
+
+264
+00:32:26,822 --> 00:32:35,252
+So instead of using Oh, I see.
+
+265
+00:32:35,252 --> 00:32:50,022
+Instead of just using the replace lock time. Get the profiles any time and use that otherwise.
+
+266
+00:32:50,022 --> 00:32:53,172
+Use the replace lock time, so fall back we.
+
+267
+00:32:53,172 --> 00:33:00,792
+Why did we determine the last used time by profile logs for place, long time profiles in any last modified times for the backwards compatibility?
+
+268
+00:33:00,792 --> 00:33:08,412
+Only using replace log time. Not touching such and such, hence would be much older than the 60 days threshold.
+
+269
+00:33:08,412 --> 00:33:17,542
+In this case, we would misjudge lots of daily active users as inactive users, if only considered the last modified time.
+
+270
+00:33:17,542 --> 00:33:31,742
+All right. So here we take the newer time is the last year's time.
+
+271
+00:33:31,742 --> 00:33:46,022
+I almost feel like we we have this information like shouldn't there be information about the like when the last session ended like that?
+
+272
+00:33:46,022 --> 00:33:55,112
+That, to me is maybe. Wouldn't that be some sort of in here?
+
+273
+00:33:55,112 --> 00:34:05,312
+Uh, what was the time the session ended? Commentary session.
+
+274
+00:34:05,312 --> 00:34:23,162
+That's a thing that exists, right? Oh, last shut down duration.
+
+275
+00:34:23,162 --> 00:34:46,722
+Failed profile lockdown. Do we have things like when the last shutdown was?
+
+276
+00:34:46,722 --> 00:34:57,222
+Grams. Oh, uh.
+
+277
+00:34:57,222 --> 00:35:16,342
+Suspend since process start is kind of in the area that that's what we want the time of last shut down.
+
+278
+00:35:16,342 --> 00:35:24,732
+Last shut down. So is there anything out there that we call that and last shutdown time?
+
+279
+00:35:24,732 --> 00:35:37,552
+Well, that's the duration. Get last shut down duration.
+
+280
+00:35:37,552 --> 00:35:43,222
+Yeah. That's just how long it lasted.
+
+281
+00:35:43,222 --> 00:35:55,542
+Not the actual timestamp of it. The last oh, the last shutdown time.
+
+282
+00:35:55,542 --> 00:36:01,192
+Hang on a second, let's actually we can check the said if I go to services that telemetry last shutdown duration.
+
+283
+00:36:01,192 --> 00:36:09,852
+Yeah, it's just how much how much time it took, not when it was, um, when do we right?
+
+284
+00:36:09,852 --> 00:36:28,372
+And last shutdown time? Right here, read last shutdown duration had the shutdown time file name.
+
+285
+00:36:28,372 --> 00:36:47,712
+So we write how long it took to shut down into a file. What is that file name?
+
+286
+00:36:47,712 --> 00:36:56,202
+Path Char pointer. What is that file name, how do we oh, it's we're constructed with this thing,
+
+287
+00:36:56,202 --> 00:37:02,862
+fetch telemetry data and the shut down time file name is passed is the first argument.
+
+288
+00:37:02,862 --> 00:37:11,262
+So shut down time file name. Here is the OK telemetry dot shutdown time.
+
+289
+00:37:11,262 --> 00:37:20,232
+OK. Which is presumably how long it took to shut down.
+
+290
+00:37:20,232 --> 00:37:33,782
+Um. What would be pretty cool is if we could also get the time stamp, not just the duration.
+
+291
+00:37:33,782 --> 00:37:46,082
+But if we could write to this file the time stamp.
+
+292
+00:37:46,082 --> 00:38:01,122
+Hmm. OK. What's in this file, actually, though, we get the file name and we fetch the data.
+
+293
+00:38:01,122 --> 00:38:15,302
+And we run this, we read it, and the things that we pull out of it are.
+
+294
+00:38:15,302 --> 00:38:24,692
+We open this up and we we collect some information. It's just the time.
+
+295
+00:38:24,692 --> 00:38:31,502
+And then we close the file. When do we write this right last?
+
+296
+00:38:31,502 --> 00:38:40,352
+Who writes this file? Who writes this file?
+
+297
+00:38:40,352 --> 00:38:51,432
+One way of finding that out is looking at the patch that first landed this.
+
+298
+00:38:51,432 --> 00:39:16,702
+Um. And attempts shut times.
+
+299
+00:39:16,702 --> 00:39:35,432
+Seems pretty old. But yeah, who writes this?
+
+300
+00:39:35,432 --> 00:39:42,752
+Browser timings the time in milliseconds and took to complete the last shutdown on the next hour.
+
+301
+00:39:42,752 --> 00:39:47,892
+This is loaded and recorded.
+
+302
+00:39:47,892 --> 00:40:00,432
+It's like, I feel like this is the sort of information that we should write to telemetry, but I should probably double check with.
+
+303
+00:40:00,432 --> 00:40:06,612
+With our data appears now, why did this patch not land? That's my other question.
+
+304
+00:40:06,612 --> 00:40:08,262
+And this is an old man's review patch.
+
+305
+00:40:08,262 --> 00:40:20,202
+There were a bunch of comments in here from Matt and five years ago adding for comment, asking for documentation, suggesting you use idle dispatch.
+
+306
+00:40:20,202 --> 00:40:29,652
+We should use idle daily rather than using our own timer. Consistency as passive using profile exist three times.
+
+307
+00:40:29,652 --> 00:40:34,302
+Use get profoundly a lazy getter that should be calling a helper. Keep these alphabetical.
+
+308
+00:40:34,302 --> 00:40:40,272
+Please use CC. See I.
+
+309
+00:40:40,272 --> 00:40:50,202
+And then it just didn't get touched, so I think I think the technique here might be salvageable, but we might want to do something better.
+
+310
+00:40:50,202 --> 00:41:01,152
+The technique that the original patch was using here might still be salvageable.
+
+311
+00:41:01,152 --> 00:41:11,532
+How do you spell salvageable? But we might be able to build on top of something more robust.
+
+312
+00:41:11,532 --> 00:41:31,212
+We already record how long it took to do our telemetry system already records how long it took to do a shut down.
+
+313
+00:41:31,212 --> 00:41:40,332
+Into a separate file that's then read upon subsequent start up.
+
+314
+00:41:40,332 --> 00:41:56,172
+Could we augment that to also include the time stamp of the last shutdown and use that to calculate the Delta would recording?
+
+315
+00:41:56,172 --> 00:42:08,052
+So maybe I'll say maybe we could. Maybe we could augment that to also include the time stamp and use that to calculate the delta.
+
+316
+00:42:08,052 --> 00:42:25,422
+Hey, Chaton, do you think the data stewards would be opposed to adding the last shutdown time to NCAI telemetry?
+
+317
+00:42:25,422 --> 00:42:34,932
+Or there's there's a new thing that we're supposed to be using not that's not telemetry. It's called glean.
+
+318
+00:42:34,932 --> 00:42:50,272
+And is there a web ideal for glean? Yeah, glean.
+
+319
+00:42:50,272 --> 00:43:04,022
+And the way that we add like metrics for glean.
+
+320
+00:43:04,022 --> 00:43:18,332
+Metrics talk Yamal, we could put it like toolkit initialization.
+
+321
+00:43:18,332 --> 00:43:31,972
+Flush durations, perhaps we can put this inside of glean I should be opposed to adding.
+
+322
+00:43:31,972 --> 00:43:42,352
+To recording the last shutdown time in glean somewhere.
+
+323
+00:43:42,352 --> 00:43:50,062
+Request information from Chaton, because if we can do that, then we can use that instead.
+
+324
+00:43:50,062 --> 00:43:54,142
+And, you know, I think that would be a little bit more robust than trying to hack something together
+
+325
+00:43:54,142 --> 00:44:01,852
+by looking at like like touching files and looking at like their last use time.
+
+326
+00:44:01,852 --> 00:44:10,882
+OK, so need info passed along to in one of our data stewards?
+
+327
+00:44:10,882 --> 00:44:21,662
+OK, I. Do need INFOSAN, so the other thing I was thinking we might do today, I thought I'd go through some questions.
+
+328
+00:44:21,662 --> 00:44:26,372
+So one of the things that I've been trying, I've considered answering and I hadn't had a chance of doing it was talking
+
+329
+00:44:26,372 --> 00:44:32,162
+about how patches go from being written to being in Firefox start to finish.
+
+330
+00:44:32,162 --> 00:44:38,762
+And I wanted to talk about that briefly because I've had to. I've done this talk for a couple of new hires and new contributors,
+
+331
+00:44:38,762 --> 00:44:45,032
+new contributors who might not have a sense of the flow of like where changes
+
+332
+00:44:45,032 --> 00:44:50,222
+go and how like how they're staged and the release cycle and all of that.
+
+333
+00:44:50,222 --> 00:44:54,752
+So I thought I'd go through that and hopefully that'll be interesting for you.
+
+334
+00:44:54,752 --> 00:44:59,702
+So let me switch to camera three.
+
+335
+00:44:59,702 --> 00:45:14,822
+Am I drawing tablets? I might be doing some drawing. So one second here for you can see this crime.
+
+336
+00:45:14,822 --> 00:45:22,142
+All right. Let me just finish this carrot.
+
+337
+00:45:22,142 --> 00:45:36,072
+Have some tea and I'll start talking about this. We have a quick sack.
+
+338
+00:45:36,072 --> 00:45:45,752
+All right, I'll do it. OK, so. Where do I begin?
+
+339
+00:45:45,752 --> 00:45:51,212
+Let's start with this line.
+
+340
+00:45:51,212 --> 00:46:00,152
+And let's also pretend that you are a you the audience, you have interest in writing patches for Firefox.
+
+341
+00:46:00,152 --> 00:46:04,832
+And so you have a computer and you might have cloned one of our repositories.
+
+342
+00:46:04,832 --> 00:46:09,722
+Maybe you cloned the here. I'm actually, you know, we him where it is.
+
+343
+00:46:09,722 --> 00:46:17,162
+Let's say you've cloned the Mozilla unified repository that has the Firefox Code, and it may be used yet or mercurial.
+
+344
+00:46:17,162 --> 00:46:24,062
+It doesn't really matter, but you have a local copy of the repo.
+
+345
+00:46:24,062 --> 00:46:31,622
+I'm going to call it and you for Mozilla Unified because I think that's the the default name now of the repository.
+
+346
+00:46:31,622 --> 00:46:36,932
+Maybe mine's called Mozilla Central because it's old school and I haven't cloned in a while.
+
+347
+00:46:36,932 --> 00:46:41,492
+Yours might be called unified, it might be called central. It really doesn't matter.
+
+348
+00:46:41,492 --> 00:46:55,082
+It's the repo, and it's your local clone of one that's on Mozilla's services, like Mozilla's infrastructure, and that's the copy of EMU.
+
+349
+00:46:55,082 --> 00:47:04,692
+This is like local. And then this is like Mozilla infrastructure above the line.
+
+350
+00:47:04,692 --> 00:47:18,282
+OK, so you clone the repository and you work on a patch and you write this really excellent patch, here's your patch, it's Patch Dot diff.
+
+351
+00:47:18,282 --> 00:47:23,412
+It's got like additions and subtractions and changes, and it's great.
+
+352
+00:47:23,412 --> 00:47:30,102
+And so what happens after you write it is you have this tool that whenever you run,
+
+353
+00:47:30,102 --> 00:47:38,902
+when you call the repository, you're supposed to run this command called dot slash mark bootstrap.
+
+354
+00:47:38,902 --> 00:47:46,032
+My handwriting is not incredible. So you might not be able to read that very well, but mock bootstrap installs a number of things.
+
+355
+00:47:46,032 --> 00:47:51,102
+One of the things I believe installs is called Moore's fab, and if it doesn't install Moore's fab, it should.
+
+356
+00:47:51,102 --> 00:47:55,812
+But you have this tool called Moore's Fab locally.
+
+357
+00:47:55,812 --> 00:48:02,652
+And what Moore's Fab does is it allows you to take this patch and submit it,
+
+358
+00:48:02,652 --> 00:48:12,882
+so it sends a copy of the patch up to a service called Fabricator Fabricators,
+
+359
+00:48:12,882 --> 00:48:16,762
+where we do our code review using a tool within fabricator called differential.
+
+360
+00:48:16,762 --> 00:48:21,072
+But we just call it fabricator, because that's the only tool really that we use from it.
+
+361
+00:48:21,072 --> 00:48:30,402
+So differential and this is where, you know, comments happen.
+
+362
+00:48:30,402 --> 00:48:35,742
+Like maybe someone looks at your patch and has some ideas and ways you can improve it or change it or something.
+
+363
+00:48:35,742 --> 00:48:39,612
+Maybe some they request you add some tests. Who knows?
+
+364
+00:48:39,612 --> 00:48:46,722
+A conversation about the patch ensues and you know, feedback will go back and forth in this patch might change over time.
+
+365
+00:48:46,722 --> 00:48:49,662
+Like you might come back with some feedback, alter the patch,
+
+366
+00:48:49,662 --> 00:48:57,132
+resubmit it to fabricator and it'll kind of do this like bounce back and forth a couple of times until you get approval.
+
+367
+00:48:57,132 --> 00:49:02,112
+Like your reviewer says, I like it. This patch looks good. It's ready to land.
+
+368
+00:49:02,112 --> 00:49:07,212
+And at that point, they will initiate a system called Lando.
+
+369
+00:49:07,212 --> 00:49:25,742
+So Lando Lando knows how to take your patch out of fabricator and lands it into a fork of the Mozilla central repository called Auto Land.
+
+370
+00:49:25,742 --> 00:49:35,822
+So it takes it from fabricator and just cherry picks it and like just grafts it on top of auto land and commits it to that repository.
+
+371
+00:49:35,822 --> 00:49:39,062
+It what happens is like this happens a lot like every patch that gets approved,
+
+372
+00:49:39,062 --> 00:49:42,752
+goes through auto, land or land or picks it up and drops it on auto land.
+
+373
+00:49:42,752 --> 00:49:46,502
+And it's pretty busy like it's doing that all the time if you go to tree herder.
+
+374
+00:49:46,502 --> 00:49:50,822
+Let me let me go back to my my screen here for a second.
+
+375
+00:49:50,822 --> 00:49:55,472
+If you go to tree herder, you can see all the patches coming in.
+
+376
+00:49:55,472 --> 00:50:05,082
+If we look at auto land here, like all of these patches coming in these, these are from today like this ones from my colleague heights.
+
+377
+00:50:05,082 --> 00:50:10,682
+And this one's from someone. This one's from Amelio and this one's from someone named as Moammar.
+
+378
+00:50:10,682 --> 00:50:15,212
+That's a backhoe. And another one from Amelio and another one from Amelia.
+
+379
+00:50:15,212 --> 00:50:21,242
+Amelia is very prolific today, Andre, and like each one of these is from today, they're just like boop boop boop.
+
+380
+00:50:21,242 --> 00:50:26,732
+Each approval goes, Lanning goes in, Orlando picks it up and drops into the repository.
+
+381
+00:50:26,732 --> 00:50:32,012
+And all of these symbols over on this side, which is very confusing like a lot of information, very dense.
+
+382
+00:50:32,012 --> 00:50:39,842
+But it's telling us it's telling the sheriffs, and it's telling the people who landed these things how the patch is doing in our test automation.
+
+383
+00:50:39,842 --> 00:50:44,372
+Because every patch that comes in, whenever it lands like this, it goes through a bunch of tests.
+
+384
+00:50:44,372 --> 00:50:49,772
+We run all of our automated tests on every single one that comes in and things might go orange like this.
+
+385
+00:50:49,772 --> 00:50:53,552
+Things might break. And if that happens, then we'll back stuff out.
+
+386
+00:50:53,552 --> 00:51:04,052
+And then that will green the tree up and more things will land and eventually let me go back to the screen.
+
+387
+00:51:04,052 --> 00:51:14,062
+Woops, may it seemed like things ended eventually the sheriff's so there is there's a character here.
+
+388
+00:51:14,062 --> 00:51:27,052
+They've got a little sheriff's hat. And a little badge, maybe a maybe some boots.
+
+389
+00:51:27,052 --> 00:51:42,752
+These are the tree sheriffs. Their job is to watch. They like keep their eyes on auto land using tree herder.
+
+390
+00:51:42,752 --> 00:51:48,992
+And they like watch it. And at some point they'll say, you know, if things break, if the tests fail,
+
+391
+00:51:48,992 --> 00:51:54,302
+like we saw in that example back there, we saw a couple of tests break and then a blackout occurred.
+
+392
+00:51:54,302 --> 00:51:59,312
+That red text showed a blackout. Our sheriffs did that, you know, when they saw like, Oh, tests are breaking,
+
+393
+00:51:59,312 --> 00:52:03,782
+we're going to back out the offending patch because we know which one introduced those test failures.
+
+394
+00:52:03,782 --> 00:52:11,162
+So they'll revert the patch on auto land and bounce back into the bug that the patches associated with and say,
+
+395
+00:52:11,162 --> 00:52:15,122
+like, Hey, I had to back you out, you need to look at this again. So that might happen to you.
+
+396
+00:52:15,122 --> 00:52:22,112
+Like, you might get backed out by a sheriff and then you're back at the differential stage and you might have to do some more or the fabricator stage.
+
+397
+00:52:22,112 --> 00:52:27,902
+You might have to do some more revisions to figure stuff out. But suppose, suppose it landed and everything was fine.
+
+398
+00:52:27,902 --> 00:52:31,862
+You know, none of the tests failed. All as well.
+
+399
+00:52:31,862 --> 00:52:39,032
+Then twice a day, the sheriffs will find a point in time where they go, Look, the tree is in pretty good shape.
+
+400
+00:52:39,032 --> 00:52:46,982
+You know, everything's green, it looks green. What we're going to do is we're going to merge auto land.
+
+401
+00:52:46,982 --> 00:52:55,262
+Back into Missoula Unified, a.k.a. Missoula Central, like they'll say like this is a pretty good,
+
+402
+00:52:55,262 --> 00:52:59,492
+pretty, pretty good snapshot of what's going on, everything's green will merge it back.
+
+403
+00:52:59,492 --> 00:53:06,632
+And the advantage of that is that people who clone the repository you generally like you are almost guaranteed to have a working,
+
+404
+00:53:06,632 --> 00:53:13,922
+a working version of the browser like something that has passed all the tests because it only merges over whenever the sheriffs are like.
+
+405
+00:53:13,922 --> 00:53:18,002
+It looks good. The tests are all passing. OK, merge to central.
+
+406
+00:53:18,002 --> 00:53:23,942
+And so, you know, anything in central is usually it's building properly and it's passing all of the tests.
+
+407
+00:53:23,942 --> 00:53:28,232
+That's why it's in central. It periodically will happen.
+
+408
+00:53:28,232 --> 00:53:33,452
+Something will get into central. That's breaking something. And then we'll just get back to backed out of central.
+
+409
+00:53:33,452 --> 00:53:41,712
+And then maybe Knightley's will get spun out because central is where Knightley's come from, just so we're clear twice a day.
+
+410
+00:53:41,712 --> 00:53:50,872
+Knightley's get created from whatever is in this repository, so nightly is a version of the browser that's just the bleeding edge.
+
+411
+00:53:50,872 --> 00:53:56,492
+Mike, the most recent stuff in the repository. And yeah, twice a day I'm using nightly right now.
+
+412
+00:53:56,492 --> 00:54:02,702
+That's this version of the browser. And when was it built? It was built today, this morning, probably.
+
+413
+00:54:02,702 --> 00:54:09,722
+And I'll probably get another update later today because it's twice a day that the builds get created based on whatever's in central.
+
+414
+00:54:09,722 --> 00:54:17,192
+OK, so so far, so good. So your patch in this story, your patch went through code review past continuous integration.
+
+415
+00:54:17,192 --> 00:54:22,862
+It got merged essentially at that point. Your bug is usually closed like you're.
+
+416
+00:54:22,862 --> 00:54:29,382
+That's what the sheriffs who did the landing from auto land to Missoula Central slash Missoula Unified.
+
+417
+00:54:29,382 --> 00:54:32,612
+You know, I'm going to call it central because that's what I'm used to calling it.
+
+418
+00:54:32,612 --> 00:54:36,512
+But even though the the repository as a whole might be called unified,
+
+419
+00:54:36,512 --> 00:54:42,662
+the branch that we're talking about is called central and central is is the equivalent of nightly.
+
+420
+00:54:42,662 --> 00:54:52,382
+I guess what nightly is built from, but central is are like our bleeding edge branch of the repository.
+
+421
+00:54:52,382 --> 00:54:57,392
+And whenever they do that, merge from auto land to central, that's when they close the bug.
+
+422
+00:54:57,392 --> 00:55:00,962
+They'll say, Oh, OK, you passed continuous integration. We've merged the central.
+
+423
+00:55:00,962 --> 00:55:06,902
+We have the script that runs that closes all of the bugs that are associated with the patches that went into central.
+
+424
+00:55:06,902 --> 00:55:12,392
+So that's why you might find, for example, that a bunch of if you're watching a bunch of components and Bugzilla,
+
+425
+00:55:12,392 --> 00:55:18,692
+a bunch of stuff will get closed at the same time. And that's because the script runs after the merge and like a bunch of a bunch
+
+426
+00:55:18,692 --> 00:55:23,882
+of Bugzilla bugs will get closed at the same time after the merge occurs. OK, so so far, so good.
+
+427
+00:55:23,882 --> 00:55:31,262
+Now your patch is in nightly and people are using it. OK, here's the next thing to know there are two more repositories.
+
+428
+00:55:31,262 --> 00:55:37,352
+There's one called Beta Mozilla beta and there's one called release.
+
+429
+00:55:37,352 --> 00:55:42,212
+There's actually there's another one called ESR. We're not going to talk about ESR today.
+
+430
+00:55:42,212 --> 00:55:45,812
+That's too complicated or just in muddies the water.
+
+431
+00:55:45,812 --> 00:55:54,372
+But let's let's talk about beta and release. So every four weeks.
+
+432
+00:55:54,372 --> 00:55:58,962
+The trains, man, my handwriting is just the worst today.
+
+433
+00:55:58,962 --> 00:56:03,132
+Every four weeks, the trains leave the station.
+
+434
+00:56:03,132 --> 00:56:08,682
+We use this sort of metaphor of trains to describe what is up with my handwriting.
+
+435
+00:56:08,682 --> 00:56:15,402
+I feel like it's really digressed a regressed weeks e x.
+
+436
+00:56:15,402 --> 00:56:21,042
+You know what it is. I think I've got this like brush stabilizer on.
+
+437
+00:56:21,042 --> 00:56:25,182
+Do I have breast? Yeah, I've got. Okay, turn the brush stabilizer off.
+
+438
+00:56:25,182 --> 00:56:29,682
+I've got a feeling it's like making my handwriting look worse than it's supposed to be.
+
+439
+00:56:29,682 --> 00:56:34,362
+Let's let's just try that again for four.
+
+440
+00:56:34,362 --> 00:56:41,562
+There we go. So much better. Four weeks.
+
+441
+00:56:41,562 --> 00:56:46,212
+OK. So every four weeks we do a release of Firefox.
+
+442
+00:56:46,212 --> 00:56:50,312
+Maybe you've noticed, you know, every month or so a new release of Firefox comes in.
+
+443
+00:56:50,312 --> 00:56:55,542
+And what happens is, you know, a long time ago, someone took a branch.
+
+444
+00:56:55,542 --> 00:57:02,352
+They forked Mozilla Central. They created two forks, one called beta and one called release.
+
+445
+00:57:02,352 --> 00:57:12,402
+And then after some time of things, baking in Mozilla Central and the changes in here were then merged into beta.
+
+446
+00:57:12,402 --> 00:57:20,742
+And then after some time, the changes in beta after they've been used by more people are merged into to release.
+
+447
+00:57:20,742 --> 00:57:25,662
+So hang on, I don't think I've done a very good job of explaining what's going on here.
+
+448
+00:57:25,662 --> 00:57:29,502
+I've got distracted by trying to explain how these things got set up in the past.
+
+449
+00:57:29,502 --> 00:57:33,342
+So let me let me go back for a second. We've got these three repositories.
+
+450
+00:57:33,342 --> 00:57:37,872
+They all have similar ancestry, they have similar ancestry.
+
+451
+00:57:37,872 --> 00:57:45,822
+But and you can almost think of them as branches, like if you were using Git for this whole mechanism, like we're using individual repositories.
+
+452
+00:57:45,822 --> 00:57:53,622
+If you were doing if this was being managed with get, these would probably be individual branches off of like a shared ancestry,
+
+453
+00:57:53,622 --> 00:58:01,902
+and these would be long lived branches that will periodically merge into from the central branch or the main branch.
+
+454
+00:58:01,902 --> 00:58:11,622
+That's what we call like. You can think of Central as like main that is the equivalent or main or what used to be called master.
+
+455
+00:58:11,622 --> 00:58:21,942
+So every four weeks, whatever is in beta that is not already in release is merged over to release.
+
+456
+00:58:21,942 --> 00:58:30,942
+Similarly, every four weeks after that merge occurs, everything that's not in beta that's in central is merged into beta.
+
+457
+00:58:30,942 --> 00:58:37,452
+So that's what we mean by the trains running of trains leaving the station beta merge is to release,
+
+458
+00:58:37,452 --> 00:58:42,912
+and then Central Merge is to beta, and then the version numbers are also incremented.
+
+459
+00:58:42,912 --> 00:58:50,522
+So if this was 93 before then after after the merge occurs.
+
+460
+00:58:50,522 --> 00:58:57,122
+If this was 93, then the train leaves the station boop boop boop boop boop boop boop boop boop choo choo air,
+
+461
+00:58:57,122 --> 00:59:06,842
+let's put the train choo choo train leaves the station and the version number gets bumped to ninety four after this merge occurs,
+
+462
+00:59:06,842 --> 00:59:13,112
+and that's what eventually goes out to users. Now we do a release candidate. If the stuff's like our QA,
+
+463
+00:59:13,112 --> 00:59:17,462
+people do like a really close look at the bill and we make sure that it's it's
+
+464
+00:59:17,462 --> 00:59:21,962
+up to our standards that we pass a bunch of like automated and manual testing.
+
+465
+00:59:21,962 --> 00:59:28,142
+And then we start doing a slow rollout to our released population. And then same thing.
+
+466
+00:59:28,142 --> 00:59:32,342
+There's a train that leaves from central. Um.
+
+467
+00:59:32,342 --> 00:59:37,712
+Sorry, the train's gone the other way here. Uh choo choo, it's going this way.
+
+468
+00:59:37,712 --> 00:59:43,412
+Trains go on this way and this is for everything from Central goes to Bayda.
+
+469
+00:59:43,412 --> 00:59:51,212
+And the reason why we have this beta channel like this is for what we call stabilization or bake time.
+
+470
+00:59:51,212 --> 00:59:55,892
+That's another term for it where fewer changes are allowed to land in beta.
+
+471
+00:59:55,892 --> 01:00:00,122
+After this uplift occurs, this merge or uplift is what we call it.
+
+472
+01:00:00,122 --> 01:00:07,682
+Then there's four weeks of bake time where changes that land in beta, there's a much higher bar to land changes in there.
+
+473
+01:00:07,682 --> 01:00:13,832
+So if, for example, we find out that there's something that's crashing in beta, we'll find the regression.
+
+474
+01:00:13,832 --> 01:00:18,452
+We'll just back it out and we'll fix beta up and we've got four weeks to get it in good shape.
+
+475
+01:00:18,452 --> 01:00:22,562
+But we won't land like new features in beta. We're really discouraged from doing it.
+
+476
+01:00:22,562 --> 01:00:29,192
+The bar is very high because that four weeks of time is for finding bugs and turning stuff off if things are not
+
+477
+01:00:29,192 --> 01:00:37,502
+ready and and repairing any sort of cruft like central is where you can do a little more experimental stuff.
+
+478
+01:00:37,502 --> 01:00:42,362
+Maybe, you know, half baked stuff, stuff that's kind of like half on, half off.
+
+479
+01:00:42,362 --> 01:00:48,902
+You do your development there, but as soon as it's in beta and it's on, you are exposed to like an order of magnitude more users.
+
+480
+01:00:48,902 --> 01:00:55,172
+And, you know, lots of people are going to be testing it and it better be ready and it better be
+
+481
+01:00:55,172 --> 01:00:58,682
+more reflective of what's going into release because that's what Beta is for,
+
+482
+01:00:58,682 --> 01:01:03,992
+is for giving what's eventually going to release some solid testing by real users.
+
+483
+01:01:03,992 --> 01:01:10,232
+And we look at the telemetry data and we look at the crash reporting to make sure that, you know, we haven't somehow regressed to performance.
+
+484
+01:01:10,232 --> 01:01:14,532
+We haven't somehow regressed stability. And we look at Bugzilla very closely.
+
+485
+01:01:14,532 --> 01:01:20,972
+We also look at our social media and support channel sumo ideas down the toilet at org Twitter, Facebook,
+
+486
+01:01:20,972 --> 01:01:28,082
+like all the channels are watch to see like, OK, our our beta users experiencing any pain, maybe stuff that we didn't realize.
+
+487
+01:01:28,082 --> 01:01:30,182
+And we look at Bugzilla in coming bugs, that sort of thing.
+
+488
+01:01:30,182 --> 01:01:38,282
+But there is a there is a sort of a relationship between the distance you go from central to release and the number of bugs that come in because
+
+489
+01:01:38,282 --> 01:01:46,892
+users on beta and release are lesser like let you get as you get closer to least the users are less likely to come to Bugzilla to file bugs.
+
+490
+01:01:46,892 --> 01:01:54,482
+Bugzilla is a place that nightly users tend to be comfortable going to because you're dealing with people who are comfortable running.
+
+491
+01:01:54,482 --> 01:02:02,012
+Bleeding edge software that might break on them and they're more comfortable reporting bugs like you tend to have a lot of enthusiasts who are,
+
+492
+01:02:02,012 --> 01:02:05,372
+who are, you know, comfortable using Bugzilla, whereas on release,
+
+493
+01:02:05,372 --> 01:02:10,112
+that's that's less likely that population is a little more like, Hey, I'm just trying to use my browser here.
+
+494
+01:02:10,112 --> 01:02:15,002
+I don't want to use your weird bug tracker. Why? Like, just fix the bug?
+
+495
+01:02:15,002 --> 01:02:22,382
+Like, that's that's to them. That's generally how it goes. That's the relationship I've observed anyways.
+
+496
+01:02:22,382 --> 01:02:27,632
+And that's not to say that release is perfect periodically will realize that something slipped into release that shouldn't of,
+
+497
+01:02:27,632 --> 01:02:33,092
+you know, we recently had one. We're like old versions of Mac OS.
+
+498
+01:02:33,092 --> 01:02:37,142
+There was like a problem with old versions really like old unsupported versions of Mac OS,
+
+499
+01:02:37,142 --> 01:02:44,852
+and we didn't know because all know no one's running on an unsupported versions of Mac OS in our development teams are in Kuwait,
+
+500
+01:02:44,852 --> 01:02:49,262
+so we didn't know until we heard about it in some of our various support channels.
+
+501
+01:02:49,262 --> 01:02:54,272
+And so we had to issue what's called a dot release. And that's whenever we we land.
+
+502
+01:02:54,272 --> 01:02:56,372
+We we crash, not crash land.
+
+503
+01:02:56,372 --> 01:03:06,912
+We apply a patch to the release repository and spin out a 94.0 one or 94 dot 0.2, depending on how many dot releases happen.
+
+504
+01:03:06,912 --> 01:03:15,482
+And we try not to do too many DOT releases. There's maybe one one or two if there are three or more like something's kind of gone wrong here,
+
+505
+01:03:15,482 --> 01:03:21,662
+but usually there's like one or two, you know, stuff that somehow snuck through.
+
+506
+01:03:21,662 --> 01:03:26,432
+And that's, you know, we did. We detect those things by doing a slow rollout.
+
+507
+01:03:26,432 --> 01:03:31,502
+You know, we do a slow rollout on release. We hear problems. Walsh will halt the rollout for a second,
+
+508
+01:03:31,502 --> 01:03:40,502
+put together the DOT release and then ship the DOT release and then continue the rollout and let everyone get to it.
+
+509
+01:03:40,502 --> 01:03:49,112
+And when the DOT release happens, sometimes we'll use that opportunity to also uplift changes that are low risk that can ride along in.
+
+510
+01:03:49,112 --> 01:03:56,612
+If we're already doing a build, maybe we can do some Ride-Along changes that make like offer some improvements for things that,
+
+511
+01:03:56,612 --> 01:04:00,842
+you know, we feel safe doing that sort of thing.
+
+512
+01:04:00,842 --> 01:04:06,062
+So I think that's all I have to say there. So, yeah, release every four weeks.
+
+513
+01:04:06,062 --> 01:04:11,102
+New releases cut a new major releases cut, and maybe within that time there'll be some dot releases.
+
+514
+01:04:11,102 --> 01:04:19,682
+I believe beta there is like two a week, two per week, two betas per week are cut, something like that.
+
+515
+01:04:19,682 --> 01:04:31,442
+So two builds per week. And then on nightly, it's two per day. And there used to be an intermediary channel called Aurora between central and beta.
+
+516
+01:04:31,442 --> 01:04:38,162
+And that meant that there was an extra I mean, it used to be six weeks instead of four weeks that used to be six weeks of time.
+
+517
+01:04:38,162 --> 01:04:42,092
+And even then, that was pretty radical, like, wow, six weeks of time and we had the Aurora channel.
+
+518
+01:04:42,092 --> 01:04:45,872
+So is it from nightly to Aurora was six weeks.
+
+519
+01:04:45,872 --> 01:04:49,682
+Then from Aurora, the beta was six weeks and then from Beta two release was six weeks.
+
+520
+01:04:49,682 --> 01:04:58,832
+So all told, you had like presuming you had a patch land on the very first day that of a of the nightly cycle of a new release cycle.
+
+521
+01:04:58,832 --> 01:05:03,752
+It would take six, 12, 18 weeks to finally hit release.
+
+522
+01:05:03,752 --> 01:05:07,202
+And nowadays, if you hit the beginning of a cycle, you've got four eight weeks.
+
+523
+01:05:07,202 --> 01:05:13,322
+You've basically we've cut it in half eight weeks from landing on the first day of a cycle to being out to release,
+
+524
+01:05:13,322 --> 01:05:20,852
+presuming, you know, modulo holidays because like these are, these are guidelines these four weeks and like periodically,
+
+525
+01:05:20,852 --> 01:05:27,752
+especially around the winter holidays, some of the dates might get stretched or contracted, you know,
+
+526
+01:05:27,752 --> 01:05:33,302
+especially if the week the release week happens to fall on like a public holiday, then we'll bump it by a day.
+
+527
+01:05:33,302 --> 01:05:34,832
+Or if it's in the winter holidays,
+
+528
+01:05:34,832 --> 01:05:40,262
+we might move it by a week or if it's during like a really busy time for like an all hands when we'd all get together,
+
+529
+01:05:40,262 --> 01:05:50,402
+when we could do that and we might move it by a week or something. So that's how patches get, get landed and go out to release.
+
+530
+01:05:50,402 --> 01:05:53,432
+Now there's some, some other stuff that I didn't talk about.
+
+531
+01:05:53,432 --> 01:06:00,362
+I mean, to talk about one more thing and that's called Try, Try is another fork of the repository.
+
+532
+01:06:00,362 --> 01:06:10,112
+And what this is supposed to do is to make it easier to like land patches without or not land patches.
+
+533
+01:06:10,112 --> 01:06:17,222
+It's to make it possible for you to experiment with patches and see if they'd pass continuous integration were it to land on auto land.
+
+534
+01:06:17,222 --> 01:06:22,832
+So if you're not sure, for example, if your patch is going to work on Mac OS and you don't have a Mac OS machine around,
+
+535
+01:06:22,832 --> 01:06:27,902
+or if you don't have a Windows machine around or you don't want to run the whole suite of tests yourself or something,
+
+536
+01:06:27,902 --> 01:06:35,012
+you can push your patch to try and it will run continuous integration on the patch.
+
+537
+01:06:35,012 --> 01:06:40,262
+But it won't go out to central. It's just kind of like this dumping ground of patches to try stuff out.
+
+538
+01:06:40,262 --> 01:06:52,472
+You can follow along to see what people are, are landing and try. It's usually pretty interesting stuff like, Um yeah, people are just, oh,
+
+539
+01:06:52,472 --> 01:06:58,172
+what's also really interesting is try is used to do glinting by the fabricator stuff.
+
+540
+01:06:58,172 --> 01:07:03,452
+So like periodically you'll see you'll see like lifting stuff happening here.
+
+541
+01:07:03,452 --> 01:07:09,392
+It's pretty neat. I think that's all I want to say about patches we've talked about.
+
+542
+01:07:09,392 --> 01:07:13,532
+Try. We've talked about fabricator Mozilla Unified Central, a beta release.
+
+543
+01:07:13,532 --> 01:07:18,152
+Lando. Yep. Uh oh I.
+
+544
+01:07:18,152 --> 01:07:22,982
+I'm sorry. I wasn't sharing my screen when I talked about that. Let me go back to my screen.
+
+545
+01:07:22,982 --> 01:07:27,512
+Yeah, this is try. And you can see that there's like a bunch of stuff landing and try.
+
+546
+01:07:27,512 --> 01:07:28,952
+You can check that out.
+
+547
+01:07:28,952 --> 01:07:40,082
+But it's usually just a bunch of noise, just experimental stuff that like that, you know, might not ever see the light of day will land and try.
+
+548
+01:07:40,082 --> 01:07:44,072
+OK, what else do I want to do during the stream? We got like 20 minutes left.
+
+549
+01:07:44,072 --> 01:07:51,332
+There's another question here was how difficult was it for you to get a proper understanding of Mozilla tree herder in the beginning?
+
+550
+01:07:51,332 --> 01:07:56,222
+That still looks difficult for me with all the letters and numbers on the right. It was very difficult.
+
+551
+01:07:56,222 --> 01:08:07,952
+I remember being pretty intimidated by tree herder or the precursor to tree herder was actually called TVP Tinderbox Push Log.
+
+552
+01:08:07,952 --> 01:08:24,242
+And let me see if we can find a screenshot of what that looked like. Um, it looks had a similar UI to to tree herder, but even before that,
+
+553
+01:08:24,242 --> 01:08:31,382
+we had this thing called tinderbox and it was basically like a it was just tables.
+
+554
+01:08:31,382 --> 01:08:34,862
+It was a different representation. So let's this is very old school.
+
+555
+01:08:34,862 --> 01:08:45,122
+This is, I think, from back in the Netscape days we had this and what it would look like is like there'd be a push here.
+
+556
+01:08:45,122 --> 01:08:48,942
+Um, and then it would.
+
+557
+01:08:48,942 --> 01:08:55,362
+Try and represent to you the jobs that are currently running and like these are slices of time,
+
+558
+01:08:55,362 --> 01:09:01,282
+these rows are slices of time and time is progressing from like the past into the future.
+
+559
+01:09:01,282 --> 01:09:05,602
+So like her, like from the bottom up.
+
+560
+01:09:05,602 --> 01:09:10,992
+So the future is here or like, this is current. And as you go down, you're going further into the past.
+
+561
+01:09:10,992 --> 01:09:17,742
+So this job, for example, it's describing a job and it ended around here.
+
+562
+01:09:17,742 --> 01:09:25,122
+And like these jobs are ongoing, for example, and that ended up being really confusing.
+
+563
+01:09:25,122 --> 01:09:28,842
+Like, it was a very confusing sort of system.
+
+564
+01:09:28,842 --> 01:09:36,042
+Visually and tinderbox push log was developed as an alternative, and it was much more understandable.
+
+565
+01:09:36,042 --> 01:09:40,662
+And Tree Herder is the sort of official version of tinderbox push log.
+
+566
+01:09:40,662 --> 01:09:46,662
+And so understanding it is difficult because there's just so many things going on.
+
+567
+01:09:46,662 --> 01:09:54,522
+But once you get a sense of the the symbols because a lot of the issue is the fact that there are lot of short forms for things.
+
+568
+01:09:54,522 --> 01:09:58,632
+But the good news is that you can hover them with your mouse and get a better sense of what's going on,
+
+569
+01:09:58,632 --> 01:10:04,482
+and you can click on them and get maybe more of a description of what's happening.
+
+570
+01:10:04,482 --> 01:10:08,592
+So, for example, be one of the things I learned early on.
+
+571
+01:10:08,592 --> 01:10:12,462
+This was a convention from from tinderbox push log.
+
+572
+01:10:12,462 --> 01:10:17,622
+It's been maintained with tree herder is that B stands for a kind of a build,
+
+573
+01:10:17,622 --> 01:10:23,712
+a build job because like each of these items, each of the items listed in here is a kind of a job.
+
+574
+01:10:23,712 --> 01:10:28,242
+A job is a task that's being performed by a machine somewhere, you know,
+
+575
+01:10:28,242 --> 01:10:32,172
+maybe it's a bill job or it's running tasks or it's running glinting and they might not all
+
+576
+01:10:32,172 --> 01:10:36,702
+be running on the same machine like stuff can be passed around from machine to machine.
+
+577
+01:10:36,702 --> 01:10:44,772
+And, uh, it's organized by platform so you can see what platforms doing what.
+
+578
+01:10:44,772 --> 01:10:52,632
+And I think the color coding is also really important. Green means the job completed successfully.
+
+579
+01:10:52,632 --> 01:11:03,432
+Blue means the job failed and is being retried, and the failure can occur for any number of reasons like infrastructure problems periodically happens.
+
+580
+01:11:03,432 --> 01:11:13,362
+Red means red means the test like failed completely like something went horribly wrong, and orange means that the test is like a test fail.
+
+581
+01:11:13,362 --> 01:11:20,172
+Some kind of assertion failed, and black means that the job is underway.
+
+582
+01:11:20,172 --> 01:11:24,822
+It's currently in process in progress, and gray means that the task is queued.
+
+583
+01:11:24,822 --> 01:11:30,042
+A machine is not yet doing it, but it will soon do it. I believe that's the case.
+
+584
+01:11:30,042 --> 01:11:34,602
+Is that the case in progress? So I'm wrong. Gray means in progress.
+
+585
+01:11:34,602 --> 01:11:38,832
+Black means also in progress.
+
+586
+01:11:38,832 --> 01:11:43,332
+I don't know what the difference is between black and gray in this particular case.
+
+587
+01:11:43,332 --> 01:11:47,352
+One of the means like, Oh no, it's not yet started. Gray means not started.
+
+588
+01:11:47,352 --> 01:11:50,802
+Black means in progress, and you can see how long it's been running.
+
+589
+01:11:50,802 --> 01:11:58,572
+In this particular case, this job for running web render ref tests has been running for two minutes.
+
+590
+01:11:58,572 --> 01:12:01,782
+Technicalities that must be fun for colorblind folks.
+
+591
+01:12:01,782 --> 01:12:08,622
+Yeah, I I'm curious to know whether or not like the color choice could be made a little more accessible,
+
+592
+01:12:08,622 --> 01:12:11,562
+and I have no idea what this would be like with a screen reader,
+
+593
+01:12:11,562 --> 01:12:17,232
+like if I were a developer, you know, or a sheriff using tree her with a screen reader.
+
+594
+01:12:17,232 --> 01:12:26,592
+I don't have no idea how usable this is. It's hard enough being sighted and not at being color blind to, like, interpret all of this.
+
+595
+01:12:26,592 --> 01:12:35,022
+But if you had a screen reader, if you had a color blindness like I don't, I don't know how to how I'd make sense of it.
+
+596
+01:12:35,022 --> 01:12:44,622
+But the idea is that this gives you a sense of like what state the jobs are in and then each one of these rows represents a particular push.
+
+597
+01:12:44,622 --> 01:12:52,842
+So again, this is auto land. So this push was, you know, pushed by Amelio the patch here we can look at the patch.
+
+598
+01:12:52,842 --> 01:13:00,522
+If we want to pull it up, you know, we can see what it was like whenever it got merged into auto land by Lando.
+
+599
+01:13:00,522 --> 01:13:05,152
+This is what the patch looked like and then the commit message here.
+
+600
+01:13:05,152 --> 01:13:12,162
+It's got a link to the build. And even though it was Amelio who landed the patch, this is the name of the person who landed it.
+
+601
+01:13:12,162 --> 01:13:19,932
+This is the name of the author in this case, who was also Amelio. And then these are the individual jobs that were selected to run for it.
+
+602
+01:13:19,932 --> 01:13:27,702
+Because test cluster, which is the underlying infrastructure that tree herder is the UI for task cluster,
+
+603
+01:13:27,702 --> 01:13:32,412
+is smart enough to look at a patch and say, OK, I think we should run these jobs.
+
+604
+01:13:32,412 --> 01:13:37,812
+I think we should run those jobs, that sort of thing using like some very sophisticated machine learning stuff.
+
+605
+01:13:37,812 --> 01:13:42,462
+So that allows us to minimize the amount of machine time being spent, you know,
+
+606
+01:13:42,462 --> 01:13:48,962
+testing everything whenever you change some documentation somewhere, we don't have to run all of the tests or something because.
+
+607
+01:13:48,962 --> 01:13:57,152
+They wouldn't have been affected by a documentation change. I think that's all I have to say about tree herder.
+
+608
+01:13:57,152 --> 01:14:06,362
+It is complicated, but there is help. If you click on help, there's like a user guide you can like learn a lot about the like.
+
+609
+01:14:06,362 --> 01:14:09,602
+It's got a lot of, you know, interpretations for you,
+
+610
+01:14:09,602 --> 01:14:19,622
+notations for four things and examples log built in examples keyboard shortcuts, which I use all the time.
+
+611
+01:14:19,622 --> 01:14:30,632
+Um, let's see. Uh, Danny Korn says you can test it with the dev tools now.
+
+612
+01:14:30,632 --> 01:14:38,072
+I presume you mean the colorblindness stuff, and that's true. The accessibility dev tools allow us to see whether or not.
+
+613
+01:14:38,072 --> 01:14:50,212
+Let's simulate a kind of color. No green. Uh, I mean, so these come off as like a little bit.
+
+614
+01:14:50,212 --> 01:14:55,342
+They're still distinctive, they're bolded whenever they're completed. So that helps.
+
+615
+01:14:55,342 --> 01:15:07,552
+What about no color? Again, like the boldness helps, I think, distinguish between completed and not completed.
+
+616
+01:15:07,552 --> 01:15:12,592
+I don't. And like, I don't know if I'd be able to tell whether or not a job failed.
+
+617
+01:15:12,592 --> 01:15:18,412
+So thankfully there are like ways you can filter, so I can just see the failures.
+
+618
+01:15:18,412 --> 01:15:31,882
+So I take away the successes and just see the failures. Oh yeah, failures end up having the sort of box around them that helps, um, you know, blue.
+
+619
+01:15:31,882 --> 01:15:37,762
+So all in all, for colorblindness, it might not be that bad. I don't actually know.
+
+620
+01:15:37,762 --> 01:15:44,722
+You know, let me know, are you? If you are watching the stream and you have an an ability to see certain colors,
+
+621
+01:15:44,722 --> 01:15:55,962
+I'd be very curious to know whether or not treat you, find treated or usable or not.
+
+622
+01:15:55,962 --> 01:16:00,042
+Tendencia bears mentioning that like that's true every time you push to try,
+
+623
+01:16:00,042 --> 01:16:06,132
+you get an email telling you that your push has been submitted and the message it gives you is your tribe, which has been submitted.
+
+624
+01:16:06,132 --> 01:16:13,602
+It's the best. I agree. I like that that message that makes me very happy.
+
+625
+01:16:13,602 --> 01:16:17,442
+So that was the last question that came in about treater.
+
+626
+01:16:17,442 --> 01:16:22,572
+There was a question that asked me some information about like stocks and stuff.
+
+627
+01:16:22,572 --> 01:16:30,012
+I'm not going to answer that. So I've updated the I do not ask me for financial advice.
+
+628
+01:16:30,012 --> 01:16:37,032
+What I will tell you, though, is if you want to ask me questions, technical questions about Firefox or any Mozilla stuff,
+
+629
+01:16:37,032 --> 01:16:41,262
+you can let me know your questions by clicking on this link to rate the episode.
+
+630
+01:16:41,262 --> 01:16:45,972
+Fill in a bunch of it, but at the bottom there's a section there you can ask me a question,
+
+631
+01:16:45,972 --> 01:16:51,402
+and if it's a technical question about Firefox or Mozilla stuff, I'll do my best to answer it during the next stream.
+
+632
+01:16:51,402 --> 01:16:57,462
+I think I'm going to I'm going to cap the stream there. Hey, thank you so much for watching episode two hundred and seventy of the joy of coding.
+
+633
+01:16:57,462 --> 01:17:01,962
+I hope that was interesting and and I will see you next week.
+
+634
+01:17:01,962 --> 01:17:08,322
+So with that, take care. Bye bye.
+
+635
+01:17:08,322 --> 01:17:23,922
+The joy of coding. See it!
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

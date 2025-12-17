@@ -1,0 +1,3317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 272 - December 1, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 272 - December 1, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=45e52c4f-88a8-481d-94fd-adf001806b29</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=45e52c4f-88a8-481d-94fd-adf001806b29">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:06,305 --> 00:00:12,665
+Welcome. Through the joy of coding.
+
+2
+00:00:12,665 --> 00:00:17,735
+Hello, and welcome to episode two hundred and seventy two of the joy of coding.
+
+3
+00:00:17,735 --> 00:00:18,845
+My name is Mike Conley.
+
+4
+00:00:18,845 --> 00:00:25,445
+We're going to be looking at some Firefox stuff today, maybe trying to investigate some issues, answering some questions for people on Bugzilla.
+
+5
+00:00:25,445 --> 00:00:31,955
+It's going to be a great time. I'm so happy you're here. Let's get started. Let me just share my screen.
+
+6
+00:00:31,955 --> 00:00:35,615
+Whoops. Wrong screen. Here it is. Yeah, it's December 1st.
+
+7
+00:00:35,615 --> 00:00:45,605
+Happy December 1st, everybody. It's December 1st, 2021. Last month of the 2021's, yeah, almost through almost through.
+
+8
+00:00:45,605 --> 00:00:50,615
+It's been over a year now of streaming from home.
+
+9
+00:00:50,615 --> 00:00:55,505
+That's wild. When was the last time I streamed from the Toronto the Mozilla office?
+
+10
+00:00:55,505 --> 00:01:01,145
+Let's see if we can find the first episode where I mentioned that I was streaming from home.
+
+11
+00:01:01,145 --> 00:01:14,225
+Pandemic Edition November 18th, 2020 Pandemic Edition July 1st, 2020 Uh, I was talking with Matrix five year anniversary and then,
+
+12
+00:01:14,225 --> 00:01:22,285
+yeah, there was a big jump from February 26th to March 18th where I'm like, Hey, I guess I'm streaming from home.
+
+13
+00:01:22,285 --> 00:01:29,705
+On March 18th, 2020 was the first episode, episode 208 where I was streaming from home.
+
+14
+00:01:29,705 --> 00:01:37,175
+That's where we're coming in if we get to three hundred and eight episodes here of over almost 100 episodes.
+
+15
+00:01:37,175 --> 00:01:41,685
+I mean, let's do the math here 208 211 two minus two hundred and eight.
+
+16
+00:01:41,685 --> 00:01:48,095
+I can't do that in my head because I'm not very good at math, but I'm 64.
+
+17
+00:01:48,095 --> 00:01:51,455
+Yeah, just just shy of 65.
+
+18
+00:01:51,455 --> 00:02:04,265
+If we want to round that up to a multiple of five just under 65 episodes recorded here at home and hopefully we'll be back in the office soon.
+
+19
+00:02:04,265 --> 00:02:10,205
+OK. What are we doing today? Well, the first thing I want to mention for the folks who maybe have never seen the stream before.
+
+20
+00:02:10,205 --> 00:02:13,985
+Just so you're aware, no plan survives breakfast. I think I know what I want to do today.
+
+21
+00:02:13,985 --> 00:02:18,725
+I think I know what I want to look at and what I want to sort of poke at. But who knows what'll happen?
+
+22
+00:02:18,725 --> 00:02:23,075
+You know, none of the stuff I'm doing today. I've really pre rehearsed or reexamined.
+
+23
+00:02:23,075 --> 00:02:27,035
+I haven't gotten pre-written solutions for anything, so it might be a bumpy ride.
+
+24
+00:02:27,035 --> 00:02:32,105
+You know, we might be discovering stuff as we go. We might get blocked sidelined.
+
+25
+00:02:32,105 --> 00:02:38,015
+We might discover some stuff we might get, you know, we might get nowhere, who knows, but we'll do it together.
+
+26
+00:02:38,015 --> 00:02:44,015
+That's the first thing. The second thing is that this agenda that we're looking at is something that you have access to.
+
+27
+00:02:44,015 --> 00:02:51,935
+If you're watching this on air, Mozilla, check out the excuse me, check the.
+
+28
+00:02:51,935 --> 00:02:57,055
+Oh, wow. That's interesting.
+
+29
+00:02:57,055 --> 00:03:02,305
+I must have to have an ad blocker, I must have tracking protection enabled my bat.
+
+30
+00:03:02,305 --> 00:03:11,795
+Oh, I guess it's going to do a countdown if you are watching this on air, Mozilla, check out the video.
+
+31
+00:03:11,795 --> 00:03:19,775
+Putting this on YouTube, it's in the video description. And if you're watching this on Twitch, let me just drop it into the Twitch chat groups.
+
+32
+00:03:19,775 --> 00:03:26,585
+I I copied the wrong link. It's it's this one.
+
+33
+00:03:26,585 --> 00:03:32,495
+Two hundred and seventy two right here agenda.
+
+34
+00:03:32,495 --> 00:03:38,495
+There you go. So you can follow along. So what are we doing today?
+
+35
+00:03:38,495 --> 00:03:41,045
+Well, I have some neat infos that I didn't get to last week,
+
+36
+00:03:41,045 --> 00:03:45,125
+and I don't think I've been able to get to since then, so I figured we should get to them now.
+
+37
+00:03:45,125 --> 00:03:51,535
+You know, it's not a great idea to have these sorts of things lingering for so long, so let's see if we can get to them now.
+
+38
+00:03:51,535 --> 00:03:59,885
+Um, so the first one is Bug one five seven five three seven nine.
+
+39
+00:03:59,885 --> 00:04:01,925
+This is a neat intro from Barrett.
+
+40
+00:04:01,925 --> 00:04:11,615
+I actually filed this bug two years ago and it was about a mate about to make it possible to capture nano warm startup times using frame recording.
+
+41
+00:04:11,615 --> 00:04:18,395
+This is an idea that we'd had to make it easier for us to measure startup performance.
+
+42
+00:04:18,395 --> 00:04:25,505
+And I think I let me just check to see if this is a public document.
+
+43
+00:04:25,505 --> 00:04:32,795
+No, it is not a public document, but basically I had written up a description of how the testing procedure would work.
+
+44
+00:04:32,795 --> 00:04:40,055
+And basically, you have two machines, you have the testing device and the recording device and the recording device.
+
+45
+00:04:40,055 --> 00:04:44,975
+They were like communicate with one another in the recording device uses like an HDMI capture card.
+
+46
+00:04:44,975 --> 00:04:50,015
+And what we do is we send instructions to the testing device to restart itself.
+
+47
+00:04:50,015 --> 00:04:55,895
+Launch Firefox and we use the HDMI capture card to record video of that and we process the video frames.
+
+48
+00:04:55,895 --> 00:05:01,265
+So it's just sort of a that's not like a really novel testing idea or a testing strategy.
+
+49
+00:05:01,265 --> 00:05:09,275
+We've got similar things with browser browser performance for web page loading web pages.
+
+50
+00:05:09,275 --> 00:05:17,045
+We call that our browser time tests and those were actually pioneered, I think from folks that I think it might be Wikipedia.
+
+51
+00:05:17,045 --> 00:05:22,055
+Um, let me see Wikipedia browser time.
+
+52
+00:05:22,055 --> 00:05:31,005
+It's I would say speed. I o browser time. Where these are these Wikipedia people.
+
+53
+00:05:31,005 --> 00:05:35,775
+Browser time, collect performance metrics, handles everything.
+
+54
+00:05:35,775 --> 00:05:40,575
+Records of video and then calculates visual metrics using the video. Who worked on this?
+
+55
+00:05:40,575 --> 00:05:45,765
+I'm pretty sure speed, sight, speed, io.
+
+56
+00:05:45,765 --> 00:05:53,325
+Who is this? I thought that there was a relationship between this group and Wikipedia, but I could be wrong.
+
+57
+00:05:53,325 --> 00:06:03,805
+Sites speed dot io. Who are these people?
+
+58
+00:06:03,805 --> 00:06:07,645
+It's a cost contributor. Who are these people?
+
+59
+00:06:07,645 --> 00:06:15,735
+About us? OK, so, oh, I work in the performance team on Wikimedia.
+
+60
+00:06:15,735 --> 00:06:20,295
+That's right. One of them, one of the the team members, works at Wikimedia.
+
+61
+00:06:20,295 --> 00:06:26,505
+That's the relationship there. OK. OK. Anyways, so I had written that whole thing up.
+
+62
+00:06:26,505 --> 00:06:35,865
+Yeah. Hello. Sure. Shaq, 55. And you know, the browser time sites speed stuff is good for instrumenting, you know, web pages.
+
+63
+00:06:35,865 --> 00:06:45,375
+But it's not so good for launching of an executable on an operating system like windows and recording when the actual browser executable is ready.
+
+64
+00:06:45,375 --> 00:06:52,365
+We were able to adapt some of the mechanisms for that and capture similar visual metrics,
+
+65
+00:06:52,365 --> 00:07:01,785
+but it required some pretty heroic efforts from Barrett to write a harness that allows us to like launch the browser,
+
+66
+00:07:01,785 --> 00:07:07,185
+restart a machine, wait for the machine to be in a steady state.
+
+67
+00:07:07,185 --> 00:07:13,275
+These are not in the correct order and then capture the video and then record the visual metrics using that video.
+
+68
+00:07:13,275 --> 00:07:18,465
+And so Baird's question here is, unless I'm mistaken, I think this work has already done the wasteland for effects record.
+
+69
+00:07:18,465 --> 00:07:23,925
+I think the dependencies for this bug are backwards. And yeah, I agree.
+
+70
+00:07:23,925 --> 00:07:32,295
+I agree this is done. This is done. This is now fixed.
+
+71
+00:07:32,295 --> 00:07:41,625
+So it shouldn't. I shouldn't have waited so long, but the dependencies, maybe we should.
+
+72
+00:07:41,625 --> 00:07:56,765
+Uh, what was this right? A frame recording to capture? I think what I'm going to do is I'm going to do this.
+
+73
+00:07:56,765 --> 00:08:04,245
+Make it possible depends on this. Very cold start scenarios.
+
+74
+00:08:04,245 --> 00:08:08,865
+What was the original bug to make it possible to recapture startup times using frame recording?
+
+75
+00:08:08,865 --> 00:08:21,255
+Well, that was done and that is dependent on this.
+
+76
+00:08:21,255 --> 00:08:36,725
+Which is. Task for running the startup disk or hardware harness worker pool, it blocks doing this.
+
+77
+00:08:36,725 --> 00:08:43,865
+And I think, yeah, this actually it's the other way around, I think Barrett's right,
+
+78
+00:08:43,865 --> 00:08:51,995
+like the relationship is different, so it doesn't actually depend on this.
+
+79
+00:08:51,995 --> 00:09:05,765
+It blocks this. Correct. All right.
+
+80
+00:09:05,765 --> 00:09:15,635
+OK, so that's one neat info that was easy. Next one was the search box moves left and right every time you type, every type, every you type.
+
+81
+00:09:15,635 --> 00:09:25,445
+So set, oh, this is this might require our Windows a Windows machine open preferences type something example, as you see.
+
+82
+00:09:25,445 --> 00:09:36,565
+Oh, there's a screen cast. Let's watch the screen cast together and see if we can see what Alice is talking about it.
+
+83
+00:09:36,565 --> 00:09:43,845
+Oh. Oh, that's interesting.
+
+84
+00:09:43,845 --> 00:09:55,955
+Let's do that again. I guess by hiding and showing things were changing the width, Wolf.
+
+85
+00:09:55,955 --> 00:10:01,875
+All right. It appears to be private rather than listed should be viewable.
+
+86
+00:10:01,875 --> 00:10:06,965
+Yeah. At its heart, the issues involved are the position of the search box depends on the width of the content area containing the press,
+
+87
+00:10:06,965 --> 00:10:09,995
+the search box contents control, which of the items in that area are visible.
+
+88
+00:10:09,995 --> 00:10:15,275
+Some of those items are wider than others and have content or text that either never wraps or isn't correctly set up to wrap.
+
+89
+00:10:15,275 --> 00:10:19,715
+We use pixel width for the width of the content area, and that pixel width is not enforced.
+
+90
+00:10:19,715 --> 00:10:23,555
+So in general, I see this happening with the network settings.
+
+91
+00:10:23,555 --> 00:10:32,345
+All of this content is forced to be horizontally adjacent to learn more link can't wrap, and as a result, this ends up a significant minimum width.
+
+92
+00:10:32,345 --> 00:10:36,095
+I just spilled Coke all over myself. Great stain my shirt.
+
+93
+00:10:36,095 --> 00:10:42,815
+More in a white shirt should have realized this cans fuller than I thought.
+
+94
+00:10:42,815 --> 00:10:51,665
+I will have to get that out later. Using bleach. So it's worse.
+
+95
+00:10:51,665 --> 00:10:56,915
+Yeah, this will be dependent on the strings being used in so different locales.
+
+96
+00:10:56,915 --> 00:11:02,435
+Mitigations stop having the alignment of the search box using calc.
+
+97
+00:11:02,435 --> 00:11:07,535
+This and resolve that with to a fixed value immediately after page load.
+
+98
+00:11:07,535 --> 00:11:11,615
+The downside It might not align with the content of the search for content ends up wider.
+
+99
+00:11:11,615 --> 00:11:16,955
+Upside should be fairly straightforward. Enforce the kind of pain with is fixed.
+
+100
+00:11:16,955 --> 00:11:21,515
+Even if some elements are wider, yeah, that does feel like a rather fragile fix.
+
+101
+00:11:21,515 --> 00:11:27,185
+Elements that don't wrap colors, they do wrap quickly or use em. So the weather, the kind of paints which they adjust to a higher windows.
+
+102
+00:11:27,185 --> 00:11:34,655
+Text size. Three and four of the most attractive as the right solution for what's happening here,
+
+103
+00:11:34,655 --> 00:11:39,695
+fix items don't wrap correctly in three would solve some other issues have done right.
+
+104
+00:11:39,695 --> 00:11:47,285
+Here's a checkbox they will learn more than that behaves correctly component, especially three would also probably demand some significant investment.
+
+105
+00:11:47,285 --> 00:11:56,165
+One is because a quick fix doesn't contaminate. The code would fix the jittering, but doesn't address some of the longer term tech that here.
+
+106
+00:11:56,165 --> 00:12:11,935
+What do I think we should do? Now, there's some discussion about Pepsi, Cristal or Sprite, maybe that maybe would have been better,
+
+107
+00:12:11,935 --> 00:12:20,095
+wouldn't have stained it, would have just been a sugary mess. So what are the what is the right solution here?
+
+108
+00:12:20,095 --> 00:12:26,365
+Well, I mean, it's immediately bad, like it's just it's just a bad experience right now,
+
+109
+00:12:26,365 --> 00:12:31,555
+and especially because the search box is one of the first things that you see on the page.
+
+110
+00:12:31,555 --> 00:12:35,935
+And it's so inviting. And it's probably a tool that people use.
+
+111
+00:12:35,935 --> 00:12:41,395
+And at least in this particular case, like the experience is pretty rough with it moving around.
+
+112
+00:12:41,395 --> 00:12:48,175
+So I actually think here are my thoughts. Let me write down my thoughts.
+
+113
+00:12:48,175 --> 00:13:04,805
+I think we should start with one and file a separate bug to do three and perhaps make that a mentored issue.
+
+114
+00:13:04,805 --> 00:13:16,545
+I'm only advocating for one, because it's an immediately bad experience.
+
+115
+00:13:16,545 --> 00:13:28,305
+It's not immediately, but like a pretty bad experience for a piece of UI that's exposed really early on,
+
+116
+00:13:28,305 --> 00:13:40,335
+exposed right at the top, rather right at the top of about preferences. If we can wallpaper this over now.
+
+117
+00:13:40,335 --> 00:13:52,675
+And get a bug on file to pay down that tech that maybe we'll get a shot someday, get a shot.
+
+118
+00:13:52,675 --> 00:14:02,605
+To either pay it down or mentor someone to help us pay it down.
+
+119
+00:14:02,605 --> 00:14:09,155
+OK, that's my thought. All right.
+
+120
+00:14:09,155 --> 00:14:16,085
+Next up, PIP Twitter video stops for an original video is scrolled out of view.
+
+121
+00:14:16,085 --> 00:14:23,315
+Yeah, that's true. That is true. Hmm. So the reason for this?
+
+122
+00:14:23,315 --> 00:14:26,855
+So, for example, navigate to this tweet.
+
+123
+00:14:26,855 --> 00:14:32,435
+Hopefully this is safe for work. Sure. Some kind of present pop out the video.
+
+124
+00:14:32,435 --> 00:14:36,935
+OK, so I'm going to I'm going to mute this Joe Biden on the view.
+
+125
+00:14:36,935 --> 00:14:42,005
+I'm going to mute this by going to pop out the video and then what's the next step?
+
+126
+00:14:42,005 --> 00:14:50,405
+Scroll down past video in the timeline. OK, so we scroll down past the video and the video pauses, right?
+
+127
+00:14:50,405 --> 00:14:59,105
+The video pauses when the original video scrolled out of view, and there was some discussion about this chromed also has the same issue that is true.
+
+128
+00:14:59,105 --> 00:15:03,815
+Any any picture in picture implementation I'm aware of is going to have that same issue.
+
+129
+00:15:03,815 --> 00:15:08,705
+The reason for it is because I believe Twitter is using the intersection observer to notice
+
+130
+00:15:08,705 --> 00:15:17,555
+whenever a video is out of frame and then it is pausing the video as an optimization,
+
+131
+00:15:17,555 --> 00:15:24,805
+I guess. Um, so presumably this is happening because Twitter's pause in the original video and fixing this would require either
+
+132
+00:15:24,805 --> 00:15:30,515
+over overwriting the decision from the website to pause the video or cloning the video into our own element.
+
+133
+00:15:30,515 --> 00:15:37,715
+Transferring picture in picture that video and continuing to play it in that crown, but doing that without any interruption to the video.
+
+134
+00:15:37,715 --> 00:15:45,545
+And that does sound difficult. We'd also have to make sure that if an explicit user interaction triggered the pause, we'd still honor that pause.
+
+135
+00:15:45,545 --> 00:15:47,855
+I actually think it depends. Scroll a little bit in a pause, scroll it further.
+
+136
+00:15:47,855 --> 00:15:51,005
+And eventually the player closes, probably close the video that was removed from the Dom.
+
+137
+00:15:51,005 --> 00:15:56,555
+There might be something clever we could do where if something attempts to remove the video from the downloads being closed visually,
+
+138
+00:15:56,555 --> 00:16:00,035
+you put it into some kind of special domain where it still exists in memory, but isn't in the page more.
+
+139
+00:16:00,035 --> 00:16:04,745
+But I suspect this might break expectations for a site that reintroduces a video back into the Dom afterwards,
+
+140
+00:16:04,745 --> 00:16:10,205
+as it would probably expect the video to have to be fully unbound.
+
+141
+00:16:10,205 --> 00:16:14,255
+The pause thing also sounds like it'd be brittle. I don't have a great solution to this.
+
+142
+00:16:14,255 --> 00:16:19,115
+And then one of our product managers recently commented out of sight, out of mind.
+
+143
+00:16:19,115 --> 00:16:22,445
+This is very unpleasant, but it sounds like there's no reasonable workaround for it.
+
+144
+00:16:22,445 --> 00:16:26,555
+Chrome Opera and Vivaldi disable their Pippin feeds, which seems somewhat extreme to me.
+
+145
+00:16:26,555 --> 00:16:32,405
+However, on Twitter, there's a way to recover from this behavior. Stop scrolling if PIP window is still visible, press play in the video continues.
+
+146
+00:16:32,405 --> 00:16:39,755
+Is that true? Let's find out. So this scroll pauses hit play and it continues.
+
+147
+00:16:39,755 --> 00:16:48,125
+Makes sense. Makes sense. Because, yeah, the Twitter is just pausing the video.
+
+148
+00:16:48,125 --> 00:16:54,345
+Wait. Right.
+
+149
+00:16:54,345 --> 00:17:01,545
+However, on Twitter, there's way to recover, yeah, a user can then reopen the feed in Facebook, the experience is much more disruptive.
+
+150
+00:17:01,545 --> 00:17:06,435
+So here's OK, I don't have a Facebook account, so I can't actually follow this,
+
+151
+00:17:06,435 --> 00:17:11,535
+but log in with a Facebook account launch picture in picture to some VIDEO Continue scrolling!
+
+152
+00:17:11,535 --> 00:17:14,895
+The video pauses. It does not disappear with further scrolling.
+
+153
+00:17:14,895 --> 00:17:20,355
+If you stop scrolling and press play, the video plays for a fraction of a second and then pauses again.
+
+154
+00:17:20,355 --> 00:17:28,805
+I feel like the expected result here would be video continues playing until the sauce is scrolled out of view.
+
+155
+00:17:28,805 --> 00:17:36,135
+Continuous launch video pauses does not disappear with further scrolling.
+
+156
+00:17:36,135 --> 00:17:41,875
+Video continues playing until the sauce is scrolled out of view. We previously discussed this a bit,
+
+157
+00:17:41,875 --> 00:17:47,635
+I'm not sure if anything has changed out of the work to keep the video alive of the tab is closed would help with some of this.
+
+158
+00:17:47,635 --> 00:17:54,625
+Pausing would could be fixable, though, as Mike says, brittle, but removing it is the harder bit to fix.
+
+159
+00:17:54,625 --> 00:18:07,015
+OK, so let's see. What are ideas here to judge it was appropriate.
+
+160
+00:18:07,015 --> 00:18:11,245
+Hang on, let me. It's not. Listen to this video.
+
+161
+00:18:11,245 --> 00:18:19,355
+OK, so there is a video here. Let me get at the video, where is the video?
+
+162
+00:18:19,355 --> 00:18:30,075
+Mean, get the video. Her.
+
+163
+00:18:30,075 --> 00:18:35,535
+Query selector VIDEO Are you there? No, come on.
+
+164
+00:18:35,535 --> 00:18:40,155
+How about in there? There you are.
+
+165
+00:18:40,155 --> 00:18:43,815
+Plays in line, disabled picture in picture.
+
+166
+00:18:43,815 --> 00:18:49,155
+So that, yeah, they Twitter is actually choosing to disable picture in picture,
+
+167
+00:18:49,155 --> 00:18:58,055
+which we are not paying attention to because we don't implement the spec. Purposely.
+
+168
+00:18:58,055 --> 00:19:11,695
+And let's see here. I'll respond.
+
+169
+00:19:11,695 --> 00:19:25,375
+This is actually these browsers aren't allowing for PIP because Twitter has put disabled picture in picture.
+
+170
+00:19:25,375 --> 00:19:33,505
+Equals true on the video.
+
+171
+00:19:33,505 --> 00:19:46,465
+We intentionally do not support that or any part of the picture in picture web API specification.
+
+172
+00:19:46,465 --> 00:19:54,655
+See, there was a disabled picture in picture. Yeah, this bug.
+
+173
+00:19:54,655 --> 00:20:02,965
+For more context, let's see uh.
+
+174
+00:20:02,965 --> 00:20:10,465
+So what could we do instead? Well, we have this video here revealed in the inspector.
+
+175
+00:20:10,465 --> 00:20:38,175
+What do we have for events? It looks like they're monitoring it for picture in picture events anyways, which is really interesting.
+
+176
+00:20:38,175 --> 00:20:51,165
+I'll bet you there's an intersection observer. Let's see.
+
+177
+00:20:51,165 --> 00:20:57,105
+Is it playing if you have so Smurf, Diaz, is it playing, if you have it in the feed and scroll below it?
+
+178
+00:20:57,105 --> 00:21:01,675
+If you have it in the feed? And scroll below it.
+
+179
+00:21:01,675 --> 00:21:07,345
+Yes, yes, it will pause the video, yeah. Like the site will pause the video.
+
+180
+00:21:07,345 --> 00:21:25,765
+So if I scroll down here and scroll back, it's paused it. Let me think here what we could do, so a few thoughts.
+
+181
+00:21:25,765 --> 00:21:34,925
+I honestly can't think of a great way to solve this.
+
+182
+00:21:34,925 --> 00:21:49,845
+Unless we. Fully detach the video stream from the video element.
+
+183
+00:21:49,845 --> 00:21:56,475
+Yeah, it's basically what Heise is saying, like a clone of the video in her own element,
+
+184
+00:21:56,475 --> 00:22:01,575
+transferring PIP to that video continue to play it in that clone of doing that without any interruption of the video.
+
+185
+00:22:01,575 --> 00:22:08,505
+And then if the user like it touches these controls while in that state we'd still have to like honor them,
+
+186
+00:22:08,505 --> 00:22:14,835
+we'd have to know that the user is attempting to manipulate this video despite having,
+
+187
+00:22:14,835 --> 00:22:18,555
+like, pulled it out into our own like video element under the hood.
+
+188
+00:22:18,555 --> 00:22:27,615
+It's tricky problem. It's a tricky problem. Yeah, certainly says I do think users should have more control over Twitter.
+
+189
+00:22:27,615 --> 00:22:34,435
+Yeah, it's a matter of trying to figure out how to grant that control without breaking the web.
+
+190
+00:22:34,435 --> 00:22:58,965
+Um, let me think here. We think.
+
+191
+00:22:58,965 --> 00:23:10,385
+So my original thought was like, well, maybe we disqualify the video from.
+
+192
+00:23:10,385 --> 00:23:25,175
+From Intersection Observer. Here's an idea.
+
+193
+00:23:25,175 --> 00:23:45,345
+What if when a video is in picture in picture? We override the play and pause methods on the video so that we only abide.
+
+194
+00:23:45,345 --> 00:23:56,965
+We don't we don't respond to them programmatically. We only respond to them like unless the user has.
+
+195
+00:23:56,965 --> 00:24:12,095
+It's we're responding to a user input event. I wonder how easy it would be to prototype that.
+
+196
+00:24:12,095 --> 00:24:27,015
+Uh, let me see what I've got to have a debug build, what do I have for a bill locally?
+
+197
+00:24:27,015 --> 00:24:36,195
+Hmm. So I don't think I've got a an opt build lying around.
+
+198
+00:24:36,195 --> 00:24:40,815
+It's not a recent one, but maybe we can mess with video controls a little bit.
+
+199
+00:24:40,815 --> 00:24:44,955
+Video controls is the basically it's our binding.
+
+200
+00:24:44,955 --> 00:24:57,045
+Are you a user agent binding to the video elements? And what what Twitter is using is actually called the no controls widget.
+
+201
+00:24:57,045 --> 00:25:23,465
+Um? Which doesn't show much, but it can still show error messages and whatnot, and I wonder if there's a way for us to hook.
+
+202
+00:25:23,465 --> 00:25:35,055
+What controls do we have over each HTML video elements?
+
+203
+00:25:35,055 --> 00:25:37,605
+So this is what we're looking at here is called a Web video file,
+
+204
+00:25:37,605 --> 00:25:47,415
+it describes the user interface of a video element in some of these things are like what we call chrome only,
+
+205
+00:25:47,415 --> 00:25:59,655
+meaning privileged code only or only function whenever a certain preface flipped or something like this one,
+
+206
+00:25:59,655 --> 00:26:17,845
+which is used to actually do the picture in picture stuff. OK.
+
+207
+00:26:17,845 --> 00:26:25,495
+How about the media element, because I know that video implements this as well.
+
+208
+00:26:25,495 --> 00:26:37,285
+It's a is also a media element.
+
+209
+00:26:37,285 --> 00:26:45,085
+Paused so something can call play and something can call pause, and those things can.
+
+210
+00:26:45,085 --> 00:26:58,625
+Those things can like. Pausing can throw.
+
+211
+00:26:58,625 --> 00:27:09,915
+Hmm. So here's what we could do.
+
+212
+00:27:09,915 --> 00:27:19,775
+Pause in East Timor media element.
+
+213
+00:27:19,775 --> 00:27:25,415
+I do think is maybe Twitter shouldn't even know if the video is in PIP mode or that violates spec.
+
+214
+00:27:25,415 --> 00:27:32,265
+Twitter doesn't know. Twitter does not know in Firefox, at least in the other browsers, that it prevents like it.
+
+215
+00:27:32,265 --> 00:27:40,955
+So I want to be very clear here. Firefox does not implement the picture in picture specification that Google has put together for the week.
+
+216
+00:27:40,955 --> 00:27:50,645
+It does not implement any part of it. And so you know that disable picture in picture attribute doesn't affect Firefox.
+
+217
+00:27:50,645 --> 00:27:55,205
+Picture in picture, and Firefox is a browser feature. There's a distinct difference.
+
+218
+00:27:55,205 --> 00:27:59,885
+And the other thing is that sites don't know whenever we're using Firefox as picture in picture.
+
+219
+00:27:59,885 --> 00:28:06,125
+We don't tell them we don't fire an event for them. We don't call any callbacks. It is like it's the same thing that they don't know.
+
+220
+00:28:06,125 --> 00:28:13,625
+Whenever you open up your URL bar because it's a browser feature, it's not a web feature, it's a browser feature we developed.
+
+221
+00:28:13,625 --> 00:28:20,105
+And so they don't know if users, if users are using PIP mode, except in the other browsers.
+
+222
+00:28:20,105 --> 00:28:32,555
+So in Chrome based browsers, so Chrome based browsers and WebKit, a callback is fired whenever you attempt to enter a picture in picture.
+
+223
+00:28:32,555 --> 00:28:37,955
+And I think, uh, you know, that allows the site to do to do various things.
+
+224
+00:28:37,955 --> 00:28:42,695
+It could, for example, pause the video.
+
+225
+00:28:42,695 --> 00:28:57,665
+So I wonder if what we could do here is in pause internal check to see if we're where a video element that's cloning.
+
+226
+00:28:57,665 --> 00:29:07,235
+And if so, only pause if there is a user input handler on the stack because we know when that's the case.
+
+227
+00:29:07,235 --> 00:29:16,865
+There are a couple of places where we do that. Um, it's a bit of a hack, but we could try it.
+
+228
+00:29:16,865 --> 00:29:21,335
+But in order to try it, we're going to actually have to wait until this build is done.
+
+229
+00:29:21,335 --> 00:29:27,695
+So that might take a little while. I don't actually know. Let me let me actually see what my cache looks like.
+
+230
+00:29:27,695 --> 00:29:31,355
+Um, where are we at? Oh, we're getting some cache it.
+
+231
+00:29:31,355 --> 00:29:39,215
+So it might not take too too long and might only be a couple of minutes. Uh, I'm getting some cache hits.
+
+232
+00:29:39,215 --> 00:29:43,295
+That's good. So this might not be too bad. So let's come back to this.
+
+233
+00:29:43,295 --> 00:29:53,825
+And in the meantime, we'll look at some of these intermediate test failures that I also thought we might look at today.
+
+234
+00:29:53,825 --> 00:30:04,955
+So in Bug, one six, three four, eight 04 four browser restart required title element exists, null equals true.
+
+235
+00:30:04,955 --> 00:30:13,385
+It looks like. I had.
+
+236
+00:30:13,385 --> 00:30:21,605
+Worked on this at least a little bit. There's some activity in here for me, so from two years ago, this got filed and I was like,
+
+237
+00:30:21,605 --> 00:30:27,125
+someone landed a patch to disable it and then I posted a patch to fix it.
+
+238
+00:30:27,125 --> 00:30:31,775
+And then I pushed the patch that I thought, fixed it. And then the failures kept coming.
+
+239
+00:30:31,775 --> 00:30:39,785
+It did not fix it. Did not actually fix it. Um, and so they're going to disable it again.
+
+240
+00:30:39,785 --> 00:30:46,355
+Uh, and when did I get need info right here?
+
+241
+00:30:46,355 --> 00:30:54,335
+Should we disable this now? Is it the same test failure as before?
+
+242
+00:30:54,335 --> 00:30:58,145
+Let's look at the title element exists. NULL equals true.
+
+243
+00:30:58,145 --> 00:31:06,365
+And what was my original? The original complaint here was in title only exists.
+
+244
+00:31:06,365 --> 00:31:11,645
+OK, so my original solution, I guess, didn't do the job. Here's the patch I posted.
+
+245
+00:31:11,645 --> 00:31:17,525
+We can take a look at that. Sure, Eric asks, Does as Zcash work for C++ and C?
+
+246
+00:31:17,525 --> 00:31:24,995
+It does. It does. Yes, it does.
+
+247
+00:31:24,995 --> 00:31:29,585
+There's no guarantee that the about restart required page is finished loading it after the crash.
+
+248
+00:31:29,585 --> 00:31:33,365
+If that's the case, wait for it. We wait for Dom content loaded since error pages.
+
+249
+00:31:33,365 --> 00:31:40,825
+Don't fire load events. Um.
+
+250
+00:31:40,825 --> 00:31:51,365
+If Dock Ready State is loading. What's the what are the other ready states that might be in?
+
+251
+00:31:51,365 --> 00:31:56,795
+Can't remember ready state change, you know, ready state.
+
+252
+00:31:56,795 --> 00:32:04,985
+That's what I want. Ready State. Oh no, that's the media element ready state document ready state.
+
+253
+00:32:04,985 --> 00:32:30,735
+It can be loading, interactive or complete. So when it hits interactive, the dumb content loaded should fire.
+
+254
+00:32:30,735 --> 00:32:35,425
+Before Dawn, content loaded.
+
+255
+00:32:35,425 --> 00:32:45,805
+So it seems like it fires just before Dom content loaded as an alternative and interactive, has an alternative to the load event.
+
+256
+00:32:45,805 --> 00:32:56,675
+Sounds like they'd fire before those things. Some resources are still loading.
+
+257
+00:32:56,675 --> 00:33:13,825
+And the restart required page is.
+
+258
+00:33:13,825 --> 00:33:18,845
+We're getting no for the title. What is the restart required page?
+
+259
+00:33:18,845 --> 00:33:35,395
+Let's take a look at it. We start required.
+
+260
+00:33:35,395 --> 00:33:46,465
+Oh, you know what it might be? Fluent so fluent does a synchronous translation of things.
+
+261
+00:33:46,465 --> 00:33:51,025
+And this got converted to fluent back in twenty eighteen.
+
+262
+00:33:51,025 --> 00:33:57,385
+And I'll bet you, even when Dong content loaded is true, it's not necessarily the case.
+
+263
+00:33:57,385 --> 00:34:01,045
+Like after it fires, it's not necessarily the case that the translation will have occurred.
+
+264
+00:34:01,045 --> 00:34:06,775
+Yet there's a way we can actually wait for that. Hang on.
+
+265
+00:34:06,775 --> 00:34:12,745
+So let me let me. Have they landed this?
+
+266
+00:34:12,745 --> 00:34:32,375
+Did they land this needs revision? I actually think I have another idea of how to fix this test and make it less flaky.
+
+267
+00:34:32,375 --> 00:34:41,645
+I'll post a patch in the bug momentarily, momentarily, momentarily.
+
+268
+00:34:41,645 --> 00:34:46,385
+So let me let me see if I can create a patch.
+
+269
+00:34:46,385 --> 00:34:50,825
+This is tricky because I've already got a build going here, an apt build.
+
+270
+00:34:50,825 --> 00:34:55,925
+So how can we do this work when we already have a build going?
+
+271
+00:34:55,925 --> 00:34:57,035
+Well, the good news is,
+
+272
+00:34:57,035 --> 00:35:06,155
+is that I think this sort of thing I can do with an artifact build and my artifact build will use a different object or an object, dir.
+
+273
+00:35:06,155 --> 00:35:14,855
+So if you've ever worked on Firefox before, you'll know that one of the things that gets created when you use Mock Build is an object directory,
+
+274
+00:35:14,855 --> 00:35:22,385
+and that's where all the build artifacts go. Things like generated files, the generated any generated C++, but also the object files, the headers.
+
+275
+00:35:22,385 --> 00:35:29,375
+Everything that gets pre-processed goes through a bunch of scripting and gets dumped into this what we call the object directory.
+
+276
+00:35:29,375 --> 00:35:37,625
+And you can see what one looks like here. Uh?
+
+277
+00:35:37,625 --> 00:35:42,155
+So it's like there's a bunch of stuff gets created and we're like, we're not there yet.
+
+278
+00:35:42,155 --> 00:35:47,435
+Whenever you've created this, this object directory and you've populated it with all the pre-processed stuff.
+
+279
+00:35:47,435 --> 00:35:53,165
+Then there's the build step. So then all the stuff in here gets run through the compiler.
+
+280
+00:35:53,165 --> 00:36:00,995
+So you know you that's your C++ rust objective C compiler, and then it gets linked up.
+
+281
+00:36:00,995 --> 00:36:08,025
+So what you have in this in this directory is usually you don't have the C++ in here, I don't think.
+
+282
+00:36:08,025 --> 00:36:13,415
+Um yeah. By the time it reaches the orbiter you've compiled.
+
+283
+00:36:13,415 --> 00:36:20,315
+Sorry, I should have. I should clarify the stuff in the orbiter isn't C++.
+
+284
+00:36:20,315 --> 00:36:25,145
+It's sometimes there are header files like this pre-processed header.
+
+285
+00:36:25,145 --> 00:36:31,475
+Hang on, hang on. And that's not true. There are definitely header files in here.
+
+286
+00:36:31,475 --> 00:36:36,065
+Find name C like disks include.
+
+287
+00:36:36,065 --> 00:36:46,745
+There are definitely headers in here. Are there any? Surely there are some C++.
+
+288
+00:36:46,745 --> 00:36:50,585
+Yeah, there are C++ files near, but they've gone through pre-processing. OK.
+
+289
+00:36:50,585 --> 00:36:55,715
+So after having kids pre-processed and some of them get unified like a bunch of C++ files,
+
+290
+00:36:55,715 --> 00:37:01,445
+gets sewn together into a single C++ file sometimes and they get thrown into the orbiter.
+
+291
+00:37:01,445 --> 00:37:09,305
+And then we send them through the compilers and they get linked up. And finally, what gets produced goes in this subdirectory called disk.
+
+292
+00:37:09,305 --> 00:37:13,355
+And in that under Ben, that's when you're binary.
+
+293
+00:37:13,355 --> 00:37:17,915
+Things get created like under binary disc.
+
+294
+00:37:17,915 --> 00:37:26,975
+Then I think, where's Firefox, for example? Well, on Mac OS, you're not going to find it in.
+
+295
+00:37:26,975 --> 00:37:32,735
+I think the problem is that I'm building this directory right now. Let's find an old one.
+
+296
+00:37:32,735 --> 00:37:43,595
+19:05 is a really old one. Just been, yeah, this is the stuff you're going to see inside dustbin and I'll include your Firefox binary.
+
+297
+00:37:43,595 --> 00:37:50,855
+Now, why do I bring this up? I bring this up because by using an artifact build, I'm using a different object her.
+
+298
+00:37:50,855 --> 00:37:53,795
+And that means that so long as I don't change things to too much,
+
+299
+00:37:53,795 --> 00:37:59,315
+I shouldn't end up screwing up anything that's happening in this build step from my normal kind of build.
+
+300
+00:37:59,315 --> 00:38:07,625
+So, you know, this has all the environment variables to do my optimized non artifact, full binary build right now.
+
+301
+00:38:07,625 --> 00:38:14,495
+And over here, I'm going to say build with artifact. And all that does is set some environment variables in this shell.
+
+302
+00:38:14,495 --> 00:38:21,515
+And then if I do mark build, I'm going to do an artifact build over here.
+
+303
+00:38:21,515 --> 00:38:29,045
+And that's not going to affect this build because this is using a different object directory so that it's using one called OBJ Dash artifact.
+
+304
+00:38:29,045 --> 00:38:33,335
+That's why I set it up and they shouldn't interfere with one another.
+
+305
+00:38:33,335 --> 00:38:38,585
+So the only way I could potentially interfere with this build is if I like modified and some
+
+306
+00:38:38,585 --> 00:38:44,255
+code and then hit save before this thing had built it before it had packaged it or built it,
+
+307
+00:38:44,255 --> 00:38:49,955
+then I'll be true for things like JavaScript, but for the purposes of the thing that we're looking at for this bug,
+
+308
+00:38:49,955 --> 00:38:55,175
+this this intermediate test failure, that shouldn't matter. That shouldn't matter.
+
+309
+00:38:55,175 --> 00:39:05,345
+So hopefully that made sense. Hey, magically, the stain has kind of gone away.
+
+310
+00:39:05,345 --> 00:39:13,745
+Yeah, I can kind of see it's just faded a little bit. Luckily, it's a zero sugar, zero sugar Coca-Cola, so it's not like a sticky mess.
+
+311
+00:39:13,745 --> 00:39:19,115
+It's just a it's just a small stain on my shirt.
+
+312
+00:39:19,115 --> 00:39:28,235
+All right, let's keep going. Now, the one problem with doing these bills at the same time is, obviously I'm doing a lot of my laptop right now.
+
+313
+00:39:28,235 --> 00:39:33,485
+I've got obese running. I'm recording this because that's how I operate with obese.
+
+314
+00:39:33,485 --> 00:39:39,995
+I stream and I record the same time for backing it up. And then I've got a full blown binary build going on here,
+
+315
+00:39:39,995 --> 00:39:45,275
+and I'm requesting an opt bill which requires it to do like a bunch of python in order to figure out what to get.
+
+316
+00:39:45,275 --> 00:39:51,905
+And so I have I'm probably saturating all my cores if I look at like the activity monitor.
+
+317
+00:39:51,905 --> 00:40:00,435
+I'll bet you we're going to see that all of my CPUs are, like, maxed out.
+
+318
+00:40:00,435 --> 00:40:06,465
+CPU load. Let's take a look. 16 cores, boom.
+
+319
+00:40:06,465 --> 00:40:16,605
+Look at all that maximum. So my machine is going to be a little rough for the next little bit while I get this build going.
+
+320
+00:40:16,605 --> 00:40:23,295
+But in the meantime, maybe I can talk a little bit about the holiday stream.
+
+321
+00:40:23,295 --> 00:40:28,305
+So on December 15th, I had talked about maybe doing a special holiday stream.
+
+322
+00:40:28,305 --> 00:40:35,235
+That's not next week, but the week after. That will be the last stream of the year and my special holiday stream.
+
+323
+00:40:35,235 --> 00:40:39,885
+I put out some ideas. I think my first idea was like, Hey, maybe I can.
+
+324
+00:40:39,885 --> 00:40:47,265
+I can write, I can play a game that I wrote back in back when I was first starting learning how to program.
+
+325
+00:40:47,265 --> 00:40:51,885
+And the other one was maybe we could watch code rush. I actually think there'll be time to do both.
+
+326
+00:40:51,885 --> 00:40:58,215
+So I'm thinking next on December 15th is not an extreme, but the stream after a watch code rush with you.
+
+327
+00:40:58,215 --> 00:41:02,115
+We want to get it. Get some popcorn ready off some popcorn. Be munching on.
+
+328
+00:41:02,115 --> 00:41:09,585
+We'll watch coders together all positive periodically, like an annoying co viewer of a movie opposite all.
+
+329
+00:41:09,585 --> 00:41:13,845
+Talk your ear off about things I'm seeing and my impressions. I've seen it before.
+
+330
+00:41:13,845 --> 00:41:18,135
+It's not like my first time seeing it, but if maybe you haven't seen it, this is your excuse to see it.
+
+331
+00:41:18,135 --> 00:41:23,565
+Maybe I can. I can supply additional context. And I know there is at certain points where you can like,
+
+332
+00:41:23,565 --> 00:41:28,035
+see source code flying by the screen and we can pause and we can look at it and see what they're looking at.
+
+333
+00:41:28,035 --> 00:41:35,025
+So we do that. And then the game I made when I was younger is not a very complicated game, so we can play it together that we can do both.
+
+334
+00:41:35,025 --> 00:41:40,095
+That would be the holiday stream. Maybe we can even look at the source code, although it is a mess.
+
+335
+00:41:40,095 --> 00:41:46,005
+OK, so our artifact build is done. What I want to do is I want to run this test.
+
+336
+00:41:46,005 --> 00:41:51,255
+This test is what is it?
+
+337
+00:41:51,255 --> 00:42:18,165
+Tab crashed browser's shown restart required. I will say Mark Mulkey test browser shown restart required.
+
+338
+00:42:18,165 --> 00:42:23,435
+C.P. Hughes, who? OK.
+
+339
+00:42:23,435 --> 00:42:29,615
+I think we are all now aware of how busy my machine is. But that's OK.
+
+340
+00:42:29,615 --> 00:42:37,875
+Sometimes doing multiple things is fine. OK, so the test passes.
+
+341
+00:42:37,875 --> 00:42:44,535
+What I want to do is modify the test whenever we're waiting for it to load.
+
+342
+00:42:44,535 --> 00:42:56,295
+I mean, there's this step. Also wait for any fluent strings to have been inserted.
+
+343
+00:42:56,295 --> 00:43:03,425
+Oh wait, hold on. Oh, yikes.
+
+344
+00:43:03,425 --> 00:43:16,155
+I'm Ron. So I thought I knew what was going on here.
+
+345
+00:43:16,155 --> 00:43:22,275
+But I'm wrong, because it's not actually looking at the strings, it's just looking for the presence of the elements.
+
+346
+00:43:22,275 --> 00:43:29,475
+And I already told these people that the people in in that business bug that I knew what was going on.
+
+347
+00:43:29,475 --> 00:43:33,945
+Yeah, I guess I better deliver now. OK, let's see.
+
+348
+00:43:33,945 --> 00:43:39,945
+Let's see. Well, let's investigate this a little bit further. Let's take a look at a screenshot of the failure.
+
+349
+00:43:39,945 --> 00:43:46,095
+That's something we can do. So if we look at a recent failure, we can open it up here and to her,
+
+350
+00:43:46,095 --> 00:43:54,075
+or this is reports of the failures and we can find a recent one, this one from yesterday in auto land on Linux Debug.
+
+351
+00:43:54,075 --> 00:44:05,235
+We're in uh, can we pull up the job? And one of the things that gets created as a PNG is screenshot of the the failure.
+
+352
+00:44:05,235 --> 00:44:14,205
+And it looks like nothing got created. Um.
+
+353
+00:44:14,205 --> 00:44:37,545
+How does this test work? Crash frame assert is at restart required page.
+
+354
+00:44:37,545 --> 00:44:49,145
+Hmm. Is there a case where this runs and we we actually see the page?
+
+355
+00:44:49,145 --> 00:44:58,725
+No. No.
+
+356
+00:44:58,725 --> 00:45:06,415
+Let's go let's go a bit further here than opt build.
+
+357
+00:45:06,415 --> 00:45:15,995
+No, never showed up, at least at the time of failure.
+
+358
+00:45:15,995 --> 00:45:25,105
+Well, one way we could verify that is we should wait for the.
+
+359
+00:45:25,105 --> 00:45:29,905
+The document ready state is loading. We should wait for Dom content loaded,
+
+360
+00:45:29,905 --> 00:45:42,145
+because maybe this is the initial about blank before a document actually loads that can occur and we have tools for that.
+
+361
+00:45:42,145 --> 00:45:49,635
+Hang on browser test utils on content loaded.
+
+362
+00:45:49,635 --> 00:46:00,275
+Waits for an ongoing page load wait for browser loaded.
+
+363
+00:46:00,275 --> 00:46:06,895
+Wait, browser, test utils, browser loaded.
+
+364
+00:46:06,895 --> 00:46:16,325
+And then you can tell it what? Browser, you what things you care about, like it might be an error page.
+
+365
+00:46:16,325 --> 00:46:22,325
+And that's true. So false null. True.
+
+366
+00:46:22,325 --> 00:46:30,515
+Um, or though maybe we want a boat restart required so false.
+
+367
+00:46:30,515 --> 00:46:48,125
+The boat restart required. True. Dock ready state.
+
+368
+00:46:48,125 --> 00:46:51,695
+How about isn't? Yeah.
+
+369
+00:46:51,695 --> 00:46:59,795
+Equals loading. Let's see what happens when we run this.
+
+370
+00:46:59,795 --> 00:47:05,375
+Hello, digital ocean TV. That sounds really official.
+
+371
+00:47:05,375 --> 00:47:13,895
+Digital ocean is like some kind of of important internet tool or something, I think.
+
+372
+00:47:13,895 --> 00:47:19,505
+I don't know if I've heard of digital ocean before.
+
+373
+00:47:19,505 --> 00:47:26,975
+Sounds impressive. Hello, God, whoa.
+
+374
+00:47:26,975 --> 00:47:44,965
+Hey, everyone, saying hello. Hello, everyone. Now, did did we actually enter this, that's the other thing is because this is.
+
+375
+00:47:44,965 --> 00:47:53,835
+Oh, you know what we should do? Crash frame.
+
+376
+00:47:53,835 --> 00:47:58,755
+I go to a particular page simulate a build ID mismatch.
+
+377
+00:47:58,755 --> 00:48:08,115
+We crash the frame and then do this.
+
+378
+00:48:08,115 --> 00:48:16,565
+How do we make sure that we're actually entering here like am commonly entered here?
+
+379
+00:48:16,565 --> 00:48:26,255
+Let's see if. Verify headless.
+
+380
+00:48:26,255 --> 00:48:33,515
+Let's see if that string ever shows up. It's a Veep's provider o digital ocean.
+
+381
+00:48:33,515 --> 00:48:38,555
+It's a veeps provider with good docs. Well, that's a that is a glowing review.
+
+382
+00:48:38,555 --> 00:48:45,545
+Digital ocean TV. Uh, good docs.
+
+383
+00:48:45,545 --> 00:48:50,885
+I do. I sponsor. Are they? Are they my sponsor? Do I sponsor them or do they sponsor me?
+
+384
+00:48:50,885 --> 00:48:58,265
+I don't know what's going on. I don't. Thanks for being my sponsor digital ocean.
+
+385
+00:48:58,265 --> 00:49:01,925
+Or You're welcome for sponsoring you, digital ocean.
+
+386
+00:49:01,925 --> 00:49:09,215
+I don't know what our relationship is. It's probably something to do with Amazon and Twitch.
+
+387
+00:49:09,215 --> 00:49:12,935
+So I actually don't see us entering that code path.
+
+388
+00:49:12,935 --> 00:49:20,105
+Probably because my machine like this, this is a race effectively and we're not entering the race condition.
+
+389
+00:49:20,105 --> 00:49:25,145
+But with the verify command, we can use chaos mode to sort of stress,
+
+390
+00:49:25,145 --> 00:49:31,025
+test the machine a little bit and see if we can recreate the conditions where we enter.
+
+391
+00:49:31,025 --> 00:49:44,745
+Um, enter the the losing race condition and make sure that our solution works properly.
+
+392
+00:49:44,745 --> 00:49:54,525
+While we're waiting on this. Any questions from the audience, there are no questions that came in through the through the rate this episode form.
+
+393
+00:49:54,525 --> 00:50:05,715
+So any questions from the audience about what I'm doing or what's going on here in the stream or Firefox stuff or anything like that technical?
+
+394
+00:50:05,715 --> 00:50:26,005
+Oh, we entered it. Hey, we entered the. Interesting.
+
+395
+00:50:26,005 --> 00:50:38,285
+Now, I kind of wish it was open. So browser test utils child has this like Dom content loaded handler.
+
+396
+00:50:38,285 --> 00:50:57,395
+I do this sometimes where like if we if I'm dealing with this sort of thing, I'll say SA event a event type at a event target document, you or I.
+
+397
+00:50:57,395 --> 00:51:04,305
+Slash event target location.
+
+398
+00:51:04,305 --> 00:51:10,125
+We'll do it after I send the message. All right, let's do it again.
+
+399
+00:51:10,125 --> 00:51:11,865
+Let's do it again.
+
+400
+00:51:11,865 --> 00:51:21,825
+And that happened while we were doing the chaos mode stuff so we can actually jump to the jump ahead to that part and just use chaos mode directly.
+
+401
+00:51:21,825 --> 00:51:26,895
+You do it with an environment variable if you never use Chaos mode when you're testing,
+
+402
+00:51:26,895 --> 00:51:37,545
+it's great because what it does is it tells the Gecko the Firefox code base to basically randomly,
+
+403
+00:51:37,545 --> 00:51:48,015
+randomly re prioritize threads, randomly change the the ordering of various unordered collections.
+
+404
+00:51:48,015 --> 00:51:53,985
+Lots of things to help sort of stress test things and find intermittent test failures in races,
+
+405
+00:51:53,985 --> 00:52:04,245
+change the conditions that certain races will reveal yourself reveal themselves rather.
+
+406
+00:52:04,245 --> 00:52:08,005
+So, wow, there are some questions I don't know much about you.
+
+407
+00:52:08,005 --> 00:52:13,935
+This is my first time watching you, says God. Well, well, thanks for watching.
+
+408
+00:52:13,935 --> 00:52:20,895
+I don't know much about you either, so I guess or even sure year's 55 asks, Are you planning to do advent advent of code?
+
+409
+00:52:20,895 --> 00:52:24,405
+You know, I did. I did last year and I did the year before that.
+
+410
+00:52:24,405 --> 00:52:34,755
+And every time I do advent of code, I do it over the holidays with the intent or the hope of using it as a ha.
+
+411
+00:52:34,755 --> 00:52:38,295
+We entered the race. So it starts with about restart required.
+
+412
+00:52:38,295 --> 00:52:44,115
+It isn't about restart required, but it starts with.
+
+413
+00:52:44,115 --> 00:52:54,895
+So maybe that's what I'll I'll change this being because I think it can be a function as well as a.
+
+414
+00:52:54,895 --> 00:53:06,175
+Want load a function so I can be like.
+
+415
+00:53:06,175 --> 00:53:13,105
+What does it take as its argument, if a string, if not the first load results promised tax returns true, if that's the little we're interested in.
+
+416
+00:53:13,105 --> 00:53:19,905
+If it's a string, what is the function called with the URL?
+
+417
+00:53:19,905 --> 00:53:32,415
+OK. URL. URL that starts with about restart required.
+
+418
+00:53:32,415 --> 00:53:37,395
+OK. Let's see if that works, OK?
+
+419
+00:53:37,395 --> 00:53:41,085
+Are you planning to do advent of code? Yes, I was.
+
+420
+00:53:41,085 --> 00:53:45,585
+I try and do it every year as an opportunity and an excuse to learn more rest.
+
+421
+00:53:45,585 --> 00:53:52,365
+I bought a rust book recently and you know, I have some ability to read rust.
+
+422
+00:53:52,365 --> 00:53:57,945
+I'm just not very confident with writing it. So advent of code gives me an excuse for writing it.
+
+423
+00:53:57,945 --> 00:54:01,935
+The book that I bought as well has a bunch of like practical exercises for building a
+
+424
+00:54:01,935 --> 00:54:12,885
+game like a sort of a dungeon crawler roguelike text game saw event dom content loaded,
+
+425
+00:54:12,885 --> 00:54:20,355
+uh, about restart required. Yeah, that should have that should have been enough.
+
+426
+00:54:20,355 --> 00:54:31,185
+Well, come on now. Dump evaluating you, Earl.
+
+427
+00:54:31,185 --> 00:54:36,425
+That should be enough for you. Why isn't it enough for you?
+
+428
+00:54:36,425 --> 00:54:45,045
+Um, well, I do it this year, probably, you know, this year I'll probably be a little busier pandemic,
+
+429
+00:54:45,045 --> 00:54:50,715
+providing I'll be a little bit busier than last year during the holidays, last year during the holidays, nothing.
+
+430
+00:54:50,715 --> 00:54:57,015
+I did nothing. I didn't see family or anything. This year, maybe I'll be able to see some family.
+
+431
+00:54:57,015 --> 00:55:04,605
+So I guess it's dependent on that, whether I'll get some downtime to do some things like advent of code.
+
+432
+00:55:04,605 --> 00:55:15,375
+Oh, interesting. Interesting. Uh, we get the that kind of URL.
+
+433
+00:55:15,375 --> 00:55:19,755
+Um, what load will be called with the visible URL?
+
+434
+00:55:19,755 --> 00:55:27,555
+OK, yeah. All right. That's why. So what load we don't want to use won't load at all.
+
+435
+00:55:27,555 --> 00:55:31,755
+So we're just going to set that to false or no, let's not say default.
+
+436
+00:55:31,755 --> 00:55:44,275
+Let's set it to page. Yeah, that's what we want, that's what we want.
+
+437
+00:55:44,275 --> 00:55:48,505
+So, yeah, my long answer, it's dependent, it's dependent on that.
+
+438
+00:55:48,505 --> 00:55:54,685
+Is there a new date for vision rollout by default, vision rollout by default, we should be nearly there.
+
+439
+00:55:54,685 --> 00:56:02,155
+I haven't actually checked, but I believe we should be at nearly everybody on the release channel.
+
+440
+00:56:02,155 --> 00:56:14,405
+Actually, I wonder if our telemetry tells us. Uh, no, not there.
+
+441
+00:56:14,405 --> 00:56:22,975
+Like we could take a look at. Visions.
+
+442
+00:56:22,975 --> 00:56:28,345
+Sir, are there fishing probes we could look at?
+
+443
+00:56:28,345 --> 00:56:38,575
+I'm not actually working on fishing these days, so it doesn't look like there are probes on the measurement dashboard here.
+
+444
+00:56:38,575 --> 00:56:42,295
+So I'm not actually monitoring the dashboards. I've just been sort of reporting what I've been hearing.
+
+445
+00:56:42,295 --> 00:56:47,155
+The plan was to roll it out to 100 percent by the end of November.
+
+446
+00:56:47,155 --> 00:56:53,455
+It's December 1st, so we should if we're not there, we should be pretty close because I know we were over 50 percent at one point.
+
+447
+00:56:53,455 --> 00:56:59,305
+So there's a release of Firefox coming out next week.
+
+448
+00:56:59,305 --> 00:57:04,225
+I'm actually curious to know if they've turned fishing on by default.
+
+449
+00:57:04,225 --> 00:57:09,705
+Have they decided to do that? Um, vision default.
+
+450
+00:57:09,705 --> 00:57:16,685
+See if there's a bug file about that.
+
+451
+00:57:16,685 --> 00:57:25,205
+So it looks like our code is working where we enter our sometimes we enter our particular event handler and sometimes we don't.
+
+452
+00:57:25,205 --> 00:57:35,685
+And it works. So I'm more confident than not that this is going to help fix things.
+
+453
+00:57:35,685 --> 00:57:42,315
+Uh, do we enable vision pref by default in Firefox 97?
+
+454
+00:57:42,315 --> 00:57:50,145
+Firefox is currently version 96 on nightly. Ninety seven will get created.
+
+455
+00:57:50,145 --> 00:58:01,155
+I think the beginning of next week. So yeah, I think the plan is it's on by default in the nightly ninety seven cycle,
+
+456
+00:58:01,155 --> 00:58:15,405
+but we will have used the rollout deployment mechanism to have enabled by default for all users on the ninety four five six on version 94,
+
+457
+00:58:15,405 --> 00:58:19,845
+which is that release right now by the end of November, hopefully.
+
+458
+00:58:19,845 --> 00:58:26,565
+I don't think we're there quite yet. We might be close to 100 percent, but we're not quite 100 percent by next week.
+
+459
+00:58:26,565 --> 00:58:31,395
+Ninety five will be released and then that should.
+
+460
+00:58:31,395 --> 00:58:42,075
+Maybe if there's any leftover lingering people who don't have vision enabled will have it on by default soon after and then 97, 95 and 96.
+
+461
+00:58:42,075 --> 00:58:48,105
+Or kind of an opportunity to like, I guess, fill in the last couple of gaps if there are people that don't have it yet.
+
+462
+00:58:48,105 --> 00:58:57,805
+And then 97, it's on by default for real. So the rollout plan is it should if you're on release,
+
+463
+00:58:57,805 --> 00:59:07,995
+chances are you have a greater than 50 percent chance that you have vision enabled and that probability only increases over the next couple of weeks.
+
+464
+00:59:07,995 --> 00:59:19,185
+So hopefully that answers your question. OK, I'm going to turn this into a patch that I can post for this regression, this intermittent test failure.
+
+465
+00:59:19,185 --> 00:59:31,075
+I'm going to get rid of our garbage, our garbage dump statement here.
+
+466
+00:59:31,075 --> 00:59:38,365
+And we can get rid of this dump, St. Stephen, here as well.
+
+467
+00:59:38,365 --> 00:59:49,655
+And then if we look at our patch. That's the change.
+
+468
+00:59:49,655 --> 00:59:57,945
+Uh, right, so we're going to uh. What was the name of this bug?
+
+469
+00:59:57,945 --> 01:00:15,015
+Bug one, six three four eight oh four. I can say bug such and such account for the possibility for the initial about blank load.
+
+470
+01:00:15,015 --> 01:00:27,225
+To make browser shown restart required more resilient, asked me for a.
+
+471
+01:00:27,225 --> 01:00:39,285
+And actually, what I should do is put in a more verbose comment in the commit message so that Mika knows exactly what I'm talking about.
+
+472
+01:00:39,285 --> 01:00:42,945
+OK, so I thought that this was going to be a faster build because I had see cash gone.
+
+473
+01:00:42,945 --> 01:00:48,045
+But really, this is not where we're at like minute 35 here.
+
+474
+01:00:48,045 --> 01:00:54,225
+Not, not great. It might not be done by the time the stream is over.
+
+475
+01:00:54,225 --> 01:01:00,915
+We shall see. We haven't been helping things by doing work, you know, with the artifact builds and stuff, we've been stealing cycles.
+
+476
+01:01:00,915 --> 01:01:05,005
+But hey, we were able to get some other stuff done. OK,
+
+477
+01:01:05,005 --> 01:01:09,135
+so what I want to do actually is I want to augment this commit message a little
+
+478
+01:01:09,135 --> 01:01:18,585
+bit further and say browsers show and restart required works by crashing,
+
+479
+01:01:18,585 --> 01:01:21,285
+especially crashing a content frame,
+
+480
+01:01:21,285 --> 01:01:37,485
+crashing a tab such that the resulting error page will be there about restart required error page in an earlier patch.
+
+481
+01:01:37,485 --> 01:01:51,465
+And this bug, I tried to fix the interment and test failure that was occurring because we weren't waiting for the
+
+482
+01:01:51,465 --> 01:02:03,105
+about restart required page to finish loading before testing for the presence of certain DOM nodes.
+
+483
+01:02:03,105 --> 01:02:16,605
+My solution was to use the Dom Content Loaded event handler since load isn't fired for error pages like a boat restart required.
+
+484
+01:02:16,605 --> 01:02:31,575
+The problem is that sometimes depending on how quickly we're able to pull the mark up four pages out of the omni dodge,
+
+485
+01:02:31,575 --> 01:02:37,815
+the initial about blank will have an opportunity to fire.
+
+486
+01:02:37,815 --> 01:02:51,225
+It's the initial about blank four that gets loaded when creating a content viewer will have an opportunity to fire
+
+487
+01:02:51,225 --> 01:03:07,225
+its Dom content loaded and and so the test will proceed despite the document not having the requisite nodes yet.
+
+488
+01:03:07,225 --> 01:03:19,795
+Causing the failure, this patch makes the test more resilient by using browser test you.
+
+489
+01:03:19,795 --> 01:03:45,595
+Those are loaded to wait for Dom content loaded and checking that the checking that the URL for the page matches our expectation.
+
+490
+01:03:45,595 --> 01:03:51,665
+Which is the original pages, you, Earl.
+
+491
+01:03:51,665 --> 01:04:08,195
+Before the crash, does that actually fix things? Because the about blank.
+
+492
+01:04:08,195 --> 01:04:19,225
+We're waiting for Dom content loaded. Maybe Air Page has that work.
+
+493
+01:04:19,225 --> 01:04:36,305
+Is wanted maybe error page than the visible URL is past.
+
+494
+01:04:36,305 --> 01:04:56,755
+Yes, we do that intentionally. Dark Red State is loading.
+
+495
+01:04:56,755 --> 01:05:19,945
+Wait for Dom content loaded where the page. Well, one way we can verify that this works is by pushing to try and doing a bunch of triggers.
+
+496
+01:05:19,945 --> 01:05:27,355
+All right. I have some more questions in the in the chat, I'll get to them in a quick second.
+
+497
+01:05:27,355 --> 01:05:33,335
+So I'm just going to hang on after rebase this.
+
+498
+01:05:33,335 --> 01:05:41,375
+Onto Central. Hopefully, this doesn't cause my other bill to get upset.
+
+499
+01:05:41,375 --> 01:05:51,505
+It shouldn't it shouldn't. It's changing central slightly, but not in a meaningful way, because I know what this package contains.
+
+500
+01:05:51,505 --> 01:06:02,435
+It's just some changes to some markup, so we should be OK over here.
+
+501
+01:06:02,435 --> 01:06:12,305
+The question is, what's my favorite dessert, um? I really like ice cream and I like chocolate almonds.
+
+502
+01:06:12,305 --> 01:06:17,585
+I like it when I don't have a nut allergy, so thankfully I like it whenever there are peanuts and a dessert.
+
+503
+01:06:17,585 --> 01:06:22,565
+So like, um, peanut butter, ice cream is really good.
+
+504
+01:06:22,565 --> 01:06:29,165
+And I know it's really rich. But if you can find like a New York cheesecake, that's really nice.
+
+505
+01:06:29,165 --> 01:06:31,655
+There's there's a kind of cheesecake.
+
+506
+01:06:31,655 --> 01:06:41,195
+My mom used to make when I was younger, it's like a really light, almost like airy cheesecake, which I really enjoyed.
+
+507
+01:06:41,195 --> 01:06:49,875
+Pro tip regarding peanut butter and ice cream If you have any peanut butter in your in your cupboard and you don't have not allergy,
+
+508
+01:06:49,875 --> 01:06:54,515
+because why would you have peanut butter if you had no, not allergy? And you've got some vanilla ice cream?
+
+509
+01:06:54,515 --> 01:06:58,475
+What you can do is you can put it in some scoops of vanilla ice cream in a bowl,
+
+510
+01:06:58,475 --> 01:07:05,075
+then put a scoop of peanut butter from your jar into a little bowl and put it in the
+
+511
+01:07:05,075 --> 01:07:09,335
+microwave for a couple of seconds till it melts and then pour it over your ice cream.
+
+512
+01:07:09,335 --> 01:07:14,195
+And it solidifies and really tasty, very rich again full of calories.
+
+513
+01:07:14,195 --> 01:07:18,815
+Use it to bulk up if you need more calories, but it's very tasty.
+
+514
+01:07:18,815 --> 01:07:22,715
+I really enjoy doing that. How did I start contributing to Firefox?
+
+515
+01:07:22,715 --> 01:07:26,335
+I started by making add ons. I made an add on.
+
+516
+01:07:26,335 --> 01:07:33,365
+I made a couple of add ons for Firefox, and then I was actually before I started working on Firefox full time.
+
+517
+01:07:33,365 --> 01:07:42,335
+I worked on Thunderbird. I was hired as a contractor to work on Thunderbird, which is an email client written using the same technology as Firefox.
+
+518
+01:07:42,335 --> 01:07:50,735
+And then I got, you know, I was being I was working for a subsidiary of Mozilla called Mozilla Messaging,
+
+519
+01:07:50,735 --> 01:07:56,525
+which existed at the time to work on Thunderbird. And then Mozilla messaging was reabsorbed into the Mozilla Corporation.
+
+520
+01:07:56,525 --> 01:08:02,285
+And then I was re tasked to work on Firefox instead of Thunderbird. So that's how I got started.
+
+521
+01:08:02,285 --> 01:08:08,415
+Mozilla engineer question mark. Yes, I am a Mozilla engineer, although in Canada, it's interesting.
+
+522
+01:08:08,415 --> 01:08:14,855
+I hesitate to use the term software engineer. I tend to say software developer.
+
+523
+01:08:14,855 --> 01:08:23,105
+And that's because in Canada, at least the term engineer, like there's there's like a there's a rule,
+
+524
+01:08:23,105 --> 01:08:26,335
+there are rules on what can actually be considered an engineer and what's not.
+
+525
+01:08:26,335 --> 01:08:35,915
+And like, you have to be a like there's a certification you have to pass from, like the engineering cabal.
+
+526
+01:08:35,915 --> 01:08:41,505
+Like, I have a I have a couple of friends who have engineering degrees and they couldn't actually be called engineers until they got there.
+
+527
+01:08:41,505 --> 01:08:49,745
+There are certify certifications. There per page is what's called up in Canada page, and there's a lot of work that goes into that.
+
+528
+01:08:49,745 --> 01:08:55,565
+And so I studied computer science. So I'm a I'm a computer scientist.
+
+529
+01:08:55,565 --> 01:08:59,945
+I have a Masters computer science. I'm a software developer. Am I a software engineer?
+
+530
+01:08:59,945 --> 01:09:05,075
+If I'm talking to Americans, I find that they don't care. And so, yeah, I'll say software engineer.
+
+531
+01:09:05,075 --> 01:09:10,355
+But in Canada, at least, I find that I tend to be a little more careful because it makes people think that
+
+532
+01:09:10,355 --> 01:09:14,285
+I've got like an engineering degree and I don't I don't have an engineering degree. I'm not a page.
+
+533
+01:09:14,285 --> 01:09:22,235
+I don't have the ring. I like I. There's all these like special. This engineering has a special status, and I don't have that.
+
+534
+01:09:22,235 --> 01:09:28,205
+Why isn't Mozilla going all in on wesm and giving it GC and full dorm access?
+
+535
+01:09:28,205 --> 01:09:33,785
+Why would you want to give was MGC? That's my response.
+
+536
+01:09:33,785 --> 01:09:36,965
+Why would you want to give? Why MGC GC? One of the problem?
+
+537
+01:09:36,965 --> 01:09:47,075
+So the idea of them is to have like native performance characteristics running in a web run runtime.
+
+538
+01:09:47,075 --> 01:09:55,565
+And GC is a terrible property to add to that sort of set of conditions because
+
+539
+01:09:55,565 --> 01:10:02,645
+GC will periodically interrupt things and scan the heap and reclaim memory.
+
+540
+01:10:02,645 --> 01:10:10,325
+And that's bad for performance. Sometimes, especially when you're using plasm, you're often trying to gain like native level performance.
+
+541
+01:10:10,325 --> 01:10:16,325
+You're like doing 3D simulations or you're making a computer game that's like doing heavy computations.
+
+542
+01:10:16,325 --> 01:10:23,855
+You don't want the browser to run the GC, you know, arbitrarily to which will cause frame drop and stutter and a terrible user experience.
+
+543
+01:10:23,855 --> 01:10:38,675
+So there's the idea of of seeing is it's the trade off there is that you end up making it so that your native code that
+
+544
+01:10:38,675 --> 01:10:45,065
+you've worked so hard to port to wesm doesn't have the performance characteristics that was supposed to give you.
+
+545
+01:10:45,065 --> 01:10:51,275
+Now that's not to say that you can't have your AWAZIEM code implement its own kind of garbage collection.
+
+546
+01:10:51,275 --> 01:11:00,985
+Like, I know that, for example, you can run a virtual machine inside of.
+
+547
+01:11:00,985 --> 01:11:11,455
+Was in the wise and run time you can someone certainly has compiled Python so that it can be run inside of Wesm, the sandbox game with Lua,
+
+548
+01:11:11,455 --> 01:11:23,935
+I think, and that what that does is it allows you to like run script, but also to like, manually call the garbage collector whenever convenient.
+
+549
+01:11:23,935 --> 01:11:28,615
+And so it is possible to garbage collect in the scope of.
+
+550
+01:11:28,615 --> 01:11:33,595
+But you don't want the browser to do it. You don't want the JavaScript engine to do it arbitrarily.
+
+551
+01:11:33,595 --> 01:11:41,995
+You probably want to control it yourself when you're when your native code full dom access is a similar problem.
+
+552
+01:11:41,995 --> 01:11:50,695
+Dom Access Well, first of all, there might be there's some advantage to giving Dom access.
+
+553
+01:11:50,695 --> 01:11:56,275
+I mean, you you can sort of have some Dom access, you have to write a glue layer in JavaScript.
+
+554
+01:11:56,275 --> 01:12:02,005
+And I think part of that is because no matter what, you're going to want to have a translation layer,
+
+555
+01:12:02,005 --> 01:12:07,645
+you're native code, for example, was not probably designed to talk to the Dom.
+
+556
+01:12:07,645 --> 01:12:12,385
+So having some kind of translation layer between the two, you're going to need that anyways.
+
+557
+01:12:12,385 --> 01:12:17,785
+And so I think it's possible, for example, to have a waza module and then you have your translation layer,
+
+558
+01:12:17,785 --> 01:12:20,665
+which knows how to touch the DOM when you need it to.
+
+559
+01:12:20,665 --> 01:12:27,325
+I'm not an expert on this on the DOM part of this, but I can tell you for a fact that the garbage collectors stuff is bad for performance,
+
+560
+01:12:27,325 --> 01:12:31,345
+at least for for the wesm stuff that you're probably compiling down to Wesm.
+
+561
+01:12:31,345 --> 01:12:39,055
+If you're looking for native or near native runtime performance with low jitter, low frame drop edge.
+
+562
+01:12:39,055 --> 01:12:47,185
+You don't want the GC kicking in because your y zip code is creating garbage.
+
+563
+01:12:47,185 --> 01:12:54,265
+Yeah, so hopefully that answers your question. Danny Cohen writes You need to be a member of the professional order of engineers.
+
+564
+01:12:54,265 --> 01:12:58,165
+Is that what it's called? It sounds like a cabal. It sounds like a cult.
+
+565
+01:12:58,165 --> 01:13:02,555
+But I think you're right. Like, I don't know if that's the exact name, but you have to be a member,
+
+566
+01:13:02,555 --> 01:13:07,285
+an accredited member of the special group to have the title of engineer in Canada.
+
+567
+01:13:07,285 --> 01:13:12,865
+At least God. Well, goes no spec, no implementation.
+
+568
+01:13:12,865 --> 01:13:20,245
+I'm not sure what that means, but you put a smiley face on it, so I'm going to give you a smiley face too.
+
+569
+01:13:20,245 --> 01:13:31,285
+OK, so we rebased our thing here. What I want to do is I want to push it up to try and see if we can recreate the test failures.
+
+570
+01:13:31,285 --> 01:13:39,895
+So the test failures were occurring on Linux, predominantly Linux debug builds.
+
+571
+01:13:39,895 --> 01:13:45,565
+So let's see if we can spin some of those up.
+
+572
+01:13:45,565 --> 01:13:51,295
+So what we can do is we can say Mark, try fuzzy.
+
+573
+01:13:51,295 --> 01:13:56,345
+And then you can also pass it a directory that you want to run tests in.
+
+574
+01:13:56,345 --> 01:14:00,145
+And in this case, I only want to run the tab crash tests and those are under browser based content.
+
+575
+01:14:00,145 --> 01:14:11,435
+Tests have crashed. So Mark, try fuzzy browser based content tab crashed rate content tests tab crashed.
+
+576
+01:14:11,435 --> 01:14:20,825
+And then we're going to say, oh, a do an artifact build, please and repeat or rebuild rather nine times.
+
+577
+01:14:20,825 --> 01:14:30,565
+And let's see what that gives us. God writes, I mean, Firefox is going to implement whatever is in the wesm spec, that's true.
+
+578
+01:14:30,565 --> 01:14:42,265
+Yeah, especially for for newer stuff like that, for older things, you know, before the browsers started working together.
+
+579
+01:14:42,265 --> 01:14:44,875
+And you know, the first version of the browser where you had Internet Explorer,
+
+580
+01:14:44,875 --> 01:14:48,745
+Netscape Navigator and, you know, everyone was just kind of making stuff up.
+
+581
+01:14:48,745 --> 01:14:59,335
+There wasn't a lot of communication these days. The browser vendors Mozilla, Google, Microsoft, Apple Opera, you know,
+
+582
+01:14:59,335 --> 01:15:05,785
+people from people who care about browsers, they get together and they collaborate on specifications.
+
+583
+01:15:05,785 --> 01:15:14,365
+And when we agree on something as a group, that's when you know, that's how we work together to implement stuff and move the web forward.
+
+584
+01:15:14,365 --> 01:15:18,845
+And that's why you don't, for example, necessarily need to have jQuery anymore.
+
+585
+01:15:18,845 --> 01:15:23,095
+Like, I don't know if people here remember jQuery or prototype.
+
+586
+01:15:23,095 --> 01:15:33,625
+There were a bunch of like JavaScript libraries for glossing over web API differences, and you don't need those as much these days.
+
+587
+01:15:33,625 --> 01:15:38,245
+Now, that's not to say that there aren't differences between the engines that are very much that's very much the case.
+
+588
+01:15:38,245 --> 01:15:46,375
+But you have to remember that like the engines are a lot more inline now in terms of API surface than they were back then.
+
+589
+01:15:46,375 --> 01:15:49,825
+Like 10 years ago, 10 15 years ago, it was a lot harder.
+
+590
+01:15:49,825 --> 01:15:58,195
+You had to have a library like jQuery in order to write a JavaScript that worked cross browser engines like it.
+
+591
+01:15:58,195 --> 01:16:04,225
+Or you just be like, if anything, all over the place based on, you know, sniffing the user agent or whatever.
+
+592
+01:16:04,225 --> 01:16:09,205
+You know, those libraries really helped make it so you could have a single code base and talk to all of the major browsers.
+
+593
+01:16:09,205 --> 01:16:16,015
+And I think that's that's required less and less and less because the browser vendors are working together to spec things out.
+
+594
+01:16:16,015 --> 01:16:21,745
+And that's not to say we always agree on stuff. You know, I talked about the picture in picture web API earlier.
+
+595
+01:16:21,745 --> 01:16:27,805
+That is a specification that came out of Google. And, you know, it hasn't been turned into a standard yet.
+
+596
+01:16:27,805 --> 01:16:35,095
+It's a draft specification that they're working on. And it was based on stuff that Apple shipped without consulting anybody.
+
+597
+01:16:35,095 --> 01:16:42,535
+And uh, at Mozilla, we have our, you know, if you look at our opinions on various web specs,
+
+598
+01:16:42,535 --> 01:16:47,455
+you can see that we deferred implementing the web API for picture in picture on purpose.
+
+599
+01:16:47,455 --> 01:16:56,005
+We figured we could offer the same capability to users without actually introducing the Web API, maybe even a superior capability to users.
+
+600
+01:16:56,005 --> 01:17:00,955
+And did it using like just a browser feature. And that's what the Firefox picture in picture feature is.
+
+601
+01:17:00,955 --> 01:17:08,425
+It's a browser feature. It's not an implementation of the web API. And the advantage of that is it really puts the power in the user's hands.
+
+602
+01:17:08,425 --> 01:17:17,755
+You know, excuse me, we had identified before, for example, that Twitter has the disabled picture in picture attribute on videos in their feeds.
+
+603
+01:17:17,755 --> 01:17:26,755
+And that means that, you know, Twitter makes it so that Chrome and Safari and all the other browsers you can't easily
+
+604
+01:17:26,755 --> 01:17:30,325
+picture in picture those items like you could remove the attribute and dev tools.
+
+605
+01:17:30,325 --> 01:17:39,565
+You could write a web extension to remove the attribute. Yes, you could do those things, but with Firefox, you don't have to.
+
+606
+01:17:39,565 --> 01:17:45,505
+We just we don't pay attention to that attribute. We just let you control the video.
+
+607
+01:17:45,505 --> 01:17:51,625
+And that's true for most videos. So, yeah, that's that's my little rant on on.
+
+608
+01:17:51,625 --> 01:17:57,175
+It's not really a rant that's more my position on things like the browsers working together.
+
+609
+01:17:57,175 --> 01:18:01,615
+Wow. This bill is taking forever and pushing. You know what?
+
+610
+01:18:01,615 --> 01:18:03,985
+I just want to get something done, so here's what I'm going to do.
+
+611
+01:18:03,985 --> 01:18:07,315
+We're obviously not going to get to the Twitter thing because this bill is not yet done.
+
+612
+01:18:07,315 --> 01:18:11,815
+So I'm going to cancel this build to reclaim some CPU cycles.
+
+613
+01:18:11,815 --> 01:18:14,725
+And instead, we're going to offer these CPU cycles.
+
+614
+01:18:14,725 --> 01:18:21,235
+We're going to redirect them to mock tri fuzzy so we can push this thing to try and I can in my stream.
+
+615
+01:18:21,235 --> 01:18:27,925
+So hopefully the CPU is now you can see the CPU load going down.
+
+616
+01:18:27,925 --> 01:18:32,785
+That's good. And so this thing will start, hopefully to finish the job.
+
+617
+01:18:32,785 --> 01:18:40,745
+It started with the python, it was running and eventually we're going to get a Kirsty's interface that allows me to select the jobs.
+
+618
+01:18:40,745 --> 01:18:45,965
+Lot of a lot of waiting during the stream. I apologize. You know, what I really should have done is made sure I had a binary build ready to go.
+
+619
+01:18:45,965 --> 01:18:51,725
+I didn't. I didn't expect us to be doing a binary build today or requiring a binary build, and I apologize.
+
+620
+01:18:51,725 --> 01:18:56,305
+I only had a relatively recent artifact built, I think.
+
+621
+01:18:56,305 --> 01:19:06,235
+OK, here we go. So let's push this up to try. Where do Linux debug Linux eight four Debug Moki tests?
+
+622
+01:19:06,235 --> 01:19:13,915
+Uh, and we have vision enabled. I guess it doesn't matter. What were these jobs?
+
+623
+01:19:13,915 --> 01:19:24,775
+Let's look at the details these jobs again. It was with software web render and vision was not enabled.
+
+624
+01:19:24,775 --> 01:19:30,265
+But I really don't know if that's a requirement this one had vision enabled, so let's just do it with vision enabled software web.
+
+625
+01:19:30,265 --> 01:19:39,085
+Render. Go, go, go, go, go. And we're going to try and reproduce this test failure in automation.
+
+626
+01:19:39,085 --> 01:19:46,345
+And if we can reproduce it, then my solution doesn't work. And I've wasted everyone's time because I restarted my machine.
+
+627
+01:19:46,345 --> 01:19:52,505
+My private key is not registered. So or my identity with SSA agent is not registered.
+
+628
+01:19:52,505 --> 01:20:00,785
+So just give me a second I have to wait for. I have to wait for Mark to give me a sheen back.
+
+629
+01:20:00,785 --> 01:20:07,295
+All right. Um, Scooby Doo doo doo doo doo doo doo doo doo doo doo doo.
+
+630
+01:20:07,295 --> 01:20:15,065
+There we go. And we just say, Mark, try again because it remembers what I just tried to do.
+
+631
+01:20:15,065 --> 01:20:18,515
+And once this goes up, I think I'm going to end the stream, so I apologize.
+
+632
+01:20:18,515 --> 01:20:24,485
+If you were hoping to see a little bit more more inside the ED, I did a lot of talking.
+
+633
+01:20:24,485 --> 01:20:30,155
+We didn't actually get to this part. I really apologize. Like, I wish this bill had been faster.
+
+634
+01:20:30,155 --> 01:20:35,285
+Maybe someday we'll have really fast bills for op bills and normally you do.
+
+635
+01:20:35,285 --> 01:20:42,095
+But I hadn't done an opt bill in a while on this machine, so that was my fault.
+
+636
+01:20:42,095 --> 01:20:50,945
+And with that, oh, you know what? Actually, we're pretty close. If we're doing tool kit library, it means we're pretty close to being done this build.
+
+637
+01:20:50,945 --> 01:20:54,275
+Hey, how about OK? We're going to go, we're going to go a little long here.
+
+638
+01:20:54,275 --> 01:20:59,765
+I want to see if that Twitter thing will work, that Twitter idea.
+
+639
+01:20:59,765 --> 01:21:04,655
+So let's. Just give me a quick sec here.
+
+640
+01:21:04,655 --> 01:21:08,765
+Now we're done our compilation. We were almost done before.
+
+641
+01:21:08,765 --> 01:21:13,445
+We were just 30 40, maybe a minute off. Hey, our metrics are clean.
+
+642
+01:21:13,445 --> 01:21:19,125
+That's great. OK, compilation is done.
+
+643
+01:21:19,125 --> 01:21:28,305
+We have our build, what we're going to do is we're going to modify this is the idea we go inside of HTML media element.
+
+644
+01:21:28,305 --> 01:21:36,525
+We find the pause thing here, pause internal.
+
+645
+01:21:36,525 --> 01:21:47,535
+And here I want to check like if we're cloning, the element is cloning element visually is being used in picture in picture mode.
+
+646
+01:21:47,535 --> 01:22:02,505
+Basically, then don't don't do it unless, uh, pause internal.
+
+647
+01:22:02,505 --> 01:22:12,255
+Don't do it unless a user input event is on the stack.
+
+648
+01:22:12,255 --> 01:22:19,095
+And I believe we have something called like, is handling user input?
+
+649
+01:22:19,095 --> 01:22:30,965
+Yeah. Is handling user input. S.P.
+
+650
+01:22:30,965 --> 01:22:37,505
+Some call user activation, Dom, user activation is handling user input.
+
+651
+01:22:37,505 --> 01:22:41,285
+Do we have anything is handling? We already have it in here.
+
+652
+01:22:41,285 --> 01:22:49,955
+Great. And is not handling user input, then we return.
+
+653
+01:22:49,955 --> 01:22:59,095
+So that's what I want to try. See what happens? No, wait, hold up, hold up.
+
+654
+01:22:59,095 --> 01:23:06,025
+I'm from I need to use build with default here.
+
+655
+01:23:06,025 --> 01:23:11,035
+Otherwise, it was pointed at my artifact bill before this terminal was all artifact ability.
+
+656
+01:23:11,035 --> 01:23:18,985
+And this one was the binary one, so I had to switch this one to binary time binary mode better.
+
+657
+01:23:18,985 --> 01:23:27,805
+OK, so now we rebuild with our new C++.
+
+658
+01:23:27,805 --> 01:23:34,945
+Let's hopefully get that done quickly. I don't want to just sit here and watch this build with you.
+
+659
+01:23:34,945 --> 01:23:43,225
+I mean, not not that I don't love hanging around. Oh, I see some more traffic in the in the chat perks of working on a giant C++ code base.
+
+660
+01:23:43,225 --> 01:23:49,825
+That is correct. What do you think Firefox needs to be more appealing than Chrome?
+
+661
+01:23:49,825 --> 01:23:54,235
+I mean, I think there's no there's no silver bullet, lots of like.
+
+662
+01:23:54,235 --> 01:23:58,285
+There are lots of things that there's like a long tail of things we need to do.
+
+663
+01:23:58,285 --> 01:24:03,805
+Obviously, we need to offer a better experience in general. So what does that mean?
+
+664
+01:24:03,805 --> 01:24:12,265
+Well, it's going to mean different things for different people. Obviously, we need the browser to work on most sites and work properly.
+
+665
+01:24:12,265 --> 01:24:22,375
+You know, that means skimming APIs that are being blocked by like enhanced tracking protection.
+
+666
+01:24:22,375 --> 01:24:28,705
+That means implementing web APIs that important sites have implemented that are they're using.
+
+667
+01:24:28,705 --> 01:24:32,935
+Despite the fact that we might not have necessarily agreed with the specifications,
+
+668
+01:24:32,935 --> 01:24:39,775
+like finding some kind of compromise there or applying pressure to have those sites not use those APIs.
+
+669
+01:24:39,775 --> 01:24:48,355
+So making websites work properly is probably priority one because that's the primary job of the browser.
+
+670
+01:24:48,355 --> 01:24:55,375
+The other things to do or make sure it works fast and efficiently. So really, you know, performance is table stakes.
+
+671
+01:24:55,375 --> 01:25:02,875
+So keeping that going and we've done a good job actually in the past couple of years of bringing our performance to beat to a comparable level,
+
+672
+01:25:02,875 --> 01:25:08,935
+at least on in our in our according to our measurements and from my personal measurements and from telemetry,
+
+673
+01:25:08,935 --> 01:25:16,145
+you know, our our performance is quite comparable now and then offering the users more power if possible.
+
+674
+01:25:16,145 --> 01:25:23,125
+So picture in picture is a perfect example of the, you know, offering users an ability that the other browsers don't give you.
+
+675
+01:25:23,125 --> 01:25:31,815
+So I think that would make Firefox more appealing. This is just my opinion. So.
+
+676
+01:25:31,815 --> 01:25:36,885
+I find it much harder to create dynamic Web pages than just making a desktop app using geeky or cute.
+
+677
+01:25:36,885 --> 01:25:42,345
+It feels like D.M.C. Assassin and jazz were originally meant to just specify documents in the past two years or hacks to get them to make apps.
+
+678
+01:25:42,345 --> 01:25:46,335
+In my opinion, probably much better if browsers just had a VM bytecode and you can implement use
+
+679
+01:25:46,335 --> 01:25:50,505
+whatever language UI framework you want in Java applets failed trying to do this,
+
+680
+01:25:50,505 --> 01:25:55,095
+says spent death. I I don't think I agree with you.
+
+681
+01:25:55,095 --> 01:26:04,945
+I think it's much easier. Like so if you take a look at my joy of coding webpage like building this web page was incredibly simple.
+
+682
+01:26:04,945 --> 01:26:08,685
+It's it's just this. It's HTML.
+
+683
+01:26:08,685 --> 01:26:12,825
+There's plenty of documentation for what I did here. It's nothing fancy.
+
+684
+01:26:12,825 --> 01:26:20,925
+And you know, I was able to build up and embed a bunch of stuff to make it so that you could watch my stream.
+
+685
+01:26:20,925 --> 01:26:28,005
+And I think that would have been a lot harder for me to do and make it so that people could easily run it by creating a binary application using GTK,
+
+686
+01:26:28,005 --> 01:26:35,175
+GTK or. Like, I don't think it's it's not a it's not a contest like it's no there's no contest.
+
+687
+01:26:35,175 --> 01:26:39,795
+It's much easier to deploy web applications than than GTA speak.
+
+688
+01:26:39,795 --> 01:26:48,295
+Speaking as someone who deploys desktop applications that run web applications, it's much easier to deploy web applications.
+
+689
+01:26:48,295 --> 01:26:54,185
+You know, the infrastructure is just better for the tooling is better for it. I say there's no contest.
+
+690
+01:26:54,185 --> 01:27:00,465
+It's not even the same sport save in the same ballpark. OK, so let's let's run this.
+
+691
+01:27:00,465 --> 01:27:13,865
+Let's see what happens. OK, so the original bug was about.
+
+692
+01:27:13,865 --> 01:27:25,485
+Uh, Twitter. So let's find that example again.
+
+693
+01:27:25,485 --> 01:27:32,655
+Having Google controlled websites advertising it the way they do, Chrome would be a nice start to making it more appealing and a fair fight.
+
+694
+01:27:32,655 --> 01:27:36,825
+Well, obviously, I mean, Google has the, you know,
+
+695
+01:27:36,825 --> 01:27:48,315
+a lot of opportunity to evangelize their web browser because of all of the services that they offer, for sure.
+
+696
+01:27:48,315 --> 01:27:51,495
+OK, so here's our our video. We can play it. We can pause it.
+
+697
+01:27:51,495 --> 01:27:55,575
+Let's open it in picture in picture. Here we go. Let's play a discussion with her.
+
+698
+01:27:55,575 --> 01:28:01,695
+So let's mute it and let's scroll it out of view. OK, so we keep it playing.
+
+699
+01:28:01,695 --> 01:28:09,665
+So that works, and we can still pause it from user input events.
+
+700
+01:28:09,665 --> 01:28:18,245
+Except from here. Shoot whenever we try and pause it from the picture in picture player, we no, we are not interpreting that as a user input event.
+
+701
+01:28:18,245 --> 01:28:20,555
+So that is a problem.
+
+702
+01:28:20,555 --> 01:28:36,695
+Now the way to the way around that may be is to put a user input event handling, handling user input on the on the stack with our privileged stuff.
+
+703
+01:28:36,695 --> 01:28:48,835
+So is handling user input set handling user input is true on.
+
+704
+01:28:48,835 --> 01:29:01,465
+Whenever we call into the pause method, pause.
+
+705
+01:29:01,465 --> 01:29:13,915
+Uh, and the way you do that is, say, handling user input equal, where is our window, uh?
+
+706
+01:29:13,915 --> 01:29:18,325
+VIDEO VIDEO. Hang on, hang on.
+
+707
+01:29:18,325 --> 01:29:22,495
+Hang on. Where's this pause? Here we go.
+
+708
+01:29:22,495 --> 01:29:35,305
+Pause! Get weak. VIDEO VIDEO Pause. Say VIDEO Dot owner global dot when utils handling user input true.
+
+709
+01:29:35,305 --> 01:29:45,655
+And then in a try block, we'll call pause. And then finally, we will destroy the handling user input thing.
+
+710
+01:29:45,655 --> 01:29:55,735
+That's how we make sure we're not keeping it around. And let's see if that works.
+
+711
+01:29:55,735 --> 01:30:07,545
+I think we can just do that to restart. Uh, OK.
+
+712
+01:30:07,545 --> 01:30:12,405
+So let's move, that's muted. Pause, play.
+
+713
+01:30:12,405 --> 01:30:24,435
+Picture in, picture, scroll out, keeps going. Pause, Playworks, pause, play, pause, play.
+
+714
+01:30:24,435 --> 01:30:33,435
+And if I scroll down here, scroll up. Can it still pause it whenever I'm down here?
+
+715
+01:30:33,435 --> 01:30:37,905
+Yeah, it does. Pause it. Note that whenever I come back and starts playing it again, that's interesting.
+
+716
+01:30:37,905 --> 01:30:41,685
+I didn't notice that before. It's like, pause. Oh, it removes it from the dominant.
+
+717
+01:30:41,685 --> 01:30:50,795
+Puts it back. Oh, it puts the spinner, too.
+
+718
+01:30:50,795 --> 01:31:06,225
+That's interesting, that's that's not great. I did. Play.
+
+719
+01:31:06,225 --> 01:31:13,545
+So we can maybe make this a little bit better, but at some point Twitter removes it from the dorm and then we just eliminate it,
+
+720
+01:31:13,545 --> 01:31:18,735
+and then it puts it back, so it's marginally better, marginally better.
+
+721
+01:31:18,735 --> 01:31:24,015
+So what I can do is I can offer this potential solution to our product team and see what they think.
+
+722
+01:31:24,015 --> 01:31:27,555
+I don't know what that's going to do to the Facebook case.
+
+723
+01:31:27,555 --> 01:31:37,125
+Let me see if I can find is there a publicly available Facebook video public Facebook VIDEO Facebook videos?
+
+724
+01:31:37,125 --> 01:31:41,205
+Are there Facebook videos here? Yeah. Here's one.
+
+725
+01:31:41,205 --> 01:31:45,615
+So if I like open this in picture in picture, who is this? Justin Bieber?
+
+726
+01:31:45,615 --> 01:31:57,105
+OK? Scroll out of view. Still playing? Now what if I had done that without picture in picture or if I had done this without the patch?
+
+727
+01:31:57,105 --> 01:32:03,855
+Let me just see how this is supposed to behave first or how it currently behaves.
+
+728
+01:32:03,855 --> 01:32:09,155
+So if I pull this out to picture in picture and scroll down, it does keep playing.
+
+729
+01:32:09,155 --> 01:32:20,175
+So that's that's not unique. It pauses it here. If I hit play play, this is what the product manager was describing.
+
+730
+01:32:20,175 --> 01:32:24,135
+So we can do is see whether or not our patch makes it better.
+
+731
+01:32:24,135 --> 01:32:31,395
+That experience so. OK. Justin Bieber.
+
+732
+01:32:31,395 --> 01:32:46,405
+Seems to make it better. OK, so a potential solution, we have a potential solution, I'm not saying that we've got the solved yet.
+
+733
+01:32:46,405 --> 01:32:49,285
+We have a potential solution.
+
+734
+01:32:49,285 --> 01:32:57,355
+We don't have a solution for the Twitter case where you scroll it out of view and dump the Twitter removes it from the DOM,
+
+735
+01:32:57,355 --> 01:33:10,435
+but we can offer this as a potential solution. Proof of concept.
+
+736
+01:33:10,435 --> 01:33:17,035
+Um, but. And this is for bug such and such.
+
+737
+01:33:17,035 --> 01:33:25,825
+Proof of concept. Don't let videos.
+
+738
+01:33:25,825 --> 01:33:34,225
+Don't let sites pause videos when without user input, when in Pep.
+
+739
+01:33:34,225 --> 01:33:35,065
+Now the problem?
+
+740
+01:33:35,065 --> 01:33:45,475
+I already am noticing a problem with this potential idea, which is that now you've got a way for sites to know that you're in PIP mode.
+
+741
+01:33:45,475 --> 01:33:55,225
+If they attempt to pause the video and then they look at the playing state of the video and it's not yet paused,
+
+742
+01:33:55,225 --> 01:34:00,805
+then they can make certain claims on whether or not,
+
+743
+01:34:00,805 --> 01:34:07,405
+like they can guess, they can assume, especially if you're using Firefox as user agent,
+
+744
+01:34:07,405 --> 01:34:10,045
+they might be able to guess that you're using picture in picture.
+
+745
+01:34:10,045 --> 01:34:17,845
+So that's a drawback to this plan, as we've added the ability for sites to kind of like we've added state basically.
+
+746
+01:34:17,845 --> 01:34:24,275
+So that site like kind of you can infer some state and that's less good, that's less good.
+
+747
+01:34:24,275 --> 01:34:28,645
+So I don't know whether or not this will this idea will fly,
+
+748
+01:34:28,645 --> 01:34:35,545
+but we can at least have our my fellow engineers and the product managers think about it a little bit.
+
+749
+01:34:35,545 --> 01:34:45,025
+So you saw it here first. If this solution sticks, you know, maybe you got to watch it being born and if it doesn't stick.
+
+750
+01:34:45,025 --> 01:34:53,545
+If it turns out that this is not an acceptable solution, well, you have to see a way we could do it.
+
+751
+01:34:53,545 --> 01:34:58,585
+So I don't know if we'd want to try this,
+
+752
+01:34:58,585 --> 01:35:11,545
+but what it does is it prevents us site scripts from pausing video elements when they're
+
+753
+01:35:11,545 --> 01:35:27,775
+being used for a picture in picture unless the pause is requested when handling user input.
+
+754
+01:35:27,775 --> 01:35:41,395
+In my limited, very limited testing, this addresses both the Twitter and the Facebook case and the bug.
+
+755
+01:35:41,395 --> 01:35:53,105
+Until, except for the part where Twitter removes the video element from the DOM.
+
+756
+01:35:53,105 --> 01:36:01,095
+The drawback, at least there there is at least one potential drawback here.
+
+757
+01:36:01,095 --> 01:36:19,775
+Uh, sites could use this as an ability to detect when users are viewing a video and PIP and PIP in Firefox by
+
+758
+01:36:19,775 --> 01:36:33,605
+attempting to pause a video and then checking the the play pause state and seeing that the pause attempt failed.
+
+759
+01:36:33,605 --> 01:36:44,405
+I'm not certain if that's really a problem in practice, but calling it out here.
+
+760
+01:36:44,405 --> 01:36:55,255
+OK, so let's push this up for consideration. I can send our product manager a test build.
+
+761
+01:36:55,255 --> 01:37:09,275
+And they could try to. Uh, Marco Marco VRO to tive rights, oh, hand, there are a couple of questions here.
+
+762
+01:37:09,275 --> 01:37:15,515
+OK, I'm going to try and answer these last two questions and I'm going to end the stream. I think there are questions.
+
+763
+01:37:15,515 --> 01:37:19,745
+They might be statements. We'll see Mars fab cement tipped single?
+
+764
+01:37:19,745 --> 01:37:33,045
+No. Was it not work in progress? So I'm not requesting review on these things.
+
+765
+01:37:33,045 --> 01:37:41,775
+And I can do a try build mark, try.
+
+766
+01:37:41,775 --> 01:37:55,275
+We used chooser know non artifact. I think that's why I say no artifact, no artifact.
+
+767
+01:37:55,275 --> 01:38:01,385
+OK, so the question was, is Firefox on par or ahead of Chrome in terms of hardware acceleration across platforms?
+
+768
+01:38:01,385 --> 01:38:02,635
+I think we're actually ahead.
+
+769
+01:38:02,635 --> 01:38:11,475
+That'd be my guess because of web render web render gave us the ability to turn on hardware acceleration for our graphics layer on more systems.
+
+770
+01:38:11,475 --> 01:38:18,435
+And, you know, gave us more control, more ability to make it take advantage of the existing hardware.
+
+771
+01:38:18,435 --> 01:38:23,775
+Like, I'm pretty sure Google Chrome and all Chromium browsers are basically using the GPU.
+
+772
+01:38:23,775 --> 01:38:28,605
+Not like unless you're using WebGL. Thank you. I just got a coffee delivery.
+
+773
+01:38:28,605 --> 01:38:32,655
+Unless you're using WebGL, I'm pretty sure the hardware,
+
+774
+01:38:32,655 --> 01:38:37,905
+the graphics hardware for the most part for your average website, is being used simply for compositing.
+
+775
+01:38:37,905 --> 01:38:42,195
+That's that's my guess based on what I like.
+
+776
+01:38:42,195 --> 01:38:47,715
+I haven't looked at the graphics code of the other browsers recently, but that's how Firefox used to work anyways,
+
+777
+01:38:47,715 --> 01:38:53,235
+as we had layers and the hardware acceleration was used to composite those layers really,
+
+778
+01:38:53,235 --> 01:38:59,385
+really quickly and efficiently, which doesn't really take advantage of what a graphics card can really, really do.
+
+779
+01:38:59,385 --> 01:39:09,645
+And that's the advantage of web render is instead of just compositing, we are making taking the the the graphics card and we're trying to use it.
+
+780
+01:39:09,645 --> 01:39:15,555
+We're describing what needs to be drawn to it rather than just giving it textures to composite,
+
+781
+01:39:15,555 --> 01:39:20,655
+which allows it to like, you know, do what it's good at and very fast at.
+
+782
+01:39:20,655 --> 01:39:24,405
+And that's been aided by the fact that a lot of hardware these days love computers
+
+783
+01:39:24,405 --> 01:39:29,115
+will have a discrete graphics card like it used to be a graphics card for you.
+
+784
+01:39:29,115 --> 01:39:34,125
+Old timers you probably remember a graphics card was something you bought and installed in your own machine as an add on,
+
+785
+01:39:34,125 --> 01:39:37,665
+like as a as an additional thing. And for the most part,
+
+786
+01:39:37,665 --> 01:39:46,125
+I think your average computer user would just use the integrated graphics device on their motherboard unless you were doing like some serious gaming.
+
+787
+01:39:46,125 --> 01:39:56,175
+Like I remember I got a voodoo PC, i.e. graphics card, and that was really expensive and impressive at the time.
+
+788
+01:39:56,175 --> 01:39:59,535
+Like, Oh, look at all the graphics processing you can do.
+
+789
+01:39:59,535 --> 01:40:06,525
+And these days, I think a lot of hardware when you ship has a if it doesn't have a discrete graphics chip graphics card,
+
+790
+01:40:06,525 --> 01:40:17,805
+it has more powerful integrated graphics and we can use we can use it to its full advantage for its full power what it's good at with web render.
+
+791
+01:40:17,805 --> 01:40:23,475
+And I think that web render is a distinct advantage over the other browser engines.
+
+792
+01:40:23,475 --> 01:40:34,845
+I'm I'm quite confident that they don't speak to the graphics cards in the same way, at least unless they're I'm speaking outside of WebGL.
+
+793
+01:40:34,845 --> 01:40:43,785
+But for general web browser documents, I think they they probably just composite layers like we used to do.
+
+794
+01:40:43,785 --> 01:40:47,325
+And the last question was, I always use Firefox.
+
+795
+01:40:47,325 --> 01:40:50,295
+Don't think I found a website which only worked OK on Chrome for quite a while.
+
+796
+01:40:50,295 --> 01:40:53,475
+It was always weird when I found one, though, especially because it's easy to test on both.
+
+797
+01:40:53,475 --> 01:40:55,395
+Not like it's a different OS.
+
+798
+01:40:55,395 --> 01:41:03,045
+OK, that wasn't really a question, but I'm glad to hear that Firefox is serving you and your the sites that you visit work with it.
+
+799
+01:41:03,045 --> 01:41:05,685
+I mean, you have to think about, you know what?
+
+800
+01:41:05,685 --> 01:41:15,945
+We're up against the, you know, think of how many paid software developers Google has working on the Chrome engine and Chromium.
+
+801
+01:41:15,945 --> 01:41:23,145
+And you know, they're they they spend a lot of time, a lot of resources, a lot of money,
+
+802
+01:41:23,145 --> 01:41:31,005
+you know, building out these things to make it work on various websites. And we are much, much, much smaller, but we are keeping up.
+
+803
+01:41:31,005 --> 01:41:37,275
+And I think that like, I'm not trying to toot our own horn here, but I think we're doing a pretty good job of keeping up.
+
+804
+01:41:37,275 --> 01:41:42,915
+We have much more limited resources, fewer people, at least fewer paid people.
+
+805
+01:41:42,915 --> 01:41:51,045
+We have a lot more volunteer contributors, which helps out a lot. And maybe you want to be a volunteer contributor to and help us out more.
+
+806
+01:41:51,045 --> 01:41:58,875
+OK. So what I want to do is I wanted to build this for 160 for Mac, OS and Linux.
+
+807
+01:41:58,875 --> 01:42:04,365
+And I just wanted to do an opt build just so that people can try it out.
+
+808
+01:42:04,365 --> 01:42:19,075
+So pushing. Um, so I'm gonna write what I wrote in the commit message.
+
+809
+01:42:19,075 --> 01:42:31,485
+How do I get at it? I have to wait until this commenced on. Where do I?
+
+810
+01:42:31,485 --> 01:42:51,225
+Here I got it. I just posted a patch that we might want to consider.
+
+811
+01:42:51,225 --> 01:42:59,505
+What it does is prevent side scripts from pausing video moments and my very limited testing.
+
+812
+01:42:59,505 --> 01:43:10,105
+I've pushed to try to generate some builds for Anya to test.
+
+813
+01:43:10,105 --> 01:43:18,505
+We'd probably want to discuss this with the media folk to see if this is.
+
+814
+01:43:18,505 --> 01:43:28,975
+And media the damn media folks see this as an OK solution regardless.
+
+815
+01:43:28,975 --> 01:43:51,685
+OK. Well. Or let's see.
+
+816
+01:43:51,685 --> 01:44:06,055
+So whenever these builds are done, try push is here, I'll put links to the generated builds when they're created.
+
+817
+01:44:06,055 --> 01:44:10,285
+All right. I think that's it. Oh God, whoa, I'm glad you enjoyed the stream.
+
+818
+01:44:10,285 --> 01:44:15,205
+I'm calling it here. Hey, thanks so much for watching episode two hundred and seventy two of the joy of coding.
+
+819
+01:44:15,205 --> 01:44:19,195
+I hope you had an interesting time, and I will see you next week.
+
+820
+01:44:19,195 --> 01:44:23,495
+Well, stream two hundred and seventy three. Let me know what you thought of today's stream.
+
+821
+01:44:23,495 --> 01:44:29,725
+There's a link inside the agenda. You can rate the episode. Smashed that rate this episode, link and fill out the form,
+
+822
+01:44:29,725 --> 01:44:36,055
+and you can let me know what you want to see more of and what you want to see less of and give me suggestions on what to do.
+
+823
+01:44:36,055 --> 01:44:40,285
+OK, we went really long. I apologize for that, and I'll talk to you next week.
+
+824
+01:44:40,285 --> 01:44:47,185
+Have a great week. Everybody take care. Bye bye.
+
+825
+01:44:47,185 --> 01:44:55,387
+The joy holding tip.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

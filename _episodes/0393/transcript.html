@@ -1,0 +1,2934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 393 - February 5, 2025</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 393 - February 5, 2025</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=1d85d764-75ef-4b67-937c-b24b014b96a8</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=1d85d764-75ef-4b67-937c-b24b014b96a8">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,225 --> 00:00:08,655
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:09,195 --> 00:00:12,464
+Hello. Welcome to the Joy of coding. My name is Mike Connolly.
+
+3
+00:00:12,465 --> 00:00:18,105
+It's so good to have you here. It's episode 393, and boy howdy.
+
+4
+00:00:18,135 --> 00:00:20,595
+We're going to be hacking on some Firefox stuff as per usual.
+
+5
+00:00:20,955 --> 00:00:28,095
+Going to continue our journey to document some fairly gnarly code, um, and build up build up that documentation.
+
+6
+00:00:28,095 --> 00:00:33,584
+But also, as we've discovered the past couple of weeks, build up the capability that we might be able to get some,
+
+7
+00:00:33,585 --> 00:00:39,195
+like strong typing thanks to TypeScript and its ability to parse Json comments.
+
+8
+00:00:39,795 --> 00:00:46,575
+Uh, let's start by sharing my screen. What are we doing today? Yeah, it's it's February 5th, 2025.
+
+9
+00:00:46,725 --> 00:00:50,535
+Happy February everybody. We're already one month down in 2025.
+
+10
+00:00:50,565 --> 00:00:53,685
+Time is passing so quickly. We're one month in.
+
+11
+00:00:54,225 --> 00:00:57,305
+Uh, yeah, a reminder. No plans. Survives breakfast.
+
+12
+00:00:57,315 --> 00:01:00,884
+I think I know what I want to do today. I think I know what's going to go on.
+
+13
+00:01:00,885 --> 00:01:04,435
+I think we're going to keep documenting, uh, customizable UI internal.
+
+14
+00:01:04,455 --> 00:01:10,395
+We might even finish it. That's my hope. Um, but, uh, it might not go according to plan.
+
+15
+00:01:10,455 --> 00:01:17,625
+We might get stuck on something. We might find ourselves, uh, distracted or pulled into something else, or who knows what'll happen.
+
+16
+00:01:17,625 --> 00:01:21,465
+That's okay. Um, this is software development in the raw, as I like to say.
+
+17
+00:01:21,645 --> 00:01:25,275
+And, uh, we're just going to do our best and roll with the punches as they come.
+
+18
+00:01:25,305 --> 00:01:25,995
+That's the first thing.
+
+19
+00:01:26,025 --> 00:01:32,534
+The second thing is that the agenda that, uh, you're looking at in front of us here in front of my screen is something that you have access to,
+
+20
+00:01:32,535 --> 00:01:34,955
+and it'll be in a different place depending on where you're watching the stream.
+
+21
+00:01:34,965 --> 00:01:37,995
+If you're watching this on air Mozilla, it'll be over there in the details section.
+
+22
+00:01:38,295 --> 00:01:42,315
+If you're watching this on YouTube, it'll be down in the, uh, uh, video description.
+
+23
+00:01:42,495 --> 00:01:45,225
+If you're watching this on Twitch, it'll be down in the channel. Details.
+
+24
+00:01:45,585 --> 00:01:50,455
+And so now what I'm going to do is, uh, well, let's let's talk a little bit about what we're doing today.
+
+25
+00:01:50,475 --> 00:01:55,695
+The first thing I wanted to mention some fun news is that Firefox 135 is out the door.
+
+26
+00:01:55,965 --> 00:02:02,805
+Hey, did you know that? Did you know that? 135 one out the door yesterday on February 4th and a bunch of stuff went out?
+
+27
+00:02:03,255 --> 00:02:10,545
+Uh, some interesting things like, uh, hey, Firefox translations, the client side translation feature that we ship with Firefox,
+
+28
+00:02:10,965 --> 00:02:15,315
+uh, now supports pages in simplified Chinese, Japanese and Korean.
+
+29
+00:02:15,795 --> 00:02:22,875
+They can now be translated and, uh, Russian is now available as a target language for translating to, which is interesting.
+
+30
+00:02:23,145 --> 00:02:27,165
+Let's actually see, let's, let's try and, uh, let's find Japanese Wikipedia.
+
+31
+00:02:27,555 --> 00:02:36,195
+Let's go to Japanese Wikipedia. Uh, let's pull up some, some Wikipedia page.
+
+32
+00:02:36,195 --> 00:02:39,225
+This looks like a beach of some kind. Who knows?
+
+33
+00:02:39,435 --> 00:02:46,665
+Let's see what happens. Now. I don't think I've ever translated Japanese before in my browser, so it's going to have to download the model first.
+
+34
+00:02:47,445 --> 00:02:51,135
+Uh, and we'll see how quickly that goes. And then.
+
+35
+00:02:51,975 --> 00:02:56,534
+Oh, there it is. One of in today's main page we introduced one image a day.
+
+36
+00:02:56,535 --> 00:02:59,445
+Today's photo was published from among the selected excellent images.
+
+37
+00:02:59,775 --> 00:03:03,615
+If you have a great image that you want to post and today's photo, please recommend. This is excellent.
+
+38
+00:03:03,915 --> 00:03:11,025
+Very cool. Suddenly I can read this Japanese Wikipedia page and uh, this one is apparently Takano Beach.
+
+39
+00:03:12,225 --> 00:03:15,495
+Um, okay, great. That's.
+
+40
+00:03:15,705 --> 00:03:20,505
+And that's what it looks like. Sure looks like a beach to me. Um, anyway, that's pretty cool.
+
+41
+00:03:21,195 --> 00:03:25,935
+Uh, and, you know, it doesn't involve sending a bunch of text off to some cloud somewhere.
+
+42
+00:03:26,235 --> 00:03:32,355
+Uh, it's all done on the client side, which is very nice and remarkably quick, if you ask me.
+
+43
+00:03:33,015 --> 00:03:39,344
+Uh, okay, so that's neat. Credit card autofill is being rolled out to, uh, everyone globally, which is nice.
+
+44
+00:03:39,345 --> 00:03:44,234
+That was apparently very difficult because of the there's lots of different challenges.
+
+45
+00:03:44,235 --> 00:03:49,214
+You'd think that credit cards would be the same worldwide. And there they, for the most part are.
+
+46
+00:03:49,215 --> 00:03:55,515
+But it's people's addresses that are associated with, um, or is it their addresses?
+
+47
+00:03:55,605 --> 00:04:03,855
+There's some there is some, um, complexity related to different regions that has made this a very difficult rollout.
+
+48
+00:04:04,005 --> 00:04:07,785
+But finally, we've reached the point where we can roll out, uh, credit card autofill.
+
+49
+00:04:08,805 --> 00:04:18,255
+Let's see, there's like if you want to use the, uh, uh, one of the multitude of AI chat bot like generative AI things,
+
+50
+00:04:18,705 --> 00:04:26,715
+you can now do that in the sidebar that's, um, uh, now from like, I think you can enable it in labs that's been rolled out.
+
+51
+00:04:28,245 --> 00:04:36,195
+What else? There's some certificate transparency stuff. Uh, the CR Lite certificate revocation mechanism is being rolled out.
+
+52
+00:04:36,195 --> 00:04:40,995
+That's really good, because that means that we can do more performant certificate revocation checks.
+
+53
+00:04:42,885 --> 00:04:49,005
+Uh, there's some protection here against, uh, sites abusing the history API, which is good.
+
+54
+00:04:49,515 --> 00:04:58,305
+And, uh, and this feature, which I'm going to hit command Q this is a small thing, but I think it's a pretty nice if you are a,
+
+55
+00:04:58,395 --> 00:05:04,215
+um, uh, you tend to fat finger, um, command or control w and sometimes hit command.
+
+56
+00:05:04,655 --> 00:05:12,575
+Under control Q instead. Because, uh, sometimes you want to close a tab and you accidentally hit command Q or control Q on,
+
+57
+00:05:12,575 --> 00:05:18,215
+uh, windows, um, or, sorry, Linux or Mac OS, not on windows, because on, um,
+
+58
+00:05:18,515 --> 00:05:23,824
+I don't think the like the quick keyboard shortcut is like alt F4 on windows, but on windows, uh, on Linux,
+
+59
+00:05:23,825 --> 00:05:31,445
+Mac OS, you can use control Q or command Q, and if you didn't mean to close the browser, uh, that could be a pain.
+
+60
+00:05:31,625 --> 00:05:36,275
+So, uh, we now offer the ability. It's like, hey, did you actually mean to close the current tab?
+
+61
+00:05:36,275 --> 00:05:38,795
+And you can just go ahead and close the current tab, which is nice.
+
+62
+00:05:39,875 --> 00:05:47,735
+Uh, that refresh of the new tab page that, like this is the first step in a major refresh of the new tab page is coming out.
+
+63
+00:05:47,835 --> 00:05:51,755
+Uh, that should be rolling out worldwide over the next couple of days.
+
+64
+00:05:52,025 --> 00:06:00,544
+So that's like four columns of stories. And as you'll see for my own new tab page, we're like, we're really tinkering with this thing.
+
+65
+00:06:00,545 --> 00:06:08,945
+Like we're trying a bunch of stuff. This is like a little preview of the sorts of, um, layouts and, and, uh, styles that we're looking at introducing.
+
+66
+00:06:09,095 --> 00:06:14,254
+This is all still very experimental. Um, and this is just I picked this background.
+
+67
+00:06:14,255 --> 00:06:19,445
+There's a bunch of backgrounds you could choose. Um, but I like this one best, but, like, there are some other ones.
+
+68
+00:06:20,225 --> 00:06:25,865
+Um, but I like this one right now. Um, and, uh, what else?
+
+69
+00:06:25,865 --> 00:06:30,695
+What else? Uh, so the do not Track checkbox is removed.
+
+70
+00:06:30,725 --> 00:06:39,575
+That's because, unfortunately, this is something that we, uh, we shipped many, many, many, many years ago, but it ended up being that, like, uh,
+
+71
+00:06:39,575 --> 00:06:45,995
+the Do Not Track checkbox would set, uh, an Http header and ended up not being enforced in practice,
+
+72
+00:06:45,995 --> 00:06:50,045
+like sites would just not abide by it for the most part.
+
+73
+00:06:50,405 --> 00:06:54,265
+Uh, now we use, uh, a stronger a stronger positioning.
+
+74
+00:06:54,275 --> 00:07:01,744
+So there's that the tell websites not to sell or share my data. Uh, and that's using a sort of a stronger framework called global privacy Control.
+
+75
+00:07:01,745 --> 00:07:03,755
+And you can read out more about that there.
+
+76
+00:07:04,715 --> 00:07:13,025
+Uh, we've renamed copy without site tracking to copy clean link to make it clearer for people because apparently that that that's a clearer label.
+
+77
+00:07:13,445 --> 00:07:16,715
+We did some testing there. It was a bunch of changes to the web platform.
+
+78
+00:07:16,865 --> 00:07:20,915
+Bunch of volunteer contributors helped out. This is a pretty beefy, uh, release.
+
+79
+00:07:21,695 --> 00:07:28,534
+Uh, and so good job, everybody. Good job. Okay, so let's keep working on that documentation.
+
+80
+00:07:28,535 --> 00:07:36,665
+And as always, we're going to start by checking out central pulling the latest.
+
+81
+00:07:39,605 --> 00:07:45,485
+And then rebasing our documentation uh, branch on top of it.
+
+82
+00:07:51,825 --> 00:07:57,255
+Uh all right so documentation that's this one it check out so and so.
+
+83
+00:08:00,165 --> 00:08:04,425
+And that should be. Yeah. Customizable UI and customize mode.
+
+84
+00:08:04,875 --> 00:08:12,595
+We're going to rebase on top of Bookmarks central. All right.
+
+85
+00:08:12,625 --> 00:08:19,225
+That rebase cleanly. So now or based on top of bookmarks central I'll go ahead and do an artifact build.
+
+86
+00:08:26,435 --> 00:08:33,635
+And then while we're here, let's pull open the file that we've been, uh, documenting and find our spot.
+
+87
+00:08:34,865 --> 00:08:38,465
+So where where have we been? What have we been doing?
+
+88
+00:08:39,605 --> 00:08:52,495
+Um. Hold on. Okay.
+
+89
+00:08:55,075 --> 00:09:10,925
+Uh, so we have gotten to. Now, unfortunately, that's not a very that is true that we return an object.
+
+90
+00:09:11,135 --> 00:09:15,995
+It would be nice if we could describe that object more. And maybe that's something we should do.
+
+91
+00:09:17,135 --> 00:09:22,955
+Um. Saved placements.
+
+92
+00:09:27,595 --> 00:09:30,955
+It's a placements array. So it's like.
+
+93
+00:09:38,465 --> 00:09:42,125
+Seed placements and trees, which I'd.
+
+94
+00:09:49,215 --> 00:09:56,825
+It's just like. I think it's just an array of widgets.
+
+95
+00:09:57,395 --> 00:10:04,685
+Widget IDs. That's all it is. So maybe we should take a closer look at this.
+
+96
+00:10:05,435 --> 00:10:08,825
+Um, because maybe returning object isn't right.
+
+97
+00:10:09,785 --> 00:10:16,095
+Um, I think we got. I'm just noticing that there, that was a little bit further that we got to about here.
+
+98
+00:10:16,115 --> 00:10:23,345
+Okay. So we're in the same zone. I want to I want to tinker with this.
+
+99
+00:10:24,155 --> 00:10:30,125
+So it's a it's really the, uh, parsed value of this pref.
+
+100
+00:10:30,425 --> 00:10:33,635
+So we can compute that ourselves. Oh, sorry.
+
+101
+00:10:33,665 --> 00:10:37,145
+I've got a a build temporary build time flag I need to get rid of.
+
+102
+00:10:41,735 --> 00:10:45,565
+Uh, schizophrenic web developer rights. Sometimes I don't understand why.
+
+103
+00:10:45,755 --> 00:10:51,395
+Why people put everything in one file instead of splitting related stuff in separate small files.
+
+104
+00:10:53,735 --> 00:11:02,675
+I mean, it's a great question. Sometimes there's a real practical reason because, you know, sometimes files represent, uh,
+
+105
+00:11:02,675 --> 00:11:07,115
+modules and sometimes you want to share things between different components within that module,
+
+106
+00:11:07,325 --> 00:11:10,955
+but keep things scoped to that module instead of exporting them from that module.
+
+107
+00:11:11,645 --> 00:11:16,985
+Um, now, you could, in theory, separate things into different files and then like.
+
+108
+00:11:18,285 --> 00:11:23,805
+Assemble the module is like a pre-processing task, so it's still sort of like packed up as a module.
+
+109
+00:11:23,805 --> 00:11:30,315
+You could do that, but like. It's a, there's a there's a balancing act here between um.
+
+110
+00:11:31,355 --> 00:11:35,405
+Separating concerns and seeing the whole picture.
+
+111
+00:11:37,125 --> 00:11:42,585
+You know, it's about finding the right balance. Obviously, you don't want your entire program to be in a whole file,
+
+112
+00:11:43,965 --> 00:11:48,435
+and obviously you don't want every single function or method to be in a separate file.
+
+113
+00:11:49,825 --> 00:11:53,635
+Those are two extremes. And so what?
+
+114
+00:11:54,025 --> 00:11:58,195
+What is the balance point? And the balance point I think is readability and understandability.
+
+115
+00:11:58,765 --> 00:12:03,234
+Um, if there is a way you can make things more understandable,
+
+116
+00:12:03,235 --> 00:12:12,205
+either by joining files into a single file or splitting a file into separate files, uh, opt for whatever is more readable.
+
+117
+00:12:12,685 --> 00:12:16,375
+So I don't think there's like a there should be my opinion anyways.
+
+118
+00:12:16,735 --> 00:12:21,564
+There's a hard and fast rule over whether or not you should like split things into separate files.
+
+119
+00:12:21,565 --> 00:12:25,255
+It's optimized for readability and understandability. That should be the goal.
+
+120
+00:12:25,735 --> 00:12:33,625
+Um, having everything split out into separate small files is, um, maybe a thing you could do.
+
+121
+00:12:33,805 --> 00:12:42,925
+But I would be very reluctant to, uh, have it be, uh, just a generalized blanket rule of thumb.
+
+122
+00:12:45,115 --> 00:12:51,085
+Okay. So let's take a look at this pref and parse its values.
+
+123
+00:12:54,725 --> 00:13:01,374
+Uh, the pref is. This one.
+
+124
+00:13:01,375 --> 00:13:12,835
+Horizontal tab strip. And I think it only gets written to when you, um, turn on the.
+
+125
+00:13:14,135 --> 00:13:20,795
+Oops. Turn on the vertical tab strip. There it is.
+
+126
+00:13:20,975 --> 00:13:24,515
+Yeah, it's an array of strings. That's what it is.
+
+127
+00:13:25,595 --> 00:13:31,675
+So like. Yeah, if we obviously if we parse this we're going to get an array of strings back services.
+
+128
+00:13:32,005 --> 00:13:37,955
+Graphs get char pref. Json.
+
+129
+00:13:38,705 --> 00:13:42,935
+Parse that. Yeah. An array of strings obviously.
+
+130
+00:13:43,415 --> 00:13:50,345
+So we'll go ahead then down to uh where we were at.
+
+131
+00:13:53,865 --> 00:13:59,765
+Um. Where were we?
+
+132
+00:14:05,675 --> 00:14:11,795
+It's right around here. Okay. So instead of it being an object, it is an array of strings.
+
+133
+00:14:15,275 --> 00:14:29,765
+Um, the state is an array of widget IDs that, uh, had been in the tab strip.
+
+134
+00:14:33,035 --> 00:14:39,125
+When switching prior to switching two vertical tabs.
+
+135
+00:14:42,305 --> 00:14:51,075
+And this will be similar. Returns over the last of the state that was saved the last time was restore.
+
+136
+00:14:51,075 --> 00:14:59,185
+Horizontal towers of the state is an array. The state is an array of widgets that have it in the tabs.
+
+137
+00:14:59,195 --> 00:15:06,185
+The vertical tabs strip prior to switching to horizontal tabs.
+
+138
+00:15:08,585 --> 00:15:13,055
+Schizophrenic web developer says using TypeScript means you could get rid of JS docs.
+
+139
+00:15:13,625 --> 00:15:17,285
+Uh, no, I don't think so.
+
+140
+00:15:20,465 --> 00:15:29,704
+I don't think that implies that. Uh loads uh saved customization state objects from preferences or sets some of the differences.
+
+141
+00:15:29,705 --> 00:15:34,775
+No such state can be found. Note that this does not populate view placements, which is done lazily.
+
+142
+00:15:34,775 --> 00:15:40,025
+Okay, no return value and that's fine. No arguments. Yeah, okay, we'd already done these.
+
+143
+00:15:41,015 --> 00:15:49,205
+Okay, so now we're down to our new one. Restore saved horizontal tab strips state.
+
+144
+00:15:49,235 --> 00:15:54,635
+Now this is. What is this doing? So this will.
+
+145
+00:15:56,735 --> 00:16:00,695
+Take an array of strings as an argument.
+
+146
+00:16:00,905 --> 00:16:09,315
+And it defaults to. That.
+
+147
+00:16:11,235 --> 00:16:16,215
+Uh, and that's a boolean is initializing, which defaults to false.
+
+148
+00:16:18,045 --> 00:16:22,035
+There is type. Doc. What do you think about this project? Never heard of it.
+
+149
+00:16:26,555 --> 00:16:31,445
+Type doc converts comments in TypeScript source code in HTML documentation or Json module model.
+
+150
+00:16:32,495 --> 00:16:36,115
+Um. Sounds.
+
+151
+00:16:36,355 --> 00:16:40,575
+Sounds like a good idea. Uh, is there an example?
+
+152
+00:16:44,285 --> 00:16:54,955
+People using it. Example.
+
+153
+00:16:54,975 --> 00:16:59,155
+Example. Example. I'd love to see an example.
+
+154
+00:17:08,255 --> 00:17:15,244
+So from this you can add explanations and add examples to your test documentation site by annotating your code comments.
+
+155
+00:17:15,245 --> 00:17:21,965
+For example this. And then what's the output?
+
+156
+00:17:22,505 --> 00:17:29,555
+Um. Well, show me what the example output.
+
+157
+00:17:29,605 --> 00:17:32,665
+Click on the exports link in the sidebar. See a complete list.
+
+158
+00:17:37,395 --> 00:17:50,405
+Like, show me what the output of this would be. This is, um, not very helpful.
+
+159
+00:17:51,485 --> 00:18:03,005
+Uh. Markdown showcase. Like was this rendered somewhere?
+
+160
+00:18:03,005 --> 00:18:06,335
+Calculates a square root of a number. Calculates the square.
+
+161
+00:18:06,365 --> 00:18:09,485
+No, it's not on this page. Okay.
+
+162
+00:18:09,515 --> 00:18:14,565
+Simple functions. Hey. Okay, here we go. Here we go. Okay.
+
+163
+00:18:14,685 --> 00:18:17,205
+Yeah. This is a good idea. This is a good idea.
+
+164
+00:18:17,745 --> 00:18:25,394
+It's not too different from what we're doing here, except that the types are being inferred from the fact that you use types in TypeScript.
+
+165
+00:18:25,395 --> 00:18:33,825
+And those are being slurped up into these, um, somewhat jerky style tags and then generating, uh, documentation.
+
+166
+00:18:33,855 --> 00:18:38,835
+I think that's a great idea. Uh, if you're using TypeScript, this seems like a good project.
+
+167
+00:18:39,195 --> 00:18:42,794
+That's my opinion. All right, so restore saved.
+
+168
+00:18:42,795 --> 00:18:46,845
+Horizontal tab, strip state. So what we're going to do here.
+
+169
+00:18:52,715 --> 00:18:56,665
+What does this do? I mean, I know what it says it does.
+
+170
+00:18:56,675 --> 00:19:11,405
+Was it actually do? So it's actually going to write widgets into the tab strip area.
+
+171
+00:19:17,395 --> 00:19:28,465
+Um. Okay. Restores um or adds widgets to the tab strip area.
+
+172
+00:19:29,155 --> 00:19:44,445
+Area. Tab strip area. That were saved when switching away from horizontal tabs.
+
+173
+00:19:47,185 --> 00:19:51,215
+Um. Switch things switching away.
+
+174
+00:19:52,505 --> 00:20:10,115
+This effectively this will re effectively rebuild uh area tab strip to uh match the state and save replacements.
+
+175
+00:20:12,815 --> 00:20:17,465
+And then clear the saved horizontal tab state.
+
+176
+00:20:21,485 --> 00:20:25,415
+Schizophrenic web developer writes as a programmer, spend more time reading code or writing code.
+
+177
+00:20:25,415 --> 00:20:30,165
+Reading code. My experience. Um.
+
+178
+00:20:32,715 --> 00:20:41,895
+Uh, the array of widget IDs to add to the, uh, tab strip to the area.
+
+179
+00:20:44,925 --> 00:21:01,465
+In order, um. If this set of placements doesn't include tab browser tabs.
+
+180
+00:21:05,365 --> 00:21:12,385
+The whole set is ignored and the tab strip is reset to the defaults.
+
+181
+00:21:18,595 --> 00:21:25,825
+For some reason the whole set of placements is ignored.
+
+182
+00:21:28,945 --> 00:21:31,965
+Is initializing. True.
+
+183
+00:21:31,975 --> 00:21:37,625
+If we're initializing. True.
+
+184
+00:21:38,375 --> 00:21:47,075
+If the horizontal tab strip is being read, being rebuilt during, uh, customized full UI initialization.
+
+185
+00:21:49,535 --> 00:22:02,485
+As opposed to during um. Uh, as opposed to uh via uh uh pref flip at runtime.
+
+186
+00:22:05,995 --> 00:22:09,175
+Why write in comments if you can get that information from reading the code?
+
+187
+00:22:10,495 --> 00:22:14,544
+Uh, to save time. Uh.
+
+188
+00:22:14,545 --> 00:22:18,235
+Delete widget in saved horizontal tab strip state.
+
+189
+00:22:24,575 --> 00:22:28,985
+So there's a string. So, um.
+
+190
+00:22:34,555 --> 00:22:48,825
+Does this always return an array? Yes, it will always return an array either empty or with whatever was passed out of here.
+
+191
+00:22:49,005 --> 00:23:10,525
+Okay. Um, looks for a widget with, uh, a matching ID to a widget ID within the saved horizontal tab strip state, and then deletes it from that.
+
+192
+00:23:12,085 --> 00:23:16,135
+Uh, deletes it from that state before restart.
+
+193
+00:23:16,375 --> 00:23:20,095
+Um, before saving that state to preferences.
+
+194
+00:23:22,195 --> 00:23:34,525
+The, uh, ID of the widget has to move from the saved horizontal tab strip state, delete widget, and saved nav bar when vertical tabs.
+
+195
+00:23:34,555 --> 00:23:43,815
+Oh man, that is that is a mouthful. Position, not equals equals minus one.
+
+196
+00:23:43,845 --> 00:23:47,625
+Is this better? Depends.
+
+197
+00:23:47,715 --> 00:23:51,465
+I think it's stricter. Better. What do you mean by better?
+
+198
+00:23:57,095 --> 00:24:01,225
+Um, a widget ID stream.
+
+199
+00:24:04,025 --> 00:24:09,454
+So we're going to get the vertical snapshot state. It checks also for the number type.
+
+200
+00:24:09,455 --> 00:24:15,105
+That's right. It is stricter. That's true. But what do you mean by better.
+
+201
+00:24:15,185 --> 00:24:20,975
+You said is this better? What do you mean by better? I don't know what you mean.
+
+202
+00:24:21,935 --> 00:24:29,495
+What do you mean? What do you mean? What do you mean? What do you mean by better?
+
+203
+00:24:32,625 --> 00:24:37,455
+So what is this doing? We're saving. We're getting the save vertical snapshot state.
+
+204
+00:24:39,105 --> 00:24:45,315
+We get the position of the widget. And if the position isn't there, we'll slice it out.
+
+205
+00:24:47,175 --> 00:24:56,505
+Oh right right right right right. The vertical snapshot state to protect from minus one as string.
+
+206
+00:24:56,745 --> 00:25:03,195
+No I understand it's doing it's doing uh type checking I agree it is stricter.
+
+207
+00:25:03,525 --> 00:25:08,445
+It is stricter. It doesn't for example compare against strings or objects.
+
+208
+00:25:08,625 --> 00:25:11,715
+It will just compare number to number.
+
+209
+00:25:11,715 --> 00:25:15,135
+I agree that that's what's happening. You ask though. Is this better?
+
+210
+00:25:15,405 --> 00:25:24,735
+What do you mean by better? I need to understand the conditions of your question before I can attempt to answer it.
+
+211
+00:25:25,725 --> 00:25:29,565
+Prevent bugs. Maybe it depends.
+
+212
+00:25:29,565 --> 00:25:34,545
+It depends on what you expect. Maybe sometimes you.
+
+213
+00:25:34,905 --> 00:25:39,765
+There are situations where you do want to have loose typing in.
+
+214
+00:25:39,765 --> 00:25:45,855
+A thing can be a number or null. Uh, I think it's really it's up to the author.
+
+215
+00:25:45,885 --> 00:25:53,595
+I will say myself that stricter typing does tend to be safer.
+
+216
+00:25:54,465 --> 00:25:58,815
+I don't know, and I guess you could say that. That's better. Um.
+
+217
+00:26:01,855 --> 00:26:10,255
+It's hard for me to to place a value judgment. I will say being stricter about types is generally safer.
+
+218
+00:26:11,125 --> 00:26:18,235
+It's safer. I won't say better. I'll say safer. Um, so that's as far as I'll go.
+
+219
+00:26:20,695 --> 00:26:24,175
+Uh, but I'm not going to say what people should do.
+
+220
+00:26:25,285 --> 00:26:31,045
+Um, okay. So a horizontal tab strip state.
+
+221
+00:26:32,815 --> 00:26:37,644
+Uh. Or store saved.
+
+222
+00:26:37,645 --> 00:26:44,454
+Horizontal tab strip state. And the actual saving of the horizontal tab strip state happens here.
+
+223
+00:26:44,455 --> 00:26:48,505
+And then this is saving the nav bar when vertical tab state.
+
+224
+00:26:48,955 --> 00:26:55,585
+Right. Um, looks for a widget.
+
+225
+00:26:59,875 --> 00:27:04,825
+With a matching ID to a widget ID within the saved nav bar.
+
+226
+00:27:04,825 --> 00:27:08,034
+State nav bar.
+
+227
+00:27:08,035 --> 00:27:16,665
+State. Uh. When in vertical tabs mode.
+
+228
+00:27:19,305 --> 00:27:25,035
+Within the within the navbar state that was saved.
+
+229
+00:27:28,185 --> 00:27:38,415
+Um, when switching away from vertical tabs mode and then deletes it from the state for state, save the state preferences.
+
+230
+00:27:38,435 --> 00:27:53,105
+Yeah. And so what's happening there? Save horizontal I'm also going to say see this C customizable UI in turn will save horizontal tab strip state.
+
+231
+00:27:55,205 --> 00:27:58,925
+Oh, not save horizontal. It's this one save navbar. See this one?
+
+232
+00:27:59,765 --> 00:28:08,284
+But I'm also going to do the same thing up here. Save horizontal tab.
+
+233
+00:28:08,285 --> 00:28:24,825
+Strip state. Uh.
+
+234
+00:28:25,155 --> 00:28:31,395
+Now, what's interesting about what you're writing? Uh, schizophrenic web web developer is that, like, women down the line?
+
+235
+00:28:31,425 --> 00:28:37,425
+Maybe you've seen some of the past episodes. Well, we're we've been working on this by putting these tapes in here.
+
+236
+00:28:37,515 --> 00:28:40,965
+We don't have to wholesale change over our code here to use TypeScript.
+
+237
+00:28:40,975 --> 00:28:47,775
+We can still take advantage of the TypeScript compiler to better enforce at, um, compile time,
+
+238
+00:28:48,615 --> 00:28:53,535
+uh, or build time, or even when editing that we are passing the right types around.
+
+239
+00:28:54,645 --> 00:28:57,134
+And, uh, so you kind of get the best of both worlds.
+
+240
+00:28:57,135 --> 00:29:04,305
+You end up getting the documentation, which helps prevent people from having to, like, read the code to understand what it's doing.
+
+241
+00:29:04,755 --> 00:29:09,465
+Uh, and you also get some strong typing, which is nice.
+
+242
+00:29:09,825 --> 00:29:13,475
+Um, does it result in bug free code?
+
+243
+00:29:13,485 --> 00:29:16,545
+Is it better? I would say it's safer.
+
+244
+00:29:16,815 --> 00:29:27,735
+It's safer. Um, that's that's where as far as [INAUDIBLE] go, better is such a, um, I'm hesitating to to place such a value judgment.
+
+245
+00:29:28,515 --> 00:29:32,085
+Uh, it depends on who you ask if it's better, but is it safer? I think it's safer.
+
+246
+00:29:34,935 --> 00:29:39,765
+The idea of the widget to remove from the saved nav bar state.
+
+247
+00:29:47,475 --> 00:29:52,415
+Um. Okay.
+
+248
+00:29:57,735 --> 00:30:02,715
+And this will also be an array, but it can be.
+
+249
+00:30:05,205 --> 00:30:08,325
+The empty array. Um.
+
+250
+00:30:10,705 --> 00:30:27,085
+Collects. Uh, record. Record takes the current set of widgets placed within the horizontal tabs strip, and, uh, saves their IDs to a preference.
+
+251
+00:30:28,405 --> 00:30:42,805
+Um, this can be used to then re, um, revive the old, um, state of the horizontal tab strip.
+
+252
+00:30:43,255 --> 00:30:56,425
+When. This is used when just before, uh, switching to vertical tabs mode.
+
+253
+00:30:57,715 --> 00:31:08,545
+And the saved state can be used to restore the horizontal tab mode state of the tab strip.
+
+254
+00:31:12,475 --> 00:31:18,235
+Vertical tabs mode, which moves, uh, moves some widgets around.
+
+255
+00:31:21,385 --> 00:31:27,475
+Yeah. And the save state can be used to restore. Can be is used I'll say is used.
+
+256
+00:31:29,755 --> 00:31:36,025
+Placements. Um, the placements uh, within the tabs strip.
+
+257
+00:31:38,845 --> 00:31:42,565
+Horizontal tab. Strip to save to preferences.
+
+258
+00:31:43,465 --> 00:31:47,185
+It's. This is the empty array.
+
+259
+00:31:48,475 --> 00:31:56,385
+Uh, this method. Well, um.
+
+260
+00:31:57,935 --> 00:32:03,455
+Fetch the current placements of the tab strip automatically.
+
+261
+00:32:06,215 --> 00:32:26,225
+Um. Okay. So the placements within the nav bar.
+
+262
+00:32:27,695 --> 00:32:33,155
+To save to preferences. If this is the.
+
+263
+00:32:33,845 --> 00:32:37,415
+If this is the empty area. What if this. If this is the.
+
+264
+00:32:39,365 --> 00:32:43,235
+Empty array. I should say the empty array.
+
+265
+00:32:43,745 --> 00:32:50,315
+This method will fetch the current placements of the nav bar automatically.
+
+266
+00:32:57,305 --> 00:33:00,955
+Uh. Uh.
+
+267
+00:33:01,175 --> 00:33:05,615
+Not. Fetch. Use the current placements. Use the current places.
+
+268
+00:33:06,275 --> 00:33:09,455
+Okay. Um.
+
+269
+00:33:11,075 --> 00:33:13,855
+And then we'll take that and we'll just reword it a little.
+
+270
+00:33:13,865 --> 00:33:28,085
+Takes the current set of widgets placed within the, uh, the nav bar while in vertical tabs mode, and saves their IDs to a preference.
+
+271
+00:33:28,565 --> 00:33:33,335
+This is used just before switching to horizontal tabs mode.
+
+272
+00:33:35,555 --> 00:33:43,145
+Which moves some widgets around. And the saved state is used to restore the, uh.
+
+273
+00:33:43,145 --> 00:33:48,125
+The um. Nav bars.
+
+274
+00:33:48,305 --> 00:33:57,185
+Nav bars placed widget placements. If the user switches back to vertical tabs.
+
+275
+00:34:04,225 --> 00:34:14,795
+Get area placements for saving. Area.
+
+276
+00:34:17,765 --> 00:34:25,045
+I got. Is Ariel lazy? I think that's got to be area ID, right?
+
+277
+00:34:27,635 --> 00:34:39,945
+His default area. Default area.
+
+278
+00:34:41,325 --> 00:34:46,695
+Yeah. It's and it's the area ID. So I'm gonna change this symbol.
+
+279
+00:35:05,595 --> 00:35:08,595
+Get area placements for saving and save so you can occur.
+
+280
+00:35:08,595 --> 00:35:14,475
+So what we do is we figure out whether or not the area is lazy and whether or not there are future placements for that area.
+
+281
+00:35:16,905 --> 00:35:21,165
+And if so, we compute the future placements.
+
+282
+00:35:22,915 --> 00:35:32,365
+Otherwise we get the placements from the area version previously saved state if not present in entry places,
+
+283
+00:35:32,365 --> 00:35:37,195
+this way of state is still persisted, temporarily disabled and so if there are no placements.
+
+284
+00:35:38,755 --> 00:35:51,735
+For some reason. Um. And there's some save state and the save state.
+
+285
+00:35:57,975 --> 00:36:02,265
+How's the area? Then we'll figure out what was persisted.
+
+286
+00:36:03,925 --> 00:36:08,304
+Okay. Um. I think I know what's happening here.
+
+287
+00:36:08,305 --> 00:36:19,795
+Returns the, uh, placements of widgets within a particular area without, uh, caring, um, regardless of whether or not.
+
+288
+00:36:22,525 --> 00:36:25,615
+That area has not yet been built.
+
+289
+00:36:29,045 --> 00:36:35,495
+Or is no longer registered. Um.
+
+290
+00:36:37,615 --> 00:36:41,755
+Then a known unknown area.
+
+291
+00:36:44,185 --> 00:36:51,785
+Known area, regardless of whether or not the area has has been built yet.
+
+292
+00:36:51,805 --> 00:37:01,945
+Regardless, regardless whether or not the area has been built, has already been built, or is registered.
+
+293
+00:37:04,525 --> 00:37:12,355
+Or is still registered. Um, this might mean, for example, returning.
+
+294
+00:37:13,135 --> 00:37:24,015
+This means that we can get the placements for an area that, um, was, uh,
+
+295
+00:37:24,775 --> 00:37:33,685
+registered in the past but is no longer registered, but still exists within the saved state.
+
+296
+00:37:46,835 --> 00:37:50,164
+Registry is known for still exists within the safe state. Okay.
+
+297
+00:37:50,165 --> 00:37:58,655
+So straying, uh, the idea of the area to get the placements for.
+
+298
+00:37:59,405 --> 00:38:08,585
+And it should return an array. Well, it might not like.
+
+299
+00:38:08,585 --> 00:38:13,485
+Look at this. You we we initialize it to undefined.
+
+300
+00:38:13,505 --> 00:38:17,045
+We might enter this branch. We might enter this branch.
+
+301
+00:38:17,555 --> 00:38:23,655
+We might enter this branch. So what are callers expect?
+
+302
+00:38:43,125 --> 00:38:52,775
+Save state. Well, I'm not going to change that.
+
+303
+00:38:52,795 --> 00:38:59,335
+So I'm going to say it's either a string array or undefined.
+
+304
+00:39:00,805 --> 00:39:05,605
+Um, because like that's possible right? If the area's lazy.
+
+305
+00:39:06,715 --> 00:39:13,735
+And there are future placements for it. We get placements. If the area is not lazy, it's registered.
+
+306
+00:39:13,735 --> 00:39:20,455
+We'll go ahead and get the placements for it. If we don't yet have placements so the area isn't future,
+
+307
+00:39:20,575 --> 00:39:26,455
+it's not being lazily constructed and it's not currently registered, then maybe we've seen it in the past.
+
+308
+00:39:27,995 --> 00:39:31,325
+But what if, um. We've never heard of it before.
+
+309
+00:39:32,705 --> 00:39:41,735
+Then we'll return undefined. Uh, returns the placements for the, uh, area.
+
+310
+00:39:42,065 --> 00:39:45,215
+Or undefined if the area is not recognized.
+
+311
+00:39:49,555 --> 00:39:53,435
+Yeah, everything prefixed with G like G save state is global.
+
+312
+00:39:53,455 --> 00:39:57,145
+Yeah, that's an old convention. That's an old Mozilla convention.
+
+313
+00:39:57,445 --> 00:40:06,355
+Uh, it means it's module global. Similarly, members tend to be uh, prefixed with m and r arguments are prefixed with a.
+
+314
+00:40:06,385 --> 00:40:11,425
+Now that's non uniformly um applied throughout the code base.
+
+315
+00:40:11,425 --> 00:40:20,244
+It's kind of like an old habit. And there's not really, um, a stated set of rules on when you should use those prefixes.
+
+316
+00:40:20,245 --> 00:40:28,015
+I think these days with static analysis and client side, um, uh, like Ides being as smart as they are,
+
+317
+00:40:28,015 --> 00:40:31,855
+the necessity, the utility of having those prefixes is probably.
+
+318
+00:40:33,155 --> 00:40:41,965
+Less valuable. But back in the day when people were programing with like notepad plus plus only or like vim without any,
+
+319
+00:40:42,025 --> 00:40:47,275
+um, superpowers, uh, like no intellisense or a language server or anything.
+
+320
+00:40:47,545 --> 00:40:52,645
+Having those prefixes sometimes helped as shorthand to know like, oh, okay,
+
+321
+00:40:52,645 --> 00:40:57,505
+I'm dealing with a member variable here, or this is an argument from earlier on in this function or whatnot.
+
+322
+00:40:58,555 --> 00:41:01,825
+Um, but these days I think it's kind of an anachronism.
+
+323
+00:41:03,235 --> 00:41:08,305
+Save state. Here we go. I don't think this returns anything.
+
+324
+00:41:10,655 --> 00:41:19,235
+Saves. Um, the current state of all customizable areas to disk.
+
+325
+00:41:21,065 --> 00:41:30,185
+Current state. Uh, to the preferences and preferences.
+
+326
+00:41:31,745 --> 00:41:36,055
+Um. Serializer helper.
+
+327
+00:41:43,675 --> 00:41:50,325
+Key and then value. Its key used for.
+
+328
+00:41:52,765 --> 00:41:56,905
+Key is not used at all. Uh, so that is.
+
+329
+00:41:57,955 --> 00:42:08,915
+Yeah. Um. Oh, it's it's the passed to Json.
+
+330
+00:42:08,935 --> 00:42:12,624
+This helper is passed to Json.
+
+331
+00:42:12,625 --> 00:42:20,245
+Stringify. When, uh, serializing the current, uh, customizable.
+
+332
+00:42:23,365 --> 00:42:28,075
+Areas to preferences and, uh, save state.
+
+333
+00:42:30,145 --> 00:42:35,095
+Uh, see, uh, customizable UI internal save state.
+
+334
+00:42:38,525 --> 00:42:42,935
+I actually don't think we need the braces around these. I think that's not expected.
+
+335
+00:42:47,555 --> 00:42:50,675
+Uh, see customize for your internal.
+
+336
+00:42:52,775 --> 00:42:56,915
+Save state. Here we go. Everyone prefixed.
+
+337
+00:42:57,005 --> 00:43:07,115
+Uh, they are creative at Mozilla. Uh, I mean, we do our best where we're having a good time hacking on stuff.
+
+338
+00:43:07,685 --> 00:43:11,705
+Uh, hacking on hacking on the code base. Various open source code bases.
+
+339
+00:43:12,275 --> 00:43:16,685
+Um, but thank you. Uh, I'll pass a pass along your feedback.
+
+340
+00:43:20,255 --> 00:43:23,855
+Um, so Json stringify takes an hour.
+
+341
+00:43:23,945 --> 00:43:26,975
+It's been a while since Bob about this Json stringify.
+
+342
+00:43:28,775 --> 00:43:32,014
+It takes an argument. The second argument, the replacer.
+
+343
+00:43:32,015 --> 00:43:35,795
+A replacer is a function that alters the behavior, the string ification process.
+
+344
+00:43:38,225 --> 00:43:42,425
+Or it's an array of strings. Numbers that specifies properties of value to be included in the output.
+
+345
+00:43:42,755 --> 00:43:48,154
+Wow. If replacer is an array, all elements in the array they're not.
+
+346
+00:43:48,155 --> 00:43:50,345
+Strings are numbers, including symbol values are completely ignored.
+
+347
+00:43:51,125 --> 00:43:55,925
+If replacer is anything other than a function or an array, all string keyed properties.
+
+348
+00:43:56,055 --> 00:44:00,815
+Uh, wait. Hold on a function that alters the behavior of the string ification process.
+
+349
+00:44:03,295 --> 00:44:10,845
+Okay, so what kind of function? Uh, replace or replace her.
+
+350
+00:44:10,875 --> 00:44:16,935
+Okay, so as a function, it takes two parameters, the key and the value being stringify the object in which.
+
+351
+00:44:16,935 --> 00:44:24,135
+So a key. Um, let's see what the exact definition of this is.
+
+352
+00:44:24,465 --> 00:44:29,745
+Uh. Stringify.
+
+353
+00:44:31,875 --> 00:44:49,805
+Oh. Um. So what is the key?
+
+354
+00:44:50,225 --> 00:45:02,925
+Um. Key in the value.
+
+355
+00:45:02,945 --> 00:45:13,814
+What is the type of the key? Is there like a. Json.
+
+356
+00:45:13,815 --> 00:45:18,345
+Stringify. Laser signature.
+
+357
+00:45:24,915 --> 00:45:32,765
+Presumably it's just a string, right? I say that except that you can have, I think, object.
+
+358
+00:45:32,775 --> 00:45:43,695
+Can you have an object B the key x equals so and so let y equals so and so x dot y equals test.
+
+359
+00:45:44,685 --> 00:45:48,855
+Yeah x dot y. Or wait no no no hold on hold on.
+
+360
+00:45:48,855 --> 00:45:52,065
+That's not right. Let z equal.
+
+361
+00:45:54,195 --> 00:45:57,975
+X. Why does that work. Z.
+
+362
+00:45:59,655 --> 00:46:03,195
+Oh okay. So it casts the object into a string. Okay.
+
+363
+00:46:03,855 --> 00:46:07,185
+Uh in that case I'm going to say the key is a string.
+
+364
+00:46:10,105 --> 00:46:13,435
+And the value is literally anything.
+
+365
+00:46:14,215 --> 00:46:17,365
+Um. So. Object.
+
+366
+00:46:20,275 --> 00:46:29,345
+Null. Undefined. It's literally anything.
+
+367
+00:46:29,355 --> 00:46:32,474
+Um. Key can be a number.
+
+368
+00:46:32,475 --> 00:46:42,035
+Can it be a number? Maybe it can be, uh, let, uh, z a equal two test a.
+
+369
+00:46:42,045 --> 00:46:45,645
+Whoops. Sorry. Uh, that's not right.
+
+370
+00:46:50,535 --> 00:46:58,395
+Yes, it can be. It can be a number. That's very interesting.
+
+371
+00:46:58,725 --> 00:47:03,015
+Numeric. Literal JavaScript. What a trip string number.
+
+372
+00:47:03,375 --> 00:47:07,905
+Like what are the things? What can in JavaScript and JavaScript?
+
+373
+00:47:08,445 --> 00:47:11,895
+Uh object key type. Object key types.
+
+374
+00:47:22,235 --> 00:47:29,135
+There's strings or symbols numbers can be used to, but there's still those will get converted to strings.
+
+375
+00:47:30,915 --> 00:47:39,455
+Is that true? X.
+
+376
+00:47:39,935 --> 00:47:43,115
+Let x equals 12X.
+
+377
+00:47:46,615 --> 00:47:56,625
+One. Okay. Uh, four.
+
+378
+00:47:57,045 --> 00:48:07,425
+All right. X keys. Entries. Uh x uh for.
+
+379
+00:48:07,425 --> 00:48:11,265
+Let k v for.
+
+380
+00:48:11,265 --> 00:48:19,395
+Let k in x console log type of k.
+
+381
+00:48:21,045 --> 00:48:24,915
+String. Okay.
+
+382
+00:48:27,195 --> 00:48:38,534
+String symbol. Uh, she serialize current customers, uh, state.
+
+383
+00:48:38,535 --> 00:48:42,465
+And what it's going to do is if a values object or it's a map.
+
+384
+00:48:42,795 --> 00:48:47,135
+This, um. Converts.
+
+385
+00:48:47,525 --> 00:48:54,455
+Uh, this does the work of serializing map and set.
+
+386
+00:48:57,135 --> 00:49:01,065
+Uh, objects to objects.
+
+387
+00:49:04,085 --> 00:49:08,555
+Map and sets to objects and arrays, respectively.
+
+388
+00:49:12,065 --> 00:49:15,815
+Okay. Returns.
+
+389
+00:49:18,735 --> 00:49:32,165
+Some value. Um, begin batch update.
+
+390
+00:49:34,535 --> 00:49:41,765
+If many, many, uh, changes are occurring to the state.
+
+391
+00:49:43,775 --> 00:49:49,495
+Of. Um. Customization.
+
+392
+00:49:50,155 --> 00:49:54,085
+So the customization state. Um.
+
+393
+00:49:54,475 --> 00:49:59,605
+We can begin a batch update, which, um.
+
+394
+00:50:03,365 --> 00:50:09,875
+Holds off on persisting state to disk until the batch.
+
+395
+00:50:10,205 --> 00:50:14,915
+Until the, uh, batch update ends.
+
+396
+00:50:16,595 --> 00:50:21,365
+Uh calling. Begin.
+
+397
+00:50:22,865 --> 00:50:31,105
+Batch update. Um, increases the, uh.
+
+398
+00:50:33,175 --> 00:50:39,775
+Increases, uh, the value line increases the depth.
+
+399
+00:50:42,095 --> 00:50:54,335
+Of batch updates, and only when the depth and should be balanced with a call to end batch update.
+
+400
+00:51:00,875 --> 00:51:09,145
+Um, in order to ensure that state gets written and.
+
+401
+00:51:14,525 --> 00:51:21,425
+And batch update. Uh, signals the end of a batch update.
+
+402
+00:51:21,875 --> 00:51:39,335
+And presuming that there are no other batch updates on the stack, uh, that they're not there on the stack, that we have a batch update depth of zero.
+
+403
+00:51:40,355 --> 00:51:53,435
+The current state. The current customizations state will be will be persisted to preferences.
+
+404
+00:51:55,865 --> 00:52:04,535
+Uh, this should always be called balance out a call to begin batch update.
+
+405
+00:52:10,885 --> 00:52:14,575
+Force. Dirty boolean. Um.
+
+406
+00:52:16,495 --> 00:52:21,835
+True to. Uh. Set to. True to force.
+
+407
+00:52:22,585 --> 00:52:35,185
+The state saving mechanism. To treat the current placement, uh, customization state as dirty.
+
+408
+00:52:36,535 --> 00:52:41,155
+Uh, as as being, uh, to treat the current customization set to true.
+
+409
+00:52:41,155 --> 00:52:50,275
+To force the state saving mechanism to treat the current customization state as changed and thus in need of persisting to disk.
+
+410
+00:52:55,645 --> 00:52:58,675
+Add listener G listeners.
+
+411
+00:53:00,415 --> 00:53:09,005
+Mhm. What does this do? Some weird, like, listener.
+
+412
+00:53:09,005 --> 00:53:16,675
+Uh. Bad day.
+
+413
+00:53:18,595 --> 00:53:22,195
+Oh. Shoot. I should have just.
+
+414
+00:53:24,025 --> 00:53:27,945
+Instead of running that I've been not doing the thing I should have been doing. Should say.
+
+415
+00:53:27,955 --> 00:53:32,425
+See customizable UI. You can batch update.
+
+416
+00:53:37,735 --> 00:53:45,175
+And batch. Um, I'm pretty sure save state.
+
+417
+00:53:47,635 --> 00:53:53,565
+Isn't. Yeah, it's only exposed in one place.
+
+418
+00:53:53,595 --> 00:53:58,335
+Okay. That's good. And get area placements for saving.
+
+419
+00:53:59,145 --> 00:54:03,105
+Not used externally. Okay. Saved by not.
+
+420
+00:54:04,515 --> 00:54:08,635
+Not used externally. Save horizontal tabs.
+
+421
+00:54:08,645 --> 00:54:12,105
+Strip state. Not used.
+
+422
+00:54:14,905 --> 00:54:23,575
+Okay. And what I'm looking for is the publicly exposed, customizable UI object calling into these methods,
+
+423
+00:54:23,575 --> 00:54:29,095
+because that if that exists, that I can just forward the documentation rather than rewriting it.
+
+424
+00:54:29,365 --> 00:54:33,865
+Um, yeah. Okay. Well, let's save state.
+
+425
+00:54:35,005 --> 00:54:38,335
+I think. Yeah, okay.
+
+426
+00:54:38,865 --> 00:54:44,305
+But that's as far as I got. See. Okay.
+
+427
+00:54:44,995 --> 00:54:48,805
+Um, how far are we? We're at add listener.
+
+428
+00:54:52,165 --> 00:54:55,794
+We've got reset. Rebuild.
+
+429
+00:54:55,795 --> 00:54:59,215
+Undo. Reset. Some other stuff.
+
+430
+00:55:02,005 --> 00:55:07,105
+Come. Quite a few functions left. I'm sorry, gang, we might not get this done today.
+
+431
+00:55:07,105 --> 00:55:11,425
+I'm. We're close, we're close. But there's still something like a thousand lines to go.
+
+432
+00:55:12,355 --> 00:55:17,844
+Um, let's see what we can do in half an hour. I thought we'd get all these done, but I've been, uh.
+
+433
+00:55:17,845 --> 00:55:20,985
+I've been moving more slowly than I thought. Okay.
+
+434
+00:55:20,995 --> 00:55:32,335
+Add listener. Well, what are listeners? Um, it's a it's just a set and then notify listeners what this on which created on widget.
+
+435
+00:55:32,335 --> 00:55:40,935
+Added on widget after created. Would you drag?
+
+436
+00:55:54,925 --> 00:55:58,105
+Notify listeners at home. It's weird. No.
+
+437
+00:55:58,155 --> 00:56:06,295
+Like notice here. We're calling them from on widget drag.
+
+438
+00:56:06,325 --> 00:56:16,905
+What? So who calls customizable UI on widget drag?
+
+439
+00:56:22,615 --> 00:56:27,285
+Customize mode. Oh I see.
+
+440
+00:56:33,135 --> 00:56:44,125
+Okay. Okay, so this is a way of dispatching special.
+
+441
+00:56:46,575 --> 00:56:50,265
+Events uh, on widget drag for example.
+
+442
+00:56:50,985 --> 00:56:54,405
+So these things customizable UI listeners, that's what it's expecting okay.
+
+443
+00:56:54,405 --> 00:57:00,345
+That's helpful. I've got these um add listener.
+
+444
+00:57:01,725 --> 00:57:07,725
+Oh. Oh good. Oh good. I can just point to these add listener.
+
+445
+00:57:10,785 --> 00:57:17,655
+See? Uh, customized for you by listener.
+
+446
+00:57:21,225 --> 00:57:26,095
+Um. See customizable UI.
+
+447
+00:57:26,755 --> 00:57:31,465
+Listener. And then remove listener.
+
+448
+00:57:38,225 --> 00:57:45,875
+There's no return value added. We see customizable UI and remove listener notify listeners.
+
+449
+00:57:47,285 --> 00:57:53,405
+Um. I don't actually believe that is exposed publicly, so we have to write this ourselves.
+
+450
+00:57:55,925 --> 00:58:03,675
+Okay. And for event I believe it's a string.
+
+451
+00:58:05,415 --> 00:58:12,915
+And then any args. You know what?
+
+452
+00:58:12,925 --> 00:58:22,374
+That's probably what I should have used for serialization is any, um.
+
+453
+00:58:22,375 --> 00:58:28,195
+Serialization helper. Serialized helper.
+
+454
+00:58:28,615 --> 00:58:33,605
+Helper. It should be any.
+
+455
+00:58:41,665 --> 00:58:56,435
+Okay. So, um, for any listener is registered via uh, add listener or remove listener.
+
+456
+00:58:59,925 --> 00:59:12,395
+Uh uh, this calls the appropriate listener function, um for a particular customizable UI event.
+
+457
+00:59:13,745 --> 00:59:20,945
+Um, passing along the, uh, arguments.
+
+458
+00:59:22,895 --> 00:59:25,505
+Passing along the arguments. Um.
+
+459
+00:59:28,955 --> 00:59:41,735
+Uh, calls the appropriate listener function for for a particular customer if it is defined on the listener passing on the arguments string.
+
+460
+00:59:42,395 --> 00:59:45,965
+Uh, a event, the um.
+
+461
+00:59:49,915 --> 00:59:55,405
+The name of the event being fired.
+
+462
+00:59:55,615 --> 00:59:59,785
+Um, the event being fired.
+
+463
+01:00:00,445 --> 01:00:10,015
+This is not a Dom event. So much as, uh, this is not a Dom event.
+
+464
+01:00:12,685 --> 01:00:26,295
+Uh, just an identifier. This is not a Donovan app so much as.
+
+465
+01:00:28,805 --> 01:00:42,485
+Uh, a string identifier of something that can be listened for the, uh, uh, the a customizable UI listener.
+
+466
+01:00:42,995 --> 01:00:55,325
+For example, on widget created. Arguments to pass to the customizable UI listener function turns nothing.
+
+467
+01:00:58,455 --> 01:01:05,075
+Dispatch toolbox event to window. All right.
+
+468
+01:01:17,975 --> 01:01:21,155
+Um. I kind of want to change this.
+
+469
+01:01:23,735 --> 01:01:29,525
+Symbol name. Uh, instead of a fan. Would you like a listener name?
+
+470
+01:01:32,015 --> 01:01:37,055
+The name of the listener that should be called.
+
+471
+01:01:41,845 --> 01:01:49,855
+This is a string identifier of something that can be listened for via a customizable UI listener.
+
+472
+01:01:49,855 --> 01:01:55,725
+For example on widget created. Yeah.
+
+473
+01:01:58,455 --> 01:02:02,655
+For a particular customizable UI event.
+
+474
+01:02:04,665 --> 01:02:09,885
+Yeah. All right.
+
+475
+01:02:10,485 --> 01:02:13,185
+Dispatch toolbox event to window.
+
+476
+01:02:13,545 --> 01:02:39,195
+Um, constructs a custom event, uh, with the a event type type, uh, that is bubbling cancelable bubbling and cancel and includes the details passed on.
+
+477
+01:02:39,195 --> 01:02:51,735
+Add details. This event is then dispatched on the G nav toolbox in a way that lets it string the type of the custom event.
+
+478
+01:02:54,585 --> 01:02:58,545
+To fire. Details. Any.
+
+479
+01:03:00,555 --> 01:03:08,925
+E um details to assign to the event being fired.
+
+480
+01:03:10,005 --> 01:03:19,545
+Hey windows Dom window the when the browser window containing the Navy and G nav toolbox.
+
+481
+01:03:21,165 --> 01:03:28,665
+Um, which will have the event dispatched on it.
+
+482
+01:03:32,225 --> 01:03:37,265
+Dispatch toolbox event. So, um.
+
+483
+01:03:43,725 --> 01:03:51,985
+Let's see. Customizable UI internal dispatch toolbox.
+
+484
+01:03:52,005 --> 01:03:55,915
+Again, this is going to be somewhat similar.
+
+485
+01:03:57,505 --> 01:04:07,195
+Constructs a custom event with that as well and includes it details then dispatched in a window if provided.
+
+486
+01:04:07,195 --> 01:04:16,345
+If one is provided. If no window is provided, this is dispatched on.
+
+487
+01:04:18,915 --> 01:04:24,015
+The G nav toolbox for all registered windows.
+
+488
+01:04:30,655 --> 01:04:37,075
+And that, uh, details. A window?
+
+489
+01:04:37,405 --> 01:04:40,704
+No. Or no?
+
+490
+01:04:40,705 --> 01:04:50,635
+To dispatch to all registered uh, log toolbox elements in all registered windows.
+
+491
+01:04:51,655 --> 01:04:54,894
+Returns nothing. Document docket.
+
+492
+01:04:54,895 --> 01:04:59,605
+Source. Going strong. Woohoo! Create widget.
+
+493
+01:04:59,755 --> 01:05:08,304
+Okay, now I'm pretty sure this is. This is something that's already been.
+
+494
+01:05:08,305 --> 01:05:13,945
+Yeah. Okay, so we can just forward this. Um.
+
+495
+01:05:17,015 --> 01:05:23,075
+See. Customizable UI create widget.
+
+496
+01:05:24,065 --> 01:05:27,065
+What are the param properties?
+
+497
+01:05:36,525 --> 01:05:42,275
+Is one of these? And it returns these.
+
+498
+01:05:49,495 --> 01:05:52,645
+Very good. That's going to skip a lot of lines.
+
+499
+01:05:55,255 --> 01:05:58,495
+Create built in widget. Uh huh. Uh. This one.
+
+500
+01:06:01,495 --> 01:06:10,895
+We have to define. Built in widget.
+
+501
+01:06:13,545 --> 01:06:22,395
+Um, creates the widgets that are defined using uh, defined within um.
+
+502
+01:06:29,835 --> 01:06:37,935
+That are defined statically within the browser and customizable widgets.
+
+503
+01:06:42,195 --> 01:06:48,495
+And what is that? The widget definition.
+
+504
+01:06:51,455 --> 01:06:55,895
+Now the widget definition will be similar to how we create widgets elsewhere.
+
+505
+01:06:56,705 --> 01:07:00,755
+So I have a feeling that will be create widget properties.
+
+506
+01:07:04,175 --> 01:07:10,325
+Right. A data conditional destroy promise.
+
+507
+01:07:14,215 --> 01:07:35,335
+Never heard of it. Um. Oh, if one already exists on the data or null, we'll create the conditional destroy promise.
+
+508
+01:07:44,955 --> 01:07:49,245
+Additional distraught parents so complicate what is happening here. Conditional destroy promise.
+
+509
+01:07:51,945 --> 01:07:57,855
+If conditional control. Okay. What are all conditional destroy promise?
+
+510
+01:07:59,895 --> 01:08:04,815
+Okay. If the data includes conditional destroy promise.
+
+511
+01:08:06,135 --> 01:08:12,345
+Set it to this and then deleted on the data. So if it had existed, then call it.
+
+512
+01:08:12,975 --> 01:08:22,225
+When was this introduced? Um.
+
+513
+01:08:23,155 --> 01:08:26,755
+Is this no longer needed? Conditional destroy. Promise.
+
+514
+01:08:30,995 --> 01:08:46,865
+My great pocket. Aha!
+
+515
+01:08:47,805 --> 01:08:51,715
+In the pocket. Pocket button.
+
+516
+01:08:53,865 --> 01:09:21,985
+And then destroy the widget. Print reader putting data.
+
+517
+01:09:22,285 --> 01:09:32,575
+That's the reader putting. Where's the customizable built in widgets?
+
+518
+01:09:34,135 --> 01:09:41,065
+Removed buttons. We removed the pocket button. Here we have this one.
+
+519
+01:09:48,935 --> 01:09:54,925
+What is that? But. Save to pocket.
+
+520
+01:10:04,075 --> 01:10:22,575
+Yeah, okay. Here.
+
+521
+01:10:22,585 --> 01:10:30,624
+Create widget. Got it. Okay.
+
+522
+01:10:30,625 --> 01:10:35,815
+So I'm going to take a note that we don't need conditional destroy promise anymore.
+
+523
+01:10:35,815 --> 01:10:51,685
+Nothing uses it. Um, active bugs file a bug to get rid of conditional destroy promise in customize pull UI that system JS.
+
+524
+01:10:55,315 --> 01:11:02,005
+The data otherwise is this stuff on view showing location specific?
+
+525
+01:11:08,755 --> 01:11:12,565
+That's, uh, that's one of these create widget properties.
+
+526
+01:11:15,235 --> 01:11:18,355
+Okay. It doesn't return anything.
+
+527
+01:11:33,055 --> 01:11:39,655
+Returns. True. So we've got some preexisting code here we can work with returns true.
+
+528
+01:11:46,065 --> 01:11:49,575
+Tries true if the area will eventually lazily restore.
+
+529
+01:11:51,585 --> 01:11:56,745
+The area with uh. Uh uh. With the area with.
+
+530
+01:11:59,835 --> 01:12:11,144
+Associated area. But hasn't yet boram a area that's a string, a area.
+
+531
+01:12:11,145 --> 01:12:24,165
+It. Um.
+
+532
+01:12:24,825 --> 01:12:27,915
+If the area is lazy, it's true.
+
+533
+01:12:27,915 --> 01:12:39,495
+If. G areas of the type of the area is the tool bar, then the area is lazy.
+
+534
+01:12:39,515 --> 01:12:47,765
+Otherwise. If we have if the area is in G placements or.
+
+535
+01:12:50,445 --> 01:12:55,455
+We don't have it in areas.
+
+536
+01:12:58,725 --> 01:13:05,755
+I don't know if this is true. That's a little flimsy.
+
+537
+01:13:05,765 --> 01:13:12,855
+A Is Ariel lazy? Who calls that? In this area.
+
+538
+01:13:15,075 --> 01:13:18,165
+This is the lazy area that has no story yet. We can't yet modify it.
+
+539
+01:13:19,845 --> 01:13:24,105
+Would at least like to add to it. So we keep track of energy future places and use it to add.
+
+540
+01:13:24,105 --> 01:13:29,085
+We're starting the area. We throw away a position though, as I can only be bogus with the area having a it were stored.
+
+541
+01:13:30,685 --> 01:13:43,105
+Okay. Normalize widget.
+
+542
+01:13:43,735 --> 01:14:02,465
+Okay. Normalize which it.
+
+543
+01:14:27,225 --> 01:14:37,745
+That's going to return. Does it return a wrapped widget?
+
+544
+01:14:42,955 --> 01:14:48,625
+Which event handler? Doesn't actually wrap it.
+
+545
+01:14:53,325 --> 01:14:58,835
+Hmhm. So.
+
+546
+01:15:02,075 --> 01:15:08,285
+That's got to be these. And then a source string.
+
+547
+01:15:08,705 --> 01:15:11,855
+Um. Source external.
+
+548
+01:15:13,025 --> 01:15:17,495
+One of the. Sorry.
+
+549
+01:15:22,105 --> 01:15:25,405
+Uh, one of the customizable.
+
+550
+01:15:28,335 --> 01:15:36,555
+UI source constants. Um, for example.
+
+551
+01:15:38,445 --> 01:15:41,595
+Customizable UI source external.
+
+552
+01:15:44,185 --> 01:15:49,485
+Returns an object that looks like doesn't actually look like it returns a wrapped widget.
+
+553
+01:15:51,255 --> 01:16:17,005
+Just returns an object. Callers to this.
+
+554
+01:16:19,165 --> 01:16:23,785
+Like this one. Like create widget. Demo group.
+
+555
+01:16:24,875 --> 01:16:30,775
+Right G Group rapper. Cash. Cache will delete the widget.
+
+556
+01:16:32,875 --> 01:16:42,965
+It's built in toolbar. What you might need out of updating.
+
+557
+01:16:44,825 --> 01:16:49,555
+And which area. This returns the widget ID.
+
+558
+01:16:51,785 --> 01:16:55,385
+So this does not. This is wrong. This returns the widget ID.
+
+559
+01:16:55,855 --> 01:16:58,885
+Incorrect. Incorrect.
+
+560
+01:16:58,895 --> 01:17:04,895
+This documentation. Create widget returns a string.
+
+561
+01:17:17,745 --> 01:17:20,945
+That wraps the widget. Okay.
+
+562
+01:17:25,325 --> 01:17:43,115
+Return string. The ID of the created widget. Uh, and places them within the pallet.
+
+563
+01:17:46,325 --> 01:17:54,045
+And. Creates the widgets and customizable widgets.
+
+564
+01:17:54,115 --> 01:18:03,465
+Yeah, I don't think there's anything that there is widget or turn object given a set.
+
+565
+01:18:04,495 --> 01:18:10,225
+Of. Customizable UI create widget properties.
+
+566
+01:18:10,375 --> 01:18:13,465
+Attempts to normalize.
+
+567
+01:18:14,995 --> 01:18:25,405
+Uh. That object and create a normalized version of that object.
+
+568
+01:18:29,485 --> 01:18:39,385
+Uh, with default values where, um, a data failed to define values.
+
+569
+01:18:41,885 --> 01:18:45,185
+As well as properly wrapped properly.
+
+570
+01:18:46,835 --> 01:18:55,575
+Um. Wrapped event handlers.
+
+571
+01:18:55,585 --> 01:19:01,255
+Properly wrapped event handlers. String.
+
+572
+01:19:01,435 --> 01:19:07,465
+Returns object. The normalized widget representation.
+
+573
+01:19:11,845 --> 01:19:16,795
+Okay. Move.
+
+574
+01:19:16,865 --> 01:19:24,955
+Okay. Wrap widget. Event handler. So. Given some widget definition.
+
+575
+01:19:26,455 --> 01:19:39,065
+Uh. Object. Uh.
+
+576
+01:19:39,095 --> 01:19:46,205
+Widget. Event name. Uh.
+
+577
+01:19:54,715 --> 01:19:59,725
+Given some widget definition. Object for words calls.
+
+578
+01:20:03,065 --> 01:20:14,125
+To functions. With the name a event name to the underlying implementation.
+
+579
+01:20:17,125 --> 01:20:22,315
+Object's copy of that function. Uh.
+
+580
+01:20:29,395 --> 01:20:45,554
+Why do we have this indirection? Uh.
+
+581
+01:20:45,555 --> 01:20:53,925
+Substring, the name of a function to redirect to the underlying implementations.
+
+582
+01:20:54,495 --> 01:20:58,905
+Um, version of that same function.
+
+583
+01:20:59,565 --> 01:21:02,685
+Same named function, a widget.
+
+584
+01:21:03,225 --> 01:21:12,315
+Now that's going to be something like a customizable UI create widget properties.
+
+585
+01:21:13,905 --> 01:21:17,115
+Um, actually I'm pretty sure this is just.
+
+586
+01:21:19,365 --> 01:21:30,765
+Called from normalized widgets. This is going to be I'm going to say, um, a normalized widget as returned by,
+
+587
+01:21:31,515 --> 01:21:42,765
+uh, normalize the widget as computed by normal normalized widget definition.
+
+588
+01:21:43,905 --> 01:21:48,375
+Returns nothing. Now why do we do this wrapping.
+
+589
+01:21:49,425 --> 01:21:56,185
+The other thing I want to mention is um. The normalized widget representation.
+
+590
+01:21:56,275 --> 01:22:13,705
+Uh, notably, uh, the implementation property of this uh, widget will point to the original a data structure.
+
+591
+01:22:16,815 --> 01:22:20,715
+Will lmms replace developers? Writes schizophrenic web developer?
+
+592
+01:22:21,165 --> 01:22:24,585
+Uh, no, I don't think they will. I could be wrong, but I don't think they will.
+
+593
+01:22:29,075 --> 01:22:44,925
+Destroy widget. They might replace certain classes of software.
+
+594
+01:22:46,655 --> 01:22:52,905
+I could see that happening. I think some people think of it like horses.
+
+595
+01:22:52,905 --> 01:22:58,015
+Like horses seeing the automobile. Um, and I wouldn't think of it that way.
+
+596
+01:22:58,035 --> 01:23:03,315
+I think of, yeah, like horses became quaint, I guess, whenever automobiles came around.
+
+597
+01:23:03,675 --> 01:23:06,885
+But we're not horses where people who ride horses.
+
+598
+01:23:07,575 --> 01:23:12,395
+And so, yeah, it's possible that lives are like the automobile.
+
+599
+01:23:12,405 --> 01:23:20,915
+But in that model, then the way I think about it is. Um, we stop riding horses and we start writing automobiles.
+
+600
+01:23:22,055 --> 01:23:26,645
+Um. We go faster, but they become assistive tools.
+
+601
+01:23:26,655 --> 01:23:33,464
+I think that's that's more likely. As opposed to being completely replaced with autonomous automobiles, like,
+
+602
+01:23:33,465 --> 01:23:44,925
+I think the idea that LMS can produce humongous software systems and maintain them by themselves without human, uh, intervention is.
+
+603
+01:23:46,335 --> 01:23:53,115
+I don't think we're even close. Uh, personally, um, how would you even.
+
+604
+01:23:53,235 --> 01:23:56,985
+How would you even. How do you even test that?
+
+605
+01:23:57,955 --> 01:24:01,345
+If it doesn't burn the Earth first? Yeah. Great question.
+
+606
+01:24:01,375 --> 01:24:04,865
+Um, yeah, yeah.
+
+607
+01:24:05,035 --> 01:24:13,245
+They consume a lot of power as well. Uh, although I've, I've heard that there's been work to make them more efficient.
+
+608
+01:24:13,265 --> 01:24:16,565
+You know, you can potentially. Um. Well, there's.
+
+609
+01:24:16,745 --> 01:24:21,875
+So there's two steps. There's, like, the, uh, energy cost in training, which can be immense.
+
+610
+01:24:22,415 --> 01:24:26,105
+And then there's the actual energy cost in querying, which is also quite a lot.
+
+611
+01:24:28,075 --> 01:24:33,234
+Um, and yeah, it's that's a lot of energy being used.
+
+612
+01:24:33,235 --> 01:24:41,125
+And the other thing is about like they rely on currently, at least they rely on human created content.
+
+613
+01:24:42,515 --> 01:24:47,465
+It has to train on human created content, be it artwork or source code or whatnot.
+
+614
+01:24:48,335 --> 01:24:52,895
+And there's a phenomenon called model collapse. If you, um.
+
+615
+01:24:55,285 --> 01:24:59,935
+If an alarm is only trained on outputs from other LMS,
+
+616
+01:25:00,535 --> 01:25:07,135
+it becomes like photocopies of photocopies and the whole thing kind of becomes really homogenous and the quality just tanks.
+
+617
+01:25:07,585 --> 01:25:09,625
+This is called model collapse.
+
+618
+01:25:10,405 --> 01:25:19,124
+And so what that tells you is that human creativity actually has a there's that there's a lot of value to human creativity to these things.
+
+619
+01:25:19,125 --> 01:25:24,625
+They need human creativity in order to like, improve the models and to evolve the models.
+
+620
+01:25:26,315 --> 01:25:33,095
+Um. They can't. And so, like, you have this interesting problem right now where there's so much content potentially
+
+621
+01:25:33,095 --> 01:25:37,895
+being created right now on the web that is a mixture of human created and machine created.
+
+622
+01:25:38,315 --> 01:25:45,325
+And, you know, there's this I think problem that people working in this space are dealing with of like, oh no,
+
+623
+01:25:45,335 --> 01:25:52,085
+how do we filter out all of the LM stuff to train our next generation LM so that we don't suffer model collapse?
+
+624
+01:25:52,715 --> 01:25:58,805
+Um, we need to invest more in finding real human creativity.
+
+625
+01:25:59,585 --> 01:26:02,824
+So, uh, it's it's very interesting.
+
+626
+01:26:02,825 --> 01:26:07,395
+It's almost like human. Human creativity is fed into this wood chipper.
+
+627
+01:26:08,755 --> 01:26:12,505
+But it's not just a wood chipper. It's. It fuels the machine.
+
+628
+01:26:12,805 --> 01:26:20,065
+It needs human creativity. If we stop producing new code, then the whole thing stops improving.
+
+629
+01:26:21,265 --> 01:26:32,095
+Now that that only changes, like in the event that suddenly the problem of human creativity or like the feature of human creativity.
+
+630
+01:26:32,665 --> 01:26:36,595
+Um, like if we somehow make it so that these things can like.
+
+631
+01:26:38,785 --> 01:26:43,795
+Their outputs don't result in model collapse, which I think is that is the definition of of creativity.
+
+632
+01:26:43,915 --> 01:26:52,445
+Use is that the output from a generative model can be fed into a new generative model and train it, and it doesn't suffer model collapse.
+
+633
+01:26:52,465 --> 01:26:56,995
+Then I'll worry. Then I'll I'll be like, oh no, maybe there needs any more.
+
+634
+01:26:56,995 --> 01:27:01,185
+But like, um. They.
+
+635
+01:27:01,545 --> 01:27:04,874
+So far I've seen nothing of the sort and didn't call them rights.
+
+636
+01:27:04,875 --> 01:27:08,085
+Just feeding the more human made content doesn't make them exponentially better either.
+
+637
+01:27:08,085 --> 01:27:13,245
+That's true, that's true. But as far as I know, and again, I'm not an expert in this domain.
+
+638
+01:27:14,275 --> 01:27:19,375
+That's just my opinion. Like, have I used one of these things before? Yeah, like I remember, um.
+
+639
+01:27:20,495 --> 01:27:25,985
+Uh, one of my, uh, nephews. I wrote him a poem using one of these things just to make him laugh.
+
+640
+01:27:26,375 --> 01:27:30,755
+You know, I so I've used these things before, and, you know, I have.
+
+641
+01:27:30,755 --> 01:27:33,785
+I used it for anything super serious. No. Um.
+
+642
+01:27:34,865 --> 01:27:38,895
+But I will like what I have read.
+
+643
+01:27:38,915 --> 01:27:44,645
+What I understand is that model collapse occurs when you feed them their own output as trading data.
+
+644
+01:27:45,365 --> 01:27:51,605
+And that, to me, means that there's something that humans provide to the system that is still of value.
+
+645
+01:27:52,415 --> 01:27:58,905
+If you want to measure it that way, um, value in at least the training part and data column is right.
+
+646
+01:27:58,925 --> 01:28:02,134
+It doesn't make them better whenever you just feed them human creativity.
+
+647
+01:28:02,135 --> 01:28:06,035
+But certainly if you feed them LM generated content for training, it makes them worse.
+
+648
+01:28:06,785 --> 01:28:12,285
+That's true. Uh, currently anyways. At least that's okay.
+
+649
+01:28:12,315 --> 01:28:16,125
+That's my understanding. Could be wrong. Could be wrong. I'm willing to be wrong.
+
+650
+01:28:16,155 --> 01:28:19,425
+Maybe someday. We're all. We're all going to be just outmoded.
+
+651
+01:28:19,455 --> 01:28:23,715
+That's possible. Um. But why worry?
+
+652
+01:28:24,705 --> 01:28:28,455
+Prepare, I guess. Dig your bunkers. Now, everybody.
+
+653
+01:28:29,175 --> 01:28:32,445
+Dig your bunkers now. Uh, don't quote me.
+
+654
+01:28:32,445 --> 01:28:37,405
+I'm just joking. Um, I think we're going to be, like, for LMS.
+
+655
+01:28:37,425 --> 01:28:44,205
+I'm. I'm not worried that they're going to take my job or your job or, uh, you know, I think they're assistive technology.
+
+656
+01:28:46,695 --> 01:28:51,795
+Um. All right, but I asked me again in a year.
+
+657
+01:28:52,275 --> 01:28:55,635
+Maybe I'm wrong. Uh. Destroy widget.
+
+658
+01:28:55,665 --> 01:29:00,255
+Uh, I don't think we need to actually document that because it's already been documented.
+
+659
+01:29:00,495 --> 01:29:04,955
+You can just see the other one get customized target for area.
+
+660
+01:29:04,965 --> 01:29:07,995
+Is that. Yeah, we can get that one for free, too.
+
+661
+01:29:08,295 --> 01:29:12,825
+Okay. E e c customized for you.
+
+662
+01:29:12,825 --> 01:29:16,035
+I get customized target for area.
+
+663
+01:29:31,245 --> 01:29:36,134
+Destroy yet? Uh, okay. I always think of them like the computer.
+
+664
+01:29:36,135 --> 01:29:43,715
+When it arrived, it would take everyone's job as well. That's right. Um, I mean, so here's one way I used to think about it.
+
+665
+01:29:43,725 --> 01:29:49,865
+I don't know if this is still true, but this is why I think about it. When you are programing.
+
+666
+01:29:51,865 --> 01:29:55,225
+You are describing something to a computer.
+
+667
+01:29:55,675 --> 01:30:00,265
+You're describing instructions to to solve a set of problems.
+
+668
+01:30:02,875 --> 01:30:06,655
+If you had an Lem that could program you.
+
+669
+01:30:06,835 --> 01:30:12,415
+Describe to what the problem you're trying to solve. That's like, basically maybe a new form of programing.
+
+670
+01:30:12,655 --> 01:30:16,285
+I don't know if so. Like, presumably.
+
+671
+01:30:18,535 --> 01:30:23,005
+You know, what would that maybe that means just more people can be programmers.
+
+672
+01:30:24,025 --> 01:30:30,975
+Um, you still need to describe what you want.
+
+673
+01:30:30,985 --> 01:30:34,945
+That's what programing is, is basically describing what you want the computer to do.
+
+674
+01:30:36,715 --> 01:30:43,425
+Um. And then when there are problems with it, debugging it.
+
+675
+01:30:43,445 --> 01:30:49,234
+You have to be able to describe the problem and investigate the problem,
+
+676
+01:30:49,235 --> 01:30:57,485
+which may be an LM could potentially help with I don't know, I, uh, I can't, I don't know.
+
+677
+01:30:57,725 --> 01:31:01,505
+I don't know. I don't know. I don't, I don't know.
+
+678
+01:31:01,955 --> 01:31:19,025
+Okay. Reset resets. Um, the customizations state across all browser, all registered windows to the default set of placements.
+
+679
+01:31:20,765 --> 01:31:24,545
+Um, this also um.
+
+680
+01:31:26,025 --> 01:31:34,515
+Puts the browser back into horizontal tabs mode if it was in vertical tabs mode.
+
+681
+01:31:39,725 --> 01:31:43,235
+The, um. Yeah.
+
+682
+01:31:43,565 --> 01:31:51,755
+Okay, so there's no. No. Are you there? And now I actually, I say, I think this might actually be one that we can just see as well.
+
+683
+01:31:51,755 --> 01:31:55,025
+Actually see customizable UI reset. Yeah.
+
+684
+01:31:56,375 --> 01:32:03,845
+So I'm pretty sure that's documented. Yeah.
+
+685
+01:32:11,275 --> 01:32:19,914
+Reset UI state. Well, this do reset.
+
+686
+01:32:19,915 --> 01:32:23,515
+Everything is a good idea. Okay.
+
+687
+01:32:24,205 --> 01:32:36,835
+Um, resets all of the internal state objects of customizable UI internal to their, uh, defaults.
+
+688
+01:32:38,905 --> 01:32:45,475
+And also persists. But, um.
+
+689
+01:32:48,085 --> 01:32:51,175
+But, uh. Persists. No.
+
+690
+01:32:51,175 --> 01:33:04,015
+Hang on. Persists the current state to guide state before reset or to allow for undoing resets.
+
+691
+01:33:04,735 --> 01:33:10,195
+Uh, for or to temporarily allow for undoing resets.
+
+692
+01:33:11,635 --> 01:33:22,765
+Um, customizable UI resets. Um, and then blows away the current customizable UI.
+
+693
+01:33:22,945 --> 01:33:26,575
+Customizable. Um.
+
+694
+01:33:29,625 --> 01:33:38,685
+Customizable UI state. Including including saved prefs and sets them to defaults.
+
+695
+01:33:43,965 --> 01:33:49,935
+Um. To their defaults.
+
+696
+01:33:50,775 --> 01:34:00,465
+This also. Sets them and their replacements to.
+
+697
+01:34:02,295 --> 01:34:11,985
+Sets them and the associated. Uh, flows with current standard sets them to their defaults.
+
+698
+01:34:13,725 --> 01:34:21,285
+This also rebuilds all of the registered areas to reflect the defaults.
+
+699
+01:34:29,505 --> 01:34:34,875
+Rebuild registered areas. Oh, we're over time, gang.
+
+700
+01:34:35,445 --> 01:34:38,575
+Uh, it's 238. Whoo! How much is left?
+
+701
+01:34:38,595 --> 01:34:41,595
+So, uh, two, three, 4 or 5. Let's do some math.
+
+702
+01:34:41,595 --> 01:34:45,045
+2 or 4? Three. 4 or 5. That's the.
+
+703
+01:34:45,195 --> 01:34:49,365
+That's the. That's one number four.
+
+704
+01:34:49,365 --> 01:34:58,275
+Three, 4 or 5. What's the other number? 506 four.
+
+705
+01:34:59,745 --> 01:35:03,705
+Uh okay. 506 four minus four 345.
+
+706
+01:35:04,035 --> 01:35:12,285
+Only 719 lines to go. So I'm thinking that we have a better shot of having this done next week.
+
+707
+01:35:13,065 --> 01:35:18,405
+Uh. Uh, sorry about that. I thought we were there. I thought we were done, but we're not quite.
+
+708
+01:35:18,645 --> 01:35:22,485
+We're almost there. We've made good progress, though. And, um.
+
+709
+01:35:23,565 --> 01:35:29,055
+And then this will be this will be wrapped up, and then maybe we can document these things.
+
+710
+01:35:29,235 --> 01:35:33,585
+That'll be nice. That that'll not take us long. And then we'll have done everything.
+
+711
+01:35:33,585 --> 01:35:36,705
+We'll have documented all of these. Now, there's still, um.
+
+712
+01:35:36,975 --> 01:35:40,735
+I think there's some script in here to document. Some of this is already documented.
+
+713
+01:35:40,755 --> 01:35:43,755
+That's nice. We could probably do a bit better.
+
+714
+01:35:44,985 --> 01:35:48,885
+And then all of this is documented. And that'll be good.
+
+715
+01:35:50,685 --> 01:35:57,165
+Put it up for review. Maybe we could, uh, invest in some TypeScript checking and see what that's like.
+
+716
+01:35:58,335 --> 01:36:02,115
+All right, well, I'm going to call it there. Hey, thanks so much again for watching episode.
+
+717
+01:36:02,745 --> 01:36:07,605
+What is this episode 393 of the Joy of coding. Hey, we're closing in on episode 400.
+
+718
+01:36:07,725 --> 01:36:12,195
+Let me know what you'd like to see for episode 400. Uh, you can rate this episode.
+
+719
+01:36:12,205 --> 01:36:15,675
+Let me know if you if you follow this link to rate this episode.
+
+720
+01:36:16,275 --> 01:36:19,784
+Link to rate this episode. Oh, thank you everybody for watching.
+
+721
+01:36:19,785 --> 01:36:23,835
+I'm seeing a bunch of messages in the chat. Thanks for watching everyone. Here's a link to rate this episode.
+
+722
+01:36:23,955 --> 01:36:31,615
+If you have an idea of something I could do, uh, that's interesting for episode 400, let me know by rating this episode and just you can just supply.
+
+723
+01:36:31,635 --> 01:36:35,015
+There will be text fields in there. You can supply feedback or you can just drop it in the chat.
+
+724
+01:36:35,025 --> 01:36:41,115
+I read everything that comes in through the feedback form and the chat. Um, and if you got good ideas, I'll, I'll give them a shot.
+
+725
+01:36:41,235 --> 01:36:50,745
+I know that some people were interested in, um, writing a simple ad on to do something, um, or to try or write something in rust.
+
+726
+01:36:51,195 --> 01:36:55,815
+So, yeah, let me know what you think. Uh, and with that, we'll call it there.
+
+727
+01:36:56,175 --> 01:37:01,605
+Thanks again everybody. Have yourselves a great week. I will see you next week with episode 394.
+
+728
+01:37:02,115 --> 01:37:09,705
+Take care. Bye bye. The joy of coding.
+
+729
+01:37:09,955 --> 01:37:10,305
+See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

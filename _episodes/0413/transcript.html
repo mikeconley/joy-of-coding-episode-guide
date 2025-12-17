@@ -1,0 +1,3206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 413 - August 13, 2025</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 413 - August 13, 2025</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=0d212c1b-2cbb-4571-b74a-b31d00f43811</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=0d212c1b-2cbb-4571-b74a-b31d00f43811">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:02,974 --> 00:00:08,534
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:09,164 --> 00:00:12,764
+Hello and welcome to episode 413 of the Joy of coding.
+
+3
+00:00:13,244 --> 00:00:17,803
+My name is Mike Connelly. It's so good to have you here. We're going to be live hacking on some Firefox stuff.
+
+4
+00:00:17,804 --> 00:00:22,334
+I'm very excited about that. I'm so happy to have you with me on the ride.
+
+5
+00:00:22,334 --> 00:00:30,674
+Let's get started. Hey, it's August 13th, 2025, episode 4 or 13 A reminder no plan survives breakfast.
+
+6
+00:00:30,674 --> 00:00:38,113
+I think I know what I want to do today, I think I know, uh, what I kind of want to address, but whether or not that succeeds or fails,
+
+7
+00:00:38,114 --> 00:00:44,204
+uh, we're going to discover as we, as we work on this and whether or not it's, you know, easy, difficult.
+
+8
+00:00:44,204 --> 00:00:48,824
+Maybe it'll be a slam dunk, may be a complete disaster. We're going to find out as we work on it.
+
+9
+00:00:48,854 --> 00:00:52,514
+Uh, none of this has been sort of pre-prepared beyond just an idea of what I want to do.
+
+10
+00:00:52,874 --> 00:00:58,994
+That's the first thing. The second thing is that the agenda that we're looking at this handy dandy thing with links and text, etc., uh, this is,
+
+11
+00:00:58,994 --> 00:01:03,254
+uh, something you have access to and there will be a link to it, uh, in different places depending on where you are.
+
+12
+00:01:03,254 --> 00:01:09,344
+So if you're watching this on Mozilla, check out the details section over that way if you're watching this on YouTube, check out the description.
+
+13
+00:01:09,344 --> 00:01:14,204
+Uh, that away. And if you're watching this on Twitch, then check out the channel details also, uh, that away.
+
+14
+00:01:14,444 --> 00:01:17,594
+And that should have a link to the agenda which will update over time.
+
+15
+00:01:17,774 --> 00:01:22,604
+As I change it, this little spinny will spin and then if you hit reload, it should update the second thing.
+
+16
+00:01:22,814 --> 00:01:26,203
+Uh, or the third thing rather that I'll highlight is the episode guide.
+
+17
+00:01:26,204 --> 00:01:31,814
+If you were watching last week's episode guide, uh, last week's episode, the episode guide was a big deal.
+
+18
+00:01:32,054 --> 00:01:36,974
+Uh, we we made some changes so that we could, like, have these different sections expand and collapse.
+
+19
+00:01:36,974 --> 00:01:42,164
+That was, uh, uh, merging in, uh, a pull request from Danny Colon, and that's great.
+
+20
+00:01:42,194 --> 00:01:47,984
+Really appreciate that. That, uh, involved me getting, like, an updated version of Ruby on this machine so I could, like,
+
+21
+00:01:47,984 --> 00:01:54,254
+build the do Ruby gems and bundle and Jekyll and all this sort of stuff as it was, uh, very interesting.
+
+22
+00:01:54,614 --> 00:01:58,094
+I did some get gymnast, excuse me, get gymnastics.
+
+23
+00:01:58,124 --> 00:02:05,353
+Uh, but all in all told, we got in pretty good shape. We also merged in a bunch of, uh, more recent episode, uh, uh, more recent episodes.
+
+24
+00:02:05,354 --> 00:02:10,394
+We got all the way up to 410, so that's pretty good. Um, hey, let's get started.
+
+25
+00:02:10,394 --> 00:02:16,603
+So today's keynote code Keanu code is, uh, for episode 413.
+
+26
+00:02:16,604 --> 00:02:23,174
+It's Http code 413. This is the associated image I'm going to believe this is from Point Break.
+
+27
+00:02:23,474 --> 00:02:29,444
+That looks like a point break image to me. Uh, it's probably Keanu wiping out, uh, on a surfboard.
+
+28
+00:02:29,594 --> 00:02:31,844
+I don't know if that's actually Keanu or stunt double.
+
+29
+00:02:31,844 --> 00:02:42,194
+It wouldn't surprise me if it was Keanu actually surfing like that guy seems pretty cool, but the, um, the Http code 413 is content too large.
+
+30
+00:02:42,344 --> 00:02:45,944
+So let's read up quickly and, uh, get ourselves familiar with what that means.
+
+31
+00:02:47,774 --> 00:02:55,124
+So Http 413 content to large. It's a status code that indicates that the request entity was larger than limits defined by the server.
+
+32
+00:02:55,124 --> 00:02:59,444
+So the server might close a connection or return a retry after header field.
+
+33
+00:03:00,164 --> 00:03:05,354
+So uh, prior to a certain RFC, the response phrase for the status was payload too large.
+
+34
+00:03:05,594 --> 00:03:14,654
+And that message is still widely used. So for example, if maybe you're posting to an end point and, uh, you know, you, you start pushing bytes,
+
+35
+00:03:14,864 --> 00:03:20,683
+maybe you'll send a content length of a certain amount and the server might immediately reject the upload if,
+
+36
+00:03:20,684 --> 00:03:27,464
+uh, if like, the content length is larger than the maximum size will process and then it might return a 413 saying that,
+
+37
+00:03:27,464 --> 00:03:33,434
+hey, the contents too large get get your bus out of my kitty pool sort of a thing.
+
+38
+00:03:34,274 --> 00:03:38,054
+So, uh, yeah, that's that's what's going on. 413 content to large.
+
+39
+00:03:38,504 --> 00:03:43,004
+That's a great lesson there. Uh, and I, I guess it's a fairly appropriate.
+
+40
+00:03:43,004 --> 00:03:49,094
+This wave is apparently too large for whoever's surfing here, and they are wiping out after hanging ten.
+
+41
+00:03:49,754 --> 00:03:54,613
+Okay, so what are we working on today? Uh, I was hoping we could, uh.
+
+42
+00:03:54,614 --> 00:03:59,414
+Well, first of all, let me let me show you some stuff. Some kind of neat stuff that that's been going on in New Tableland.
+
+43
+00:04:00,314 --> 00:04:06,404
+Uh, we've got these cool widgets now that we've been tinkering with. These are not on by default, but they are in nightly.
+
+44
+00:04:06,404 --> 00:04:12,344
+And if you can find the preferences, in fact, let me let me see if I can list the preferences for you in case you want to try them out.
+
+45
+00:04:13,094 --> 00:04:17,084
+Um, we may have actually mentioned them in the nightly blog.
+
+46
+00:04:17,504 --> 00:04:22,304
+Um, widgets? No. Did we not mention them in the nightly blog?
+
+47
+00:04:23,354 --> 00:04:26,444
+Uh, what? Maybe it is this one. Widget.
+
+48
+00:04:27,284 --> 00:04:33,284
+Yeah. Widget. Trending searches. Widget. Um.
+
+49
+00:04:36,124 --> 00:04:40,953
+Let's see. Well, let me get the preface out anyways.
+
+50
+00:04:40,954 --> 00:04:47,464
+Uh, let me let me get you some preface to look at all of it.
+
+51
+00:04:48,334 --> 00:04:51,484
+So these are the widget prefs that I would recommend flipping.
+
+52
+00:04:51,794 --> 00:04:57,844
+Uh, I've flipped these three. So, uh, you know, again, this is just for nightly users.
+
+53
+00:04:57,854 --> 00:05:00,874
+Uh, if you feel like you want to try some stuff out.
+
+54
+00:05:01,264 --> 00:05:04,644
+Uh, expect this stuff to be, you know, malfunctioning.
+
+55
+00:05:04,654 --> 00:05:11,764
+I wouldn't do any, um, you know, deep, deep production level commitment to any of these widgets that could change at any time.
+
+56
+00:05:11,764 --> 00:05:14,974
+We may choose to just abandon it altogether, but that's okay.
+
+57
+00:05:15,064 --> 00:05:22,204
+You can try them. Uh, so widget prefs for, uh, task list slash, uh, timer.
+
+58
+00:05:22,804 --> 00:05:35,734
+Those prefs are, uh, widgets system enabled, I think, and then focus timer enabled and then lists enabled.
+
+59
+00:05:37,264 --> 00:05:44,524
+And, uh, you should also as part of that, uh, you'll get this like little set of toggles that you can turn them on and off.
+
+60
+00:05:45,094 --> 00:05:51,123
+Uh, turn the timer on and off. So that's nice. So you can have like a little break timer or a focus timer if you want to.
+
+61
+00:05:51,124 --> 00:05:55,144
+Like, I want to focus for the next 25 minutes on something. You could just start that off.
+
+62
+00:05:55,324 --> 00:06:01,054
+It'll start a timer that's going to be on every new tab. You can close that new tab, it'll open up and still be running.
+
+63
+00:06:01,354 --> 00:06:08,404
+Uh, and whenever that timer goes off, I've got it set up to to send me a system notification when the timer goes off.
+
+64
+00:06:08,824 --> 00:06:11,974
+So you may find that useful. Uh, we're just testing.
+
+65
+00:06:12,004 --> 00:06:15,994
+We're just putting our feet in the water here on ways we can make new tab more useful for people.
+
+66
+00:06:16,474 --> 00:06:23,764
+Um, you know, we started a foray into it with this, uh, with the wet weather widget, and the final placement is unclear.
+
+67
+00:06:23,764 --> 00:06:27,603
+Like, we're we're really just interested in sort of like the functionality of the widgets.
+
+68
+00:06:27,604 --> 00:06:32,134
+And then we're going to think about where they can go. Maybe, you know, if the user can drag and drop them.
+
+69
+00:06:32,134 --> 00:06:36,123
+That's all stuff that is coming down the, the, the thinking pipeline.
+
+70
+00:06:36,124 --> 00:06:39,424
+But for now, we're just trying to, uh, to get them working properly.
+
+71
+00:06:39,574 --> 00:06:45,244
+So I've got a 25 minute timer. Let's let's just let that run, um, and proceed.
+
+72
+00:06:45,904 --> 00:06:49,143
+So what are we working on today? Uh, okay.
+
+73
+00:06:49,144 --> 00:06:50,254
+So speaking of new tab.
+
+74
+00:06:51,524 --> 00:06:59,834
+I may have mentioned this to you before, but one of the things that we are, um, working on, or I've been working on for a couple of months with, uh,
+
+75
+00:06:59,834 --> 00:07:02,404
+some of my colleagues, uh, shout out to Poonam, uh,
+
+76
+00:07:02,414 --> 00:07:06,314
+who has been working on this with me fairly closely and for the web extensions team has been really helping out.
+
+77
+00:07:06,674 --> 00:07:11,084
+Uh, we want to make it so that we can update new tab out of band from the rest of the browser.
+
+78
+00:07:11,714 --> 00:07:16,784
+Uh, we think, uh, in a way, new Tab was always kind of designed to be that way.
+
+79
+00:07:17,084 --> 00:07:25,664
+Um, when it was originally landed in, uh, Firefox, back in like this instance, this version of a new tab was landed back in, I think, 2017.
+
+80
+00:07:26,414 --> 00:07:32,234
+Uh, it was in like the quantum, the quantum release. So, um, that's when this first iteration landed.
+
+81
+00:07:32,654 --> 00:07:37,304
+And it was always designed to be updatable out of band, like as an extension.
+
+82
+00:07:38,464 --> 00:07:44,584
+But then we, uh, we change the extension format. So originally it was written as something called a bootstrap extension.
+
+83
+00:07:44,914 --> 00:07:49,444
+And then we decided to get rid of bootstrap extensions in favor of web extensions.
+
+84
+00:07:49,834 --> 00:07:56,823
+And uh, the team at the time was like, well, look, we don't have a great way of the web extension.
+
+85
+00:07:56,824 --> 00:08:03,004
+APIs aren't really robust enough just yet to, uh, to fully port everything over to a web extension.
+
+86
+00:08:03,004 --> 00:08:05,823
+So let's just make it a normal browser Chrome component.
+
+87
+00:08:05,824 --> 00:08:12,594
+And for years, the new tab was a normal browser component until a couple months ago when we converted it into a, um,
+
+88
+00:08:12,604 --> 00:08:19,444
+sort of a built in extension, a built in web extension that sits inside the browser and that can be updated out of.
+
+89
+00:08:19,774 --> 00:08:23,764
+Now, it does require, uh, because of how it functions, functions.
+
+90
+00:08:23,764 --> 00:08:27,364
+It does require a restart in order for any updates to be applied.
+
+91
+00:08:27,694 --> 00:08:31,414
+Um, and it's not going to tell you it's not going to tell you to restart the browser.
+
+92
+00:08:31,414 --> 00:08:36,783
+It's just, you know, if an update is applied in the background in the next time you restart, it should be, uh, it should be up to date.
+
+93
+00:08:36,784 --> 00:08:40,534
+So we are currently testing that out-of-band behavior on beta.
+
+94
+00:08:41,014 --> 00:08:45,753
+And uh, if I go to my beta profile, I'm pretty sure it's this one.
+
+95
+00:08:45,754 --> 00:08:53,913
+Yeah. This one has the, uh, the, um, the update because I can tell because it's got the nicely styled, uh,
+
+96
+00:08:53,914 --> 00:08:59,404
+nicely styled widgets here where as opposed to a different profile, let's say, uh, lucky number seven here.
+
+97
+00:08:59,584 --> 00:09:07,804
+If I were to turn on the widgets in this profile there, the the styling is way off because, uh, uh, system system.
+
+98
+00:09:09,464 --> 00:09:13,994
+Uh, because, you know, this was earlier on, like, what's on 41, 42 on beta.
+
+99
+00:09:14,444 --> 00:09:18,614
+We hadn't even gotten to the point where we could style it, uh, nicely.
+
+100
+00:09:18,884 --> 00:09:23,713
+And so, uh, what got what we call train hopped to, uh, some beta users,
+
+101
+00:09:23,714 --> 00:09:28,094
+not all beta users is includes like updated styles for the widgets, which are off by default.
+
+102
+00:09:28,094 --> 00:09:35,923
+But really we were just testing the deployment mechanism. And so, yeah, uh, this is uh, 142 an instance of 142.
+
+103
+00:09:35,924 --> 00:09:41,594
+But if I look at about new tab or about support, rather we scroll down to new tab.
+
+104
+00:09:41,594 --> 00:09:45,253
+If you're an add ons, you can see it's listed here. I'm running 140 3.0.
+
+105
+00:09:45,254 --> 00:09:48,703
+And then this sort of like larger version string. And that's great.
+
+106
+00:09:48,704 --> 00:09:49,934
+That's what what I wanted.
+
+107
+00:09:50,144 --> 00:09:58,183
+Um I'm curious, anyone who's in the chat if you are running beta, I'm curious to know if you're running, uh, new tab 142 or 143.
+
+108
+00:09:58,184 --> 00:10:04,034
+Let me know in the chat. And let's see if you got put into the enrollment cohort where we're testing this deployment out.
+
+109
+00:10:04,994 --> 00:10:14,203
+Uh, let's see. So, uh, as part of the enrollment mechanism, uh, or part of the mechanism that we use to deploy, uh,
+
+110
+00:10:14,204 --> 00:10:23,353
+what we call these train hop updates to, uh, new tab, we have to, like, construct a recipe that goes out with our, what we call Nimbus.
+
+111
+00:10:23,354 --> 00:10:29,114
+That's our platform for, you know, uh, deploying rollouts and experiments and all sorts of things.
+
+112
+00:10:29,114 --> 00:10:36,284
+And in this case, we're using it to deploy an instruction to, uh, clients to say like, okay, now please download this updated instance of of new tab.
+
+113
+00:10:37,004 --> 00:10:41,473
+Uh, someday it's possible that all of this will be kind of instrumented through add ons.mozilla.org.
+
+114
+00:10:41,474 --> 00:10:46,154
+But for now we're just doing it with uh, with uh Nimbus and Experimenter.
+
+115
+00:10:48,774 --> 00:10:54,744
+Okay, so the recipe requires us to, um, supply this chunk, which includes.
+
+116
+00:10:55,754 --> 00:10:59,394
+Uh, Danny Collins says, I guess Knightley is already on 143. That is correct.
+
+117
+00:10:59,414 --> 00:11:03,404
+So what basically happened? 142 is on developer.
+
+118
+00:11:03,554 --> 00:11:08,144
+142 is beta. 143 is Knightley. That's if we look at what train.
+
+119
+00:11:08,534 --> 00:11:14,984
+What train is it now? 143 is nightly, 142 is in beta, and we're actually in RC week for 142.
+
+120
+00:11:15,974 --> 00:11:18,704
+And that beta is also where Developer Edition is.
+
+121
+00:11:19,064 --> 00:11:28,454
+So some people on 142 beta, uh, have been enrolled such that they've received the new tab from nightly 143 from about a week ago.
+
+122
+00:11:28,694 --> 00:11:38,444
+They got a we took a snapshot of nightly, uh, nightly new tab and we updated 142, uh, a small subset of the 142 population's new tab with it.
+
+123
+00:11:39,104 --> 00:11:43,004
+Um, and so that's allowing us to sort of test this deployment mechanism.
+
+124
+00:11:43,004 --> 00:11:47,474
+We're going to test some, uh, emergency escape hatches on it to like, uninstall the update,
+
+125
+00:11:48,104 --> 00:11:53,384
+uh, like install it again, like, use the emergency, um, sort of release valve to turn it off,
+
+126
+00:11:53,384 --> 00:11:55,994
+even though it's installed like a bunch of stuff to make sure that the,
+
+127
+00:11:56,354 --> 00:12:01,784
+the deployment mechanism works and that we've got maneuvers in place in case anything ever goes wrong.
+
+128
+00:12:02,114 --> 00:12:05,204
+Uh, because, you know, we don't want to ever break people's browsers.
+
+129
+00:12:06,554 --> 00:12:11,204
+Okay. So, uh, the recipe looks a little bit like this.
+
+130
+00:12:11,564 --> 00:12:15,524
+And one of the things that I realized I had to do when I constructed the recipe
+
+131
+00:12:15,794 --> 00:12:20,264
+is that I had to pull the version number out from the API that was built,
+
+132
+00:12:20,774 --> 00:12:24,194
+um, and stored on, on the FTP server.
+
+133
+00:12:24,194 --> 00:12:29,254
+And that was a pain because like this version number is generated by our CI infrastructure,
+
+134
+00:12:29,384 --> 00:12:36,524
+like it's an encoding of the exact date and time that the build was created and signed by our inference infrastructure.
+
+135
+00:12:36,674 --> 00:12:42,074
+And so it's not really deterministic at the point where you like kick off a build of the new Tab API.
+
+136
+00:12:42,314 --> 00:12:46,604
+Um, this could be it's really just a matter of um, the machine.
+
+137
+00:12:47,234 --> 00:12:52,574
+Whatever the time was whenever signing began is when the add on version, uh, sort of gets computed.
+
+138
+00:12:53,144 --> 00:12:56,803
+And so I think it's when signing begins or maybe, maybe the build job.
+
+139
+00:12:56,804 --> 00:13:01,484
+But at any rate, this is not a thing that we get to define in advance, at least not these two numbers.
+
+140
+00:13:01,724 --> 00:13:05,384
+These two numbers. Yes. These two numbers. No.
+
+141
+00:13:05,684 --> 00:13:11,834
+And so what I'd like to do is make it possible for me to, like, supply, uh,
+
+142
+00:13:11,834 --> 00:13:18,373
+a task cluster, build job one where we, like, created the xpi to a command line.
+
+143
+00:13:18,374 --> 00:13:21,764
+Uh, uh, command. That will was a recipe.
+
+144
+00:13:21,764 --> 00:13:31,183
+In this context, a recipe is the Json object that the clients, um, interpret as instructions.
+
+145
+00:13:31,184 --> 00:13:36,854
+It's not. It's not like it's a, uh, it's not, uh, an imperative instruction set.
+
+146
+00:13:36,854 --> 00:13:42,644
+It's a declarative Json object that describes to the clients, here's what you need to do.
+
+147
+00:13:42,644 --> 00:13:48,043
+And in this case, what you need to do whenever the, um, particular feature.
+
+148
+00:13:48,044 --> 00:13:52,244
+In this case it's called new tab train hop add on when it receives this instruction.
+
+149
+00:13:52,244 --> 00:14:04,844
+This instruction is uh, uh aka this recipe is download uh, the API in this folder from the uh, FTP server and expect it to be this version.
+
+150
+00:14:06,794 --> 00:14:12,074
+Um, and if if for some reason your current version is greater than this, ignore it.
+
+151
+00:14:12,974 --> 00:14:21,224
+Uh, that is that is what the recipe is in this context. It's it's instructions for the clients to sort of execute, to apply some kind of,
+
+152
+00:14:21,224 --> 00:14:25,963
+um, in this case a rollout or in times past, it'd be like an experiment,
+
+153
+00:14:25,964 --> 00:14:32,714
+like some experiments will be, um, turn this pref on or, um, turn this set of preferences on,
+
+154
+00:14:32,714 --> 00:14:39,764
+or set this preference to a particular value to, I don't know, change the size of a cache.
+
+155
+00:14:39,764 --> 00:14:44,113
+And we're going to run an experiment to see whether or not that improves it,
+
+156
+00:14:44,114 --> 00:14:50,264
+like satisfies a hypothesis to improve, uh, network throughput in certain conditions or something.
+
+157
+00:14:50,564 --> 00:14:54,553
+So it's like we use this to sort of like, fiddle with things, uh,
+
+158
+00:14:54,554 --> 00:14:59,594
+without just sort of like setting a preference and just hoping, hoping that it works in the while.
+
+159
+00:14:59,594 --> 00:15:04,953
+This allows us to do it remotely and, uh, use science to sort of see like, okay,
+
+160
+00:15:04,954 --> 00:15:10,033
+and this is what has happened to this population like in the event that we're testing like say, uh,
+
+161
+00:15:10,034 --> 00:15:15,224
+I don't know, uh, changing how our networking stack works, we may send out an instruction and realize like,
+
+162
+00:15:15,224 --> 00:15:21,314
+oh, um, you know, the 95th percentile was fine, but for, you know, um.
+
+163
+00:15:22,234 --> 00:15:28,023
+Sorry the night at the 95th percentile. What we experienced was like people on, uh, I don't know, older hardware.
+
+164
+00:15:28,024 --> 00:15:30,424
+It behaves worse. So we need to, like, tune it better.
+
+165
+00:15:30,424 --> 00:15:35,764
+And so then we'll kind of go back to the drawing board, uh, as opposed to just kind of like the following stuff out into the wild.
+
+166
+00:15:37,414 --> 00:15:38,164
+Uh, okay.
+
+167
+00:15:38,164 --> 00:15:53,614
+So let, uh, what I want to do is see if I can go from a, a task cluster job to a URL to a, like a command that will take a task cluster job URL,
+
+168
+00:15:53,824 --> 00:16:02,554
+figure out where the, uh, file that was, uh, built and moved is, and then extract the version number from it and then construct this Json object.
+
+169
+00:16:02,764 --> 00:16:06,604
+And I know how to do almost all of that except for the task cluster part.
+
+170
+00:16:07,594 --> 00:16:10,834
+Uh, so we're going to be figuring that out hopefully today.
+
+171
+00:16:11,134 --> 00:16:18,664
+Uh, because, I mean, there is a I could just like scrape task cluster, but there is an API and there's a client library.
+
+172
+00:16:18,664 --> 00:16:22,894
+I've never used the client library before. And the client library probably does way more than I need it to do.
+
+173
+00:16:22,984 --> 00:16:29,433
+Like the client library for task cluster is like it allows you to like create jobs if you have the right credentials as well.
+
+174
+00:16:29,434 --> 00:16:34,804
+And I'm not looking to create a job, I'm looking to examine a preexisting job and kind of interrogate it for information.
+
+175
+00:16:35,494 --> 00:16:41,103
+And, uh, if there's a client library for an API, I prefer to use that rather than the API directly,
+
+176
+00:16:41,104 --> 00:16:45,574
+because that way, if the, um, if the API is ever changed or version,
+
+177
+00:16:45,784 --> 00:16:52,924
+uh, up or something, you just you you're going to, I presume, hopefully they'll update the client library so you don't really have to worry about it.
+
+178
+00:16:55,114 --> 00:16:57,624
+I take loans like it doesn't taste class or have an API.
+
+179
+00:16:57,634 --> 00:17:03,384
+It absolutely does and it's well documented, but I don't really want to use it unless I have to.
+
+180
+00:17:03,394 --> 00:17:07,443
+I'll use the client library, which will kind of. It's like two levels of abstraction.
+
+181
+00:17:07,444 --> 00:17:12,814
+Like an API is like an abstraction on top of a software ecosystem that allows you to talk to it.
+
+182
+00:17:12,814 --> 00:17:19,534
+And I am going another level of abstraction up, which is like a client library that knows how to talk to that API,
+
+183
+00:17:19,624 --> 00:17:25,984
+that knows how to talk to that software ecosystem. So that, you know, I'm kind of like two levels removed from the OP software ecosystem.
+
+184
+00:17:26,254 --> 00:17:31,894
+And that insulates me a little bit more from changes, say, in the software ecosystem, from the API.
+
+185
+00:17:32,194 --> 00:17:40,504
+Uh, and like, you know, even the client library, because the client library might update itself, um, but not change its interfaces.
+
+186
+00:17:40,504 --> 00:17:45,813
+And so my stuff doesn't need to change like that. That's kind of what I'm hoping to insulate my stuff myself about.
+
+187
+00:17:45,814 --> 00:17:54,994
+Like, all of this is about insulating yourself from changing the moving sands, uh, of of, you know, shifting software systems.
+
+188
+00:17:56,164 --> 00:18:08,644
+Okay. So how does how is any of this going to work? Uh, well, what I'm hoping we can do is I'm hoping we can, uh, start by creating a, um.
+
+189
+00:18:09,274 --> 00:18:15,724
+Well, let's let's quickly examine the existing, uh, scripts that we have.
+
+190
+00:18:15,724 --> 00:18:21,183
+So, like, there is a set of script scripts under Mark new tab that's like a, I can say mock new tab.
+
+191
+00:18:21,184 --> 00:18:23,674
+And it gives me a couple of different, uh, things that I can do.
+
+192
+00:18:23,674 --> 00:18:30,844
+And I'm basically going to be adding, uh, I've realized I've realized that this is, uh, this is wrong.
+
+193
+00:18:30,844 --> 00:18:35,493
+I need to update that there's an incorrect documentation string here.
+
+194
+00:18:35,494 --> 00:18:39,574
+This is a copy paste error from this. So we need to update that.
+
+195
+00:18:39,934 --> 00:18:48,244
+Um, and I might do that as part of this, but I want to add to this list and make it maybe have it be like mark new tab,
+
+196
+00:18:48,724 --> 00:18:54,664
+um, and call it like uh, train hop recipe.
+
+197
+00:18:54,664 --> 00:18:59,614
+And then you pass it like a tree herder task, uh, or like a task cluster job URL.
+
+198
+00:18:59,884 --> 00:19:05,584
+And then it will, it will do the work of figuring out where the the API went,
+
+199
+00:19:05,824 --> 00:19:11,434
+downloading the API, extracting the version number, and then constructing this, uh, structure.
+
+200
+00:19:11,734 --> 00:19:19,294
+And, uh, that, that last three quarters of stuff is pretty straightforward, but it's the task cluster part that I'm most uncomfortable with.
+
+201
+00:19:20,074 --> 00:19:28,024
+So let us start by, uh, fixing sort of like the side bug, which is we're going to let's let's fix the, uh, the documentation on the watch command.
+
+202
+00:19:28,034 --> 00:19:32,193
+Now, the new tab commands exist under extensions.
+
+203
+00:19:32,194 --> 00:19:36,364
+New tab in this um, file called mock.
+
+204
+00:19:37,354 --> 00:19:40,654
+Uh oh. It's actually under um it's not under extensions.
+
+205
+00:19:40,654 --> 00:19:44,734
+It's under Senator components. Components new tab.
+
+206
+00:19:46,744 --> 00:19:53,074
+I think it's under components new tab, which is where like oh I'm wrong I'm absolutely wrong is under extensions new tab.
+
+207
+00:19:53,464 --> 00:19:56,884
+My bad, my bad I've just missed it. There it is.
+
+208
+00:19:56,884 --> 00:20:03,334
+Mock commands. Um, and this is where all the, uh, the, the python is that we've written for these utilities.
+
+209
+00:20:03,334 --> 00:20:09,784
+So it's a big old wall of Python. The first thing I'm going to, uh, do is I'm going to update this, uh, doc string.
+
+210
+00:20:10,114 --> 00:20:13,654
+So for under watch, I can already tell that this is wrong.
+
+211
+00:20:14,014 --> 00:20:28,864
+Uh, so, uh, I'm going to rewrite this. So, uh, watch it, uh, invokes uh, npm run watch and see and Mark watch uh, simultaneously.
+
+212
+00:20:32,824 --> 00:20:51,544
+Uh, for uh, auto auto building of auto building and bundling and, uh, um, uh, I've compiled I've compiled, uh, code.
+
+213
+00:20:52,824 --> 00:20:56,063
+New tap cut. Okay.
+
+214
+00:20:56,064 --> 00:20:59,304
+So that is one thing. So we're going to go ahead and I'm going to commit.
+
+215
+00:20:59,514 --> 00:21:12,894
+I don't know what that bug is going to be but I'm going to say uh, update uh, erroneous uh description description for Mac new tab watch.
+
+216
+00:21:13,584 --> 00:21:22,254
+So that's one. The second thing uh, we're going to do is now let's figure out how to do task cluster stuff.
+
+217
+00:21:22,284 --> 00:21:25,614
+Now, the first thing I want to figure out is the task cluster library.
+
+218
+00:21:25,644 --> 00:21:30,713
+So I am I'm fairly sure that there is a task cluster library.
+
+219
+00:21:30,714 --> 00:21:34,284
+I've seen this thing around. It's like import task cluster. Yeah.
+
+220
+00:21:34,494 --> 00:21:39,143
+People bring stuff in like this all the time, and I don't even know what this thing is.
+
+221
+00:21:39,144 --> 00:21:43,284
+So let's look at what, uh, Pi Pi says about task cluster.
+
+222
+00:21:44,364 --> 00:21:48,564
+Task cluster client. So I must have read this before. Maybe I was reading this the other day and I just forgot.
+
+223
+00:21:48,864 --> 00:21:54,774
+But is there documentation? Yeah. For this library is complete interface to task cluster in Python.
+
+224
+00:21:56,754 --> 00:22:00,324
+Provide synchronous and asynchronous interfaces for all task cluster API methods.
+
+225
+00:22:00,354 --> 00:22:04,614
+Great. Here is a simple setup of an index client.
+
+226
+00:22:06,174 --> 00:22:13,314
+Uh, the route URL option is required as it gives the task cluster deployment, um, to which API request should be sent.
+
+227
+00:22:14,184 --> 00:22:20,124
+Uh credentials are only required if the request is to be authenticated. Uh, many of the API methods do not require authentication.
+
+228
+00:22:20,544 --> 00:22:27,084
+So that's true. I do not, uh. I do not need to see your virus.
+
+229
+00:22:27,084 --> 00:22:33,834
+Use test clusters. Options from environment to. Yeah. That's great. Function does not respect test cluster.
+
+230
+00:22:33,834 --> 00:22:40,704
+Proxy to use a test cluster proxy from within a task. Uh, okay, so I kind of like this.
+
+231
+00:22:42,584 --> 00:22:50,273
+Off. Options from environment task cluster index.
+
+232
+00:22:50,274 --> 00:22:54,144
+Options from environment index. Build URL.
+
+233
+00:22:57,034 --> 00:23:00,064
+To generate the URL for an API method without actually calling the method.
+
+234
+00:23:01,264 --> 00:23:04,444
+No, I actually want to call the method so.
+
+235
+00:23:08,454 --> 00:23:11,894
+This is if you wish to perform requests on top of a third party.
+
+236
+00:23:11,904 --> 00:23:15,384
+I don't wish to do that. What I want to do is is.
+
+237
+00:23:21,044 --> 00:23:24,194
+I just want to, like, check stuff out. This task group.
+
+238
+00:23:28,364 --> 00:23:33,494
+Downloads artifacts. Eventually we will want to do an artifact download, I think.
+
+239
+00:23:35,034 --> 00:23:43,414
+Shared authentication. Okay, so I do.
+
+240
+00:23:43,414 --> 00:23:51,033
+I think this is the right thing that I want to use is this thing, uh, let me actually pull up the task cluster job that did the,
+
+241
+00:23:51,034 --> 00:23:59,614
+um, creation of the of the new Tab XP before, uh, now, in order to do that, uh.
+
+242
+00:24:01,774 --> 00:24:09,324
+Let me see if I can find it. Uh, boy, this is a bit of a pain.
+
+243
+00:24:10,074 --> 00:24:15,234
+I realize now that in order to do this, I need to be on the.
+
+244
+00:24:16,464 --> 00:24:20,064
+I need to go a couple of layers deep, gang, I need to, um.
+
+245
+00:24:20,064 --> 00:24:27,024
+Hopefully this does not bork my stream, but I need to do some networking stuff in here to access some secure scopes.
+
+246
+00:24:27,414 --> 00:24:31,374
+Pardon me? My phone's asking me some questions.
+
+247
+00:24:32,394 --> 00:24:36,124
+And prove my identity, and let's just see whether or not I'm dropping frames like crazy.
+
+248
+00:24:36,144 --> 00:24:39,374
+No. Okay. We're good. So now I need. I just need to go.
+
+249
+00:24:39,384 --> 00:24:47,034
+I'm doing this off screen because, uh, uh, I don't I don't think there's anything sensitive in any of this stuff, but.
+
+250
+00:24:47,984 --> 00:24:57,254
+This is the sort of thing where like, it's behind a VPN and it's like, I don't want to, um, leak details,
+
+251
+00:24:57,254 --> 00:25:01,394
+but basically I'm looking at the ship it tool that we use for building and shipping releases.
+
+252
+00:25:02,054 --> 00:25:09,104
+Um, and in particular, I'm looking at extensions, recent extensions, no recent ones.
+
+253
+00:25:09,734 --> 00:25:14,794
+Is that true? Oh, man.
+
+254
+00:25:17,244 --> 00:25:20,694
+Uh, am I in the right one? Ship it. Really? In treason XP.
+
+255
+00:25:22,654 --> 00:25:29,973
+Refresh. Trying to pull up the list.
+
+256
+00:25:29,974 --> 00:25:34,584
+I need to find the job where we, uh. Where we create the spy.
+
+257
+00:25:34,594 --> 00:25:39,184
+There are no. Oh, no. Oh, no. This may this may be a bust.
+
+258
+00:25:40,224 --> 00:25:45,094
+Where I don't. Mhm. Where is the list I need?
+
+259
+00:25:45,094 --> 00:25:51,484
+Like a historical list of releases. For extensions.
+
+260
+00:25:53,724 --> 00:25:58,194
+Oh. Found it, found it. Found a fan of Hanna. Okay, so I found the ship task.
+
+261
+00:25:58,524 --> 00:26:01,584
+Now, I'm pretty sure the ship task does not require authentication.
+
+262
+00:26:02,994 --> 00:26:06,863
+Yeah, so it's good. We can. We can use this. This is a private browsing window, and I could access it.
+
+263
+00:26:06,864 --> 00:26:09,934
+So this is the task that, uh.
+
+264
+00:26:10,174 --> 00:26:20,004
+Uh, I'm. Or maybe even the task ID that we're going to be like, as an example of one that we would pass to our script, our command line, uh, handler.
+
+265
+00:26:20,454 --> 00:26:27,864
+And that would go ahead and, uh, we're going to use the task cluster, uh,
+
+266
+00:26:28,164 --> 00:26:32,214
+UI or the task cluster client library to interrogate this stuff, and in particular,
+
+267
+00:26:32,514 --> 00:26:39,324
+beat mover new tab, which is the like there's a bunch of dependent jobs like signing and whatnot,
+
+268
+00:26:39,534 --> 00:26:45,144
+but it's this one that actually moves the API to the FTP server.
+
+269
+00:26:45,354 --> 00:26:50,214
+And this is the one that's going to provide us the path to the actual file. And we want the actual file.
+
+270
+00:26:51,294 --> 00:26:57,444
+Uh, so we need to figure out how to use the client library to interrogate this job,
+
+271
+00:26:57,984 --> 00:27:07,944
+this task group, uh, to find this job, to then, uh, you know, get more information about this job.
+
+272
+00:27:08,424 --> 00:27:12,684
+Um, now, is there anything in here about a task group? Yeah, this task group.
+
+273
+00:27:13,554 --> 00:27:16,554
+Um, that's what I'm going to ultimately want to do.
+
+274
+00:27:16,554 --> 00:27:24,774
+And it looks like it will, like we can strip off if we can, like, find that we can strip off the, uh, the task group,
+
+275
+00:27:25,704 --> 00:27:31,044
+uh, if we take the URL, which is what I'm going to do, I'm going to strip off the you or the end of the URL.
+
+276
+00:27:31,734 --> 00:27:40,404
+Um, yeah. So I'll accept this and then we'll go ahead and just take the last chunk of information.
+
+277
+00:27:42,214 --> 00:27:44,854
+Okay, so, uh, where do I want to get started?
+
+278
+00:27:44,884 --> 00:27:48,994
+Well, the first thing I need to do is I need to make sure that the task cluster library is available to us.
+
+279
+00:27:49,264 --> 00:27:51,123
+And I actually know that that's not the case.
+
+280
+00:27:51,124 --> 00:27:59,404
+Like, we don't have the task cluster library installed as part of, like, the scope that the new tab, um, uh, command line runs in.
+
+281
+00:27:59,704 --> 00:28:02,074
+And the way that you add it is kind of interesting.
+
+282
+00:28:02,074 --> 00:28:11,674
+We have this notion of sites, um, for Python and we, uh, this is how we like list the third party dependencies.
+
+283
+00:28:11,674 --> 00:28:14,463
+And in this case, the third party dependency is provided by it.
+
+284
+00:28:14,464 --> 00:28:21,124
+Like we write the test cluster client library, but we vendor it in because it's external from the, the, the tree.
+
+285
+00:28:21,424 --> 00:28:26,433
+And so, um, we're going to want to uh, vendor in presumably task cluster.
+
+286
+00:28:26,434 --> 00:28:30,874
+Let me see what other people are doing. Yeah. Third party Python task cluster.
+
+287
+00:28:31,474 --> 00:28:35,464
+That's what we want. Uh, I don't actually know if we want task graph or URLs.
+
+288
+00:28:35,614 --> 00:28:41,104
+It's possible that we do. But let's start just by bringing in task cluster.
+
+289
+00:28:44,454 --> 00:28:50,564
+Um, I'm realizing, though, other people are always bringing in at least task graph and URL.
+
+290
+00:28:50,584 --> 00:28:56,184
+Sometimes you don't bring in task cluster. I don't see anyone just bringing in task Cluster, but let's try it ourselves.
+
+291
+00:28:56,454 --> 00:28:59,664
+Maybe, uh, we can get away with it. Uh, let's try it.
+
+292
+00:28:59,964 --> 00:29:03,954
+So let's go ahead and add Task Cluster to this list. Is this in alphabetical order?
+
+293
+00:29:04,534 --> 00:29:07,704
+Gimpy. So task cluster, we'll add that.
+
+294
+00:29:07,944 --> 00:29:15,984
+And so let's go ahead and then say inside of commands import task cluster and see whether or not uh uh new tabs.
+
+295
+00:29:15,984 --> 00:29:20,144
+Happy with that Mark. New tab help. Okay.
+
+296
+00:29:20,154 --> 00:29:25,424
+Has no idea what I'm talking about. It's like, hey, uh, I'm trying to bring in this stuff.
+
+297
+00:29:25,434 --> 00:29:28,704
+What the heck is Mohawk? No. Module name.
+
+298
+00:29:28,704 --> 00:29:32,424
+Mohawk. So there's, like, some kind of dependency tree here.
+
+299
+00:29:32,904 --> 00:29:36,174
+Mohawk? Yeah, I guess I have to bring that in, too.
+
+300
+00:29:37,824 --> 00:29:42,314
+So ventured Mohawk.
+
+301
+00:29:42,444 --> 00:29:46,554
+I don't know what that is, but no module named slug ID.
+
+302
+00:29:47,574 --> 00:29:51,144
+Slug ID so we're going to bring the slug ID in as well.
+
+303
+00:29:52,464 --> 00:29:56,334
+Oh, fun fun dependency dependency stuff.
+
+304
+00:29:56,484 --> 00:29:59,934
+Okay, so now we need task cluster URLs. Okay.
+
+305
+00:30:01,104 --> 00:30:04,614
+Uh, do we need task graph is going to be the question next.
+
+306
+00:30:06,024 --> 00:30:13,214
+The answer is no. Okay. So now we have the task cluster library. Now let's see if we can uh we're going to add a new command.
+
+307
+00:30:13,224 --> 00:30:19,134
+Let's add a new command. We're going to add to the bottom and we're going to call it um.
+
+308
+00:30:21,894 --> 00:30:25,014
+Do you put double spaces between these in Python I never know. Yes you do.
+
+309
+00:30:25,674 --> 00:30:31,044
+Sub command. New tab. Uh, train hop recipe.
+
+310
+00:30:33,474 --> 00:30:47,994
+And, uh, generates the, uh, appropriate train hop, uh, recipe for Nimbus from a shipping, uh, task cluster.
+
+311
+00:30:47,994 --> 00:30:51,384
+Job. Job url.
+
+312
+00:30:54,164 --> 00:30:59,804
+Given given a shipping shipping task cluster.
+
+313
+00:31:00,944 --> 00:31:03,944
+Shipping job URL from ship it.
+
+314
+00:31:06,224 --> 00:31:14,264
+And then we're going to call it Train hop recipe and just say pass for now.
+
+315
+00:31:15,164 --> 00:31:18,494
+And is there anything else I need to supply it. It's there's going to be an argument.
+
+316
+00:31:18,674 --> 00:31:25,484
+So we have to make sure that it takes an argument, a single argument.
+
+317
+00:31:31,804 --> 00:31:38,544
+Um. This report.
+
+318
+00:31:42,754 --> 00:31:50,344
+So our command argument, um, has this work command argument.
+
+319
+00:31:59,294 --> 00:32:02,704
+Details. Expressions.
+
+320
+00:32:10,774 --> 00:32:18,004
+Like, I kind of want this to be a required argument and argument.
+
+321
+00:32:21,094 --> 00:32:27,424
+I presume there's a way I can make it required, right? An argument required.
+
+322
+00:32:29,944 --> 00:32:38,894
+How do I make a command? Argument required. ARGs number args.
+
+323
+00:32:39,854 --> 00:32:43,364
+Pass remainder arguments to provide SPC shell. Okay.
+
+324
+00:32:45,964 --> 00:32:54,484
+That's not a remainder. Uh.
+
+325
+00:32:54,484 --> 00:33:00,644
+Not quite. Give me an argument ID.
+
+326
+00:33:01,094 --> 00:33:10,064
+Okay. And then choices. So I don't supply like a flag I'll say like task cluster job URL.
+
+327
+00:33:12,644 --> 00:33:20,654
+And then. The ship thing.
+
+328
+00:33:20,774 --> 00:33:31,174
+Task cluster job URL from ship it. Uh, and then can I say like required?
+
+329
+00:33:33,214 --> 00:33:37,023
+Is required like required equals.
+
+330
+00:33:37,024 --> 00:33:44,444
+True. Okay. Required equals true. Uh.
+
+331
+00:33:44,734 --> 00:33:47,944
+And is there a way I can like force it to be a URL?
+
+332
+00:33:51,004 --> 00:33:55,804
+It's like a way that I can make sure that it's formatted of the URL.
+
+333
+00:33:57,304 --> 00:34:02,494
+I'll bet you this is using arc pass under the hood Python URL format.
+
+334
+00:34:05,584 --> 00:34:16,704
+No. Use URL parse from URL to parse.
+
+335
+00:34:26,934 --> 00:34:30,464
+If all possible. Gothenburg.
+
+336
+00:34:30,924 --> 00:34:34,444
+Hmhm. Yeah.
+
+337
+00:34:34,844 --> 00:34:38,244
+He's like doing the homework. He's like, yeah, that's using Art pass.
+
+338
+00:34:41,394 --> 00:34:48,714
+I guess I can just do the check. Um, so let's let's take a look at what happens whenever we call it and what args do we get?
+
+339
+00:34:48,834 --> 00:34:56,144
+Um. So we're going to get a single argument here.
+
+340
+00:34:56,164 --> 00:35:04,144
+It's the task cluster job URL I'm going to do is I'm going to print the task cluster job URL.
+
+341
+00:35:04,174 --> 00:35:09,394
+And I'm going to call it a day. So uh, let's see if it shows up and help.
+
+342
+00:35:09,934 --> 00:35:13,984
+It does. We're going to say uh train hop recipe.
+
+343
+00:35:15,844 --> 00:35:21,574
+And we're not going to pass an ARG. And it's going to it's an invalid argument for positions.
+
+344
+00:35:23,554 --> 00:35:27,934
+So I guess we don't supply required for positions.
+
+345
+00:35:28,894 --> 00:35:32,314
+What about that? The following arguments are required.
+
+346
+00:35:32,554 --> 00:35:36,614
+Okay. If I say help. Yeah.
+
+347
+00:35:36,634 --> 00:35:41,194
+Okay. So that's good. And then I'm gonna say test. And it printed it.
+
+348
+00:35:41,314 --> 00:35:47,344
+Test right there. Okay. Great. So now what I'm going to do is I'm going to make sure that the, uh, URL is valid.
+
+349
+00:35:48,364 --> 00:35:52,084
+Now do we use URL parse in other parts of the code?
+
+350
+00:35:53,074 --> 00:35:58,024
+Uh let's see. Uh, okay.
+
+351
+00:35:58,174 --> 00:36:01,894
+URL pass from is and is URL part is part of like the default.
+
+352
+00:36:04,234 --> 00:36:07,414
+Uh, the default libraries.
+
+353
+00:36:08,344 --> 00:36:13,474
+I'm going to guess it is based on this uh from URL lib pass.
+
+354
+00:36:13,894 --> 00:36:25,194
+Okay. So let's let's bring it in. Uh, if and then how do you use it?
+
+355
+00:36:25,224 --> 00:36:31,494
+How do you use it? URL equals if, uh scheme.
+
+356
+00:36:32,124 --> 00:36:42,744
+How do I. Okay. URL parse. Is does it like raise if I give it something that's invalid?
+
+357
+00:36:45,014 --> 00:36:51,714
+Let's see. Um, sure.
+
+358
+00:36:52,034 --> 00:36:58,034
+I'll pass. Uh, test 123. Pass result is just.
+
+359
+00:36:58,044 --> 00:37:05,234
+It chokes. It completely chokes. Um, now is this does the well, it doesn't choke.
+
+360
+00:37:05,234 --> 00:37:08,354
+It returns a pass. Result is just the path.
+
+361
+00:37:08,894 --> 00:37:17,984
+Does it tell me if it's, like, valid? It just tells me whether or not it just allows me to extract different parts of it.
+
+362
+00:37:18,584 --> 00:37:23,714
+Um, valid URL parse does not perform validation.
+
+363
+00:37:24,224 --> 00:37:34,024
+Uh. Recommend the use of these APIs or the values being used anywhere with security please code defensively.
+
+364
+00:37:34,034 --> 00:37:38,344
+Some verifications. What constitutes URLs is not universally well defined.
+
+365
+00:37:38,484 --> 00:37:42,284
+Retro. Okay.
+
+366
+00:37:42,704 --> 00:37:47,684
+That's fine. Um, how is URL parse being used over here?
+
+367
+00:37:50,024 --> 00:37:54,074
+I see. Uh. What else? What about elsewhere?
+
+368
+00:37:54,944 --> 00:38:00,184
+Uh, first of all, if the scheme is in Https.
+
+369
+00:38:00,194 --> 00:38:14,914
+Okay, well, that's maybe good enough for me. Um. Let uh url equals URL parse task cluster job url.
+
+370
+00:38:15,274 --> 00:38:24,754
+If you URL dot scheme is not equal to https, then we're going to raise an exception.
+
+371
+00:38:26,444 --> 00:38:35,184
+Uh how do we what do we do. I think the way we've been doing is will print and then we'll return one in the, uh.
+
+372
+00:38:36,884 --> 00:38:41,024
+In the event of errors or like. What's the error code?
+
+373
+00:38:46,034 --> 00:38:51,414
+Yeah. Turn one. Okay. Print.
+
+374
+00:38:52,134 --> 00:38:56,544
+Uh, expected an https. Uh.
+
+375
+00:38:57,024 --> 00:39:02,464
+You are, uh, a URL. Um.
+
+376
+00:39:04,474 --> 00:39:13,304
+Turn one. Okay. Uh.
+
+377
+00:39:13,724 --> 00:39:16,934
+Let's see. Got.
+
+378
+00:39:20,794 --> 00:39:24,034
+Now, I think there's a way to do formatted strings these days.
+
+379
+00:39:24,044 --> 00:39:29,704
+Yeah. F and then prints. Okay. That's what they're doing in Python land these days.
+
+380
+00:39:44,644 --> 00:39:48,094
+Uh, okay, so we've got our task cluster job URL.
+
+381
+00:39:48,634 --> 00:40:01,384
+We should also. Let's see what we remember from the test cluster documentation here.
+
+382
+00:40:01,404 --> 00:40:10,854
+There was something about getting the options from the environment. I'm very curious about what that's going to give us.
+
+383
+00:40:10,874 --> 00:40:15,854
+Actually. So let's do this. Let's. This is one of my favorite things to do in Python.
+
+384
+00:40:17,654 --> 00:40:21,974
+Set a breakpoint. Um.
+
+385
+00:40:24,494 --> 00:40:28,424
+There you go. That should pass. Okay, so now we, uh, are going to.
+
+386
+00:40:31,184 --> 00:40:34,264
+Index route URL option is required.
+
+387
+00:40:34,274 --> 00:40:42,074
+So what's the route URL. Queue events.
+
+388
+00:40:42,974 --> 00:40:52,634
+So index. So I have to supply. Route url.
+
+389
+00:40:56,714 --> 00:41:00,134
+In this case it is task cluster.
+
+390
+00:41:01,934 --> 00:41:08,894
+Here is this. Without the ending slash with the trailing slash.
+
+391
+00:41:11,784 --> 00:41:14,964
+Maybe that's enough. Um, what does it think about that?
+
+392
+00:41:15,774 --> 00:41:19,134
+Okay. And then index dot. What can I do with it?
+
+393
+00:41:21,324 --> 00:41:26,744
+Index. Um, I don't know.
+
+394
+00:41:27,044 --> 00:41:40,604
+Um. Find task. Uh, test resource not found.
+
+395
+00:41:40,634 --> 00:41:45,284
+Okay, so what about, um, find task?
+
+396
+00:41:45,704 --> 00:41:50,294
+This thing. This is a task group. But maybe that idea is sufficient.
+
+397
+00:41:53,234 --> 00:41:57,584
+Resource not found. Uh, it.
+
+398
+00:41:57,584 --> 00:42:02,234
+Does it have some notion of finding a task group? Or maybe this is an index.
+
+399
+00:42:02,714 --> 00:42:08,594
+Or maybe I can list tasks like, uh, index list tasks.
+
+400
+00:42:11,074 --> 00:42:17,983
+And correct number of positional arguments. Uh func info insert task list.
+
+401
+00:42:17,984 --> 00:42:22,184
+Namespace list has options ping service name, session and version.
+
+402
+00:42:23,684 --> 00:42:28,364
+Let's see what the API version is. V1.
+
+403
+00:42:28,754 --> 00:42:33,073
+Okay. Is it not expected at https url?
+
+404
+00:42:33,074 --> 00:42:38,534
+Not an expected https. URL.
+
+405
+00:42:42,814 --> 00:42:50,134
+Not an expected ay ay ay https. In English, I think an h like it's about.
+
+406
+00:42:51,634 --> 00:42:56,104
+I think it's an I think it's a m and I think it's because, uh.
+
+407
+00:42:59,094 --> 00:43:01,364
+Saying expected a https.
+
+408
+00:43:01,374 --> 00:43:10,614
+You've got this like AA in there because a aa h starts with the sort of the phoneme like a h, and so then you get a double aa.
+
+409
+00:43:11,034 --> 00:43:16,974
+And um, people who speak English are lazy, I think, or the English language tends to be lazy.
+
+410
+00:43:16,974 --> 00:43:25,554
+I'll speak for myself, though. I'm lazy. And so what you tend to do is you have, when you have repeated syllables are repeated um, vowels like that,
+
+411
+00:43:26,364 --> 00:43:35,604
+you'll slip a consonant in there to springboard off of NH and nay, and they uh, because that's easier than going AA, which is like a little more.
+
+412
+00:43:35,874 --> 00:43:42,384
+There's a little more, um, uh, uh, muscle required, just a little bit of muscle required.
+
+413
+00:43:42,384 --> 00:43:48,234
+But, uh. Uh. I'm curious to know how you are pronouncing.
+
+414
+00:43:48,594 --> 00:43:54,144
+Uh. It. Uh, Smurf d I've never heard your voice, so I don't know how you'd be pronouncing it.
+
+415
+00:43:55,044 --> 00:43:59,214
+So we can interrogate a little bit, and it's like it's doing some stuff.
+
+416
+00:43:59,214 --> 00:44:02,844
+Like I'm getting 400 fours here, but I need to know more.
+
+417
+00:44:02,844 --> 00:44:06,594
+I need to know, like, can I get a task group?
+
+418
+00:44:08,754 --> 00:44:12,024
+List. Can I get a task group? Yeah. Queue.
+
+419
+00:44:14,194 --> 00:44:21,484
+List task group. I don't see that. In here because I'm using an index.
+
+420
+00:44:21,484 --> 00:44:28,054
+Maybe I don't want an index. Maybe instead of a task cluster index.
+
+421
+00:44:30,074 --> 00:44:34,563
+Uh, dir. Task cluster. Maybe I want to something else.
+
+422
+00:44:34,564 --> 00:44:41,134
+Like a. What is the things that exposes of a queue?
+
+423
+00:44:41,764 --> 00:44:45,514
+A task list auth failure? An object, an index, a hook?
+
+424
+00:44:48,114 --> 00:44:54,894
+This task. Lost your connection error? I mean, do I want it a cue?
+
+425
+00:44:56,644 --> 00:45:02,564
+Let's try. Let's see what happens if I create a queue. Q.
+
+426
+00:45:09,194 --> 00:45:14,684
+And then list task group. And then let's supply it with this.
+
+427
+00:45:17,774 --> 00:45:21,824
+Hey. All right, we got some stuff. Can we get a bunch of stuff back?
+
+428
+00:45:23,054 --> 00:45:26,084
+That's pretty good. And is one of these the beat mover?
+
+429
+00:45:27,164 --> 00:45:31,784
+This is ship it action XP. Yeah, this looks like the right deal.
+
+430
+00:45:33,764 --> 00:45:38,804
+And yeah, here's the here it is here. This is where we ultimately.
+
+431
+00:45:42,694 --> 00:45:46,884
+Upload sine artifacts to node system at pub system. There it is, there it is.
+
+432
+00:45:46,894 --> 00:45:52,353
+That's the description. And did it, did it come up with a the up the path.
+
+433
+00:45:52,354 --> 00:45:56,944
+Did it. I want to see the path that you ended up with.
+
+434
+00:45:57,724 --> 00:46:03,394
+Um. Wow. Big old blob of of Json here.
+
+435
+00:46:04,084 --> 00:46:08,554
+Uh, I'd love it if I could inspect this.
+
+436
+00:46:10,714 --> 00:46:14,234
+So let's see here. Um, can I do this?
+
+437
+00:46:14,254 --> 00:46:18,574
+Can I go, like, data application Json?
+
+438
+00:46:20,374 --> 00:46:25,714
+No. Uh, expected line.
+
+439
+00:46:26,714 --> 00:46:31,004
+One. Column two. I think, uh, I think I broke it.
+
+440
+00:46:31,514 --> 00:46:36,224
+But what about if I do like Json? Pretty print online.
+
+441
+00:46:36,254 --> 00:46:39,734
+I've done this before, so, uh, make pretty.
+
+442
+00:46:40,844 --> 00:46:45,824
+Oh, not so happy. Why not so happy?
+
+443
+00:46:46,094 --> 00:46:50,924
+Task group ID expected. String got.
+
+444
+00:46:52,844 --> 00:46:57,454
+Undefined. What are you talking about?
+
+445
+00:46:58,954 --> 00:47:04,224
+Why are you so upset? What happens if I.
+
+446
+00:47:08,314 --> 00:47:15,803
+Get rid of most of this. Parse error still doesn't like this.
+
+447
+00:47:15,804 --> 00:47:18,954
+So like does it prefer double quotes?
+
+448
+00:47:22,224 --> 00:47:30,834
+It does. Okay, so my problem is that now I need instead of I'm going to take this and I'm going to go um Json dump s.
+
+449
+00:47:32,394 --> 00:47:35,934
+There we go. Now I've got this big old Json string.
+
+450
+00:47:37,494 --> 00:47:41,724
+Um I'm just going to take that. I'm going to put it in here.
+
+451
+00:47:42,504 --> 00:47:46,193
+Make pretty. There we go. Now where is. Okay.
+
+452
+00:47:46,194 --> 00:47:49,584
+So smurfd0 he says no you were I only heard H at first.
+
+453
+00:47:49,584 --> 00:47:53,783
+Now I can only hear at. Okay. Get it. Uh.
+
+454
+00:47:53,784 --> 00:47:57,324
+All right. Parser. Script worker.
+
+455
+00:47:58,314 --> 00:48:01,754
+Uh, beat mover. So this is the important one.
+
+456
+00:48:01,764 --> 00:48:05,574
+B mover status completed.
+
+457
+00:48:06,144 --> 00:48:11,154
+Task B mover. Push the system add ons and then it the destination.
+
+458
+00:48:12,204 --> 00:48:19,584
+The destination I think is important. That's ultimately where it put it.
+
+459
+00:48:19,624 --> 00:48:28,454
+And I think that's the part that we want. I don't think there's anything in here that's going to be like, here's where it is on the pub.
+
+460
+00:48:30,534 --> 00:48:34,284
+Uh, FTP, uh, whatever, uh FTP.
+
+461
+00:48:35,394 --> 00:48:40,134
+So like yeah slash pub slash system add on slash new tab.
+
+462
+00:48:40,434 --> 00:48:51,614
+That's where the stuff's going. Uh, beat mover and mover pleaded so pub system as new tab.
+
+463
+00:48:51,634 --> 00:48:56,994
+Yeah, this is exactly what I want right here. Okay.
+
+464
+00:49:00,344 --> 00:49:05,284
+Okay, so we're in good shape. Uh, I feel I'm pretty good about this.
+
+465
+00:49:05,294 --> 00:49:09,814
+So what I can do from this is I can do the same thing.
+
+466
+00:49:09,824 --> 00:49:20,283
+I can create a queue. And we're going to actually take this.
+
+467
+00:49:20,284 --> 00:49:23,494
+And we are going to set that as an um.
+
+468
+00:49:23,514 --> 00:49:27,214
+Uh, constant, uh, task.
+
+469
+00:49:27,604 --> 00:49:32,974
+Cluster URL route URL equals such and such.
+
+470
+00:49:36,634 --> 00:49:49,104
+And then. Mr. Earl, um, I need.
+
+471
+00:49:49,164 --> 00:49:53,993
+So from this. Uh, I also need to pass out the last part to get the job.
+
+472
+00:49:53,994 --> 00:50:01,014
+Earl. I also want to make sure that the task cluster route URL matches whatever came in as the.
+
+473
+00:50:01,434 --> 00:50:08,574
+Oh boy, I can't even remember. Um. Uh.
+
+474
+00:50:10,014 --> 00:50:14,964
+So if I do like Earl pass again, and then I.
+
+475
+00:50:14,994 --> 00:50:24,853
+Ah. Uh, Earl. Pass this. I put it in quotes.
+
+476
+00:50:24,854 --> 00:50:29,054
+Connelly. Oh, all right, then I get this stuff.
+
+477
+00:50:33,464 --> 00:50:37,514
+I want to make sure that the scheme and the net lock match.
+
+478
+00:50:38,854 --> 00:50:43,384
+Right. Uh, domain doesn't know what a domain is.
+
+479
+00:50:44,434 --> 00:50:48,394
+Base domain? What does it know about hostname?
+
+480
+00:50:50,314 --> 00:50:53,374
+Hostname that I'm going to make sure that the host names match.
+
+481
+00:50:54,754 --> 00:51:03,914
+All right, so what I'll do. Or URL.
+
+482
+00:51:06,614 --> 00:51:11,444
+Task cluster URL equals URL. Parse task cluster root URL.
+
+483
+00:51:17,494 --> 00:51:25,954
+T c route URL. Or job URL.
+
+484
+00:51:30,374 --> 00:51:37,424
+Or job URL. Host name uh, not equal to TC.
+
+485
+00:51:37,424 --> 00:51:49,034
+Root url hostname expected in https url at um with hostname tc root url hostname.
+
+486
+00:51:50,714 --> 00:51:54,074
+Okay, let's see if that it computes.
+
+487
+00:51:57,324 --> 00:52:03,594
+Um. I'm actually going to open a new terminal.
+
+488
+00:52:05,214 --> 00:52:11,424
+Mark. New tab. What was it again? Oh, uh, I got a bad python.
+
+489
+00:52:11,754 --> 00:52:16,614
+I'm not the best Python author. Just FYI, it's not my lingua franca.
+
+490
+00:52:17,754 --> 00:52:21,773
+Um. Okay.
+
+491
+00:52:21,774 --> 00:52:24,804
+So. Train, huh? Recipe.
+
+492
+00:52:26,364 --> 00:52:30,384
+We got to supply a URL, so let's bring in. Let's put in those the garbage.
+
+493
+00:52:30,564 --> 00:52:34,494
+It's like, oh, yeah. No dollar sign.
+
+494
+00:52:37,994 --> 00:52:41,204
+Got. Okay. So let's now supply this.
+
+495
+00:52:44,134 --> 00:52:50,284
+You could have used. Yeah, but then that doesn't hook in nicely with our, uh, mock stuff, which is all written in Python.
+
+496
+00:52:51,514 --> 00:52:54,694
+Okay, so it we got to the last point.
+
+497
+00:52:55,534 --> 00:52:59,674
+Uh, so what I want to do, actually, is I want to extract the, um.
+
+498
+00:53:04,194 --> 00:53:11,964
+The ID from the end there. So, uh, job URL is that I want to take the path.
+
+499
+00:53:13,464 --> 00:53:18,804
+I'm going to split. And I want the last one.
+
+500
+00:53:18,864 --> 00:53:25,044
+The last part. Okay. That's what I'm going to do. Uh, job.
+
+501
+00:53:25,734 --> 00:53:32,244
+What's it called, a job ID? Group ID?
+
+502
+00:53:33,474 --> 00:53:37,524
+Group ID? As a cluster.
+
+503
+00:53:37,644 --> 00:53:42,114
+I'm going to say group URL. Group URL.
+
+504
+00:53:42,414 --> 00:53:47,504
+Because that's. I should use the real terminology group.
+
+505
+00:53:47,514 --> 00:53:53,964
+Not a job. It's a group. Group. And then.
+
+506
+00:53:56,664 --> 00:54:03,804
+Uh, group ID equals, uh, group URL.
+
+507
+00:54:08,334 --> 00:54:14,514
+Path split. One.
+
+508
+00:54:15,504 --> 00:54:19,254
+If not group ID. Print.
+
+509
+00:54:22,074 --> 00:54:30,204
+Could not extract the task group ID from and then print the URL.
+
+510
+00:54:31,044 --> 00:54:35,844
+Uh task cluster URL one.
+
+511
+00:54:36,144 --> 00:54:47,894
+Okay, so let's let's try that. Just try.
+
+512
+00:54:49,564 --> 00:54:52,774
+Expect to keep the job. You are still using job URL somewhere.
+
+513
+00:54:53,954 --> 00:54:57,844
+Chop chop chop. Joe Jo. Oh, yeah.
+
+514
+00:54:57,854 --> 00:55:01,964
+Okay. Should be group the shipping task cluster.
+
+515
+00:55:02,324 --> 00:55:05,534
+Group. Jar. Task group.
+
+516
+00:55:05,984 --> 00:55:09,314
+Shipping task group.
+
+517
+00:55:12,044 --> 00:55:15,294
+Ship it. Okay.
+
+518
+00:55:15,294 --> 00:55:24,294
+Got it. So let's let's, um, let's print, uh, extracted, uh, task group ID.
+
+519
+00:55:27,384 --> 00:55:36,654
+And I'll put in the group ID. And now we're going to query.
+
+520
+00:55:37,494 --> 00:55:43,224
+And the way we did that before was. We.
+
+521
+00:55:45,654 --> 00:55:54,604
+Got. All right. Um. Task group equals q dot list task group.
+
+522
+00:55:58,004 --> 00:56:01,114
+I admire dedication, proper error messages, even fruit tree stuff. Yo.
+
+523
+00:56:01,124 --> 00:56:10,574
+Thank you. Uh, yeah, I, I mean, remember, even for stuff like, if you're ever working on a team, some of the stuff users will never see this.
+
+524
+00:56:10,574 --> 00:56:12,344
+They should never, ever see this stuff.
+
+525
+00:56:12,704 --> 00:56:21,554
+But your colleagues, me and people in you in the future may give yourself a gift in the future and give yourself proper error message,
+
+526
+00:56:21,794 --> 00:56:26,444
+error messages and documentation. So, uh, yeah, um, it's a good idea.
+
+527
+00:56:27,464 --> 00:56:34,514
+So now we've got this task group, and now we need to sort of like, navigate down the structure of what came back.
+
+528
+00:56:34,934 --> 00:56:41,414
+And we need to find the beat mover task because that's the that's the, uh, that's the important one.
+
+529
+00:56:46,264 --> 00:56:51,564
+We're looking for. Worker type beat mover.
+
+530
+00:56:53,754 --> 00:57:00,844
+Lets the. Task scopes name.
+
+531
+00:57:02,554 --> 00:57:09,064
+Beat mover. New tab. That's what we want. Uh, we want to find the thing that has that.
+
+532
+00:57:09,724 --> 00:57:14,584
+So each of these is a task. So we're going to go through each of the tasks.
+
+533
+00:57:15,664 --> 00:57:20,434
+Um. Like, uh tasks.
+
+534
+00:57:21,094 --> 00:57:25,714
+Equal tasks. Does that work? It has no notion of a task.
+
+535
+00:57:27,274 --> 00:57:31,084
+Is it this? Yeah. Tasks.
+
+536
+00:57:31,774 --> 00:57:36,154
+And then the first one. It's an array. And this one is not it?
+
+537
+00:57:36,544 --> 00:57:40,354
+This is not it. Alan's not at.
+
+538
+00:57:43,594 --> 00:57:46,634
+Uh. That's not it.
+
+539
+00:57:47,474 --> 00:57:53,434
+Oh, maybe I missed it, I missed it. This one is this beat mover mat.
+
+540
+00:57:53,684 --> 00:57:59,234
+Uh, name release notification. No, uh, matter signing?
+
+541
+00:57:59,254 --> 00:58:02,353
+No. Some eta b mover.
+
+542
+00:58:02,354 --> 00:58:10,634
+Okay, so, um, what we'll do is we'll say tasks equal, uh, task group.
+
+543
+00:58:13,324 --> 00:58:21,594
+Tasks. Or maybe for task in task group tasks.
+
+544
+00:58:22,914 --> 00:58:29,244
+Um, we're going to say like the, uh, beat mover task.
+
+545
+00:58:30,564 --> 00:58:35,334
+Name equals beat mover.
+
+546
+00:58:35,334 --> 00:58:42,834
+New tab. Uh, and we just want to, uh, find the one.
+
+547
+00:58:45,414 --> 00:58:50,324
+So, um. Uh.
+
+548
+00:58:51,814 --> 00:58:58,714
+So, uh, new tab location equals the empty string.
+
+549
+00:59:00,304 --> 00:59:06,424
+And then if task metadata.
+
+550
+00:59:06,754 --> 00:59:11,134
+So if I do tasks like that and I go metadata, what does it give me.
+
+551
+00:59:11,974 --> 00:59:15,754
+Doesn't know what I'm talking about. So what is the structure status.
+
+552
+00:59:18,384 --> 00:59:23,754
+So there's a more of a nested structure here, a nested structure status task.
+
+553
+00:59:23,754 --> 00:59:30,514
+I look at the task. And then from there, can I get the metadata?
+
+554
+00:59:32,704 --> 00:59:37,984
+Yeah. Okay if task.
+
+555
+00:59:41,954 --> 00:59:49,354
+Task metadata. Name?
+
+556
+00:59:50,054 --> 00:59:53,773
+Now, is this really how they're expecting me to to, like, get this stuff?
+
+557
+00:59:53,774 --> 00:59:57,494
+Like, what is the what is this structure? Is it just an object? I think it is.
+
+558
+00:59:58,514 --> 01:00:03,734
+Yeah. Yeah, I think this is this is what they're expecting me to do.
+
+559
+01:00:04,604 --> 01:00:12,134
+If task metadata name equals be mover task name, we're going to say.
+
+560
+01:00:13,454 --> 01:00:19,424
+Um. Sprint found the beat mover task found.
+
+561
+01:00:22,944 --> 01:00:35,574
+Over task name task and the new tab location will be at task and not in the metadata.
+
+562
+01:00:39,824 --> 01:00:44,864
+But it's in the where. Where?
+
+563
+01:00:45,224 --> 01:00:50,024
+What is it? Where are you?
+
+564
+01:00:50,094 --> 01:00:57,104
+Beat! Move! Hey! You're going to be under.
+
+565
+01:01:02,574 --> 01:01:07,554
+Payload. Task. Payload. Artifact map.
+
+566
+01:01:08,394 --> 01:01:13,634
+Task payload. Whoops. Artifacts.
+
+567
+01:01:14,564 --> 01:01:17,974
+Map with a capital M. Okay.
+
+568
+01:01:19,814 --> 01:01:25,064
+Uh, task payload artifact map.
+
+569
+01:01:28,634 --> 01:01:43,664
+And then we want the. Hmhm.
+
+570
+01:01:43,664 --> 01:01:51,884
+So this is an array actually. Artifacts equals that for artifact in artifacts.
+
+571
+01:01:53,714 --> 01:01:58,004
+Um. If.
+
+572
+01:02:05,424 --> 01:02:08,904
+Uh. Beat mover. Pass name.
+
+573
+01:02:09,234 --> 01:02:18,144
+Beat mover. Um. Artifact path.
+
+574
+01:02:19,764 --> 01:02:24,234
+It's going to be public build new tab XP.
+
+575
+01:02:24,444 --> 01:02:29,514
+So if. Artifact.
+
+576
+01:02:39,494 --> 01:02:47,174
+Paths. Oh, boy. Has.
+
+577
+01:02:47,804 --> 01:02:53,414
+Okay. It's going to be a key. If. If.
+
+578
+01:02:54,674 --> 01:02:58,964
+Beat mover. Artifact path in artifact paths.
+
+579
+01:03:02,774 --> 01:03:12,754
+Uh. Then. Artifact paths, then we're going to say that the new tab location.
+
+580
+01:03:14,044 --> 01:03:21,174
+Artifact. Artifact path. Artifact.
+
+581
+01:03:21,174 --> 01:03:25,703
+I'm gonna say destination. Artifact.
+
+582
+01:03:25,704 --> 01:03:31,344
+Destination equals artifact paths.
+
+583
+01:03:32,514 --> 01:03:45,234
+Beat mover. Artifact path. And then the first destination.
+
+584
+01:03:46,164 --> 01:03:50,304
+So destinations zero.
+
+585
+01:03:51,354 --> 01:03:57,684
+That seems pretty wild. Better than using the API, I guess.
+
+586
+01:03:58,914 --> 01:04:06,353
+Uh, okay. So there we go. We got our thing. And now, uh, let's just have it print uh, that out.
+
+587
+01:04:06,354 --> 01:04:12,714
+Got the, uh, destination. Um, artifact destination.
+
+588
+01:04:13,764 --> 01:04:19,284
+Let's see if that works. Yeah.
+
+589
+01:04:19,464 --> 01:04:25,284
+All right. Cool. So now we need to strap that on to the, uh, FTP server.
+
+590
+01:04:26,244 --> 01:04:32,314
+Um, URL. Uh, actually, we don't need that at all.
+
+591
+01:04:32,334 --> 01:04:37,643
+We don't need to construct the whole thing. What we need is, uh, this just this.
+
+592
+01:04:37,644 --> 01:04:41,634
+We need the last two elements of the, uh.
+
+593
+01:04:43,484 --> 01:04:48,974
+Well, no, because we need to download it. So let's construct. We have to construct the full URL.
+
+594
+01:04:49,004 --> 01:04:55,274
+But we also just want the last two elements for this part for the XP download path.
+
+595
+01:04:56,054 --> 01:05:01,954
+Okay. So let's start by constructing the, uh, the full URL.
+
+596
+01:05:05,284 --> 01:05:08,764
+And I'm pretty sure you do it like this, uh, pub.
+
+597
+01:05:08,764 --> 01:05:18,154
+So the. Uh, girl pass joint is there, like you're a live pass.
+
+598
+01:05:18,314 --> 01:05:23,644
+Do you do join URL join. Okay.
+
+599
+01:05:26,794 --> 01:05:50,234
+Port URL parse URL join. Um, your uh, xp url, spi, ftp url equals and then ftp root path equals.
+
+600
+01:05:51,554 --> 01:05:57,404
+It's not even the FTP, um, it's the archive root path.
+
+601
+01:05:58,674 --> 01:06:02,534
+ftp.mozilla.org. So.
+
+602
+01:06:04,784 --> 01:06:11,984
+Archive url equals URL join archive root path artifact destination.
+
+603
+01:06:12,404 --> 01:06:22,004
+And let's see if it can print that. Uh downloading from Xpi archive URL.
+
+604
+01:06:26,864 --> 01:06:30,954
+Yeah. That's right. Let's see if, uh, what happens.
+
+605
+01:06:30,974 --> 01:06:34,184
+Is there, like, a thing here? Um.
+
+606
+01:06:39,374 --> 01:06:45,014
+Binary. Yeah. There it is. There it is. Cool.
+
+607
+01:06:45,674 --> 01:06:49,844
+Uh, and now we need to download the file. So let's download it to a temporary directory.
+
+608
+01:06:49,874 --> 01:06:56,354
+Then we're going to look inside of it, uh, and find the find the version.
+
+609
+01:06:56,804 --> 01:07:02,384
+Find the version. So we're, we're making good time. It's, uh, 212, uh, eastern time.
+
+610
+01:07:02,594 --> 01:07:07,994
+I'm hoping to wrap this up in, like, 15 to 20 minutes. I'm thinking we might be almost done at that point.
+
+611
+01:07:08,294 --> 01:07:13,874
+So let's, uh, let's see how we, um, download this file to a temporary directory.
+
+612
+01:07:14,114 --> 01:07:18,914
+So the good news is, uh, I've done this before where you use, like with,
+
+613
+01:07:20,474 --> 01:07:28,964
+with temporary directory, I'm going to say, uh, download dir and uh Python download file.
+
+614
+01:07:29,474 --> 01:07:32,654
+How do you download a file over http s.
+
+615
+01:07:33,254 --> 01:07:36,704
+Uh, you probably want to use requests. Um.
+
+616
+01:07:39,294 --> 01:07:42,594
+That's my guesses. Requests. Um.
+
+617
+01:07:44,534 --> 01:07:48,324
+And long files from URLs and Python. This is from code mentor.
+
+618
+01:07:48,914 --> 01:07:59,364
+Uh, I think what I'm going to do, actually, is I'm going to take a look inside of our preexisting, uh, source, um, import requests.
+
+619
+01:08:00,534 --> 01:08:04,494
+Oh, it looks like we're already doing it. Yeah, of course we're already doing it. Uh, requests get.
+
+620
+01:08:04,494 --> 01:08:09,764
+And then. Response requests get.
+
+621
+01:08:11,534 --> 01:08:14,534
+Key dates for display report. Yeah, okay.
+
+622
+01:08:15,734 --> 01:08:18,944
+Downloading file requests.
+
+623
+01:08:19,094 --> 01:08:27,894
+Download a file. Uh, you, um.
+
+624
+01:08:28,014 --> 01:08:31,314
+You requests three. Download a file.
+
+625
+01:08:31,734 --> 01:08:35,664
+Is it requests three? Python.
+
+626
+01:08:43,144 --> 01:08:48,484
+With request. Jet stream. True. Race for status.
+
+627
+01:08:59,404 --> 01:09:05,384
+Your request. Stream two requests cannot release a connection back to the pool.
+
+628
+01:09:05,394 --> 01:09:08,664
+As you can see, while the data corresponds closely in efficiency for yourself,
+
+629
+01:09:08,664 --> 01:09:15,264
+partially reading requests by storing them all while you stream for each make request with a within a width statement to true, it's always closed.
+
+630
+01:09:17,454 --> 01:09:20,514
+Uh, I just want to download a file. Y'all. Download.
+
+631
+01:09:26,864 --> 01:09:32,354
+Down, uh, right to, uh, file download to, uh.
+
+632
+01:09:33,314 --> 01:09:40,464
+Do I even need like. It's just I don't want to necessarily hold it in memory.
+
+633
+01:09:41,664 --> 01:09:46,574
+Uh, requests download to a file with. Open some file name.
+
+634
+01:09:46,584 --> 01:09:55,524
+Okay. Okay, so, uh, requests get stream true with requests get.
+
+635
+01:09:55,554 --> 01:10:00,954
+We're going to get the archive URL stream true as request.
+
+636
+01:10:01,794 --> 01:10:08,094
+Uh res for status. Quest res for status in case something has gone wrong.
+
+637
+01:10:08,484 --> 01:10:19,164
+We're going to open a file. Uh, in this case, we're going to open, um, something called new tabbed API.
+
+638
+01:10:20,184 --> 01:10:28,914
+Uh. XP name new tab XP.
+
+639
+01:10:29,904 --> 01:10:41,734
+So we'll do this. And then, uh, open.
+
+640
+01:10:44,104 --> 01:10:48,114
+Local file name. We're going to open up. Path dot.
+
+641
+01:10:48,124 --> 01:10:51,334
+Join. Path. Lib.
+
+642
+01:10:53,524 --> 01:10:57,364
+Path. Join.
+
+643
+01:10:58,534 --> 01:11:06,574
+Join path. I have so I want. Temporary directory is clone dir.
+
+644
+01:11:06,574 --> 01:11:09,634
+And then what you do with clone dir. You create a okay.
+
+645
+01:11:09,664 --> 01:11:16,594
+You create a path. Uh, for chunk chunk size.
+
+646
+01:11:21,054 --> 01:11:26,814
+Uh download path equals path.
+
+647
+01:11:27,384 --> 01:11:31,164
+Download dir. And then can I add a new join.
+
+648
+01:11:31,854 --> 01:11:35,004
+Join path and then supply.
+
+649
+01:11:38,574 --> 01:11:42,774
+Uh, XP name. And then we're going to write.
+
+650
+01:11:46,044 --> 01:11:54,304
+We write our chunks. And then, uh, now that we've downloaded it.
+
+651
+01:11:59,384 --> 01:12:03,164
+Uh, we're going to open it. So open the zip file. Open the zip file.
+
+652
+01:12:04,634 --> 01:12:10,244
+Python. Uh, read zip file. Work with zip files.
+
+653
+01:12:11,054 --> 01:12:21,284
+This is from the standard library. Okay. Uh, need to open a zip file with, uh, XP or just zip files.
+
+654
+01:12:22,844 --> 01:12:29,384
+Let's open. Let's reach in and read manifest to Jason.
+
+655
+01:12:31,754 --> 01:12:35,354
+With zip file. Download path.
+
+656
+01:12:36,734 --> 01:12:41,474
+Read. X quotes.
+
+657
+01:12:44,774 --> 01:12:47,924
+As XP. New tab XP.
+
+658
+01:12:49,214 --> 01:12:57,624
+We want to read. I don't need.
+
+659
+01:12:57,984 --> 01:13:12,654
+I think it's by default it reads and then with new tab XP dot open manifest Json as manifest.
+
+660
+01:13:17,864 --> 01:13:22,724
+Uh. Manifest file a manifest string.
+
+661
+01:13:26,244 --> 01:13:34,274
+Our manifest file. Uh, Json, uh, manifest equals Json parse.
+
+662
+01:13:35,244 --> 01:13:38,744
+Is that set the import.
+
+663
+01:13:38,744 --> 01:13:42,674
+Jason. Jason. Pass. Jason.
+
+664
+01:13:44,594 --> 01:13:50,864
+You load load s okay. Jason. Load.
+
+665
+01:13:51,284 --> 01:13:54,554
+And then, uh. Manifest. File. Dot. Read.
+
+666
+01:13:58,354 --> 01:14:08,514
+And then we're going to break there. And then what we definitely need to do is when we're done, we're going to unlink the file.
+
+667
+01:14:08,524 --> 01:14:14,284
+We have to erase the file or delete the file. Erase.
+
+668
+01:14:14,914 --> 01:14:18,394
+What do we do with the fluent stuff.
+
+669
+01:14:19,264 --> 01:14:30,464
+We definitely delete the. Mm.
+
+670
+01:14:30,514 --> 01:14:33,634
+Tree. Okay. Clean out the temporary directory.
+
+671
+01:14:37,104 --> 01:14:40,194
+Arm tree. Uh. Download path.
+
+672
+01:14:42,504 --> 01:14:47,184
+Okay. Now, zip util, do I need to get zip file in here?
+
+673
+01:14:47,544 --> 01:14:53,184
+ZIP file. Do I?
+
+674
+01:14:53,304 --> 01:15:00,774
+Do I or is it just available? Import the zip file from zip file.
+
+675
+01:15:01,764 --> 01:15:04,794
+Import zip file. Yeah. There it is. Okay.
+
+676
+01:15:07,204 --> 01:15:10,774
+From zip file. Import zip file.
+
+677
+01:15:11,974 --> 01:15:18,244
+Let's see. Let's see what it will do. So run it.
+
+678
+01:15:22,404 --> 01:15:30,144
+Okay air running mock name are not defined from eter contents in line 808.
+
+679
+01:15:30,234 --> 01:15:37,104
+Makes sense. I copy pasted and ah should actually be request.
+
+680
+01:15:42,824 --> 01:15:47,174
+Okay. All right. Now, uh, with new tab, open its manifest.
+
+681
+01:15:47,744 --> 01:15:50,954
+Uh, p manifest. Do we have it? We do.
+
+682
+01:15:51,224 --> 01:15:54,914
+And so now I can get the version, uh, and, uh, it's like this.
+
+683
+01:15:56,654 --> 01:16:04,364
+Congratulations, everybody. We did it. Uh, XP version equals manifest version.
+
+684
+01:16:05,954 --> 01:16:10,964
+Okay. And now we have everything we need to construct.
+
+685
+01:16:12,224 --> 01:16:15,884
+Um. The resulting file.
+
+686
+01:16:16,784 --> 01:16:20,144
+So our resulting structure so result equals.
+
+687
+01:16:22,274 --> 01:16:26,024
+Python is fantastic since smurfd0. Yeah. Uh okay.
+
+688
+01:16:26,024 --> 01:16:30,494
+So we're going to uh we're going to continue until error. Not a directory.
+
+689
+01:16:30,494 --> 01:16:33,914
+Not a directory. I can't read tree.
+
+690
+01:16:34,784 --> 01:16:38,714
+What did I do before arm tree clone dir.
+
+691
+01:16:38,714 --> 01:16:41,834
+Which. Oh from okay okay okay.
+
+692
+01:16:42,224 --> 01:16:48,284
+Downloader not telling path okay. So now we have everything we need.
+
+693
+01:16:48,524 --> 01:16:52,934
+Result. Add on version.
+
+694
+01:16:55,124 --> 01:17:05,324
+Um. Add on version XP version.
+
+695
+01:17:06,554 --> 01:17:14,384
+Maybe I'll just make this add on version and then XP download path.
+
+696
+01:17:16,934 --> 01:17:22,184
+Uh, I have to do some string manipulation, but I'm just going to put Foof here for now and then.
+
+697
+01:17:22,184 --> 01:17:25,674
+Um. Uh.
+
+698
+01:17:25,674 --> 01:17:33,414
+Print. Uh, Json.
+
+699
+01:17:33,424 --> 01:17:37,203
+Was it? Uh, Python import.
+
+700
+01:17:37,204 --> 01:17:42,604
+Jason. Jason. Jason. Dump.
+
+701
+01:17:42,814 --> 01:17:49,794
+Dump. String. Json. Dump as result.
+
+702
+01:17:50,854 --> 01:17:56,114
+And how do I make it pretty? Oh.
+
+703
+01:17:56,194 --> 01:18:01,044
+Json dump. That's going to dump into a file. And I want indent to sort keys.
+
+704
+01:18:01,054 --> 01:18:08,034
+True. Yeah. Okay.
+
+705
+01:18:08,274 --> 01:18:11,334
+Let's see. Oh, man, I'm getting lit up. Is something going on?
+
+706
+01:18:12,144 --> 01:18:22,944
+My phone is, like, off the corner. Off the hook. Oh, boy.
+
+707
+01:18:26,554 --> 01:18:30,184
+Nothing. Nothing earth shattering. Okay, so let's run this thing.
+
+708
+01:18:30,934 --> 01:18:35,554
+Uh, quick. Run the command again.
+
+709
+01:18:36,904 --> 01:18:42,364
+Hey. Looking good. Okay, now we just need to do the last part, which is we've got the URL.
+
+710
+01:18:42,574 --> 01:18:47,644
+We need to, um, just take the last two elements of the destination.
+
+711
+01:18:48,544 --> 01:18:53,254
+So. Um. Interesting.
+
+712
+01:18:53,404 --> 01:18:56,494
+Import pdb set. Trace. We'll do it there.
+
+713
+01:18:57,364 --> 01:19:09,764
+So we've got the destination. We really just want to truncate everything except the last two elements.
+
+714
+01:19:09,764 --> 01:19:21,134
+So split. And then we want the last two elements, which, if I remember correctly, is like minus two, minus one.
+
+715
+01:19:21,734 --> 01:19:26,174
+Is it like that? Minus two. Minus one? No, it's from this one.
+
+716
+01:19:27,684 --> 01:19:32,934
+No. Minus one zero.
+
+717
+01:19:35,754 --> 01:19:48,694
+So how do I do the last two elements? New tab.
+
+718
+01:19:51,114 --> 01:19:59,934
+So the last element is that. Python last two elements of a list of the last items.
+
+719
+01:20:00,084 --> 01:20:08,304
+That's two indices in a Python list. Y minus two colon.
+
+720
+01:20:08,574 --> 01:20:12,233
+That's intuitive. Okay. So that uh.
+
+721
+01:20:12,234 --> 01:20:15,294
+And then join with that. Oh.
+
+722
+01:20:15,654 --> 01:20:22,554
+What? How do you what's, uh, Python list join.
+
+723
+01:20:23,604 --> 01:20:29,574
+Oh, you know what I remember now? It's, uh, joined like that.
+
+724
+01:20:30,834 --> 01:20:34,044
+Yeah. There we go. There we go. And that's what we wanted.
+
+725
+01:20:34,524 --> 01:20:38,274
+New term one for the one build new tab. This is the. This is the.
+
+726
+01:20:39,414 --> 01:20:42,624
+That is the special invocation. So.
+
+727
+01:20:44,964 --> 01:20:53,424
+Let's try that. And let's run it.
+
+728
+01:20:56,164 --> 01:20:59,524
+So I. We'll get rid of our.
+
+729
+01:21:05,814 --> 01:21:08,963
+There it is. Okay, now, let us, uh, put some padding around it.
+
+730
+01:21:08,964 --> 01:21:15,474
+Actually. Print. Uh Nimbus uh uh train hop recipe.
+
+731
+01:21:19,714 --> 01:21:23,014
+Then print it. Call it a day.
+
+732
+01:21:26,904 --> 01:21:31,864
+We did it, everyone. We did it. All right.
+
+733
+01:21:31,894 --> 01:21:37,234
+I'm pretty happy with that. Um, I'm going to post this for review.
+
+734
+01:21:38,134 --> 01:21:45,764
+Um. Uh, we actually have to file a bug first.
+
+735
+01:21:49,774 --> 01:21:54,994
+Uh, but, uh, you've, uh, you to, um.
+
+736
+01:21:57,794 --> 01:22:01,244
+And there's a, um. There's a meta bug.
+
+737
+01:22:02,324 --> 01:22:05,804
+New tab. A bugs, uh, new tab.
+
+738
+01:22:07,304 --> 01:22:10,894
+Uh, built in, uh. Not quite.
+
+739
+01:22:10,904 --> 01:22:16,554
+It blocks this one. This is the metal bug blocks.
+
+740
+01:22:17,564 --> 01:22:24,344
+Um, create a utility that more easily generates the, um.
+
+741
+01:22:26,354 --> 01:22:33,614
+Uh, Nimbus recipe for what was the exact feature?
+
+742
+01:22:33,614 --> 01:22:36,854
+I think it is. Uh, let me look it up.
+
+743
+01:22:38,384 --> 01:22:42,264
+Whoop! Upsy daisy. Um.
+
+744
+01:22:43,284 --> 01:22:47,244
+Experimenter. Truck stop.
+
+745
+01:22:49,924 --> 01:22:55,204
+Exact feature is. Yeah.
+
+746
+01:22:57,104 --> 01:23:06,374
+Uh, for the, uh, new Tab train hop add on feature for doing train hopping.
+
+747
+01:23:10,454 --> 01:23:18,614
+After the ship, it, uh tool creates a, um, signed xpi and moves it to ftp.
+
+748
+01:23:18,794 --> 01:23:28,004
+mozilla.org. Uh. Um, we have everything in place to do a deployment.
+
+749
+01:23:28,454 --> 01:23:35,054
+However, the recipe that we require, um, for doing the deployment.
+
+750
+01:23:38,454 --> 01:23:42,744
+Requires knowing the version number and path of the API.
+
+751
+01:23:43,164 --> 01:23:50,094
+And while it's possible to get those with a little bit of command line foo, um,
+
+752
+01:23:51,774 --> 01:23:57,924
+get those ad hoc with a little command line, uh, or or file management foo.
+
+753
+01:23:58,344 --> 01:24:04,344
+Uh, I think we can make this much simpler with a new tab marked command.
+
+754
+01:24:05,274 --> 01:24:19,944
+Uh, this bug is about adding such a command, which will take a, um, task cluster, uh, group task group URL, like, uh,
+
+755
+01:24:20,724 --> 01:24:38,634
+like the URLs that the ship it uh, tool uh, provides and uh, compute and then, uh, figures out where the API went on ftp.mozilla.org and construct.
+
+756
+01:24:39,324 --> 01:24:47,124
+And then this, uh, grabs the API and extracts the version string from it.
+
+757
+01:24:49,524 --> 01:24:55,074
+Then it generates the recipe Json and prints it to the console.
+
+758
+01:24:57,574 --> 01:25:02,344
+Task. So the task is not a bug. This is not a defect.
+
+759
+01:25:07,814 --> 01:25:11,353
+And so now I'm going to commit. Bugs.
+
+760
+01:25:11,354 --> 01:25:15,284
+Such and such. Uh, add um.
+
+761
+01:25:17,394 --> 01:25:21,074
+Uh, add mark. New tab. What's it called?
+
+762
+01:25:21,074 --> 01:25:28,734
+Mark. New tab. Train hop recipe. For generating the Nimbus.
+
+763
+01:25:28,824 --> 01:25:32,514
+Uh. Recipe for.
+
+764
+01:25:34,544 --> 01:25:42,774
+You type train. How bad on. Teacher being high.
+
+765
+01:25:49,584 --> 01:25:58,854
+I'm going to change one last thing, which is I'm going to move the doc the generic appropriate task train up recipe for the Nimbus.
+
+766
+01:26:00,204 --> 01:26:09,084
+New tab train hub feature. Now is there a way I can like have this be multiple lines instead of one big big old line description?
+
+767
+01:26:13,954 --> 01:26:17,854
+Python. Dot py.
+
+768
+01:26:18,724 --> 01:26:24,394
+Description equals. Is there a way that people have been splitting this up?
+
+769
+01:26:32,464 --> 01:26:36,694
+No. Oh, here we go.
+
+770
+01:26:37,744 --> 01:26:42,604
+Yeah. Description. Okay. Three quotes.
+
+771
+01:26:44,594 --> 01:26:56,104
+Then. And, uh.
+
+772
+01:26:59,754 --> 01:27:05,904
+Here we go. Uh, Judith.
+
+773
+01:27:08,424 --> 01:27:15,233
+Squash. Let's also, uh, update the description on that one.
+
+774
+01:27:15,234 --> 01:27:18,624
+JJ, describe el Z.
+
+775
+01:27:24,114 --> 01:27:28,074
+Um, actually, I'm just going to file a new bug here.
+
+776
+01:27:29,154 --> 01:27:44,224
+Uh, new tab. Uh Mark new tab provides, uh, the wrong provides the wrong help string for the watch command.
+
+777
+01:27:47,494 --> 01:28:00,154
+The watch command, um, has, uh, the wrong description and shows the same description as, uh, update locales.
+
+778
+01:28:01,984 --> 01:28:08,014
+This bug is about adding, uh, proper description for my new tab to watch.
+
+779
+01:28:09,214 --> 01:28:14,074
+Okay, so. We'll do that.
+
+780
+01:28:14,704 --> 01:28:18,544
+Look that up. What's up?
+
+781
+01:28:18,544 --> 01:28:26,994
+Max? Uh, Rafi. This one. And Crawford thinks that.
+
+782
+01:28:27,064 --> 01:28:33,664
+Crawford. Is Max okay?
+
+783
+01:28:33,894 --> 01:28:40,534
+Yeah, it's all right. And with that, I think we are good to go.
+
+784
+01:28:40,564 --> 01:28:43,864
+Let's go ahead and push that up for review. Mas fab. Submit.
+
+785
+01:28:44,284 --> 01:28:50,164
+And with that, we're going to call it there. Hey, thank you so much for watching episode 413 of the Joy of coding.
+
+786
+01:28:50,854 --> 01:28:57,574
+I hope you found that interesting. My name is been Mike Conley. It still is Mike Conley, and I'm so glad you were able to join me on that journey.
+
+787
+01:28:57,574 --> 01:29:01,414
+So let me know what you thought. There's a link at the end of the agenda here to rate this episode.
+
+788
+01:29:01,414 --> 01:29:07,474
+I'm actually going to put that link here, link to rate this episode and put that in the chat.
+
+789
+01:29:07,894 --> 01:29:13,294
+Uh, and uh, let me know what you thought. This is a great way to let me know what you want to see more of, what you want to see less of,
+
+790
+01:29:13,444 --> 01:29:17,374
+and if you have questions, I will do my best to answer them on the stream.
+
+791
+01:29:17,584 --> 01:29:23,703
+Uh, you know, they can be questions about Firefox or source code or, you know, um, picture in picture, which is a thing I worked on or a new tab like.
+
+792
+01:29:23,704 --> 01:29:28,894
+I'll do my best to try and answer your questions. Just send them in and, uh, and I'll try and do my best if I have the answers.
+
+793
+01:29:29,134 --> 01:29:32,164
+To be clear, I don't always have all the answers, but I'll do my best.
+
+794
+01:29:32,524 --> 01:29:35,854
+And with that, um, I'm going to call it. Thanks again for watching. Everybody.
+
+795
+01:29:35,884 --> 01:29:39,994
+Have yourselves a great week and I will see you next time.
+
+796
+01:29:40,144 --> 01:29:46,894
+Take care. Bye bye. The joy of coding.
+
+797
+01:29:47,374 --> 01:29:47,734
+See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

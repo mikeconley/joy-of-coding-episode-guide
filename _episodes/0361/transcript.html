@@ -1,0 +1,3214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 361 - April 3, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 361 - April 3, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=452adc61-54bd-44ee-89e7-b12b00fa170b</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=452adc61-54bd-44ee-89e7-b12b00fa170b">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,783 --> 00:00:10,243
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy of coding.
+
+2
+00:00:10,513 --> 00:00:14,653
+Hello and welcome to episode 361 of the Joy of coding.
+
+3
+00:00:14,663 --> 00:00:19,843
+My name is Mike Connelly. It's so good to have you here. We're gonna be live hacking on some Firefox stuff today.
+
+4
+00:00:20,053 --> 00:00:23,863
+It's going to be great. I'm very excited to have you here. Thanks for being here.
+
+5
+00:00:23,893 --> 00:00:28,813
+Let's get started. I'll start by sharing my screen so you can see the agenda and what what I'm looking at right now.
+
+6
+00:00:29,683 --> 00:00:35,313
+Hey, it's April 3rd, 2024, episode 361 A reminder no plan survives breakfast.
+
+7
+00:00:35,323 --> 00:00:38,772
+I think I know how today is going to go, I think I know what I'm going, what I'm going to work on.
+
+8
+00:00:38,773 --> 00:00:43,393
+Uh, but I don't know how it's going to go. I haven't done any preparation in advance for this stream.
+
+9
+00:00:43,393 --> 00:00:47,833
+I haven't, you know, check to make sure that what we're going to work on is going to work out.
+
+10
+00:00:47,893 --> 00:00:54,673
+Um, I'm coding without a net, I'm coding on the internet, but without a safety net.
+
+11
+00:00:55,213 --> 00:00:58,183
+Um, yeah. So that's the story. That's the name of the game.
+
+12
+00:00:58,213 --> 00:01:02,833
+Uh, I think you should know that the, uh, agenda that we're looking at is something that you have access to.
+
+13
+00:01:03,073 --> 00:01:08,203
+Uh, if you're watching this on YouTube or Diode Zone, check out the video description for a link.
+
+14
+00:01:08,473 --> 00:01:13,363
+If you're watching this on Twitch, it's down in the video or channel details, rather channel information.
+
+15
+00:01:13,603 --> 00:01:16,543
+And if you're watching this on air, Mozilla, it's over in the details section over there.
+
+16
+00:01:16,543 --> 00:01:24,013
+And as I update this, this little spinny will spin and you'll be able to click on the links in the agenda copy and that'll hopefully be useful.
+
+17
+00:01:24,403 --> 00:01:26,203
+Uh, you know, as I, as I flesh this out,
+
+18
+00:01:26,443 --> 00:01:32,623
+as things develop and what I wanted to start with was actually talking a little bit because I actually I have a build going on in the background.
+
+19
+00:01:32,623 --> 00:01:36,763
+Unfortunately, it's almost done. I did not expect it to take 99 minutes.
+
+20
+00:01:36,913 --> 00:01:42,883
+It turns out, uh, one of the things I failed to do, and I just sort of figured it out is, uh,
+
+21
+00:01:43,153 --> 00:01:51,523
+my Windows Defender settings were properly exempting my source directory from, you know, anti-malware scans.
+
+22
+00:01:51,943 --> 00:02:01,663
+But, uh, the Mozilla build directory, which is what hosts like clang or a lot of the bash tools, um, a lot of that was not exempt.
+
+23
+00:02:02,143 --> 00:02:08,743
+And, uh, I've exempted both the Mozilla, the Moore's build and the Mozilla build directories in my home, uh, directory.
+
+24
+00:02:08,743 --> 00:02:15,073
+But I only did that a few minutes before the stream started. So I'm hoping we're going to see an increase in, um, performance of build time.
+
+25
+00:02:15,523 --> 00:02:19,153
+Um, you know, right now I'm doing a, uh. It's a little disappointing.
+
+26
+00:02:19,153 --> 00:02:23,923
+I am seeing the anti-malware service executable. Um, still doing a lot of work.
+
+27
+00:02:23,923 --> 00:02:29,622
+I don't know why. Uh, but I'm hoping that will eventually Peter out once.
+
+28
+00:02:29,623 --> 00:02:34,063
+Uh. Uh, you know, once the sort of the exemptions that I've added kick in.
+
+29
+00:02:34,063 --> 00:02:36,583
+I don't know what it takes for those exemptions to kick in.
+
+30
+00:02:36,593 --> 00:02:42,462
+Uh, it's possible that I have to, like, restart the machine, but, uh, or maybe restart some of the processes.
+
+31
+00:02:42,463 --> 00:02:48,583
+I don't know, uh, maybe I just need to, like, re restart the shell here, and that'll be enough for it.
+
+32
+00:02:48,583 --> 00:02:52,032
+But long story short, uh, hopefully that will result in faster builds.
+
+33
+00:02:52,033 --> 00:02:59,113
+And we're almost done this build anyways, uh, and I, I could have sworn that I had set things up that way to begin with,
+
+34
+00:02:59,563 --> 00:03:03,522
+but, uh, either windows reverted it or I'm misremembering.
+
+35
+00:03:03,523 --> 00:03:10,063
+I don't exactly remember, but those exemptions I've just re added and that actually that information for people who are on windows builds,
+
+36
+00:03:10,393 --> 00:03:13,753
+that information is in our, uh, Firefox build windows.
+
+37
+00:03:13,963 --> 00:03:21,913
+That's in our, uh, source docs, the Mozilla um, the, the bootstrap tool is supposed to actually do it for you.
+
+38
+00:03:22,153 --> 00:03:29,113
+Um, however, you know, if if you've already got builds going, you may you might just need to do it manually.
+
+39
+00:03:29,143 --> 00:03:31,272
+I don't know, but like, this is, uh,
+
+40
+00:03:31,273 --> 00:03:36,613
+this is the instruction that I followed right here to follow some manual steps and how to exempt the right folders and whatnot.
+
+41
+00:03:36,613 --> 00:03:42,523
+And then and then that's what I did to hopefully, uh, that'll cause my builds to be a little bit faster in the future.
+
+42
+00:03:43,543 --> 00:03:44,713
+And now, while that's building,
+
+43
+00:03:44,713 --> 00:03:50,983
+I thought we'd briefly talk about something that's related to the work that we've been doing for the past a little while.
+
+44
+00:03:50,983 --> 00:03:55,632
+We did mostly in 2023, and tangentially related to the things that we've been working on over the past couple episodes,
+
+45
+00:03:55,633 --> 00:03:59,953
+which is the windows jump list. Uh, I got caught on a bug.
+
+46
+00:04:00,073 --> 00:04:04,273
+Um, this is what it looks like whenever a crash report comes in.
+
+47
+00:04:04,783 --> 00:04:11,953
+So, uh, uh, I want to I want to be very clear, because I feel like some people use the term crash very loosely.
+
+48
+00:04:12,313 --> 00:04:23,323
+Uh, what I mean by a crash report and a crash in particular is, you know, the, uh, my background is I'm just going to just adjust that.
+
+49
+00:04:23,323 --> 00:04:30,313
+There we go. Um, a crash is whenever the process, uh, process ends unexpectedly.
+
+50
+00:04:30,553 --> 00:04:36,013
+You know, maybe it, um, maybe it it a failed in assertion.
+
+51
+00:04:36,013 --> 00:04:37,993
+It is crashing itself intentionally.
+
+52
+00:04:38,263 --> 00:04:45,643
+Or maybe it does something illegal in the eyes of the operating system, like trying to access memory it's not supposed to have access to.
+
+53
+00:04:45,883 --> 00:04:52,542
+And that will cause it to crash. That's a crash. And you'll you'll know it's a crash, because either in the tab crash case, you'll see like a little.
+
+54
+00:04:52,543 --> 00:04:56,293
+Oh, gosh. Geez. Uh, your tab crash, kind of a dialog in the middle.
+
+55
+00:04:56,653 --> 00:05:02,563
+Uh, or if it's a parent process crash that brings down the whole browser, you'll see a separate dialog show up saying that Firefox crashed.
+
+56
+00:05:02,893 --> 00:05:04,153
+Please submit a crash report.
+
+57
+00:05:04,543 --> 00:05:13,423
+And those crash reports are very handy because when a crash occurs, we have an opportunity to gather some information about the crash.
+
+58
+00:05:13,903 --> 00:05:21,462
+And then, uh, if you if you like, submit the crash report, it goes on to this, um, it goes through this ingestion pipeline.
+
+59
+00:05:21,463 --> 00:05:23,743
+I think the ingestion pipeline is called Socorro.
+
+60
+00:05:24,013 --> 00:05:32,442
+And then we have a tool for sort of browsing through, uh, some of the, uh, some of the crash information on a site called Crash Stats.
+
+61
+00:05:32,443 --> 00:05:36,403
+So let me open this, uh, up. Crash stats. This is the crash report.
+
+62
+00:05:36,553 --> 00:05:40,542
+Like. And then when a new crash shows up in crash stats are sheriffs.
+
+63
+00:05:40,543 --> 00:05:43,933
+Or in this case, I think it was. Yeah. Diana Smith was one of our, uh.
+
+64
+00:05:44,593 --> 00:05:51,912
+I don't know if Diana is a sheriff or, like, a release manager, but someone, um, named Diana saw this crash report.
+
+65
+00:05:51,913 --> 00:05:55,333
+It was like, hey, this looks like a new crash. Here's the reason.
+
+66
+00:05:55,333 --> 00:05:59,772
+Here's an instance of the report. Here are some of the top frames of the crashing thread.
+
+67
+00:05:59,773 --> 00:06:05,533
+That's very handy if it's accurate. Here's the thing to know about crashes is that as soon as you have a crash,
+
+68
+00:06:05,533 --> 00:06:12,883
+what happens is sometimes the memory is corrupted, and that can include the memory that has information about the stack.
+
+69
+00:06:12,883 --> 00:06:19,993
+So sometimes the stacks are not reliable. If the process, the crash report can be very confused if memory was very confused.
+
+70
+00:06:20,233 --> 00:06:24,163
+But in this case we have a stack that actually looks fairly reasonable.
+
+71
+00:06:24,163 --> 00:06:29,323
+You've got some thread that's running some method and hey, some of these look familiar.
+
+72
+00:06:29,683 --> 00:06:32,863
+Uh, jump list builder do set app ID, set app ID.
+
+73
+00:06:32,983 --> 00:06:37,362
+So we're crashing here in Jump List Builder on line 76.
+
+74
+00:06:37,363 --> 00:06:40,363
+So that's a really, really handy handy stack.
+
+75
+00:06:41,473 --> 00:06:46,243
+And then what do you do about it. Like why are we crashing. And so I did a little bit of analysis.
+
+76
+00:06:46,393 --> 00:06:52,692
+So like that's all I had to work with. And if you go into crash stats and you can do this yourself if you follow this link here,
+
+77
+00:06:52,693 --> 00:06:58,413
+let me put a link in the, uh, in the agenda here for the bug and for the crash report.
+
+78
+00:06:58,443 --> 00:07:02,713
+You can check it out yourself. These are these are public.
+
+79
+00:07:03,133 --> 00:07:06,363
+And you can see all the information that got gathered during the crash, you know?
+
+80
+00:07:06,373 --> 00:07:09,612
+Okay. Uh, this was actually a this is a startup crash.
+
+81
+00:07:09,613 --> 00:07:15,913
+The browser was only up for four seconds, and, uh, this was on version 124 .0.1.
+
+82
+00:07:16,813 --> 00:07:25,063
+And, uh, even though, I mean, it says not a startup crash, but it's pretty quick after after start.
+
+83
+00:07:25,063 --> 00:07:30,763
+So it's almost a startup crash. And here's the stack of the crashing thread.
+
+84
+00:07:30,763 --> 00:07:37,683
+This is this is the stack. And you know, you can see the other threads if you're interested on what the main thread was doing at the time.
+
+85
+00:07:37,723 --> 00:07:43,933
+In this case, it looks like the main thread was trying to like parse some URL or something, and it was allocating memory.
+
+86
+00:07:44,233 --> 00:07:48,852
+But um, the jump list thread, uh, it hit here.
+
+87
+00:07:48,853 --> 00:07:57,913
+And so if like we can follow the actual, uh, line of code that the crash occurred on is like that information is encoded in the crash report,
+
+88
+00:07:57,913 --> 00:08:01,182
+and the version of the of the binary is also encoded.
+
+89
+00:08:01,183 --> 00:08:07,663
+So we're able to actually pull out from our source control the line of code, the actual line of code that the crash occurred on.
+
+90
+00:08:08,053 --> 00:08:15,893
+And we'll pull that up here. We can take a look. Sometimes materials.
+
+91
+00:08:15,903 --> 00:08:20,393
+Uh, the web, the web UI is a little slow, especially if you're pulling up ancient history.
+
+92
+00:08:20,783 --> 00:08:26,473
+Just give it a brief second here. Meanwhile, how's our bill doing?
+
+93
+00:08:26,713 --> 00:08:31,653
+All right. We're we're at the very end of our bill. It's in mostly alphabetical order, so we're in the W's.
+
+94
+00:08:31,663 --> 00:08:37,023
+That's good. Come on HD mozilla.org.
+
+95
+00:08:38,613 --> 00:08:39,423
+This will be a lot.
+
+96
+00:08:39,573 --> 00:08:47,282
+So one thing you may or may not know is that we're beginning a slow but steady transition away from mercurial for Firefox desktop development to git,
+
+97
+00:08:47,283 --> 00:08:52,103
+and that means migration away from HG, mozilla.org, and HG web.
+
+98
+00:08:52,113 --> 00:08:58,293
+And so hopefully in the future when we're using whatever it is that we're going to be using, forget I think it might be GitHub, I don't know.
+
+99
+00:08:58,293 --> 00:09:02,283
+But this will hopefully be faster. So this is where things went wrong.
+
+100
+00:09:02,403 --> 00:09:05,643
+This this we we crashed right here.
+
+101
+00:09:06,183 --> 00:09:15,123
+And the crash. Uh, if we look at the reason again, it was a, uh, exception access violation read.
+
+102
+00:09:15,813 --> 00:09:23,403
+And that basically means, hey, you tried to access memory that you shouldn't, you know, um, is there is precise definition.
+
+103
+00:09:23,403 --> 00:09:29,403
+Let's see. Um. Uh, exception.
+
+104
+00:09:29,553 --> 00:09:32,553
+Uh, meaning? Is there a meaning?
+
+105
+00:09:35,463 --> 00:09:40,063
+Uh. Was there a precise meaning?
+
+106
+00:09:44,603 --> 00:09:48,803
+I think. I think the precise meaning is, hey, you tried to dereference a null pointer.
+
+107
+00:09:48,803 --> 00:09:53,393
+And if you if you've ever written some C or native code or C plus, plus or something,
+
+108
+00:09:53,393 --> 00:10:00,443
+dereferencing a null pointer is a surefire way of, you know, uh, crashing.
+
+109
+00:10:01,673 --> 00:10:06,713
+And so the null pointer is almost certainly m windows dest list because that's what we're attempting to do.
+
+110
+00:10:06,743 --> 00:10:11,093
+Like set a Z app ID is a string like that.
+
+111
+00:10:11,273 --> 00:10:17,543
+We've been passed. And there is an assertion here that ensures that and windows dest list exists.
+
+112
+00:10:17,543 --> 00:10:21,563
+But Mas asserts really only do things on debug builds.
+
+113
+00:10:21,563 --> 00:10:25,913
+And this user who submitted this crash report, uh, was not on a debug build.
+
+114
+00:10:25,913 --> 00:10:31,612
+They were on a normal build. So like we go past these assertions and then this dereference will occur.
+
+115
+00:10:31,613 --> 00:10:38,453
+So what that means is nowhere in our CI did we ever detect this particular case.
+
+116
+00:10:39,323 --> 00:10:48,622
+And, uh, that's that's kind of unfortunate. And I did a little bit of digging into like, how could m window's dest list be null?
+
+117
+00:10:48,623 --> 00:10:55,223
+Because when we call set app ID, if you recall, I don't know if anyone here calls on that occurs.
+
+118
+00:10:55,553 --> 00:11:06,413
+That's in response to do set app ID and do set app ID happens immediately after dispatching a runnable to set up the back end.
+
+119
+00:11:06,713 --> 00:11:14,303
+And setting up the back end is supposed to construct a native jump list back end,
+
+120
+00:11:14,303 --> 00:11:23,363
+and if you construct a native jumbles back end that is supposed to inside the special lambda set M windows dest list.
+
+121
+00:11:23,723 --> 00:11:28,013
+But what I failed to account for is that sometimes this can fail.
+
+122
+00:11:29,213 --> 00:11:33,803
+Sometimes creating an instance of this custom destination list will fail.
+
+123
+00:11:33,803 --> 00:11:39,713
+Like that's. There's sometimes error codes come back from the this is calling into windows and saying, hey, make me one of these things.
+
+124
+00:11:40,673 --> 00:11:47,272
+And in this case we fail. And because we fail em windows dest list remains null, it stays being null.
+
+125
+00:11:47,273 --> 00:11:53,783
+And then the subsequent call to uh, to set the app ID will explode right here.
+
+126
+00:11:54,233 --> 00:12:03,263
+And so that was my hypothesis was, you know, uh oh, we are uh uh, you know, we're not handling an error correctly.
+
+127
+00:12:03,833 --> 00:12:09,022
+So let's go back to the bug and you can see the commentary where I had this discussion with,
+
+128
+00:12:09,023 --> 00:12:15,533
+uh, one of our, one of my colleagues, uh, uh, Dave Parks, aka Handy man.
+
+129
+00:12:15,533 --> 00:12:22,853
+So I do a little bit of a breakdown here, like, hey, here's the, uh, it's, uh, my assumption is that windows desk list is null pointer.
+
+130
+00:12:22,973 --> 00:12:29,182
+Windows desk list is set here. Um, so, uh, runnable should execute it in orders.
+
+131
+00:12:29,183 --> 00:12:33,473
+So my guess is that we exit early and never set windows dest lists.
+
+132
+00:12:34,313 --> 00:12:36,833
+Uh, if we fall into this particular branch.
+
+133
+00:12:37,043 --> 00:12:44,153
+In which case we should probably try to like in the event that we fail to create a dest list, we shouldn't try and do anything else.
+
+134
+00:12:44,153 --> 00:12:50,183
+Like, basically, the operating system is telling us, like, I can't allow you to manipulate the jump list.
+
+135
+00:12:50,633 --> 00:12:55,253
+Um, because the thing that they give us to allow us to do that, they won't give it to us.
+
+136
+00:12:55,253 --> 00:13:01,373
+So at that point, I think we should probably just give up rather than pretending that everything's fine and then explode.
+
+137
+00:13:02,153 --> 00:13:07,643
+Um, and so what I did was I wrote a patch, and let's take a quick look at the patch.
+
+138
+00:13:09,923 --> 00:13:14,603
+And it wasn't like a one shot, or there was a little bit of a conversation between myself and handyman.
+
+139
+00:13:14,993 --> 00:13:23,753
+But basically the patch changed, uh, the name of the method from, uh, set app ID to do set app ID if available.
+
+140
+00:13:24,323 --> 00:13:33,323
+Um, because normally normally, uh, there is already a, uh, jump list builder idea.
+
+141
+00:13:33,563 --> 00:13:41,603
+There's already a method called is available that we call actually from the, uh, module.
+
+142
+00:13:43,913 --> 00:13:48,923
+Uh, lists. We call it here.
+
+143
+00:13:48,923 --> 00:13:53,783
+And if either of the, uh, builders are unavailable or like the, um,
+
+144
+00:13:54,743 --> 00:13:59,482
+the jobless builders say that they're not available, then we bail out here, and that's good.
+
+145
+00:13:59,483 --> 00:14:01,673
+That's the expected. That's the expected thing to do.
+
+146
+00:14:01,673 --> 00:14:10,763
+But the actual constructor was also assuming that the builder would get, uh, the underlying backend would get created.
+
+147
+00:14:11,243 --> 00:14:18,293
+And that's where we were falling over, is the constructor would dispatch a runnable that just presumed that everything would go right.
+
+148
+00:14:18,803 --> 00:14:24,713
+Uh, and not doing this is available. Check. So that was where we we fouled it up a little bit.
+
+149
+00:14:25,103 --> 00:14:29,033
+And so we updated uh, the method to be do said app ID if available.
+
+150
+00:14:29,033 --> 00:14:36,143
+And we just add this check if the jump list is available, if the uh if it if it exists, then we'll go ahead and set the app ID.
+
+151
+00:14:36,233 --> 00:14:45,773
+Otherwise don't do anything. Just throw it away. Uh, and you know, the later check to see if were available by the front end will be used to like,
+
+152
+00:14:46,253 --> 00:14:51,113
+ensure we don't try and, you know, press buttons even though the thing's not available.
+
+153
+00:14:51,803 --> 00:14:54,773
+And the other thing we needed to do this was something that handyman noticed.
+
+154
+00:14:55,043 --> 00:15:03,863
+He suspected that the reason we're seeing this is because of a small set of users may have set this pref.
+
+155
+00:15:04,523 --> 00:15:10,223
+This is a pref that is not like I don't know, I don't think it's exposed anywhere.
+
+156
+00:15:10,843 --> 00:15:14,183
+I don't know much about it. I think this was added.
+
+157
+00:15:15,593 --> 00:15:26,353
+Um, when was this added? This was added back in 2011 and what it lets you do.
+
+158
+00:15:29,723 --> 00:15:37,913
+Is it allows people, in theory, to run separate instances of Firefox and have them individually pinned to the taskbar.
+
+159
+00:15:39,113 --> 00:15:45,683
+And so like if you have different user profiles, they will exist in different applications in your taskbar.
+
+160
+00:15:46,523 --> 00:15:52,403
+And I don't know if we ever ended up like really exposing that in the UI or anything.
+
+161
+00:15:52,463 --> 00:15:56,423
+Um, let's actually take a quick leak. Uh, quick look.
+
+162
+00:15:56,723 --> 00:16:03,173
+Rather, let's take a quick look at, uh, what landed for this, um, is all essential.
+
+163
+00:16:03,293 --> 00:16:09,192
+Yeah, this is long before fabricator, so let me see if I can find. Calm.
+
+164
+00:16:09,193 --> 00:16:15,583
+Central push. Okay, here are the the the patches that landed for Brazil Central.
+
+165
+00:16:17,753 --> 00:16:21,383
+Again, this is digging way to the past, so mercurial is going to struggle with it a little bit.
+
+166
+00:16:23,303 --> 00:16:29,243
+Um. Had City hash and its extension to other license.
+
+167
+00:16:29,253 --> 00:16:33,483
+So we're we're adding we added some kind of like hash library.
+
+168
+00:16:34,983 --> 00:16:41,073
+Uh, okay. Something called the city hash. We added the extension as an extension.
+
+169
+00:16:42,963 --> 00:16:52,413
+Uh, we added the ability to use that to generate hashes to generate the app IDs basically.
+
+170
+00:16:52,413 --> 00:16:57,962
+So when you when you construct an application, when you are adding an entry to the task bar with windows,
+
+171
+00:16:57,963 --> 00:17:02,643
+you have to supply like an ID and every application that has, I think the same ID.
+
+172
+00:17:02,763 --> 00:17:09,363
+I don't know if they have the same executable name, but at least the same ID will be grouped together inside of the task bar.
+
+173
+00:17:10,653 --> 00:17:18,153
+And uh, I think what's going on is, uh, you know, Jim was making it so that we can hash the profile directory into some string
+
+174
+00:17:18,423 --> 00:17:23,253
+and then append that the app id so that windows will treat them separately.
+
+175
+00:17:25,333 --> 00:17:29,323
+And, uh. And then there's, like, the ability to.
+
+176
+00:17:30,373 --> 00:17:34,273
+Well, hang on. Where where where is this ultimately, where is this exposed?
+
+177
+00:17:35,353 --> 00:17:40,693
+Um, so it looks like before we were just, like, statically generating the app ID,
+
+178
+00:17:41,353 --> 00:17:46,093
+and now we're, like, dynamically registering it or dynamically setting it, which is.
+
+179
+00:17:46,093 --> 00:17:51,613
+Which is good. Um, where I was expecting to see.
+
+180
+00:17:56,263 --> 00:18:09,703
+This is a lot of stuff. Where's the. Maybe that was later on.
+
+181
+00:18:09,883 --> 00:18:14,113
+Widget changes. Installer changes. I should look at widget changes.
+
+182
+00:18:16,313 --> 00:18:20,003
+Get app user model ID. Okay, so leave of a bit of a bit of a David.
+
+183
+00:18:20,003 --> 00:18:36,113
+Uh, so we like, generate a unique, um, a unique app ID and I guess we use some hash to do that or something.
+
+184
+00:18:38,443 --> 00:18:43,113
+Blah blah blah blah blah blah. But I'm looking for where the pref got introduced.
+
+185
+00:18:43,123 --> 00:18:46,863
+Where's the pref profile option?
+
+186
+00:18:46,873 --> 00:18:54,103
+That sounds right. So it looks like we never really exposed it.
+
+187
+00:18:54,153 --> 00:19:01,023
+Like we we made it so that people could set that profit, but we didn't really, like expose it in the UI as a thing that you could turn on it.
+
+188
+00:19:01,053 --> 00:19:08,953
+It's just like, hey, here's a hidden pref. Uh, and maybe there was like an, uh, there was a goal down the line to expose it in the UI.
+
+189
+00:19:08,973 --> 00:19:11,763
+I don't, I don't know. I don't know anything about it.
+
+190
+00:19:11,763 --> 00:19:17,763
+But all I know is that some people had it set, and I suspect that's actually where things were going wrong.
+
+191
+00:19:17,763 --> 00:19:22,082
+Like in my conversation with handyman, he was like, oh, that's probably where things are happening.
+
+192
+00:19:22,083 --> 00:19:27,753
+Because looking at the crash report, um, what was the conversation?
+
+193
+00:19:27,753 --> 00:19:34,503
+He's like, um, there are these two calls to create jump list Builder, and then all the crashes,
+
+194
+00:19:34,503 --> 00:19:40,862
+unsurprisingly have to jump list threads and the non crash thread is in the jump jump list routines preparing
+
+195
+00:19:40,863 --> 00:19:46,113
+something for when they're reporting suggesting some trouble creating an AI custom destination list.
+
+196
+00:19:46,473 --> 00:19:51,063
+The calls seem to operate on different Com objects, but because of the different app user model IDs,
+
+197
+00:19:51,363 --> 00:19:58,893
+unless that pref is set and if the pref is set in the event.
+
+198
+00:19:59,133 --> 00:20:06,243
+So we've got newer code that tries to like group based on whether or not your application, your Firefox is in private browsing or not.
+
+199
+00:20:07,803 --> 00:20:15,213
+And um, we weren't differentiating between private browsing and not private browsing.
+
+200
+00:20:15,453 --> 00:20:18,753
+So if you have this preference set, this hidden preference set.
+
+201
+00:20:19,173 --> 00:20:26,312
+And if you happened to like open a private browsing window, I suspect, uh,
+
+202
+00:20:26,313 --> 00:20:32,583
+you might have a hard time here, like creating the, um, the I custom destination list would fail.
+
+203
+00:20:32,583 --> 00:20:36,063
+That's what the handyman was suggesting anyways, because you'd have the same.
+
+204
+00:20:36,963 --> 00:20:41,493
+The same app ID been used at the same time.
+
+205
+00:20:42,153 --> 00:20:46,173
+Um, like or quick was soon after one another and windows is probably falling over.
+
+206
+00:20:46,413 --> 00:20:49,893
+Uh, um, I don't know why.
+
+207
+00:20:50,163 --> 00:20:58,413
+Like, windows is a little bit mysterious. They have documentation, you do a, you make some request to an API and then you get a result back.
+
+208
+00:20:58,683 --> 00:21:08,433
+And in this case, it's the suspicion is that we are violating some requirement where, you know, these app user model IDs need to be unique.
+
+209
+00:21:08,433 --> 00:21:13,593
+And especially you can't request the same one at the same time from two different applications.
+
+210
+00:21:14,553 --> 00:21:18,033
+Otherwise you'll get like a null or a bad result.
+
+211
+00:21:18,453 --> 00:21:21,663
+And then we were handling that bad result incorrectly.
+
+212
+00:21:21,663 --> 00:21:27,723
+And so this is a little bit of belt suspenders where we try and handle the case where the jump this back end isn't available correctly.
+
+213
+00:21:28,083 --> 00:21:35,523
+And we're going to try and do the right thing with grouping applications, uh, for users that happen to have this preference set.
+
+214
+00:21:36,363 --> 00:21:42,693
+So that's that was the fix. And if you take a look at the crash reports again let me pull up the crash reports.
+
+215
+00:21:43,353 --> 00:21:51,063
+Um, now hopefully this this patch, if you take a look at the, um, the sort of progression here,
+
+216
+00:21:51,243 --> 00:21:57,572
+the fix went out, it got pushed to autoland seven days ago, and then it landed in nightly on March 28th.
+
+217
+00:21:57,573 --> 00:22:02,073
+That's just six days ago. And then I requested uplifts both beta and release.
+
+218
+00:22:02,073 --> 00:22:07,473
+So that's that's where all this conversation is coming. And I'm saying like, hey, this is a small fix that can help with stability.
+
+219
+00:22:07,803 --> 00:22:11,823
+It's it's a simple enough patch. There's low risk. It's probably worth to uplift.
+
+220
+00:22:11,823 --> 00:22:15,812
+So it got landed in beta. It got landed in release four days ago.
+
+221
+00:22:15,813 --> 00:22:19,653
+And then we released a dot release. So there was already a dot release.
+
+222
+00:22:19,893 --> 00:22:22,893
+One version 124 is what's on release right now.
+
+223
+00:22:22,893 --> 00:22:31,263
+And we did a .0.1 release because of the, uh, pond own thing, which, if you're not familiar to own, is like a security conference and like,
+
+224
+00:22:31,323 --> 00:22:39,033
+um, all of the web web browsers, including Firefox, got got, um, people found, uh, people found vulnerabilities.
+
+225
+00:22:39,213 --> 00:22:42,783
+We were prepared for that. We were always prepared for Podio, and we knew it was coming.
+
+226
+00:22:43,083 --> 00:22:48,272
+And as soon as we saw the, um, the exploit, we like deployed a fix.
+
+227
+00:22:48,273 --> 00:22:55,923
+And we had one out with him, like, I think less than 24 hours, which is stunning from start to finish from like, um,
+
+228
+00:22:56,643 --> 00:23:03,602
+hearing about the exploit to like rolling out a fix to everybody was less than 24 hours and that went in 124 .0.1.
+
+229
+00:23:03,603 --> 00:23:06,633
+And then we knew we were probably going to do a .0.2 for other reasons.
+
+230
+00:23:06,633 --> 00:23:13,593
+I think there were some stability things, and this got to ride along in 124 .0.2, which went out, I think yesterday.
+
+231
+00:23:13,623 --> 00:23:18,723
+Firefox 1.4.0.2. This was released yesterday.
+
+232
+00:23:19,773 --> 00:23:25,083
+So the fix actually went out. And if we take a look at the crash stats again, let's take a look at more reports.
+
+233
+00:23:25,083 --> 00:23:29,763
+We can see all of the reports that have a similar signature. And we can take a look at all the reports here.
+
+234
+00:23:30,933 --> 00:23:36,003
+And if we sort by version, well first of all someone's got a this is an example of like hey, uh,
+
+235
+00:23:36,003 --> 00:23:43,352
+it's possible that either someone is submitting garbage to us through the Crash Report API or there was some memory corruption here,
+
+236
+00:23:43,353 --> 00:23:46,863
+because that doesn't make any sense. Someone with a version 1024.
+
+237
+00:23:47,313 --> 00:23:54,203
+Um, but I don't. See anyone 24 Doritos, which is really good and there are only 49 results.
+
+238
+00:23:54,223 --> 00:24:03,403
+This was not a frequent crash. Just to be clear, this was not a frequent crash, but it was a thing that involved code that I had written.
+
+239
+00:24:03,403 --> 00:24:07,513
+And so that's why I dove on it. Um, and I think it's been fixed like we haven't.
+
+240
+00:24:07,513 --> 00:24:14,172
+It's the fix has only been out for a day, but we've rolled out 124 .0.2 broadly, and so far no crashes have come up.
+
+241
+00:24:14,173 --> 00:24:18,103
+So I'm hopeful that that that takes care of and I'll keep an eye on it.
+
+242
+00:24:18,343 --> 00:24:19,873
+But that's the long and the short of it, I hope.
+
+243
+00:24:19,903 --> 00:24:28,632
+I'm sorry to spend like 28 or so minutes on it, but, um, basically that's the that's the start, beginning,
+
+244
+00:24:28,633 --> 00:24:35,143
+middle and end of a crash investigation patch and fix, uh, in case you were curious what that's like.
+
+245
+00:24:36,193 --> 00:24:39,432
+All right, well, uh, now that I've, uh, stalled enough. Hey.
+
+246
+00:24:39,433 --> 00:24:45,703
+All right, we've got our we've got our builds. And it turns out that my I've actually got both debug and opt builds.
+
+247
+00:24:45,703 --> 00:24:50,023
+I have done, uh, my, uh, uh, if you take a look at this, I had, uh,
+
+248
+00:24:50,653 --> 00:24:54,972
+I prepared to run my builds earlier in the day, and I was expecting them to be done by now.
+
+249
+00:24:54,973 --> 00:25:00,313
+But the reason it took so long, along with the defender stuff, was also because I was doing two builds, a debug build and then an opt build.
+
+250
+00:25:00,943 --> 00:25:06,733
+So I haven't touched that century since the last episode.
+
+251
+00:25:06,733 --> 00:25:10,813
+And if you recall, what we had was a crash. We were dealing with a crash.
+
+252
+00:25:10,963 --> 00:25:14,803
+Um, and, you know, we had some notes here.
+
+253
+00:25:16,633 --> 00:25:23,693
+Where is it? Um. Where's this active bus?
+
+254
+00:25:23,703 --> 00:25:27,093
+Here we go. Uh, we had this crash, and, uh.
+
+255
+00:25:27,423 --> 00:25:31,113
+Why are we crashing when we attempt to get a favicon for a site we've never visited?
+
+256
+00:25:31,923 --> 00:25:36,452
+And, uh, I said that the problem is that such and such takes, uh,
+
+257
+00:25:36,453 --> 00:25:42,243
+runnable as an argument that runnable will only ever be called if we successfully retrieve and cache the fabric on in any error condition,
+
+258
+00:25:42,243 --> 00:25:43,232
+the runnable will not be called.
+
+259
+00:25:43,233 --> 00:25:53,043
+Unfortunately, that will leave us with dangling promises, and so we spend some time trying to fix that by adding a, um, an optional argument.
+
+260
+00:26:00,253 --> 00:26:05,113
+An optional argument to, um.
+
+261
+00:26:07,163 --> 00:26:15,593
+What is it? To cache icon from fab icon uri async.
+
+262
+00:26:18,433 --> 00:26:22,183
+Is that what we did? That it was something like that. We decided we were going to add.
+
+263
+00:26:26,123 --> 00:26:32,203
+It takes a runnable. And then it passes that along.
+
+264
+00:26:32,213 --> 00:26:37,093
+We were going to pass. This runnable.
+
+265
+00:26:37,813 --> 00:26:46,463
+Pass the promise holder. Right.
+
+266
+00:26:46,473 --> 00:26:49,903
+So we were going to optionally pass this promise holder around.
+
+267
+00:26:49,923 --> 00:26:55,622
+That's what it was going to be. And in the event that we ever destructed we were going to reject the promise.
+
+268
+00:26:55,623 --> 00:27:01,143
+Whatever was owning the promise holder would if destroyed before it can be resolved.
+
+269
+00:27:01,953 --> 00:27:09,333
+Um, like if the thing owning it was destroyed before resolved and it's like destructor, it would reject the promise.
+
+270
+00:27:10,203 --> 00:27:22,323
+And we assumed that that would fix things. Uh, or I had assumed and, uh, we're like, we pass it along here to async encoded right icon, and, uh,
+
+271
+00:27:22,353 --> 00:27:28,623
+then we run here, and then if all went well, we would resolve if everything worked out, we would resolve if exists.
+
+272
+00:27:28,623 --> 00:27:32,553
+And if ever we destroy it, we destruct. We would reject here.
+
+273
+00:27:33,103 --> 00:27:37,293
+We assumed that that was going to work out. We built it and it still crashed.
+
+274
+00:27:38,523 --> 00:27:42,333
+And that was the cliffhanger. I'm going to investigate that crash today.
+
+275
+00:27:42,843 --> 00:27:47,793
+Um, and we're going to try and figure out what what's gone wrong, what is wrong with our assumptions.
+
+276
+00:27:49,023 --> 00:27:54,603
+Um, and what else?
+
+277
+00:27:55,443 --> 00:27:59,143
+There was something else I wanted to mention. We're going to investigate the crash.
+
+278
+00:27:59,163 --> 00:28:02,733
+We're going to use the debugger to try and investigate it.
+
+279
+00:28:03,993 --> 00:28:07,763
+Make sure that our assumptions are correct. I guess that's it.
+
+280
+00:28:07,773 --> 00:28:10,833
+That's. That's what we're going to do. We're going to use the debug build to do that.
+
+281
+00:28:10,863 --> 00:28:15,363
+I've actually got both the opt and rebuild debug and opt builds ready.
+
+282
+00:28:15,813 --> 00:28:22,773
+Uh, but let's let's run with our debug build because we'll be able to have more easily step through in that particular case.
+
+283
+00:28:23,313 --> 00:28:39,833
+And uh, and we'll see where things fall over. You know, debug builds as you're hopefully you are probably aware are much slower than opt builds.
+
+284
+00:28:39,833 --> 00:28:44,573
+So just give it a second to page everything into memory. It's a there's a lot going on.
+
+285
+00:28:47,333 --> 00:28:53,543
+Debug builds are intentionally non optimized so things take longer.
+
+286
+00:28:54,003 --> 00:28:57,173
+They emit more debug information on purpose.
+
+287
+00:28:57,983 --> 00:29:06,793
+So the browser is going to be a lot slower. Oh oh.
+
+288
+00:29:07,213 --> 00:29:08,553
+I remember what I wanted to mention.
+
+289
+00:29:08,563 --> 00:29:17,563
+The one thing I wanted to mention was I did touch the patch just before I started building because I did a rebase.
+
+290
+00:29:17,563 --> 00:29:24,103
+So this is up to date with the most recent Mozilla Central as of I ago, 4 or 5 hours ago.
+
+291
+00:29:24,613 --> 00:29:28,473
+So that is a difference between the last episode and this episode.
+
+292
+00:29:28,483 --> 00:29:33,193
+Like a thing you didn't see was me rebasing the patch and there wasn't anything special about that rebase.
+
+293
+00:29:33,403 --> 00:29:37,393
+I didn't have to deconstruct anything. It was a very clean rebase, but I rebased it.
+
+294
+00:29:38,113 --> 00:29:45,073
+Okay, let us open up the the toolbox and see if we can invoke some stuff and cause a crash.
+
+295
+00:29:52,053 --> 00:29:56,043
+Now, what would be lovely is if there was some console history.
+
+296
+00:29:58,383 --> 00:30:04,503
+But I got a feeling there isn't. Yeah.
+
+297
+00:30:05,403 --> 00:30:08,943
+Um, we might. If we're lucky, there will be. Here we go.
+
+298
+00:30:08,973 --> 00:30:14,343
+We we did start to tape some of this stuff up, so, um, I can just paste this in.
+
+299
+00:30:21,703 --> 00:30:29,763
+Okay, so I got to that part and I want to get the, um, I want to get a favicon for something I actually don't have.
+
+300
+00:30:29,773 --> 00:30:33,193
+That's good. So I don't I don't need to do anything super special.
+
+301
+00:30:33,193 --> 00:30:38,682
+But let me write this down in here. Uh, test Uri equals services.io New York.
+
+302
+00:30:38,683 --> 00:30:42,703
+Uh, https example.com.
+
+303
+00:30:44,443 --> 00:30:48,073
+Actually, that's not a good that's not a good example. Let's do my colleague. Okay.
+
+304
+00:30:49,933 --> 00:30:53,863
+Blog. My blog. So, uh, put that in.
+
+305
+00:30:56,903 --> 00:31:04,093
+It should be valid. Okay.
+
+306
+00:31:04,103 --> 00:31:07,673
+And then we're going to, um, get access to the builder.
+
+307
+00:31:07,853 --> 00:31:11,123
+So windows task.
+
+308
+00:31:13,133 --> 00:31:24,323
+Jump for windows. What did I import? Window when taskbar jump list when taskbar jump list builder.
+
+309
+00:31:27,613 --> 00:31:30,733
+And confusingly, there is a thing called builder underneath it.
+
+310
+00:31:31,573 --> 00:31:35,413
+And that's what we're going to call a obtain and cache fab icon async.
+
+311
+00:31:35,653 --> 00:31:40,153
+We're going to pass our test Uri to it. And this is what's going to crash.
+
+312
+00:31:40,993 --> 00:31:45,913
+Now I'm going to before I press enter I'm going to paste this into here.
+
+313
+00:31:47,393 --> 00:31:51,013
+We're also going to await it because this returns a promise.
+
+314
+00:31:51,523 --> 00:31:55,663
+This should crash I'm not notice I'm not attaching the debugger just well you know what I should do.
+
+315
+00:31:56,173 --> 00:32:01,813
+Before I do anything, let's attach the debugger. Um, so the first thing I need to do is get the process ID.
+
+316
+00:32:05,563 --> 00:32:08,683
+One nine 208. So let's attach to that.
+
+317
+00:32:20,943 --> 00:32:30,323
+Okay. Let us now crash. Am I stuck at a breakpoint?
+
+318
+00:32:30,333 --> 00:32:36,792
+What's going on here? It's running.
+
+319
+00:32:36,793 --> 00:32:48,923
+So let's the. There we go. Okay.
+
+320
+00:32:48,953 --> 00:32:53,783
+We crashed and we crash here in Moore's promised folder base.
+
+321
+00:32:55,213 --> 00:33:05,773
+And this is the stack assertion failure that there is no and promise and promise holder based in default delete when the.
+
+322
+00:33:06,603 --> 00:33:14,483
+Let's let's actually go into the source code. So we moved things over.
+
+323
+00:33:27,553 --> 00:33:32,503
+And so we because it's a unique pointer holder.
+
+324
+00:33:34,723 --> 00:34:04,663
+We made a unique pointer to hold onto the promise holder. Hmhm.
+
+325
+00:34:16,153 --> 00:34:24,193
+I'm surprised that that's where we're failing. We are deleting on destruction because of.
+
+326
+00:34:27,103 --> 00:34:32,143
+I would have expected that by moving the promise folder, we would have moved the underlying promise.
+
+327
+00:34:43,473 --> 00:35:08,323
+Is that not how it works? Standard move promise holder.
+
+328
+00:35:16,843 --> 00:35:25,393
+So it should work. I it doesn't look like I have to do anything special to to transfer the promise to.
+
+329
+00:35:27,803 --> 00:35:31,913
+Much older and. Sure. Oh, there's the promise.
+
+330
+00:35:32,213 --> 00:35:36,083
+And that's what I read. Sure. Promise.
+
+331
+00:35:36,083 --> 00:35:43,223
+And I returning the promise. Let's go further up the stack.
+
+332
+00:35:43,343 --> 00:35:46,713
+Maybe I am releasing something because.
+
+333
+00:35:46,723 --> 00:35:50,403
+Oh, right. I'm out. I'm up here. I'm up here.
+
+334
+00:35:50,423 --> 00:35:56,333
+Notify. Icon observers that are being destroyed.
+
+335
+00:35:57,623 --> 00:36:18,413
+Then the favicon data callback. Main thread pointer holder.
+
+336
+00:36:18,413 --> 00:36:25,403
+Favicon data callback is being destroyed. The favicon data callback is being destroyed.
+
+337
+00:36:26,963 --> 00:36:31,282
+Okay. Where do we have a favicon data callback?
+
+338
+00:36:31,283 --> 00:36:37,383
+In here. This thing.
+
+339
+00:36:39,763 --> 00:36:43,033
+And I've handed it the promise holder.
+
+340
+00:36:46,253 --> 00:37:00,243
+I moved the promise holder to it. Wait a second, wait a second.
+
+341
+00:37:00,573 --> 00:37:15,713
+Wait a second. So async favicon data ready release.
+
+342
+00:37:15,723 --> 00:37:22,663
+So I should actually be running. It should have been rejected.
+
+343
+00:37:25,993 --> 00:37:31,213
+So I already did run the destructor, so it should have been rejected.
+
+344
+00:37:33,223 --> 00:37:41,933
+And the mouse promised holder. When you reject something.
+
+345
+00:37:44,483 --> 00:37:52,323
+Reject. If exists, we say resolve. If not empty, then we're going to reject.
+
+346
+00:37:52,963 --> 00:37:58,173
+And what do you do if you reject? You're supposed to set the promise to be null.
+
+347
+00:37:58,923 --> 00:38:02,133
+So that never occurred.
+
+348
+00:38:07,053 --> 00:38:17,723
+That's very interesting. Why didn't we do this part?
+
+349
+00:38:24,343 --> 00:38:31,293
+I think that's where I want to set a breakpoint. That's where I want to set a breakpoint for the next time this happens.
+
+350
+00:38:31,303 --> 00:38:32,763
+Okay. So we're going to detach.
+
+351
+00:38:36,743 --> 00:38:44,543
+Uh, we are going to rerun and we're going to do that whole thing again, but this time we're going to have that breakpoint set.
+
+352
+00:38:46,023 --> 00:38:49,823
+And we're going to see what happens at that, at that destructor.
+
+353
+00:39:05,663 --> 00:39:08,723
+Okay. Open up the console.
+
+354
+00:39:14,283 --> 00:39:17,813
+Come on. There it is.
+
+355
+00:39:21,263 --> 00:39:26,243
+And then we're going to go ahead and paste our. Oh sorry is back over here.
+
+356
+00:39:26,693 --> 00:39:41,363
+We're going to go ahead and paste this stuff in. Also going to, uh, you know, put this in, uh, services, uh, info, process ID.
+
+357
+00:39:45,193 --> 00:39:51,933
+So the process ID. 17212.
+
+358
+00:40:01,423 --> 00:40:04,502
+Let's make sure that we properly get our. Yeah. Okay.
+
+359
+00:40:04,503 --> 00:40:10,533
+Our breakpoint has been set up correctly. And maybe we can add a couple of other breakpoints as well.
+
+360
+00:40:10,833 --> 00:40:13,953
+Um, maybe we'll set one right here just for.
+
+361
+00:40:14,793 --> 00:40:17,913
+Just for giggles. Just for giggles.
+
+362
+00:40:19,683 --> 00:40:23,403
+And, uh, I keep going to the wrong place.
+
+363
+00:40:23,793 --> 00:40:29,343
+We're going to paste this line in here and we're going to hopefully, uh, hit our breakpoint so we can start stepping through.
+
+364
+00:40:35,303 --> 00:40:42,863
+Okay, so we have our first breakpoint here. Uh, we got our promise is set here.
+
+365
+00:40:43,493 --> 00:40:48,413
+All right. We're going to, uh. We're doing these things.
+
+366
+00:40:48,413 --> 00:40:55,703
+We're creating the Mars promise. We create the promise holder, and then we're going to call into these things.
+
+367
+00:40:56,543 --> 00:41:05,853
+Step in ten and cache fab icon. Uh, step out of that.
+
+368
+00:41:06,783 --> 00:41:15,043
+Here we go. See if the the thing happens.
+
+369
+00:41:15,043 --> 00:41:20,473
+We're going to invoke async. We're going to check what's going on in here.
+
+370
+00:41:20,473 --> 00:41:23,983
+We're going to check to see if the file exists, but we're doing it off of the main thread.
+
+371
+00:41:25,093 --> 00:41:28,483
+It shouldn't exist. So we're going to fetch it.
+
+372
+00:41:31,213 --> 00:41:34,272
+Right. Do this part. So we're going to step we're going to break in here.
+
+373
+00:41:34,273 --> 00:41:37,393
+Actually I'm going to break here.
+
+374
+00:41:39,743 --> 00:41:43,193
+Okay, sir, we're the main thread.
+
+375
+00:41:44,243 --> 00:41:49,923
+We're going to construct. Oh.
+
+376
+00:41:51,563 --> 00:42:02,213
+We construct. Kind of help her return.
+
+377
+00:42:04,853 --> 00:42:10,853
+We're going to construct our promise that we will call this.
+
+378
+00:42:18,513 --> 00:42:22,333
+Come on, come on, come on. No.
+
+379
+00:42:24,493 --> 00:42:35,713
+Oh. What's going on here?
+
+380
+00:42:44,463 --> 00:42:48,153
+Show studio is busy now.
+
+381
+00:42:51,393 --> 00:42:57,223
+What? Are you busy? What are you doing?
+
+382
+00:42:57,673 --> 00:43:08,353
+We're about to get into the really interesting stuff. Windows isn't busy.
+
+383
+00:43:11,693 --> 00:43:15,173
+Visual Studio is taking up a lot of memory.
+
+384
+00:43:17,753 --> 00:43:25,913
+It's thinking, I don't know what it's doing, but it's thinking it's doing some it's got a Node.js thing going.
+
+385
+00:43:25,943 --> 00:43:29,243
+That's crazy. Come on, come on, come on, come on.
+
+386
+00:43:29,243 --> 00:43:32,243
+Where are you? Well, I'm going to give.
+
+387
+00:43:33,293 --> 00:43:43,643
+This is very frustrating. I'm going to give, uh, uh, Visual Studio about ten more seconds to get its act together before I kill it and start over.
+
+388
+00:43:45,053 --> 00:43:49,373
+Ten here. Let's let's do a drum roll. Let's do a drum roll.
+
+389
+00:43:54,093 --> 00:44:04,353
+Nine. A. Three.
+
+390
+00:44:05,733 --> 00:44:10,893
+Two. One. Sorry.
+
+391
+00:44:11,553 --> 00:44:14,793
+All right, well, this is hilarious. Uh.
+
+392
+00:44:14,973 --> 00:44:25,893
+I'm gonna kill my damn tool here. Um. Well, that was a bust.
+
+393
+00:44:26,523 --> 00:44:37,563
+Let's try it again. You know, this time I'm just going to.
+
+394
+00:44:37,743 --> 00:44:44,903
+I'm not going to step through the whole thing. I'm just going to go, um, I guess set a breakpoint at the top of that destructor.
+
+395
+00:44:44,913 --> 00:44:46,403
+That's the part I'm really interested in.
+
+396
+00:44:46,413 --> 00:44:54,663
+I was kind of going through the this like stepping through the whole process as like, um, I was just kind of curious to see which way we go.
+
+397
+00:44:54,663 --> 00:45:00,003
+But I actually think that that that destructor has the information that we desperately need.
+
+398
+00:45:04,463 --> 00:45:12,273
+Okay, here we go. Paste this in.
+
+399
+00:45:16,433 --> 00:45:29,233
+Process ID is 6088. And does it remember our breakpoints from last time?
+
+400
+00:45:29,773 --> 00:45:33,733
+No it doesn't. Thanks.
+
+401
+00:45:35,803 --> 00:45:41,053
+So I kind of guess I do need to, man.
+
+402
+00:45:45,363 --> 00:45:48,543
+It's, uh. Widget. Favicon. Helper.
+
+403
+00:45:49,113 --> 00:46:00,573
+Put a breakpoint here. Um.
+
+404
+00:46:01,083 --> 00:46:05,013
+Can we go to line of code? Okay, great. Now I'm actually going to disable.
+
+405
+00:46:06,753 --> 00:46:11,193
+Well, where was the, uh, where's the destructor I wanted?
+
+406
+00:46:12,153 --> 00:46:16,603
+It was. I'm so mad.
+
+407
+00:46:17,893 --> 00:46:23,293
+I think it was in a header. I think it was in favicon helpers. Um.
+
+408
+00:46:33,753 --> 00:46:45,013
+Where is it? Favicon. Helper's. Toolkit.
+
+409
+00:46:45,013 --> 00:46:48,813
+Comments. Places. Widget. No, no.
+
+410
+00:46:48,823 --> 00:46:56,363
+Can't possibly be. Was it when you tells.
+
+411
+00:46:58,863 --> 00:47:02,193
+Dot h. And then promise bolder.
+
+412
+00:47:02,763 --> 00:47:10,743
+There's one of these. So I'm going to set a breakpoint here. And is there another reject if exists.
+
+413
+00:47:11,673 --> 00:47:15,873
+No. Okay I think it was this one. So let's set a breakpoint there.
+
+414
+00:47:17,163 --> 00:47:23,193
+Somehow we've already. Somehow we've already hit that that breakpoint.
+
+415
+00:47:23,463 --> 00:47:32,883
+Um, I have a feeling it was for a subsequent call for the caching for, like, what exists in here, the privacy notice.
+
+416
+00:47:33,843 --> 00:47:45,153
+Um, okay, so let's now do our thing where we call with a Uri that we don't have a fallback for.
+
+417
+00:47:46,143 --> 00:47:50,553
+Okay. Just continue. Just continue. Okay, so we are here.
+
+418
+00:47:50,823 --> 00:47:54,212
+We are being destroyed. Uh, we're going to say.
+
+419
+00:47:54,213 --> 00:48:02,413
+Hey. Whoa! Why didn't we run the thing?
+
+420
+00:48:04,633 --> 00:48:15,193
+Why didn't we run the thing? It's promise, holder.
+
+421
+00:48:17,023 --> 00:48:20,923
+Oh! Promise, holder.
+
+422
+00:48:20,923 --> 00:48:25,273
+The contents of it. Of the unique pointer are null.
+
+423
+00:48:40,233 --> 00:48:43,623
+What? Did it get moved out already? Is that what happened?
+
+424
+00:48:45,933 --> 00:48:55,533
+Call stack. The async favicon data ready.
+
+425
+00:48:56,973 --> 00:49:19,833
+I'm going to go ahead and continue and let last crash. The async valve icon data ready, we move the promise holder into it.
+
+426
+00:49:22,113 --> 00:49:27,663
+I want to see whether or not. Uh.
+
+427
+00:49:27,663 --> 00:49:31,803
+Promise, holder, we move the promise holder from a promise holder.
+
+428
+00:49:34,053 --> 00:49:45,163
+Into it. I want a breakpoint here on favicon data not available, because I think that's that's the operative part.
+
+429
+00:49:45,163 --> 00:49:53,203
+That's the part that I think we are going to hit. Very curious about why all this is ifdef.
+
+430
+00:49:53,473 --> 00:50:02,223
+Oh well, most places does exist here, Visual Studio, so I don't know why this is all ifdef or grayed out, but okay.
+
+431
+00:50:03,003 --> 00:50:09,432
+Uh, favicon not available. And then on complete.
+
+432
+00:50:09,433 --> 00:50:17,793
+I want a breakpoint there. And I want a breakpoint here.
+
+433
+00:50:18,923 --> 00:50:22,253
+So we're going to do it again. Same. Same business.
+
+434
+00:50:26,943 --> 00:50:39,293
+Maybe we're just not being careful about how we move things around. Testing since it's a unique pointer.
+
+435
+00:50:40,823 --> 00:50:44,962
+It's not sufficient, I guess, to see that a unique pointer exists.
+
+436
+00:50:44,963 --> 00:50:46,973
+You have to see if it's pointing at something.
+
+437
+00:50:51,203 --> 00:50:58,282
+And in this case, we I guess we're we're bailing out because we're not doing the thing in the destructor,
+
+438
+00:50:58,283 --> 00:51:03,083
+because the unique pointer, the promise holder has, it's supposed to have been moved.
+
+439
+00:51:14,923 --> 00:51:18,463
+26908.
+
+440
+00:51:23,213 --> 00:51:31,833
+No. Go ahead and attach or break points.
+
+441
+00:51:31,913 --> 00:51:35,783
+All is well. All right. Now do the thing.
+
+442
+00:51:44,133 --> 00:51:55,153
+Okay. Continue. Okay, so here I am.
+
+443
+00:51:55,153 --> 00:52:02,393
+Promise. Holder is what? It's optimized away.
+
+444
+00:52:03,533 --> 00:52:07,313
+Okay, well, let me set breakpoints in each of these methods.
+
+445
+00:52:08,723 --> 00:52:13,523
+Let's also go up one. Um, a promise folder is a tuple.
+
+446
+00:52:17,493 --> 00:52:24,843
+Is currently null. So presumably. We have moved it.
+
+447
+00:52:24,863 --> 00:52:33,353
+We have thus moved it, and it's actually in a promise folder which has then been moved into a promise folder.
+
+448
+00:52:34,703 --> 00:52:39,203
+Right, a promise folder. It's already been moved, right?
+
+449
+00:52:44,313 --> 00:52:51,603
+All right, let's continue. Okay. This m promise holder is a tuple.
+
+450
+00:52:52,053 --> 00:52:56,103
+It's. No, we didn't get anything. We got.
+
+451
+00:53:00,153 --> 00:53:04,053
+The promise holder wasn't successfully moved to us, I guess.
+
+452
+00:53:05,243 --> 00:53:19,733
+It's null. The promise is null. So that's the problem I guess is we have the async favicon data ready thing.
+
+453
+00:53:23,883 --> 00:53:27,063
+And it doesn't work.
+
+454
+00:53:28,083 --> 00:53:34,233
+It hasn't had a chance to move it because it. The thing doesn't exist.
+
+455
+00:53:34,863 --> 00:53:43,263
+So when we're doing it wrong, it seems like like when we construct this async favicon data ready thing, we are not passing.
+
+456
+00:53:46,083 --> 00:54:35,793
+The promise holder correctly. Tain and can async.
+
+457
+00:54:39,833 --> 00:54:43,953
+Isn't fair, right, hon? Dad, Ray isn't far away from dad already.
+
+458
+00:54:46,113 --> 00:54:49,143
+We construct it right here. There's no other place.
+
+459
+00:54:51,883 --> 00:54:59,743
+It's just the one place that we constructed. And we pass it a promise holder.
+
+460
+00:55:01,123 --> 00:55:09,463
+And we do that by calling this. This is the case where we're using the old sync mechanism.
+
+461
+00:55:09,483 --> 00:55:15,693
+This is the case where we do it from our current test and.
+
+462
+00:55:20,633 --> 00:55:23,983
+Oh. Oh.
+
+463
+00:55:25,043 --> 00:55:28,883
+Hold up, hold up, hold up, hold up. Did I do this? Did I do this wrong?
+
+464
+00:55:29,123 --> 00:55:33,113
+Did I pass? So auto prompt.
+
+465
+00:55:46,273 --> 00:55:52,243
+It's supposed to be the favicon page, Uri, the ICO file, the thread,
+
+466
+00:55:52,243 --> 00:55:58,212
+and then whether or not you're using the like what folder you're supposed to be using.
+
+467
+00:55:58,213 --> 00:56:03,133
+Bom bom bom bom. And then a runnable.
+
+468
+00:56:03,793 --> 00:56:06,913
+And then the promise holder. We're not passing the promise holder.
+
+469
+00:56:09,043 --> 00:56:13,453
+What we. Okay. That's the problem. That is the problem.
+
+470
+00:56:16,183 --> 00:56:21,883
+Uh. We are. This is the old code. We need to actually pass the promise holder here.
+
+471
+00:56:24,043 --> 00:56:28,153
+Instead of null pointer. And we don't need to actually do anything here.
+
+472
+00:56:29,053 --> 00:56:34,703
+We can just pass null pointer. Right.
+
+473
+00:56:38,333 --> 00:56:59,413
+Is that correct? And then what you really want to do is you you want to say like, whatever.
+
+474
+00:56:59,623 --> 00:57:10,063
+If this resolves or whatever happens to this promise, we want to actually chain it so that if it resolves.
+
+475
+00:57:15,593 --> 00:57:22,403
+Hmhm. No, we don't need to do any of these things.
+
+476
+00:57:22,473 --> 00:57:30,483
+We don't need to do any of these things. We move the holder.
+
+477
+00:57:34,013 --> 00:57:38,003
+The holder passes it along to async favicon data ready.
+
+478
+00:57:38,753 --> 00:57:44,122
+In any event, where things go horribly wrong in the destructor will reject the promise,
+
+479
+00:57:44,123 --> 00:57:50,723
+but in the good case will pass it along to encode and right then the promise holder
+
+480
+00:57:50,723 --> 00:57:54,913
+pass is passed along here and then will resolve if it exists with the icon pack.
+
+481
+00:57:55,133 --> 00:57:59,393
+That's correct. I think that's what we need to do. I think that's why things were going wrong,
+
+482
+00:57:59,393 --> 00:58:07,013
+as we actually had a bunch of old code still in there that was using the old runnable mode that I'd forgotten to update.
+
+483
+00:58:08,213 --> 00:58:18,682
+That was my bad. Um, and all this convoluted C plus plus, um, I had failed to update a chunk of code to not use the runnable,
+
+484
+00:58:18,683 --> 00:58:23,933
+but instead passed null for the runnable and to pass in a promise holder.
+
+485
+00:58:31,883 --> 00:58:44,203
+All right. Let's see if this fixes the crash. If it does, we're in pretty good shape.
+
+486
+00:58:44,233 --> 00:58:52,093
+At that point, it's time to to clean up the patch. Um, I don't know, how are we going to do tests for this?
+
+487
+00:58:55,093 --> 00:58:59,053
+We might need to write tests in JavaScript like a monkey test.
+
+488
+00:59:00,633 --> 00:59:19,473
+That'd probably be best. Let's just.
+
+489
+00:59:19,683 --> 00:59:23,543
+Let's. See what's going on here. We're going to link Zola.
+
+490
+00:59:25,583 --> 00:59:32,493
+So it turns out we've found the killer. And it turns out the killer was probably me the whole time.
+
+491
+00:59:33,503 --> 00:59:47,583
+That's the story of software development. Linking have already made a joke about, like, Abraham Lincoln.
+
+492
+00:59:51,603 --> 01:00:03,243
+Papa. Papa. Papa. Papa. Papa. Okay, well, let me make a joke about Abraham.
+
+493
+01:00:03,903 --> 01:00:09,453
+Uh, Lincoln. Uh.
+
+494
+01:00:14,843 --> 01:00:18,243
+No, I got nothing. I don't. I don't have a job. I'll work on it.
+
+495
+01:00:18,263 --> 01:00:31,613
+I'll work on it. All right, let's run. Abraham.
+
+496
+01:00:31,953 --> 01:00:35,673
+A divided binary cannot stand.
+
+497
+01:00:39,843 --> 01:00:45,213
+I don't know. That's pretty low quality, low quality joke on my part.
+
+498
+01:00:45,223 --> 01:00:48,333
+Mike with a windows zoom in a VM in the basement.
+
+499
+01:00:48,333 --> 01:00:56,972
+Clue. Mozilla edition. Yeah, I mean, in all seriousness, sometimes as a software developer, that's what it feels like.
+
+500
+01:00:56,973 --> 01:01:00,453
+It's a detective sometimes I am a I think I've said this before.
+
+501
+01:01:00,663 --> 01:01:06,032
+Sometimes I feel like a soccer coach. Sometimes I feel like a firefighter.
+
+502
+01:01:06,033 --> 01:01:08,013
+Sometimes I feel like a member of the bomb squad.
+
+503
+01:01:08,013 --> 01:01:15,933
+Sometimes I feel like a detective, like a crime scene investigator, a detective, or down in the CSI, like doing the science.
+
+504
+01:01:16,473 --> 01:01:23,913
+Sometimes I feel like, uh, yeah, like all of these things at different times of, like, the software development life cycle.
+
+505
+01:01:24,513 --> 01:01:29,493
+All right, let's try, uh. Let's try the thing.
+
+506
+01:01:30,093 --> 01:01:35,252
+Let's do the thing. I'm not going to attach a debugger this time.
+
+507
+01:01:35,253 --> 01:01:39,303
+I'm just going to. We're just going to roll. We're just going to see if this works.
+
+508
+01:01:42,663 --> 01:01:48,383
+I'm not even going to get the OS. Uh, process ID? Let's go.
+
+509
+01:01:48,413 --> 01:01:51,473
+Are you ready? Drum roll. I think it's worth doing a drum roll.
+
+510
+01:02:05,413 --> 01:02:10,182
+Amazing. It didn't crash, but we did get an error.
+
+511
+01:02:10,183 --> 01:02:14,323
+Failure. Um, and maybe that's okay.
+
+512
+01:02:14,743 --> 01:02:21,073
+In the event that we cannot get the fab icon. We'll just return an error failure.
+
+513
+01:02:22,903 --> 01:02:30,503
+Maybe that's fine. Um.
+
+514
+01:02:33,303 --> 01:02:37,353
+What do we do in that case? What do we currently do if, uh.
+
+515
+01:02:40,643 --> 01:02:43,733
+If we can't find the favicon tan. Whoops.
+
+516
+01:02:47,133 --> 01:02:50,343
+In the event that it's not found fairly common.
+
+517
+01:03:00,463 --> 01:03:13,032
+But when you tells. Work ten cached favicon files.
+
+518
+01:03:13,033 --> 01:03:18,733
+So in the event that we can't find it, we return it as error. And what does our.
+
+519
+01:03:22,773 --> 01:03:31,533
+Uh was are jumpers could do. Ten cache five icon.
+
+520
+01:03:32,643 --> 01:03:39,153
+If we got a successful set cache icon path to be a icon file path will return it.
+
+521
+01:03:47,413 --> 01:03:52,533
+Otherwise. We'll just let pass.
+
+522
+01:03:52,863 --> 01:03:59,223
+Uh, if we, we'll just set it to be the empty string, which is fine.
+
+523
+01:03:59,223 --> 01:04:04,863
+So what? We're what we made it is possible to do is just have this be a waiting right here.
+
+524
+01:04:05,433 --> 01:04:09,093
+Hey. That's great. That's great. Uh, we can actually do that now.
+
+525
+01:04:10,473 --> 01:04:13,563
+So let's do that. Let's do it.
+
+526
+01:04:14,463 --> 01:04:23,403
+So let's update the front end now to use our new method. And, uh, I'll actually use an opt build for this.
+
+527
+01:04:23,403 --> 01:04:28,413
+I think I can take advantage of the opt build that's also also been built.
+
+528
+01:04:29,103 --> 01:04:38,853
+And we can wire this up to the front end. Um, build what will build with the full box build.
+
+529
+01:04:39,693 --> 01:04:51,393
+Let's go over to windows jump lists, obtain and cat on to obtain and cache fab icon async.
+
+530
+01:04:54,773 --> 01:05:04,913
+Oh, wait. Um.
+
+531
+01:05:06,653 --> 01:05:12,593
+Any other errors, however, will abort on. What were we doing before we were.
+
+532
+01:05:14,603 --> 01:05:21,283
+Asked. Instant success. If I can't file.
+
+533
+01:05:26,013 --> 01:05:30,933
+If it doesn't exist, we'll return this error not available, and then we'll try and going to go and get it.
+
+534
+01:05:31,683 --> 01:05:43,773
+So this is a slightly different case where. Uh, if it occurs or by has been requested.
+
+535
+01:05:44,823 --> 01:05:57,383
+Uh, it might also. Throw an exception.
+
+536
+01:05:57,893 --> 01:06:06,593
+If there was a problem. Fetching the file icon from the database and writing it to the disk.
+
+537
+01:06:07,613 --> 01:06:10,703
+Uh, in either cases, non-fatal.
+
+538
+01:06:13,063 --> 01:06:20,773
+Fatal. So we ignore that here. Uh, okay.
+
+539
+01:06:25,333 --> 01:06:30,253
+Then this should work. We're already. Oh, well. Hold on, we can't do that inside of Rosa on that.
+
+540
+01:06:30,253 --> 01:06:32,173
+We're going to have to actually change how we do things.
+
+541
+01:06:32,173 --> 01:06:39,343
+Here we are inside of an async function, but inside of a map you can't really can't really do this.
+
+542
+01:06:39,343 --> 01:06:47,083
+So we're going to. Say custom descriptions um for.
+
+543
+01:06:49,093 --> 01:06:57,943
+Let row of rows. And then we're going to say these things.
+
+544
+01:07:00,663 --> 01:07:05,163
+But you or I equal those things like own path.
+
+545
+01:07:05,163 --> 01:07:09,063
+And we're going to say custom descriptions.
+
+546
+01:07:10,353 --> 01:07:23,393
+Now push. Here we go.
+
+547
+01:07:26,253 --> 01:07:30,303
+All right. Let's just make sure that that JavaScript got built out.
+
+548
+01:07:32,523 --> 01:07:36,643
+I think we're seeing the light at the end of the tunnel. Now, that's not to say that there isn't more to do.
+
+549
+01:07:36,663 --> 01:07:42,213
+We there's tests to write. There's a lot of cleanup to do. Like, what we've written is fairly convoluted and complicated.
+
+550
+01:07:42,603 --> 01:07:50,043
+We might be able to get some advice from some of our native code experts on how I can simplify things even further.
+
+551
+01:07:50,643 --> 01:07:55,323
+Um, but I think we're we're very close to having something that's functional.
+
+552
+01:07:59,473 --> 01:08:09,523
+So those fab icons were. Uh, but now I'm going to click on that's going to try and load it over here isn't it.
+
+553
+01:08:09,553 --> 01:08:12,823
+Yeah. Okay. So this is, this is the problem with um.
+
+554
+01:08:15,793 --> 01:08:19,993
+Let me let me pull up history. History today.
+
+555
+01:08:21,763 --> 01:08:27,733
+I think those items like this is this is old information, deadly moral mushrooms.
+
+556
+01:08:28,543 --> 01:08:37,493
+So let's actually load some websites. Go to websites.
+
+557
+01:08:37,513 --> 01:08:45,402
+We got a bunch of fav icons in the, uh. In the show, in the history database.
+
+558
+01:08:45,403 --> 01:08:52,173
+And then we're going to go ahead and we're going to pull up. We're going to manually update the jump list.
+
+559
+01:08:52,183 --> 01:08:55,543
+So we're gonna do this jump list. Uh.
+
+560
+01:08:58,193 --> 01:09:01,733
+Windows win. Taskbar. Jump list.
+
+561
+01:09:01,733 --> 01:09:05,093
+Builder. Update. Uh.
+
+562
+01:09:07,433 --> 01:09:16,373
+Builder update. Maybe just update. Hey, check them out.
+
+563
+01:09:16,383 --> 01:09:20,583
+Check them out. Take a look.
+
+564
+01:09:20,823 --> 01:09:26,643
+It's in a book. We got some fav icon uns.
+
+565
+01:09:27,183 --> 01:09:31,903
+Why do we have fav icons?
+
+566
+01:09:31,923 --> 01:09:35,043
+So, um, put the phone away. That's a new one.
+
+567
+01:09:35,163 --> 01:09:39,093
+Put the phone away. So why didn't we get this one? Why didn't we get this favicon?
+
+568
+01:09:39,123 --> 01:09:51,453
+Maybe it was not loaded yet. Let's run it again. That's interesting.
+
+569
+01:09:52,593 --> 01:09:56,343
+Uh, what about in history? Do we have it over here? We do.
+
+570
+01:09:56,553 --> 01:10:02,223
+So how come? What's the deal? How come I can't get the favicon out for.
+
+571
+01:10:02,793 --> 01:10:07,403
+Put the phone away. Uh, we can try and investigate that.
+
+572
+01:10:07,413 --> 01:10:12,563
+We got a couple minutes. Uh, so let's.
+
+573
+01:10:16,043 --> 01:10:23,453
+Uh, let's say that, uh, across early services down near you or I.
+
+574
+01:10:26,543 --> 01:10:37,703
+Uh, and then when taskbar and jump list builder builder obtain cache fab icon async axios URL.
+
+575
+01:10:40,193 --> 01:10:44,153
+Okay, so there is a URL there. I mean there's a thing.
+
+576
+01:10:45,513 --> 01:10:52,913
+Oh hang on, did I? Where's.
+
+577
+01:10:53,013 --> 01:10:56,792
+Where's the folder c? OBJ. Default profile.
+
+578
+01:10:56,793 --> 01:11:05,283
+Default jump list cache. Okay so let's go into the. Folder Timplus cache.
+
+579
+01:11:06,543 --> 01:11:12,993
+There it is. So how come not over here.
+
+580
+01:11:17,763 --> 01:11:23,472
+But the other ones worked. Uh.
+
+581
+01:11:23,473 --> 01:11:26,653
+All right, well, let's take a look inside of the debugger.
+
+582
+01:11:33,363 --> 01:11:37,803
+And sometimes this happens. I have to like restart the debugger.
+
+583
+01:11:40,953 --> 01:11:47,483
+Because it doesn't attach to the right process when taskbar. Should keep this wind junk.
+
+584
+01:11:47,483 --> 01:11:54,593
+Plus there we go. Obtain, obtain and cache favicon async.
+
+585
+01:11:55,643 --> 01:11:59,183
+Here we go. Let's do it here.
+
+586
+01:12:00,093 --> 01:12:05,223
+I'll go back to our console. And we'll run that.
+
+587
+01:12:05,943 --> 01:12:09,093
+Oh hang on. Let's do the update part.
+
+588
+01:12:11,253 --> 01:12:14,733
+We did. We break. Hit our break point. Yes.
+
+589
+01:12:15,183 --> 01:12:21,753
+Okay, so we have all these rows. Uh, let's take a look at the Uri for this one.
+
+590
+01:12:22,203 --> 01:12:25,483
+Um. Row.
+
+591
+01:12:25,483 --> 01:12:30,132
+Let's add a watch point. Uh, watch expression road.
+
+592
+01:12:30,133 --> 01:12:33,583
+Uh, get results by name, the URL.
+
+593
+01:12:34,033 --> 01:12:37,093
+So that's resolving to itr.com.
+
+594
+01:12:37,093 --> 01:12:43,123
+That's not the one we care about. So um, let's just take our way through here.
+
+595
+01:12:43,153 --> 01:12:46,962
+Get pocket get pocket. Electric literature.
+
+596
+01:12:46,963 --> 01:12:50,353
+Atlas obscura Axios phone. This is the one.
+
+597
+01:12:52,123 --> 01:13:01,563
+So we can actually set a conditional breakpoint for next time. Road, get result by name URL equals.
+
+598
+01:13:01,583 --> 01:13:05,903
+And then we're going to copy this. Copy that.
+
+599
+01:13:06,653 --> 01:13:09,982
+Copy that. Get result.
+
+600
+01:13:09,983 --> 01:13:14,643
+My name URL equals. Uh, that.
+
+601
+01:13:18,573 --> 01:13:24,543
+Okay. And then we're going to try and get the icon path. And did we get an icon path.
+
+602
+01:13:24,813 --> 01:13:29,803
+We did not. So what's the difference?
+
+603
+01:13:30,103 --> 01:13:49,383
+The Uri. Uh, and then what was the one that we were testing with?
+
+604
+01:13:52,143 --> 01:14:01,803
+Axios URL. Https Colgate.
+
+605
+01:14:02,343 --> 01:14:09,782
+axios.com. Have a black phone while driving paying fine UTM source pocket new tab and us.
+
+606
+01:14:09,783 --> 01:14:15,003
+That looks right. So what happened? Why did this one not work?
+
+607
+01:14:16,683 --> 01:14:23,193
+Uh, your, uh, uh, spec. Uh, Uri equals.
+
+608
+01:14:26,693 --> 01:14:33,743
+I mean, so here's what I'm going to do. I'm going to save store as a global variable.
+
+609
+01:14:35,123 --> 01:14:43,643
+Can't I? Come on. Um, when taskbar jump start and commonly text equals uh, you are I.
+
+610
+01:14:44,483 --> 01:14:57,413
+Perfect. Okay. Uh, play. So now we'll go over here and we'll say one win taskbar jump start and calmly test equals Axios URL.
+
+611
+01:14:57,893 --> 01:15:06,833
+True. They're the same. So what's the deal? How come one failed and the other one did not, uh, obtain and cache favicon async?
+
+612
+01:15:07,493 --> 01:15:10,583
+How come that one gives me back something?
+
+613
+01:15:15,853 --> 01:15:19,063
+And this one does not. Let's step through it again.
+
+614
+01:15:26,543 --> 01:15:30,083
+Tain cache favicon async Uri.
+
+615
+01:15:32,343 --> 01:15:42,013
+Godsmack. And let's, let's call this right now and see what happens.
+
+616
+01:15:42,023 --> 01:15:45,713
+Like if I. That gives me back something.
+
+617
+01:15:46,043 --> 01:15:50,273
+So then now what do I have? I come back.
+
+618
+01:15:51,323 --> 01:15:55,253
+Okay. We have a thing. So then what's the deal? Play.
+
+619
+01:16:01,173 --> 01:16:07,463
+Still nothing. Is it possible that.
+
+620
+01:16:10,163 --> 01:16:20,513
+Um. Uh.
+
+621
+01:16:20,783 --> 01:16:30,463
+Uh. How do I turn this into a file?
+
+622
+01:16:30,463 --> 01:16:35,743
+You or I can write. Because that the right is to have the right.
+
+623
+01:16:38,493 --> 01:16:45,222
+Um. Let's path that path.
+
+624
+01:16:45,223 --> 01:16:49,593
+Utils dot. Apparent.
+
+625
+01:16:52,193 --> 01:16:59,453
+Okay, so it knows how to parse that I await io utils exists path.
+
+626
+01:17:00,593 --> 01:17:05,313
+It knows that the file exists. So what the heck?
+
+627
+01:17:05,553 --> 01:17:11,643
+You know, if, um. Edit condition.
+
+628
+01:17:15,013 --> 01:17:18,463
+And condition. All right.
+
+629
+01:17:19,513 --> 01:17:22,993
+I'm going to set a breakpoint here.
+
+630
+01:17:24,553 --> 01:17:29,203
+And now let's do exists or the update again. Yep.
+
+631
+01:17:29,713 --> 01:17:33,313
+Yep yep. Icon path. We get a thing.
+
+632
+01:17:37,353 --> 01:17:41,833
+Yep. Um.
+
+633
+01:17:42,193 --> 01:17:45,403
+Continue. Custom descriptions.
+
+634
+01:17:48,043 --> 01:17:52,623
+Unfold them. Put the phone away.
+
+635
+01:17:53,733 --> 01:17:57,903
+Icon path. There's your icon path. How come?
+
+636
+01:17:58,293 --> 01:18:17,733
+That's no good. What is the form of this file?
+
+637
+01:18:19,033 --> 01:18:28,113
+What is? What are the differences? Um.
+
+638
+01:18:28,593 --> 01:18:31,833
+How do I look at the view? Can I hex?
+
+639
+01:18:33,723 --> 01:18:45,003
+Hex? Uh, I want to use hex code.
+
+640
+01:18:45,213 --> 01:18:51,123
+Can I use Sublime Text as a hex hex editor? Sublime text hex edit.
+
+641
+01:18:54,963 --> 01:19:05,363
+Uh, plug ins. Hex viewer. Uh, I would just like an online hex editor.
+
+642
+01:19:05,383 --> 01:19:11,823
+I don't mind that. Uh, online hack said it.
+
+643
+01:19:13,683 --> 01:19:21,093
+Uh, sure. Let's try this. So how do I open a file and I just drag a file in here?
+
+644
+01:19:21,963 --> 01:19:25,173
+Yes. Okay. Let's go over here.
+
+645
+01:19:25,563 --> 01:19:29,943
+Let's drag another one in this one. This is the one that I would expect to work.
+
+646
+01:19:30,783 --> 01:19:47,893
+Also a png. They appear to be valid.
+
+647
+01:19:55,593 --> 01:20:00,213
+Images. Well that's interesting. Different sizes.
+
+648
+01:20:02,593 --> 01:20:07,163
+Different sizes. Okay.
+
+649
+01:20:07,193 --> 01:20:13,283
+Not our problem. Not our problem. I have a feeling that's the issue.
+
+650
+01:20:14,033 --> 01:20:26,973
+And I would suspect. Even without our change, this is still a bug that for sufficiently large icon files windows is just rejecting them.
+
+651
+01:20:30,883 --> 01:20:34,003
+Can we verify that? Yes we can.
+
+652
+01:20:35,833 --> 01:20:39,913
+Yes we can. Let's verify that. Let's let's write that down.
+
+653
+01:20:41,173 --> 01:20:50,212
+So I think we can check these off. Uh, we seem to have an interesting bug.
+
+654
+01:20:50,213 --> 01:20:53,423
+Where the fab icon from. What is the site?
+
+655
+01:20:53,603 --> 01:20:57,863
+Axios. Um, something about phones.
+
+656
+01:20:57,863 --> 01:21:01,343
+Put your phone away. Put the phone down.
+
+657
+01:21:02,123 --> 01:21:06,023
+Put the phone down. Um.
+
+658
+01:21:11,233 --> 01:21:14,653
+Uh, isn't showing up on the jump list.
+
+659
+01:21:15,853 --> 01:21:24,823
+Uh, I hypothesis. My hypothesis is that this is because the favicon is quite large.
+
+660
+01:21:27,523 --> 01:21:43,813
+Uh, and that the jump the jump list, back end, the Win32 jump list back end is just silently, um, uh, failing to present it because it's so large.
+
+661
+01:21:45,313 --> 01:21:49,863
+Let's prove that. So let's at least show that our patch wasn't involved.
+
+662
+01:21:49,873 --> 01:21:53,833
+So I'm going to shut everything down. Shut them all down!
+
+663
+01:21:53,833 --> 01:21:57,613
+Hurry! All right. Shut it down!
+
+664
+01:22:01,133 --> 01:22:05,093
+And we're going to build, um. I'm going to amend.
+
+665
+01:22:08,103 --> 01:22:14,223
+I am going to have to break this patch up into different chunks, but I'll do that maybe during the next episode.
+
+666
+01:22:15,123 --> 01:22:21,393
+Um, that'll be fun and then we can post it for review. But, uh, I mean, I think, uh, I'm going to go back a revision.
+
+667
+01:22:21,603 --> 01:22:27,963
+So without the patch, we are going to build an opt build.
+
+668
+01:22:28,473 --> 01:22:34,453
+We're going to show that the problem still exists. If the problem still exists.
+
+669
+01:22:35,113 --> 01:22:40,333
+We didn't introduce it. We didn't start the fire. We may have noticed it, and we may have a potential solution.
+
+670
+01:22:40,333 --> 01:22:46,392
+Now, while we're waiting for this build to take place. Let's take a look at the code that tries to get the five icons.
+
+671
+01:22:46,393 --> 01:22:51,053
+And, um, maybe we can even write a patch to fix this particular bug.
+
+672
+01:22:51,073 --> 01:22:58,122
+So, for example, we do this thing where, um, we're saying is async and code and.
+
+673
+01:22:58,123 --> 01:23:06,073
+Right. And we get like some sizes, uh, we get some surfaces.
+
+674
+01:23:07,923 --> 01:23:11,423
+It says windows will resize appropriately for us.
+
+675
+01:23:13,233 --> 01:23:21,803
+Mhm. Mhm. Create a 48 by 48 surface in the event that things are too small.
+
+676
+01:23:24,873 --> 01:23:33,903
+What if it's otherwise? By using the input image services size, we may end up decoding two different sizes 16 by 16 or bigger for higher DPI windows.
+
+677
+01:23:33,933 --> 01:23:37,113
+Apparently we'll resize appropriately for us if we want to encode ourselves one day.
+
+678
+01:23:37,113 --> 01:23:42,243
+Because we like our resizing better, we'd have to manually resize the image here and use get system metrics.
+
+679
+01:23:43,083 --> 01:23:49,743
+Uh, we don't support resizing images asynchronously at the moment anyway, so getting the DPI aware icon size won't help.
+
+680
+01:23:50,553 --> 01:23:53,613
+What is this value? What are these values it's talking about?
+
+681
+01:23:56,153 --> 01:23:59,243
+The system. Small width of an icon in pixels.
+
+682
+01:23:59,273 --> 01:24:02,723
+Small icons typically appear in Windows Captions in small icon view.
+
+683
+01:24:04,523 --> 01:24:09,623
+What's the other one? System icon size.
+
+684
+01:24:11,213 --> 01:24:19,553
+The system. The small height of an icon. Okay, um, the width and the height.
+
+685
+01:24:19,583 --> 01:24:24,503
+Okay. What are the values?
+
+686
+01:24:24,983 --> 01:24:30,253
+Does it. I guess.
+
+687
+01:24:38,333 --> 01:24:42,853
+To. 48 per.
+
+688
+01:24:46,343 --> 01:24:51,572
+Hmm. Well. That's interesting. Uh, so we're almost done building.
+
+689
+01:24:51,573 --> 01:24:55,143
+We're just finishing the the x x pick'em.
+
+690
+01:24:55,953 --> 01:25:02,883
+I'm hoping to show that the patch is not the one introducing the favicon problem on Axios.
+
+691
+01:25:03,453 --> 01:25:07,803
+And then we can file a separate bug. If that's the case.
+
+692
+01:25:08,943 --> 01:25:12,783
+And then we will, uh, we can call it a day.
+
+693
+01:25:13,653 --> 01:25:19,383
+Um, and next week, next stream, I'm going to break down the patch into some component parts.
+
+694
+01:25:20,193 --> 01:25:23,463
+Uh, we can get them individually reviewed and get that stuff landed.
+
+695
+01:25:24,003 --> 01:25:33,363
+And we're even closer to having ourselves in a state where we can, uh, where we can be completely off the main thread with the jump list, gang.
+
+696
+01:25:33,813 --> 01:25:38,343
+Woo! All right, if this is not done building in.
+
+697
+01:25:40,473 --> 01:25:44,163
+30s, I might cap the stream early.
+
+698
+01:25:44,313 --> 01:25:48,993
+Well, no, that's not fair. I really want to know. I want to know if this if ours is the patch.
+
+699
+01:25:48,993 --> 01:25:54,183
+So is there anything useful I can do while we're waiting for this build to complete?
+
+700
+01:25:54,633 --> 01:26:06,273
+Um. I mean this is doing inflating drawing target for size.
+
+701
+01:26:06,293 --> 01:26:15,703
+Why can't we do the same thing? Why can't we just, like, make everything 48 by 48?
+
+702
+01:26:33,583 --> 01:26:52,123
+Right. Maybe we should just always make it 48 by 48.
+
+703
+01:26:53,953 --> 01:26:56,653
+For the jump list, it really shouldn't matter, right? If it's smaller or bigger?
+
+704
+01:26:56,663 --> 01:27:00,723
+Well, it's surprising to me because, like, there's an assumption here and maybe that's something we can do.
+
+705
+01:27:00,733 --> 01:27:04,603
+All reading. Oh, no. Bill's done. Okay, let's let's pull this up.
+
+706
+01:27:06,013 --> 01:27:09,063
+I'm curious who wrote this because I'd like to ask about this.
+
+707
+01:27:09,073 --> 01:27:12,192
+Windows will resize appropriately for us. Who said that?
+
+708
+01:27:12,193 --> 01:27:18,583
+Like who's someone's being like, I'm curious to know if they have proof or information we don't know.
+
+709
+01:27:18,583 --> 01:27:23,683
+Or maybe that's a thing that windows used to do but doesn't do anymore. Brian Bondy no longer at Mozilla.
+
+710
+01:27:25,033 --> 01:27:38,413
+Uh, but we can read into this a little bit. All right, let's pull up our thing and we're going to call update.
+
+711
+01:27:41,023 --> 01:27:45,403
+Yeah. Still still not working. So our patch did not introduce the problem.
+
+712
+01:27:48,703 --> 01:27:53,583
+Um. So let's file a new bug.
+
+713
+01:27:55,533 --> 01:27:58,893
+Uh, jump list. Where where where where am I going to put this?
+
+714
+01:27:59,763 --> 01:28:03,973
+Uh, bugzilla. Uh, where are the other favicon?
+
+715
+01:28:03,983 --> 01:28:13,983
+Um. Uh, was when you two, I think is going to be under, um, Win32 or widget new bug widget windows.
+
+716
+01:28:20,703 --> 01:28:26,943
+Um. Jump. Uh, list five icons.
+
+717
+01:28:27,723 --> 01:28:31,383
+Don't work for five icons. Larger.
+
+718
+01:28:34,443 --> 01:28:37,683
+That are. Well, let's at least get a precise measurement.
+
+719
+01:28:37,693 --> 01:28:41,343
+How big was that? Axios five icon.
+
+720
+01:28:44,173 --> 01:28:52,883
+It is 144 by 144. Steps to reproduce on windows.
+
+721
+01:28:53,303 --> 01:29:00,293
+Um, open up the browser console. In a, uh, on windows.
+
+722
+01:29:04,023 --> 01:29:14,403
+Uh, clear history in Firefox, clear history, and, uh, open up the browser console.
+
+723
+01:29:16,893 --> 01:29:21,903
+Put the following into the browser console to repopulate the jump list.
+
+724
+01:29:26,853 --> 01:29:39,563
+Uh, what's the. Um.
+
+725
+01:29:45,833 --> 01:29:54,773
+Uh, check that the jump. The jump list does not have any history items in it since history was removed.
+
+726
+01:29:56,513 --> 01:30:05,663
+Uh. Step one. Visit uh https colon or uh and YouTube.
+
+727
+01:30:07,793 --> 01:30:12,833
+YouTube.com. And then rerun the script.
+
+728
+01:30:14,213 --> 01:30:19,133
+The JS in the console from step. Two.
+
+729
+01:30:20,783 --> 01:30:32,003
+Check the jump list and see that both Mozilla, the mozilla.org, and youtube.com visits appear with their fav icons.
+
+730
+01:30:32,483 --> 01:30:43,003
+Set visit. Where is it?
+
+731
+01:30:43,483 --> 01:30:50,373
+Axios. Phone.
+
+732
+01:30:50,673 --> 01:30:55,863
+Put the phone away. Is it, um.
+
+733
+01:30:58,363 --> 01:31:03,703
+We run the JS and the console from step two.
+
+734
+01:31:08,343 --> 01:31:11,493
+Sure. Shift J to open.
+
+735
+01:31:18,193 --> 01:31:27,163
+Uh. Expected results. Uh, in the jump list, the Axios visit should have, uh, five items from that site.
+
+736
+01:31:27,493 --> 01:31:34,333
+Actual results. The Axios visit has the default icon instead of the Axios fat icon.
+
+737
+01:31:34,813 --> 01:31:42,343
+This seems to be because the fat icon from the Axios website is 140 pixels by 140 pixels.
+
+738
+01:31:42,763 --> 01:31:49,063
+And I think that, um, when 32 to API that we're passing the, um.
+
+739
+01:31:51,133 --> 01:31:56,173
+We're doing the right thing and caching that fab icon.
+
+740
+01:32:00,633 --> 01:32:04,233
+Uh, pathology to repopulate. I forget we have to do it twice.
+
+741
+01:32:06,773 --> 01:32:10,233
+Then rerun. Do this twice. I'm going to.
+
+742
+01:32:16,453 --> 01:32:21,933
+Okay. I'm gonna. Rerun the JS console.
+
+743
+01:32:21,953 --> 01:32:27,413
+Do this twice. Check the jump list. Chapter five icon visit.
+
+744
+01:32:29,483 --> 01:32:33,803
+Rerun the console system twice.
+
+745
+01:32:37,883 --> 01:32:43,163
+Since we haven't, we're doing the right thing caching the favicon on the disc and looking at the cache.
+
+746
+01:32:44,133 --> 01:32:52,823
+The silicon is 140 by 140. I suspect that, uh, windows is choking on that for some reason.
+
+747
+01:32:53,303 --> 01:32:56,633
+Maybe we're exceeding some internal limits that.
+
+748
+01:32:58,623 --> 01:33:03,353
+Uh, well, let's see here. Uh, what is it that we're, uh, doing with the sad icon?
+
+749
+01:33:03,363 --> 01:33:06,573
+We're family.
+
+750
+01:33:08,673 --> 01:33:12,683
+So, like, uh. Tina Cantrell.
+
+751
+01:33:12,733 --> 01:33:15,733
+Icon. Jumbles. Builder. Icon.
+
+752
+01:33:17,423 --> 01:33:30,023
+Description. Custom descriptions. Uh, jump with shortcut descriptions and custom descriptions and do populate job lists.
+
+753
+01:33:30,743 --> 01:33:34,583
+So we construct these things. Begin lists arbitrary.
+
+754
+01:33:34,703 --> 01:33:38,483
+We create an instance of a thing. We get a shell link from a description.
+
+755
+01:33:40,023 --> 01:33:52,753
+From the custom list. The fabric.
+
+756
+01:33:52,873 --> 01:33:57,283
+If the icon is passed, then we'll use set icon location.
+
+757
+01:34:02,193 --> 01:34:09,213
+So let's look at the documentation. Um, Microsoft went through to set icon location.
+
+758
+01:34:10,653 --> 01:34:14,103
+Set the path and the path of the file containing icon.
+
+759
+01:34:15,123 --> 01:34:21,813
+What's the size? What the address of a buffer to contain the path of the file containing the icon.
+
+760
+01:34:22,563 --> 01:34:27,693
+What is the size that it expects? Get icon location.
+
+761
+01:34:32,533 --> 01:34:36,862
+I shall link. I shall.
+
+762
+01:34:36,863 --> 01:34:41,123
+Link set. Icon location. Icon size.
+
+763
+01:34:47,473 --> 01:34:52,272
+Size icon. Icon.
+
+764
+01:34:52,273 --> 01:35:03,603
+Small arrow showing has an icon scale shortcut. Dimensions.
+
+765
+01:35:03,933 --> 01:35:08,523
+Width. Height. Size. Icon.
+
+766
+01:35:08,523 --> 01:35:11,713
+Size. Geez.
+
+767
+01:35:12,183 --> 01:35:22,673
+Uh, well, it's not telling us. Uh. Maybe works in some internal elements that I don't see documented here.
+
+768
+01:35:25,103 --> 01:35:43,673
+Or here? At any rate, it might be worthwhile to just hardcode some static size.
+
+769
+01:35:44,783 --> 01:35:53,393
+Um, 48 seems to be what we do for small, smaller icons and always scale to that.
+
+770
+01:35:56,633 --> 01:36:00,263
+Uh, 48.
+
+771
+01:36:02,323 --> 01:36:11,103
+Well, less than 48. Three pixels.
+
+772
+01:36:16,603 --> 01:36:23,923
+Or ask the system for it. The icon size it expects.
+
+773
+01:36:25,723 --> 01:36:30,373
+Um. Yeah.
+
+774
+01:36:36,343 --> 01:36:40,093
+Or maybe better. Okay.
+
+775
+01:36:40,573 --> 01:36:46,543
+132 but, uh, it's I'm gonna say there's a defect filing submit.
+
+776
+01:36:47,623 --> 01:36:51,193
+Okay. Um, we can maybe think about trying to fix that ourselves.
+
+777
+01:36:52,123 --> 01:36:56,683
+Um, but we have some str in here, and.
+
+778
+01:36:56,983 --> 01:37:02,173
+Yeah, next week, maybe we can start cleaning. Cleaning up our patch a little bit, getting it ready for review.
+
+779
+01:37:02,203 --> 01:37:06,643
+We've got async favicon fetching working off of the main thread.
+
+780
+01:37:07,273 --> 01:37:11,383
+Um, we can start doing some try builds. We ran a test. It's going to be great.
+
+781
+01:37:11,503 --> 01:37:16,182
+It's going to be great. I'm looking forward to it. Hey, thanks so much for watching episode 361 of the Joy of coding.
+
+782
+01:37:16,183 --> 01:37:19,783
+I hope that was interesting. I hope you liked it. Um, let's see here.
+
+783
+01:37:19,783 --> 01:37:23,773
+I think we should be on schedule to do a, uh, an episode next week.
+
+784
+01:37:24,433 --> 01:37:29,833
+Um, so I'll see you on April 10th. Uh, what am I going to write in the agenda today?
+
+785
+01:37:30,163 --> 01:37:38,742
+Uh, we got the crash fixed, and the thing seems to work, but we found a bug related to large fab icons.
+
+786
+01:37:38,743 --> 01:37:44,713
+We think, um, preexisting bug found a preexisting bug.
+
+787
+01:37:45,733 --> 01:37:49,153
+I am assuming it's due to the size of the fab icon.
+
+788
+01:37:50,293 --> 01:37:53,683
+Uh, at any rate, we can we can maybe look into that next.
+
+789
+01:37:54,883 --> 01:37:58,213
+I don't know. Uh. Eh. That's it.
+
+790
+01:37:58,243 --> 01:38:02,593
+Thanks again for watching. Episode 100 of 100 and 361 of the Joy of coding.
+
+791
+01:38:02,623 --> 01:38:07,993
+Let me know what you thought. Let me put the, uh, link to the right this episode form in the chat, in case you're interested.
+
+792
+01:38:07,993 --> 01:38:12,823
+It's also here in the agenda. You can click on that. Let me know what you thought. Rate this episode form.
+
+793
+01:38:14,083 --> 01:38:17,833
+Just drop it in the chat. Feel free to write stuff in there. I read everything that comes in.
+
+794
+01:38:17,863 --> 01:38:22,123
+Let me know what you want. More of. What? Less? Uh, maybe you have questions. Maybe have suggestions.
+
+795
+01:38:22,153 --> 01:38:26,083
+Uh, I'm happy to to cover it. Um, yeah, that'd be great.
+
+796
+01:38:26,533 --> 01:38:29,983
+Thanks again. See you next week. Take care everybody. Hold on.
+
+797
+01:38:29,983 --> 01:38:33,223
+Let me change me.
+
+798
+01:38:33,553 --> 01:38:38,263
+Take care of everybody. Bye bye. The joy.
+
+799
+01:38:38,973 --> 01:38:41,463
+Oh, dang. See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

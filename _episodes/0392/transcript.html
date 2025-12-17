@@ -1,0 +1,2602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 392 - January 29, 2025</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 392 - January 29, 2025</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=96c47d81-65da-4c3f-a979-b24b0145a227</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=96c47d81-65da-4c3f-a979-b24b0145a227">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,366 --> 00:00:09,826
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy of coding.
+
+2
+00:00:10,096 --> 00:00:13,506
+Hello and welcome to episode 392 of the Joy of coding.
+
+3
+00:00:13,516 --> 00:00:17,475
+My name is Mike Connelly. It's so good to see you. It's so good to, uh, be here.
+
+4
+00:00:17,476 --> 00:00:22,846
+And we're going to live hacking some Firefox stuff, and we're going to, um, yeah, continue our journey.
+
+5
+00:00:22,846 --> 00:00:27,646
+More documentation where we're I think we're in the homestretch.
+
+6
+00:00:28,756 --> 00:00:32,325
+I know it may maybe doesn't feel that way, but we're in the home stretch.
+
+7
+00:00:32,326 --> 00:00:35,716
+We're plowing through, uh, some documentation stuff.
+
+8
+00:00:36,646 --> 00:00:42,046
+And, you know, we're getting to the point where we'll be having all of the modules documented.
+
+9
+00:00:42,526 --> 00:00:48,976
+And one of the interesting things that we discovered last week is that we might actually be able to turn some of the,
+
+10
+00:00:49,096 --> 00:00:58,276
+um, TypeScript type safety stuff on for like certain modules when this is all done, which I think is pretty neat.
+
+11
+00:00:58,486 --> 00:01:06,556
+Um, you know, it's the it's the little things. Uh, so let's, let's start by, uh, sharing my screen so you can see what I'm seeing.
+
+12
+00:01:08,326 --> 00:01:13,186
+A it's January 29th, 2025, a reminder no plan survives breakfast.
+
+13
+00:01:13,186 --> 00:01:17,026
+I think I know what I want to do today. I think I know how things are going to go down, but maybe not.
+
+14
+00:01:17,026 --> 00:01:20,266
+Maybe. Did I just open up a hole in my green screen? It doesn't matter.
+
+15
+00:01:20,476 --> 00:01:25,545
+It doesn't matter. There's a chair in the way. Um, yeah, maybe I did open up a hole in my green screen.
+
+16
+00:01:25,546 --> 00:01:29,056
+It doesn't matter. Um, we'll see how things go.
+
+17
+00:01:29,056 --> 00:01:36,436
+You know, I might get distracted or sidelined or interrupted and, you know, well, we'll just deal with it as we go.
+
+18
+00:01:36,676 --> 00:01:41,506
+Dealing with life as it comes at you. Uh, that's how we roll with the joy of coding.
+
+19
+00:01:42,046 --> 00:01:46,996
+Uh, yeah. I don't have anything super pre-planned except that I want to continue working on this, uh, documentation.
+
+20
+00:01:47,776 --> 00:01:51,825
+That's the first thing. Second thing, the agenda that we're looking at, you have access to this.
+
+21
+00:01:51,826 --> 00:01:55,396
+If you're watching this on Mozilla, check out the detail section over there.
+
+22
+00:01:55,576 --> 00:02:00,465
+Uh, if you're watching this on YouTube, uh, check out the video details for a link to the agenda.
+
+23
+00:02:00,466 --> 00:02:06,226
+If you're watching this on Twitch, check out the channel details. Uh, this agenda will update as I write stuff into it.
+
+24
+00:02:06,226 --> 00:02:09,286
+And then this little spinning will spin. And if you reload, you'll get all the updates.
+
+25
+00:02:09,736 --> 00:02:13,876
+Now, I want to briefly, uh, highlight some things that I've been enjoying recently.
+
+26
+00:02:14,206 --> 00:02:20,176
+Uh, you've probably noticed that I'm more or less a, um, a vertical tabs convert at this point.
+
+27
+00:02:20,176 --> 00:02:23,356
+Also, I've switched up my new tab background. I really like this new background.
+
+28
+00:02:23,356 --> 00:02:28,456
+It looks nice. And this you're getting like a preview of some sections, stuff that we're, we're testing out.
+
+29
+00:02:29,056 --> 00:02:32,206
+Uh, in new tab. Um, yeah.
+
+30
+00:02:32,216 --> 00:02:34,006
+I'm really enjoying the background.
+
+31
+00:02:34,156 --> 00:02:41,506
+I'm having a good time with vertical tabs and a couple of my favorite things that that's going on on new tabs land or, uh, in vertical tabs land.
+
+32
+00:02:41,956 --> 00:02:48,285
+Uh, the sidebar now has this like keyboard shortcut for expand and collapse, which I now use quite a bit.
+
+33
+00:02:48,286 --> 00:02:51,346
+Like you don't have to, uh, find the button and do it.
+
+34
+00:02:51,346 --> 00:02:59,506
+I think someone is also, uh, my colleague Kelly Corcoran is working on a, um, an option that allows it to open up if you hover the sidebar over here.
+
+35
+00:03:00,016 --> 00:03:07,366
+Uh, so that's that's something that people have been requesting. And the other thing is there are now close buttons when we're in the collapsed state.
+
+36
+00:03:07,366 --> 00:03:13,306
+So I can, like, close this tab. Um, and then, you know, I don't have to, like, expand it to close.
+
+37
+00:03:13,636 --> 00:03:19,396
+Uh, I could have used the keyboard shortcut. And oftentimes I do use the keyboard shortcut, but it is nice to also be able to like,
+
+38
+00:03:19,396 --> 00:03:24,676
+close background tabs with just the click of a mouse button without having to expand the, uh, the sidebar.
+
+39
+00:03:25,066 --> 00:03:28,516
+I also want to point out a couple of neat things that I learned about tab groups.
+
+40
+00:03:28,516 --> 00:03:31,996
+That's another thing that, uh, people have been working on and people have been asking for.
+
+41
+00:03:32,266 --> 00:03:35,296
+So let's let's create a tab group. I'm going to open up some tabs here.
+
+42
+00:03:35,536 --> 00:03:42,856
+Got some pocket stories. Uh, and I'm going to put all of those in a tab group and tabs to new group.
+
+43
+00:03:42,856 --> 00:03:45,885
+And I'm going to call this like interesting Stories.
+
+44
+00:03:45,886 --> 00:03:49,366
+And I'm going to give this, uh, a red color. Let's do that.
+
+45
+00:03:50,086 --> 00:03:53,385
+Uh, and you know, if I expand it, I get interesting stories.
+
+46
+00:03:53,386 --> 00:03:59,086
+If I collapse, it's just the first character, interesting stories, and I can collapse and expand that group.
+
+47
+00:03:59,086 --> 00:04:02,655
+That's helpful. You know, if I'm, uh. I want to get back to my interesting stories.
+
+48
+00:04:02,656 --> 00:04:06,886
+I can, like, read this, and then I want to switch over to these. I can go over here and close individual ones.
+
+49
+00:04:07,126 --> 00:04:13,576
+That's nice. One of the, uh, neat things about it, though, is that I found out if you close a group so you can right click on a group,
+
+50
+00:04:13,576 --> 00:04:19,906
+you can rename it, you can change the color. Um, I can also save and close the group.
+
+51
+00:04:20,236 --> 00:04:23,236
+So if I save and close the group, the group is gone.
+
+52
+00:04:24,166 --> 00:04:29,955
+And then over here in the there's this button list all tabs, there's tab groups,
+
+53
+00:04:29,956 --> 00:04:34,816
+there's like a list of, uh, tab groups that are currently closed but saved.
+
+54
+00:04:35,026 --> 00:04:38,896
+I can restore them and I get those tab groups back, which is kind of neat.
+
+55
+00:04:38,926 --> 00:04:42,616
+And they reload on demand. Um, and so I thought that was kind of cool.
+
+56
+00:04:42,616 --> 00:04:48,105
+And then I can, like, delete the group when I'm done with it. So new options, new powers and capabilities are coming.
+
+57
+00:04:48,106 --> 00:04:51,255
+This is currently, I believe, the default state in nightly.
+
+58
+00:04:51,256 --> 00:04:54,346
+You get all of the stuff. Um, I don't know.
+
+59
+00:04:54,346 --> 00:05:02,146
+Actually, no. Hold on. The default state has tabs in the horizontal mode, and I believe the sidebar is not enabled by default.
+
+60
+00:05:02,246 --> 00:05:07,256
+The new sidebar, but those are going to be added right now. They're in, uh, in the labs section.
+
+61
+00:05:07,256 --> 00:05:10,016
+If you go into Firefox Labs, I think you can enable them here.
+
+62
+00:05:10,196 --> 00:05:15,325
+But in the coming days, you'll be able to, uh, access them from another part of preferences.
+
+63
+00:05:15,326 --> 00:05:21,176
+I think they're being moved out of labs, are being graduated to a different part of the, uh, browser, uh, preferences.
+
+64
+00:05:22,346 --> 00:05:28,476
+Anyways, I'm pretty stoked about that. And I just really love this background.
+
+65
+00:05:28,506 --> 00:05:32,016
+This is a nice background. Um, okay. So what are we working on?
+
+66
+00:05:32,256 --> 00:05:35,826
+Oh, nerd bloke is typing something. We'll see what nerd bloke is typing.
+
+67
+00:05:35,946 --> 00:05:39,916
+But in the meantime, let us, uh, continue on with what we were working.
+
+68
+00:05:39,936 --> 00:05:43,806
+Uh oh. Any idea when it's planned for release? Vertical tabs.
+
+69
+00:05:44,256 --> 00:05:47,276
+That's a great question. I don't think we have.
+
+70
+00:05:47,286 --> 00:05:52,206
+I don't know personally. I think there's going to like we want to make sure that it.
+
+71
+00:05:53,276 --> 00:05:56,666
+We're proud of the feature. We want it to.
+
+72
+00:05:58,106 --> 00:06:05,096
+You only get one chance to make a good first impression. And so, um, we want to make it so that.
+
+73
+00:06:05,106 --> 00:06:07,326
+Well, first of all, this isn't going to be the default mode,
+
+74
+00:06:08,106 --> 00:06:14,045
+but we're going to offer it maybe either during onboarding or we're going to direct people to settings that it's like,
+
+75
+00:06:14,046 --> 00:06:19,776
+hey, um, what's the, uh, you know, what do you want?
+
+76
+00:06:19,806 --> 00:06:21,726
+Do you want vertical tabs? Do you want horizontal tabs?
+
+77
+00:06:22,656 --> 00:06:28,596
+And, uh, you really only get one chance to make that that first impression for a preexisting user.
+
+78
+00:06:28,926 --> 00:06:34,776
+You know, for new users, you can ask them during onboarding or, you know, if if they make it clear that they want to customize the browser,
+
+79
+00:06:35,406 --> 00:06:42,785
+but, uh, we want it so that when people use vertical tabs that the that like, it serves all of their needs,
+
+80
+00:06:42,786 --> 00:06:48,216
+that a person who maybe has a different need for vertical tabs or like, has a different, um,
+
+81
+00:06:48,336 --> 00:06:56,646
+maybe they use side berry or tree style tabs or something that we've done enough to sort of like, um, make the feature compelling.
+
+82
+00:06:56,886 --> 00:07:01,086
+We don't want it to be just sort of this thing that people look at and go like, hey, it's okay.
+
+83
+00:07:01,086 --> 00:07:05,596
+And then they, they switch back to horizontal tabs, like, we want it to be a valid, uh,
+
+84
+00:07:05,616 --> 00:07:12,336
+real choice, and that the vertical tabs, um, uh, implementation meets our quality standards.
+
+85
+00:07:12,636 --> 00:07:15,936
+And so there's going to be a lot of testing, a lot of testing.
+
+86
+00:07:16,236 --> 00:07:23,316
+Uh, and that means not just like automated testing. That doesn't just mean like, uh, you know, uh, manual testing from QA.
+
+87
+00:07:23,586 --> 00:07:30,696
+We're going to be, like, turning it on stage is doing experimentation with it and seeing what people think of it in the lab and in the wild, etc.
+
+88
+00:07:31,116 --> 00:07:37,416
+Um, and so I don't know when the, uh, planned releases, but I suspect it will be sometime this year.
+
+89
+00:07:37,746 --> 00:07:46,866
+Uh, it's fairly feature complete, like I think, uh, implementation wise, for the most part, it is doing what was in the original specification.
+
+90
+00:07:47,376 --> 00:07:51,416
+Um, now, whether or not they want to make some adjustments, like they're going to take this implementation,
+
+91
+00:07:51,416 --> 00:07:53,916
+they're going to put it in front of people, they're going to test it out.
+
+92
+00:07:53,916 --> 00:07:57,476
+And you know, now that it's done and get people to actually drive the browser round,
+
+93
+00:07:57,486 --> 00:08:01,656
+see how it feels, we're going to see whether or not that matches our original research.
+
+94
+00:08:01,656 --> 00:08:06,246
+When we did the design. Uh, and then, you know, maybe make some adjustments.
+
+95
+00:08:06,246 --> 00:08:11,406
+We'll see. Uh, so I don't know, that was a long way of saying I don't know when it's planned for release.
+
+96
+00:08:11,586 --> 00:08:15,965
+I like it, I'm ready. Like, if you want it in nightly, it's there for you.
+
+97
+00:08:15,966 --> 00:08:19,536
+I believe you can actually turn it on in beta and release right now as well. It's in labs.
+
+98
+00:08:19,986 --> 00:08:29,046
+Um, now, one thing that actually you bring to mind, uh, an interesting point because I just realized.
+
+99
+00:08:30,206 --> 00:08:36,536
+Uh. Hang on, let me. Let me find the bug. Uh, where is it?
+
+100
+00:08:43,496 --> 00:08:46,526
+If the new browser layouts section. That's this.
+
+101
+00:08:46,526 --> 00:08:54,056
+This bug right here. Sorry, I did this off screen, but, uh, add sidebar, vertical tabs, checkboxes in about Preferences and remove from Nightly Labs.
+
+102
+00:08:54,356 --> 00:09:00,415
+It's AP1, and starting from nightly 36 we need to remove it.
+
+103
+00:09:00,416 --> 00:09:11,186
+Introduce the browser layout section for the sidebar in preferences, and then let's see if it's gated behind any any, uh.
+
+104
+00:09:13,916 --> 00:09:20,666
+Let's see if it's gated behind a release channel. So this is the definition of the, uh, the UI for toggling.
+
+105
+00:09:22,826 --> 00:09:26,836
+Had some strings. Makes sense. We've removed it from labs.
+
+106
+00:09:26,846 --> 00:09:36,026
+Makes sense. It doesn't look like it's gated. So I'm going to say, like, I don't know, don't quote me on this, but this just landed.
+
+107
+00:09:36,926 --> 00:09:44,576
+So it's possible that it will be available in about preferences starting in 136,
+
+108
+00:09:45,596 --> 00:09:52,826
+which if we take a look at what train is it now uh, goes to release on March 4th.
+
+109
+00:09:53,306 --> 00:09:57,796
+Is are we is it going to get back out? Are we going to find problems back though?
+
+110
+00:09:57,806 --> 00:10:01,306
+Maybe. Who knows. Um, we'll see.
+
+111
+00:10:01,316 --> 00:10:06,715
+But the moving it to about preferences is there, and that's just one part of it.
+
+112
+00:10:06,716 --> 00:10:13,316
+Like we might want to show some onboarding, uh, to allow people like to sort of like, let people know that this feature exists.
+
+113
+00:10:13,766 --> 00:10:21,055
+Um, so I don't know. I don't know. Uh, it depends, I guess, on what you mean by release, because technically it's already released.
+
+114
+00:10:21,056 --> 00:10:29,056
+You can go onto the release channel right now if you pop open your release instance of Firefox, and I believe it's in Firefox.
+
+115
+00:10:29,066 --> 00:10:32,066
+Is it in Firefox Labs? No it isn't. It's only in beta.
+
+116
+00:10:33,746 --> 00:10:41,266
+It's in beta. It's not in beta.
+
+117
+00:10:41,656 --> 00:10:47,926
+That's very interesting. Well, I then I think it's in 136 to answer the question.
+
+118
+00:10:48,346 --> 00:10:52,876
+I think it will be available as a thing you can configure in about preferences in 136.
+
+119
+00:10:54,136 --> 00:10:57,616
+Presuming this patch doesn't get backed out. That's my guess.
+
+120
+00:10:58,396 --> 00:11:02,406
+Uh, nerd bloke asks, how's the QA for profile backup going? It is paused.
+
+121
+00:11:02,416 --> 00:11:07,066
+The profile backup project has been mothballed. Uh, I've been dispatched to work on other things.
+
+122
+00:11:07,396 --> 00:11:17,386
+Uh, and profile backup is currently paused. Now that we may end up, um, revisiting it in the near or mid-term future.
+
+123
+00:11:17,536 --> 00:11:27,106
+But for now, the project is paused. Um, which is a bit of a bummer, but, you know, priorities change, priorities shift, and the code is still there.
+
+124
+00:11:27,526 --> 00:11:30,856
+The tests are still running. Uh, we may come back to it in the future.
+
+125
+00:11:31,126 --> 00:11:34,816
+I was recently talking to someone from the, uh, updater team, and we.
+
+126
+00:11:35,086 --> 00:11:42,316
+There's this idea that we might be able to make use of the backup system to snapshot the profile before an upgrade.
+
+127
+00:11:42,616 --> 00:11:50,775
+Before a version upgrade. That way, if something somehow corrupts the profile during an upgrade, there is like, there's an easier way to roll back.
+
+128
+00:11:50,776 --> 00:11:55,176
+We've just like restore the snapshot from before the upgrade while we do a downgrade.
+
+129
+00:11:55,186 --> 00:11:59,955
+So like instead of running your broken profile and then downgrading the instance of the browser,
+
+130
+00:11:59,956 --> 00:12:05,316
+we could like just run the older version of the browser with the snapshot in profile, something like that.
+
+131
+00:12:05,326 --> 00:12:07,876
+So there are some talks along those lines.
+
+132
+00:12:08,236 --> 00:12:13,216
+Uh, but for now, I don't think the, the, uh, backup feature is, is kind of ready for the prime time just yet.
+
+133
+00:12:13,996 --> 00:12:17,176
+We did a lot of good work on it, though. It happens.
+
+134
+00:12:17,776 --> 00:12:25,716
+Okay. Let's continue. Uh, so the customization, customizable UI documentation I need to rebase again.
+
+135
+00:12:25,726 --> 00:12:29,686
+Same as usual. Uh, let's check out Bookmarks central.
+
+136
+00:12:30,616 --> 00:12:53,426
+Let's go ahead and pull. Let's go ahead and check out customizable UI dot cementation.
+
+137
+00:13:00,426 --> 00:13:12,376
+Get rebase. Bookmarks. Central. All right.
+
+138
+00:13:13,156 --> 00:13:23,026
+So, yeah, we were, uh, a good chunk of the way through documenting customizable UI internal.
+
+139
+00:13:25,316 --> 00:13:29,216
+Which is this thing? Uh, I'd say we're about halfway through it.
+
+140
+00:13:29,816 --> 00:13:36,836
+Uh, where have we gotten to? Uh. Oh, there's still quite a bit left.
+
+141
+00:13:41,636 --> 00:13:44,666
+Are we halfway through it? Okay, we got to about here.
+
+142
+00:13:44,666 --> 00:13:48,536
+Create special widget. Okay, this this still needs to be done.
+
+143
+00:13:49,766 --> 00:13:55,826
+Okay. Um, so let's go ahead and continue on from here.
+
+144
+00:13:56,516 --> 00:13:59,996
+Uh, let me check to see if there's any more questions in the chat there or not.
+
+145
+00:14:00,266 --> 00:14:04,066
+Also, while I have the chat in mind, I want to mention the.
+
+146
+00:14:04,136 --> 00:14:12,446
+A couple of people had pointed this out last episode. We're closing in on episode 400, and I need ideas and what I can do for episode 400.
+
+147
+00:14:13,316 --> 00:14:22,256
+Um, you know, if there's something in particular you want to see me do for the fourth centennial anniversary of,
+
+148
+00:14:22,496 --> 00:14:26,266
+um, uh, the Joy of coding, uh, let me know.
+
+149
+00:14:26,276 --> 00:14:31,046
+You can either drop in the chat or you can, uh, fill in this form here, and you can you can give me your thoughts.
+
+150
+00:14:31,436 --> 00:14:36,686
+Uh, a couple of ideas off the top of my head. What to do for the 400th episode.
+
+151
+00:14:37,766 --> 00:14:46,606
+I could, um, do a spicy hacking episode, so I did that.
+
+152
+00:14:46,616 --> 00:14:51,206
+I've done that a couple times. This is where I, uh, work on code.
+
+153
+00:14:51,326 --> 00:15:01,016
+Well, um, eating very spicy food on a regular interval, usually about ten minutes per wing or something.
+
+154
+00:15:02,126 --> 00:15:05,276
+Uh, so you get to watch me suffer a little bit with heat.
+
+155
+00:15:05,906 --> 00:15:13,136
+Uh, that's for the fans of hot ones. You can just kind of watch me, uh, kind of go like, hot, hot, hot, um, hacking.
+
+156
+00:15:13,746 --> 00:15:18,866
+Um. You watch me. Watch me play a video game.
+
+157
+00:15:19,976 --> 00:15:23,576
+I could just do a normal stream where I play a video game.
+
+158
+00:15:23,576 --> 00:15:26,666
+I don't know if I want to put that on there. Maybe I'd put that on air. Mozilla.
+
+159
+00:15:27,056 --> 00:15:32,126
+It seems a little silly. You know, I'm going to take that one off. Um, that's not really relevant.
+
+160
+00:15:32,486 --> 00:15:42,116
+Uh, Mozilla wise, uh, or code wise, um, we could examine some, uh, video game source code.
+
+161
+00:15:44,726 --> 00:15:47,876
+You know, there's a video game that's open source. We could look at it, we try build it.
+
+162
+00:15:48,506 --> 00:15:52,556
+Uh, we could try and change some parts of it. Uh, what else?
+
+163
+00:15:54,266 --> 00:16:06,746
+We could. We could try to fix a Thunderbird bug. I think we did that a few, um, uh, you know, maybe at two, 250 or something or 350.
+
+164
+00:16:07,376 --> 00:16:15,956
+Uh, we could, uh, try to fix the oldest possible Firefox bug during the episode.
+
+165
+00:16:16,766 --> 00:16:25,166
+Uh, so find a really old bug, try to fix it in a one shot.
+
+166
+00:16:26,246 --> 00:16:33,506
+Uh, write a simple add on, write a simple add on to do something that's, uh, smurfd0.
+
+167
+00:16:34,586 --> 00:16:38,426
+Um. Well, what does that sound?
+
+168
+00:16:38,846 --> 00:16:46,616
+Oh, you know, I think there's a plow going by. It's snowed a lot. Uh, Toronto, um, folk probably know this, but it snowed in Toronto last night,
+
+169
+00:16:46,616 --> 00:16:50,006
+and there are plows going by and stuff, and I just felt it through the ground.
+
+170
+00:16:50,966 --> 00:16:58,946
+Uh, if you got more ideas, let me know. Uh, you can you can just drop, uh, drop a message and I'll add it to the possibilities list.
+
+171
+00:16:58,946 --> 00:17:04,306
+So it talked about those things. Oh, what are the keyboard shortcuts? Uh, it's Ctrl Z on macOS.
+
+172
+00:17:05,726 --> 00:17:09,295
+And what is it on Windows and Linux?
+
+173
+00:17:09,296 --> 00:17:16,956
+Let me just look that, uh. Uh.
+
+174
+00:17:18,866 --> 00:17:30,006
+I think it's command Z. Uh, shortcuts, shortcuts, shortcuts work.
+
+175
+00:17:30,026 --> 00:17:34,136
+Short cut for expanding and hiding the sidebar.
+
+176
+00:17:35,756 --> 00:17:44,936
+Okay, so this is the bug. And, uh, ignore the first comment that's wrong.
+
+177
+00:17:45,056 --> 00:17:54,316
+The ones that were selected. Here we go. Uh, Mac OS, command Z or control Z, uh, expand on Windows and Linux are the same.
+
+178
+00:17:54,326 --> 00:17:59,715
+Alt Ctrl z. Alt Ctrl z. Paradigm shift stream.
+
+179
+00:17:59,716 --> 00:18:05,566
+Use all AI tools, says Chris. Well, no code written by herself.
+
+180
+00:18:05,896 --> 00:18:10,366
+Uh oh. Uh, I mean, we could try, uh.
+
+181
+00:18:10,526 --> 00:18:16,756
+Uh, try and do something with. I try to do something with AI.
+
+182
+00:18:17,386 --> 00:18:29,026
+How would we feel about that? You know, one thing I was thinking about, uh, we could we could write a tool that tries to, uh,
+
+183
+00:18:30,196 --> 00:18:40,576
+pipe the transcript of past episodes into an Lstm to produce video titles, title suggestions.
+
+184
+00:18:41,986 --> 00:18:45,135
+So right now, the joy of coding is like joy coding. Episode one. Episode two.
+
+185
+00:18:45,136 --> 00:18:49,936
+Episode three. There's not really any titles. And for a while there I was trying to solicit titles for the videos because, like,
+
+186
+00:18:49,936 --> 00:18:54,776
+that's one of the pieces of feedback I'd gotten through the form is people going like, I don't know what this show is.
+
+187
+00:18:54,796 --> 00:19:00,346
+It's just like a list of episode numbers. It'd be great if there were titles to kind of give people a sense of what goes on.
+
+188
+00:19:00,826 --> 00:19:07,426
+And I wasn't about to go and rewatch all 391 episodes ish to come up with titles.
+
+189
+00:19:07,566 --> 00:19:09,796
+That would be that's way too much. Way too much.
+
+190
+00:19:10,066 --> 00:19:20,626
+But we can get the transcripts and maybe we can have, uh, an attempt to produce some, um, produce some video title suggestions.
+
+191
+00:19:21,616 --> 00:19:36,826
+We could try that. Um, we could revive Adesso and attempt to, um, uh, hand roll our own captions using newer, uh, models.
+
+192
+00:19:40,216 --> 00:19:49,676
+As it was a tool. That is, you can find it in the Joy of coding uh, episode guide repository that we, I used to use to do all client side.
+
+193
+00:19:49,676 --> 00:19:54,356
+So I'd extract the audio from a video and Joy of coding episode.
+
+194
+00:19:54,596 --> 00:19:57,626
+And I would do transcription like client side transcription.
+
+195
+00:19:58,586 --> 00:20:03,056
+And uh, it was relatively good. And we got all these transcripts written.
+
+196
+00:20:03,686 --> 00:20:07,706
+Um, so this would be this, this would be similar to add.
+
+197
+00:20:07,716 --> 00:20:12,535
+So um, and it might even be like a, uh, an addition to add.
+
+198
+00:20:12,536 --> 00:20:19,076
+So, uh, we could try to write something in rust.
+
+199
+00:20:19,976 --> 00:20:23,246
+I've done this before, but we could try again.
+
+200
+00:20:24,626 --> 00:20:28,436
+Uh, all right, that's an option. Oh, you know what?
+
+201
+00:20:28,436 --> 00:20:40,766
+We could try to port, uh, a module, a JS module to rust for use with application services.
+
+202
+00:20:41,366 --> 00:20:42,296
+That might be interesting.
+
+203
+00:20:42,686 --> 00:20:50,665
+So this is a thing that we've been trying to do is to share more code between, uh, Firefox desktop and Firefox for Android and Firefox for iOS.
+
+204
+00:20:50,666 --> 00:20:56,756
+And what's particularly interesting about that problem is that normally sharing code between
+
+205
+00:20:56,756 --> 00:21:02,035
+Firefox for Android and Firefox for desktop has been easy because we have Toolkit Toolkit,
+
+206
+00:21:02,036 --> 00:21:05,336
+and with gecko. So, you know, we can execute JavaScript. We've got it.
+
+207
+00:21:05,666 --> 00:21:11,096
+XP comm, like we got all this stuff that is common between, uh, desktop and and mobile.
+
+208
+00:21:11,396 --> 00:21:16,526
+We don't have that on iOS because, uh, Firefox for iOS is written, uh, using WebKit.
+
+209
+00:21:16,646 --> 00:21:26,476
+It's a wrapper around, uh, WebKit WebView thing. But it is possible to, um, write libraries like.
+
+210
+00:21:27,566 --> 00:21:33,356
+We've developed ways to write a library once in rust.
+
+211
+00:21:34,546 --> 00:21:44,196
+Compile it and have bindings be created for Kotlin for Swift and then via exp.
+
+212
+00:21:44,206 --> 00:21:49,366
+Come to JavaScript and like C plus plus XP or.
+
+213
+00:21:49,516 --> 00:21:52,836
+I think it's just JavaScript um via xp.
+
+214
+00:21:52,846 --> 00:21:59,476
+Com and so we could find a module. I've got a couple in mind and attempt to port one to rust.
+
+215
+00:22:00,166 --> 00:22:07,756
+Um, so that that module could then be used by say, iOS and Firefox or Android, um, as well as desktop.
+
+216
+00:22:07,996 --> 00:22:10,986
+So that's an idea. Uh, let me know what you thought.
+
+217
+00:22:11,146 --> 00:22:20,716
+What, you think you can either, uh, write it in the chat or you can, uh, uh, or you can, you know, send that rate, that episode form, um.
+
+218
+00:22:22,876 --> 00:22:26,006
+And I'll, I'll read it all.
+
+219
+00:22:26,026 --> 00:22:30,346
+Ctrl alt z, alt Ctrl Z on Linux and Windows.
+
+220
+00:22:31,726 --> 00:22:42,886
+Uh, and then I'll also add, uh, looks like it might ride out as an option in Firefox one 36th March.
+
+221
+00:22:44,116 --> 00:22:48,406
+And then I'll link to the source bug for that little bit of hot goss.
+
+222
+00:22:50,656 --> 00:22:54,646
+Uh, right there. Okay. Anyways, back to what we were up to.
+
+223
+00:22:54,916 --> 00:23:03,315
+Uh, find widget in window. Was this thing do find a XUL provided widget in a window.
+
+224
+00:23:03,316 --> 00:23:06,856
+Don't try to use this for an API provided widget or a special widget.
+
+225
+00:23:07,786 --> 00:23:13,726
+Okay, this is just for visual widgets. Now who calls this ourselves?
+
+226
+00:23:14,236 --> 00:23:22,556
+Um. And one thing we might do get widget node.
+
+227
+00:23:27,396 --> 00:23:35,076
+Is we can make this clearer by calling this Find Zul widget in window rename symbol,
+
+228
+00:23:35,736 --> 00:23:41,226
+find Zul widget in window and I'm pretty sure that will rename update all the callers again,
+
+229
+00:23:42,786 --> 00:23:47,886
+and I'm pretty sure there aren't any external callers because it's not exposed.
+
+230
+00:23:50,896 --> 00:23:57,336
+Yeah, okay. So let's go ahead and update the documentation.
+
+231
+00:23:58,956 --> 00:24:03,636
+Find a Zul provided widget window. Don't try to use this for an API provided widget or a special widget.
+
+232
+00:24:05,346 --> 00:24:13,475
+Um param string id, the ID of the Zul widget as well.
+
+233
+00:24:13,476 --> 00:24:18,726
+Provided widget and find or widget.
+
+234
+00:24:19,236 --> 00:24:34,446
+Find a zip file widget node uh to find uh widget to find the node for in a window, and then param dom window a window.
+
+235
+00:24:35,286 --> 00:24:50,166
+The window to find the Zul provided widget node for and returns uh, either null or the node.
+
+236
+00:24:52,746 --> 00:25:04,086
+Uh, that'll be a Dom node or null. Uh, the found Zul widget node uh, or null if it cannot be found.
+
+237
+00:25:06,816 --> 00:25:12,696
+I do notice that it throws. So I'm going to say throws. Uh, I have not used this in a while.
+
+238
+00:25:13,746 --> 00:25:18,096
+You know what? I've never used it. I don't think we've used it elsewhere. Oh, so we have.
+
+239
+00:25:18,096 --> 00:25:21,196
+So we have. Throws.
+
+240
+00:25:21,196 --> 00:25:26,536
+Error. Throws and throws if, uh.
+
+241
+00:25:29,116 --> 00:25:34,546
+Throws if the, uh. If a window is not a registered build window.
+
+242
+00:25:37,846 --> 00:25:42,106
+Sure. Build widget.
+
+243
+00:25:42,196 --> 00:25:52,485
+Okay, we're getting into the good stuff now. And is that called externally?
+
+244
+00:25:52,486 --> 00:25:55,736
+I don't think so. Yeah.
+
+245
+00:25:55,946 --> 00:25:59,066
+It's only called internally. Um.
+
+246
+00:26:05,866 --> 00:26:11,046
+Constructs a, um. What does that actually do?
+
+247
+00:26:15,656 --> 00:26:20,926
+Was it returning? Build widget. Uh.
+
+248
+00:26:20,936 --> 00:26:38,116
+Build widget. Node. Construct a node for a particular widget.
+
+249
+00:26:38,176 --> 00:26:48,346
+Uh, for a customizable UI widget. For, uh, that can be placed within a document.
+
+250
+00:26:50,356 --> 00:26:59,176
+Uh, as a document, the document that the node will be inserted into a widget, which will be.
+
+251
+00:27:03,736 --> 00:27:08,726
+It's either a string. Or.
+
+252
+00:27:11,336 --> 00:27:15,566
+I think it's a widget wrapper.
+
+253
+00:27:17,796 --> 00:27:22,226
+Well that's it. It's either string or a thing that has show and private browsing.
+
+254
+00:27:28,886 --> 00:27:37,576
+Which is a widget. Would you hit?
+
+255
+00:27:41,016 --> 00:27:46,536
+Widget group wrapper. Is it a widget group wrapper?
+
+256
+00:27:46,566 --> 00:27:50,886
+It is. I think it's a widget group wrapper or a single widget group wrapper.
+
+257
+00:28:01,156 --> 00:28:07,686
+Okay. And no, no redo.
+
+258
+00:28:07,716 --> 00:28:13,416
+Okay, so it's either, uh, a string resort or a widget group wrapper.
+
+259
+00:28:14,556 --> 00:28:35,226
+Or is all widget group wrapper? Um, the, uh, widget wrapper, customizable UI widget wrapper or ID widget ID of the widget to construct.
+
+260
+00:28:36,756 --> 00:28:40,926
+Returns a Dom node or null.
+
+261
+00:28:42,606 --> 00:28:50,826
+Uh. Returns the constructed uh node for the widget to be placed in a document.
+
+262
+00:28:51,396 --> 00:28:57,666
+Uh cannot row will return null if the uh widget is not allowed.
+
+263
+00:28:57,906 --> 00:29:02,856
+If the widget node is not allowed to be placed in a document.
+
+264
+00:29:03,066 --> 00:29:13,626
+For example, if a document is a private browsing window document and the widget is not allowed to be placed in such a window.
+
+265
+00:29:16,906 --> 00:29:22,456
+Um. I'll say it throws error.
+
+266
+00:29:24,766 --> 00:29:33,766
+And throw. If the document is not a browser window document, or if the, uh.
+
+267
+00:29:34,156 --> 00:29:37,786
+Or if a widget is not.
+
+268
+00:29:42,316 --> 00:29:47,226
+Right. Okay.
+
+269
+00:29:49,356 --> 00:29:52,566
+Pretty good. Next.
+
+270
+00:29:52,896 --> 00:29:59,616
+Thank you. Next. Ensure sub view listeners.
+
+271
+00:30:01,806 --> 00:30:05,586
+Who? Boy. Okay. Um. This doesn't return anything.
+
+272
+00:30:08,766 --> 00:30:14,106
+Which this thing doing? Uh. So it'll go through.
+
+273
+00:30:18,796 --> 00:30:41,386
+Uh. Every find any widget associated with a particular view for each of the sub view events.
+
+274
+00:30:46,746 --> 00:30:51,276
+We'll add an event listener. So this is us hooking up.
+
+275
+00:30:52,346 --> 00:30:55,436
+Event listeners for any time.
+
+276
+00:30:55,436 --> 00:30:59,426
+The view changes to particular widgets that are associated with that view.
+
+277
+00:31:01,416 --> 00:31:07,996
+Okay. And that's k sub view events.
+
+278
+00:31:08,016 --> 00:31:11,316
+That's view showing and hiding. Okay.
+
+279
+00:31:14,106 --> 00:31:21,756
+Uh, iterates all. Uh, widgets in the palette.
+
+280
+00:31:26,926 --> 00:31:53,806
+And. Uh, for customizable widget, uh, widgets that have their view ID property set to view nodes ID um, and then uh.
+
+281
+00:31:55,476 --> 00:32:01,866
+For each of those widgets. Oh wait, it's going to find the first one.
+
+282
+00:32:02,316 --> 00:32:10,446
+Iterates all widgets. For the first customizable widget that has.
+
+283
+00:32:14,616 --> 00:32:25,076
+That's what view I'd. The widget is type view.
+
+284
+00:32:37,836 --> 00:32:40,866
+A button that opens a view in a panel. So there's only.
+
+285
+00:32:41,706 --> 00:32:46,656
+Is there only ever one? I think that's the case.
+
+286
+00:32:46,656 --> 00:32:54,566
+There's only ever one. And then there's the ID, which is the view.
+
+287
+00:32:55,856 --> 00:33:02,996
+Okay. I think that's what it is. Iterate.
+
+288
+00:33:03,596 --> 00:33:14,516
+So this is finds the, uh, widget in the palette that, uh, has its view id property, uh,
+
+289
+00:33:14,516 --> 00:33:25,796
+set to the ID of view node and then, uh, hooks up the hooks up each case sub view event.
+
+290
+00:33:26,446 --> 00:33:30,596
+It's. Uh uh.
+
+291
+00:33:33,826 --> 00:33:39,736
+To, uh, the appropriate listeners on the widget.
+
+292
+00:33:45,256 --> 00:33:53,145
+Um. When does this occur? And sure, some of you listeners ensure that the customizable widget that matches up with this view node will get there.
+
+293
+00:33:53,146 --> 00:33:57,496
+Oh. So this. This is exposed publicly.
+
+294
+00:33:59,926 --> 00:34:06,405
+And this is called externally okay. I'm just going to say C customizable UI.
+
+295
+00:34:06,406 --> 00:34:22,946
+And sure sub view listeners. All right.
+
+296
+00:34:23,276 --> 00:34:37,116
+Get localized property. It's that called externally.
+
+297
+00:34:37,126 --> 00:34:53,746
+It is. So we're going to. Uh, see customizable UI, get local flips, get localized property.
+
+298
+00:34:55,966 --> 00:35:02,016
+And then. This property.
+
+299
+00:35:05,336 --> 00:35:10,196
+I. Think that's the right move.
+
+300
+00:35:16,096 --> 00:35:20,416
+Like, presumably I can't just, like, leave the. Can I just, like, leave these blank?
+
+301
+00:35:21,106 --> 00:35:25,276
+That'd be kind of nice. And then it's just like, hey, take a look at this other thing.
+
+302
+00:35:25,936 --> 00:35:30,286
+Is that, like, legal if I do mock lint?
+
+303
+00:35:32,296 --> 00:35:38,176
+Browser components. Customizable UI, customizable UI dot system JS.
+
+304
+00:35:43,626 --> 00:35:48,456
+Yeah. Okay. So like, everywhere I've seen, I've done. See I think I can like.
+
+305
+00:35:51,486 --> 00:35:56,346
+I can simplify this. I can get rid of, um.
+
+306
+00:36:00,986 --> 00:36:05,516
+I think I can just do this. I think.
+
+307
+00:36:17,686 --> 00:36:29,385
+Yeah. Yeah.
+
+308
+00:36:29,386 --> 00:36:33,226
+I don't know why I was doing all this repetition before. I think this will be okay.
+
+309
+00:36:38,746 --> 00:36:48,416
+What? Okay, now let's see if it likes it.
+
+310
+00:36:48,446 --> 00:36:56,106
+How do you like me now? Awesome.
+
+311
+00:37:04,786 --> 00:37:07,946
+Tony and even describe it how it adds shortcut. Is that a freebie?
+
+312
+00:37:07,966 --> 00:37:11,506
+It is a freebie. Oh, we're getting a bunch of freebies.
+
+313
+00:37:13,666 --> 00:37:17,476
+Um, see? Customizable UI add shortcut.
+
+314
+00:37:19,876 --> 00:37:25,786
+And that takes a shortcut node, uh, which is an element.
+
+315
+00:37:27,236 --> 00:37:30,706
+Uh. Hmm.
+
+316
+00:37:37,046 --> 00:37:44,366
+Hang on. Wait wait wait.
+
+317
+00:37:47,216 --> 00:37:51,776
+What's the return value? It wasn't including a return.
+
+318
+00:37:51,806 --> 00:37:56,066
+Oh, there is no return value. Okay, great. Great, great. There is no return value.
+
+319
+00:38:01,836 --> 00:38:06,305
+Do widget command. Now that one's not exposed externally.
+
+320
+00:38:06,306 --> 00:38:09,606
+So we now have an interesting one. An interesting case.
+
+321
+00:38:12,926 --> 00:38:24,896
+So, um, if the widget has, uh, executes a widget, a customizable UI widgets command handler.
+
+322
+00:38:31,416 --> 00:38:36,506
+Um. Yeah.
+
+323
+00:38:36,586 --> 00:38:45,736
+Command handler. To handle a event which is presumably a command event.
+
+324
+00:38:46,846 --> 00:38:55,996
+To handle a event. I don't think I need this last part. So a widget that is a so, uh, a group widget.
+
+325
+00:38:57,946 --> 00:39:12,855
+Widget group wrapper or a Zul widget group wrapper, the, uh, customizable UI widget to call the command handler or, uh, a node.
+
+326
+00:39:12,856 --> 00:39:17,026
+This is the, uh, presumably.
+
+327
+00:39:21,426 --> 00:39:31,385
+The, uh. No. That be of that a event day event, command event fired on and then a event.
+
+328
+00:39:31,386 --> 00:39:40,746
+That's a command event. Uh, the command event to handle and no return value.
+
+329
+00:39:40,776 --> 00:39:48,626
+What is this used for? It's not used at all.
+
+330
+00:39:55,706 --> 00:39:58,826
+I think we can just get rid of that widget command.
+
+331
+00:40:00,656 --> 00:40:11,916
+Yeah, I think we can just get rid of that. Uh, or you know what?
+
+332
+00:40:11,926 --> 00:40:16,246
+Let's let's take a to do, um.
+
+333
+00:40:18,616 --> 00:40:27,195
+File a bug to get rid of. Customized UI widget command.
+
+334
+00:40:27,196 --> 00:40:30,856
+Uh, notification. We'll just move on. Let's keep this contained.
+
+335
+00:40:32,086 --> 00:40:36,016
+Show widget view that is also internal.
+
+336
+00:40:36,346 --> 00:40:45,256
+Okay. So a widget is presumably going to be, uh, these two types.
+
+337
+00:40:55,546 --> 00:41:01,186
+To, uh, show the view for the panel.
+
+338
+00:41:01,186 --> 00:41:07,446
+View for. Uh, okay.
+
+339
+00:41:07,446 --> 00:41:17,106
+So there's the node, there's the event, we get the placement of the the area, we get the area type.
+
+340
+00:41:18,096 --> 00:41:24,486
+We determine if the widget is currently disallowing the sub view and if we're in the.
+
+341
+00:41:27,596 --> 00:41:31,646
+Panel. And were overflowed.
+
+342
+00:41:39,956 --> 00:41:45,866
+Oh, so we don't we don't do the subway animation. Okay, we'll hide the panel.
+
+343
+00:41:47,216 --> 00:41:53,066
+Otherwise, if we are not in a panel type, we'll get the wrapper.
+
+344
+00:41:58,706 --> 00:42:08,966
+Find the panel multi-view. If there is a panel multi-view.
+
+345
+00:42:11,506 --> 00:42:15,785
+If it's not designed for the panel type. For?
+
+346
+00:42:15,786 --> 00:42:20,866
+Not in a panel, but we are in. A panel multiview.
+
+347
+00:42:20,886 --> 00:42:24,776
+That's great. What case would that be?
+
+348
+00:42:27,636 --> 00:42:32,256
+Oh, if it. Maybe we're in the overflow. We're in the overflow case.
+
+349
+00:42:33,946 --> 00:42:39,136
+Then we'll hide the panel. That's weird.
+
+350
+00:42:42,506 --> 00:42:51,416
+It's almost the same. But not quite.
+
+351
+00:43:00,446 --> 00:43:03,616
+When was this added? Huh?
+
+352
+00:43:04,036 --> 00:43:11,146
+I added this. Make browser actions pop out of overflow.
+
+353
+00:43:13,656 --> 00:43:23,976
+Fixed browser action panel. If the area that the widget is in.
+
+354
+00:43:25,386 --> 00:43:31,356
+I see. I see.
+
+355
+00:43:31,366 --> 00:43:32,746
+Okay. That's the difference okay.
+
+356
+00:43:33,106 --> 00:43:44,925
+So if we are if the widget is placed within a panel and we're not supposed to show it as a sub view, then we hide the panel and then open the sub.
+
+357
+00:43:44,926 --> 00:43:49,696
+You are open in its own panel. If the if we are.
+
+358
+00:43:51,306 --> 00:43:57,456
+In a toolbar, because that's the only other kind right now or any other, any non panel type.
+
+359
+00:43:58,326 --> 00:44:02,286
+And yet we are somehow in a panel multi view.
+
+360
+00:44:04,326 --> 00:44:10,536
+Uh, I guess that's the. Oh, that would be like the oh, that might be the add ons panel.
+
+361
+00:44:13,906 --> 00:44:19,776
+We'll hide the panel. That's weird, but all right.
+
+362
+00:44:21,096 --> 00:44:26,225
+Uh, the customizable UI widgets show the panel view for, uh, the node.
+
+363
+00:44:26,226 --> 00:44:38,226
+That's a Dom node. The node that is handling the event that is causing the panel view to show.
+
+364
+00:44:41,886 --> 00:44:54,996
+Uh, and then there's the event that will be like, um, the event that the node is handling that is causing the panel view to show.
+
+365
+00:44:55,716 --> 00:45:00,576
+And do we do anything with that event or do we just pass it along. We just pass it along okay.
+
+366
+00:45:01,356 --> 00:45:18,126
+And we don't return anything. So um, handles an event on a, uh, customizable UI widget node that has a view, a panel view associated with it.
+
+367
+00:45:19,656 --> 00:45:24,576
+Uh, this routine will cause the panel view to be displayed.
+
+368
+00:45:28,536 --> 00:45:33,726
+Uh, handle widget command. Didn't we just do this?
+
+369
+00:45:33,726 --> 00:45:38,916
+Do widget command. Handle widget command.
+
+370
+00:45:46,026 --> 00:45:49,886
+Mhm. Right.
+
+371
+00:45:52,066 --> 00:45:57,086
+I see. Uh, so do widget command executes the.
+
+372
+00:45:57,106 --> 00:46:07,606
+Okay. Uh. Okay. So the issue is that not every widget has an on command handler.
+
+373
+00:46:08,266 --> 00:46:17,476
+Some of them, even though the button will eventually fire a command, we will choose to do, um, something based on the kind of widget it is.
+
+374
+00:46:17,716 --> 00:46:22,126
+If it's a button, then it is presumed to have a command event handler.
+
+375
+00:46:22,546 --> 00:46:28,006
+If it's a view type, then will show the panel. Or if it's a button in view.
+
+376
+00:46:29,946 --> 00:46:37,806
+It'll depend on like, uh, if it's one of those combined drop down, uh, combined buttons, then it depends on where you click it, but okay.
+
+377
+00:46:38,046 --> 00:46:47,466
+Handles a command event on a, uh, customizable UI widget node and chooses,
+
+378
+00:46:47,586 --> 00:46:57,996
+uh, to and does the, uh, action that best suits the, uh, uh, type of widget.
+
+379
+00:46:59,226 --> 00:47:07,386
+Does the, uh, widget, there's going to be the, uh, group widget widget group wrapper or Zul widget group wrapper,
+
+380
+00:47:08,046 --> 00:47:25,476
+the widget to uh, handle the command event for Dom node, the, uh, Dom the node that the, uh command event is being fired, uh, on.
+
+381
+00:47:25,476 --> 00:47:32,796
+And then the event, that's a command event, uh, the command event to be handled.
+
+382
+00:47:36,666 --> 00:47:41,196
+And there's no return value. Handle widget click.
+
+383
+00:47:41,916 --> 00:47:47,016
+This is different. Oh, and is this another one of those things that we don't need anymore.
+
+384
+00:47:47,556 --> 00:47:50,746
+So it is. So let's update our our notes here.
+
+385
+00:47:50,776 --> 00:48:02,796
+Get rid of uh and uh notifications save handle widget click which isn't the exact same thing as command.
+
+386
+00:48:03,276 --> 00:48:13,536
+Command can also be fired if you use the keyboard to get there. Handles a click uh click event.
+
+387
+00:48:19,686 --> 00:48:26,706
+And does the action that best suits the type of widget. Uh handles a click event on a customizable UI widget node.
+
+388
+00:48:28,236 --> 00:48:32,826
+This is closest to I think do which command. All right.
+
+389
+00:48:35,756 --> 00:48:44,546
+It goes and redirects. To the Widget's onClick event handler.
+
+390
+00:48:48,266 --> 00:48:56,996
+A widget is going to be a group, a widget group wrapper, or its all widget group wrapper.
+
+391
+00:49:01,196 --> 00:49:06,656
+A widget to call the onClick event handler for.
+
+392
+00:49:09,296 --> 00:49:13,586
+Uh, if one exists. If such a handler exists.
+
+393
+00:49:15,406 --> 00:49:18,986
+If such a handler exists.
+
+394
+00:49:19,196 --> 00:49:26,146
+If the handler does not exist. This, uh, nothing is called.
+
+395
+00:49:27,736 --> 00:49:31,186
+Okay. Uh, on a node. As a Dom node.
+
+396
+00:49:32,746 --> 00:49:37,456
+The node that, uh, fired click event.
+
+397
+00:49:38,716 --> 00:49:44,446
+This is a mouse event. A click event to be handled.
+
+398
+00:49:48,746 --> 00:49:57,266
+Get panel for node. Uh, well, uh, let's go ahead and update that to actually be private.
+
+399
+00:50:02,096 --> 00:50:08,816
+Oh. Oh. Private identifier is now allowed.
+
+400
+00:50:11,006 --> 00:50:14,276
+Outside of class bodies. Oh. We're not.
+
+401
+00:50:15,326 --> 00:50:21,955
+What in the world is this? Not a class. This customizable UI internal is.
+
+402
+00:50:21,956 --> 00:50:26,996
+It has an object we don't have. Shoot. All right, leave it the way it is.
+
+403
+00:50:28,346 --> 00:50:33,506
+Maybe we want to make it into a class. Actually. Class action lawsuit.
+
+404
+00:50:34,556 --> 00:50:37,646
+Um, customizable UI internal.
+
+405
+00:50:39,586 --> 00:50:40,636
+I won't do it now, though.
+
+406
+00:50:47,676 --> 00:51:07,536
+Uh, so this a this is returns the closest, uh, Zul panel element to a node in its ancestry or null if no such, uh, node can be found.
+
+407
+00:51:09,666 --> 00:51:17,436
+Dom node, the node to check the ancestry for returns Dom node or null.
+
+408
+00:51:22,826 --> 00:51:29,826
+All right. How are we doing? How are we doing? Uh. Progress wise.
+
+409
+00:51:32,076 --> 00:51:36,606
+Um, ultimately, we're trying to get to.
+
+410
+00:51:40,386 --> 00:51:43,536
+Oh, boy, I said, I do reset.
+
+411
+00:51:44,706 --> 00:51:49,626
+Some of these are already documented. That's good.
+
+412
+00:51:50,526 --> 00:51:56,376
+But ultimately we're trying to get to here for 766.
+
+413
+00:51:57,126 --> 00:52:01,596
+And I think we're we're just over halfway there.
+
+414
+00:52:02,136 --> 00:52:05,346
+I Karumba says smurfd0. Indeed.
+
+415
+00:52:08,166 --> 00:52:11,576
+Okay. What is this? What is this function is an interactive element.
+
+416
+00:52:11,586 --> 00:52:16,596
+If you put things in the panel which need more than single click interaction, we don't want to close it.
+
+417
+00:52:17,766 --> 00:52:21,836
+Right now we check for text inputs and menu buttons.
+
+418
+00:52:21,846 --> 00:52:26,495
+We also check for being outside of any toolbar item toolbar button,
+
+419
+00:52:26,496 --> 00:52:32,166
+i.e. on a blank part of the menu or another menu like a context menu inside the panel.
+
+420
+00:52:33,826 --> 00:52:37,906
+Um. So.
+
+421
+00:52:39,136 --> 00:52:48,416
+So this returns true. If what is ultimately, uh.
+
+422
+00:52:52,486 --> 00:53:02,446
+True if the event being handled, the click event being handled is on.
+
+423
+00:53:12,986 --> 00:53:18,026
+And customers. If there's no panel, it's clear nothing for us to close.
+
+424
+00:53:23,866 --> 00:53:26,956
+Otherwise we go through the.
+
+425
+00:53:34,396 --> 00:53:49,026
+Targets. If target is disabled.
+
+426
+00:53:56,106 --> 00:54:01,446
+When would we return? False if the tool. If the tag name of a thing is toolbar item.
+
+427
+00:54:02,346 --> 00:54:05,736
+If we have toolbar, we will now interact with the menu.
+
+428
+00:54:08,206 --> 00:54:14,626
+Why would we return? False. You'd return false here.
+
+429
+00:54:19,456 --> 00:54:24,916
+Or. That's it.
+
+430
+00:54:25,306 --> 00:54:32,566
+We'd only return false here if the target that we got to.
+
+431
+00:54:34,576 --> 00:54:39,856
+Get attribute type is not menu.
+
+432
+00:54:40,756 --> 00:54:45,556
+If the tag name, we get to a toolbar item and it's not a menu type.
+
+433
+00:54:48,706 --> 00:54:53,206
+Which need more than single click, we don't want to close it right now and check for text inputs and menu buttons.
+
+434
+00:54:53,216 --> 00:54:59,186
+Text. Do we check for text input? I say it's true, and then.
+
+435
+00:54:59,786 --> 00:55:23,326
+Okay. Is click, then being handle is on one of these interactive things that should result in the associated panel closing.
+
+436
+00:55:32,836 --> 00:55:35,876
+Menu item. Oh.
+
+437
+00:55:35,986 --> 00:55:40,135
+That's wild. Um, maybe auto hide panel.
+
+438
+00:55:40,136 --> 00:55:49,516
+We don't. That should result in the, uh, associated panel closing.
+
+439
+00:55:49,536 --> 00:56:02,256
+Okay. Well, Param, uh, event, a event, the click event that is, that is occurring.
+
+440
+00:56:05,026 --> 00:56:08,296
+Is it a click event? Not necessarily.
+
+441
+00:56:08,626 --> 00:56:24,076
+It. The event being handled as such a result, in an associate panel closing the event that is occurring.
+
+442
+00:56:24,526 --> 00:56:32,595
+That word deter that we're evaluating. Uh returns boolean true.
+
+443
+00:56:32,596 --> 00:56:47,926
+If the event occurred on a, um, an item we consider interactive such that the enclosing panel should close.
+
+444
+00:56:50,556 --> 00:56:53,706
+Right. Maybe auto hide panel.
+
+445
+00:56:54,846 --> 00:57:03,126
+Oh, no. It's the other way around. It's the other way around.
+
+446
+00:57:05,076 --> 00:57:08,226
+Uh, if you put in a single thing, you know, we don't want to close it.
+
+447
+00:57:09,456 --> 00:57:16,506
+So it's true. If the event being has one of those interactions, it should not result in the associated panel closing.
+
+448
+00:57:19,746 --> 00:57:22,956
+Should stay open. Remain open.
+
+449
+00:57:24,426 --> 00:57:28,176
+False. If the panel should close.
+
+450
+00:57:30,576 --> 00:57:35,126
+And that only gets called if the event is not of type command.
+
+451
+00:57:35,136 --> 00:57:38,466
+So that could be a click.
+
+452
+00:57:40,946 --> 00:57:47,766
+That could be a key press. Uh, okay.
+
+453
+00:57:49,296 --> 00:57:53,616
+All right. Well, now we understand this. It's a little wild, but.
+
+454
+00:57:53,616 --> 00:57:58,296
+Okay. Hide panel four node.
+
+455
+00:58:03,056 --> 00:58:06,746
+Finds the associated panel, if any.
+
+456
+00:58:07,196 --> 00:58:17,396
+For a given Dom node. Uh, enclosing a given Dom node and closes it.
+
+457
+00:58:20,186 --> 00:58:23,995
+Right. Get panel for node. Wait, how does that work?
+
+458
+00:58:23,996 --> 00:58:27,746
+How is get. Yeah. Get panel for node.
+
+459
+00:58:27,746 --> 00:58:33,416
+Should, uh, have an underscore. Not.
+
+460
+00:58:35,936 --> 00:58:41,876
+What what what what. Get panel for node.
+
+461
+00:58:44,186 --> 00:58:49,555
+Find. Replace. It's the opposite of what I want to do.
+
+462
+00:58:49,556 --> 00:59:03,756
+But it's what we must do. Uh, Dom node.
+
+463
+00:59:04,326 --> 00:59:11,256
+Uh, the node to find the pair. Uh panel parent for parent.
+
+464
+00:59:11,256 --> 00:59:16,446
+Ancestor four. To close.
+
+465
+00:59:19,416 --> 00:59:28,546
+To close the parent ancestor for I should say. Maybe auto hide panel.
+
+466
+00:59:39,946 --> 00:59:50,146
+Uh. Handles an event that might cause, uh.
+
+467
+00:59:52,306 --> 01:00:02,926
+The, um, uh, so for an event that occurs for a Dom node within a panel.
+
+468
+01:00:07,456 --> 01:00:15,346
+This, uh, routine will check to see if that event should cause the panel to close.
+
+469
+01:00:17,926 --> 01:00:29,296
+Who? Okay.
+
+470
+01:00:32,866 --> 01:00:41,806
+Uh, the event that, uh, is being fired on the Dom node, the for a node.
+
+471
+01:00:41,956 --> 01:00:54,616
+I'm just going to say a node on the node. This could be a keyboard mouse or command event for example.
+
+472
+01:00:55,546 --> 01:01:14,086
+Returns nothing. Get unused widgets.
+
+473
+01:01:15,316 --> 01:01:19,846
+This is called. Externally. It is a freebie.
+
+474
+01:01:21,076 --> 01:01:24,816
+See customizable UI.
+
+475
+01:01:24,826 --> 01:01:32,146
+Get unused widgets. Freebie.
+
+476
+01:01:32,206 --> 01:01:36,346
+Freebie. Copy that.
+
+477
+01:01:36,946 --> 01:01:49,586
+Copy that. Mhm.
+
+478
+01:01:49,806 --> 01:01:54,396
+I don't know if I believe this widget group wrapper or.
+
+479
+01:01:57,196 --> 01:02:01,185
+It's a it's not. This isn't correct.
+
+480
+01:02:01,186 --> 01:02:09,705
+It's not one or the other. This is all right JZ doc mixed array.
+
+481
+01:02:09,706 --> 01:02:17,196
+How do I say a mixed array. Type.
+
+482
+01:02:18,816 --> 01:02:24,546
+It's this. Uh, we know, uh, how to document.
+
+483
+01:02:24,556 --> 01:02:28,996
+What's the best way to document array. Uh, not an array of arrays.
+
+484
+01:02:29,926 --> 01:02:36,796
+A stock array. Okay. So it would be array that for that.
+
+485
+01:02:37,846 --> 01:02:41,586
+That's how it should be done. That and used widgets.
+
+486
+01:02:57,566 --> 01:03:01,466
+Get placement of widget. It's another freebie, please.
+
+487
+01:03:01,736 --> 01:03:06,746
+Yes. Yeah. Yes.
+
+488
+01:03:07,556 --> 01:03:14,486
+We get a freebie. Give me a freebie.
+
+489
+01:03:16,376 --> 01:03:22,706
+I want fugu. Customizable UI. I get placement of widget.
+
+490
+01:03:27,286 --> 01:03:31,706
+Wait, what? Hold up, hold up. Let's take some extra parameters.
+
+491
+01:03:33,536 --> 01:03:41,216
+So it's not exactly a pass through. Uh.
+
+492
+01:03:41,216 --> 01:03:47,816
+Hold up, hold up. This is straight up wrong.
+
+493
+01:03:50,416 --> 01:04:02,626
+Um. Param boolean A only registered.
+
+494
+01:04:04,846 --> 01:04:12,866
+True. Um. And I don't exactly know what that means.
+
+495
+01:04:12,876 --> 01:04:16,705
+We'll check that out in a second. A, uh, boolean. Hey.
+
+496
+01:04:16,706 --> 01:04:20,456
+Dead areas. It's false. What does that mean?
+
+497
+01:04:21,206 --> 01:04:32,266
+It's been a widget. A only registered.
+
+498
+01:04:34,986 --> 01:04:44,106
+Oh. In the event. Okay. Okay, I understand, so we can get the placement even if the widget is no longer registered, which can happen if,
+
+499
+01:04:44,106 --> 01:04:53,136
+for example, an extension, uh, introduces a widget via the web extension API and then that widget is uninstalled.
+
+500
+01:04:53,406 --> 01:04:58,716
+We still remember the placement of that widget so that next time you install that extension, maybe you re-enable it.
+
+501
+01:04:59,166 --> 01:05:03,066
+It doesn't go back to the default. Well, it goes back to where it remembers you had placed it.
+
+502
+01:05:03,156 --> 01:05:07,086
+So we remember kind of forever. Um.
+
+503
+01:05:08,576 --> 01:05:13,196
+So a widget can be. We can request the placement even if it's not registered.
+
+504
+01:05:13,676 --> 01:05:24,846
+And then dead areas. Okay if I if an area no longer exists.
+
+505
+01:05:24,856 --> 01:05:29,026
+I guess that's also true. Okay. Okay.
+
+506
+01:05:29,236 --> 01:05:42,436
+Boolean. Um. Set to false to return placements for widgets that aren't registered.
+
+507
+01:05:44,716 --> 01:05:47,956
+But still exist within the placements.
+
+508
+01:05:48,316 --> 01:05:54,016
+Uh, state. Having been registered in the past.
+
+509
+01:05:56,416 --> 01:06:01,006
+And placed in the past. Added areas equals false.
+
+510
+01:06:01,306 --> 01:06:07,306
+Include er, uh placements within areas that are not no longer registered.
+
+511
+01:06:09,706 --> 01:06:12,796
+But still exist in the state.
+
+512
+01:06:13,186 --> 01:06:14,956
+In the area. Uh, placement state.
+
+513
+01:06:20,206 --> 01:06:32,236
+Set to true to include placements within within dead areas that are no longer registered but still exist in the placements state.
+
+514
+01:06:32,536 --> 01:06:39,466
+Okay, so we've fixed that up. Okay.
+
+515
+01:06:39,736 --> 01:06:55,386
+Placement of widget. And now we can get rid of these.
+
+516
+01:07:00,526 --> 01:07:06,276
+Ha ha. How are we doing on time?
+
+517
+01:07:06,666 --> 01:07:10,476
+211 doing great. We're going to cross the 3000 mark.
+
+518
+01:07:11,286 --> 01:07:15,546
+That's good news. Widget exists. Is this another freebie?
+
+519
+01:07:16,176 --> 01:07:20,856
+It is not. This is not a freebie, but I think it's pretty straightforward.
+
+520
+01:07:23,376 --> 01:07:29,826
+Widget ideas. String. A non g power.
+
+521
+01:07:29,826 --> 01:07:33,786
+The Pogba is a defy power. That's a customer. If it's not in Japan it doesn't exist.
+
+522
+01:07:34,386 --> 01:07:38,786
+So. If you.
+
+523
+01:07:47,336 --> 01:07:55,206
+If if we've seen the widget before. Or the widget is saved to pocket.
+
+524
+01:07:57,896 --> 01:08:03,056
+Save to pocket. But. Is this for?
+
+525
+01:08:07,826 --> 01:08:21,426
+G-Sync destroyed API widgets. Um.
+
+526
+01:08:24,576 --> 01:08:28,206
+Returns true if the widget. Um.
+
+527
+01:08:37,166 --> 01:08:44,096
+Uh, the widget ID belongs to a widget that is in the palette.
+
+528
+01:08:48,156 --> 01:08:51,196
+G behind this G palette again.
+
+529
+01:08:51,216 --> 01:08:56,226
+G palette. Map of every widget that it knows about.
+
+530
+01:08:56,226 --> 01:09:01,476
+Keyed on their IDs. Okay. Uh, belongs to widget that is registered.
+
+531
+01:09:07,486 --> 01:09:11,986
+Is a special. Widget.
+
+532
+01:09:12,466 --> 01:09:21,706
+C is special widget. O is special widget.
+
+533
+01:09:23,056 --> 01:09:31,306
+Uh. Uh.
+
+534
+01:09:35,556 --> 01:09:39,486
+Or this will return false.
+
+535
+01:09:45,136 --> 01:09:56,686
+Turn false for widget IDs belonging to widgets we have seen in the past, but are no longer registered.
+
+536
+01:09:58,666 --> 01:10:03,376
+There is also a special case for treating uh.
+
+537
+01:10:06,166 --> 01:10:14,506
+The save to park save to pocket button as a non-existent widget.
+
+538
+01:10:14,656 --> 01:10:29,306
+Unless it's in the, uh. This is also a special case for treating this as a non-existent widget.
+
+539
+01:10:29,696 --> 01:10:36,986
+All other IDs are presumed to belong to all widgets and presumed to exist.
+
+540
+01:10:38,696 --> 01:10:46,946
+It's kind of a weird thing. Um.
+
+541
+01:10:46,946 --> 01:10:56,686
+Returns Boolean. Actually going to put this down here?
+
+542
+01:11:06,256 --> 01:11:15,826
+Oh, boy. Come on. Okay. Check for the current existence of a widget ID.
+
+543
+01:11:19,316 --> 01:11:26,236
+Huh? All right. Add widget to area. We've crossed the 3000 mark, gang.
+
+544
+01:11:26,946 --> 01:11:38,186
+Woohoo! Um, is this exposed externally?
+
+545
+01:11:41,116 --> 01:11:45,195
+Incredibly. Yes it is. Okay, good. Uh, okay.
+
+546
+01:11:45,196 --> 01:11:50,106
+So we get this one for free. See customizable UI.
+
+547
+01:11:50,336 --> 01:12:00,736
+Add widget to area. I'll go ahead and copy those.
+
+548
+01:12:09,716 --> 01:12:19,156
+Hmhm. Her arm.
+
+549
+01:12:19,176 --> 01:12:33,876
+Now there's an a initial ad here that is not provided, uh, that is not used by the externally exposed method.
+
+550
+01:12:40,616 --> 01:12:43,976
+But is used elsewhere. Initial ad.
+
+551
+01:12:48,086 --> 01:12:51,866
+Uh. That's false. Let's do that.
+
+552
+01:12:53,456 --> 01:12:56,846
+Uh, true.
+
+553
+01:12:56,876 --> 01:13:02,216
+If this is the first time the widget is being added to the area.
+
+554
+01:13:03,776 --> 01:13:14,346
+Uh, how do we know that? Add widget to area. When we restore state for the area.
+
+555
+01:13:16,596 --> 01:13:28,016
+At which to area. Uh, add widget to area.
+
+556
+01:13:30,326 --> 01:13:34,166
+I see. Uh, during initialization.
+
+557
+01:13:40,706 --> 01:13:53,276
+It's being add to the area. For the first time during initialization or after a, uh, state reset.
+
+558
+01:14:09,646 --> 01:14:14,506
+If not, initial add will add to the dirty dirty area cache.
+
+559
+01:14:17,846 --> 01:14:21,246
+Uh. Okay.
+
+560
+01:14:24,676 --> 01:14:32,426
+Remove widget from area. C customizable UI.
+
+561
+01:14:32,446 --> 01:14:38,046
+Remove widget from area. Yes.
+
+562
+01:14:39,246 --> 01:14:46,596
+Take me to your implementation. I know it's string.
+
+563
+01:14:49,146 --> 01:14:56,346
+And there's no return value. It's wild that that doesn't let me, like, go to the implementation.
+
+564
+01:14:57,336 --> 01:15:01,696
+How do I get to you? Hmm.
+
+565
+01:15:02,196 --> 01:15:06,126
+Okay. Move widget within area.
+
+566
+01:15:09,706 --> 01:15:17,836
+See uh see customizable UI move widget within area that exist.
+
+567
+01:15:18,376 --> 01:15:22,726
+It does. Hey. Oh, and that's the widget ID.
+
+568
+01:15:22,906 --> 01:15:27,016
+That'll be a string. And then this.
+
+569
+01:15:28,666 --> 01:15:35,926
+Uh oh. No. Why am I why am I adding those comments number.
+
+570
+01:15:36,466 --> 01:15:42,766
+So, like, I shouldn't need that. It's a bad habit.
+
+571
+01:15:42,946 --> 01:15:46,276
+I needed it for this one because this isn't in the other documentation.
+
+572
+01:15:49,896 --> 01:15:59,646
+Is special widget. Yeah, okay. Get saved.
+
+573
+01:15:59,646 --> 01:16:03,966
+Horizontal snapshots state that is not exposed externally.
+
+574
+01:16:06,186 --> 01:16:09,305
+Um, okay.
+
+575
+01:16:09,306 --> 01:16:20,496
+So this is interesting. Uh. Returns the, uh, horizontal tab strips.
+
+576
+01:16:23,156 --> 01:16:32,696
+Placements state that was saved when switching to vertical tabs.
+
+577
+01:16:32,696 --> 01:16:45,476
+Mode saved. So last time we switched to vertical tabs, mode returns state and that's an object.
+
+578
+01:16:45,716 --> 01:16:50,126
+All right. Um.
+
+579
+01:16:50,426 --> 01:16:55,286
+Get saved. Vertical snapshot state returns.
+
+580
+01:16:58,436 --> 01:17:03,176
+The vertical. Tab strips.
+
+581
+01:17:06,126 --> 01:17:12,666
+Tab strips placement state. Let's say last I would switch to horizontal tabs mode.
+
+582
+01:17:16,056 --> 01:17:24,936
+Load saved state. Huh?
+
+583
+01:17:26,306 --> 01:17:29,686
+Okay. Turns. Nothing.
+
+584
+01:17:38,676 --> 01:17:44,285
+Loads the saved, customize customization saved customization.
+
+585
+01:17:44,286 --> 01:17:54,846
+State objects from preferences and or sets them or sets them to their default.
+
+586
+01:17:59,946 --> 01:18:04,146
+To their defaults if no such state can be found.
+
+587
+01:18:17,246 --> 01:18:23,336
+Okay. The panel area is the exception.
+
+588
+01:18:24,446 --> 01:18:34,216
+This does not populate G placements. I don't think that's true anymore.
+
+589
+01:18:34,236 --> 01:18:38,256
+Clear. So we try and get the customization state.
+
+590
+01:18:38,286 --> 01:18:43,446
+There's no state. Okay. We try and parse that state. Um.
+
+591
+01:18:44,466 --> 01:18:48,776
+If we can't pass, it will clear it out. Falling back to the defaults.
+
+592
+01:18:48,786 --> 01:18:53,166
+If there's no placements. We'll set that on the saved state.
+
+593
+01:18:53,856 --> 01:18:59,856
+There's no current version. Set the current version on it, and we'll set some defaults here.
+
+594
+01:19:03,666 --> 01:19:11,116
+G placements. The panel area is an exception.
+
+595
+01:19:11,356 --> 01:19:17,446
+The panel area is gone, so I'm going to get rid of that comment. Okay.
+
+596
+01:19:17,986 --> 01:19:29,076
+Restore state for area. Um, is that used externally to restore state for area?
+
+597
+01:19:30,206 --> 01:19:43,836
+No. Oh, boy.
+
+598
+01:19:44,196 --> 01:19:48,246
+Where? I hate to keep doing this, but I have to have to know.
+
+599
+01:19:48,366 --> 01:19:52,846
+How close are we to being done this? Uh. This object.
+
+600
+01:19:59,176 --> 01:20:05,386
+I keep checking. Five six keeps getting further away because we keep adding lines.
+
+601
+01:20:05,986 --> 01:20:11,356
+But how many lines are between us and, uh, being done?
+
+602
+01:20:19,596 --> 01:20:23,676
+Uh. Uh, how many lines are selected?
+
+603
+01:20:24,996 --> 01:20:30,126
+Um, 404,856 minus.
+
+604
+01:20:30,786 --> 01:20:35,736
+Hey, let's do some math. 4856 minus.
+
+605
+01:20:36,366 --> 01:20:43,746
+Uh, let's say 3207. There are just over 1500 lines to go.
+
+606
+01:20:44,406 --> 01:20:50,646
+And we've already completed, let's say, 3205 minus.
+
+607
+01:20:55,526 --> 01:21:00,146
+3205. West 275.
+
+608
+01:21:00,716 --> 01:21:06,416
+We've already completed 2750, so, you know, we're well over halfway.
+
+609
+01:21:06,896 --> 01:21:12,746
+We're continuing to plug along. Uh, we're getting some freebies here and there, which is nice.
+
+610
+01:21:13,796 --> 01:21:20,205
+Um. Let's do this last one.
+
+611
+01:21:20,206 --> 01:21:24,796
+And then I think I'm going to call it, uh. All right. Restore state for area.
+
+612
+01:21:30,526 --> 01:21:39,286
+That's got to be an area ID. Area I.D. that's going to be a string.
+
+613
+01:21:41,266 --> 01:21:51,766
+Uh, given an area ID, a customizable area ID, um.
+
+614
+01:22:02,836 --> 01:22:06,046
+If. Placements. Preexisted. Restoring.
+
+615
+01:22:08,896 --> 01:22:33,256
+Starting from preexisting placements. There's a saved stay from safe stay.
+
+616
+01:22:41,006 --> 01:22:51,386
+Default state. That we're at before was able to be restore and register, which is really the start area before it's been restored.
+
+617
+01:22:52,856 --> 01:22:59,606
+Okay. Um. And when's that called?
+
+618
+01:22:59,606 --> 01:23:02,606
+Restore state. What's restore state for area.
+
+619
+01:23:03,356 --> 01:23:10,036
+That's called when resetting. And registering.
+
+620
+01:23:14,906 --> 01:23:20,125
+Okay. Uh, during called.
+
+621
+01:23:20,126 --> 01:23:24,806
+Uh. Restores the placements.
+
+622
+01:23:25,196 --> 01:23:29,036
+Uh, sets the.
+
+623
+01:23:30,746 --> 01:23:52,016
+Restores the, uh, placements of widgets within an area along, uh, with id, a area ID, um, or sets the default placements if.
+
+624
+01:23:52,346 --> 01:23:58,436
+Uh, no. Uh, from sales state.
+
+625
+01:24:00,806 --> 01:24:05,546
+State or sets the default placement. No such saved state exists.
+
+626
+01:24:06,296 --> 01:24:10,846
+Um. This is called.
+
+627
+01:24:12,166 --> 01:24:18,826
+This should be called during area registration or after a state reset.
+
+628
+01:24:22,816 --> 01:24:34,326
+And I don't think there's a return value I think yeah we just we just and we just restore the, uh, ID of the area to restore the state or.
+
+629
+01:24:39,866 --> 01:24:44,306
+So that'll actually like move the the Dom nodes around.
+
+630
+01:24:47,396 --> 01:24:55,416
+Okay. Let's call it there. Hey thanks for watching episode 300 and whatever this was 392 of the Joy of coding.
+
+631
+01:24:55,436 --> 01:25:01,495
+Let me know what you thought. Uh, there's a form. There's a form right here where you can rate this episode.
+
+632
+01:25:01,496 --> 01:25:07,916
+That's also a great place to give me more ideas. Uh, ring link to rate this episode.
+
+633
+01:25:07,946 --> 01:25:12,506
+This is a place to give me more ideas in case there's something you want me to do for the 400th episode that's coming up.
+
+634
+01:25:13,136 --> 01:25:17,096
+Eight episodes away. You know, I put some ideas in here.
+
+635
+01:25:17,246 --> 01:25:20,426
+Uh, give me. Give me more ideas. Maybe. Maybe we'll do a vote.
+
+636
+01:25:21,206 --> 01:25:25,076
+We'll do a vote. We'll see what people think. But we need to get some candidates.
+
+637
+01:25:25,376 --> 01:25:29,156
+So nominate some ideas, and then we'll put a put it to a vote.
+
+638
+01:25:29,786 --> 01:25:34,166
+We'll do a poll or something. And, uh, and I'll make a decision on what to do.
+
+639
+01:25:34,976 --> 01:25:38,606
+And, uh, otherwise you can let me know how the, uh, how the episode went.
+
+640
+01:25:38,606 --> 01:25:42,836
+You can also ask me questions if you have questions about anything I'm doing. That's a great place to ask me.
+
+641
+01:25:43,196 --> 01:25:48,836
+Uh, and I'm always watching the chat. So thanks again for watching episode 392 of the Joy of coding.
+
+642
+01:25:49,436 --> 01:25:52,966
+Uh, and I'll see you next week. Probably.
+
+643
+01:25:52,976 --> 01:25:56,426
+Let me just double check. Do I have an episode next week or am I away?
+
+644
+01:25:58,286 --> 01:26:03,566
+I should be in town. So, uh. Yeah, I will see you next week for episode 393.
+
+645
+01:26:03,656 --> 01:26:06,986
+Have yourselves a great week, everybody. Take care. Bye bye.
+
+646
+01:26:08,636 --> 01:26:12,716
+The joy of. Oh, they see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

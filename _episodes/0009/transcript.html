@@ -1,0 +1,4277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding (mconley livehacks on Firefox) - Episode 9</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding (mconley livehacks on Firefox) - Episode 9</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=72aa65ec-3c2b-48ff-8423-ac1600012f37</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=72aa65ec-3c2b-48ff-8423-ac1600012f37">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:11,140 --> 00:00:15,580
+Hello. Welcome to Episode nine of The Joy of Coding.
+
+2
+00:00:15,580 --> 00:00:21,130
+My name is Mike Connelly. We're going to be hacking on Firefox. It's gonna be a great time.
+
+3
+00:00:21,130 --> 00:00:24,670
+I hope you're looking forward to it. Let's dig right in.
+
+4
+00:00:24,670 --> 00:00:30,550
+So, first of all, I'm trying something new. I'm using a new version of the broadcasting software, though.
+
+5
+00:00:30,550 --> 00:00:37,630
+I used to do this. And now hopefully you can see me in the bottom right hand corner of your screen.
+
+6
+00:00:37,630 --> 00:00:43,360
+So now you can, like, watch my my mug as I as I work on stuff.
+
+7
+00:00:43,360 --> 00:00:45,820
+I don't know if that's gonna make things more or less interesting,
+
+8
+00:00:45,820 --> 00:00:52,390
+but now you can see what I do with my face at the same time that I'm, you know, hacking on things.
+
+9
+00:00:52,390 --> 00:00:59,860
+So let's take a look at the agenda. Here's today's agenda.
+
+10
+00:00:59,860 --> 00:01:07,910
+So, as usual, I'll start with my preamble that no plan survives breakfast. Hopefully that we get we get like more or less through this list of things,
+
+11
+00:01:07,910 --> 00:01:13,220
+but it's possible that something else will pop up while I'm doing this and I have to change tack abruptly.
+
+12
+00:01:13,220 --> 00:01:16,880
+That just happens. So it could happen.
+
+13
+00:01:16,880 --> 00:01:21,260
+Just be prepared for that. We're in hash live hacking on our site at Mazola dot org.
+
+14
+00:01:21,260 --> 00:01:26,270
+If you want to join us and chat, talk about what's going on.
+
+15
+00:01:26,270 --> 00:01:36,680
+So I think this is actually an out of date, a copy paste, a lot of a lot of stuff from agenda to agenda.
+
+16
+00:01:36,680 --> 00:01:43,970
+So that line is out of date. So ignore that. So basically what's going on is we're back to hacking on View Source.
+
+17
+00:01:43,970 --> 00:01:47,180
+I had started this last week.
+
+18
+00:01:47,180 --> 00:01:55,280
+I'm trying to make view source work properly with multiprocessor Firefox so that we don't hit the network when I'm reviewing the source of a document,
+
+19
+00:01:55,280 --> 00:02:03,020
+because sometimes that'll happen with ETN s only with tennis for non multiprocessor Firefox, which is synonymous with the tennis.
+
+20
+00:02:03,020 --> 00:02:12,110
+I kind of use the two interchangeably if if we're in 90 tennis, non multi proses Firefox, you source works just fine.
+
+21
+00:02:12,110 --> 00:02:17,030
+It's only in multi proses Firefox where you run into this problem and I'm trying to fix that.
+
+22
+00:02:17,030 --> 00:02:19,760
+And so this is the bug. You're looking at the agenda.
+
+23
+00:02:19,760 --> 00:02:25,790
+You can read the bug and hear my notes that I'll be referring to a lot during the course of this video.
+
+24
+00:02:25,790 --> 00:02:30,950
+This might be a long haul. I mean, I think last week I went for about two and a half hours.
+
+25
+00:02:30,950 --> 00:02:35,480
+Probably I'll end up going about the same length this week. Hopefully that's OK.
+
+26
+00:02:35,480 --> 00:02:41,060
+Feel free to come in and out or just watch the video whenever like the recording is posted at the end if you have to bail out.
+
+27
+00:02:41,060 --> 00:02:44,900
+That's fine. So any updates?
+
+28
+00:02:44,900 --> 00:02:48,530
+I haven't really done any work on this. Like I like I said, I only want to work on this one.
+
+29
+00:02:48,530 --> 00:02:51,200
+I'm streaming that you get to see the whole process from start to finish.
+
+30
+00:02:51,200 --> 00:02:57,560
+So I haven't done any work on this view source stuff from the last episode to this one.
+
+31
+00:02:57,560 --> 00:03:06,890
+But some that doesn't mean activity hasn't happened. So we wrote a brief patch last week, too, for this bug one one five one two zero,
+
+32
+00:03:06,890 --> 00:03:11,330
+which was to pass the outer window idea of the frame that the user might have
+
+33
+00:03:11,330 --> 00:03:15,890
+selected with the context menu up with the context menu message up to the parent.
+
+34
+00:03:15,890 --> 00:03:23,570
+And I got a review plus with some conditions on it. So that's the thing I think we can land today, assuming the tree is open when we want to land it.
+
+35
+00:03:23,570 --> 00:03:30,590
+And if at some point we get blocked, you know, maybe I'm I'm stuck waiting for an answer to some question.
+
+36
+00:03:30,590 --> 00:03:36,770
+I have this patch and this bug that I could potentially review.
+
+37
+00:03:36,770 --> 00:03:41,240
+We'll see. We'll see if we get there. So let's get started.
+
+38
+00:03:41,240 --> 00:03:48,770
+The first thing to do is I've. So this is my terminal. I've updated to the change that we were working on last time.
+
+39
+00:03:48,770 --> 00:03:53,270
+So that's this. I think it was called modernize you source to use a frame grab.
+
+40
+00:03:53,270 --> 00:03:59,550
+But in the meantime, I've been working on other stuff. I've been hacking on different bugs.
+
+41
+00:03:59,550 --> 00:04:08,060
+I didn't just like nap between the last week and this week. So in that time, I've pulled from the from Mazola inbound or I've pulled from Central.
+
+42
+00:04:08,060 --> 00:04:12,950
+And so this patch needs to be re based on top of the latest stuff I've pulled.
+
+43
+00:04:12,950 --> 00:04:17,240
+So what I'm going to do is rebase on top of tip.
+
+44
+00:04:17,240 --> 00:04:22,160
+If I take a look at graph log I have actually I don't want to be based on top of tip.
+
+45
+00:04:22,160 --> 00:04:27,270
+I want to bit rebase on top of here. So that's what I will do.
+
+46
+00:04:27,270 --> 00:04:32,690
+Rebase. No, I want to make that the destination.
+
+47
+00:04:32,690 --> 00:04:39,590
+So I'm currently I've got the excuse me, the view source branch change set checked out.
+
+48
+00:04:39,590 --> 00:04:45,120
+And I'm going to rebase it on top of this change set, which is actually the tip of inbounded,
+
+49
+00:04:45,120 --> 00:04:48,860
+at least as of about an hour ago, because I pushed this stuff to inbound.
+
+50
+00:04:48,860 --> 00:04:52,880
+So let's rebase it and we might have to do some conflict.
+
+51
+00:04:52,880 --> 00:04:58,310
+Conflict resolution, hopefully not, because resources sources mostly code that no one touches, but you never know.
+
+52
+00:04:58,310 --> 00:05:02,030
+So here we go. Do doing a rebase hey, we do have some conflicts.
+
+53
+00:05:02,030 --> 00:05:12,500
+So let's I mean, this is kind of part of the game. Let's figure out how to resolve these.
+
+54
+00:05:12,500 --> 00:05:26,960
+So it looks like content type and content disposition have been added as well in the sink message up to the parent regarding the context message.
+
+55
+00:05:26,960 --> 00:05:31,800
+So I just want to add my frame outer window ideas stuff here.
+
+56
+00:05:31,800 --> 00:05:38,750
+Window I. D I can take that and anything else.
+
+57
+00:05:38,750 --> 00:05:46,820
+No. So I don't have to worry about that. So I will mark that as resolves based content content that is.
+
+58
+00:05:46,820 --> 00:05:54,680
+What else is conflicted. Probably the same, same problem in terms of the context menu stuff.
+
+59
+00:05:54,680 --> 00:05:58,850
+Yeah. It's the same thing. So content type and content. Disposition were added here.
+
+60
+00:05:58,850 --> 00:06:05,000
+I just want to add frame out or window ideas while I'm at it and that's it.
+
+61
+00:06:05,000 --> 00:06:09,590
+We can probably mark that resolved and continue our rebase.
+
+62
+00:06:09,590 --> 00:06:14,390
+So Tab Rouzer. So we re.
+
+63
+00:06:14,390 --> 00:06:27,180
+Continue. Go, go. Go. I know at least one person is reporting in I.R.S. that they're having a hard time seeing the stream.
+
+64
+00:06:27,180 --> 00:06:32,630
+Rafael is saying that they can't see the stream if you're watching this and you're in live hacking.
+
+65
+00:06:32,630 --> 00:06:40,770
+Let me know if the stream is is working or not. That be good to know because I really hope that you're all able to see this stuff.
+
+66
+00:06:40,770 --> 00:06:44,780
+OK, so I read based on top of this change that.
+
+67
+00:06:44,780 --> 00:06:52,520
+And here's our stuff. OK, let's see.
+
+68
+00:06:52,520 --> 00:07:01,070
+Richard also wants to know to make sure that the stream is working correctly. So please let us know if you are watching this and your own hash.
+
+69
+00:07:01,070 --> 00:07:05,750
+Live hacking. Hey, the boundary just open. That's good. OK.
+
+70
+00:07:05,750 --> 00:07:10,250
+So where am I? I'm now at the tip of the stuff that I rebase.
+
+71
+00:07:10,250 --> 00:07:18,080
+And I'm going to build the tree. And while I'm Mike Taylor reports in in hash, light hacking says looks good to me.
+
+72
+00:07:18,080 --> 00:07:24,770
+So that bolsters my confidence. Meanwhile, I am building the stuff I just re based.
+
+73
+00:07:24,770 --> 00:07:32,270
+And while we're waiting for that bill to finish, we can start kind of re familiarizing ourselves with what we doing and.
+
+74
+00:07:32,270 --> 00:07:36,600
+Oh, tephra is also reporting and then the stream is working fine. So this is all good.
+
+75
+00:07:36,600 --> 00:07:41,980
+My confidence is bolstered.
+
+76
+00:07:41,980 --> 00:07:50,290
+So let's see if we can refresh memories in terms of what we're doing last week, where we got and the way I like to do that is with my notes.
+
+77
+00:07:50,290 --> 00:07:54,640
+So I have my notes here. Where would it be?
+
+78
+00:07:54,640 --> 00:07:57,970
+Make it so that. Yeah, this one one or two. Five one four six. That's right.
+
+79
+00:07:57,970 --> 00:08:03,190
+So this is how I swap in context. And let's see where I was.
+
+80
+00:08:03,190 --> 00:08:07,600
+So this was our attack plan last week and we got about this far.
+
+81
+00:08:07,600 --> 00:08:09,520
+And then these are the things that I have to do next.
+
+82
+00:08:09,520 --> 00:08:15,640
+So it looks like there are cases where a document is not passed to view source, utils view source.
+
+83
+00:08:15,640 --> 00:08:22,810
+And I don't think I had accounted for that.
+
+84
+00:08:22,810 --> 00:08:27,830
+Yeah. Yeah. Had not accounted for that.
+
+85
+00:08:27,830 --> 00:08:39,340
+So I need to account for that. And then I also have to account for the case where in the view source Zuhal document,
+
+86
+00:08:39,340 --> 00:08:45,190
+which can be opened directly from, you know, open dialog or whatnot.
+
+87
+00:08:45,190 --> 00:08:55,210
+If someone passes in and NSI S.H. entry as an argument, which we definitely do want to work with that or we do, I think.
+
+88
+00:08:55,210 --> 00:09:03,070
+Oh yeah. That's what we want to do. We want to sort of treat that behavior opening with A.I.s H entries as being sort of the old behavior.
+
+89
+00:09:03,070 --> 00:09:08,830
+And I think we still want to support it, but deprecate that behavior.
+
+90
+00:09:08,830 --> 00:09:13,900
+And then I can also lay in this context. When you patch, I can actually probably do that to start.
+
+91
+00:09:13,900 --> 00:09:18,040
+That might be a good way to to feel good about myself is to like land the thing.
+
+92
+00:09:18,040 --> 00:09:23,930
+So let's let's land a thing. So what was that?
+
+93
+00:09:23,930 --> 00:09:33,640
+Well, is that patch. No. Here, one one four six four nine six oh nine.
+
+94
+00:09:33,640 --> 00:09:40,160
+No, that's not the right one. What one was it? This one.
+
+95
+00:09:40,160 --> 00:09:45,710
+Yes. And gave more, gave it a review plus.
+
+96
+00:09:45,710 --> 00:09:50,770
+But I think he had some conditions here. He had some nitz.
+
+97
+00:09:50,770 --> 00:09:58,350
+This target, not owner document, is used a few times, this section, abolition ocean, we had a.
+
+98
+00:09:58,350 --> 00:10:04,680
+Yeah, we got short cut for it, and he doesn't like my trailing karma, so I'm okay with fixing those things.
+
+99
+00:10:04,680 --> 00:10:10,500
+Maybe we should just fix those right now and and move on and then land this thing.
+
+100
+00:10:10,500 --> 00:10:18,120
+So even though I'm building right now, I'm gonna go ahead because I'm not the changes that I made between.
+
+101
+00:10:18,120 --> 00:10:22,880
+Like where I'm about to check out and where I am right now and my my currently checked out.
+
+102
+00:10:22,880 --> 00:10:25,350
+Change that is not binary. It's all just JavaScript stuff.
+
+103
+00:10:25,350 --> 00:10:32,730
+So I'm I feel reasonably confident checking out a different part of the tree while I'm building.
+
+104
+00:10:32,730 --> 00:10:39,570
+So I want to check out this stuff. That might be the bottom of my screen is you can't see it.
+
+105
+00:10:39,570 --> 00:10:45,070
+Sorry. No. Yo. So I'm checking that stuff out.
+
+106
+00:10:45,070 --> 00:10:50,170
+And now let's address Gabler's review feedback. Make sure it works properly and then let's land.
+
+107
+00:10:50,170 --> 00:10:55,150
+That puppy will land it on ethics team because it's a browser change.
+
+108
+00:10:55,150 --> 00:11:00,160
+So it will go on ethics team, which is a different. It's not inbounded.
+
+109
+00:11:00,160 --> 00:11:03,400
+We have a whole bunch of different branches that kind of their integration branches
+
+110
+00:11:03,400 --> 00:11:09,670
+that we land on and then our tree sheriffs merge them until it's all quite magical.
+
+111
+00:11:09,670 --> 00:11:14,230
+Sorry for the golf. OK, so I've checked out that patch.
+
+112
+00:11:14,230 --> 00:11:22,890
+Let's take a look at Gabler's back again. It's in this context, Venu, that I want to make the first change.
+
+113
+00:11:22,890 --> 00:11:31,750
+I think it's a good suggestion to. Come on, come on, come on, come on.
+
+114
+00:11:31,750 --> 00:11:37,040
+As context menu. This is the one and that was online 616.
+
+115
+00:11:37,040 --> 00:11:41,090
+Somewhere down here. Actually had I know a shortcut.
+
+116
+00:11:41,090 --> 00:11:49,370
+Six. Sixteen. Yeah. So he is saying that we make reference to this target owner document a lot.
+
+117
+00:11:49,370 --> 00:11:54,500
+We make reference to it here, here and here. And he's saying, well, why not?
+
+118
+00:11:54,500 --> 00:12:00,770
+Just like. Have a variable for shortcake because we're using it all over the place.
+
+119
+00:12:00,770 --> 00:12:10,040
+I think that's a fine idea. So let's call it.
+
+120
+00:12:10,040 --> 00:12:19,850
+Pontotoc equal this debt target owner document.
+
+121
+00:12:19,850 --> 00:12:24,800
+And we will refer to it here.
+
+122
+00:12:24,800 --> 00:12:32,090
+So I will say owner doc. And then I have to fix this indentation. Boom.
+
+123
+00:12:32,090 --> 00:12:39,770
+And then over here, I also want to his owner, doc. And then I should check.
+
+124
+00:12:39,770 --> 00:12:46,130
+Any of the surrounding code make sure I haven't missed any cases where I'd want to use owner doc.
+
+125
+00:12:46,130 --> 00:12:50,560
+Mm hmm. This indentation was already kind of weird and I added it.
+
+126
+00:12:50,560 --> 00:12:57,610
+Uh, so what do we want to do here like that? How many characters?
+
+127
+00:12:57,610 --> 00:13:04,470
+That's 82. It's not amazing. Effort, line up the dots.
+
+128
+00:13:04,470 --> 00:13:13,820
+OK, so there's also this reference to owner document. So I'll say owner doc here.
+
+129
+00:13:13,820 --> 00:13:24,600
+And let me just check. I should probably do this with.
+
+130
+00:13:24,600 --> 00:13:38,060
+Yeah, there's another one. And I think we're still in yeah, we're still in context.
+
+131
+00:13:38,060 --> 00:13:52,220
+Doc. And where are we now?
+
+132
+00:13:52,220 --> 00:14:00,110
+Now we're still inside, so we still have reference to honor Doc, so I can say owner Doc default view.
+
+133
+00:14:00,110 --> 00:14:15,020
+And there's another one down here. No one down here and that, I think concludes.
+
+134
+00:14:15,020 --> 00:14:22,210
+I mean, these are all outside that function. Let me just do a quick double check again.
+
+135
+00:14:22,210 --> 00:14:28,960
+Maybe there's some stuff up here that should use it. Actually, to be absolutely certain.
+
+136
+00:14:28,960 --> 00:14:33,750
+Excuse me. I will copy and paste this entire chunk of code.
+
+137
+00:14:33,750 --> 00:14:39,570
+I don't know if this is a very smart way of checking, but I will check for the owner document.
+
+138
+00:14:39,570 --> 00:14:45,540
+And this. OK, so this is the only reference to it.
+
+139
+00:14:45,540 --> 00:14:52,440
+And we never this should be fine, is what I'm I'm thinking, and I should test it and I will test it.
+
+140
+00:14:52,440 --> 00:14:56,610
+But that change has now been done. So done.
+
+141
+00:14:56,610 --> 00:15:04,560
+Next, he doesn't like my trailing new line or trailing comma at the end of tab browser dot ximo.
+
+142
+00:15:04,560 --> 00:15:11,420
+What was it, frame owner? No frame outer.
+
+143
+00:15:11,420 --> 00:15:19,950
+This thing, he didn't like my trail and karma, actually.
+
+144
+00:15:19,950 --> 00:15:26,880
+Hang on. Let's take a look at the patch. Let's see, where did the previous incarnation have a trailing comma?
+
+145
+00:15:26,880 --> 00:15:33,540
+It did. So I'm going to push back against this one, because one of the reasons that I like to have a trailing comma is that if you end
+
+146
+00:15:33,540 --> 00:15:37,560
+up adding more stuff to this list and we're adding stuff all the time to this list,
+
+147
+00:15:37,560 --> 00:15:42,870
+as you saw when I got sort of bit rotted here, is that when you add more things to the list,
+
+148
+00:15:42,870 --> 00:15:51,750
+you have to have a comma before the last item, like you have to add a new comma, and that changes the blame of the line.
+
+149
+00:15:51,750 --> 00:15:59,120
+And. And by blame, I mean like you have now changed that line so that you were the last person who touched it,
+
+150
+00:15:59,120 --> 00:16:05,390
+even though what you did was mostly like just sort of not useful work.
+
+151
+00:16:05,390 --> 00:16:12,140
+Just adding a comma. And that blood change and blame history can be a pain in the butt for somebody who's looking for the provenance of this line.
+
+152
+00:16:12,140 --> 00:16:19,640
+Like where did this line come from? It just adds another step for them. So what I'm going to push back a little on that.
+
+153
+00:16:19,640 --> 00:16:30,270
+Let me see if Gabler is cool with that. If he is an IAC, I will pay him and.
+
+154
+00:16:30,270 --> 00:16:31,060
+And then we'll have a chat.
+
+155
+00:16:31,060 --> 00:16:41,200
+I'll bring my chat window over over once I'm sure he's cool with chatting in the open like this or like chatting on aren't being recorded.
+
+156
+00:16:41,200 --> 00:16:48,380
+And then we'll talk to him. So in the meantime, I will just commit the work that I've done and let's test it.
+
+157
+00:16:48,380 --> 00:16:51,760
+So let's see. I'm here when I commit.
+
+158
+00:16:51,760 --> 00:16:56,770
+I'm going to cause these two change sets to be obsolete. So all involve them on top.
+
+159
+00:16:56,770 --> 00:17:03,550
+So commit amend Gaber. Oh, a law has pond.
+
+160
+00:17:03,550 --> 00:17:10,620
+Hey. Live hacking right now. And I had a question.
+
+161
+00:17:10,620 --> 00:17:15,270
+About your review for about one one five oh one two zero.
+
+162
+00:17:15,270 --> 00:17:24,110
+Mind if we talk about that? And our conversation is streamed live.
+
+163
+00:17:24,110 --> 00:17:37,870
+So make sure he's cool with that. So that I am committed and that should cause to change.
+
+164
+00:17:37,870 --> 00:17:43,250
+That's to go obsolete. Waiting for Gabe or to respond.
+
+165
+00:17:43,250 --> 00:17:48,170
+Waiting, waiting, waiting. OK. And now I'm going to evolve these to change sets that just went obsolete.
+
+166
+00:17:48,170 --> 00:17:53,570
+I'm going to involve them on top, which is a basic is basically replaying them a rebase in them on top.
+
+167
+00:17:53,570 --> 00:18:35,180
+So a she of all do it. Perfectly answer.
+
+168
+00:18:35,180 --> 00:18:50,320
+Much evolving, evolving, evolving. Come on, come on, come on.
+
+169
+00:18:50,320 --> 00:19:14,610
+OK. So evolved and. Uh.
+
+170
+00:19:14,610 --> 00:19:31,850
+Window screen. I'm just having a conversation with Gable right now, kind of explaining what live hacking is,
+
+171
+00:19:31,850 --> 00:19:38,040
+making sure that he's cool with me, having a conversation with him.
+
+172
+00:19:38,040 --> 00:19:56,630
+Like this live lee.
+
+173
+00:19:56,630 --> 00:20:03,300
+OK, so he's given his thumbs up. I'm bringing my Irish Sea window over.
+
+174
+00:20:03,300 --> 00:20:14,600
+Hey. So regarding your last night on your review for bug one one five or one two.
+
+175
+00:20:14,600 --> 00:20:17,930
+Thanks for the review, by the way. Always.
+
+176
+00:20:17,930 --> 00:20:29,280
+Thank you, reviewer. You ask me to remove the trailing comma, but the line above had the trailing comma.
+
+177
+00:20:29,280 --> 00:20:41,510
+And I'm wondering if we want. To keep it just so that if more things get added to that list, which, let's face it, they will.
+
+178
+00:20:41,510 --> 00:20:50,660
+We don't end up. Changing the blame on the last item, just to add a comma.
+
+179
+00:20:50,660 --> 00:20:54,870
+So let's see if he's cool with that. And then if he is, we will test this patch.
+
+180
+00:20:54,870 --> 00:21:02,130
+Actually, we can while we're waiting. We can test it right now. Actually.
+
+181
+00:21:02,130 --> 00:21:15,360
+I shouldn't. I should check to see how my builds doing, it's actually we're getting close to the end here, so I will be able to test this soon.
+
+182
+00:21:15,360 --> 00:21:32,830
+And then we can land it. Landing is super satisfying.
+
+183
+00:21:32,830 --> 00:21:42,270
+Since the two. Waiting, waiting, waiting.
+
+184
+00:21:42,270 --> 00:21:53,010
+OK, while we're waiting, let's see. I will keep this window here and I will bring up my notes and I will do that.
+
+185
+00:21:53,010 --> 00:21:58,180
+And let's think about some stuff so I can hide the stuff.
+
+186
+00:21:58,180 --> 00:22:04,980
+Can I? All right. Reading, reading it all things like.
+
+187
+00:22:04,980 --> 00:22:15,590
+I thought that this is the reason for it. I like the idea in general. And drop that and that.
+
+188
+00:22:15,590 --> 00:22:27,420
+OK, cool. OK, drop that.
+
+189
+00:22:27,420 --> 00:22:32,700
+So one thing I want to think about is the case where a document is not being passed to view source,
+
+190
+00:22:32,700 --> 00:22:38,750
+because I'm pretty sure I had made an assumption in here.
+
+191
+00:22:38,750 --> 00:22:47,670
+Where'd you know it? I don't have the right revision checked out, but I'd made an assumption where document was being passed.
+
+192
+00:22:47,670 --> 00:22:52,770
+I just sort of assumed that anyone calling this function is going to pass document and that's not the case.
+
+193
+00:22:52,770 --> 00:23:02,740
+So I have to. I have to account for that case.
+
+194
+00:23:02,740 --> 00:23:08,480
+Read it to. And the reason I need to account.
+
+195
+00:23:08,480 --> 00:23:10,730
+I think I was doing a lot with that document.
+
+196
+00:23:10,730 --> 00:23:20,510
+I was using it in order to work to to basically find all of the things that the frame script needs to do its job.
+
+197
+00:23:20,510 --> 00:23:27,200
+And then I was passing that to the.
+
+198
+00:23:27,200 --> 00:23:32,600
+I was passing that to The View source Dot Zuhal, I guess.
+
+199
+00:23:32,600 --> 00:23:38,750
+But the I can't I can't count on a document being around.
+
+200
+00:23:38,750 --> 00:23:43,970
+So I hadn't I hadn't taken that into account and I need to correct that.
+
+201
+00:23:43,970 --> 00:23:46,190
+So Gaber says one question is, that's something we often do.
+
+202
+00:23:46,190 --> 00:23:55,370
+I mean, that COINTEL guy was shot, either mentioned that case or we should stay consistent. It's one of those things I see all over the place.
+
+203
+00:23:55,370 --> 00:24:00,280
+But no, I don't think it's codified anywhere.
+
+204
+00:24:00,280 --> 00:24:05,800
+I'm fine with driving, just wonder if I should start using this price, encourage others to do so as well.
+
+205
+00:24:05,800 --> 00:24:27,320
+I think it makes sense for lists that are likely to increase, to change.
+
+206
+00:24:27,320 --> 00:24:34,670
+Oh, OK. How's our bill doing? I think we're getting down to the nitty gritty.
+
+207
+00:24:34,670 --> 00:24:39,800
+We should be linking soon. If I'm reading this right, I mean, all the building occurs in parallel,
+
+208
+00:24:39,800 --> 00:24:43,160
+so I can't really say with any certainty where we are in the whole build process.
+
+209
+00:24:43,160 --> 00:24:47,990
+But even though it's non-deterministic, I do feel like there are patterns.
+
+210
+00:24:47,990 --> 00:24:50,000
+All right. I feel like I can see patterns.
+
+211
+00:24:50,000 --> 00:24:59,940
+And I feel like especially because this is maybe I mostly basing it based on how much time has gone by, but I'm pretty sure the build is almost done.
+
+212
+00:24:59,940 --> 00:25:06,000
+Maybe it should be then. But that's another story, says Gabor. Indeed.
+
+213
+00:25:06,000 --> 00:25:10,980
+So I think that I will interpret that as we're saying, it's cool for me to drop that issue.
+
+214
+00:25:10,980 --> 00:25:19,710
+So I think that conversation is done. And I will take this off the screen and I will bring this over here.
+
+215
+00:25:19,710 --> 00:25:24,580
+I could probably just do that. Whatever.
+
+216
+00:25:24,580 --> 00:25:42,000
+Come on, OCD. There we go. OK.
+
+217
+00:25:42,000 --> 00:25:48,710
+So. I really want to test that. Haven't got that bill done, so we're waiting.
+
+218
+00:25:48,710 --> 00:25:52,580
+And what I will do in the meantime while we're waiting is read check out the tip
+
+219
+00:25:52,580 --> 00:26:03,720
+so we can take a look at the code that we had written and start making plans. So let's let's go back up here.
+
+220
+00:26:03,720 --> 00:26:09,090
+And any changes I do should probably occur in this second change that, because that's about modernizing view source utils.
+
+221
+00:26:09,090 --> 00:26:14,910
+So that's just more of a note to myself.
+
+222
+00:26:14,910 --> 00:26:24,390
+Uh oh. Keoki. So the thing to realize document deprecate is optional.
+
+223
+00:26:24,390 --> 00:26:29,680
+That's what I should write in here, actually, because I'm going to already start making changes.
+
+224
+00:26:29,680 --> 00:26:40,950
+Let's go back one, change that. Bill still going.
+
+225
+00:26:40,950 --> 00:26:47,700
+Yes. OK. So document deprecated optional.
+
+226
+00:26:47,700 --> 00:27:01,470
+And this one was also optional. In fact, I'm pretty sure all three of these are optional.
+
+227
+00:27:01,470 --> 00:27:08,150
+OK. You know what, I don't really like that deprecated.
+
+228
+00:27:08,150 --> 00:27:19,370
+Like, if I'm going to put the state of them in there, then I might as well put them all together, deprecated optional.
+
+229
+00:27:19,370 --> 00:27:26,970
+And then line number deprecated optional.
+
+230
+00:27:26,970 --> 00:27:34,790
+The backspace key is very close to the volume key. All right. So then what do I do?
+
+231
+00:27:34,790 --> 00:27:44,190
+I check to make sure that. If we if it exists that we make sure that it is not across process rapper.
+
+232
+00:27:44,190 --> 00:27:56,490
+So I should do this document and that way we can eliminate the case where someone is attempting to use the old deprecated API here using a Kapow.
+
+233
+00:27:56,490 --> 00:28:02,830
+If you're using a Capelle, you're doing it wrong. That's that's the decision.
+
+234
+00:28:02,830 --> 00:28:09,930
+Kay. And then what do I do?
+
+235
+00:28:09,930 --> 00:28:20,730
+So then I started to like do things in order to construct the arguments that the caller needs.
+
+236
+00:28:20,730 --> 00:28:34,000
+But that doesn't work if the. If the document doesn't exist, we'll have to account for document not existing here.
+
+237
+00:28:34,000 --> 00:28:42,610
+So if not a document. I'm wondering if maybe what the most the best structure for this is?
+
+238
+00:28:42,610 --> 00:28:46,420
+Let's see. This is in the case the document does exist.
+
+239
+00:28:46,420 --> 00:28:58,480
+And then that's all we need. We can instruct the rest. In the event that document doesn't exist, then all we get is the You are El.
+
+240
+00:28:58,480 --> 00:29:07,200
+And in that case. We just need to pass the.
+
+241
+00:29:07,200 --> 00:29:19,470
+We can't get at the browser. Hmm.
+
+242
+00:29:19,470 --> 00:29:27,370
+What are we going to do? So if sources called and someone just passes in a string for the fall.
+
+243
+00:29:27,370 --> 00:29:31,960
+What did we. What is the current code do? What's wrong?
+
+244
+00:29:31,960 --> 00:29:35,950
+Browser window. Was the current code.
+
+245
+00:29:35,950 --> 00:29:43,560
+Do. Goo goo, goo goo goo has just joined live hacking.
+
+246
+00:29:43,560 --> 00:29:51,860
+Hello. What appears to be 20 G's. Thank you for joining us.
+
+247
+00:29:51,860 --> 00:30:04,480
+Um. I guess in the event that we're just passing in the URL.
+
+248
+00:30:04,480 --> 00:30:14,170
+Do we really need the browser? I guess and the only reason that we want to pass on the browser.
+
+249
+00:30:14,170 --> 00:30:20,150
+Is if we need to ensure that the browser.
+
+250
+00:30:20,150 --> 00:30:24,300
+Is remote. Or see if the browser is remote.
+
+251
+00:30:24,300 --> 00:30:30,390
+And we also need it so that in the remote case that we can make sure that the browser is running in the right process.
+
+252
+00:30:30,390 --> 00:30:39,360
+But in this case, we're just passing your L. There's no there's no chance that we're going to attempt to, like, retrieve this from the B F cache.
+
+253
+00:30:39,360 --> 00:30:50,080
+So I think we're OK to just have your source go into the.
+
+254
+00:30:50,080 --> 00:30:59,760
+Going to like. A particular mode that only attempts to get it back off the network.
+
+255
+00:30:59,760 --> 00:31:11,020
+And if a document does exist. Then we can do this stuff.
+
+256
+00:31:11,020 --> 00:31:20,210
+OK, so let me write that down. We have not been passed a document.
+
+257
+00:31:20,210 --> 00:31:32,600
+Which means that there is no chance that will attempt to load this from load the source from the BMF cache.
+
+258
+00:31:32,600 --> 00:31:46,550
+We are definitely going to be loading off of the network because the only information we have is the you are El.
+
+259
+00:31:46,550 --> 00:31:58,910
+OK. In that case. ARGs equals.
+
+260
+00:31:58,910 --> 00:32:01,520
+And then we should pass in like the U, r, l,
+
+261
+00:32:01,520 --> 00:32:14,640
+and maybe some way for the receiver of the message to know that we're in a particular mode as opposed to just implying it from the lack of a browser.
+
+262
+00:32:14,640 --> 00:32:25,000
+No. No, I think just passing in the Yooralla is fine. A args or you URL and line no.
+
+263
+00:32:25,000 --> 00:32:35,010
+That should be enough information. So if we see that, then we know that we're just getting it off of the network.
+
+264
+00:32:35,010 --> 00:32:47,510
+This is the Ellis case, it's getting a little complicated. Lots of decisions here.
+
+265
+00:32:47,510 --> 00:32:59,560
+Else we were passed a document from which we can infer the.
+
+266
+00:32:59,560 --> 00:33:06,540
+Arguments that the new. API.
+
+267
+00:33:06,540 --> 00:33:14,030
+Takes. So here we would throw.
+
+268
+00:33:14,030 --> 00:33:21,950
+So here we would get the requestor, the interface requestor, which allows us to get the browser in the outer window I.D. and that is good.
+
+269
+00:33:21,950 --> 00:33:29,600
+And in the other case. We throw in these cases.
+
+270
+00:33:29,600 --> 00:33:34,870
+I don't know if we need to throw in the event that the U or L is missing.
+
+271
+00:33:34,870 --> 00:33:41,140
+The outer window I.D. Might be enough.
+
+272
+00:33:41,140 --> 00:33:52,570
+I think the you are l is only ever passed it for some reason, the weed, like it's the outer window I.D., like the B.F. cash entry for this.
+
+273
+00:33:52,570 --> 00:33:56,950
+For the content window with this out or a window idea has been like cleared or something.
+
+274
+00:33:56,950 --> 00:34:05,800
+So I think we can actually get rid of that. OK.
+
+275
+00:34:05,800 --> 00:34:12,860
+And then we would call it an. Here, I'm going to put this in braces.
+
+276
+00:34:12,860 --> 00:34:22,750
+I'm also going to put a to do for myself. In the code, I like to put these in because my code review tool, like I like to grep around for to.
+
+277
+00:34:22,750 --> 00:34:33,320
+That way I know that I don't. Don't commit with this stuff to handle the external ED case.
+
+278
+00:34:33,320 --> 00:34:48,400
+I don't know what we're gonna do in that case. Then in open, an internal viewer, we just passed the args.
+
+279
+00:34:48,400 --> 00:34:59,920
+Good. So we have. Simplified the way that view source utils works.
+
+280
+00:34:59,920 --> 00:35:07,690
+I think in a way, I was kind of hoping that we could then clamp down on the way you sourced of Zuhal works,
+
+281
+00:35:07,690 --> 00:35:17,300
+but that some people are calling directly into it and passing arguments, which means that, like.
+
+282
+00:35:17,300 --> 00:35:29,530
+Maybe. Maybe I'm getting distracted by my internal innate desire to make things better and simpler,
+
+283
+00:35:29,530 --> 00:35:37,250
+like I did all this work last week till like get all these values.
+
+284
+00:35:37,250 --> 00:35:45,250
+But maybe. Maybe this work I'm doing in here should actually be done inside.
+
+285
+00:35:45,250 --> 00:35:49,920
+You saw star J.S. on the other side. What's what's the reason?
+
+286
+00:35:49,920 --> 00:36:02,040
+I wouldn't do that. Because view source Dot Zuhal and you sourced a jass are the ones that eventually are called and like
+
+287
+00:36:02,040 --> 00:36:07,230
+Thunderbird and see Monkey and stuff will directly call view source Zuhal with those arguments,
+
+288
+00:36:07,230 --> 00:36:12,660
+I'm really starting to think that that might be the better choice. And I'm like, that's not so bad.
+
+289
+00:36:12,660 --> 00:36:25,780
+I mean, we don't want to throw all this away. It's just that. Some stuff might need to.
+
+290
+00:36:25,780 --> 00:36:39,510
+Uh. Like a lot of the stuff might need to get moved.
+
+291
+00:36:39,510 --> 00:36:45,280
+OK, yeah, yeah, I think that's what's gonna happen.
+
+292
+00:36:45,280 --> 00:36:49,690
+Shoot. Sorry about that. That's what that's what happens.
+
+293
+00:36:49,690 --> 00:37:01,250
+Um. So that means we don't have to throw any of this away, we just move it.
+
+294
+00:37:01,250 --> 00:37:07,960
+And I think it's a good idea to keep this renamed a OG's a Agas or you are L.
+
+295
+00:37:07,960 --> 00:37:18,440
+And. Over time, as we like maybe a Alanda patch for sea monkey and Thunderbird eventually to like have them use the new API.
+
+296
+00:37:18,440 --> 00:37:28,010
+And then we can get rid of this other stuff and simplify a lot of this. But until then, I think what we should do is move this.
+
+297
+00:37:28,010 --> 00:37:35,110
+I'm just kind of readying myself up to do it and thinking it through, then open an internal viewer.
+
+298
+00:37:35,110 --> 00:37:43,640
+We're supposed to do this stuff. But we'll just do it down in.
+
+299
+00:37:43,640 --> 00:37:59,800
+The source such as. Except that.
+
+300
+00:37:59,800 --> 00:38:06,120
+In the old scenario, we get this is forced Chass set and Char's at.
+
+301
+00:38:06,120 --> 00:38:26,200
+Might have to keep doing this. OK, let's put this back for now.
+
+302
+00:38:26,200 --> 00:38:42,490
+While we're here, we can truly white. But we should also also make sure that this is never called.
+
+303
+00:38:42,490 --> 00:38:50,100
+With a kapow! But actually, maybe.
+
+304
+00:38:50,100 --> 00:39:07,860
+Yeah, we'll do that down here. Now, let me think about this again, because I'm wondering if maybe some of this work could be done.
+
+305
+00:39:07,860 --> 00:39:12,500
+No. No. Because if we want to support the old API this way.
+
+306
+00:39:12,500 --> 00:39:30,930
+I think we have to do it this way. OK, so then this should be what was it?
+
+307
+00:39:30,930 --> 00:39:39,360
+But I need that back. This is a Agas where you are, Al.
+
+308
+00:39:39,360 --> 00:39:48,970
+And then this stuff will all go away up here. And then I have to.
+
+309
+00:39:48,970 --> 00:40:10,650
+And then. I was already broken. OK.
+
+310
+00:40:10,650 --> 00:40:19,140
+And then I think we have to change the way we call. Here.
+
+311
+00:40:19,140 --> 00:40:24,520
+A args or you are all. It's a tragedy.
+
+312
+00:40:24,520 --> 00:40:29,620
+This is all gotten cleaned up, but now I'm backtracking a little bit.
+
+313
+00:40:29,620 --> 00:40:37,260
+Oh. So.
+
+314
+00:40:37,260 --> 00:40:50,220
+Actually, just going to get rid of this for now. And you know what, this to do?
+
+315
+00:40:50,220 --> 00:40:56,760
+I can just turn into a checkbox here in my notes. Maybe I even had it already.
+
+316
+00:40:56,760 --> 00:41:03,580
+Yeah, I already had it. So that's what happens.
+
+317
+00:41:03,580 --> 00:41:10,520
+And I don't actually need interfaces, I can just get cost, see you.
+
+318
+00:41:10,520 --> 00:41:19,340
+Actually, I should probably just do if a document and components start.
+
+319
+00:41:19,340 --> 00:41:25,900
+Tells. OK.
+
+320
+00:41:25,900 --> 00:41:31,790
+Actually, we also have an f a document down here. I don't want to lose this code.
+
+321
+00:41:31,790 --> 00:41:47,160
+Just drop that there for now. And what I'll do is I'll move this check inside here where we already have the document condition.
+
+322
+00:41:47,160 --> 00:42:07,550
+And I'll throw. And inbound is closed again to our build is done.
+
+323
+00:42:07,550 --> 00:42:15,650
+We can actually say, let's stop for a second and go back to landing that patch that Gábor had reviewed.
+
+324
+00:42:15,650 --> 00:42:20,750
+So I will commit. And of all of.
+
+325
+00:42:20,750 --> 00:42:25,800
+Actually, I want to yell, all you have to evolve anyway, is when a very change Gabler stuff.
+
+326
+00:42:25,800 --> 00:42:30,380
+Also will need to pull from in.
+
+327
+00:42:30,380 --> 00:42:40,180
+I guess FDX team. I'm going to push the ethics team that CFX team is doing ethics team is open.
+
+328
+00:42:40,180 --> 00:43:00,240
+The tree is open. So this is where I will land the work. Doo doo doo doo doo doo.
+
+329
+00:43:00,240 --> 00:43:09,690
+Come on, mercurial, evolve, evolve. Do it.
+
+330
+00:43:09,690 --> 00:43:15,590
+Hmm, mm hmm. OK. We are done evolving.
+
+331
+00:43:15,590 --> 00:43:25,720
+And now I want to. I don't think there was any more work to do there, we just need to test it.
+
+332
+00:43:25,720 --> 00:43:34,470
+So let's test it. I'll just do.
+
+333
+00:43:34,470 --> 00:43:39,620
+Quick rebuild, because I want to make sure that none of this new source stuff.
+
+334
+00:43:39,620 --> 00:43:48,750
+So I'll just components you source rebuild that stuff, because that's the most of the changes in those last two run.
+
+335
+00:43:48,750 --> 00:43:58,460
+And I just I just want to test to make sure that, like, context menu stuff works in the evenings and not eaten this case.
+
+336
+00:43:58,460 --> 00:44:06,370
+So these work. What about in the.
+
+337
+00:44:06,370 --> 00:44:13,860
+Watch people code. Actually, I failed to put the my my entry here in the sub, read it, watch people code.
+
+338
+00:44:13,860 --> 00:44:19,190
+So the number of people might have dropped this week. Hopefully not by too much.
+
+339
+00:44:19,190 --> 00:44:23,470
+So this seems to work like the context menu.
+
+340
+00:44:23,470 --> 00:44:29,600
+I don't know if you heard that. I just got a compound from closing near an unsafe compound from closing the tab that's known.
+
+341
+00:44:29,600 --> 00:44:45,620
+But like. We if the body if the document thing, owner doc thing was a problem, I would probably because it happened so early on in that function.
+
+342
+00:44:45,620 --> 00:44:49,190
+I would imagine that I would be seeing errors. Things would not be working.
+
+343
+00:44:49,190 --> 00:44:53,090
+So I'm I'm reasonably confident I have a high degree of confidence.
+
+344
+00:44:53,090 --> 00:45:02,120
+So I'm going to say that this works. That was what we call a smoke test and just make sure that, like.
+
+345
+00:45:02,120 --> 00:45:08,680
+Nothing is crazy broken. So let's pull ethics team.
+
+346
+00:45:08,680 --> 00:45:12,510
+I will rebase this change set on top of the tip of that hike's team.
+
+347
+00:45:12,510 --> 00:45:16,090
+I will push it. I will update the bug. And why even.
+
+348
+00:45:16,090 --> 00:45:22,510
+Why tell you? I will show you. Let's do it right now. Paul FXE team.
+
+349
+00:45:22,510 --> 00:45:36,260
+So we get the latest stuff. Suspicious nervous system.
+
+350
+00:45:36,260 --> 00:45:44,450
+Bunch of change that's come in. And now.
+
+351
+00:45:44,450 --> 00:45:51,700
+Let's see. Let's take a look at them. Great.
+
+352
+00:45:51,700 --> 00:45:57,260
+Now I will rebase. Where was I?
+
+353
+00:45:57,260 --> 00:46:04,420
+Down here. Let's rebase. All three of them.
+
+354
+00:46:04,420 --> 00:46:18,350
+So H-E rebates are that to here to the tip.
+
+355
+00:46:18,350 --> 00:46:35,540
+Done. And it merges some stuff. Great.
+
+356
+00:46:35,540 --> 00:46:43,360
+So now we should be able to just commit this. So let's make sure there's nothing new.
+
+357
+00:46:43,360 --> 00:46:49,110
+All of a sudden landed on an F-16 that makes us rebase again. We are good.
+
+358
+00:46:49,110 --> 00:46:56,130
+And if I say outgoing for some reason, if I just if I use the ethics team.
+
+359
+00:46:56,130 --> 00:47:02,400
+Alias. When pushing. Get some air.
+
+360
+00:47:02,400 --> 00:47:09,380
+Um, that's not even a repository of you.
+
+361
+00:47:09,380 --> 00:47:12,770
+Make sure it's just the one going out. And let's take a look at it.
+
+362
+00:47:12,770 --> 00:47:25,770
+Last double check. I'm pretty paranoid. I don't like to burn the tree.
+
+363
+00:47:25,770 --> 00:47:34,500
+Looks good. All those which is from all over document to owner doc.
+
+364
+00:47:34,500 --> 00:47:43,860
+Looks good. Good.
+
+365
+00:47:43,860 --> 00:47:48,460
+Oh, oh, yeah. I want to put that comma back.
+
+366
+00:47:48,460 --> 00:47:52,420
+That's something I missed. That's why you always check.
+
+367
+00:47:52,420 --> 00:47:57,430
+That's why you always leave a note. So I want to put that comma back.
+
+368
+00:47:57,430 --> 00:48:05,590
+So I will commit I mean, that and all the others on top.
+
+369
+00:48:05,590 --> 00:48:13,090
+Then whenever I. I push this thing, I'm going to make reference to the fact that I fixed one thing like, oh, you know what?
+
+370
+00:48:13,090 --> 00:48:17,650
+I'll just stop explaining what I'm going to do. I'll just do it that way.
+
+371
+00:48:17,650 --> 00:48:39,720
+You don't have to, like, hear about it twice. Down the down.
+
+372
+00:48:39,720 --> 00:48:51,130
+Come on, come on, come on, go ahead. More.
+
+373
+00:48:51,130 --> 00:48:57,560
+OK. So that's done.
+
+374
+00:48:57,560 --> 00:49:04,070
+And I will push it now to six eight three six three.
+
+375
+00:49:04,070 --> 00:49:13,970
+Make sure that's checked out. And now I will.
+
+376
+00:49:13,970 --> 00:49:19,670
+Push. Actually, I'd like to visually make sure that I've got the right one.
+
+377
+00:49:19,670 --> 00:49:23,600
+Yes, that's what I want to push. I don't want to push either in my work in progress batches.
+
+378
+00:49:23,600 --> 00:49:41,370
+So push and then. Integration effects team.
+
+379
+00:49:41,370 --> 00:49:46,800
+Come on. This is always so tense. Yes. All right, pushed.
+
+380
+00:49:46,800 --> 00:49:59,750
+And it worked. So now what we do is we go to the bug that this patch belongs to one one five oh oh one two oh oh.
+
+381
+00:49:59,750 --> 00:50:09,520
+And I will. Refresh, make sure there hasn't been a conversation in here and now or apply.
+
+382
+00:50:09,520 --> 00:50:18,220
+So looks good to me. So always thank you, reviewer. Thanks for the fast review or.
+
+383
+00:50:18,220 --> 00:50:22,610
+Good idea. Done. That's the one I did.
+
+384
+00:50:22,610 --> 00:50:36,760
+Do I see Gabe or and I talked about this and we think we'll keep the trailing karma so as not to require.
+
+385
+00:50:36,760 --> 00:50:45,710
+Future coders to. Change the blame on the final item when adding.
+
+386
+00:50:45,710 --> 00:50:56,180
+New items just by adding a comma. Landed on Aphex Team as boom done.
+
+387
+00:50:56,180 --> 00:51:05,690
+And now I will. Say, in the white board, fixed in effect team.
+
+388
+00:51:05,690 --> 00:51:15,780
+And. And that's it. Save Cheney is.
+
+389
+00:51:15,780 --> 00:51:23,040
+Good. So let that bake on ethics team and eventually, hopefully, fingers crossed, it will merge.
+
+390
+00:51:23,040 --> 00:51:28,860
+And then in the meantime, I can keep working on the other two batches.
+
+391
+00:51:28,860 --> 00:51:39,630
+So I actually read based on top of some ethics team stuff. So while I'm working, I will kick off yet another build in the background build.
+
+392
+00:51:39,630 --> 00:51:45,360
+But that's OK. I don't think this will be as long a build. I didn't pull that much stuff and it was off from ethics team.
+
+393
+00:51:45,360 --> 00:51:53,570
+So chances are it's mostly JavaScript. So we should take a minute or two.
+
+394
+00:51:53,570 --> 00:52:02,060
+So where was I? I want to move like I put in this little guard here to prevent us from.
+
+395
+00:52:02,060 --> 00:52:09,500
+Accessing things on the Kapow! And then what I want to do is actually.
+
+396
+00:52:09,500 --> 00:52:11,160
+Actually go to the next patch?
+
+397
+00:52:11,160 --> 00:52:19,230
+No, I think about it because the next patch is the one where I modernize the view source Jass, which is what I want to do with this stuff.
+
+398
+00:52:19,230 --> 00:52:24,700
+So. That's done. I am nexted.
+
+399
+00:52:24,700 --> 00:52:33,860
+And the main entry point is here. And then this load args thing is what I was dealing with.
+
+400
+00:52:33,860 --> 00:52:36,220
+And. Right.
+
+401
+00:52:36,220 --> 00:52:42,550
+I started to work on this last week, and this is like hauntingly familiar in that like this is what I was basically doing over here before.
+
+402
+00:52:42,550 --> 00:52:51,540
+So I was kind of repeating myself, which is not a thing I like to do.
+
+403
+00:52:51,540 --> 00:52:56,730
+Callers is using the modern API and we can just return that, as are our arguments.
+
+404
+00:52:56,730 --> 00:53:11,010
+Yes. Now, what is the other case, the other cases that the caller is not using, the modern API and.
+
+405
+00:53:11,010 --> 00:53:19,090
+We might not even be able to do this if the caller has not passed in the document.
+
+406
+00:53:19,090 --> 00:53:24,790
+So that's something that what we end up doing here has to take new account.
+
+407
+00:53:24,790 --> 00:53:29,050
+Like if we end up only having a U or L in a line number,
+
+408
+00:53:29,050 --> 00:53:36,340
+which would be the case if we didn't get a document that we just kind of have to roll with it.
+
+409
+00:53:36,340 --> 00:53:45,920
+So maybe I should put in a comment there. If the caller didn't pass us a.
+
+410
+00:53:45,920 --> 00:53:53,820
+If our arguments don't include a browser or a.
+
+411
+00:53:53,820 --> 00:54:02,450
+Don't include a browser. Or an outer window.
+
+412
+00:54:02,450 --> 00:54:07,040
+We must be. Loading.
+
+413
+00:54:07,040 --> 00:54:19,540
+The source from the parent process and will.
+
+414
+00:54:19,540 --> 00:54:28,290
+Hang on, did include a browser, so they might have passed, just passed us a page descriptor,
+
+415
+00:54:28,290 --> 00:54:40,230
+but they didn't include include a browser or an outer window I.D. then we must be doing it in the non neatness mode.
+
+416
+00:54:40,230 --> 00:54:57,320
+I guess that's how we differentiate. Or maybe maybe it would be simpler.
+
+417
+00:54:57,320 --> 00:55:09,650
+Is if instead of, like, trying to work backwards and generate the same stuff.
+
+418
+00:55:09,650 --> 00:55:17,840
+We had two completely separate code parts. I don't like doing that.
+
+419
+00:55:17,840 --> 00:55:26,060
+I don't like doing that. Well, maybe maybe it's not a bad idea because, like,
+
+420
+00:55:26,060 --> 00:55:30,800
+the legacy API is something I want to eventually get rid of and if there they're two separate code parts,
+
+421
+00:55:30,800 --> 00:55:49,880
+that makes it really easy to get rid of the old one without having to mix them together.
+
+422
+00:55:49,880 --> 00:56:03,430
+So maybe that's something I can do here. I can have like a modern the modern API method and a.
+
+423
+00:56:03,430 --> 00:56:10,920
+Legacy API method or deprecated API method?
+
+424
+00:56:10,920 --> 00:56:16,980
+And then whenever I deprecate, I just get rid of the deprecate API method.
+
+425
+00:56:16,980 --> 00:56:23,570
+And it's all based on the stuff we are past. Our build doing.
+
+426
+00:56:23,570 --> 00:56:31,550
+Wow. OK, I'm building. I assumed you would only take a couple of meds, but apparently something on effects team really touch something deep.
+
+427
+00:56:31,550 --> 00:56:50,540
+That's a surprise. OK. Thinking, thinking, thinking.
+
+428
+00:56:50,540 --> 00:56:54,310
+So at the very least, we know that the first argument will either be a string or an object.
+
+429
+00:56:54,310 --> 00:57:01,040
+And really I think that's our way of knowing whether or not we're using the modern or the legacy API.
+
+430
+00:57:01,040 --> 00:57:13,210
+That's that's it. Like I think that's it. That's the decider. We're using the modern.
+
+431
+00:57:13,210 --> 00:57:24,280
+API for his source. I don't know if that comment is much.
+
+432
+00:57:24,280 --> 00:57:36,640
+So. Actually.
+
+433
+00:57:36,640 --> 00:57:43,750
+Equals string. Because that's what it will be in the event that it's a string.
+
+434
+00:57:43,750 --> 00:57:51,630
+Right. Like, let me just refresh my memory. Type of.
+
+435
+00:57:51,630 --> 00:58:00,820
+Hello, is a string OK? If it equals a string, then let's use OnLoad view source.
+
+436
+00:58:00,820 --> 00:58:22,380
+Legacy. Otherwise, so we're using the Legacy API.
+
+437
+00:58:22,380 --> 00:58:32,770
+She called, deprecated to make it. Deprecated API.
+
+438
+00:58:32,770 --> 00:58:43,560
+Modern API. Which allows us to.
+
+439
+00:58:43,560 --> 00:58:55,200
+If you. The source of documents from out of process browser's.
+
+440
+00:58:55,200 --> 00:59:05,040
+And I think we can keep that. I think we can get rid of this because that's already.
+
+441
+00:59:05,040 --> 00:59:12,670
+Oh, it's the exact opposite. I don't think we can. I don't think we want this at all anymore.
+
+442
+00:59:12,670 --> 00:59:20,480
+What we really want this to be is like. This.
+
+443
+00:59:20,480 --> 00:59:30,000
+And then. Do all this stuff.
+
+444
+00:59:30,000 --> 00:59:36,430
+Now, what are we going to send down, like we're going to probably call a special frame script like this.
+
+445
+00:59:36,430 --> 00:59:48,810
+We're gonna use a frame script no matter what, even if it's a non remote browser. But we'll send it like things that would normally be copouts in the.
+
+446
+00:59:48,810 --> 01:00:00,430
+In the E tennis, the multiprocessor scenario. That's what we'll do, this, um.
+
+447
+01:00:00,430 --> 01:00:13,270
+I don't think we need to do that anymore. Let us a args is so window arguments.
+
+448
+01:00:13,270 --> 01:00:19,720
+Windowed arguments. Oh, in the.
+
+449
+01:00:19,720 --> 01:00:28,810
+Modern API, we must be passed. The browser.
+
+450
+01:00:28,810 --> 01:00:34,850
+And an outer. It must be past the browser.
+
+451
+01:00:34,850 --> 01:00:41,360
+We don't have to be past the outer. Well, we probably should be past theater window.
+
+452
+01:00:41,360 --> 01:00:46,790
+But it's also possible that we just want to view source from some euro.
+
+453
+01:00:46,790 --> 01:00:58,560
+So actually, we don't have to be past anything. OK.
+
+454
+01:00:58,560 --> 01:01:06,050
+So then what do we do? We. At some point, we need to, like, send a message down this view source.
+
+455
+01:01:06,050 --> 01:01:09,600
+Thing is like. This is what makes a bunch of decisions.
+
+456
+01:01:09,600 --> 01:01:14,130
+I have a feeling this is what's going to eventually go into the like the frame script.
+
+457
+01:01:14,130 --> 01:01:25,510
+So let's maybe let's get a frame script going up. So under tool kit components, you source.
+
+458
+01:01:25,510 --> 01:01:32,850
+Content. Oh, we already had one. Where did this come from?
+
+459
+01:01:32,850 --> 01:01:39,240
+Did I do I had this. Whereas this even part of.
+
+460
+01:01:39,240 --> 01:01:56,760
+Did I add this? It's part of the patch.
+
+461
+01:01:56,760 --> 01:02:06,100
+Is it all like part of the. Content.
+
+462
+01:02:06,100 --> 01:02:13,350
+As it tracked even. Nope, doesn't look like it, doesn't look like it.
+
+463
+01:02:13,350 --> 01:02:19,660
+So it was something I probably added at some point, but just I never added never do anything with it.
+
+464
+01:02:19,660 --> 01:02:27,120
+Surmisal reads it, so I add it now. Make sure I'm on the right.
+
+465
+01:02:27,120 --> 01:02:35,580
+Still tip, right? Yeah, so we're in this thing and I think we can actually get rid of all that stuff now.
+
+466
+01:02:35,580 --> 01:02:43,780
+That was probably useful. So we need there's the modern.
+
+467
+01:02:43,780 --> 01:02:51,500
+API support. And then there's the deprecated API support.
+
+468
+01:02:51,500 --> 01:02:59,680
+So let's see. The source.
+
+469
+01:02:59,680 --> 01:03:08,000
+Source. I don't know if there's any other message to. To send down like.
+
+470
+01:03:08,000 --> 01:03:13,220
+I think it's just the source. And then.
+
+471
+01:03:13,220 --> 01:03:24,670
+Some message handler, let me see, how do I want to do this?
+
+472
+01:03:24,670 --> 01:03:35,540
+You source and then. Message listener source.
+
+473
+01:03:35,540 --> 01:03:47,700
+Deprecated. This cannot be called.
+
+474
+01:03:47,700 --> 01:03:58,540
+When this cannot this should not be called. He called if this frame's script is running.
+
+475
+01:03:58,540 --> 01:04:09,270
+In a content process. So we should probably, like, assert that or something like if there's a way to check.
+
+476
+01:04:09,270 --> 01:04:17,140
+Process type. And make sure that the process type is.
+
+477
+01:04:17,140 --> 01:04:25,360
+The default process type. What happened to my network? Come on.
+
+478
+01:04:25,360 --> 01:04:27,730
+Brian Grant Grand.
+
+479
+01:04:27,730 --> 01:04:33,830
+I actually just had to check to make sure I was still in the network, I probably wouldn't hear about it for a while from people if off.
+
+480
+01:04:33,830 --> 01:04:40,370
+All of a sudden my network just dropped you. I wouldn't know until long afterwards when I rejoined and someone said, what?
+
+481
+01:04:40,370 --> 01:04:45,500
+Your stream died halfway through. So the Exaro is currently unavailable.
+
+482
+01:04:45,500 --> 01:04:50,930
+Great. Switching to MDX, I always have a backup plan. What was I looking at?
+
+483
+01:04:50,930 --> 01:04:57,670
+Process time. Always have a backup plan. X are.
+
+484
+01:04:57,670 --> 01:05:04,060
+Probably this is getting bogged down from everyone switching from DSR. Here we go.
+
+485
+01:05:04,060 --> 01:05:13,420
+Services app, info process, date. So I probably should.
+
+486
+01:05:13,420 --> 01:05:18,520
+Const. What is that pattern?
+
+487
+01:05:18,520 --> 01:05:28,010
+It used to before. I think it's like contest as I use this all the time to begin to begin new scripts.
+
+488
+01:05:28,010 --> 01:05:36,130
+Actually, I probably just need. See you components that utils, if I need the others, then I'll bring them in using that destructor pattern.
+
+489
+01:05:36,130 --> 01:05:44,960
+If and then I need to import services, seafood import resource.
+
+490
+01:05:44,960 --> 01:05:56,510
+Services, JSM. If services happen for process, type equals the content process.
+
+491
+01:05:56,510 --> 01:06:07,020
+That's bad. Or, you know, what I should do is make sure it's to be more strict.
+
+492
+01:06:07,020 --> 01:06:20,020
+If we're anything except the parent process, then we should throw or something.
+
+493
+01:06:20,020 --> 01:06:30,850
+You source deprecated. Should not be deprecated API.
+
+494
+01:06:30,850 --> 01:06:45,260
+Shouldn't be used from. With remote browsers.
+
+495
+01:06:45,260 --> 01:06:46,530
+OK. So from here on out,
+
+496
+01:06:46,530 --> 01:06:54,270
+we know that we're in process and we can do a lot of like things that we normally couldn't do because we know that we're not dealing with capoulas.
+
+497
+01:06:54,270 --> 01:07:01,320
+We're dealing with direct references to things that I've just been passed to us on own only over here that,
+
+498
+01:07:01,320 --> 01:07:08,040
+you know, we've only been passed things that can be serialized via Jason.
+
+499
+01:07:08,040 --> 01:07:14,930
+OK. So my build is done. That's great. What are we going to do?
+
+500
+01:07:14,930 --> 01:07:21,620
+So we have this script. Oh, I should also probably start it off with the MPL.
+
+501
+01:07:21,620 --> 01:07:30,140
+New scripts always start with the MPL. I have a copy of that around.
+
+502
+01:07:30,140 --> 01:07:49,850
+Yes. So now we're ready to listen to stuff and we need to make sure that this frame script is loaded.
+
+503
+01:07:49,850 --> 01:08:02,250
+So back over here in view source.
+
+504
+01:08:02,250 --> 01:08:08,440
+If we're dealing with a remote browser, then the.
+
+505
+01:08:08,440 --> 01:08:19,020
+Browser. For view, source needs to be remote as well.
+
+506
+01:08:19,020 --> 01:08:26,150
+If our just our browser and our stop browser is remote browser.
+
+507
+01:08:26,150 --> 01:08:31,160
+Then G browser. Set, attribute, remote.
+
+508
+01:08:31,160 --> 01:08:40,700
+True. I also have to make sure that the remote browser binding.
+
+509
+01:08:40,700 --> 01:08:47,380
+Is used source, CSX, so browser.
+
+510
+01:08:47,380 --> 01:08:54,590
+Promote true. Whereas this.
+
+511
+01:08:54,590 --> 01:09:05,470
+Source says that's used here. OK, browser remote equals true, and then I have to use the remote browser binding.
+
+512
+01:09:05,470 --> 01:09:26,570
+Which is. This.
+
+513
+01:09:26,570 --> 01:09:40,000
+Pretty sure I can do that. I'm just curious to know what's extending remote browser in here.
+
+514
+01:09:40,000 --> 01:09:45,530
+I wasn't aware that we ever. We extend it.
+
+515
+01:09:45,530 --> 01:09:51,370
+Specially all special, like we probably don't need this, especially because this is a tool kit.
+
+516
+01:09:51,370 --> 01:10:02,640
+So we we don't even have access to this. So that's probably good enough.
+
+517
+01:10:02,640 --> 01:10:08,580
+Right. So that's done, that's done. And then over here.
+
+518
+01:10:08,580 --> 01:10:12,660
+So that binding is attached now and now we need to load the frame script.
+
+519
+01:10:12,660 --> 01:10:21,180
+So she browser message manager load frame script and then.
+
+520
+01:10:21,180 --> 01:10:28,220
+The frame script is also a thing that we need to make sure that we reference here.
+
+521
+01:10:28,220 --> 01:10:33,750
+Um, content. Global view source content.
+
+522
+01:10:33,750 --> 01:10:38,040
+Jass content, news source content.
+
+523
+01:10:38,040 --> 01:10:44,560
+Jazz. Was this in any kind of order?
+
+524
+01:10:44,560 --> 01:10:50,940
+Doesn't look like it. I didn't even share that content.
+
+525
+01:10:50,940 --> 01:11:04,550
+Global view source utils content. Right, right, right. So I can probably just make reference to this from global content source content.
+
+526
+01:11:04,550 --> 01:11:19,680
+Content vs source content. Jess. So the message manager.
+
+527
+01:11:19,680 --> 01:11:24,680
+So I make sure this is not actually a. It's called again, ever.
+
+528
+01:11:24,680 --> 01:11:31,590
+Good. Don't reenter. Make sure.
+
+529
+01:11:31,590 --> 01:11:41,340
+It's called On Load of the window. I'd better make sure this isn't called every time, like something is loaded,
+
+530
+01:11:41,340 --> 01:11:46,170
+like a documented, a new source, documents loaded if one clicks on a link.
+
+531
+01:11:46,170 --> 01:11:58,140
+I would need to make sure this isn't called again. OK, so that I can short this.
+
+532
+01:11:58,140 --> 01:12:04,110
+And then I think I'm going to just tear a bunch.
+
+533
+01:12:04,110 --> 01:12:14,010
+I'm not going to tear it out. I'm going to get rid of it for a sec because I'll probably have to adapt all of this to be multiprocessor friendly.
+
+534
+01:12:14,010 --> 01:12:26,800
+And then. I guess we want to just send a message, send async message, you source.
+
+535
+01:12:26,800 --> 01:12:41,540
+Mm hmm. Now, what about the deprecated case? And the deprecated case, we still want to load this frame script.
+
+536
+01:12:41,540 --> 01:12:53,740
+Mm hmm. So we've got an ordering problem here.
+
+537
+01:12:53,740 --> 01:12:57,130
+We can probably.
+
+538
+01:12:57,130 --> 01:13:09,240
+So hypothesis, my hypothesis is that we can do this up here, and then even if we flip the remoteness, we don't have to reload the frame scripts.
+
+539
+01:13:09,240 --> 01:13:17,220
+It will get loaded again as soon as the browser re binds to the tree.
+
+540
+01:13:17,220 --> 01:13:27,270
+That's the hypothesis. Let's make sure. So I think we've done this.
+
+541
+01:13:27,270 --> 01:13:41,230
+I need to ensure that if the few source browser switches from non remote to remote, that we don't need to reintroduce.
+
+542
+01:13:41,230 --> 01:13:56,040
+The Frame script. Um.
+
+543
+01:13:56,040 --> 01:14:03,760
+You source and then we pass it. Our arguments be the subset of arguments.
+
+544
+01:14:03,760 --> 01:14:08,800
+So what are the things that am I need to know? Your well argued that your URL.
+
+545
+01:14:08,800 --> 01:14:21,970
+What else? One of the things that we pass up here, the outer window I.D.
+
+546
+01:14:21,970 --> 01:14:35,140
+And then the line number. That's it.
+
+547
+01:14:35,140 --> 01:14:40,820
+So let's see if we can just get this far. Let's let's see what happens.
+
+548
+01:14:40,820 --> 01:14:50,430
+And then if the content process can hear about it, then we will say, like, Yahoo!
+
+549
+01:14:50,430 --> 01:14:55,820
+And then message that data, we'll dump it out.
+
+550
+01:14:55,820 --> 01:15:08,450
+Chase and. String of high. OK.
+
+551
+01:15:08,450 --> 01:15:14,690
+I have a feeling this is not going to work properly. That's just cause, like, the first time never works.
+
+552
+01:15:14,690 --> 01:15:25,680
+So let's let's assume it will not work and figure out what's wrong by giving it a run and seeing how far we get.
+
+553
+01:15:25,680 --> 01:15:35,160
+So I have to redo that, make make sure that, like, the content script is being loaded.
+
+554
+01:15:35,160 --> 01:15:38,710
+Anything in here that saying things are horribly wrong? Nope.
+
+555
+01:15:38,710 --> 01:15:46,440
+OK. So let's go to a remote page. Let's go to Sherry watch People COCOM.
+
+556
+01:15:46,440 --> 01:15:55,200
+And now I will open view source. Why do you play automatically?
+
+557
+01:15:55,200 --> 01:16:04,410
+Don't do that. I don't think I should go here again. The videos play automatically. Definitely page source.
+
+558
+01:16:04,410 --> 01:16:10,580
+Bunch of compounds get past. I heard those in my ear and then.
+
+559
+01:16:10,580 --> 01:16:14,200
+Something went wrong. What went wrong? Nothing opened this open.
+
+560
+01:16:14,200 --> 01:16:16,130
+An internal viewer is not a function.
+
+561
+01:16:16,130 --> 01:16:24,290
+So I told you something always goes wrong and that's because I'd change the name of this function to have an underscore in front of it.
+
+562
+01:16:24,290 --> 01:16:26,780
+And the reason I did that is because I'm pretty sure I'm gonna want to audit these and make
+
+563
+01:16:26,780 --> 01:16:31,910
+sure that most of these are pseudo private methods with the underscore in front of them.
+
+564
+01:16:31,910 --> 01:16:38,030
+So that was a dumb mistake on my part. And I will rebuild.
+
+565
+01:16:38,030 --> 01:16:45,640
+Real quick. And let's try that again.
+
+566
+01:16:45,640 --> 01:16:52,530
+Let's go to a different page, let's go to my Web site. I will attempt to view the source.
+
+567
+01:16:52,530 --> 01:17:02,610
+I'll also open up the console. And view the source you source cannot accept Dick Powell is the document.
+
+568
+01:17:02,610 --> 01:17:10,720
+OK, so the Kapow is being passed as the documents. So a bunch of said, I'm attempting to view this source.
+
+569
+01:17:10,720 --> 01:17:14,010
+So I'd like that was a reflex. I want to see where the problem was.
+
+570
+01:17:14,010 --> 01:17:19,890
+And that involves the view source window, which is broken.
+
+571
+01:17:19,890 --> 01:17:23,620
+So I can't do it, but I know where that's happening. I mean, I threw that.
+
+572
+01:17:23,620 --> 01:17:33,010
+I threw that myself. That's happening over here because I haven't adapted any of my callers to use the new.
+
+573
+01:17:33,010 --> 01:17:41,320
+The new API, so I should actually do that. I should change the colors.
+
+574
+01:17:41,320 --> 01:17:49,660
+Now, where are all the colors? They would all be making reference to G.V. Source Utils.
+
+575
+01:17:49,660 --> 01:17:55,120
+So. Decks are still down. So switch dynamics are.
+
+576
+01:17:55,120 --> 01:18:02,350
+So there's one over here and there's one here for the HD service.
+
+577
+01:18:02,350 --> 01:18:07,280
+Let's just do the one here in browser. We'll have to fix the other ones eventually.
+
+578
+01:18:07,280 --> 01:18:14,540
+I don't. That is definitely true. But I will get to those.
+
+579
+01:18:14,540 --> 01:18:20,200
+Let's see TVU source utils here and then we passed all this stuff.
+
+580
+01:18:20,200 --> 01:18:25,430
+Right, right, right, right, right. So I think we can go ahead and tear all this out.
+
+581
+01:18:25,430 --> 01:18:31,160
+We we don't actually want to do this stuff ever in the parent process, not via FOX anyways.
+
+582
+01:18:31,160 --> 01:18:37,580
+The other apps. Sure. Not in Firefox. So I'm going to get rid of this stuff.
+
+583
+01:18:37,580 --> 01:18:53,800
+Don't need it. Who calls browser view source of documents?
+
+584
+01:18:53,800 --> 01:19:14,690
+And then it's passing the content document as Kapow! Don't want you to do that, I want you to pass the outer window I.D.
+
+585
+01:19:14,690 --> 01:19:24,750
+So. And then who else calls it sets?
+
+586
+01:19:24,750 --> 01:19:38,120
+It's only ever called by people who. In this context, menu calls it, it's only ever called in Firefox anyways.
+
+587
+01:19:38,120 --> 01:19:55,210
+OK. It's possible that add ons might use this function and I might break them.
+
+588
+01:19:55,210 --> 01:20:05,430
+Hopefully it's not too bad. Content. Because I'd rather not.
+
+589
+01:20:05,430 --> 01:20:10,720
+OK. Well, suppose they have passed and I document.
+
+590
+01:20:10,720 --> 01:20:16,210
+If a document and sued is cross process rapper,
+
+591
+01:20:16,210 --> 01:20:24,470
+I don't think checking to see if something is across process, Rappard does not send down a Capan message.
+
+592
+01:20:24,470 --> 01:20:31,730
+Then. Throw new air.
+
+593
+01:20:31,730 --> 01:20:44,760
+Why did I even say. Carouser.
+
+594
+01:20:44,760 --> 01:20:51,600
+Browser view, source document. Except a Kapow is a document.
+
+595
+01:20:51,600 --> 01:21:07,630
+OK, otherwise. That then this.
+
+596
+01:21:07,630 --> 01:21:16,760
+Otherwise, we should construct the arguments.
+
+597
+01:21:16,760 --> 01:21:28,840
+Let args. And then browser will be.
+
+598
+01:21:28,840 --> 01:21:38,130
+A. Document. It's basically the stuff I did up here.
+
+599
+01:21:38,130 --> 01:21:58,910
+Ah, over here, sorry. Yeah, this stuff.
+
+600
+01:21:58,910 --> 01:22:15,620
+Question out or window I.D., we pass the browser. Out our window idee.
+
+601
+01:22:15,620 --> 01:22:25,700
+So anything else we need to pass? They didn't give us a euro, but we could get the euro.
+
+602
+01:22:25,700 --> 01:22:39,250
+We have this or function. That could get the URL.
+
+603
+01:22:39,250 --> 01:22:44,560
+I mean, what I'm saying is, like the old function took a document and was able to extract the oil from it as well.
+
+604
+01:22:44,560 --> 01:22:56,940
+So we can do it the same way. We have to make sure as a string, not an NSA, you are all just fine, because I'm pretty sure that's what we.
+
+605
+01:22:56,940 --> 01:23:04,600
+Here we go. You are Al, you are all current, you are icepack.
+
+606
+01:23:04,600 --> 01:23:12,200
+Web nav current, you are icepack. Web nav, I can probably just like go with browser dot current.
+
+607
+01:23:12,200 --> 01:23:15,670
+You are idot speck. Pretty sure I can do that.
+
+608
+01:23:15,670 --> 01:23:19,390
+G. Browser. Kearn browser. Sorry.
+
+609
+01:23:19,390 --> 01:23:23,280
+Selected browser. Dot current. You are idot spec.
+
+610
+01:23:23,280 --> 01:23:29,390
+Yeah I just do that. So your owl is what's wrong?
+
+611
+01:23:29,390 --> 01:23:41,960
+File. Do I want to be here? You are all equal.
+
+612
+01:23:41,960 --> 01:23:57,640
+All I see is lower case. Making up a case.
+
+613
+01:23:57,640 --> 01:24:02,400
+Source.
+
+614
+01:24:02,400 --> 01:24:11,800
+It's still early enough that I can sort of bike shed with myself on a bunch of things, like whether or not you or I should be upper case or not.
+
+615
+01:24:11,800 --> 01:24:21,530
+OK. And then what else? In browser. Here we set you are l equal to browser dot current.
+
+616
+01:24:21,530 --> 01:24:25,470
+You write on spec. Kay.
+
+617
+01:24:25,470 --> 01:24:35,470
+And what else do we need to pass? We don't have a line number, so we just passed a.
+
+618
+01:24:35,470 --> 01:24:55,840
+Just pass the documents. We do have a line no. Deprecated.
+
+619
+01:24:55,840 --> 01:25:13,000
+API, a document or a Agas or document as well as or document API.
+
+620
+01:25:13,000 --> 01:25:19,070
+She probably documenters. The view source.
+
+621
+01:25:19,070 --> 01:25:25,520
+Dialog. Paran, a args or document.
+
+622
+01:25:25,520 --> 01:25:36,550
+An object. Either an object that contains.
+
+623
+01:25:36,550 --> 01:25:43,440
+An object. Or an NSA document.
+
+624
+01:25:43,440 --> 01:25:51,060
+If the latter. The ladder.
+
+625
+01:25:51,060 --> 01:25:56,700
+Is. Deprecated.
+
+626
+01:25:56,700 --> 01:26:03,070
+API that. Is not supported.
+
+627
+01:26:03,070 --> 01:26:12,690
+With ETN, that's. This functional throw.
+
+628
+01:26:12,690 --> 01:26:23,260
+A. Halves are a document is a compound.
+
+629
+01:26:23,260 --> 01:26:33,750
+If a args or a document. Is an object that an object can take.
+
+630
+01:26:33,750 --> 01:26:40,200
+Following. Properties. And it's basically like.
+
+631
+01:26:40,200 --> 01:26:50,660
+This. Duplicating. A little bit, but I mean, it's a lot of indirection.
+
+632
+01:26:50,660 --> 01:27:13,310
+Browser. Do OK.
+
+633
+01:27:13,310 --> 01:27:26,110
+So that's fine. Else. ARGs equals a R or a document.
+
+634
+01:27:26,110 --> 01:27:38,900
+And then that's what we pass. If I just.
+
+635
+01:27:38,900 --> 01:27:44,590
+You know what? I think I've just done a whole bunch of work I didn't need to shoot because, like, I'm doing all the stuff already,
+
+636
+01:27:44,590 --> 01:27:59,000
+I keep putting layers and layers of production, but, like, I can just pass that old stuff.
+
+637
+01:27:59,000 --> 01:28:04,190
+Just past that old stuff, except no. Hey, no, no, I'm I feel better.
+
+638
+01:28:04,190 --> 01:28:10,220
+I feel better now. What? What a what a rollercoaster.
+
+639
+01:28:10,220 --> 01:28:16,220
+No. The reason that I do it multiple layers is because there's one layer that I'm thinking about, all the other Zul apps.
+
+640
+01:28:16,220 --> 01:28:25,820
+This one is for just for add ons that are working in Firefox. So I feel better about it now.
+
+641
+01:28:25,820 --> 01:28:44,020
+Nine hours, so args. So now I have to change all the call points that call this function, and I will have them use the new mechanism.
+
+642
+01:28:44,020 --> 01:29:01,860
+And that is there's one under browser context. There's one under browser's sets.
+
+643
+01:29:01,860 --> 01:29:15,970
+Here it is. So what I will pass is. Browser.
+
+644
+01:29:15,970 --> 01:29:28,800
+Window G browser, selective browser. And then.
+
+645
+01:29:28,800 --> 01:29:43,390
+What else will accept? I keep forgetting. Out window I.D.
+
+646
+01:29:43,390 --> 01:29:56,640
+Right. Right, right, right. Her window I.D.
+
+647
+01:29:56,640 --> 01:30:16,060
+Well, I'd just like to multiple lines in here.
+
+648
+01:30:16,060 --> 01:30:47,250
+Actually, what I can do is I can change this so that if it'll just take the selected browser and if what it gets past is a browser, then.
+
+649
+01:30:47,250 --> 01:30:54,440
+Trying to figure out the best way to simplify this, because who calls browser view source of document?
+
+650
+01:30:54,440 --> 01:31:16,090
+Maybe. I could do is like browser view source.
+
+651
+01:31:16,090 --> 01:31:31,540
+And then it just takes a browser and then this will just this will be a helper function that returns opens the views source dialog.
+
+652
+01:31:31,540 --> 01:31:37,750
+For the source loaded in the currently loaded.
+
+653
+01:31:37,750 --> 01:31:50,920
+At the root. For the source loaded in the.
+
+654
+01:31:50,920 --> 01:32:04,390
+Route of the browser. The route loaded in the route cut route, document, top level, I should say, top level document.
+
+655
+01:32:04,390 --> 01:32:18,990
+I will document the browser. Program browser, the browser that we want to load the source of.
+
+656
+01:32:18,990 --> 01:32:26,670
+OK, so we can just have our caller, I think this is a common case, you the source of the current page.
+
+657
+01:32:26,670 --> 01:32:38,460
+So then we just pass the browser, the. Browser selection browser that makes that simpler.
+
+658
+01:32:38,460 --> 01:32:56,730
+We changed that browser view source. Top GOP source utilized the source browser browser and then.
+
+659
+01:32:56,730 --> 01:33:03,500
+Out our window I.D. browser, selected Browse browser, that outer window I.D.
+
+660
+01:33:03,500 --> 01:33:11,090
+And then, um, you are Al. Is browser dot current?
+
+661
+01:33:11,090 --> 01:33:20,830
+You are idot spec there. That is.
+
+662
+01:33:20,830 --> 01:33:25,660
+Fine. I think that'll work. So why all the rigamarole?
+
+663
+01:33:25,660 --> 01:33:30,270
+I mean, I'm just trying to make sure that I don't blow up a whole bunch like any extension's them.
+
+664
+01:33:30,270 --> 01:33:35,890
+I use this this method. We might want to just deprecate this.
+
+665
+01:33:35,890 --> 01:33:44,760
+It's a kind of a. Because it's so all you have, we have no idea what sort of relies on it.
+
+666
+01:33:44,760 --> 01:33:50,130
+So you kind of have to move carefully, says China, to break the world.
+
+667
+01:33:50,130 --> 01:33:55,250
+Which is tricky. Lazy software. Am I right? So let's try that.
+
+668
+01:33:55,250 --> 01:34:03,870
+Let's. Bill, that, bill that.
+
+669
+01:34:03,870 --> 01:34:12,160
+Oh, and there was also a syntax error online. Forty one. All right, fine, 114.
+
+670
+01:34:12,160 --> 01:34:17,270
+Right here. Oh, yeah, definitely is in tax air here.
+
+671
+01:34:17,270 --> 01:34:22,480
+I just know that out. I guess that doesn't make any sense when I'm calling this function yet.
+
+672
+01:34:22,480 --> 01:34:33,160
+So that. OK.
+
+673
+01:34:33,160 --> 01:34:38,000
+If I source Yahoo! We got an outer window I.D.
+
+674
+01:34:38,000 --> 01:34:46,630
+That's great. That's great. Who is not defined in remote browser?
+
+675
+01:34:46,630 --> 01:34:53,570
+So. Shoot. So I wonder if I.
+
+676
+01:34:53,570 --> 01:35:06,350
+Utils. That's probably fine. And it will work.
+
+677
+01:35:06,350 --> 01:35:29,420
+So good. We got a message sent down. He has no interface, Don Windu, I.D.
+
+678
+01:35:29,420 --> 01:35:35,540
+What is that? Hey. We'll have to do something special.
+
+679
+01:35:35,540 --> 01:35:44,130
+So let's actually let's. What do you want to like?
+
+680
+01:35:44,130 --> 01:35:55,500
+What I'd love to do is set a breakpoint in that. And this, like OnLoad, are the main entry point here.
+
+681
+01:35:55,500 --> 01:36:06,020
+But I don't know if I can do that. I don't know if I can do that without it being open.
+
+682
+01:36:06,020 --> 01:36:18,830
+Let's find out. Let's find out. It might complain. But let's see.
+
+683
+01:36:18,830 --> 01:36:24,050
+Yeah, you source utils. I can set a breakpoint in.
+
+684
+01:36:24,050 --> 01:36:33,350
+But like, if I were to open view source and then you're over here, I can probably see the view source thing.
+
+685
+01:36:33,350 --> 01:36:41,560
+Yeah, here. And then can I hit a break point if I do it again?
+
+686
+01:36:41,560 --> 01:36:48,200
+I don't see that's the problem. His source.
+
+687
+01:36:48,200 --> 01:36:58,050
+Oh, there it is. But we.
+
+688
+01:36:58,050 --> 01:37:03,460
+It's back there and now it's all kind of slow. Why are you so slow?
+
+689
+01:37:03,460 --> 01:37:14,850
+But we get a lot of complaints. Some of these look like they're from my Web site so I can ignore those Web navigation is No.
+
+690
+01:37:14,850 --> 01:37:25,190
+And the bindings browser, the browser binding. So that's not good.
+
+691
+01:37:25,190 --> 01:37:36,800
+I'll have to look into that. Why is Web navigation no. Can I use given objects as a week map key?
+
+692
+01:37:36,800 --> 01:37:40,470
+All right. So what's the time?
+
+693
+01:37:40,470 --> 01:37:43,890
+It's two thirty seven. I've been doing this for about an hour and a half.
+
+694
+01:37:43,890 --> 01:37:47,550
+I hope to keep doing this for another twenty three minutes or so.
+
+695
+01:37:47,550 --> 01:37:52,170
+I want to carry on until about three o'clock. I hope that's all right with you.
+
+696
+01:37:52,170 --> 01:37:57,750
+People gonna just keep powering through. I think we're making OK progress here.
+
+697
+01:37:57,750 --> 01:38:03,750
+I was hoping, like, where where did I want to be open with serialized arguments?
+
+698
+01:38:03,750 --> 01:38:09,540
+Keep in mind those except objects for argument. I think we're actually down here somewhere.
+
+699
+01:38:09,540 --> 01:38:15,980
+We haven't actually dealt with this. We've done this. We can move this.
+
+700
+01:38:15,980 --> 01:38:22,850
+We have to do actually both of these. So let's let's put these in chronological order like we skipped ahead a little.
+
+701
+01:38:22,850 --> 01:38:27,650
+So let's do this. So we do have that.
+
+702
+01:38:27,650 --> 01:38:34,990
+We need to do this and then all of these things. So we're actually a little bit behind.
+
+703
+01:38:34,990 --> 01:38:42,730
+Well, wait. We've done that. Oh, jeez, horse. OK, yeah, we do that.
+
+704
+01:38:42,730 --> 01:38:53,920
+Sorry. Hey, not so bad. Things are looking better. And then only use.
+
+705
+01:38:53,920 --> 01:39:00,490
+PALATABILITY. So that's that's where we are right now.
+
+706
+01:39:00,490 --> 01:39:09,160
+That's not so bad. We did move forward. Great. Ensure that the view source browser, which is from non remote to remote.
+
+707
+01:39:09,160 --> 01:39:18,180
+If that occurs. So we don't need to reintroduce the frame script. That's.
+
+708
+01:39:18,180 --> 01:39:26,810
+Yeah, I'm pretty sure that's the case. So what I'll do is I'll have.
+
+709
+01:39:26,810 --> 01:39:38,320
+Well, I do. Inside the frame script.
+
+710
+01:39:38,320 --> 01:39:45,020
+I guess what I'll do is I'll have it count. Set interval.
+
+711
+01:39:45,020 --> 01:39:53,540
+I think I have access to set interval in here and I'll just have it go like Lou and I'll do that every second.
+
+712
+01:39:53,540 --> 01:40:02,630
+This is a really dumb test. But then I will also inside view source here after we've done loading it.
+
+713
+01:40:02,630 --> 01:40:11,120
+I'm going to say set. Time out. Cheap Rouzer dot set.
+
+714
+01:40:11,120 --> 01:40:18,130
+Remove attribute. Remote. And we'll do that after five seconds.
+
+715
+01:40:18,130 --> 01:40:29,990
+Then if we still see the hello's coming from the content process, then we know that the frame script was reloaded.
+
+716
+01:40:29,990 --> 01:40:40,070
+And then what I'll do is. Put it back, said, attribute remote truths.
+
+717
+01:40:40,070 --> 01:40:46,100
+This is a dumb little test. Put that back after two seconds.
+
+718
+01:40:46,100 --> 01:40:56,820
+Arbitrary numbers. Random random numbers. OK.
+
+719
+01:40:56,820 --> 01:41:02,940
+So. I don't see any.
+
+720
+01:41:02,940 --> 01:41:07,510
+Oh, set interval is not defined. OK.
+
+721
+01:41:07,510 --> 01:41:19,360
+So. What I can do, I believe I added something in that mimics set interval that I can use from here.
+
+722
+01:41:19,360 --> 01:41:25,540
+So this is just for testing seafood. Import re zorse Jeary modules.
+
+723
+01:41:25,540 --> 01:41:38,690
+I think it's called time or not JSM. Do I have timer? Tool kit module's.
+
+724
+01:41:38,690 --> 01:41:42,900
+Tool kit, components module's.
+
+725
+01:41:42,900 --> 01:41:50,740
+There should be one called Taimur, and then we have set time it like imports, these things that you would expect inside like the window context.
+
+726
+01:41:50,740 --> 01:42:05,390
+But because we're in a JSM, they're not there by default. So I bring those in and then said, Intervale, I believe should work.
+
+727
+01:42:05,390 --> 01:42:14,960
+OK, load the document. Hello, hello, hello.
+
+728
+01:42:14,960 --> 01:42:24,040
+OK. I should have actually had it dump like a message, because I'm not entirely sure.
+
+729
+01:42:24,040 --> 01:42:36,390
+Like, I saw the hellos. Keep going. But I need confirmation that. Dump.
+
+730
+01:42:36,390 --> 01:42:45,080
+Setting browser to remote. That man.
+
+731
+01:42:45,080 --> 01:42:54,770
+Setting browser to non remote. Setting browser to remote.
+
+732
+01:42:54,770 --> 01:43:02,340
+It's a dumb little test, but it's quick and dirty. Bring it up.
+
+733
+01:43:02,340 --> 01:43:07,860
+Hello. So it's saying browser's remote. We saw that here. So this is remote and then sets to non remote.
+
+734
+01:43:07,860 --> 01:43:13,830
+So good and then sends it to remote again. This is really good. So we don't have to reload the frame script each time.
+
+735
+01:43:13,830 --> 01:43:20,660
+So that is all I wanted to know. So.
+
+736
+01:43:20,660 --> 01:43:31,660
+All right. My finding down here. Switching back and forth does not require us to load reload the frame script.
+
+737
+01:43:31,660 --> 01:43:40,430
+I'm pretty sure I like. I've learned that, like, I'm gonna add that to my things I've learned this week because I like I intuitively knew it,
+
+738
+01:43:40,430 --> 01:43:47,310
+but now that we've experimented with it, I know. Switching back and forth.
+
+739
+01:43:47,310 --> 01:43:55,840
+Between remote and non remote browsers does not require us to reload the frame script.
+
+740
+01:43:55,840 --> 01:44:02,610
+Reload a frame script. So.
+
+741
+01:44:02,610 --> 01:44:09,230
+That's good. Great.
+
+742
+01:44:09,230 --> 01:44:15,240
+Good, good, good. Now, one thing I noticed is that we were past the outer window I.D.
+
+743
+01:44:15,240 --> 01:44:20,140
+But we didn't get anything else like. Is that OK?
+
+744
+01:44:20,140 --> 01:44:29,060
+Like, what was I supposed to get? OnLoad cheese sauce.
+
+745
+01:44:29,060 --> 01:44:34,160
+We didn't get a you or Al, we didn't get a line, no see. Yeah. All there is is the other window. That's probably fine.
+
+746
+01:44:34,160 --> 01:44:40,770
+Let's get rid of all this crap I added for testing. Pardon my language.
+
+747
+01:44:40,770 --> 01:44:58,920
+I said, crap. Sorry about that. And I don't need time or any more inside the frame script.
+
+748
+01:44:58,920 --> 01:45:08,400
+So now what I could do is like maybe maybe the best way forward is to, like,
+
+749
+01:45:08,400 --> 01:45:15,580
+actually see if we can load now that we have the outer window idea, we can get a reference on the.
+
+750
+01:45:15,580 --> 01:45:21,340
+Like the dorm window, the content window, and probably in here, we could just load the source.
+
+751
+01:45:21,340 --> 01:45:28,610
+I think. Let's see if we can do that as an experiment.
+
+752
+01:45:28,610 --> 01:45:34,800
+Because I mean, if that doesn't work, if for some reason that's a problem, this whole approach is moot.
+
+753
+01:45:34,800 --> 01:45:44,320
+Like this is not going to work. So I think there is a way the I forget what it's called.
+
+754
+01:45:44,320 --> 01:45:48,960
+I used it in webapp manager at JSM, I think. Yeah.
+
+755
+01:45:48,960 --> 01:45:59,120
+The six hours working again. Browser module's web app manager, JSM.
+
+756
+01:45:59,120 --> 01:46:06,120
+There was like out window I.D. Get out our window with I.D.
+
+757
+01:46:06,120 --> 01:46:15,110
+This is what I can do. So I have services.
+
+758
+01:46:15,110 --> 01:46:26,010
+So let outer window I.D. Equals message data.
+
+759
+01:46:26,010 --> 01:46:34,810
+That's just a way of de structuring. So I can extract data when you I.D. And then get.
+
+760
+01:46:34,810 --> 01:46:43,020
+Out her window idee. Let content window equal that.
+
+761
+01:46:43,020 --> 01:46:51,370
+And then we need to do.
+
+762
+01:46:51,370 --> 01:46:56,820
+Five. The content window, I'm in pretty good shape. Use sourced at G.S.
+
+763
+01:46:56,820 --> 01:47:00,540
+So what's the shortest path to displaying the source code with just the document?
+
+764
+01:47:00,540 --> 01:47:14,580
+The content window. I get the page loader and then what's the ARG, what's the ARG supposed to be?
+
+765
+01:47:14,580 --> 01:47:28,690
+It's a page descriptor and I can get the page descriptor from the same technique I use in here, which was so hard to find this one.
+
+766
+01:47:28,690 --> 01:47:34,660
+Scott. You are.
+
+767
+01:47:34,660 --> 01:47:40,930
+Two main things called browser doorjambs. Page descriptor.
+
+768
+01:47:40,930 --> 01:47:47,780
+How did we get that? What we did was we got the interface requestor, we got the web nav and then we got.
+
+769
+01:47:47,780 --> 01:47:58,920
+The page descriptor from the Web, have you got the current descriptors, so let's try and follow those steps.
+
+770
+01:47:58,920 --> 01:48:02,170
+Let. So this is all kind of garbagey, but let's try it.
+
+771
+01:48:02,170 --> 01:48:12,310
+And requestor equals. Content window.
+
+772
+01:48:12,310 --> 01:48:16,660
+Query interface. So now I'm starting to use.
+
+773
+01:48:16,660 --> 01:48:22,720
+See you and see I. So I can probably do this structuring thing.
+
+774
+01:48:22,720 --> 01:48:26,920
+Now, as I see utils, is that how it's done?
+
+775
+01:48:26,920 --> 01:48:36,270
+Sometimes I forget the syntax, you know what I say sometimes every time I forget the syntax, is that utils?
+
+776
+01:48:36,270 --> 01:48:42,890
+You. Yes, it is. OK. See you.
+
+777
+01:48:42,890 --> 01:48:50,640
+And then interfaces. Faces S.I.
+
+778
+01:48:50,640 --> 01:49:08,610
+And I just do that. So then, see, I interface requestor and then I want to do I want to get the web now from it like web nav equals.
+
+779
+01:49:08,610 --> 01:49:16,870
+Quester. Get her face, A.I. Web navigation.
+
+780
+01:49:16,870 --> 01:49:26,080
+Then what do I want to do? How is NSA Web navigation globally available?
+
+781
+01:49:26,080 --> 01:49:31,540
+Where's that even coming from? So just something that.
+
+782
+01:49:31,540 --> 01:49:36,420
+Yeah. OK. Is declared rate right up here. All right, fine. Weird.
+
+783
+01:49:36,420 --> 01:49:49,500
+Okey dokey. Huge source. And then we want to get the.
+
+784
+01:49:49,500 --> 01:49:58,620
+Then we want to get the page descriptor. Scripter Ekwall.
+
+785
+01:49:58,620 --> 01:50:05,930
+Web NAFDAC query interface. That.
+
+786
+01:50:05,930 --> 01:50:14,200
+And then. Say entry equals.
+
+787
+01:50:14,200 --> 01:50:23,890
+Descriptor dot. Current descriptor.
+
+788
+01:50:23,890 --> 01:50:30,170
+And then. With that, we can do what we do over here with it.
+
+789
+01:50:30,170 --> 01:50:39,270
+So we. Page loader, G, page a loader.
+
+790
+01:50:39,270 --> 01:50:44,340
+What are you? It's a Web nav.
+
+791
+01:50:44,340 --> 01:50:50,360
+Oh, it's actually just descriptor again, so I'm going to call that page loader.
+
+792
+01:50:50,360 --> 01:50:55,850
+And then. I will do page loader dot.
+
+793
+01:50:55,850 --> 01:51:03,900
+Oh. Oh. But we want to use the page loader of the current document.
+
+794
+01:51:03,900 --> 01:51:16,590
+So. That this. Is something that we can probably shortcut entry dot current scripter.
+
+795
+01:51:16,590 --> 01:51:23,370
+And then what we want as our page load that we load in is actually this browser, like the one we're inside running this frame script.
+
+796
+01:51:23,370 --> 01:51:32,590
+This is the one that we want. To get the page loader for.
+
+797
+01:51:32,590 --> 01:51:36,760
+Now, where do we do stuff like that browser content, our.
+
+798
+01:51:36,760 --> 01:51:44,470
+I think that we do things like web. Web.
+
+799
+01:51:44,470 --> 01:51:52,270
+What do we do, stuff like this A.I. Web, navigation content, dodgiest, maybe its content OJARS.
+
+800
+01:51:52,270 --> 01:51:59,500
+I've definitely seen this before. And so our web now of aviation.
+
+801
+01:51:59,500 --> 01:52:03,970
+From the dog show. OK, so we have this globally available dog show that we can work with.
+
+802
+01:52:03,970 --> 01:52:20,840
+OK. Dog show that's. Call that other Web nav.
+
+803
+01:52:20,840 --> 01:52:31,200
+Other Web nav. So let my web nav equal dog shell, dot query interface.
+
+804
+01:52:31,200 --> 01:52:44,160
+CSI Web navigation. Oh, I think we just need the page load on ourselves.
+
+805
+01:52:44,160 --> 01:52:54,030
+We don't actually need the. My right.
+
+806
+01:52:54,030 --> 01:53:05,900
+Web navigation, lets get web navigation. She browsed our web navigation.
+
+807
+01:53:05,900 --> 01:53:10,400
+OK. And it just QIC to us. I will description by page of scripture.
+
+808
+01:53:10,400 --> 01:53:16,710
+So I think I just do this. And Assai Web Web page descriptor.
+
+809
+01:53:16,710 --> 01:53:25,280
+My descriptor. Or call Paige lower.
+
+810
+01:53:25,280 --> 01:53:31,720
+Naming so hard, right? OK. Paige, loader load, Paige, and then.
+
+811
+01:53:31,720 --> 01:53:41,840
+We'll pass at the S.H. entry and then we'll pass it. Display a source who defines that.
+
+812
+01:53:41,840 --> 01:53:55,850
+Where's that from? That's an ISI Web page descriptor, so I can do S.I and Assai Web page descriptor dot display as source.
+
+813
+01:53:55,850 --> 01:54:00,710
+So fingers crossed we might actually get to see some source code from a remote
+
+814
+01:54:00,710 --> 01:54:07,550
+browser without causing unsafe caparo usage without like hitting the network.
+
+815
+01:54:07,550 --> 01:54:15,290
+That's that's the hope and the dream. So I'm going to hit command you now.
+
+816
+01:54:15,290 --> 01:54:20,040
+Let's see what happens. Nothing. Nothing.
+
+817
+01:54:20,040 --> 01:54:26,160
+OK. So what went wrong? I'm bringing my here content window is no content.
+
+818
+01:54:26,160 --> 01:54:33,410
+Window is no. So I wasn't actually able to get the odor.
+
+819
+01:54:33,410 --> 01:54:36,780
+I wasn't able to get anything useful here.
+
+820
+01:54:36,780 --> 01:54:41,030
+So. Let's double check.
+
+821
+01:54:41,030 --> 01:55:00,140
+Maybe I didn't do my deconstruction right. Dump out our window I.D. is Windu Window I.D.
+
+822
+01:55:00,140 --> 01:55:06,460
+I think this will be a great end to the stream if I'm able to see some source, so I'm like, I'm really hoping that that's what happens.
+
+823
+01:55:06,460 --> 01:55:10,230
+OK, content windows now, outer window idee is that.
+
+824
+01:55:10,230 --> 01:55:16,440
+But we're not able to get the content window. Get out our window with I.D.
+
+825
+01:55:16,440 --> 01:55:29,600
+So for some reason. Weird.
+
+826
+01:55:29,600 --> 01:55:36,560
+So let's do an experiment. The outer window idea is this value. This should be available in the content process.
+
+827
+01:55:36,560 --> 01:55:42,890
+I will open up the content tool box, which allows me to do magical things.
+
+828
+01:55:42,890 --> 01:55:48,530
+I don't have access to services. So Components utilized an import resource.
+
+829
+01:55:48,530 --> 01:55:54,590
+Jeary modules services that JSM. So now I have services.
+
+830
+01:55:54,590 --> 01:56:02,450
+Window was a window mediator. Get oduor window with idee.
+
+831
+01:56:02,450 --> 01:56:08,080
+And then pass the number. Yeah, it got the window.
+
+832
+01:56:08,080 --> 01:56:13,270
+We should be able to get the window. So this must not be running in the content process then?
+
+833
+01:56:13,270 --> 01:56:19,000
+Is that correct? Let's do an assertion or not an assertion.
+
+834
+01:56:19,000 --> 01:56:24,180
+Let's let's test process type. Equals.
+
+835
+01:56:24,180 --> 01:56:30,870
+Else we must be running in the content process.
+
+836
+01:56:30,870 --> 01:56:56,170
+We heard. We're running in the parent process.
+
+837
+01:56:56,170 --> 01:56:59,200
+And it says we're running in the parent process. OK, so that makes sense.
+
+838
+01:56:59,200 --> 01:57:14,490
+That's why we couldn't find it, because the script is running the parent process somehow. So the browser must not be remote.
+
+839
+01:57:14,490 --> 01:57:25,830
+Don setting browser to be remote.
+
+840
+01:57:25,830 --> 01:57:34,500
+I wonder if it's because. Even you know, I was seeing some errors about browser, child and stuff.
+
+841
+01:57:34,500 --> 01:57:41,730
+Maybe we failed to. Make it an actual remote browser, and that's a problem.
+
+842
+01:57:41,730 --> 01:57:54,390
+Same browser to be remote. But we're actually running in the parent process.
+
+843
+01:57:54,390 --> 01:58:01,020
+It gets this problem. The binding is attached, but I'm pretty sure.
+
+844
+01:58:01,020 --> 01:58:08,850
+Let's let's double check. So we'll bring up the browser tool box.
+
+845
+01:58:08,850 --> 01:58:14,160
+And let's open up The View source page.
+
+846
+01:58:14,160 --> 01:58:20,380
+It's pulling in the. The stuff and let's find the browser.
+
+847
+01:58:20,380 --> 01:58:26,600
+Where's the browser? Where is that going to be? Browser.
+
+848
+01:58:26,600 --> 01:58:31,120
+There it is. And yeah, because I can see that.
+
+849
+01:58:31,120 --> 01:58:39,590
+It is remote. It does have the remote browser binding on it.
+
+850
+01:58:39,590 --> 01:58:48,230
+But I can still see inside of it. So the remote browser binding is definitely not working here.
+
+851
+01:58:48,230 --> 01:58:54,180
+Why not? So I will detach that.
+
+852
+01:58:54,180 --> 01:59:04,430
+So. Oh. Do I have the binding address right?
+
+853
+01:59:04,430 --> 01:59:10,470
+I think I should. That makes sense. I also feel like I saw it.
+
+854
+01:59:10,470 --> 01:59:17,680
+Yeah, this is the right you are all removed browser.
+
+855
+01:59:17,680 --> 01:59:23,940
+Feel like I tried solving this before. Look, I got a remote browser loading in the first iteration of this.
+
+856
+01:59:23,940 --> 01:59:31,720
+My patch for this bug. So maybe let's take a quick, brief look at here.
+
+857
+01:59:31,720 --> 01:59:37,490
+What did I do? Browser remote equals true.
+
+858
+01:59:37,490 --> 01:59:41,210
+I use this. Yeah, that's what I wanted. And then I bring in Konsta. You?
+
+859
+01:59:41,210 --> 01:59:49,480
+Yep. And then I set remote to true. Get rid of content, focus.
+
+860
+01:59:49,480 --> 01:59:57,220
+I had set remote to true in here, but I don't think I need to do that content primary content.
+
+861
+01:59:57,220 --> 02:00:06,050
+Heidi is content. She sauce.
+
+862
+02:00:06,050 --> 02:00:22,600
+Mode page. Navigation.
+
+863
+02:00:22,600 --> 02:00:31,490
+Oh. I see s no interface.
+
+864
+02:00:31,490 --> 02:00:36,260
+Yes, I. Progress on window I.D. line. Seventy two of browser child.
+
+865
+02:00:36,260 --> 02:00:49,800
+What is that? Let's see that real quick. 972.
+
+866
+02:00:49,800 --> 02:00:57,670
+So maybe this just doesn't work for some reason.
+
+867
+02:00:57,670 --> 02:01:07,870
+So Web progress didn't get constructed properly. Maybe.
+
+868
+02:01:07,870 --> 02:01:28,440
+To an end in sight web progress. Page, page, scripter, load, page.
+
+869
+02:01:28,440 --> 02:01:43,790
+I don't think I'm getting this. That's not important. Her mode of navigation.
+
+870
+02:01:43,790 --> 02:01:48,950
+Why doesn't that work? So here's the mystery.
+
+871
+02:01:48,950 --> 02:01:55,530
+The mystery is how come the browser, despite being.
+
+872
+02:01:55,530 --> 02:02:01,530
+Despite having the remote attribute. Why is it not remote?
+
+873
+02:02:01,530 --> 02:02:07,940
+And it looks like it makes an effort, like it tries to load this browser child thing.
+
+874
+02:02:07,940 --> 02:02:13,100
+And I wonder if that bails out.
+
+875
+02:02:13,100 --> 02:02:19,100
+Let's let's make it do stuff, let's make it like, say, browser dot child.
+
+876
+02:02:19,100 --> 02:02:35,000
+That address is being loaded. This must be happening in the content process and then remote browser, which is here.
+
+877
+02:02:35,000 --> 02:02:43,700
+It does that in the constructor browser.
+
+878
+02:02:43,700 --> 02:02:55,800
+In the constructor. I wonder if something in here is going wrong.
+
+879
+02:02:55,800 --> 02:03:07,330
+Attempting. You know what, I could probably set a breakpoint in here, so maybe I'll do that.
+
+880
+02:03:07,330 --> 02:03:17,870
+No. Browser. Constructor.
+
+881
+02:03:17,870 --> 02:03:26,970
+Oh, wait. Maybe I should do that in the context of this. So that the breakpoint actually takes.
+
+882
+02:03:26,970 --> 02:03:31,270
+Construct, dear. OK.
+
+883
+02:03:31,270 --> 02:03:42,910
+And it drops my breakpoint all the way down there. What what is what?
+
+884
+02:03:42,910 --> 02:03:50,560
+Effort. All right. So no break point. Constructing.
+
+885
+02:03:50,560 --> 02:04:07,030
+Browser. And if we exit and remote browsers successfully constructed.
+
+886
+02:04:07,030 --> 02:04:16,560
+And then what do we do? Quit build that tool kit content.
+
+887
+02:04:16,560 --> 02:04:22,110
+Build it all, I really want to end this stream, having some view source show up.
+
+888
+02:04:22,110 --> 02:04:26,400
+That would be. That's my dream. That's what I really hope for.
+
+889
+02:04:26,400 --> 02:04:34,110
+So Sam Bradford of you wrote it constructs a remote browser and then browser child is being loaded and then remote.
+
+890
+02:04:34,110 --> 02:04:41,010
+Adeline's parent throws a JavaScript error.
+
+891
+02:04:41,010 --> 02:04:55,010
+Saying cannot use the given object is a weak map. Key. So we've successfully applied the binding.
+
+892
+02:04:55,010 --> 02:05:08,000
+So XBRL is much easier, believe it or not, to inspect using that old the old standby tool DOD inspector, which I think I still have.
+
+893
+02:05:08,000 --> 02:05:19,840
+Extensions on inspector. OK.
+
+894
+02:05:19,840 --> 02:05:24,650
+Now open up. Now, the old way.
+
+895
+02:05:24,650 --> 02:05:30,950
+Don't be fooled by the source that you viewed there, that just magically for some reason.
+
+896
+02:05:30,950 --> 02:05:37,850
+It works for the 90 Tamez case, we need to work for the ETN s case.
+
+897
+02:05:37,850 --> 02:05:43,250
+That's actually good for Wirch in the 92 in his case. You know, that's not so bad.
+
+898
+02:05:43,250 --> 02:05:49,340
+I can live with that, but I really want to work. Here.
+
+899
+02:05:49,340 --> 02:06:07,830
+Is Tom Inspector Broken? You say down the specter isn't broken.
+
+900
+02:06:07,830 --> 02:06:13,960
+Arlen Specter's broken no, huh?
+
+901
+02:06:13,960 --> 02:06:18,830
+OK. OK. Back to the tool box.
+
+902
+02:06:18,830 --> 02:06:31,800
+Is there anything that our tools can that my tool here can do to help me figure out what's going wrong here?
+
+903
+02:06:31,800 --> 02:06:38,830
+So let's look at it again. The browser does indeed have the.
+
+904
+02:06:38,830 --> 02:06:44,720
+Remote equals true on it. Pretty sure doesn't need anything else.
+
+905
+02:06:44,720 --> 02:07:03,800
+Let's double check on that. Content.
+
+906
+02:07:03,800 --> 02:07:07,370
+Primary. Does have content primary.
+
+907
+02:07:07,370 --> 02:07:15,330
+Yes, it does content primary message. What does message mean?
+
+908
+02:07:15,330 --> 02:07:23,380
+But his message for. That's new.
+
+909
+02:07:23,380 --> 02:07:42,090
+Maybe that's what I'm missing. Message.
+
+910
+02:07:42,090 --> 02:07:52,780
+So let's go back. I want to put it in that group, Swan.
+
+911
+02:07:52,780 --> 02:07:59,350
+What is message equals true? Used for.
+
+912
+02:07:59,350 --> 02:08:10,640
+So get the parent. And then.
+
+913
+02:08:10,640 --> 02:08:18,340
+Blame. I need to figure out where this was introduced.
+
+914
+02:08:18,340 --> 02:08:21,440
+This message equals true business.
+
+915
+02:08:21,440 --> 02:08:29,040
+And what it does, hopefully, I'm hoping that by figuring out when this was introduced, I can figure what it does because maybe this is what's missing.
+
+916
+02:08:29,040 --> 02:08:39,350
+And maybe another shortcut would be to just try it instead of attempting to understand what it does to just just apply it to the.
+
+917
+02:08:39,350 --> 02:08:45,730
+To The View source browser. Like, I could just do that.
+
+918
+02:08:45,730 --> 02:08:51,790
+Here. Same message equals true.
+
+919
+02:08:51,790 --> 02:08:56,780
+It's that. What we need. I have no idea.
+
+920
+02:08:56,780 --> 02:09:11,970
+Let's find out. Boom, boom, boom, boom, boom, boom, boom, boom, boom, boom.
+
+921
+02:09:11,970 --> 02:09:18,220
+And. Doesn't seem to make much of a difference.
+
+922
+02:09:18,220 --> 02:09:24,450
+Contin window is still no. This happens twice, which is.
+
+923
+02:09:24,450 --> 02:09:30,030
+Oh, I guess because of the initial tab browser child.
+
+924
+02:09:30,030 --> 02:09:45,090
+Why do I get the feeling that this is. Somehow related.
+
+925
+02:09:45,090 --> 02:09:50,980
+What does it take to make a browser remote?
+
+926
+02:09:50,980 --> 02:10:04,180
+Well, I think there are other remote browsers that are used like the the social API browser in here, I believe is also in the remote case, remote.
+
+927
+02:10:04,180 --> 02:10:10,430
+I think. Let's let's check them out.
+
+928
+02:10:10,430 --> 02:10:19,580
+Let's see what other people. People have had to do. Such a be remote.
+
+929
+02:10:19,580 --> 02:10:36,750
+Social. Framework. Browser.
+
+930
+02:10:36,750 --> 02:10:47,830
+Browser promise. And new workers created.
+
+931
+02:10:47,830 --> 02:10:55,090
+Send a single message. Freemarket net. Oh.
+
+932
+02:10:55,090 --> 02:11:02,820
+Oh, you know what it is? I don't think we can just, like, set the attribute and and call it a day.
+
+933
+02:11:02,820 --> 02:11:14,060
+I'm pretty sure we actually have to remove the browser from the document and then re add it.
+
+934
+02:11:14,060 --> 02:11:29,560
+That would explain it. If that were the case, I'm actually I'm going to get rid of that again app content.
+
+935
+02:11:29,560 --> 02:11:39,190
+OK, so let's let's try that experiment, let parents know equals G browser, dot parent node.
+
+936
+02:11:39,190 --> 02:11:46,630
+And then G browser dot. Remove and set the attribute and then re add it to the DOM.
+
+937
+02:11:46,630 --> 02:12:00,760
+It's apparent no dot. To child for now, although I'm pretty sure I'm going to want to insert it in the same spot that we got from.
+
+938
+02:12:00,760 --> 02:12:12,970
+That's the equivalent of update remoteness that we use and tab browser.
+
+939
+02:12:12,970 --> 02:12:28,720
+Excuse me. Something happened.
+
+940
+02:12:28,720 --> 02:12:32,860
+Hey, it's happening, the content process. Good. OK, so that was the thing.
+
+941
+02:12:32,860 --> 02:12:36,460
+So we need to now our script is loading in the content process.
+
+942
+02:12:36,460 --> 02:12:41,020
+We still don't have any source. It's twelve minutes past three. I might take it to three, 30.
+
+943
+02:12:41,020 --> 02:12:50,530
+I really want some sauce to show up. So we need to when flipping.
+
+944
+02:12:50,530 --> 02:12:58,330
+Remoteness makes sure to remove and re add browser to Don.
+
+945
+02:12:58,330 --> 02:13:08,170
+OK, right now, I'm doing it sloppily because I really want to get get to this thing, get to the finish line here.
+
+946
+02:13:08,170 --> 02:13:19,640
+So we in the script here. We do get the outer window.
+
+947
+02:13:19,640 --> 02:13:28,220
+So. We should be showing the source now.
+
+948
+02:13:28,220 --> 02:13:32,290
+I think because we. Did all that stuff.
+
+949
+02:13:32,290 --> 02:13:55,790
+So do we get to that point? Aeronaut initialized.
+
+950
+02:13:55,790 --> 02:14:09,050
+Sanday Singh message. I wasn't there before.
+
+951
+02:14:09,050 --> 02:14:13,190
+We might have to wait for the damned update before we can send it a message.
+
+952
+02:14:13,190 --> 02:14:21,310
+Shoot. Oh, OK. So.
+
+953
+02:14:21,310 --> 02:14:25,200
+The remoteness will change. OK.
+
+954
+02:14:25,200 --> 02:14:31,030
+Let's just shortcut this. And what I'll do is I will.
+
+955
+02:14:31,030 --> 02:14:36,290
+Because I really want to see this working. Do a timer.
+
+956
+02:14:36,290 --> 02:14:45,690
+Now, give that message, manage your time to set up, I guess, in the process to get all hooked up.
+
+957
+02:14:45,690 --> 02:14:53,440
+I think that'll do the job. So desperate to see this view, saw stuff show up.
+
+958
+02:14:53,440 --> 02:15:10,750
+I want it. Let me have it, please. And that's still not initialized.
+
+959
+02:15:10,750 --> 02:15:24,930
+What as aeronaut initialized? Maybe now I do need the message thing.
+
+960
+02:15:24,930 --> 02:15:40,070
+Maybe I do need this. It's unexplainable, I don't know what's happening here.
+
+961
+02:15:40,070 --> 02:15:47,070
+Paul McClosky bill him added that. And whereas the parent.
+
+962
+02:15:47,070 --> 02:16:01,660
+And at eight. Nothing.
+
+963
+02:16:01,660 --> 02:16:12,050
+Still nothing. And it's not initialized.
+
+964
+02:16:12,050 --> 02:16:20,400
+And I wonder again, if it's in here, it's not initialized, maybe because something's gone wrong in here.
+
+965
+02:16:20,400 --> 02:16:42,890
+No interface. Hmm hmm, hmm, hmm, and what was that again, that was line 74.
+
+966
+02:16:42,890 --> 02:16:54,200
+So what if I do this? No interface damn window idea.
+
+967
+02:16:54,200 --> 02:17:01,710
+What is dumb? Tom Windu Idee.
+
+968
+02:17:01,710 --> 02:17:10,160
+Window Idee Xed IDL. It's from NSI Web progress.
+
+969
+02:17:10,160 --> 02:17:17,460
+And as I would progress, get dorm window I.D., why would that ever.
+
+970
+02:17:17,460 --> 02:17:26,600
+That ever return? No interface. Because the window.
+
+971
+02:17:26,600 --> 02:17:38,930
+It might not be Elliott Dongmei No. Something in here might be failing.
+
+972
+02:17:38,930 --> 02:18:00,700
+Happy, so weird. Let's try this.
+
+973
+02:18:00,700 --> 02:18:10,250
+Just. Just to make it work.
+
+974
+02:18:10,250 --> 02:18:24,830
+Uh, that window idee or.
+
+975
+02:18:24,830 --> 02:18:36,690
+Time, time, window idee. OK, that's sloppy, but I'm just so desperate to see.
+
+976
+02:18:36,690 --> 02:18:40,750
+It happened. Still trying to get the OK.
+
+977
+02:18:40,750 --> 02:18:45,540
+Here's the blame. Philippe added message.
+
+978
+02:18:45,540 --> 02:18:53,960
+True. Good. And that this is when it actually happened.
+
+979
+02:18:53,960 --> 02:19:08,090
+And that's from a backout. Its message.
+
+980
+02:19:08,090 --> 02:19:16,330
+So maybe I should just ask somebody. I will ping Philippe.
+
+981
+02:19:16,330 --> 02:19:31,240
+Who added it back? Much chasing my tail.
+
+982
+02:19:31,240 --> 02:19:36,970
+And now I just added a syntax error on line 73 right there.
+
+983
+02:19:36,970 --> 02:19:56,140
+Because it expects the semicolon. Of course, that's broken.
+
+984
+02:19:56,140 --> 02:20:05,090
+Syntex, Miskin identifier and catch. So it still isn't like that.
+
+985
+02:20:05,090 --> 02:20:10,340
+Philippe is just Paul and me. Hey, what do you know?
+
+986
+02:20:10,340 --> 02:20:19,880
+Well, the message attribute does on the zoo browser on.
+
+987
+02:20:19,880 --> 02:20:25,460
+You know, I should have done this browser is checked the documentation.
+
+988
+02:20:25,460 --> 02:20:38,960
+Maybe there is a. No, it doesn't have it.
+
+989
+02:20:38,960 --> 02:20:48,740
+OK, that's good. I would've felt rather silly if I had just been sitting there in the documentation.
+
+990
+02:20:48,740 --> 02:20:54,650
+So send async message is for summaries and not initialized what the Delio.
+
+991
+02:20:54,650 --> 02:21:07,990
+We definitely had a working before you saw it. You were there. You were with me.
+
+992
+02:21:07,990 --> 02:21:14,000
+So what's going on? Oh, maybe it's because I need a new message manager.
+
+993
+02:21:14,000 --> 02:21:23,610
+Oh, you know what? Yeah. Jesus message, Manjula frame scripts.
+
+994
+02:21:23,610 --> 02:21:29,050
+OK. So we didn't actually prove this to be true because.
+
+995
+02:21:29,050 --> 02:21:34,880
+Here's the problem, here's the problem. Before when I said that.
+
+996
+02:21:34,880 --> 02:21:37,520
+OK. Yeah. The frame script doesn't have to be reloaded.
+
+997
+02:21:37,520 --> 02:21:42,740
+I had not actually done it correctly because I had removed the browser from the DOM and put it back in.
+
+998
+02:21:42,740 --> 02:22:00,810
+So I think we need to reprove that first thing. And second of all, as soon as I change the browser, the message manager needs to be.
+
+999
+02:22:00,810 --> 02:22:10,770
+The old message manager references is no good. I have to use the new one, so I don't think I need this time at anymore.
+
+1000
+02:22:10,770 --> 02:22:15,940
+Re adding the element to the don is synchronous. So I think we'll be OK. Should've known.
+
+1001
+02:22:15,940 --> 02:22:34,790
+Should've known. Nothing.
+
+1002
+02:22:34,790 --> 02:22:40,670
+What the Delio. Why didn't that work?
+
+1003
+02:22:40,670 --> 02:22:56,030
+Why? Why, why? I don't see any like.
+
+1004
+02:22:56,030 --> 02:23:05,250
+Errors, though. I mean, I had swallowed up the air inside browser child here.
+
+1005
+02:23:05,250 --> 02:23:23,440
+You know what? Let me just. I really don't feel comfortable with that. Let me put that back. Now, what I need to do.
+
+1006
+02:23:23,440 --> 02:23:31,300
+Did. La la, la, la, la, la. What I need to do is find out why lo descriptor or load page might be failing in the remote case.
+
+1007
+02:23:31,300 --> 02:23:40,240
+And I don't think I can do that without diving into like. Native code.
+
+1008
+02:23:40,240 --> 02:23:51,820
+Oh. You know what we were supposed to be getting here, something has gone wrong between now and here because we never dumped this message.
+
+1009
+02:23:51,820 --> 02:24:01,950
+Or, yeah, we we never get here. So. Down.
+
+1010
+02:24:01,950 --> 02:24:09,410
+Got out our window idee. Don.
+
+1011
+02:24:09,410 --> 02:24:19,850
+Loading page. I'm going to wrap this whole thing in a try catch so that I can, like, dump any errors that I might hit that might.
+
+1012
+02:24:19,850 --> 02:24:32,080
+For some reason not be pumped out to the console.
+
+1013
+02:24:32,080 --> 02:24:37,070
+This is some sloppy, sloppy work here I'm doing, but I'm just so desperate.
+
+1014
+02:24:37,070 --> 02:24:44,030
+I want I want to see that view source. Come on, get my child there.
+
+1015
+02:24:44,030 --> 02:25:12,260
+No interface. So do we not even send the message?
+
+1016
+02:25:12,260 --> 02:25:22,330
+You're killing me. Come on, let's do this. How many times have I said come on during this entire session?
+
+1017
+02:25:22,330 --> 02:25:28,330
+Philippe is not sure what the message actually does. OK. Well, that makes two of us so I'm not alone.
+
+1018
+02:25:28,330 --> 02:25:33,090
+Message sent. You know what? You know why I don't think it's working.
+
+1019
+02:25:33,090 --> 02:25:43,150
+I don't think it's working because this does need to get reloaded in the event that we switch the.
+
+1020
+02:25:43,150 --> 02:25:48,970
+In the event that we switch the. The type.
+
+1021
+02:25:48,970 --> 02:26:03,620
+Shoot. Let's just prove it.
+
+1022
+02:26:03,620 --> 02:26:08,630
+Hey, we got the source. We did it. We got there.
+
+1023
+02:26:08,630 --> 02:26:12,860
+Hey, that and we are down to the wire there only. There are only four minutes remaining.
+
+1024
+02:26:12,860 --> 02:26:23,540
+So, OK, let me let me explain what happened. So this is the script that we used to respond to the message that we're sending down.
+
+1025
+02:26:23,540 --> 02:26:28,700
+And then in here I decide whether or not we should be using a remote browser or not
+
+1026
+02:26:28,700 --> 02:26:33,230
+based on whether or not the browser that we want to view the source from is remote.
+
+1027
+02:26:33,230 --> 02:26:42,530
+And if we do, then we have to remove the browser element from the Dom said the attribute to true and then re add it to the DOM.
+
+1028
+02:26:42,530 --> 02:26:49,460
+And I thought we wouldn't have to reload the frame script, but we do. Otherwise, you know, the content, the, the frame excuse me,
+
+1029
+02:26:49,460 --> 02:26:57,020
+the remote browser doesn't have anything set up to receive the messages that were about to send down.
+
+1030
+02:26:57,020 --> 02:26:59,720
+So I'm gonna have to find something. I don't like repeating myself here.
+
+1031
+02:26:59,720 --> 02:27:08,570
+But like I mean if you find some mechanism around that, but like, look, look, this is this is source that is well, hopefully not off the network.
+
+1032
+02:27:08,570 --> 02:27:17,460
+And you know what? I can prove it. I can try and prove it anyways.
+
+1033
+02:27:17,460 --> 02:27:29,650
+I'm going to try and prove it by the original test case, which was to go to that like poetry page that does like a post.
+
+1034
+02:27:29,650 --> 02:27:36,170
+Do I have a link for it? To add a link for it.
+
+1035
+02:27:36,170 --> 02:27:47,910
+Oh, I even misspelled that. Great. Gave me a mechanism.
+
+1036
+02:27:47,910 --> 02:27:58,030
+So I'm going to go here. OK, so if this this works the way I think it should, then.
+
+1037
+02:27:58,030 --> 02:28:06,190
+I should get the Kittens of Gilgamesh. Make you twitch in my source.
+
+1038
+02:28:06,190 --> 02:28:26,360
+No. No. We must have re requested it off the network.
+
+1039
+02:28:26,360 --> 02:28:33,850
+Well, shoot. Good news is that we.
+
+1040
+02:28:33,850 --> 02:28:39,670
+The good news is that we've got this stuff showing up and now I just need to figure why we're still hitting the network here.
+
+1041
+02:28:39,670 --> 02:28:46,620
+But you know what I mean? To say that for next week. So.
+
+1042
+02:28:46,620 --> 02:28:51,180
+It doesn't. We need to reload the script.
+
+1043
+02:28:51,180 --> 02:29:00,630
+So find a graceful way to load the script into the same process.
+
+1044
+02:29:00,630 --> 02:29:06,780
+Into the browser that we create and only have to do it once.
+
+1045
+02:29:06,780 --> 02:29:12,690
+That shouldn't be too bad. We might start without a browser in the document.
+
+1046
+02:29:12,690 --> 02:29:23,310
+And then, like. React to it and then load the script and in the remote case, set the remote attribute,
+
+1047
+02:29:23,310 --> 02:29:28,090
+we might do something like that might there might be a little flicker, though. So that's the thing to consider.
+
+1048
+02:29:28,090 --> 02:29:40,260
+But we might be able to get around it by saying some background colors. So then the other thing.
+
+1049
+02:29:40,260 --> 02:29:45,970
+When flipping remoteness makes sure to remove an Rijad browser done in a nice way.
+
+1050
+02:29:45,970 --> 02:29:53,860
+Because the way I currently do it is kind of sloppy. And then the other thing I wanna do is like find out why we're still hitting the network.
+
+1051
+02:29:53,860 --> 02:29:57,550
+Sad face. OK. So, you know what?
+
+1052
+02:29:57,550 --> 02:30:00,670
+I have a bunch of sad faces in here, but I'm feeling pretty good.
+
+1053
+02:30:00,670 --> 02:30:04,150
+I feel pretty good that we got the source to come up and that this is a remote browser.
+
+1054
+02:30:04,150 --> 02:30:11,200
+Let me just reassure myself and all of you out there that that is indeed a remote browser being loaded there.
+
+1055
+02:30:11,200 --> 02:30:17,640
+Because if not, well, then I will. For real sad face. Yeah.
+
+1056
+02:30:17,640 --> 02:30:21,330
+It is a remote browser that we have no access to. So that's good.
+
+1057
+02:30:21,330 --> 02:30:27,450
+And we're lowering the source in it, even though for some reason we seem to be hitting the network.
+
+1058
+02:30:27,450 --> 02:30:33,240
+So great. Great job, everybody. We got pretty we got pretty far.
+
+1059
+02:30:33,240 --> 02:30:40,750
+We checked off a number of things here. And we're going to continue next week on the.
+
+1060
+02:30:40,750 --> 02:30:45,330
+Let me see here. Switch to me. Hello. We're going to come back next week, Renee.
+
+1061
+02:30:45,330 --> 02:30:51,870
+Keep leaning on this. I feel like we're getting reasonably close next week because for some reason, still hitting the network.
+
+1062
+02:30:51,870 --> 02:30:58,710
+I might have to use like GDP or X code or LDV or something to, like, get into the biner and figure out what's going wrong.
+
+1063
+02:30:58,710 --> 02:31:05,100
+But I think it's gonna be exciting. So thank you so much for watching this episode of The Joy of Coding.
+
+1064
+02:31:05,100 --> 02:31:09,960
+I hope it was entertaining. And I will see you next week. Take care.
+
+1065
+02:31:09,960 --> 02:31:14,367
+Bye.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

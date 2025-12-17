@@ -1,0 +1,2873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 298 - August 24, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 298 - August 24, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a14d3b90-f4c4-4db0-a5f2-aed801558511</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a14d3b90-f4c4-4db0-a5f2-aed801558511">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,726 --> 00:00:11,616
+Welcome. Through the joy. Jodie Hello.
+
+2
+00:00:12,036 --> 00:00:15,906
+Hello and welcome to Episode 298 of The Joy of Coding.
+
+3
+00:00:15,936 --> 00:00:22,086
+My name is Mike Connelly. It's so good to have you here. Going to hack on some Firefox stuff that I do.
+
+4
+00:00:22,476 --> 00:00:23,705
+You know, a quick code review of them.
+
+5
+00:00:23,706 --> 00:00:29,436
+We're going to keep working on that thing we were working on last week where we were trying to move the windows jump list implementation off of the,
+
+6
+00:00:30,186 --> 00:00:35,436
+you know, fully off of the main thread. So that's what we're looking at today.
+
+7
+00:00:35,736 --> 00:00:41,346
+Let's get started. I'll start by sharing my screen as per normal and going through the traditional preamble.
+
+8
+00:00:41,556 --> 00:00:48,756
+So it's August 24th, 2022. Episode 298 Only two episodes away from Episode 300.
+
+9
+00:00:49,266 --> 00:00:57,216
+I think that deserves an air horn. Brace yourselves. Oh, yeah.
+
+10
+00:00:57,726 --> 00:01:01,236
+Well, that's right.
+
+11
+00:01:01,446 --> 00:01:04,476
+Why is being here be so good?
+
+12
+00:01:04,716 --> 00:01:12,275
+Yeah. Really excited for episode 300. It's going to be. I don't know if I've talked much about what it is that I'm going to be doing.
+
+13
+00:01:12,276 --> 00:01:19,356
+I've got I'm weighing a couple of things, you know, and, you know, I've done the spicy thing in the past.
+
+14
+00:01:19,716 --> 00:01:26,376
+I think around episode to 50, I did something with like an old computer game I'd made and I, like, brushed it off.
+
+15
+00:01:27,516 --> 00:01:30,665
+I. Yeah, let's. You know, who knows?
+
+16
+00:01:30,666 --> 00:01:34,086
+Who knows what I'll come up with. But I'm sure it'll be fun.
+
+17
+00:01:34,086 --> 00:01:38,795
+I'm sure we'll think of something. So a reminder, no plan survives breakfast.
+
+18
+00:01:38,796 --> 00:01:43,416
+I don't know how this episode is going to go. I don't know how things are going to proceed today.
+
+19
+00:01:43,416 --> 00:01:48,006
+I might get stuck. Sidelined? Who knows? That's all the name of the game.
+
+20
+00:01:48,336 --> 00:01:52,596
+None of this episode's really pre-planned, but hopefully we get through it.
+
+21
+00:01:52,686 --> 00:01:56,136
+The second thing is that you should be aware that there is an agenda.
+
+22
+00:01:56,196 --> 00:01:57,576
+This is what we're looking at right now.
+
+23
+00:01:57,576 --> 00:02:05,436
+It's got all these handy links stuff you might want to follow the agenda if you're in YouTube, it's in the video description down below.
+
+24
+00:02:05,466 --> 00:02:08,576
+If you're an air Mozilla, it's in the, um.
+
+25
+00:02:09,846 --> 00:02:13,336
+Oh, no. Oh, no. Hang on. Uh, good.
+
+26
+00:02:13,366 --> 00:02:18,366
+It didn't play the audio. It's in the air muzzle.
+
+27
+00:02:18,376 --> 00:02:22,506
+It's in the video details. If you're on diode, it's in the video description down below.
+
+28
+00:02:22,506 --> 00:02:25,776
+And if you're watching this on Twitch, I'm going to drop it in the Twitch chat right now.
+
+29
+00:02:25,806 --> 00:02:31,206
+There you go. There's the agenda. Follow along and there is an episode guide.
+
+30
+00:02:31,656 --> 00:02:35,705
+If you're watching this in the future and want to know like what ultimately happened here,
+
+31
+00:02:35,706 --> 00:02:40,266
+or maybe you're watching this in the past, no, that's not possible.
+
+32
+00:02:40,506 --> 00:02:43,985
+But you want to watch a past episode, then, you know,
+
+33
+00:02:43,986 --> 00:02:50,736
+if you want to leave through and see what went on and look at old agendas and stuff, you can read the episode guide and if you want to.
+
+34
+00:02:54,776 --> 00:03:03,446
+Oh, I see that they're from crushed optimists nightly now as a separate Windows Taskbar icon for private browsing Windows related recent bug 1785814.
+
+35
+00:03:03,446 --> 00:03:12,355
+We'll take a look at that in a second. Yeah. If you want to contribute to the episode guide, maybe you have your own notes, addenda, corrections.
+
+36
+00:03:12,356 --> 00:03:16,676
+You want to expand on something, send a pull request to the repository. I'm happy to check it out.
+
+37
+00:03:16,676 --> 00:03:19,786
+And and, you know, add it to the episode guide.
+
+38
+00:03:19,796 --> 00:03:26,966
+It's for you, dear viewers. Let me just check out this bug that you're linking to.
+
+39
+00:03:26,996 --> 00:03:38,876
+What is this bug I'm doing off screen to start with? Mainly because I don't want to accidentally pull up a security bug whenever I'm livestreaming.
+
+40
+00:03:38,956 --> 00:03:43,376
+Okay. So the OS environment is taskbar pin private scaler set to false.
+
+41
+00:03:43,376 --> 00:03:50,486
+Even if the pin private window shortcut was pinned to the taskbar that it did do.
+
+42
+00:03:51,806 --> 00:03:54,596
+Yeah. I don't know what all this stuff is,
+
+43
+00:03:56,816 --> 00:04:02,846
+but it seems like there is an effort going on to make it possible to like we're changing some of our pinning behavior.
+
+44
+00:04:02,846 --> 00:04:08,096
+But according to crushed optimist nightly now as a separate Windows Taskbar icon for private browsing windows.
+
+45
+00:04:08,126 --> 00:04:14,156
+That's good. That's a good thing. And maybe, you know, down the road, we can take advantage of that.
+
+46
+00:04:16,406 --> 00:04:24,476
+We can take advantage of that whenever we want. If we were to have like different items in the and the taskbar on Windows for different profiles.
+
+47
+00:04:25,406 --> 00:04:31,315
+But before I go into that, I want to review a patch. So this patch dropped into my review queue just this morning.
+
+48
+00:04:31,316 --> 00:04:35,026
+It's for bug 1786055. Let's take a look at the the bug.
+
+49
+00:04:35,036 --> 00:04:43,166
+I haven't looked at this patch at all, but I have like read the title, which is we're going to drop some stuff from this HTML file.
+
+50
+00:04:43,916 --> 00:04:49,376
+And looking at this, this bug, it's actually about migrating us to fluent.
+
+51
+00:04:49,556 --> 00:04:55,706
+So if you're not already familiar with fluent, fluent is a mechanism for, you know,
+
+52
+00:04:56,096 --> 00:04:59,756
+trains making Firefox and other projects you can use in your own projects.
+
+53
+00:05:00,026 --> 00:05:09,236
+It's for string translation and we've been slowly but surely making Firefox run with fluent strings only.
+
+54
+00:05:09,236 --> 00:05:15,836
+This is the burn down chart from the beginning of the project in 2018 to now this giant section at the top here.
+
+55
+00:05:16,016 --> 00:05:20,366
+This is the number of fluent strings that we have in Mozilla Central.
+
+56
+00:05:20,726 --> 00:05:24,506
+And we now have over, I'd say, over 55%.
+
+57
+00:05:24,506 --> 00:05:28,285
+Yeah, over half our fluent strings. That's good. We still have to burn down.
+
+58
+00:05:28,286 --> 00:05:31,226
+The rest of this chunk. At the bottom are for four deeds.
+
+59
+00:05:31,446 --> 00:05:40,946
+Deeds are like a very old way of doing, you know, string interpolation inside of our HTML files.
+
+60
+00:05:40,946 --> 00:05:45,596
+We're getting off of that. And that allows us to move entirely off of HTML to HTML documents.
+
+61
+00:05:45,596 --> 00:05:57,205
+That's good. And then this blue section is for like dynamic string manipulation in properties files and those are, you know, done with JavaScript.
+
+62
+00:05:57,206 --> 00:06:01,196
+And there's an effort to do a lot of this conversion using like automated.
+
+63
+00:06:01,466 --> 00:06:06,205
+Like I basically run a script to migrate everything over to using fluent.
+
+64
+00:06:06,206 --> 00:06:09,806
+So we're looking to, to burn this down pretty rapidly soon.
+
+65
+00:06:09,806 --> 00:06:19,286
+So that's, you know, I've got high hopes that either this year or maybe next year we'll be basically done this, this transition.
+
+66
+00:06:19,296 --> 00:06:26,276
+That's my hope. Anyways, this is part of that effort we're migrating the edit menu overlay dtd to fluid.
+
+67
+00:06:30,056 --> 00:06:38,695
+And so let's read this bug. So Imali arrow a.k.a Emily wrote the edit menu overlay DTV file is one of the
+
+68
+00:06:38,696 --> 00:06:41,935
+few remaining DCD files used for localization and should be migrated to fluid.
+
+69
+00:06:41,936 --> 00:06:49,706
+It strings are used in a few different places and they say that the DTD defines a few keyboard shortcuts for find and find again commands.
+
+70
+00:06:49,706 --> 00:06:56,876
+One of the two places where they're used is edit menu keys, which itself is used from the sidebar places in the content area downloads view.
+
+71
+00:06:56,876 --> 00:07:00,685
+But I don't think those key definitions actually do anything, at least on Mac OS.
+
+72
+00:07:00,686 --> 00:07:08,906
+I can't find anything working differently if I just remove those lines which were last touched in 2003 2003.
+
+73
+00:07:08,906 --> 00:07:15,356
+I don't know if the zooms can work. 23 bar 2003.
+
+74
+00:07:15,686 --> 00:07:18,836
+It's old. Yikes.
+
+75
+00:07:20,126 --> 00:07:23,186
+So no relevant try. Auto tests appear to break.
+
+76
+00:07:23,906 --> 00:07:29,846
+And then I had a conversation with MLA over Matrix saying that maybe Neo has some
+
+77
+00:07:29,846 --> 00:07:33,715
+context here and Neill responded saying it doesn't look like they're used at all.
+
+78
+00:07:33,716 --> 00:07:35,576
+So I think we can remove them, which is great.
+
+79
+00:07:35,876 --> 00:07:43,855
+And so Patches got written, it looks like and the, you know, one set of patches I was said as a reviewer on.
+
+80
+00:07:43,856 --> 00:07:51,716
+But it looks like the fact that I am one of several reviewers and one other reviewer already gave the thumbs up means I don't.
+
+81
+00:07:51,746 --> 00:07:54,806
+Have to review, but let's take a look at it anyways. Let's take a look at the whole stack.
+
+82
+00:07:56,756 --> 00:08:01,856
+This first one is migrate the style editor to Fluent.
+
+83
+00:08:04,856 --> 00:08:09,666
+Yeah, this is a devtools thing so I'm happy that uh uh.
+
+84
+00:08:10,976 --> 00:08:14,246
+If not defined mas. Oh man, that's old school.
+
+85
+00:08:14,246 --> 00:08:17,996
+We definitely don't. Do we still Ms.
+
+86
+00:08:17,996 --> 00:08:22,376
+Fenech? Yeah, we definitely.
+
+87
+00:08:24,326 --> 00:08:27,926
+Oh, interesting. If we're building mobile slash Android.
+
+88
+00:08:31,206 --> 00:08:34,685
+We still call it Mars underscore fennec. That's like an old artifact.
+
+89
+00:08:34,686 --> 00:08:40,296
+We definitely shouldn't call it that anymore. Should be like Mars, Phenix, or whatever.
+
+90
+00:08:40,776 --> 00:08:47,256
+But it looks like if we weren't. We're not on mobile.
+
+91
+00:08:47,336 --> 00:08:51,626
+Then we'll package this thing, and now we're just removing it entirely so we don't need it anymore.
+
+92
+00:08:51,656 --> 00:09:05,876
+So edit menu overlay defined these these shortcut keys and so instead now it looks like we're going to use fluent.
+
+93
+00:09:07,986 --> 00:09:10,986
+I can f find command key. Access key.
+
+94
+00:09:12,076 --> 00:09:15,326
+Five axis key find again. G Yeah.
+
+95
+00:09:15,386 --> 00:09:22,636
+Alex So it's all good. And then I don't know what all of this business was fine again, command key to.
+
+96
+00:09:29,306 --> 00:09:36,806
+Find again too. This is an edit menu keys, but this is the thing that's being removed later on.
+
+97
+00:09:38,306 --> 00:09:46,166
+So all of these things these definitions are for ultimately this include file.
+
+98
+00:09:48,946 --> 00:09:53,906
+Which doesn't actually use them. So find Commander Key.
+
+99
+00:09:54,776 --> 00:09:58,816
+Was using. You know, these entities.
+
+100
+00:09:59,236 --> 00:10:03,736
+But then apparently. His keys weren't doing anything.
+
+101
+00:10:06,286 --> 00:10:09,886
+Let's let's verify this. Let's verify this.
+
+102
+00:10:09,886 --> 00:10:14,776
+I trust the the the the patch submitter.
+
+103
+00:10:15,166 --> 00:10:18,706
+But let's verify this. Last but verify.
+
+104
+00:10:19,336 --> 00:10:22,846
+So edit menu keys inked x html.
+
+105
+00:10:23,506 --> 00:10:31,296
+Yeah. Where is that? Imported. Oops. Content area downloads view.
+
+106
+00:10:31,306 --> 00:10:41,386
+I know what that is, the history sidebar else and what that is and the library window and the way these work is.
+
+107
+00:10:42,436 --> 00:10:48,926
+So if I open up like the library. Then it says if.
+
+108
+00:10:50,976 --> 00:10:58,646
+Uh, well, first of all, it's double check and make sure that this item is existing in the places window.
+
+109
+00:10:58,656 --> 00:11:04,426
+Damn. Make sure we've got our no, we got our assumptions correct here.
+
+110
+00:11:10,476 --> 00:11:13,906
+Yeah. Okay. So that's interesting.
+
+111
+00:11:14,206 --> 00:11:23,876
+I seem to recall where where is that in the Dom Sandler working where it jumps me to where it is in the DOM.
+
+112
+00:11:23,926 --> 00:11:27,136
+It doesn't appear to be working. He's set.
+
+113
+00:11:31,996 --> 00:11:36,136
+Key find what's your parent node?
+
+114
+00:11:36,316 --> 00:11:42,786
+Parent element main key set. Main key set.
+
+115
+00:11:43,856 --> 00:11:46,856
+Where's that? Right here.
+
+116
+00:11:51,526 --> 00:11:55,486
+So key find and interestingly.
+
+117
+00:11:57,826 --> 00:12:01,846
+Uh, where we have all these things Kiki he key find.
+
+118
+00:12:04,636 --> 00:12:18,316
+And so if I hit, uh, command f presumably I'm going to fire this command, which is organize a command, find all which.
+
+119
+00:12:22,466 --> 00:12:25,586
+Calls into places. Search box, find all.
+
+120
+00:12:25,616 --> 00:12:34,156
+So let's set a break point. Uh, places search box, whereas places search box.
+
+121
+00:12:34,156 --> 00:12:37,296
+They find in places that. Yes.
+
+122
+00:12:40,186 --> 00:12:46,706
+Find out. Okay.
+
+123
+00:12:47,426 --> 00:12:56,426
+So if I hit command f. Interestingly, I don't enter here like I didn't hit the breakpoint.
+
+124
+00:12:57,296 --> 00:13:00,986
+I just jumped here. So what's going on?
+
+125
+00:13:04,476 --> 00:13:10,836
+Do I have the keys correct here. Accelerator, which is a.k.a, uh.
+
+126
+00:13:11,766 --> 00:13:18,336
+What's Excel again? Modifiers Excel. Maybe that's that key Zulu.
+
+127
+00:13:18,366 --> 00:13:26,756
+Key modifier excel. Which one? This. Keyboard Shortcuts modifier turns to platform.
+
+128
+00:13:30,866 --> 00:13:34,196
+Here are some examples. Uh, what is Excel?
+
+129
+00:13:38,506 --> 00:13:45,086
+What is the accelerator key? When she's the control key, Macintosh uses the command key.
+
+130
+00:13:45,166 --> 00:13:49,756
+We can see the modifier refers to the. So it's the command key command f.
+
+131
+00:13:50,266 --> 00:13:56,856
+Command shift f. No, that doesn't hit my very point.
+
+132
+00:13:58,806 --> 00:14:04,506
+So, like, even though we have this thing, like, why is this being focused?
+
+133
+00:14:04,746 --> 00:14:08,616
+Like what is causing it to be focused? I actually want to understand that.
+
+134
+00:14:08,886 --> 00:14:16,296
+So in order to understand this, I'm going to set a breakpoint here.
+
+135
+00:14:16,306 --> 00:14:31,116
+I'm going to break on, uh, well, add a breakpoint like this, an event listener.
+
+136
+00:14:31,836 --> 00:14:35,226
+Focus E. Debugger.
+
+137
+00:14:37,636 --> 00:14:41,156
+Okay. Ahead, a break point.
+
+138
+00:14:42,176 --> 00:14:48,986
+And so we did we did hit here online 9 to 6.
+
+139
+00:14:49,436 --> 00:14:56,546
+It's just that. It's just that my break point there wasn't working.
+
+140
+00:14:56,546 --> 00:15:00,566
+That's bizarre. Okay. So.
+
+141
+00:15:02,566 --> 00:15:06,156
+So, uh, let's now try something.
+
+142
+00:15:06,166 --> 00:15:14,626
+I'm going to shut down. Let's apply the patches and see if we can still focus the fine bar.
+
+143
+00:15:15,916 --> 00:15:20,926
+That's because that it almost seems as if we need that in order to focus the fine bar.
+
+144
+00:15:23,056 --> 00:15:27,406
+In places. And if that's not the case, then what's going wrong?
+
+145
+00:15:28,446 --> 00:15:30,486
+What's going on? I just.
+
+146
+00:15:31,026 --> 00:15:39,936
+All of this is the point of this is to try and understand the patch that I'm being asked to review and understand the consequences of it.
+
+147
+00:15:41,356 --> 00:15:47,436
+Let me pump up the font a little. I want the full context.
+
+148
+00:15:53,766 --> 00:16:00,426
+So my theory, my hypothesis is that command f will now no longer focus the.
+
+149
+00:16:02,306 --> 00:16:14,476
+The search and put inside of the places window. It does, though.
+
+150
+00:16:15,556 --> 00:16:18,976
+So what happened? Why is it now?
+
+151
+00:16:18,976 --> 00:16:23,366
+Work. Let's see if we can find out.
+
+152
+00:16:23,396 --> 00:16:32,576
+So let's open up the debugger again. Let's go to the places window.
+
+153
+00:16:33,116 --> 00:16:38,416
+Let's ski. Get the key. Find. Some key find still exists.
+
+154
+00:16:38,986 --> 00:16:43,006
+Key Find organizer is this a different neighborhood?
+
+155
+00:16:43,156 --> 00:16:50,466
+Because I thought we removed it. I can't find all.
+
+156
+00:16:58,156 --> 00:17:16,596
+Place is key. Find all. Find a menu item can element by the key find.
+
+157
+00:17:16,866 --> 00:17:20,466
+So somehow it finds it still and then sets the attribute on it.
+
+158
+00:17:22,296 --> 00:17:26,926
+How is that? Happening.
+
+159
+00:17:30,046 --> 00:17:34,546
+I failed to properly apply this patch or update the.
+
+160
+00:17:43,736 --> 00:17:47,306
+This should be gone. E fines should be gone.
+
+161
+00:17:50,916 --> 00:17:54,576
+Did I need to build again? Did I fail to build?
+
+162
+00:17:58,596 --> 00:18:14,656
+Let's just try that again. Okay.
+
+163
+00:18:14,666 --> 00:18:20,866
+Now, command f doesn't work, so this is actually a problem. So removing this actually does.
+
+164
+00:18:22,306 --> 00:18:27,676
+Like We do need this. I can't. Oh, hang on. No, I'm wrong.
+
+165
+00:18:28,186 --> 00:18:33,256
+It's just that there's like a mac OS focused issue bug here, but this still seems to work.
+
+166
+00:18:34,206 --> 00:18:39,096
+What is going on? Let's go back to places.
+
+167
+00:18:42,036 --> 00:18:47,286
+And it still finds Key Find under Maine, Key said.
+
+168
+00:18:47,306 --> 00:18:51,516
+So I'm very confused. Let's see if we can fully understand.
+
+169
+00:18:53,736 --> 00:18:57,066
+Maybe there's some. Where could it be coming from?
+
+170
+00:18:59,256 --> 00:19:02,526
+Maybe there are multiple key finds.
+
+171
+00:19:03,876 --> 00:19:08,916
+Is that possible? I.D. equals key find.
+
+172
+00:19:11,296 --> 00:19:15,666
+Yes. Yes.
+
+173
+00:19:15,666 --> 00:19:27,516
+And I think that might be what we're running into. I think this is the one that is being used from browsers sets and is browser sets.
+
+174
+00:19:29,186 --> 00:19:43,616
+Being used by places. Well, I mean, he's at places commands places that as.
+
+175
+00:19:47,296 --> 00:19:50,866
+Basis dot jazz is imported by.
+
+176
+00:19:53,816 --> 00:19:59,986
+Places that exchange email. Places, commands.
+
+177
+00:20:01,396 --> 00:20:06,496
+Just want to see if I can understand where this stuff is coming from. So string bundles, set places, strings.
+
+178
+00:20:06,826 --> 00:20:11,416
+It comes when.
+
+179
+00:20:14,556 --> 00:20:27,976
+String bundles. This place, the stringer said.
+
+180
+00:20:35,196 --> 00:20:38,346
+Then by the. Exists.
+
+181
+00:20:39,156 --> 00:20:46,716
+Bury you in the dome. Oh. All right, let's place a string set.
+
+182
+00:20:47,656 --> 00:20:52,716
+Do that. There you are. Okay. So place a string set and then a bunch of this stuff.
+
+183
+00:20:53,926 --> 00:20:59,656
+And then eventually scripts. Like all downloads view, which is down here.
+
+184
+00:20:59,926 --> 00:21:09,615
+And our main key set which has our mysterious find is brought in between those two things.
+
+185
+00:21:09,616 --> 00:21:12,976
+So it was one of these to either a mac window.
+
+186
+00:21:13,696 --> 00:21:21,646
+Mac window. Yes. And Mac window brings in browser sets.
+
+187
+00:21:26,226 --> 00:21:36,996
+And browser sets has our command. So the reason we can get away with removing these is because there was already like we were in
+
+188
+00:21:36,996 --> 00:21:43,026
+this really weird position where like you have the same ID applied to two different elements.
+
+189
+00:21:44,196 --> 00:21:52,686
+We had some collisions going on here. And these were old I guess they they were being overridden and shadowed.
+
+190
+00:21:54,156 --> 00:21:57,336
+So we can, in theory, remove the old things.
+
+191
+00:22:01,366 --> 00:22:02,396
+I think that's the case.
+
+192
+00:22:02,416 --> 00:22:14,086
+Now that's that's true for excuse me places what happens whenever you do you find again inside of the places database or inside of the places window.
+
+193
+00:22:14,086 --> 00:22:17,086
+Does it have a command called find again?
+
+194
+00:22:21,126 --> 00:22:24,696
+Yes, but it's disabled.
+
+195
+00:22:26,286 --> 00:22:34,306
+And what about find previous? All right.
+
+196
+00:22:34,846 --> 00:22:38,286
+What happens if I. I'm just curious.
+
+197
+00:22:38,296 --> 00:22:45,696
+What happens if I fire that command? Do command? Can't access get fine bar g browsers undefined.
+
+198
+00:22:45,846 --> 00:22:57,696
+So like some of these are being used inside of the places places window but like they don't actually they're not wired up to anything sensible.
+
+199
+00:22:59,106 --> 00:23:09,276
+So what was the old key like? There might actually be an existing bug here where we would like fire an exception in the in the in the console.
+
+200
+00:23:09,906 --> 00:23:16,216
+Let's, let's see if that's true. So let's go back to Central.
+
+201
+00:23:21,596 --> 00:23:28,526
+Build and run. And meanwhile, if we hit the keyboard shortcut of what was it?
+
+202
+00:23:35,746 --> 00:23:40,666
+Command. Sorry.
+
+203
+00:23:40,666 --> 00:23:48,135
+I'm a bit scattered. It's not there. It's over here. Command, whatever it was previous.
+
+204
+00:23:48,136 --> 00:23:51,796
+So find again. Command key. But if you use shift.
+
+205
+00:23:52,576 --> 00:23:56,156
+And what is that key? Oh, it was deleted.
+
+206
+00:23:57,536 --> 00:24:01,266
+G. So command shift.
+
+207
+00:24:01,286 --> 00:24:05,646
+G. And Shift G.
+
+208
+00:24:07,306 --> 00:24:20,816
+Let's find again. Now, if I open places and the debugger cut my window here.
+
+209
+00:24:20,836 --> 00:24:25,546
+Command shift G. Yeah. We were throwing an exception before.
+
+210
+00:24:26,616 --> 00:24:30,256
+And what about Cam?
+
+211
+00:24:30,816 --> 00:24:36,006
+VK F3 if I hit F3, what happens if three?
+
+212
+00:24:39,626 --> 00:24:46,636
+Have to do. Anything special with a three find again command key to.
+
+213
+00:24:50,196 --> 00:24:57,786
+Using Shift shift f three.
+
+214
+00:25:00,116 --> 00:25:03,476
+Here. Shift F three. Yeah.
+
+215
+00:25:04,886 --> 00:25:12,206
+Throw an interception again. So these were never adding anything of value is what I'm starting to.
+
+216
+00:25:13,076 --> 00:25:17,276
+Starting to come to the conclusion of. At least in the places when.
+
+217
+00:25:17,366 --> 00:25:23,456
+What about the history sidebar? We had this the same thing exist in the history sidebar.
+
+218
+00:25:24,656 --> 00:25:28,946
+I think we can put the places window away. Let's open up the history sidebar.
+
+219
+00:25:30,036 --> 00:25:35,935
+Uh, history. Uh, I'm trying to remember how to do this.
+
+220
+00:25:35,936 --> 00:25:39,506
+History sidebar.
+
+221
+00:25:39,596 --> 00:25:52,616
+Oh, view. Sidebar, history. There it is. Now command F doesn't actually like it doesn't send us to the search history input.
+
+222
+00:25:53,606 --> 00:26:00,806
+I don't know if it's supposed to. Instead it goes here to the current browsers.
+
+223
+00:26:00,926 --> 00:26:05,566
+Find input instead. You can like keyboard focus here.
+
+224
+00:26:07,336 --> 00:26:12,766
+Um. So it looks like it was never working.
+
+225
+00:26:13,156 --> 00:26:20,566
+And then like a three shift f three like all of those are going to the find bar down here.
+
+226
+00:26:21,406 --> 00:26:26,355
+So I don't think these were adding any value to the history side bar.
+
+227
+00:26:26,356 --> 00:26:30,376
+So I think that removal makes sense. Bookmark sidebar.
+
+228
+00:26:37,426 --> 00:26:41,866
+Same thing. It's all being targeted at the browser, and I think that might be for the best.
+
+229
+00:26:43,706 --> 00:26:47,956
+Like, I think these removals are, are pretty justified. And then content area downloads.
+
+230
+00:26:48,106 --> 00:26:52,876
+That's if you that's a fact. That's this downloads about downloads.
+
+231
+00:26:53,416 --> 00:27:00,796
+Now, there are no current downloads. But even if there were, there's like a built in find for it.
+
+232
+00:27:01,096 --> 00:27:06,346
+So let's, let's create a simple download all go to test download file.
+
+233
+00:27:08,056 --> 00:27:11,926
+Yeah. Think broadband. Let's download a small file.
+
+234
+00:27:12,736 --> 00:27:15,756
+Go away. Go away. Decline.
+
+235
+00:27:16,096 --> 00:27:23,045
+Small file. Uh.
+
+236
+00:27:23,046 --> 00:27:28,446
+All right. Uh, potential security risk.
+
+237
+00:27:28,866 --> 00:27:32,376
+All right. At the very least, it shows up in here. And then if I hit command f.
+
+238
+00:27:38,726 --> 00:27:42,476
+It looks like we were never making this sort of, like, searchable anyways.
+
+239
+00:27:46,606 --> 00:27:50,586
+Because like, there's no search input. That's the other thing. And I've got, uh.
+
+240
+00:27:53,626 --> 00:27:57,466
+I don't have the patches applied. Let's look at the behavior with the patches applied.
+
+241
+00:28:04,966 --> 00:28:10,035
+Oh, I said faster instead of faster. So I have a feeling it's going to be like, I don't know what you mean.
+
+242
+00:28:10,036 --> 00:28:23,606
+Mach build faster. Yeah, faster. All right, let's run.
+
+243
+00:28:35,756 --> 00:28:46,136
+I think our download probably got removed. Yeah. So test downloads or even better, let's just like download some file somewhere.
+
+244
+00:28:49,446 --> 00:28:55,146
+Test my download tests download test files small file.
+
+245
+00:28:55,446 --> 00:29:02,676
+No, I guess the IPv6 link isn't working their potential security risk.
+
+246
+00:29:03,486 --> 00:29:05,346
+All right then. Command F.
+
+247
+00:29:08,466 --> 00:29:16,115
+Okay so it's not great that this isn't find winning ways but like this this is not the primary interface for looking at downloads.
+
+248
+00:29:16,116 --> 00:29:19,506
+About downloads is like this old utility.
+
+249
+00:29:21,396 --> 00:29:32,046
+If you're searching your downloads, what you should probably be doing is using this and then like like this search input will find it.
+
+250
+00:29:36,066 --> 00:29:39,576
+You should be using the library about calling downloads is in the right place.
+
+251
+00:29:40,656 --> 00:29:50,796
+Okay. So I'm convinced at this point that these commands were not adding anything of value and that it is okay to remove them.
+
+252
+00:29:51,906 --> 00:29:57,426
+I'm pretty happy about that. So I'm going to go ahead and approve these changes.
+
+253
+00:30:02,726 --> 00:30:17,966
+I did a bit of poking and it looks indeed like these aren't actually useful, used, useful in any of the areas where they were defined.
+
+254
+00:30:18,326 --> 00:30:31,796
+If anything, they introduced console errors when attempting to fire commands that weren't compatible with their contexts.
+
+255
+00:30:32,426 --> 00:30:36,886
+Example in the places window on mac os.
+
+256
+00:30:37,676 --> 00:30:45,805
+Hitting shift f three will cause a console error because it's trying to use a
+
+257
+00:30:45,806 --> 00:30:56,306
+command that's only sense that's designed for windows that define g browser.
+
+258
+00:30:59,106 --> 00:31:03,846
+So I think this is good to go. Thanks.
+
+259
+00:31:05,206 --> 00:31:10,506
+Uh. Here we go. Submit.
+
+260
+00:31:14,816 --> 00:31:18,686
+All right. Feeling good about that?
+
+261
+00:31:19,256 --> 00:31:27,745
+So let's go back to what we were working on last week, which was to make the windows jobless stuff happen off of the main thread we had just made.
+
+262
+00:31:27,746 --> 00:31:34,526
+If I recall correctly, I think we'd gotten to the point where available we had made available.
+
+263
+00:31:38,846 --> 00:31:42,506
+Work off of the main thread do is available.
+
+264
+00:31:44,816 --> 00:31:55,016
+And I did it with a run up or function or a run able that's using the same I0 thread.
+
+265
+00:31:55,376 --> 00:32:02,726
+And then whenever it is done it tells the main thread to resolve the promise.
+
+266
+00:32:04,866 --> 00:32:08,346
+So that's good. And I believe we tested that manually last week.
+
+267
+00:32:08,826 --> 00:32:12,986
+Let's move to the next one, which was a bought list build.
+
+268
+00:32:12,996 --> 00:32:16,926
+Should also return a promise. Maybe let's do a couple of the same time.
+
+269
+00:32:16,926 --> 00:32:27,786
+Set app user model ID and abort list build. Let's let's try and do a two for a abort list build.
+
+270
+00:32:33,346 --> 00:32:36,436
+Bought. It's going to return a promise.
+
+271
+00:32:38,056 --> 00:32:44,266
+Oops. Who was that guy I just saw?
+
+272
+00:32:44,266 --> 00:32:51,886
+Like a weird guy show up here. I don't know what that was. Um, how do I get that guy back?
+
+273
+00:32:53,056 --> 00:32:58,966
+I think it was some kind of, like, windows ad. Oh, there it is. It's Duke Kahanamoku's birthday.
+
+274
+00:33:00,556 --> 00:33:04,336
+Happy birthday. Happy birthday, Duke. I don't know who you are.
+
+275
+00:33:04,786 --> 00:33:18,256
+And it's interesting. I only get that if I. If I click on the magnifying glass or maybe every couple of clicks, it'll show up.
+
+276
+00:33:18,256 --> 00:33:22,455
+Why didn't and show up always? Yeah.
+
+277
+00:33:22,456 --> 00:33:25,726
+It's like if I click start and then click on the search, it shows up.
+
+278
+00:33:26,086 --> 00:33:29,986
+Otherwise, if I just click on the search, it doesn't show. What the heck?
+
+279
+00:33:31,846 --> 00:33:35,686
+Good job. All right, a board list build.
+
+280
+00:33:36,586 --> 00:33:43,046
+Let's make that return a promise. Board list build.
+
+281
+00:33:44,236 --> 00:33:48,436
+Now what's interesting is a board list build.
+
+282
+00:33:51,496 --> 00:33:59,476
+Is called from. Both.
+
+283
+00:34:04,646 --> 00:34:12,866
+XP. Com, but also it looks like it can be called off of the main threat like delete active list.
+
+284
+00:34:15,206 --> 00:34:27,726
+Delete Active List returns a boolean. And do a net list build.
+
+285
+00:34:30,156 --> 00:34:41,646
+This is running on a background thread. Mm.
+
+286
+00:34:53,126 --> 00:35:05,576
+So that's interesting. You almost want this to call the off main threat, like the DU method, which is to what happens here.
+
+287
+00:35:06,026 --> 00:35:10,226
+You just call a board list and do these things.
+
+288
+00:35:15,186 --> 00:35:34,756
+Okay. And this is also on the main thread and it calls a borderless build, which also takes that lock.
+
+289
+00:35:43,916 --> 00:35:47,965
+And like what exactly do support this bill do? That's so interesting.
+
+290
+00:35:47,966 --> 00:35:52,615
+It takes a look. And if the jobless manager exists,
+
+291
+00:35:52,616 --> 00:36:04,226
+it gets a reference to a customer destination list and then calls a board list on it and then clears this static or it sets this static boolean.
+
+292
+00:36:11,376 --> 00:36:15,286
+Which is an atomic that seems to be shared between threads.
+
+293
+00:36:15,306 --> 00:36:19,266
+What a mess. Hmm.
+
+294
+00:36:22,086 --> 00:36:28,685
+So that's kind of a pain, because if I'm going to make this work off of the main thread abort list build,
+
+295
+00:36:28,686 --> 00:36:37,086
+I need to make it possible for the the off main thread stuff to also be called from off of the main thread.
+
+296
+00:36:38,536 --> 00:36:50,226
+Um, and we want one variation to resolve a promise and we want the other to not really like it.
+
+297
+00:36:50,326 --> 00:37:03,936
+Look at what's happening here in a board list. Build where like the return values are being ignored here and here.
+
+298
+00:37:04,386 --> 00:37:13,416
+Really, what? What you want to do is if the promise is rejected, then you want to reject this promise.
+
+299
+00:37:14,766 --> 00:37:18,116
+You'd think or maybe not.
+
+300
+00:37:18,876 --> 00:37:23,856
+Like what if you don't have access to the Chambliss manager?
+
+301
+00:37:30,366 --> 00:37:40,356
+I guess we are still checking. So maybe we can make it so that aborting the actual do abort list bill.
+
+302
+00:37:41,336 --> 00:37:45,486
+Um. Is. It can.
+
+303
+00:37:45,906 --> 00:37:52,366
+It can take the promise argument, but it's optional. Can we do that?
+
+304
+00:37:59,096 --> 00:38:09,205
+Promise. Uh.
+
+305
+00:38:09,206 --> 00:38:13,706
+Is available return at and point a pointer.
+
+306
+00:38:20,736 --> 00:38:30,766
+So we can make it so that if this is no we don't actually like when we pass the
+
+307
+00:38:30,936 --> 00:38:39,276
+unable to available do is available passing promise which is going to be no.
+
+308
+00:38:41,256 --> 00:38:48,066
+Okay. I think that is it's not amazing, but I think it will get us what we want.
+
+309
+00:38:55,546 --> 00:39:02,806
+Okay. So what we want to do first is there's a jazz context being passed as arguments to this method now.
+
+310
+00:39:03,376 --> 00:39:07,906
+And there's also going to be, um, oh yeah.
+
+311
+00:39:08,356 --> 00:39:13,006
+And I promise so at a promise can be null in this case.
+
+312
+00:39:13,366 --> 00:39:17,025
+So that's important to know. Um, yeah.
+
+313
+00:39:17,026 --> 00:39:21,316
+This is going to be the signature abort list build.
+
+314
+00:39:23,336 --> 00:39:32,206
+This is going to be the signature. And then what we really want to do instead of taking a lock, don't want to do that anymore.
+
+315
+00:39:38,496 --> 00:39:59,966
+Is we want. There is that thing that we had written last week.
+
+316
+00:40:01,186 --> 00:40:11,506
+Because it's pretty oh is available we call it is available should have been get available because like to be able to is available.
+
+317
+00:40:13,736 --> 00:40:17,185
+Do you get available? This should be do is available.
+
+318
+00:40:17,186 --> 00:40:20,276
+Resolve, uh, is available.
+
+319
+00:40:20,306 --> 00:40:24,686
+Okay. That's why I was confused. Is available.
+
+320
+00:40:26,786 --> 00:40:30,386
+We want to use the same structure.
+
+321
+00:40:32,716 --> 00:40:37,756
+Effectively a board list build.
+
+322
+00:40:41,636 --> 00:40:45,115
+Don't need a lock because we're doing this off the main thread.
+
+323
+00:40:45,116 --> 00:40:50,396
+Buchholz. Yeah, we get those things.
+
+324
+00:40:50,396 --> 00:41:01,226
+We create the promise. We're going to create a run a ball, and it's from a bought list build and we're going to say, do a board list build.
+
+325
+00:41:02,606 --> 00:41:21,536
+And then dispatch it on the IO thread and then, uh, voids jump list builder.
+
+326
+00:41:23,356 --> 00:41:29,026
+Do a board list build and that's going to take a ref point or promise.
+
+327
+00:41:31,906 --> 00:41:35,386
+A promise. I think that's the format. That's the thing. That's the signature.
+
+328
+00:41:36,296 --> 00:41:41,866
+Then we do have to take the lock. It's available.
+
+329
+00:41:47,006 --> 00:41:51,296
+And then this is how you resolve it. Now, here's where we do our special.
+
+330
+00:41:52,476 --> 00:41:55,536
+Finger, which is that if the promise. If.
+
+331
+00:41:57,406 --> 00:42:09,676
+A promise, and we should document this. Then we're going to resolve that promise.
+
+332
+00:42:11,056 --> 00:42:14,246
+How do I. I want to just indent. What's the.
+
+333
+00:42:14,266 --> 00:42:19,725
+There we go. Do a board list.
+
+334
+00:42:19,726 --> 00:42:29,236
+Build. Uh, and we're just going to, uh, we're going to just resolve without anything.
+
+335
+00:42:30,756 --> 00:42:36,546
+It's going to resolve. No argument.
+
+336
+00:42:36,846 --> 00:42:39,846
+There's no value coming out of it. It's just that we're resolving it.
+
+337
+00:42:42,006 --> 00:42:46,116
+And anywhere where we've been calling a bought list build.
+
+338
+00:42:46,146 --> 00:42:52,256
+Well, first of all, the other thing I want to do is like I want to assert. Which threat I'm on.
+
+339
+00:42:54,226 --> 00:43:11,966
+We're not on the main thread. And here we do want to assert we are on the main thread.
+
+340
+00:43:12,886 --> 00:43:21,106
+This is going to become more and more important to like make sure that we're on the thread that we care about, that we expect to be on.
+
+341
+00:43:25,956 --> 00:43:29,586
+And then all of the other callers of a bought list build.
+
+342
+00:43:31,046 --> 00:43:35,906
+And I say, uh, do a board list build.
+
+343
+00:43:38,006 --> 00:43:42,086
+Oh, wait, no, because this is going to be on the main thread. So this one's different.
+
+344
+00:43:44,516 --> 00:43:50,505
+A list build. This one, which is off of the main thread we can do.
+
+345
+00:43:50,506 --> 00:43:57,076
+Do a board list. Build. And we can actually.
+
+346
+00:43:59,586 --> 00:44:04,476
+Put that assertion there and then this other call.
+
+347
+00:44:09,236 --> 00:44:16,716
+In delete active list. Um.
+
+348
+00:44:26,416 --> 00:44:35,326
+We actually don't want to resort. We want to. I think we just want to throw away the promise.
+
+349
+00:44:37,306 --> 00:44:53,526
+So we might actually have to do. Delete active list next. Active list.
+
+350
+00:44:56,566 --> 00:45:05,156
+Or instead of returning for I guess we were returning a success or failure with a with a boolean,
+
+351
+00:45:05,816 --> 00:45:11,546
+it's going to be once again like just context and a promise.
+
+352
+00:45:15,796 --> 00:45:23,956
+I'm also realizing I need to put in the header or do a board list build method that we just added.
+
+353
+00:45:41,166 --> 00:45:46,266
+Okay. Uh, or at least Bill.
+
+354
+00:45:47,606 --> 00:45:54,236
+From Delete Active List. So we have our promise we're not going to be doing anything with return value there.
+
+355
+00:45:55,646 --> 00:45:58,946
+So what we're oh yeah, here's what we can do. Here's what we can do.
+
+356
+00:45:59,816 --> 00:46:08,466
+We're going to. Do the exact same thing we were doing with a board list, which is construct this thing.
+
+357
+00:46:17,256 --> 00:46:20,406
+Then we're saying, hey, do delete.
+
+358
+00:46:20,586 --> 00:46:27,326
+Active list. And then.
+
+359
+00:46:30,526 --> 00:46:38,036
+In delete active list. Oh, I see.
+
+360
+00:46:38,036 --> 00:46:41,126
+There's like internal down here. That thought I should probably move on my dues.
+
+361
+00:46:42,236 --> 00:46:47,696
+Void jump list builder. New Daily Active list.
+
+362
+00:46:48,596 --> 00:46:53,396
+Press contacts know it's going to get a ref pointer promise.
+
+363
+00:46:54,946 --> 00:46:58,546
+A promise. Here's what we should do.
+
+364
+00:46:59,326 --> 00:47:03,136
+Take our lock. We should assert that we are not on the main thread.
+
+365
+00:47:12,536 --> 00:47:16,346
+Walker says. Is there s building list equals true anywhere?
+
+366
+00:47:17,406 --> 00:47:21,226
+Great question. Yes, I think so. Let's take a look.
+
+367
+00:47:22,346 --> 00:47:24,565
+Uh, this is not on the main threat.
+
+368
+00:47:24,566 --> 00:47:33,416
+So it's building list, which is some kind of like, state value, which may or may not still matter as a thing, like once we have.
+
+369
+00:47:36,346 --> 00:47:39,766
+This is building list building. This is true here.
+
+370
+00:47:45,636 --> 00:47:48,906
+The building list is false. Like.
+
+371
+00:47:48,906 --> 00:47:56,555
+I think the S building list might no longer be necessary if all of the work is happening on
+
+372
+00:47:56,556 --> 00:48:06,456
+the same thread because it seems to be using it as like a sort of a coordination atomic.
+
+373
+00:48:07,516 --> 00:48:11,836
+Boolean between threads like a synchronization. Thing.
+
+374
+00:48:12,106 --> 00:48:15,646
+And we can probably get rid of it at some point.
+
+375
+00:48:16,726 --> 00:48:23,716
+So do delete active lists. We do this and then we're going to say, hey, do a board list build and I'm not going to pass you a promise.
+
+376
+00:48:25,096 --> 00:48:30,045
+And then here's where we dispatch our result.
+
+377
+00:48:30,046 --> 00:48:36,376
+Run the ball back to the. Um.
+
+378
+00:48:39,536 --> 00:48:46,876
+Back to the main thread. Um.
+
+379
+00:48:51,156 --> 00:48:59,565
+If this doesn't exist, then we're going to. Threat of returning error unexpected.
+
+380
+00:48:59,566 --> 00:49:20,626
+We're going to return. False. Maybe reject. Hmm.
+
+381
+00:49:20,886 --> 00:49:24,916
+You know? Right. I don't want to keep repeating that. So here's what I'm going to do instead.
+
+382
+00:49:25,966 --> 00:49:32,536
+Make scope exit. This is a classic. Um, to abort.
+
+383
+00:49:33,796 --> 00:49:40,196
+A spill. So what we'll do is we'll say, hey. Here's an air handler on scope exit.
+
+384
+00:49:47,136 --> 00:49:52,356
+What's succeeded. Her.
+
+385
+00:49:58,506 --> 00:50:02,406
+Exit and we pass. What is H.R.?
+
+386
+00:50:07,716 --> 00:50:11,436
+Make scope exit. I need to remember what that means. Make scope exit.
+
+387
+00:50:13,026 --> 00:50:16,566
+Um. Oh, I just got a delivery, everybody.
+
+388
+00:50:17,256 --> 00:50:20,286
+Bump up. Wow. Smells like tea.
+
+389
+00:50:20,856 --> 00:50:24,486
+Thank you very much. Anonymous delivery person.
+
+390
+00:50:25,116 --> 00:50:29,066
+Amazing. What is the second argument to make?
+
+391
+00:50:29,076 --> 00:50:33,596
+Scope. Go back. Um.
+
+392
+00:50:43,276 --> 00:50:51,346
+Let's go back to things. Go back to. Right hand side.
+
+393
+00:50:55,536 --> 00:50:58,596
+Is it right hand side scope exit makes comebacks.
+
+394
+00:51:01,076 --> 00:51:04,556
+Function. It's just like this function.
+
+395
+00:51:12,906 --> 00:51:21,066
+Christina's track version of this, if true is I return true fail capex is maintenance supply and star accumulate required.
+
+396
+00:51:21,846 --> 00:51:26,556
+So if not so, the above would become if not set up return false.
+
+397
+00:51:28,566 --> 00:51:35,676
+Tear down. Tear down. Otherwise released release and return to the head provides go bags of content for call actually call the
+
+398
+00:51:35,676 --> 00:51:40,716
+end of scope constructing a scope exit with a given cleanup routine commonly used for the lambda function.
+
+399
+00:51:43,846 --> 00:51:49,286
+Okay. So maybe make scope exit isn't the right move.
+
+400
+00:51:49,616 --> 00:51:54,766
+Um. Or am I? Um.
+
+401
+00:52:10,216 --> 00:52:14,596
+Oh it's a they handle the handle. I see.
+
+402
+00:52:14,926 --> 00:52:18,676
+And so whatever value that is. Oh, I see.
+
+403
+00:52:19,066 --> 00:52:24,596
+That's how that's working. Um.
+
+404
+00:52:25,246 --> 00:52:36,586
+So I guess we can do it like this, like and as a result. RV And we can pass that in if and has succeeded.
+
+405
+00:52:37,276 --> 00:52:43,446
+RV. Uh, return.
+
+406
+00:52:43,856 --> 00:52:47,746
+That shouldn't be possible, but. Okay. Um.
+
+407
+00:52:55,416 --> 00:53:01,326
+So what we'll do is we'll say do resolve.
+
+408
+00:53:02,916 --> 00:53:06,086
+Hang on. You run over.
+
+409
+00:53:06,096 --> 00:53:10,205
+What's the what is the convention do is available.
+
+410
+00:53:10,206 --> 00:53:14,115
+Resolved. In that list.
+
+411
+00:53:14,116 --> 00:53:26,486
+Build, reject, and let's build resolve. Do you abort list build resolve to abort list, build, reject.
+
+412
+00:53:27,996 --> 00:53:40,526
+We're going to move. We're also going to capture the RV from this reject RV.
+
+413
+00:53:47,656 --> 00:53:51,906
+Um. Clink for Matt.
+
+414
+00:53:51,916 --> 00:53:58,206
+Something. Something. Okay. Actually, I, uh.
+
+415
+00:53:58,786 --> 00:54:02,146
+I don't know how Quinn is going to want to format that. Something along those lines.
+
+416
+00:54:02,476 --> 00:54:08,326
+And then we can say, Hey, all right, let's get our lock up here, actually.
+
+417
+00:54:09,316 --> 00:54:24,936
+That's one of the first things we do have an RV, and then we're going to say, if not jump list manager, then RV equals as air not available return.
+
+418
+00:54:27,046 --> 00:54:32,476
+If not that, then RV equals as an unexpected return.
+
+419
+00:54:34,606 --> 00:54:39,316
+And then, um.
+
+420
+00:54:53,536 --> 00:55:01,366
+It was promise. We need to, like, release the guard error handler.
+
+421
+00:55:01,606 --> 00:55:05,446
+Release? That's how that works.
+
+422
+00:55:05,746 --> 00:55:17,786
+Yeah. Looks like they haven't been doing that in other places.
+
+423
+00:55:23,486 --> 00:55:26,786
+But if we release it there, I actually don't think.
+
+424
+00:55:30,816 --> 00:55:36,336
+Uh, and as a result, RV is air.
+
+425
+00:55:50,916 --> 00:55:55,236
+Ask her about our release, and then if there's a promise, then we resolve it.
+
+426
+00:55:55,836 --> 00:55:59,016
+Okay. Now, the thing that calls.
+
+427
+00:55:59,526 --> 00:56:08,376
+Do a board list build. Like this stuff can kind of like do some of the same business.
+
+428
+00:56:12,766 --> 00:56:16,966
+Where you kind of want.
+
+429
+00:56:23,226 --> 00:56:27,276
+An RV. Do you delete active list?
+
+430
+00:56:27,546 --> 00:56:35,276
+I should probably try and compile in a second. Uh, and then the promise.
+
+431
+00:56:35,286 --> 00:56:40,076
+Well, if there's a promise, do we know that there's a promise here?
+
+432
+00:56:40,086 --> 00:56:43,596
+Yes, there will be. It's the other one that might not have it.
+
+433
+00:56:51,136 --> 00:56:57,506
+Uh. It's. It's due a board that might not have it.
+
+434
+00:57:05,786 --> 00:57:15,726
+And so we need to factor that in. Promise.
+
+435
+00:57:17,466 --> 00:57:30,556
+Maybe reject. Okay.
+
+436
+00:57:39,666 --> 00:57:45,006
+Not my prettiest code. Okay.
+
+437
+00:57:45,276 --> 00:57:54,456
+Uh, do you have board list build? Uh, we were just, um, working there on that, so we've got our rejection occurring.
+
+438
+00:57:55,056 --> 00:58:03,676
+And then the caller. Which isn't due to elite active list will also this one will have a promise so that one we don't have to do so
+
+439
+00:58:03,676 --> 00:58:12,786
+many checks for if we want to do the same thing we were doing for where our of equals and air not available.
+
+440
+00:58:14,986 --> 00:58:19,966
+And then returning. And then.
+
+441
+00:58:26,196 --> 00:58:30,136
+Uh. RV equals that. And then returning.
+
+442
+00:58:31,246 --> 00:58:40,966
+And then. If we were able to lead, if we were able to succeed.
+
+443
+00:58:46,546 --> 00:58:51,226
+What is the original history of the operation successfully?
+
+444
+00:58:52,096 --> 00:58:59,296
+I'm gonna have to update this documentation, but, like, otherwise, we're going to resolve with false.
+
+445
+00:58:59,626 --> 00:59:07,696
+They've succeeded. Reject or reject.
+
+446
+00:59:13,146 --> 00:59:20,076
+Okay. Boo succeeded equals false.
+
+447
+00:59:20,076 --> 00:59:30,906
+We're going to say succeeded equals true. And then down here, here, we're going to release our guard.
+
+448
+00:59:32,736 --> 00:59:41,106
+And this is when we will, um, dispatch or animal to the main thread.
+
+449
+00:59:52,326 --> 00:59:59,016
+Say, Hey. Resolve.
+
+450
+01:00:14,226 --> 01:00:18,596
+Two was as do delete active lists to delete active lists.
+
+451
+01:00:18,606 --> 01:00:24,066
+Now I am expecting a number of compilation errors here.
+
+452
+01:00:24,276 --> 01:00:28,596
+Let's see what we get. Let's see if we can suss those out.
+
+453
+01:00:33,026 --> 01:00:38,246
+One of the unfortunate things is that I don't think we've got a great testing like automated testing story for these things.
+
+454
+01:00:38,576 --> 01:00:44,006
+Um, because it's like UI, like OS integration.
+
+455
+01:00:50,876 --> 01:01:00,756
+You know, the alert service. Hmm. So this is all going to have to be, like, manual testing, I think, which is a pain.
+
+456
+01:01:05,476 --> 01:01:10,456
+Check this out. I've got, like, coke and caffeinated tea at the same time.
+
+457
+01:01:15,116 --> 01:01:18,266
+Awkward asks air handler release is not needed.
+
+458
+01:01:19,466 --> 01:01:23,456
+Let's see. Damn this one. You mean this one?
+
+459
+01:01:24,056 --> 01:01:27,176
+Undo delete active list. Or is there a one that I missed?
+
+460
+01:01:38,036 --> 01:01:41,756
+No. Didn't notice. It says orcas. Okay. No problem.
+
+461
+01:01:42,236 --> 01:01:45,806
+Whoa. I don't want to do an artifact build. Nope.
+
+462
+01:01:46,436 --> 01:01:51,086
+I want to be doing a full blown binary build. This is not going to work with a an artifact build.
+
+463
+01:01:51,146 --> 01:01:54,236
+So, um.
+
+464
+01:01:54,956 --> 01:01:58,796
+Go ahead and stop. Stop.
+
+465
+01:02:01,296 --> 01:02:04,746
+Oh, it's not doing an hour. In fact, it looks like it was going to get things.
+
+466
+01:02:06,726 --> 01:02:11,676
+I don't know what it was getting. Execute Node.
+
+467
+01:02:12,126 --> 01:02:18,096
+What are you noting about? Dev tools stuff.
+
+468
+01:02:24,066 --> 01:02:28,896
+There's no way. There is no way. What? Yeah.
+
+469
+01:02:28,926 --> 01:02:32,826
+That's an artifact, Bill. No wonder it succeeded. There's no way.
+
+470
+01:02:39,546 --> 01:02:44,016
+Hopefully this doesn't take too, too long. I'm hoping to hit the air as relatively quickly.
+
+471
+01:02:45,486 --> 01:02:58,526
+Yeah, that's rebuilding widget. One thing we can't forget, and I should put it in my list of things to do here.
+
+472
+01:03:01,046 --> 01:03:07,016
+Oh, yeah. I've got to update all the callers. Yep, yep, yep. That's important.
+
+473
+01:03:07,916 --> 01:03:12,926
+So we have. Upgraded this thing to this.
+
+474
+01:03:13,766 --> 01:03:17,396
+We've done both of these. Now we need to do these.
+
+475
+01:03:19,646 --> 01:03:23,096
+And then we're going to update the collars. All the collars.
+
+476
+01:03:24,716 --> 01:03:27,806
+Okay. We've hit our errors. What kind of errors are we hitting here?
+
+477
+01:03:28,776 --> 01:03:36,536
+Um, unknown type in the header trump list builder.
+
+478
+01:03:37,916 --> 01:03:44,426
+Oh, it wants the fully qualified name. Okay. Uh, what else?
+
+479
+01:03:45,296 --> 01:03:49,106
+Too few arguments to the function call to do a board list build.
+
+480
+01:03:49,346 --> 01:03:57,745
+I see. Yeah, that's true. Do abort list build is expecting, uh, the ref pointer thing.
+
+481
+01:03:57,746 --> 01:04:02,336
+So where all the places that I call it, can I just pass null pointer.
+
+482
+01:04:05,916 --> 01:04:19,816
+NULL pointer. What might be better actually, instead of just having like a maybe like a pointer.
+
+483
+01:04:20,896 --> 01:04:28,756
+Let's do a bought list build thing that has maybe this ref pointer is to use a, a a maybe.
+
+484
+01:04:29,446 --> 01:04:36,346
+Um, that might be smarter. You remember name do delete active list.
+
+485
+01:04:40,656 --> 01:04:55,216
+Right. I need to add that as well. To the header.
+
+486
+01:04:56,236 --> 01:05:08,596
+All right. I'm pretty sure you may have seen me do this before where you can use the the maybe construct so that instead of passing,
+
+487
+01:05:08,596 --> 01:05:10,916
+like, maybe a point a pointer.
+
+488
+01:05:10,936 --> 01:05:19,366
+Otherwise not you pass what's called a maybe, which wraps like instead of it being the sort of explosive thing that, you know,
+
+489
+01:05:19,396 --> 01:05:27,826
+if you if you do it wrong you reference a null pointer and crash a maybe is something that either wraps a value or is nothing.
+
+490
+01:05:28,366 --> 01:05:37,866
+Um. It's either something or nothing. And I think I used it in the page icon protocol handler maybe.
+
+491
+01:05:39,906 --> 01:05:45,865
+Or was it called result? Use her soul to return.
+
+492
+01:05:45,866 --> 01:05:49,976
+Okay. Maybe what I want is.
+
+493
+01:05:49,976 --> 01:06:04,596
+Maybe I think. Nothing is nothing.
+
+494
+01:06:08,136 --> 01:06:13,716
+Do something, you pass it some something or nothing.
+
+495
+01:06:15,096 --> 01:06:21,276
+This also failed. What went wrong? No matching member function to call to maybe resolve.
+
+496
+01:06:24,156 --> 01:06:30,876
+Uh, maybe you resolve what's in the wrong file.
+
+497
+01:06:33,586 --> 01:06:41,716
+May be resolve. Do we always pass?
+
+498
+01:06:55,886 --> 01:07:00,566
+Do I have to resolve with something? Mate, can I say maybe resolve?
+
+499
+01:07:02,436 --> 01:07:06,056
+So undefined is what I want. Yeah. Maybe resolve with undefined.
+
+500
+01:07:15,266 --> 01:07:23,376
+Let's do a board list, bill. Because I don't think we were ever.
+
+501
+01:07:25,246 --> 01:07:28,396
+Yeah. He just supports it and clears it. Okay.
+
+502
+01:07:40,626 --> 01:07:48,786
+We might actually get to the linking stage here. That doesn't mean anything, doesn't mean it's not going to completely crash on us whenever we run it.
+
+503
+01:07:51,986 --> 01:07:55,286
+And certainly, like all of the call points are going to break.
+
+504
+01:07:55,556 --> 01:08:01,736
+But we are linking. That's good. So no obvious, obvious build problems.
+
+505
+01:08:03,116 --> 01:08:08,156
+But this is going to I'm going to want to think about this like no point or thing.
+
+506
+01:08:08,156 --> 01:08:11,486
+I'd rather use a maybe and I'd rather do it now before I forget.
+
+507
+01:08:25,016 --> 01:08:28,466
+So the way you use a maybe and I think I can.
+
+508
+01:08:30,986 --> 01:08:37,646
+I think I can pass them maybe through a lambda like I do a promise to a different a different thread.
+
+509
+01:08:38,666 --> 01:08:54,256
+Um. You can do like a coffee pass by a raft known as method store copy pass by.
+
+510
+01:08:54,256 --> 01:08:58,575
+Right. Ref, can I pass? Can I pass?
+
+511
+01:08:58,576 --> 01:09:13,446
+I maybe. Okay.
+
+512
+01:09:13,496 --> 01:09:21,396
+Do. The ball, not the.
+
+513
+01:09:29,356 --> 01:09:33,526
+Yeah. You can pass a maybe. Yeah, that's probably what I want.
+
+514
+01:09:35,236 --> 01:09:39,336
+Okay. So I actually built.
+
+515
+01:09:39,426 --> 01:09:47,376
+Incredible, but not good enough. Where's the thing where it's like, hey, this thing might.
+
+516
+01:09:48,156 --> 01:09:56,286
+Yeah, I don't want this to be a ref point or promise. I want to be a maybe promise or a copy pass by.
+
+517
+01:09:56,316 --> 01:09:59,496
+And I don't even know what this thing is. What is store copy.
+
+518
+01:10:00,216 --> 01:10:10,766
+That's paragraph. What is this thing?
+
+519
+01:10:14,366 --> 01:10:40,456
+Thread utils. He had a storage and passing argument type decorators.
+
+520
+01:10:43,516 --> 01:10:48,306
+Mm hmm. I think I'm just going to say.
+
+521
+01:10:50,336 --> 01:10:55,796
+A, um. Maybe.
+
+522
+01:11:10,296 --> 01:11:16,266
+An update or thread, you pass a vulnerable method on a maybe zoom constraints.
+
+523
+01:11:17,046 --> 01:11:26,836
+Yeah. I'm going to pass a maybe. A rough point or promise.
+
+524
+01:11:29,876 --> 01:11:43,326
+Copy paste. And then what?
+
+525
+01:11:45,126 --> 01:11:48,786
+Seen soon comes some constraint constraints.
+
+526
+01:11:57,646 --> 01:12:01,206
+I see it will call it on some directly past constraints.
+
+527
+01:12:02,736 --> 01:12:08,806
+It's just a contest, maybe. Okay. Okay.
+
+528
+01:12:28,656 --> 01:12:33,636
+Um. And then what you do with a maybe.
+
+529
+01:12:35,766 --> 01:12:38,796
+Is if the maybe.
+
+530
+01:12:42,066 --> 01:12:48,246
+Is something. Yeah. Okay. Called ref on it.
+
+531
+01:12:51,086 --> 01:12:54,386
+Constraints. Dot ref. Yeah. Okay.
+
+532
+01:12:57,556 --> 01:13:02,185
+If. Promised.
+
+533
+01:13:02,186 --> 01:13:07,196
+If promised, promised. RF may be reject.
+
+534
+01:13:10,586 --> 01:13:17,926
+Is this program. Otherwise.
+
+535
+01:13:19,906 --> 01:13:26,836
+And then what we're going to do is we're going to update the signature here to abort list build to take.
+
+536
+01:13:29,496 --> 01:13:34,146
+And maybes are defined inside of.
+
+537
+01:13:36,766 --> 01:13:48,746
+Maybe. Where?
+
+538
+01:13:51,776 --> 01:13:58,926
+What to include maybe here. I don't know if it's going to be happy too.
+
+539
+01:13:58,926 --> 01:14:02,246
+Just browsing context, maybe not age.
+
+540
+01:14:03,786 --> 01:14:15,326
+I think I'm going to have to include maybe over here. Looks like there's been some effort to put this in alphabetical order.
+
+541
+01:14:17,376 --> 01:14:21,756
+Okay. Maybe so.
+
+542
+01:14:22,176 --> 01:14:28,746
+Maybe this. And then whenever we call, do a port, a port list, build.
+
+543
+01:14:28,986 --> 01:14:32,826
+In those other contexts, you pass nothing.
+
+544
+01:14:34,416 --> 01:14:40,406
+I think it's like this. Nothing. You pass?
+
+545
+01:14:40,416 --> 01:14:45,656
+Just nothing. Instead of the null pointer.
+
+546
+01:14:52,666 --> 01:14:57,976
+And like that. No more, no point or exceptions. Think that's the theory.
+
+547
+01:14:59,776 --> 01:15:05,326
+A question from Loopy 750. Hey, is it possible to compile Firefox release version instead of nightly?
+
+548
+01:15:06,466 --> 01:15:13,696
+Yes, I think there is documentation on Firefox source docs.
+
+549
+01:15:15,106 --> 01:15:18,826
+Build. Release configuring. Build options.
+
+550
+01:15:18,826 --> 01:15:24,796
+Release promotions. This.
+
+551
+01:15:25,876 --> 01:15:32,416
+Enable release. Um, and then, like, branding.
+
+552
+01:15:32,856 --> 01:15:41,556
+Like, I think what you want to do is you want to like use the Mozilla board projects or releases rather.
+
+553
+01:15:43,506 --> 01:15:47,735
+And then there's like a Mozilla release repository.
+
+554
+01:15:47,736 --> 01:15:53,796
+This is the repository you want to use. And then what are the build instructions?
+
+555
+01:15:54,396 --> 01:15:57,846
+Mozilla Firefox release build with branding.
+
+556
+01:16:00,386 --> 01:16:04,186
+Uh, building Firefox window?
+
+557
+01:16:04,196 --> 01:16:12,036
+No Linux. And then there's like.
+
+558
+01:16:19,666 --> 01:16:36,876
+Dore Gold Style Builder, Chrome and Building. I think there's an argument to the configuration that's like use official branding.
+
+559
+01:16:42,016 --> 01:16:57,126
+Last builds. Those official builds use miles config files so recommended use the default build options.
+
+560
+01:16:58,396 --> 01:17:01,396
+Yeah. Production pools aren't really appropriate for local builds. I concur.
+
+561
+01:17:01,426 --> 01:17:04,426
+Like, I don't know if you'd want to. Yes, it is possible.
+
+562
+01:17:04,426 --> 01:17:09,526
+But you probably don't want to. Like you probably don't want to use the.
+
+563
+01:17:11,276 --> 01:17:18,726
+The the branding what if you want the code but it looks like kind of got the nightly icon.
+
+564
+01:17:18,746 --> 01:17:22,166
+You're going to want to clone the Mozilla release repository and then use Mark
+
+565
+01:17:22,166 --> 01:17:27,486
+build there and that will give you effectively the release version of Firefox.
+
+566
+01:17:27,506 --> 01:17:34,075
+It's just not going to have the the official branding. Okay.
+
+567
+01:17:34,076 --> 01:17:37,856
+So what else failed here? It doesn't like some of my maybe business.
+
+568
+01:17:38,666 --> 01:17:41,426
+Let's see if we can figure out why. Oh, big ole error. Okay.
+
+569
+01:17:41,426 --> 01:17:48,146
+So union member values reference statements on maybe storage base promised to non-customers to Microsoft Extension.
+
+570
+01:17:48,776 --> 01:17:51,476
+That's a warning instantiation. No, no, no, no,
+
+571
+01:17:51,476 --> 01:18:07,526
+no error add declared as a point to a reference of type ref pointer dom promise on maybe storage base so it doesn't like the fact that I used.
+
+572
+01:18:11,616 --> 01:18:16,996
+Here is a pointer, a reference of type pointer declared as a point to a reference.
+
+573
+01:18:18,106 --> 01:18:26,716
+I see. I see. That's fair.
+
+574
+01:18:33,316 --> 01:18:36,766
+Can I do? Like, what's what's the right way to do this? Maybe.
+
+575
+01:18:36,766 --> 01:18:47,326
+Promise. Maybe Mars promise holder.
+
+576
+01:18:58,166 --> 01:19:02,126
+Oh, and I also want to it's not just that I want to call it with.
+
+577
+01:19:05,486 --> 01:19:11,096
+Maybe I want to say some promise.
+
+578
+01:19:11,096 --> 01:19:14,726
+Some promise. That's what you want to pass there.
+
+579
+01:19:21,136 --> 01:19:26,596
+I don't know if that's going to make much better. Uh, and it doesn't like nothing.
+
+580
+01:19:28,076 --> 01:19:31,196
+Class, maybe consider it a constructor.
+
+581
+01:19:32,736 --> 01:19:38,156
+It's a lot of issues here. Unknown type name. Did you mean promise on 517?
+
+582
+01:19:47,826 --> 01:20:00,136
+I mean this. All right.
+
+583
+01:20:00,146 --> 01:20:08,076
+Let's see what airs out now. Yeah, Dench is correct.
+
+584
+01:20:08,106 --> 01:20:12,606
+You can't even build the real released version as you'll be missing some API keys for services, correct?
+
+585
+01:20:13,926 --> 01:20:19,686
+Correct. Okay.
+
+586
+01:20:19,726 --> 01:20:33,076
+More problems. More problems. So this first thing is a warning, and it doesn't seem super related to, uh.
+
+587
+01:20:34,666 --> 01:20:40,456
+Okay, okay, okay. Enough, enough, enough. First warning.
+
+588
+01:20:44,606 --> 01:20:50,036
+No, this does seem related to Microsoft Extension.
+
+589
+01:20:50,366 --> 01:20:58,736
+Your very valid reference to such and such. Inspiration and memory may be.
+
+590
+01:21:03,656 --> 01:21:12,026
+The storage space. Warning.
+
+591
+01:21:12,036 --> 01:21:22,796
+Warning. Okay. Andreas is declaring declares a pointer to a reference.
+
+592
+01:21:28,476 --> 01:21:37,386
+When saying. When we're instantiating the template class.
+
+593
+01:21:47,556 --> 01:21:56,086
+So why don't you like that? Like. When I call something with nothing.
+
+594
+01:21:59,336 --> 01:22:08,776
+So wireframe, for example. Or.
+
+595
+01:22:24,076 --> 01:22:34,606
+This is generated code. They call back pads that they.
+
+596
+01:22:50,876 --> 01:23:01,946
+Texture was and sheer rendered texture take. Maybe the external image ID, which is a maybe it's a type of maybe external image.
+
+597
+01:23:04,126 --> 01:23:08,206
+And then there's an. I see. I see.
+
+598
+01:23:10,816 --> 01:23:14,296
+So did I do this wrong? Where?
+
+599
+01:23:19,366 --> 01:23:27,796
+My. Should be like.
+
+600
+01:23:39,196 --> 01:23:43,146
+Yeah. C++. Hilarious.
+
+601
+01:23:43,896 --> 01:23:49,696
+It's hilarious stuff. Okay.
+
+602
+01:23:50,426 --> 01:23:59,726
+More errors. Is it the same error?
+
+603
+01:24:10,066 --> 01:24:13,126
+Non-Contact, low value referee. Stop it.
+
+604
+01:24:14,696 --> 01:24:21,806
+Taking focus online to voice have not caused l value reference to type.
+
+605
+01:24:23,866 --> 01:24:30,406
+Applying to a temporary of type. Constables reference.
+
+606
+01:24:41,106 --> 01:24:46,516
+Oh. Is it supposed to be taking a concert?
+
+607
+01:24:47,266 --> 01:24:53,346
+Is that expected? Yeah.
+
+608
+01:24:54,016 --> 01:24:58,736
+Konst. Excuse me.
+
+609
+01:25:07,716 --> 01:25:12,876
+Maybe our value doesn't look correct. Maybe.
+
+610
+01:25:16,086 --> 01:25:21,996
+Oh. All right. Yeah. Okay. I.
+
+611
+01:25:22,246 --> 01:25:28,236
+I think that's what you're talking about. I think that's what you're talking about.
+
+612
+01:25:29,556 --> 01:25:42,426
+My C++ is not incredible. Um, and certainly, uh, whenever it comes to things like more modern usages of, like, is this what a monad?
+
+613
+01:25:42,576 --> 01:25:49,776
+Is that what they call these things? Um. Might be called a monad.
+
+614
+01:25:50,076 --> 01:25:56,556
+Uh, yeah. My usage. Like, I'd. I'd say I'm far more used to, uh, JavaScript.
+
+615
+01:25:57,186 --> 01:26:00,296
+Uh, portable.
+
+616
+01:26:03,386 --> 01:26:14,806
+Let's see what he thinks of that. You can't just store our values and structs.
+
+617
+01:26:15,436 --> 01:26:25,516
+Sounds like a good. Good point. Sounds like a plausible theory, Chris.
+
+618
+01:26:38,176 --> 01:26:41,236
+Education is not the jobless builder.
+
+619
+01:26:43,366 --> 01:26:49,216
+Here in New Roundabout Method, a jobless builder for 71.
+
+620
+01:26:57,866 --> 01:27:01,496
+Oh. Pass by. Right, Reverend. So maybe.
+
+621
+01:27:10,916 --> 01:27:14,546
+I don't actually know what this does. Full disclosure.
+
+622
+01:27:15,296 --> 01:27:18,956
+I mean, right reference. Uh.
+
+623
+01:27:30,736 --> 01:27:35,956
+L reference. Just pass by o reference.
+
+624
+01:27:37,596 --> 01:27:40,806
+Where happens if I say Paris by reference?
+
+625
+01:27:45,436 --> 01:27:48,556
+What happens then? Let's just monkey around.
+
+626
+01:27:49,366 --> 01:27:52,846
+Anyway, good luck. Love, says Orcas. Yeah.
+
+627
+01:27:52,846 --> 01:27:59,266
+I might need some help. I might need some help from people who know these primitives better than I do.
+
+628
+01:28:02,476 --> 01:28:06,916
+Moving stuff off the main thread. Hilarious. Um.
+
+629
+01:28:10,526 --> 01:28:14,916
+Well, let's see what happens. Let's just poke and see what happens if I just get rid of this thing.
+
+630
+01:28:18,426 --> 01:28:26,166
+So, one, two, three. Yeah. So that is just we're passing this maybe ref pointer.
+
+631
+01:28:33,006 --> 01:28:50,236
+How's it like that? And I think I actually have to go in a couple of minutes because I have a meeting.
+
+632
+01:28:53,626 --> 01:28:58,275
+This is getting a lot further than normally. It's actually linking.
+
+633
+01:28:58,276 --> 01:29:15,586
+That's incredible. I can't believe.
+
+634
+01:29:15,586 --> 01:29:23,296
+I can't believe it, but, uh, seems good.
+
+635
+01:29:23,686 --> 01:29:27,956
+We're going to want to definitely have someone who knows this stuff better than I do.
+
+636
+01:29:27,976 --> 01:29:34,756
+Review it, make sure I did my job right. But it's compiling.
+
+637
+01:29:35,536 --> 01:29:40,006
+That's fun. And we got rid of that null pointer, which is really nice.
+
+638
+01:29:40,006 --> 01:29:50,266
+Like, we get this maybe. And only if, um, you know, only if there's, like, a promise.
+
+639
+01:29:53,046 --> 01:30:00,296
+And then we can pass like nothing. We don't accidentally reference and no pointer.
+
+640
+01:30:03,036 --> 01:30:06,906
+Okay. That built. Hilarious.
+
+641
+01:30:08,676 --> 01:30:14,256
+So where do we get to abort list? Build, delete, active list.
+
+642
+01:30:14,706 --> 01:30:17,976
+Let's just see what happens if I call those. Let's see if it crashes.
+
+643
+01:30:17,976 --> 01:30:19,866
+And then I'm going to I'm going to end the stream here.
+
+644
+01:30:25,686 --> 01:30:31,566
+It might be slightly an optimized i guess r-value just prevented ref pointed increase and decreased the reference count.
+
+645
+01:30:31,716 --> 01:30:37,806
+Oh, I see. Okay. Well, we're doing a different optimization here, gang.
+
+646
+01:30:40,356 --> 01:30:45,556
+Uh. And I'm trying to remember what I used to do to test this.
+
+647
+01:30:45,576 --> 01:31:02,606
+It was like I wanted to get at the builder. New build there builder is taskbar service.
+
+648
+01:31:02,626 --> 01:31:08,866
+Yeah, taskbar service. We're going to create a late service.
+
+649
+01:31:09,226 --> 01:31:12,646
+Uh, we're going to get this service and assign one taskbar.
+
+650
+01:31:14,956 --> 01:31:21,436
+Okay. But t equals cc that thing.
+
+651
+01:31:23,116 --> 01:31:31,396
+Uh, get service i when taskbar t dot and then the t dot.
+
+652
+01:31:31,846 --> 01:31:35,056
+That's what they call Toronto. For people who are cool. Apparently.
+
+653
+01:31:35,816 --> 01:31:49,526
+Create Jobless builder false. So let's create a jobless builder but be equals to create jump list builder false be.
+
+654
+01:31:50,276 --> 01:31:56,006
+What happens if I say like a bought list build? No.
+
+655
+01:31:58,196 --> 01:32:07,476
+Uh. That's supposed to return a promise, is it not?
+
+656
+01:32:08,026 --> 01:32:15,466
+Let's build. What happened?
+
+657
+01:32:15,676 --> 01:32:23,746
+Extort and net list build or be bought and atlas build that returns a promise.
+
+658
+01:32:26,306 --> 01:32:30,746
+Beat out a four list build that returns nothing.
+
+659
+01:32:31,226 --> 01:32:35,426
+Did I fail to return the promise abort list?
+
+660
+01:32:35,426 --> 01:32:40,736
+Build. Oh, yes, I did.
+
+661
+01:32:40,826 --> 01:32:45,626
+I did. There is a thing I do and that build.
+
+662
+01:32:47,526 --> 01:33:01,516
+Where you actually return. The promise of Fort Bliss to build right down here.
+
+663
+01:33:07,926 --> 01:33:11,106
+Let's close that build.
+
+664
+01:33:31,276 --> 01:33:36,526
+Yeah. Our values and our values. What it makes me think of are moves and move.
+
+665
+01:33:36,536 --> 01:33:42,466
+Semantics which full disclosure.
+
+666
+01:33:42,556 --> 01:33:45,076
+Not comfortable with like I do not.
+
+667
+01:33:45,946 --> 01:33:55,546
+I understand the concept of moving a thing into a different functions sort of responsibilities own as opposed to copying it.
+
+668
+01:33:56,626 --> 01:34:00,376
+That makes sense, but C++ move semantics.
+
+669
+01:34:00,376 --> 01:34:10,756
+I've read the documentation on C++ move semantics multiple times and have gotten nowhere in terms of like trying to understand it.
+
+670
+01:34:11,146 --> 01:34:13,396
+And we've got like standard, standard, colon,
+
+671
+01:34:13,396 --> 01:34:23,056
+colon move and I get that it's moving a thing from one like zone of responsibility to another zone of responsibility,
+
+672
+01:34:23,386 --> 01:34:31,906
+but I don't know what the rules are. So, just so you know, let's run all those instructions again.
+
+673
+01:34:32,956 --> 01:34:38,596
+Uh, be creative. Okay. So a board list build should return a promise.
+
+674
+01:34:39,076 --> 01:34:42,676
+Can I await that promise? Yeah. And it's undefined.
+
+675
+01:34:42,676 --> 01:34:45,705
+So now that thing is off of the main thread.
+
+676
+01:34:45,706 --> 01:34:54,046
+So like let x equal and x is undefined, it completes the aborting of the list.
+
+677
+01:34:55,576 --> 01:35:06,556
+The list build happens off of the main threat. Now what was the other thing that we wanted to do, which was, uh, in here it was delete active list.
+
+678
+01:35:08,026 --> 01:35:13,756
+Let's try and do that off of the main thread because I think we also did that right, like we reported that delete active list.
+
+679
+01:35:14,716 --> 01:35:23,806
+It was like yeah let's let's call that. Is that also returning beat delete active list.
+
+680
+01:35:26,956 --> 01:35:31,276
+Huh? We're accidentally not returning the promise there, but, like, look, it's.
+
+681
+01:35:31,456 --> 01:35:39,196
+Everything's God. That's good. Um, but we obviously want to return the, uh.
+
+682
+01:35:41,206 --> 01:35:44,776
+Like we do here. We want to return the promise.
+
+683
+01:35:45,226 --> 01:35:51,806
+So delete active lists. We need to return the promise here.
+
+684
+01:35:53,106 --> 01:35:59,406
+Okay. I'm going to commit. What do I have as a like my current?
+
+685
+01:35:59,406 --> 01:36:02,776
+Come in on top. Make the act fail method. Return the promise.
+
+686
+01:36:04,326 --> 01:36:09,966
+Make a bunch of other methods. Return promises.
+
+687
+01:36:10,506 --> 01:36:16,026
+I'm going to clean all this up and fold it all together once I have a better story.
+
+688
+01:36:17,466 --> 01:36:21,246
+But for now, I've committed that. Booyah.
+
+689
+01:36:23,826 --> 01:36:31,716
+So. TLDR When you run this, you got all of these things that show up in here and then they all go away.
+
+690
+01:36:32,856 --> 01:36:38,166
+Um. I don't know why, but it's probably because Windows Jump was built there.
+
+691
+01:36:39,036 --> 01:36:43,926
+It needs to be updated. Updated to use those new promising things, which I will do at a later date.
+
+692
+01:36:43,926 --> 01:36:49,116
+So I did check these off, even though they've only gotten the barest amount of testing.
+
+693
+01:36:49,956 --> 01:36:56,226
+We're going to do these ones next week and then we're going to update all the callers.
+
+694
+01:36:56,646 --> 01:37:04,566
+And then let's see if we can close this off by like removing the locks and then migrating instead of using a dedicated, lazy thread.
+
+695
+01:37:04,566 --> 01:37:08,106
+We'll try and move it over to the the background thread pool.
+
+696
+01:37:08,466 --> 01:37:11,916
+So we're I'd say about halfway through this, I apologize.
+
+697
+01:37:11,916 --> 01:37:17,526
+It's been a little slow. I'm having to like learn a lot as I do this.
+
+698
+01:37:17,946 --> 01:37:22,746
+And but I think we're going to this is going to be an interesting part because we're actually going to clean up
+
+699
+01:37:22,746 --> 01:37:30,036
+a bunch of stuff like all of these methods where we like have the method and then we have like a do method.
+
+700
+01:37:30,396 --> 01:37:41,796
+I feel like a lot of this can be done inside of like lambdas within the caller or within the call site that may or may not clean things up.
+
+701
+01:37:41,826 --> 01:37:44,676
+I don't know if I'll do that, but it's something I'm considering.
+
+702
+01:37:44,676 --> 01:37:51,575
+But at the very least, we can get off of this extra lazy thread that's been created called the IO thread and instead use the background thread pool,
+
+703
+01:37:51,576 --> 01:37:55,176
+which is better for resources. All right. So I'm going to call it there.
+
+704
+01:37:55,206 --> 01:37:59,916
+Thank you so much for watching. Episode 280 298 of The Joy of Coding.
+
+705
+01:37:59,916 --> 01:38:02,016
+I hope that was interesting. Let me know what you thought.
+
+706
+01:38:02,196 --> 01:38:08,076
+Click on this link, rate this episode and you can tell me what you thought and what it is that you want to see me do in the future.
+
+707
+01:38:08,076 --> 01:38:13,985
+I'm going to put a rate this episode link in the in the chat there you can fall, fill that out.
+
+708
+01:38:13,986 --> 01:38:19,266
+There's a little reward at the end with a picture of me going like a at the end of the forum so you can
+
+709
+01:38:19,266 --> 01:38:26,106
+it's a unique one every time collect them all there you can think of them as like little collector cards.
+
+710
+01:38:27,696 --> 01:38:31,596
+You don't have to think of them that way. But there you go. Thanks again for watching.
+
+711
+01:38:31,596 --> 01:38:34,656
+I hope you have yourselves a great week. I will see you next week.
+
+712
+01:38:35,076 --> 01:38:38,346
+Have a so. Have yourselves a great week.
+
+713
+01:38:39,906 --> 01:38:44,226
+Take everybody. Bye bye. The joy.
+
+714
+01:38:45,136 --> 01:38:47,586
+Loading the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

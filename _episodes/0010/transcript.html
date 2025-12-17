@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Profiling - Episode 10</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Profiling - Episode 10</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=bb3f233d-9d35-4d75-a662-ac1600e2edb2</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=bb3f233d-9d35-4d75-a662-ac1600e2edb2">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:02,370 --> 00:00:06,920
+Hello, everyone, and welcome to Episode 10 of The Joy of Profiling on my left eye, Jeff.
+
+2
+00:00:06,920 --> 00:00:12,490
+On my right eye, Marcus. I'm Mike Irem, looking at profiles. Let's get started.
+
+3
+00:00:12,490 --> 00:00:17,890
+OK. So the first one we're looking at comes to us from USCIRF. Here's the bug.
+
+4
+00:00:17,890 --> 00:00:22,900
+Apparently they were on Twitter. They were scrolling down on the page using the spacebar.
+
+5
+00:00:22,900 --> 00:00:30,150
+They're clicking on posts and they're clicking, scrolling up and down, using trackpad, basically scrolling on Twitter, it sounds like.
+
+6
+00:00:30,150 --> 00:00:37,030
+And they're reporting Janki scrolling Janki transition effects. And this gets worse the longer that they scroll down the page,
+
+7
+00:00:37,030 --> 00:00:41,800
+which isn't super surprising because the page gets more stuff added to it as you scroll down.
+
+8
+00:00:41,800 --> 00:00:51,630
+And they sent us a humungous profile. And I'm just going to choose a chunk here, maybe the last four seconds.
+
+9
+00:00:51,630 --> 00:00:58,840
+To look at. To start. What's that? Oh, they've got every thread.
+
+10
+00:00:58,840 --> 00:01:03,430
+OK. We're looking so big. That's why the profile is humongous.
+
+11
+00:01:03,430 --> 00:01:09,730
+Where is the content? Here it is the one.
+
+12
+00:01:09,730 --> 00:01:17,180
+OK. So let's reflow and see what's going on.
+
+13
+00:01:17,180 --> 00:01:22,350
+And that three flow cause I read a script.
+
+14
+00:01:22,350 --> 00:01:34,630
+Yeah. So. On this Twitter page, there's some JavaScript that's looking at the offset width of something when they update the tweet list.
+
+15
+00:01:34,630 --> 00:01:36,430
+And they probably shouldn't do that,
+
+16
+00:01:36,430 --> 00:01:45,430
+but that's causing LAYO flushes and that's that can be expensive and probably more and more expensive as the page gets longer and longer.
+
+17
+00:01:45,430 --> 00:01:52,520
+So that's the first thing I'm going to write.
+
+18
+00:01:52,520 --> 00:02:09,170
+A judge is causing land flushes, JavaScript scripts getting offset with updating tweets, which will get slower and slower as Page gets longer.
+
+19
+00:02:09,170 --> 00:02:12,800
+OK, what else? I can zoom out. Let's find another chunk.
+
+20
+00:02:12,800 --> 00:02:18,480
+Or here's another chunk right here. What's this? There's two reflow in a row.
+
+21
+00:02:18,480 --> 00:02:24,890
+Maybe. This is separate reflow.
+
+22
+00:02:24,890 --> 00:02:33,130
+What is the time of this refloating? This lasted about this one lasted 156 milliseconds.
+
+23
+00:02:33,130 --> 00:02:39,870
+This one lasted half a second. Do we know why? And why are they not able to timeline?
+
+24
+00:02:39,870 --> 00:02:44,300
+There's an unfixable. OK. That's OK.
+
+25
+00:02:44,300 --> 00:02:52,260
+You know the number you want in. So this one is interruptible layout.
+
+26
+00:02:52,260 --> 00:02:53,750
+Sorry, what was that bug?
+
+27
+00:02:53,750 --> 00:03:08,280
+The reason these aren't annotated in the line thingy, which got to run at argu thread header is that these red ricos happened outside of a refresher.
+
+28
+00:03:08,280 --> 00:03:17,620
+And we don't get a lot that we're going to let this happen. We're going to show you the book, what's fine five months ago to fix.
+
+29
+00:03:17,620 --> 00:03:27,470
+I'm going to fix it now. Oh, no. One three five zero zero zero nine zero nine zero nine for you.
+
+30
+00:03:27,470 --> 00:03:36,990
+Yes. OK. OK. So this reflow was like an interruptible one just because we moved the mouse.
+
+31
+00:03:36,990 --> 00:03:47,050
+So let's let's focus on that one. Lippitt.
+
+32
+00:03:47,050 --> 00:04:02,400
+Text is pretty spread out here. Take the helm.
+
+33
+00:04:02,400 --> 00:04:12,430
+What what is it that you do not use this function before, so this will take it and merge the function into color across the entire tree.
+
+34
+00:04:12,430 --> 00:04:17,120
+So basically we have this called the James Malac. Yeah.
+
+35
+00:04:17,120 --> 00:04:28,830
+I'm not really interested in like I basically want to charge any calls to Mallak into their Horler.
+
+36
+00:04:28,830 --> 00:04:35,880
+So the hope is you can like look at some of these things and.
+
+37
+00:04:35,880 --> 00:04:57,570
+Take some of the, like, leaf pieces and move them up into the collars so that your you can get a better picture of what's going on here.
+
+38
+00:04:57,570 --> 00:05:03,350
+Hash table searches pridham care about what those are individually.
+
+39
+00:05:03,350 --> 00:05:15,300
+Our hash tables are slow, but. But we won't know it's calling in, but we want it we want we want to have that hash table time.
+
+40
+00:05:15,300 --> 00:05:22,780
+More associated with the user of the hash table than. The hash table itself dash.
+
+41
+00:05:22,780 --> 00:05:34,530
+And freeing them very. Also.
+
+42
+00:05:34,530 --> 00:05:40,180
+It's not going to make year. It's pretty it's a pretty flat profile.
+
+43
+00:05:40,180 --> 00:06:03,150
+So we're going to try a different. Tack here.
+
+44
+00:06:03,150 --> 00:06:10,770
+So one of the problems with layout like profiling is it has this recursive structure.
+
+45
+00:06:10,770 --> 00:06:24,110
+Yes. And it means that the time gets spread out.
+
+46
+00:06:24,110 --> 00:06:34,150
+Over all kinds of different stacks. Because basically, like this tax structure will mirror the dorm structure.
+
+47
+00:06:34,150 --> 00:06:43,440
+That's not really. We're not really interested in breaking it out that way. Do we have the ability to merge them?
+
+48
+00:06:43,440 --> 00:06:54,420
+Yeah, we do. Excellent. Though it could work better, but we're going to just try.
+
+49
+00:06:54,420 --> 00:07:02,830
+I think it's a little bit here. You smoke?
+
+50
+00:07:02,830 --> 00:07:08,700
+It is a quarter or a megabyte profile of my guys. Yeah, it's me.
+
+51
+00:07:08,700 --> 00:07:17,420
+I had this many dimensions or we like to see the ice.
+
+52
+00:07:17,420 --> 00:07:23,350
+Can you maybe hide the other threats and to you at the top? Maybe you were reprinting the graphs.
+
+53
+00:07:23,350 --> 00:07:28,110
+Maybe that's good. So, you know, what's nice about this menu is that it doesn't go way up.
+
+54
+00:07:28,110 --> 00:07:39,800
+You click on it. Yes. Raise. A person than someone that.
+
+55
+00:07:39,800 --> 00:07:47,550
+It's also not spelled with. That means that we're at the end of it.
+
+56
+00:07:47,550 --> 00:07:59,900
+As far as the. We had a bunch of my storage threads.
+
+57
+00:07:59,900 --> 00:08:09,840
+That's as much as we can get rid of. OK. OK, so we have this block frame reflow, so I'm going to merge that one in now.
+
+58
+00:08:09,840 --> 00:08:22,330
+We'll be. A lot flatter. Plana, not.
+
+59
+00:08:22,330 --> 00:08:32,680
+Profile wasn't so big, we could try and condense all functions and which is the tool that gives us the top functions.
+
+60
+00:08:32,680 --> 00:08:48,100
+That's the more I think this is in part. But I don't know what to do with large province.
+
+61
+00:08:48,100 --> 00:08:55,830
+What are you looking for? One thing I'm confused about is why we are taking so long to do a reflow.
+
+62
+00:08:55,830 --> 00:09:00,960
+Even though this report is interruptible. Well, when do we interrupt?
+
+63
+00:09:00,960 --> 00:09:06,740
+Well, we run out of time. Like we say, hey, we have painted in a while.
+
+64
+00:09:06,740 --> 00:09:11,790
+I think you ought to paint one of the cases where we interrupt for them.
+
+65
+00:09:11,790 --> 00:09:15,970
+I don't know. I think there is some kind of like threshold or time.
+
+66
+00:09:15,970 --> 00:09:25,100
+And then we say, OK, just hang on, we've got the other ones input. I like input, if that's what causes interrupt.
+
+67
+00:09:25,100 --> 00:09:37,010
+Well, then laughs Look at this. And the other question I have, why did this Genk with the D.C.?
+
+68
+00:09:37,010 --> 00:09:44,350
+But this vote was five, 13 days ago and likely, I think, create enabled keyboard Chebaa it at the point.
+
+69
+00:09:44,350 --> 00:09:49,790
+Coming up on the space. I don't know if it stays where it is. It is.
+
+70
+00:09:49,790 --> 00:10:03,150
+That's right. All right, so now we have.
+
+71
+00:10:03,150 --> 00:10:09,070
+A profile that is a little bit flat.
+
+72
+00:10:09,070 --> 00:10:19,410
+Some strong grain defining Virginia as a bunch of.
+
+73
+00:10:19,410 --> 00:10:38,780
+Really? Really, it feels a bit like this is just a lunch.
+
+74
+00:10:38,780 --> 00:10:44,130
+Here's a really huge laundry. You reflow take a long time.
+
+75
+00:10:44,130 --> 00:10:59,020
+Yeah. Though I agree that the the sort of the interesting question here is how come this is an interruptible reflow when I grew up being.
+
+76
+00:10:59,020 --> 00:11:04,440
+Like this, like how long is this end up being? One hundred fifty nine seconds.
+
+77
+00:11:04,440 --> 00:11:13,140
+I mean, make that's the threshold. I'm personal. Remember the economy was steady and you'll rebuild right after it.
+
+78
+00:11:13,140 --> 00:11:19,910
+You don't think there be more recruits to. How does inter interruptible reflow work?
+
+79
+00:11:19,910 --> 00:11:23,450
+I don't know. Are you sure that it can enter?
+
+80
+00:11:23,450 --> 00:11:27,740
+We can interrupt reflow to do paints.
+
+81
+00:11:27,740 --> 00:11:35,930
+I'm not sure we enjoy it, so it's if I remember correctly, we only do interruptible or equal whenever we're first loading.
+
+82
+00:11:35,930 --> 00:11:41,350
+The document. We still get those kind of strains that we're seeing here at the tail end.
+
+83
+00:11:41,350 --> 00:11:46,160
+But who knows, maybe maybe a page or something. That's what we do interact with very well.
+
+84
+00:11:46,160 --> 00:11:55,590
+And then. There is like input events, causes to interrupt the free flow and then continue later on.
+
+85
+00:11:55,590 --> 00:12:00,470
+And at the time of reflow is taking way too long.
+
+86
+00:12:00,470 --> 00:12:11,070
+Well, we have people. That's also and I don't know.
+
+87
+00:12:11,070 --> 00:12:27,500
+Yeah. Was anybody ever seen in interruptible reflow interrupted or says?
+
+88
+00:12:27,500 --> 00:12:37,540
+Has. I feel like if we had somehow broken interruptible reflow, that's like a thing.
+
+89
+00:12:37,540 --> 00:12:42,950
+It's really old. We wouldn't notice interruptible he with anything.
+
+90
+00:12:42,950 --> 00:13:12,070
+Yeah. The book I quoted was fixed a while back. I remember being so.
+
+91
+00:13:12,070 --> 00:13:17,770
+If I remember correctly. Think this by like.
+
+92
+00:13:17,770 --> 00:13:22,610
+At the APEC. Passengers I'm going to keep.
+
+93
+00:13:22,610 --> 00:13:34,300
+Film public widgets have proven draftable reflect the working account concept.
+
+94
+00:13:34,300 --> 00:13:43,030
+I don't maybe we don't interrupted for Paines. Many of the.
+
+95
+00:13:43,030 --> 00:13:47,650
+I think it's just so I could be. Oh, I seen that maybe.
+
+96
+00:13:47,650 --> 00:13:55,050
+I don't know what the point of interrupting paint included into the system.
+
+97
+00:13:55,050 --> 00:14:05,920
+Let's put it in there and have no use. You can paint. This happened in the group called.
+
+98
+00:14:05,920 --> 00:14:16,940
+We're. And his personal dicks ChipMOS wrote.
+
+99
+00:14:16,940 --> 00:14:30,260
+Yeah, we could certainly interrupt timeout. There is a time that the climate is.
+
+100
+00:14:30,260 --> 00:14:39,470
+Oldrich, hundred milliseconds. We're at.
+
+101
+00:14:39,470 --> 00:14:49,030
+You're going to idea how we paint, interrupted Regla. Greg Allen, Frank Tree is still in an inconsistent state.
+
+102
+00:14:49,030 --> 00:14:56,270
+That's just whereas when we says things in the wrong places.
+
+103
+00:14:56,270 --> 00:15:04,620
+OK, we reflow it live. It'll be like partially refloating, understood it.
+
+104
+00:15:04,620 --> 00:15:15,830
+Oh. I'll be nice to know more someday.
+
+105
+00:15:15,830 --> 00:15:23,990
+I don't know that there's much we can say about this other than like, yeah, we should probably make reflow faster.
+
+106
+00:15:23,990 --> 00:15:29,840
+Would be good if there were like ReFlow Benchmark's. You look very orderly.
+
+107
+00:15:29,840 --> 00:15:35,380
+Like. Somebody should really just, like, capture a Twitter and capture it.
+
+108
+00:15:35,380 --> 00:15:41,920
+Facebook, get it, get it, a lot of DOM nodes and then like, jiggle it a bit.
+
+109
+00:15:41,920 --> 00:15:51,220
+I think the ogre did have something like that recently that he thinks he fixed the thing where if you're Tombo,
+
+110
+00:15:51,220 --> 00:15:59,290
+the overall property on the roots go through and then we would lose restyle.
+
+111
+00:15:59,290 --> 00:16:05,620
+So we would sort of reset, but we wouldn't rebuild the entire bridge anymore. At least in some case.
+
+112
+00:16:05,620 --> 00:16:08,280
+And there was another case that was trying to work around for.
+
+113
+00:16:08,280 --> 00:16:15,760
+But we've got Twitter to fix it to no longer trouble the overflow property and the restyle most fixed title.
+
+114
+00:16:15,760 --> 00:16:19,960
+OK, so many of these things have gotten us talking, especially after that.
+
+115
+00:16:19,960 --> 00:16:27,850
+Apparently not. It's falling down. One of new things, vote on what this person was doing.
+
+116
+00:16:27,850 --> 00:16:32,680
+Is there other stuff in this profile because I just arbitrarily zoomed at the last year of science.
+
+117
+00:16:32,680 --> 00:16:41,320
+There might be other stuff? Well, one of the things that's a bit of a pain is with the merging in here.
+
+118
+00:16:41,320 --> 00:16:47,890
+You can't like you've to be careful to only do your focusing at the end.
+
+119
+00:16:47,890 --> 00:16:55,780
+Franjo percent oh. But otherwise, what other things could you have done?
+
+120
+00:16:55,780 --> 00:17:05,440
+If I do it like it, it would not be inconceivable for me to, like come in here and like do some merging and then want to, like, keep those merged.
+
+121
+00:17:05,440 --> 00:17:11,800
+But then zoom out from under the title. Then I zoom out on my focusing.
+
+122
+00:17:11,800 --> 00:17:16,560
+Oh, the focus I want to do. Yeah, I see that.
+
+123
+00:17:16,560 --> 00:17:21,060
+So on two different levels of stock. Well, yeah.
+
+124
+00:17:21,060 --> 00:17:27,120
+That is the problem that we talked about yesterday. And.
+
+125
+00:17:27,120 --> 00:17:36,050
+If you have some church functions in the ancestors of the note that you focus on, you might be focusing on more than one origin.
+
+126
+00:17:36,050 --> 00:17:44,110
+I know that had been collapsed into the synagogue because of been watching. And then if you undo.
+
+127
+00:17:44,110 --> 00:17:53,700
+Dee dee dee. Well, maybe the one or works, but if you're under the merger first, then it's nothing broken.
+
+128
+00:17:53,700 --> 00:17:59,050
+But if you want to keep working under the focus.
+
+129
+00:17:59,050 --> 00:18:03,830
+There's more tractable, this seems as if it's unintentional, right?
+
+130
+00:18:03,830 --> 00:18:08,370
+Know, the this is because we snap quarter. But not putting.
+
+131
+00:18:08,370 --> 00:18:15,230
+And this is as serious as this fraction of a fraction of heading the same size.
+
+132
+00:18:15,230 --> 00:18:20,730
+All right. Well, not our problem right now. Let's zoom out.
+
+133
+00:18:20,730 --> 00:18:26,810
+More. Because at the time, zooming is up there.
+
+134
+00:18:26,810 --> 00:18:40,280
+That's what I want to say. Very caring one.
+
+135
+00:18:40,280 --> 00:18:46,370
+Yeah. One hour after the other. What's happening here? That's the secondary flier just looking at it.
+
+136
+00:18:46,370 --> 00:18:53,810
+This is the most watched event. And the other one was the this. Wouldn't the most move event count as an A.
+
+137
+00:18:53,810 --> 00:18:58,280
+Like, wouldn't. Why would any Muslim is what triggered the flush.
+
+138
+00:18:58,280 --> 00:19:02,970
+But like to tell our guests. That's already been processed.
+
+139
+00:19:02,970 --> 00:19:10,410
+It's all over intending to execute the. Yeah, there's more reflow.
+
+140
+00:19:10,410 --> 00:19:14,970
+Down here to last moves had to come in line. Watch yourself out there.
+
+141
+00:19:14,970 --> 00:19:41,180
+It's true. On a timer or what?
+
+142
+00:19:41,180 --> 00:19:45,450
+Why is there tearing. Jerry cans?
+
+143
+00:19:45,450 --> 00:19:53,010
+That. But let's not worry about it right now.
+
+144
+00:19:53,010 --> 00:19:58,990
+Timer and a timer. So some set time outs firing.
+
+145
+00:19:58,990 --> 00:20:08,640
+There's some function. General.
+
+146
+00:20:08,640 --> 00:20:29,120
+Yes. Let's go back. Oh, [INAUDIBLE].
+
+147
+00:20:29,120 --> 00:20:36,890
+That's not what I wanted to do. It feels like things have gone slower.
+
+148
+00:20:36,890 --> 00:21:10,960
+If you are not catching the results of previous mergers merging from the start.
+
+149
+00:21:10,960 --> 00:21:39,610
+Oh, yes. Well.
+
+150
+00:21:39,610 --> 00:21:45,850
+I'm just trying to flatten out again. I'm not.
+
+151
+00:21:45,850 --> 00:22:01,720
+Well. That's your child, child screamed.
+
+152
+00:22:01,720 --> 00:22:07,060
+It doesn't appear to be getting slower, linearly like I would if we're not hashing out.
+
+153
+00:22:07,060 --> 00:22:11,290
+I wouldn't imagine that we'd feel this like any like war.
+
+154
+00:22:11,290 --> 00:22:17,700
+Every time we do one of those that would get more and more slow, it feels like a constant.
+
+155
+00:22:17,700 --> 00:22:26,990
+Boatswain's. I think I remember it getting prejudice as low as we had more of those consoles.
+
+156
+00:22:26,990 --> 00:22:39,540
+I might be a. Greg.
+
+157
+00:22:39,540 --> 00:22:47,820
+Incidentally, the fellow who I don't know if you're familiar with some of the military unfamiliarity, I saw your local talk.
+
+158
+00:22:47,820 --> 00:22:51,720
+Yeah. And are you familiar with scripted?
+
+159
+00:22:51,720 --> 00:22:59,460
+Yes. I have someone compiled some VM JavaScript using instructions seeking money out in the browser itself.
+
+160
+00:22:59,460 --> 00:23:05,950
+That fellow was recently commenting like that part that the issue tracker.
+
+161
+00:23:05,950 --> 00:23:13,120
+I think he's using the issue like that. Perfect. You see, Mountlake profile some of this regime or something.
+
+162
+00:23:13,120 --> 00:23:19,810
+Cool. J.S., it's like the usual.
+
+163
+00:23:19,810 --> 00:23:25,590
+Hard to tease out anything. We've got.
+
+164
+00:23:25,590 --> 00:23:30,340
+I've got nothing on the JFK. It looks like just General J.S. execution here.
+
+165
+00:23:30,340 --> 00:23:36,600
+Run on a lot of it for. And it's a long time.
+
+166
+00:23:36,600 --> 00:23:54,600
+Sixty seventh Milicic. I think the best like the best way to get action on some of this stuff.
+
+167
+00:23:54,600 --> 00:24:03,670
+I don't know. I think it's like four pages long with a really slow.
+
+168
+00:24:03,670 --> 00:24:09,720
+No, I think to to get action on this kind of thing we need to work with.
+
+169
+00:24:09,720 --> 00:24:15,690
+The author page. Right.
+
+170
+00:24:15,690 --> 00:24:25,840
+I mean, we do know people, it's whatever it is like this. But it would need it would need to be sort of like a collaboration.
+
+171
+00:24:25,840 --> 00:24:35,300
+Because. I don't think anybody knows even how to figure out.
+
+172
+00:24:35,300 --> 00:24:48,040
+Like if you had. Then something.
+
+173
+00:24:48,040 --> 00:24:54,470
+Next week, visibility. That sounds expensive.
+
+174
+00:24:54,470 --> 00:25:05,080
+You had an minified source. This would be better.
+
+175
+00:25:05,080 --> 00:25:10,170
+Unmodified sources would have a better idea of what time things are supposed to take.
+
+176
+00:25:10,170 --> 00:25:15,750
+Many groups look at functions. This seems to take much longer than they should have.
+
+177
+00:25:15,750 --> 00:25:21,680
+But even with that like and guess frameworks can be complicated.
+
+178
+00:25:21,680 --> 00:25:27,690
+Nothing, if you like, when you're looking at profiles, an unmodified react applications.
+
+179
+00:25:27,690 --> 00:25:39,310
+It's not easy to get an actionable place. If you were the author of the browser and the reactor kiddish.
+
+180
+00:25:39,310 --> 00:25:46,500
+Like, this is slow. We profile this.
+
+181
+00:25:46,500 --> 00:25:50,870
+Like profile. Oh, profiles of the perpetrators, the amount.
+
+182
+00:25:50,870 --> 00:25:54,710
+Sure. One. Yes. You will have the same problem.
+
+183
+00:25:54,710 --> 00:26:01,350
+It's going to be O.J. execution. And President Minified, it's.
+
+184
+00:26:01,350 --> 00:26:07,590
+But what you might see there is that we are repenting for the and.
+
+185
+00:26:07,590 --> 00:26:11,390
+Still a bit in Kansas for folks following along at home.
+
+186
+00:26:11,390 --> 00:26:19,470
+We've gone Medda and we are profiling a profiler now.
+
+187
+00:26:19,470 --> 00:26:24,490
+Do business, you source maps to do it.
+
+188
+00:26:24,490 --> 00:26:34,390
+And it is good. Yes. Looks like the react source code is not identified.
+
+189
+00:26:34,390 --> 00:26:42,660
+But our code is. What are you looking at?
+
+190
+00:26:42,660 --> 00:26:48,790
+I'm looking at this chart here. What it black Malcolm?
+
+191
+00:26:48,790 --> 00:27:02,590
+Kirk. It's usually easier if you have the wrecks instrumentation.
+
+192
+00:27:02,590 --> 00:27:09,370
+That is performance mark and performance measure to give you the main component that is currently being rendered.
+
+193
+00:27:09,370 --> 00:27:17,650
+And then if you go to the turbine, you get kind of like a flame graph of the components and you need to do something special and react.
+
+194
+00:27:17,650 --> 00:27:26,330
+Yeah, you need to use in development build and you need to have a question mark rack for your attention.
+
+195
+00:27:26,330 --> 00:27:37,080
+Gotcha. And we're off the map. If we were to zoom in and choose one of these like that.
+
+196
+00:27:37,080 --> 00:27:45,120
+Yeah, definitely get us closer. Responded.
+
+197
+00:27:45,120 --> 00:27:51,400
+OK. So the function is P that it's taken a long time. All of the time, isn't he?
+
+198
+00:27:51,400 --> 00:28:03,350
+Yeah. It might be much function to follow. This is this is the kind of profile you would love to see as a web developer.
+
+199
+00:28:03,350 --> 00:28:08,140
+So where is your bottleneck? I guess the timeline.
+
+200
+00:28:08,140 --> 00:28:16,230
+Yeah, I guess we should have just inverted the temperature.
+
+201
+00:28:16,230 --> 00:28:24,250
+We are at least. Okay. Where it's like I'm running as fast as I'm just doing an airport.
+
+202
+00:28:24,250 --> 00:28:28,840
+Or maybe it has a problem on the other side.
+
+203
+00:28:28,840 --> 00:28:34,250
+Why does it not go out of baseline? Like what does this mean.
+
+204
+00:28:34,250 --> 00:28:44,040
+J.S. Iron. G.S. baseline. That's a good question.
+
+205
+00:28:44,040 --> 00:28:49,050
+How do I interpret this story? This is hard to interpret because there seem to be large gaps,
+
+206
+00:28:49,050 --> 00:28:54,010
+but these gaps are only because the center was out so thin that they go under the meaning.
+
+207
+00:28:54,010 --> 00:28:58,410
+But I've been rendered. I see. So if you do shift and Miles, we have to zoom in.
+
+208
+00:28:58,410 --> 00:29:05,060
+We suddenly start seeing things. Wow.
+
+209
+00:29:05,060 --> 00:29:15,060
+Then it will get so slow that you will understand why we have the minimum. Very nice alligator snakes.
+
+210
+00:29:15,060 --> 00:29:24,630
+Attention to detail. I don't know that the.
+
+211
+00:29:24,630 --> 00:29:32,820
+Well, that seemed to be the effect that I received, the fact is that they paid out almost POG gamers.
+
+212
+00:29:32,820 --> 00:29:43,440
+If you click on digits. Does that make it more readable? We're not going to get anything from here.
+
+213
+00:29:43,440 --> 00:29:50,950
+Nobody. OK, we've we have no. Are there any tools for the mind level profiling?
+
+214
+00:29:50,950 --> 00:29:56,350
+G.S. in. Firefox. Not that I know of.
+
+215
+00:29:56,350 --> 00:30:01,460
+There were there was something called J. Dr. G.
+
+216
+00:30:01,460 --> 00:30:05,290
+Yeah. That's never going to make it very popular.
+
+217
+00:30:05,290 --> 00:30:11,140
+Think we're no longer emitting the information that Deferent would need to display new information.
+
+218
+00:30:11,140 --> 00:30:18,880
+But Jim Koch, it gets information when a single function has been provided multiple times.
+
+219
+00:30:18,880 --> 00:30:23,240
+And it shows you goes into the versions of the functions that are produced.
+
+220
+00:30:23,240 --> 00:30:28,000
+And it also shows you why this version of putting it up to scratch sometimes.
+
+221
+00:30:28,000 --> 00:30:31,560
+All right. Like a good year.
+
+222
+00:30:31,560 --> 00:30:38,890
+Here's why you're bailing. I think Chrome has line level profiling.
+
+223
+00:30:38,890 --> 00:30:42,280
+Be interesting to see. All right, let's move on. Yeah.
+
+224
+00:30:42,280 --> 00:30:51,810
+All right. Let's move on. So it doesn't sound there's anything super actual in that massive profile except the fact that we know it's gigantic page,
+
+225
+00:30:51,810 --> 00:30:56,640
+that flows are slow to be nice.
+
+226
+00:30:56,640 --> 00:31:01,740
+Yeah, that's a there's a catch. Haven't we fixed the.
+
+227
+00:31:01,740 --> 00:31:08,390
+Can text? No, we haven't fixed that audience. It's a few more pictures.
+
+228
+00:31:08,390 --> 00:31:19,580
+We move on. Yes. Let's show. So next, I uploaded this one on behalf of someone, them may think I'm pronouncing that correctly.
+
+229
+00:31:19,580 --> 00:31:24,050
+I don't remember what was happening, though. Sure is. A lot of red, though.
+
+230
+00:31:24,050 --> 00:31:35,430
+Yes. All rain. When I say.
+
+231
+00:31:35,430 --> 00:31:42,230
+U2. They were doing something I need to I don't know, I was there just I think.
+
+232
+00:31:42,230 --> 00:31:54,350
+Remember, it's listed in that document. They were scrolling down using the touchpad.
+
+233
+00:31:54,350 --> 00:32:01,650
+Well, they got Adblock Plus Web extensions and with some filters and they go to the Rolling Stone Age and they're scrolling on.
+
+234
+00:32:01,650 --> 00:32:09,790
+So they're not even on focusing on YouTube. There's growing now some Rolling Stone magazine page.
+
+235
+00:32:09,790 --> 00:32:16,140
+Oh, this is sitting waiting on one key Bowzer message, sync message.
+
+236
+00:32:16,140 --> 00:32:24,890
+It's a. An extension is sending a serious message to the string somewhere.
+
+237
+00:32:24,890 --> 00:32:31,320
+The stronger. Certainly not.
+
+238
+00:32:31,320 --> 00:32:38,820
+Guess it's coming from Adblock Plus. Why request content?
+
+239
+00:32:38,820 --> 00:32:45,480
+Probably on behalf of Adblock Plus, I guess, what's the solution for this?
+
+240
+00:32:45,480 --> 00:32:49,900
+Do not send messages. Well, what's it asking and saying, like, can I look this right?
+
+241
+00:32:49,900 --> 00:32:54,990
+Yeah. I thought Web extensions didn't help this.
+
+242
+00:32:54,990 --> 00:33:06,970
+I must be wrong. I mean, I don't think the Web ext version of Adblock Plus is really ready yet.
+
+243
+00:33:06,970 --> 00:33:12,270
+Like, it's partially life extension. OK. So that might be the reason why we still want this.
+
+244
+00:33:12,270 --> 00:33:17,560
+We know why this isn't. It's using a module.
+
+245
+00:33:17,560 --> 00:33:22,570
+This isn't. This isn't. There's no Adblock Plus involved here.
+
+246
+00:33:22,570 --> 00:33:34,230
+I'm pretty sure there is. You just don't see it. For some reason. No, I think this is like, oh, you can stall the Web request and.
+
+247
+00:33:34,230 --> 00:33:38,550
+And we would like to talk to them. Plus low prices.
+
+248
+00:33:38,550 --> 00:33:46,960
+Yes or no. And then we talk to the content process to figure out about whether the request should go through to the families.
+
+249
+00:33:46,960 --> 00:33:53,340
+Yeah. Baby. Our and your to.
+
+250
+00:33:53,340 --> 00:34:03,700
+I would interpret that there is a missing spring. This proxy call, many times I feel like this is in the closet and there is a James Bond thing,
+
+251
+00:34:03,700 --> 00:34:09,420
+so we're hearing that we don't record in the concept for some reason. OK.
+
+252
+00:34:09,420 --> 00:34:19,400
+And Mike Brooks, how is whippoorwill Adblock Plus being called by?
+
+253
+00:34:19,400 --> 00:34:32,340
+I see. You think Adblock Plus is running in the content content?
+
+254
+00:34:32,340 --> 00:34:38,640
+But a web extension, they're not supposed to be run in.
+
+255
+00:34:38,640 --> 00:34:46,560
+Sources say the court transcripts or the economy should run in the processes.
+
+256
+00:34:46,560 --> 00:34:52,470
+They have a background page, which will be a process I see, which they can communicate with.
+
+257
+00:34:52,470 --> 00:34:56,720
+Being the kind of comments gripping the spine is your only chance.
+
+258
+00:34:56,720 --> 00:35:01,070
+I am surprised, however, that there is still like synchronous message stuff going on.
+
+259
+00:35:01,070 --> 00:35:05,710
+I mean, I thought it was not synchronous. I thought we'd just like.
+
+260
+00:35:05,710 --> 00:35:09,700
+Then pause the network Lozito and let the event expand it through.
+
+261
+00:35:09,700 --> 00:35:13,960
+We got a response back from a parent. Whether or not we should load it.
+
+262
+00:35:13,960 --> 00:35:22,710
+Now, what I think what you're saying makes a lot of sense, like it is conceivable that we call that should load content script.
+
+263
+00:35:22,710 --> 00:35:28,890
+And then it's like, oh, let's go and talk to who knows where are in the content process.
+
+264
+00:35:28,890 --> 00:35:37,080
+I saw that with older virtual book. Should not used to show at all times my process provides and that at some point they they
+
+265
+00:35:37,080 --> 00:35:42,090
+got fully intensified and then everything was a lot faster than their normal social load.
+
+266
+00:35:42,090 --> 00:35:47,780
+So I think they made some calls and some work and it looks like a US hasn't done that yet.
+
+267
+00:35:47,780 --> 00:35:52,620
+Or maybe it's just doing that. Can you make it? Can you make it asynchronous?
+
+268
+00:35:52,620 --> 00:35:58,870
+Well, there is no urgent succeeded at it yet. I think that was like an explicit.
+
+269
+00:35:58,870 --> 00:36:02,510
+Goal. How do you a synchronously ask whether you can load it?
+
+270
+00:36:02,510 --> 00:36:05,960
+He pours the load of it until you get a response back in this area. Right.
+
+271
+00:36:05,960 --> 00:36:09,830
+Keep your fatalists in the cockpit. That's the other reason. Now the other way.
+
+272
+00:36:09,830 --> 00:36:14,640
+But I'm pretty sure that that's not the solution. But I don't.
+
+273
+00:36:14,640 --> 00:36:21,730
+I could be wrong because there's like a promise. They were like, you know, a Web request handler can.
+
+274
+00:36:21,730 --> 00:36:31,610
+So there's on before request. There isn't.
+
+275
+00:36:31,610 --> 00:36:42,160
+Actually, patsy back sugar. Much.
+
+276
+00:36:42,160 --> 00:36:48,700
+I'm going to look for something else. Yeah, for sure. Something else specifically there.
+
+277
+00:36:48,700 --> 00:36:53,240
+The website that's Rolling Stone that they mentioned, it was YouTube.
+
+278
+00:36:53,240 --> 00:36:57,400
+No, it was legit. There was YouTube in your YouTube in the background.
+
+279
+00:36:57,400 --> 00:37:05,520
+But you know, Rolling Stone. OK.
+
+280
+00:37:05,520 --> 00:37:13,310
+Let's go to. That looks like flush.
+
+281
+00:37:13,310 --> 00:37:25,110
+They're calculating and also. It's.
+
+282
+00:37:25,110 --> 00:37:46,830
+It's not one thing. But this.
+
+283
+00:37:46,830 --> 00:37:58,170
+Oh. Flush coal from the country's.
+
+284
+00:37:58,170 --> 00:38:05,040
+Go on, load in the load of badass JavaScript on this.
+
+285
+00:38:05,040 --> 00:38:13,610
+Rolling Stone page, although does it page itself or is an advertiser running on the page?
+
+286
+00:38:13,610 --> 00:38:18,280
+Kristen. Labor media was Rolling Stone.
+
+287
+00:38:18,280 --> 00:38:25,870
+OK, I'm going to save for an inquiry. Because we're in.
+
+288
+00:38:25,870 --> 00:38:29,770
+This looks like it might be the Rolling Stone page itself.
+
+289
+00:38:29,770 --> 00:38:37,390
+I assume that something named Wenner Media owns or works for Rolling Stone and built the Web site.
+
+290
+00:38:37,390 --> 00:38:45,520
+And so I suspect they are running some script that's causing a layer of flesh on Loeb, which is like the worst that's going to hurt their vote time.
+
+291
+00:38:45,520 --> 00:38:56,640
+And that's forty two milliseconds or for two samples, roughly milliseconds of.
+
+292
+00:38:56,640 --> 00:39:07,250
+This. But this seems to be the initial reflow of this page.
+
+293
+00:39:07,250 --> 00:39:16,190
+Interruptible, do you like it? I would imagine that if there was so we have Franco structure here, you don't have reflow.
+
+294
+00:39:16,190 --> 00:39:21,020
+Restarting construction, so, oh, so this is just building the page.
+
+295
+00:39:21,020 --> 00:39:32,480
+I think so. Hool Roberts crowbars.
+
+296
+00:39:32,480 --> 00:39:43,930
+OK, so this is the initial recalibrates page or initial Brinkworth section, but it's surprising that that's not interruptible there.
+
+297
+00:39:43,930 --> 00:39:49,020
+Well, no, I mean, it's we're getting a study out. All right.
+
+298
+00:39:49,020 --> 00:39:53,550
+Like maybe JavaScript is running somehow before we, right?
+
+299
+00:39:53,550 --> 00:39:58,090
+Yep, the script is running before we constructed the initial presentation.
+
+300
+00:39:58,090 --> 00:40:04,260
+I see it in the presentation. Or maybe there's an ice rink.
+
+301
+00:40:04,260 --> 00:40:10,660
+And that's what we're looking at. So let's take a look here.
+
+302
+00:40:10,660 --> 00:40:17,400
+Thomas. Right.
+
+303
+00:40:17,400 --> 00:40:33,260
+This is all JavaScript because we're handling that we don't even. So to sum up, it's misleading.
+
+304
+00:40:33,260 --> 00:40:39,710
+Check what's going on here to. While you're looking at this,
+
+305
+00:40:39,710 --> 00:40:43,280
+I know one thing I'm going to want to write down for this either is that they might want
+
+306
+00:40:43,280 --> 00:40:50,410
+to consider switching to you block until Adblock Plus releases their fully web extension.
+
+307
+00:40:50,410 --> 00:40:54,550
+I think it's Jubilo Origin that has the flight attendants cockpit of a virgin.
+
+308
+00:40:54,550 --> 00:40:59,090
+Or even that the remix engine version of that is that released play?
+
+309
+00:40:59,090 --> 00:41:06,930
+Well, they have a pre release extension version. OK. It's unclear at me when I tried to find out how to run it on your watch.
+
+310
+00:41:06,930 --> 00:41:13,210
+How did you get it? I search for log origin duties and then on the Internet or on the Internet.
+
+311
+00:41:13,210 --> 00:41:19,780
+And then there is a get up release entry. And at the end, there is a list of, I think, five packages.
+
+312
+00:41:19,780 --> 00:41:26,320
+And the one you want is the one called something perfect's expired somewhere in here.
+
+313
+00:41:26,320 --> 00:41:33,310
+Releases. Yeah. This this one.
+
+314
+00:41:33,310 --> 00:41:46,160
+Or is it weathercast. It's not what they. But when I click this, I think it says is incompatible with this.
+
+315
+00:41:46,160 --> 00:41:49,930
+No. Oh, yeah. It was the wrong way to wear it.
+
+316
+00:41:49,930 --> 00:41:57,440
+Well, it's just the one you want to fix. It is the one that is the legacy extension.
+
+317
+00:41:57,440 --> 00:42:06,120
+So just from there, you walk into the. All right, so that's one thing I can consider as a thing that they might want try to do.
+
+318
+00:42:06,120 --> 00:42:15,500
+So I was looking at a Web request stuff. Yes. And there is.
+
+319
+00:42:15,500 --> 00:42:27,080
+Insured loan. We have like content policies thing about a content policy as whether blocking or not.
+
+320
+00:42:27,080 --> 00:42:34,110
+And if it's blocking, we do a simple message. Parent.
+
+321
+00:42:34,110 --> 00:42:39,540
+And if it's not blocking, we do the basic message.
+
+322
+00:42:39,540 --> 00:42:43,570
+And what what determines whether or not the content. Like what? How do we. I don't know yet.
+
+323
+00:42:43,570 --> 00:43:02,510
+Your help is blocking businesses. Trying to get.
+
+324
+00:43:02,510 --> 00:43:07,790
+What are we looking at now, Marcus? I was just looking for some other Genk here for you.
+
+325
+00:43:07,790 --> 00:43:15,410
+I was interested. What these deep calls X, Y, B, C, some kind of.
+
+326
+00:43:15,410 --> 00:43:22,800
+They'll have to score some mystical formulas. Maybe building up some major stand out and Jandamarra Page.
+
+327
+00:43:22,800 --> 00:43:26,140
+Never heard of the nunchuck sprinkler. Oh, yeah.
+
+328
+00:43:26,140 --> 00:43:32,410
+That's a templating library. OK, sure. All right.
+
+329
+00:43:32,410 --> 00:43:36,440
+What it's going to look at. I mean, there's so much junk in there.
+
+330
+00:43:36,440 --> 00:43:44,030
+There is quite a bit. I think a lot of profilers will will give a lot.
+
+331
+00:43:44,030 --> 00:43:49,960
+I think the vast majority of it appears to be this should look stuff like that is everywhere.
+
+332
+00:43:49,960 --> 00:43:56,720
+I yeah. There, these big.
+
+333
+00:43:56,720 --> 00:44:01,540
+Shanks in between the shitloads that to.
+
+334
+00:44:01,540 --> 00:44:12,310
+That was great passing. Oh, yeah, we got lots of scripted process on one page, one page.
+
+335
+00:44:12,310 --> 00:44:21,340
+That's a good question. It's huge.
+
+336
+00:44:21,340 --> 00:44:26,140
+Well, OK, maybe a Rolling Stone has embedded the chip. Yes.
+
+337
+00:44:26,140 --> 00:44:33,480
+And every one of them, it's the same script. The competitors in the same script.
+
+338
+00:44:33,480 --> 00:44:39,720
+That's what this looks like to me. Yeah, we we have some embedded YouTube videos here with different brands.
+
+339
+00:44:39,720 --> 00:44:46,600
+A lot of them go to the compiler and they look very similar. And the combination.
+
+340
+00:44:46,600 --> 00:44:54,280
+That's interesting. I wonder if there's some cashing we could give here.
+
+341
+00:44:54,280 --> 00:45:01,870
+I don't know who did like the JSC Team York might be interested because I know that they're working on like this might be
+
+342
+00:45:01,870 --> 00:45:10,090
+a great disguise to just passing cash and stuff to check whether the binary encoding can just get rid of most of this.
+
+343
+00:45:10,090 --> 00:45:20,050
+Awesome. Awesome. Mm hmm. First person has been here and here and here and here and here.
+
+344
+00:45:20,050 --> 00:45:25,670
+Marcus, sort of similar. And we have all those embedded YouTube videos.
+
+345
+00:45:25,670 --> 00:45:30,340
+I think that's a really plausible game as we should go to the pay go up.
+
+346
+00:45:30,340 --> 00:45:35,840
+I'm pretty sure you're right. I wouldn't repurposing the same stuff over and over again.
+
+347
+00:45:35,840 --> 00:45:39,820
+That's what it looks like to me. You don't have your.
+
+348
+00:45:39,820 --> 00:45:47,810
+What script is being passed? Should I like the solution here is to not repass the same Rodenberg, am I right?
+
+349
+00:45:47,810 --> 00:45:54,730
+You say minoring. Sure. Yeah. Yes.
+
+350
+00:45:54,730 --> 00:46:02,040
+OK. So let me write a couple things down for you made me mad.
+
+351
+00:46:02,040 --> 00:46:05,870
+Main Mank man sorry. I'm I'm wrecking your name.
+
+352
+00:46:05,870 --> 00:46:13,880
+Apologize. Findings here.
+
+353
+00:46:13,880 --> 00:46:21,290
+Well, my name's, uh, so.
+
+354
+00:46:21,290 --> 00:46:27,510
+Oh, it's. Adblock Plus.
+
+355
+00:46:27,510 --> 00:46:45,020
+It's causing a lot of sink. I can see traffic and down the road when the Foley Web extension block promotion is radwaste, we'll fix it.
+
+356
+00:46:45,020 --> 00:46:49,880
+We hope that this will no longer be the case.
+
+357
+00:46:49,880 --> 00:46:57,640
+I will take an action to follow up with the Web extension's team.
+
+358
+00:46:57,640 --> 00:47:03,420
+Yes, extension's team. About this, to be sure.
+
+359
+00:47:03,420 --> 00:47:15,800
+OK. The next one is Rolling Stone, we suspect, is loading a bunch of U2 frames.
+
+360
+00:47:15,800 --> 00:47:25,410
+Are YouTube things on the page and we're compiling a bunch of script again and again and again.
+
+361
+00:47:25,410 --> 00:47:31,900
+We should probably not do that. We should point this scenario at the J.
+
+362
+00:47:31,900 --> 00:47:43,900
+S team. Do you know? Do you have any suggestions for who on the GST might point that to Canet point.
+
+363
+00:47:43,900 --> 00:47:52,090
+Cannon. All right. Is there. We're almost at. We're about 40 finance, isn't we?
+
+364
+00:47:52,090 --> 00:47:59,340
+Like that may be a YouTube. I don't know that we're actually compiling the same script again.
+
+365
+00:47:59,340 --> 00:48:04,460
+If that's true, it could be show up as a. Different script.
+
+366
+00:48:04,460 --> 00:48:08,310
+This might be different a script. So we should.
+
+367
+00:48:08,310 --> 00:48:12,220
+What we should have is that you were elford the script. We're compiling profiles.
+
+368
+00:48:12,220 --> 00:48:20,210
+We should include the URL for the compiled script in our profiles.
+
+369
+00:48:20,210 --> 00:48:26,560
+So, I mean, to take an action or can someone take an action to file for the profile?
+
+370
+00:48:26,560 --> 00:48:31,530
+Well, I'm stage two file of is that a profile?
+
+371
+00:48:31,530 --> 00:48:41,020
+Look at her face now Bulgers that a gay.
+
+372
+00:48:41,020 --> 00:48:46,110
+OK. I don't know if there's. We're like pretty deep into this session.
+
+373
+00:48:46,110 --> 00:48:50,250
+I don't know if there's anything else you want to look at in here. And you also want to look at here.
+
+374
+00:48:50,250 --> 00:48:54,720
+I'm still looking at this walking. OK.
+
+375
+00:48:54,720 --> 00:49:00,480
+Anything else you want to look at? OK. OK, so let's let's investigate this blocking business.
+
+376
+00:49:00,480 --> 00:49:07,840
+Let's just see if we can do the thing we're trying to figure out is like how do you, how does it get set.
+
+377
+00:49:07,840 --> 00:49:15,550
+So it's part of it's a property of a content policy. My request.
+
+378
+00:49:15,550 --> 00:49:24,300
+I seem to recall something about that, it seems like it would be worth, isn't it, if it's just a thing that you put on?
+
+379
+00:49:24,300 --> 00:49:40,510
+Action. Let's jank the whole process browser to.
+
+380
+00:49:40,510 --> 00:49:50,510
+The. Oh, allows US spending requests for return promises from blocking requests listeners.
+
+381
+00:49:50,510 --> 00:49:56,460
+In order to make any useful as it was this like this is what I was.
+
+382
+00:49:56,460 --> 00:50:02,940
+While we're working asynchronously, once we have a process extensions to Srila going to suspend a resume forever,
+
+383
+00:50:02,940 --> 00:50:07,110
+requests when the blocking options presented won't be able to make blocking decisions seriously,
+
+384
+00:50:07,110 --> 00:50:09,120
+since communication, the essential process will be a serious.
+
+385
+00:50:09,120 --> 00:50:14,490
+Therefore, I think we'll have to suspend the channel whenever a Web extension needs to make a blocking or redirect decision.
+
+386
+00:50:14,490 --> 00:50:20,190
+So that was the ultimate goal of two years ago was to suspend the network request.
+
+387
+00:50:20,190 --> 00:50:28,350
+So is this a thing? As a Web extension author, how do you set walking?
+
+388
+00:50:28,350 --> 00:50:40,620
+Is that understood? E let's see here on before send headers.
+
+389
+00:50:40,620 --> 00:50:46,270
+Yeah, I think so. Come on before Quest.
+
+390
+00:50:46,270 --> 00:50:57,780
+Oh, there's this whole blocking response. Yeah. What request blocking API permission in your manifest.
+
+391
+00:50:57,780 --> 00:51:02,640
+Yeah. From Firefox, who was blocking.
+
+392
+00:51:02,640 --> 00:51:10,820
+So you add a listener to a Web request on before request and triggered when our request is about to be made for headers are available if you want.
+
+393
+00:51:10,820 --> 00:51:15,550
+This is a good place. Is going to cancel, redirect their quest, cancel or redirect requests.
+
+394
+00:51:15,550 --> 00:51:21,080
+First include blocking in the argument, extra info back then in the listener function,
+
+395
+00:51:21,080 --> 00:51:27,110
+return a blocking response object setting the appropriate property.
+
+396
+00:51:27,110 --> 00:51:29,510
+From 52 onwards and at every turn block response,
+
+397
+00:51:29,510 --> 00:51:38,990
+the listener can return a promise which is resolved with a blocking response that will allow you to process the request asynchronously.
+
+398
+00:51:38,990 --> 00:51:44,530
+So there is a new API that allows you to do it. A synchronously.
+
+399
+00:51:44,530 --> 00:51:52,470
+And so here's a question. Mm hmm.
+
+400
+00:51:52,470 --> 00:52:04,400
+You see what permissions you block uses. Yeah, new blaa.
+
+401
+00:52:04,400 --> 00:52:14,180
+Cohill. So let's see here. We're looking for, like manifest that.
+
+402
+00:52:14,180 --> 00:52:19,130
+So I wonder if you not have it installed in your browser.
+
+403
+00:52:19,130 --> 00:52:25,570
+I don't. But I could install it in your browser. All right.
+
+404
+00:52:25,570 --> 00:52:32,990
+It's. I'm installing the Web extension.
+
+405
+00:52:32,990 --> 00:52:36,650
+So. OK.
+
+406
+00:52:36,650 --> 00:52:46,310
+It's added now. Adblock for Firefox seems Adblock Plus.
+
+407
+00:52:46,310 --> 00:52:55,180
+No, I don't think so. I think like something else.
+
+408
+00:52:55,180 --> 00:53:01,480
+So there is no Adblock Plus. I opened up a.
+
+409
+00:53:01,480 --> 00:53:05,410
+I installed it. What am I looking for here? Our missions are missions.
+
+410
+00:53:05,410 --> 00:53:10,840
+I mean, like the little door hanger showed up and I didn't say anything about synchronous blocking or anything.
+
+411
+00:53:10,840 --> 00:53:15,310
+But you want to actually, like, look at the manifest. No, doesn't do.
+
+412
+00:53:15,310 --> 00:53:23,140
+We don't expose the permissions. We ask the user, you know, I'll show you again.
+
+413
+00:53:23,140 --> 00:53:29,840
+Let me remove this. And then also it's.
+
+414
+00:53:29,840 --> 00:53:37,230
+This right? Okay.
+
+415
+00:53:37,230 --> 00:53:45,770
+Now, if I install that doesn't have I wonder if there's a more nuanced.
+
+416
+00:53:45,770 --> 00:53:50,010
+Yeah. What does the manifest say? Yes. OK, let's do that.
+
+417
+00:53:50,010 --> 00:53:55,990
+Let's take a look. Manifest or actually. Here we go.
+
+418
+00:53:55,990 --> 00:54:05,350
+This is the next. Missions, Web request blocking, so you block origin and also.
+
+419
+00:54:05,350 --> 00:54:12,710
+But I wonder if on. Before. What was it on before request.
+
+420
+00:54:12,710 --> 00:54:33,780
+Call it on before send. What are you doing this?
+
+421
+00:54:33,780 --> 00:54:42,060
+And we'll cover such suffering. OK.
+
+422
+00:54:42,060 --> 00:54:50,750
+We have you here. Quickly, let's try and figure out how you bought just works here.
+
+423
+00:54:50,750 --> 00:54:59,250
+Well, I'm. Oh, yeah.
+
+424
+00:54:59,250 --> 00:55:22,450
+I mean, I just it. In a.
+
+425
+00:55:22,450 --> 00:55:43,190
+A Grippo. I can't seem to find it hard to get a line about both of them would be.
+
+426
+00:55:43,190 --> 00:55:49,470
+So maybe it's like a personal thing. Yeah. It's so embedded, that extension.
+
+427
+00:55:49,470 --> 00:55:53,990
+Right. Or navigate small chromium on four.
+
+428
+00:55:53,990 --> 00:56:03,330
+Quest. The. So platform fire and the.
+
+429
+00:56:03,330 --> 00:56:10,050
+Before Quest. What I'm doing here.
+
+430
+00:56:10,050 --> 00:56:20,060
+And I'll request you just search for.
+
+431
+00:56:20,060 --> 00:56:28,660
+Non blocking. Should load listener message.
+
+432
+00:56:28,660 --> 00:56:35,000
+This is actually required record of being called synchronously from the conference must return ASAP.
+
+433
+00:56:35,000 --> 00:56:49,850
+Akobo merely record the details or request no ringbarking for their retrieval by the EDP observer.
+
+434
+00:56:49,850 --> 00:56:56,600
+Do they actually need that? I don't know.
+
+435
+00:56:56,600 --> 00:57:04,760
+I don't know. I feel like it would probably take me a little while to try and understand this.
+
+436
+00:57:04,760 --> 00:57:19,490
+But. Let's see if there is anything, you know, it might be simpler to look at the log blockings.
+
+437
+00:57:19,490 --> 00:57:28,430
+You know, blocking is actually a terrible word to look for in the log. How about this?
+
+438
+00:57:28,430 --> 00:57:36,750
+Testing, storage. Feature.
+
+439
+00:57:36,750 --> 00:57:41,640
+Asynchronous API. Oh, for storing extension info.
+
+440
+00:57:41,640 --> 00:57:46,690
+So that's nice exactly it. OK. Not found.
+
+441
+00:57:46,690 --> 00:57:55,860
+Um. The quest.
+
+442
+00:57:55,860 --> 00:58:03,470
+I don't know. You know, it might be simpler is just talk to the add ONS team because they probably have this in their heads better than idea anyway.
+
+443
+00:58:03,470 --> 00:58:06,990
+What not. OK. So we are at time.
+
+444
+00:58:06,990 --> 00:58:11,610
+I think I'm going to call it right there. Thank you so much. Watching this episode of The Joy of Profiling.
+
+445
+00:58:11,610 --> 00:58:15,270
+Thank you, Marcus. Thank you, Jeff. And I'm on PTO next week.
+
+446
+00:58:15,270 --> 00:58:18,930
+So unless you both set this up or someone says this.
+
+447
+00:58:18,930 --> 00:58:28,875
+I didn't think so. We'll see what episode 11 in September.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

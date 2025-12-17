@@ -1,0 +1,3458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 368 - June 12, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 368 - June 12, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b7d9b4e7-f496-46c3-8dcf-b15401386b1a</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b7d9b4e7-f496-46c3-8dcf-b15401386b1a">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,402 --> 00:00:08,862
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy of coding.
+
+2
+00:00:09,432 --> 00:00:13,262
+Hello and welcome to episode 368 of the Joy of coding.
+
+3
+00:00:13,272 --> 00:00:18,762
+My name is Mike Connelly. It's so good to have you here. What's up? We're going to be hacking on some Firefox stuff today.
+
+4
+00:00:18,792 --> 00:00:22,022
+Hopefully. Um, let's get let's get to it.
+
+5
+00:00:22,032 --> 00:00:27,552
+Why wait? Let's go. Um, let me share my screen. Right.
+
+6
+00:00:27,552 --> 00:00:32,502
+Today is June 12th, 2024, episode 368.
+
+7
+00:00:33,312 --> 00:00:37,572
+I start every stream like this. Reminder no plan survives breakfast. I think I know how the stream is going to go.
+
+8
+00:00:37,662 --> 00:00:41,862
+I think I know what I want to do. I don't know how it's going to go, though. It might go completely sideways.
+
+9
+00:00:42,372 --> 00:00:46,302
+Um, you know, I might get stuck. We might end up getting distracted by something.
+
+10
+00:00:46,302 --> 00:00:50,592
+Who knows? Hardware failures, the stream might collapse. All sorts of things might go wrong.
+
+11
+00:00:50,742 --> 00:00:55,842
+Um, and that's okay. We'll deal with it as it comes. Like I say, every stream, more or less.
+
+12
+00:00:55,842 --> 00:01:01,542
+This is software development in the raw. So you're just going to watch me deal with stuff as it comes, like I would do normally during my day job.
+
+13
+00:01:02,592 --> 00:01:06,762
+Second thing is that the agenda that we're looking at is available to you, uh,
+
+14
+00:01:06,762 --> 00:01:12,462
+if you're watching this on YouTube or, um, yeah, I guess just YouTube is down in the video description.
+
+15
+00:01:12,702 --> 00:01:16,482
+If you're watching this on air. Mozilla, it's over in the details section, I'll link to the agenda.
+
+16
+00:01:16,482 --> 00:01:19,062
+And if you're watching this on Twitch, it's down in the channel details.
+
+17
+00:01:19,392 --> 00:01:26,202
+And as I update the agenda, like I might continue to add some text here as as the stream goes on, you'll see this little spinny spin.
+
+18
+00:01:26,442 --> 00:01:32,142
+And then if you reload the agenda, it should be up to date. And if I add any links or something, um, you'll be able to click on them.
+
+19
+00:01:33,072 --> 00:01:36,072
+Okay. Um that did, did it.
+
+20
+00:01:36,072 --> 00:01:43,481
+Uh, hey, crushed optimist is reporting in saying that they can confirm that the jump list long URL effects.
+
+21
+00:01:43,482 --> 00:01:46,902
+That's something that we worked on a couple of weeks back.
+
+22
+00:01:47,412 --> 00:01:52,842
+I can't exactly remember when this landed, but this was this was, um, crushed optimists bug.
+
+23
+00:01:53,802 --> 00:02:03,672
+And, uh, I think we determined that the problem was that we were accidentally truncating along URLs that we were sending to the, uh, to the jump list.
+
+24
+00:02:04,212 --> 00:02:06,431
+And, uh, this is this had always been a bug.
+
+25
+00:02:06,432 --> 00:02:15,702
+We had always been truncating these things, and, um, crushed optimist, uh, directed my attention to this because they were experiencing the problem.
+
+26
+00:02:16,032 --> 00:02:22,242
+And the fix was landed about a month ago in version 127, which went out to release yesterday and crushed optimists.
+
+27
+00:02:22,242 --> 00:02:25,542
+Just confirmed and version 127, it's resolved their issue.
+
+28
+00:02:25,752 --> 00:02:29,051
+Fantastic. I'm so glad to hear it crushed optimist.
+
+29
+00:02:29,052 --> 00:02:32,652
+What a success story. You know, you report a thing in the joy of coding.
+
+30
+00:02:32,652 --> 00:02:38,861
+You watch, you get fixed, and then the fix goes out and you get to enjoy the fix.
+
+31
+00:02:38,862 --> 00:02:45,012
+Like, that's the greatest thing ever. Um, you know, how often do you get to do that in the software you use often?
+
+32
+00:02:45,252 --> 00:02:51,582
+Um, so I'm, I'm glad that that worked out. Um, what am I working on today?
+
+33
+00:02:51,612 --> 00:02:56,502
+Well, actually, I have a couple things I want to do. So I think you might.
+
+34
+00:02:56,622 --> 00:03:01,692
+You might recall, last week I started to talk a little bit about the backup, the profile backup feature that I'm working on.
+
+35
+00:03:02,232 --> 00:03:04,031
+And, uh, I'm not working on it alone.
+
+36
+00:03:04,032 --> 00:03:13,361
+I have some colleagues who are working on patches for various parts of the project, and one of them just, um, got a bunch of patches reviewed.
+
+37
+00:03:13,362 --> 00:03:17,382
+They landed, I think, on Monday, and then they bounced due to a test failure.
+
+38
+00:03:17,802 --> 00:03:22,692
+Um, and then the person who was working on them went on PTO.
+
+39
+00:03:22,722 --> 00:03:27,461
+They're going to be away for the rest of the week. And so they said, hey, if someone else wants to take over these patches,
+
+40
+00:03:27,462 --> 00:03:33,041
+figure out what's wrong with it, um, you know, and then and get the patches landed, that'd be great.
+
+41
+00:03:33,042 --> 00:03:36,582
+So, uh, before they left, uh, my colleague.
+
+42
+00:03:36,582 --> 00:03:41,981
+Your name is Katherine. Actually, Kathryn figured out what was wrong with it and posted a patch on a tripod.
+
+43
+00:03:41,982 --> 00:03:46,422
+Push was like, if this comes back green, maybe try landing these or a variation thereof.
+
+44
+00:03:46,422 --> 00:03:50,652
+And I looked at the patch. I liked it, um, like the fix that she used.
+
+45
+00:03:50,922 --> 00:03:54,851
+I had some slight alterations that I wanted to make to it, just to simplify it a little bit,
+
+46
+00:03:54,852 --> 00:04:01,272
+but otherwise I thought it was sound and uh, uh, I pushed it to try and try.
+
+47
+00:04:01,272 --> 00:04:04,782
+Just came back green. Well, mostly green.
+
+48
+00:04:04,782 --> 00:04:09,642
+There are some intermittent intermittent test failures that are known.
+
+49
+00:04:09,912 --> 00:04:15,762
+Um, which is unfortunate because, uh, so this might be a very frequent one.
+
+50
+00:04:15,762 --> 00:04:21,611
+We'll see. Um, orange factor 16 failures on trunk in the past week.
+
+51
+00:04:21,612 --> 00:04:27,851
+And this one only landed a few days ago. So we might end up having to address this intermittent sooner rather than later.
+
+52
+00:04:27,852 --> 00:04:32,982
+But long story short, the main the test failure that Katherine was experiencing is gone.
+
+53
+00:04:32,982 --> 00:04:40,362
+That was this one down here, which was a main thread io um, test, uh, test violation.
+
+54
+00:04:40,662 --> 00:04:47,711
+We try to avoid reading from the disk during startup, um, through some side effect of a thing that her patch was doing.
+
+55
+00:04:47,712 --> 00:04:50,802
+The disk was read early on during startup. We found a solution.
+
+56
+00:04:51,252 --> 00:04:56,592
+Um, and I've modified her solution slightly, but it is basically the same.
+
+57
+00:04:56,772 --> 00:05:02,622
+And now I want to land those patches. Now, how do I do that? Because if we take a look, I've got, um.
+
+58
+00:05:03,432 --> 00:05:07,392
+I've got, uh, her patches here. I made some alterations here.
+
+59
+00:05:08,172 --> 00:05:12,041
+I'm gonna fold those changes into the prior patch.
+
+60
+00:05:12,042 --> 00:05:22,682
+That's. That's her patch. I'm gonna fold those changes in, and then I'm going to try and commandeer her revisions and land them, and I.
+
+61
+00:05:22,692 --> 00:05:25,842
+It's been a while since I've done this, so this may not work. We'll see.
+
+62
+00:05:26,472 --> 00:05:33,702
+This might be. This might just be heartache. Um, this might end up being a lot of pain, but we'll see what happens.
+
+63
+00:05:34,452 --> 00:05:39,162
+Um, now, not anyone can just commandeer someone's patch.
+
+64
+00:05:39,162 --> 00:05:42,732
+Like, this is the sort of thing that you need to kind of have an elevated rights to do.
+
+65
+00:05:43,872 --> 00:05:47,922
+Thankfully, I have such elevated rights, I believe so I can do this.
+
+66
+00:05:51,392 --> 00:05:54,982
+Okay, so now we have Katherine Stack of patches.
+
+67
+00:05:55,022 --> 00:06:02,431
+I am going to commandeer these revisions. Um, hey, I might actually not need to commandeer them.
+
+68
+00:06:02,432 --> 00:06:06,272
+I might be able to. I'm going to try this first. I'm going to go mas fab.
+
+69
+00:06:06,272 --> 00:06:12,902
+Submit. Uh, simplify the, um, solution.
+
+70
+00:06:13,022 --> 00:06:16,742
+Uh, that avoids main thread I. Oh, slightly.
+
+71
+00:06:17,732 --> 00:06:21,562
+And then I think there's like a force. Force.
+
+72
+00:06:24,222 --> 00:06:36,262
+I'm going to see what happens if I do this. We'll see if it's happy with it.
+
+73
+00:06:37,192 --> 00:06:44,692
+So it's going to go talk to fabricator. It's going to it's going to bypass a bunch of checks as work in progress.
+
+74
+00:06:44,962 --> 00:06:48,892
+Uh, and saying hold up. You can't do that. You don't own the revision.
+
+75
+00:06:48,892 --> 00:06:52,732
+You should only update revisions you own. You can commandeer this revision if you want to become the owner.
+
+76
+00:06:52,732 --> 00:06:57,111
+Missing reviewers, running out with no whip to to prevent this.
+
+77
+00:06:57,112 --> 00:07:01,552
+Okay, okay okay, okay. I do need to commandeer it.
+
+78
+00:07:02,212 --> 00:07:07,822
+At least I think I do. Uh, I'm going to go ahead and make sure I didn't accidentally change this just now.
+
+79
+00:07:07,822 --> 00:07:12,322
+Yes I did. Okay, so I'm going to commandeer all three of these.
+
+80
+00:07:28,712 --> 00:07:34,832
+And. I'm going to update the topmost commit.
+
+81
+00:07:36,902 --> 00:07:41,402
+To include the reviewer string because that's expected.
+
+82
+00:07:41,402 --> 00:07:48,682
+And that's why I was saying, um. It's giving.
+
+83
+00:07:52,032 --> 00:07:57,842
+Uh, a warning about saying that the, uh, patch would be whipped.
+
+84
+00:07:59,262 --> 00:08:03,312
+I'm also going to make sure that Catherine gets credit patched by.
+
+85
+00:08:05,412 --> 00:08:11,412
+Cape town, you know, so I'm actually going to, uh, here's what I'm going to do.
+
+86
+00:08:11,412 --> 00:08:19,032
+I'm going to because I don't know if that's actually going to get encoded in whenever I try and land these normally if I were to like,
+
+87
+00:08:19,932 --> 00:08:29,772
+um, just like if I was pushing directly to the repository, um, I'd get like, Catherine would get credit for free.
+
+88
+00:08:30,222 --> 00:08:34,782
+But because fabricator and Orlando, I think take patches off of fabricator.
+
+89
+00:08:35,292 --> 00:08:39,612
+They don't like merge patches necessarily. They apply patches.
+
+90
+00:08:40,272 --> 00:08:44,642
+Um, I think that information might be lost.
+
+91
+00:08:44,652 --> 00:08:48,732
+So I'm going to, uh, patch.
+
+92
+00:08:49,212 --> 00:08:52,782
+Bye. Okay, continue.
+
+93
+00:08:56,862 --> 00:09:01,962
+Yeah. I think that information gets lost. Patch.
+
+94
+00:09:02,232 --> 00:09:10,662
+I can't pretend you. Okay, now I'll submit.
+
+95
+00:09:13,132 --> 00:09:16,162
+No use, no force.
+
+96
+00:09:16,462 --> 00:09:19,672
+I won't use the force. I'm not going to use the force, Luke.
+
+97
+00:09:30,612 --> 00:09:53,262
+Let's see how this goes. It's still good.
+
+98
+00:10:06,232 --> 00:10:11,302
+Wow. I don't know why this is taking so long, but while we're waiting for that, um, what?
+
+99
+00:10:11,312 --> 00:10:12,262
+Some other stuff I want to do.
+
+100
+00:10:12,292 --> 00:10:18,472
+Well, so, uh, remember the windows jump list stuff we were working on last week, and I was like, hey, I was very optimistic.
+
+101
+00:10:18,472 --> 00:10:22,642
+I'm like, hey, let's. It's a denouement where we're going to close her up.
+
+102
+00:10:23,002 --> 00:10:29,422
+Well, uh, the patch that I landed to do the favicon off main thread caching thing, it got backed out.
+
+103
+00:10:29,812 --> 00:10:33,892
+I think I know why I saw the error message, and I think it's a pretty quick fix.
+
+104
+00:10:33,922 --> 00:10:36,382
+Uh, let's take a look at the error message and I'll show you what I mean.
+
+105
+00:10:37,492 --> 00:10:44,872
+So I rebased, uh, to a recent central, and, uh, actually, hold on a summary bug.
+
+106
+00:10:47,692 --> 00:11:01,402
+Yeah, it's this one. So, uh, I got backed out.
+
+107
+00:11:01,432 --> 00:11:05,332
+Here's the failure log. I notice this bug today.
+
+108
+00:11:05,332 --> 00:11:10,102
+There's a bug. And either in Tree herder or in central.
+
+109
+00:11:10,132 --> 00:11:13,882
+Are you seeing this, like, glitchy layout? It's ridiculous.
+
+110
+00:11:14,032 --> 00:11:20,812
+Uh, it also means that I can't scroll properly, so I have a feeling this might actually be a tree herder UI bug that I need to report.
+
+111
+00:11:21,112 --> 00:11:26,002
+So I'm just going to open the raw log because the log viewer is very glitchy.
+
+112
+00:11:27,562 --> 00:11:33,832
+Test unexpected. Fail. The test is failing right around.
+
+113
+00:11:34,162 --> 00:11:39,952
+Here's a bunch of logging. The test fails right around.
+
+114
+00:11:40,882 --> 00:11:44,362
+Where does it fail? Yeah. Right here.
+
+115
+00:11:44,392 --> 00:11:47,482
+Unexpected exception. Places utils.
+
+116
+00:11:47,482 --> 00:11:50,482
+Favicon is replaced. Favicon data is not a function.
+
+117
+00:11:51,352 --> 00:11:54,592
+And I was like, uh, well, it should be.
+
+118
+00:11:55,042 --> 00:12:05,572
+I don't know why it wouldn't be. Um, and where did I use, where did I use that particular line, and why isn't it there anymore?
+
+119
+00:12:06,052 --> 00:12:11,092
+So let's take a look at our patches again. I'm pretty sure I use it in one place and it's actually just in the test.
+
+120
+00:12:11,122 --> 00:12:14,872
+Let's double check replace favicon data.
+
+121
+00:12:17,032 --> 00:12:21,441
+Yeah, it's just in one place in the test. This method got removed recently.
+
+122
+00:12:21,442 --> 00:12:29,272
+Is what happened like between the point where I had last rebased my patch and the point where I attempted to land it.
+
+123
+00:12:29,422 --> 00:12:34,642
+This method got removed. It's a very rare occurrence. Uh, because the favicon service doesn't change that much.
+
+124
+00:12:34,942 --> 00:12:42,202
+But if we take a look at inside favicon service, we can see what's happened to the interface over the past little while.
+
+125
+00:12:42,862 --> 00:12:45,172
+Oh, meanwhile, hang on, I'm going to pause that thought.
+
+126
+00:12:45,172 --> 00:12:55,192
+I just did our first check because our our patches went up, and I think it's just the last one that needs to be approved.
+
+127
+00:12:55,222 --> 00:12:59,362
+I think I can remove K button as the reviewer.
+
+128
+00:13:01,532 --> 00:13:05,102
+Because the backup, like I had already reviewed it. I'm just reviewed.
+
+129
+00:13:05,572 --> 00:13:11,132
+I'm about. I'm gonna need someone to, like, rubber stamp this, actually.
+
+130
+00:13:11,402 --> 00:13:16,652
+Um, someone in the back of reviewers group. I'm going to ask my colleague Fred to rubber stamp this.
+
+131
+00:13:17,882 --> 00:13:30,512
+Um, hang on a second. Hey, um, um, I commandeered to use, uh, patches and tempting.
+
+132
+00:13:31,142 --> 00:13:41,972
+And. But I need somebody who is not me and the backup reviewers group to approve such and such.
+
+133
+00:13:42,672 --> 00:13:47,972
+I'm giving it the rubber stamp. So we'll have to wait for that.
+
+134
+00:13:48,722 --> 00:13:54,002
+Um, okay, so here's what changed recently in the, uh, in the favicon service.
+
+135
+00:13:54,002 --> 00:14:04,262
+Like if we take a look at this, uh, may, May 1st on May 1st replace fab icon data existed here was the it was the function.
+
+136
+00:14:04,562 --> 00:14:08,222
+And I actually I'm pretty sure I reviewed some of these badges.
+
+137
+00:14:08,672 --> 00:14:17,881
+Um, so I'm a little annoyed with myself that I didn't know this, but like, the the method got removed, um, replaced.
+
+138
+00:14:17,882 --> 00:14:21,632
+Fab icon data was not removed there. It was removed.
+
+139
+00:14:22,292 --> 00:14:25,502
+Removed in this one. So let's look at the change set.
+
+140
+00:14:26,132 --> 00:14:29,912
+Oh yeah. Remove replace fab icon data and replace favicon data from data URL.
+
+141
+00:14:29,942 --> 00:14:32,942
+Of course it was this one. So what did they get replaced with.
+
+142
+00:14:32,942 --> 00:14:40,232
+And how do we use those instead? So let's take a look at the uh a bunch of stuff got removed.
+
+143
+00:14:42,542 --> 00:14:48,062
+Um, so like, just the full interface got removed. Uh, so what got introduced?
+
+144
+00:14:48,062 --> 00:14:54,242
+Set favicon for for page. I think that's actually what what we want set favicon for page.
+
+145
+00:14:54,242 --> 00:14:59,832
+Let's see how we use that. Set five icon for page.
+
+146
+00:15:02,772 --> 00:15:05,892
+And let's see how things use it. Um, sorry, I gotta go back.
+
+147
+00:15:06,342 --> 00:15:12,132
+So it takes the page Uri fabric. This signature is very similar, I think.
+
+148
+00:15:12,762 --> 00:15:20,262
+Uh, place it's Uri data, Mime type and expiration.
+
+149
+00:15:20,262 --> 00:15:24,552
+This is uri favicon, Uri data, URL expiration callback.
+
+150
+00:15:26,412 --> 00:15:35,712
+And let's see where their usages of. Usages that got changed.
+
+151
+00:15:40,422 --> 00:15:46,402
+I'm not seeing any old usages that got changed when she test got removed.
+
+152
+00:15:51,582 --> 00:16:01,832
+Um. Let's look for some, uh, set favicon for page lists for some usages here.
+
+153
+00:16:08,172 --> 00:16:13,182
+Right. It was here that all the replace fab icons got replaced.
+
+154
+00:16:23,142 --> 00:16:28,062
+I guess. No it wasn't. When did they get replaced with that icon for page?
+
+155
+00:16:29,682 --> 00:16:35,972
+Um. Here.
+
+156
+00:16:35,972 --> 00:16:39,842
+It was here for that vignette. I did I did review this.
+
+157
+00:16:42,952 --> 00:17:01,052
+So the way you use this is you. So it's just a single call.
+
+158
+00:17:01,072 --> 00:17:07,342
+We'll just say set favicon for page and you pass it the.
+
+159
+00:17:09,802 --> 00:17:15,472
+Fake favicon uri the data item Uri rather.
+
+160
+00:17:19,542 --> 00:17:29,442
+Fake fabric on your eye, and then the data URL of the bits to actually encode as the fab icon.
+
+161
+00:17:29,802 --> 00:17:43,032
+Okay. Pretty straightforward. Now, uh, we can actually very trivially, I think, reproduce this test failure if I go mock test widget windows tests.
+
+162
+00:17:43,152 --> 00:17:46,302
+Is that does it have those unit.
+
+163
+00:17:48,992 --> 00:17:52,892
+No, it's going to be under widget tests, I guess.
+
+164
+00:17:54,182 --> 00:18:01,392
+Tests browser. Was it a browser test?
+
+165
+00:18:01,692 --> 00:18:07,062
+Maybe it was an xp c shell test. Yeah.
+
+166
+00:18:07,062 --> 00:18:12,192
+Here we go. Test jump list builder obtain and cache traffic on async.
+
+167
+00:18:13,392 --> 00:18:29,622
+So this should fail. Um.
+
+168
+00:18:35,412 --> 00:18:47,302
+Load all that memory. Hmm?
+
+169
+00:18:47,812 --> 00:18:55,682
+Hmm? Hmm. What's going on in here, gang?
+
+170
+00:18:58,672 --> 00:19:02,992
+It's taken forever. Okay, well, while we're waiting for that,
+
+171
+00:19:04,792 --> 00:19:14,812
+another thing I want to do is I wrote a very simple scheduler for the backup service that we were talking about last week.
+
+172
+00:19:15,842 --> 00:19:25,951
+Scheduler that lets us, um. Uh, right.
+
+173
+00:19:25,952 --> 00:19:28,952
+It lets us. Sorry. Let me finish my thought.
+
+174
+00:19:29,942 --> 00:19:34,442
+Um, create backups at idle moments in the background.
+
+175
+00:19:35,072 --> 00:19:43,832
+Um, when, you know, certain conditions are met and I want to test them, I want to I want to test the,
+
+176
+00:19:43,832 --> 00:19:48,442
+uh, the mechanism that I, that I created and, uh, and get it up for review.
+
+177
+00:19:48,452 --> 00:19:52,232
+So maybe we can do that today as well. Okay.
+
+178
+00:19:52,232 --> 00:19:56,072
+So we have our test failure here. Replace favicon data not a function.
+
+179
+00:19:56,072 --> 00:19:59,822
+So we're going to update this test to use the new function.
+
+180
+00:20:03,712 --> 00:20:11,752
+And replace favicon data. So I think both of these end up getting replaced.
+
+181
+00:20:13,642 --> 00:20:18,532
+Just like combine into a single call which is set favicon for page.
+
+182
+00:20:21,672 --> 00:20:25,752
+Um, and it'll look a little something like this.
+
+183
+00:20:27,972 --> 00:20:35,452
+Set favicon for page, and then you pass it the. The first argument used to be the fake favicon Uri.
+
+184
+00:20:35,472 --> 00:20:46,472
+So we're actually going to reverse the order of these. Oh, it's already been reversed.
+
+185
+00:20:47,322 --> 00:20:54,542
+So in fact, okay, it's the same order, the same two arguments to start with as setting fetch fabric on for page so we can keep those.
+
+186
+00:20:55,022 --> 00:21:02,992
+Get rid of these. Uh, and the principal.
+
+187
+00:21:02,992 --> 00:21:06,322
+And we're just going to pass in the data URL. That's the last argument.
+
+188
+00:21:08,782 --> 00:21:12,952
+Favicon Mime type. Don't need that favicon bytes.
+
+189
+00:21:14,602 --> 00:21:17,962
+I need oh, I need a data URL for it. Um.
+
+190
+00:21:27,622 --> 00:21:31,432
+Oh, this is like doing a mime type sniffing.
+
+191
+00:21:34,032 --> 00:21:37,602
+I don't, or I'm going to do this.
+
+192
+00:21:37,752 --> 00:21:43,842
+Um. I already know the mime type.
+
+193
+00:21:45,382 --> 00:21:50,482
+So I can avoid that. Let daddy or see Daisy.
+
+194
+00:21:50,752 --> 00:21:55,312
+What is that? An advertisement for, like, fried chicken.
+
+195
+00:21:57,842 --> 00:22:00,902
+What? Whoa! They didn't want that.
+
+196
+00:22:01,082 --> 00:22:05,162
+Well, with that, I'll have to watch the, uh.
+
+197
+00:22:07,022 --> 00:22:10,202
+I'll have to watch the, um, the stream again afterwards.
+
+198
+00:22:10,202 --> 00:22:13,442
+But I thought, like, a thing came up that had, like, ads all over it.
+
+199
+00:22:13,922 --> 00:22:18,272
+Did you see that? Was I did I, like, imagine that.
+
+200
+00:22:19,982 --> 00:22:23,522
+Okay, so the daddy Earl, we await a promise. We're going to get the.
+
+201
+00:22:24,542 --> 00:22:34,922
+Yeah, yeah. He claimed to read blob and buffer file reader read an astounding round blob of favicon data.
+
+202
+00:22:38,032 --> 00:22:46,102
+I think in this particular case I can, instead of doing a file reader on a blob.
+
+203
+00:22:54,402 --> 00:22:58,912
+Okay. Read. Just, uh, lunch.
+
+204
+00:22:59,292 --> 00:23:03,602
+Well, I guess. I think we'll probably have to do it this way.
+
+205
+00:23:03,612 --> 00:23:07,842
+Uh, read a bunch of bytes and buffer equals you in clamped array.
+
+206
+00:23:09,642 --> 00:23:15,552
+The favicon bytes get a buffer. The Mime type is up here.
+
+207
+00:23:18,852 --> 00:23:25,812
+File reader reader result get the blob and then set fav icon for page.
+
+208
+00:23:26,172 --> 00:23:33,482
+I want it whoops. I need to read the instructions for this.
+
+209
+00:23:43,842 --> 00:23:49,482
+Optional expiration and then a call back. So I'm going to give it the daddy URL as the third argument.
+
+210
+00:23:51,912 --> 00:23:57,282
+I'm going to give it undefined here. And then I'm going to give it the callback which is resolve.
+
+211
+00:23:58,632 --> 00:24:02,202
+So let's see that passes.
+
+212
+00:24:03,882 --> 00:24:09,132
+What was the what was the ad. Some image was there.
+
+213
+00:24:09,132 --> 00:24:13,572
+Not sure what it was though. Micah's due for some KFC or his computer is at least.
+
+214
+00:24:13,722 --> 00:24:17,322
+How did I bring that up? Yeah. Where did that come from?
+
+215
+00:24:18,192 --> 00:24:22,082
+I hit some kind of keyboard combination which showed me international.
+
+216
+00:24:22,092 --> 00:24:27,161
+It was international falafel. There was falafel. Uh, okay.
+
+217
+00:24:27,162 --> 00:24:35,262
+So it doesn't like this. Could not convert JavaScript argument to what's wrong with that JavaScript argument two for line 72.
+
+218
+00:24:36,282 --> 00:24:42,252
+Argument two is test favicon uri test favicon Uri is a new Uri.
+
+219
+00:24:42,492 --> 00:24:45,732
+What's it supposed to be? And I see you or I.
+
+220
+00:24:49,302 --> 00:24:55,612
+Three. Your eyes. Test page Uri.
+
+221
+00:24:55,852 --> 00:25:01,552
+That's a Uri test favicon Uri. Also a Uri data URL.
+
+222
+00:25:07,762 --> 00:25:11,292
+Argument two. Hmm.
+
+223
+00:25:20,212 --> 00:25:26,122
+Hmhm. Could not convert it.
+
+224
+00:25:26,662 --> 00:25:33,482
+Why? Second.
+
+225
+00:25:33,752 --> 00:25:42,572
+It should just be an NSA, you or I. Um, okay, well, let's add a debugger.
+
+226
+00:25:42,602 --> 00:25:47,492
+I haven't done this on a windows machine before, but here's how we're going to do it. JS debugger.
+
+227
+00:25:47,852 --> 00:25:53,072
+JS debugger port 6080. I'll go over here.
+
+228
+00:25:58,092 --> 00:26:01,672
+Uh, localhost 6080.
+
+229
+00:26:04,992 --> 00:26:11,642
+Is this running yet? Not yet. How are you so fast in getting that screenshot there?
+
+230
+00:26:11,652 --> 00:26:16,041
+Uh. Um. Dennis.
+
+231
+00:26:16,042 --> 00:26:26,422
+That's very impressive. So I can't attach the debugger because of a very annoying situation, which is that I need to modify the test.
+
+232
+00:26:28,202 --> 00:26:33,062
+To be like a Firefox test as opposed to just like a gecko test.
+
+233
+00:26:34,232 --> 00:26:39,212
+Um, and the way I do that is you have to, um.
+
+234
+00:26:42,562 --> 00:26:46,572
+Oops told. Back up.
+
+235
+00:26:48,462 --> 00:26:52,872
+You do this for Fox after.
+
+236
+00:26:59,872 --> 00:27:03,682
+I use the clipping feature on Twitch to get the last 60s.
+
+237
+00:27:04,802 --> 00:27:07,912
+It's so clever then sharp. So clever.
+
+238
+00:27:10,312 --> 00:27:14,152
+I wish I could show you. I think there's something wrong with the monitor I'm using.
+
+239
+00:27:15,412 --> 00:27:19,162
+I wish I could snip out what I'm seeing right now so you could see it.
+
+240
+00:27:20,602 --> 00:27:23,782
+There's probably a way. Hang on. I think there's a way.
+
+241
+00:27:24,412 --> 00:27:31,812
+Because there's, like, this halo around the very edges of the monitor that make it seem like it's.
+
+242
+00:27:31,822 --> 00:27:37,202
+I'm in, like, this dreamy dreamscape. Uh, okay.
+
+243
+00:27:37,212 --> 00:27:41,922
+Let me share this picture in the chat.
+
+244
+00:27:48,362 --> 00:28:00,852
+Unsec. So I don't know if you can see that, but if you zoom in, there's like this weird.
+
+245
+00:28:00,942 --> 00:28:06,102
+It's like. It's like my monitor is in a, uh, in a soap opera.
+
+246
+00:28:06,402 --> 00:28:11,352
+There's this, like, haze around the edges, which I think is kind of hilarious.
+
+247
+00:28:11,382 --> 00:28:15,502
+I don't know what happened. I haven't used this monitor in a long time, but, uh.
+
+248
+00:28:15,522 --> 00:28:22,992
+Okay, so our debugger is connected. We're going to do this. We're going to do this is this classic retina burn.
+
+249
+00:28:22,992 --> 00:28:28,821
+Is that what we're dealing with? So the second argument is also oh, that it's the third argument.
+
+250
+00:28:28,822 --> 00:28:33,642
+It was zero indexed. But this is supposed to be an enziguri.
+
+251
+00:28:33,672 --> 00:28:36,792
+That's the problem. And it just happens to be a string.
+
+252
+00:28:37,332 --> 00:28:48,842
+It got computed as a string instead. So that's the problem. So read his data URL and then I need to like services.
+
+253
+00:28:50,702 --> 00:28:53,882
+I thought I knew you or I got a URL.
+
+254
+00:28:58,352 --> 00:29:01,642
+Kind of looks like burned out monitor or not burned out. But stuff has burned in.
+
+255
+00:29:01,652 --> 00:29:04,472
+Yeah, I don't know what it would be because it's just along the edges.
+
+256
+00:29:05,282 --> 00:29:16,892
+Um, but yeah, it's like it's like my the effect is like my monitor is progressively going through some kind of flashback.
+
+257
+00:29:18,572 --> 00:29:23,281
+Okay, so we have fixed it. Um, let us now absorb the change.
+
+258
+00:29:23,282 --> 00:29:29,191
+Let's take a look at the change, will absorb it and then we'll push the patch to fabricator.
+
+259
+00:29:29,192 --> 00:29:35,282
+Okay. I don't think we need this part. Um, maybe in the future, if we decide we.
+
+260
+00:29:35,282 --> 00:29:38,822
+We desperately need to be able to do that debugger stuff more often. We can do that.
+
+261
+00:29:38,822 --> 00:29:44,162
+But for now, I think we can revert it. I think it's just the text that, excuse me, the test fix here.
+
+262
+00:29:44,882 --> 00:29:48,031
+Um. Okay.
+
+263
+00:29:48,032 --> 00:29:58,922
+So I'm going to do HG absorb, which is a great, great tool because it lets me um, uh, get the, uh.
+
+264
+00:30:01,712 --> 00:30:06,602
+Uh, patches absorbed into the right commit.
+
+265
+00:30:15,972 --> 00:30:19,362
+It's a portal to an alternate universe where this bug doesn't exist.
+
+266
+00:30:19,992 --> 00:30:30,332
+I like it. New cool 1230. Um, I just want to check something real quick.
+
+267
+00:30:34,892 --> 00:30:39,272
+Yes. Okay. I wanna make sure I booked this room properly.
+
+268
+00:30:39,302 --> 00:30:43,681
+I saw some people floating around. There's a bunch of people in Toronto today. Saw a bunch of people floating around my room.
+
+269
+00:30:43,682 --> 00:30:47,132
+I wanna make sure I hadn't accidentally, uh, taken someone else's room.
+
+270
+00:30:47,882 --> 00:30:50,882
+So I'm good. I'm good. Okay, so the chunks are applied.
+
+271
+00:30:51,092 --> 00:30:54,742
+I am now going to push this up. I'm going to go mas fab.
+
+272
+00:30:54,752 --> 00:30:59,912
+And this isn't just the the favicon caching patches. This is like all of the removal patches as well.
+
+273
+00:30:59,942 --> 00:31:03,242
+I'm going to land those as a second chunk, but I'm going to land those today as well.
+
+274
+00:31:03,692 --> 00:31:14,432
+Mom's fab submit um uh, fix uh test failure in what was the name of the test?
+
+275
+00:31:15,032 --> 00:31:22,682
+Test jump list? Jump list builder obtain and cache fabric on async.
+
+276
+00:31:26,932 --> 00:31:35,122
+Uh, caused by using, uh, a removed five icon service function method.
+
+277
+00:31:38,392 --> 00:31:48,412
+And go. Oh, and I got it.
+
+278
+00:31:48,412 --> 00:31:54,862
+Looks like I got, uh, the sign off from my colleague Fred to get this stuff.
+
+279
+00:31:55,342 --> 00:32:01,072
+Um, what was it? The other patch we were looking at that should be accepted now.
+
+280
+00:32:02,662 --> 00:32:07,972
+So all three are accepted. We're going to go ahead and. Uh, land these.
+
+281
+00:32:17,452 --> 00:32:22,042
+Bunch of landings. Many landings. Um.
+
+282
+00:32:23,182 --> 00:32:27,322
+All right, here we go. Land this one first.
+
+283
+00:32:28,702 --> 00:32:31,912
+Uh, had previously landed. Landing is still in progress.
+
+284
+00:32:31,912 --> 00:32:37,812
+Oh. Unresolved comments. I got to figure that out. What are the unresolved comments?
+
+285
+00:32:37,822 --> 00:32:42,562
+And can I resolve them? Right.
+
+286
+00:32:46,292 --> 00:32:53,112
+Okay. That's fine. That's fine.
+
+287
+00:32:53,922 --> 00:33:03,642
+Um, let's go back to this. Those were mainly comments from from the original author, Catherine.
+
+288
+00:33:03,822 --> 00:33:09,752
+To herself, she normally closes those out before she lands. Uh, static analysis and linting are still in progress.
+
+289
+00:33:09,762 --> 00:33:14,262
+I think we're fine, actually. Let me just let me do one last double check here.
+
+290
+00:33:15,612 --> 00:33:22,662
+Make sure I didn't do something silly. Um, Mark Glen is going to fix.
+
+291
+00:33:24,972 --> 00:33:28,992
+That means patches here should be fine. Let's just double check.
+
+292
+00:33:32,612 --> 00:33:36,002
+Oh, it did fix some stuff. Hilarious.
+
+293
+00:33:38,672 --> 00:33:42,211
+What did it find? Nothing. Okay. It didn't fix anything.
+
+294
+00:33:42,212 --> 00:33:47,102
+Great. All right, let's go ahead and land these number.
+
+295
+00:33:50,632 --> 00:34:12,902
+Meanwhile, these are being pushed up for review. And then I'm going to land the first chunk, and then I'll land the second chunk separately.
+
+296
+00:34:19,662 --> 00:34:25,241
+And then, uh, where are we? We're we're in pretty good shape for 137 eastern time.
+
+297
+00:34:25,242 --> 00:34:28,812
+That's only we're only 37 minutes in, and we've done multiple landings.
+
+298
+00:34:29,532 --> 00:34:33,012
+Um, or we're planning on doing multiple landings here, which is fairly exciting.
+
+299
+00:34:41,522 --> 00:34:44,982
+I guess I should have done a linting run a linting thing here too.
+
+300
+00:34:45,002 --> 00:34:48,362
+Let me just do that right now. Lint.
+
+301
+00:34:48,692 --> 00:34:54,112
+Uh, going to fix I think I normally have that in VS code.
+
+302
+00:34:54,122 --> 00:34:58,052
+I have it, um, doing it all the time.
+
+303
+00:34:58,142 --> 00:34:59,732
+Uh, like it just on save.
+
+304
+00:34:59,732 --> 00:35:07,832
+It'll like prettify and it'll show me linting problems, but I don't think I had that have that configured on this windows machine.
+
+305
+00:35:08,672 --> 00:35:12,812
+So let's do that. And this will also do like because I've changed a bunch of C plus plus stuff.
+
+306
+00:35:13,082 --> 00:35:21,102
+This is going to do the clean formatting. Oh, boy.
+
+307
+00:35:21,642 --> 00:35:48,202
+Lots of stuff to bring in. Um, better than several builds.
+
+308
+00:35:48,222 --> 00:35:57,672
+Heck yeah. This is like karma to payback for all those times where, like, uh, you've just been sitting watching me build and not land things.
+
+309
+00:35:58,452 --> 00:36:17,012
+Um. Sorry, I'm just responding to a couple of messages.
+
+310
+00:36:17,012 --> 00:36:20,162
+Okay? There's one morning. Nothing fixed. Okay. So nothing.
+
+311
+00:36:20,822 --> 00:36:26,762
+Nothing serious. Um, the warning was probably because I removed the thing from one of these patches.
+
+312
+00:36:26,762 --> 00:36:30,352
+I removed from Firefox dot js, and that's not technically valid JavaScript.
+
+313
+00:36:30,362 --> 00:36:34,792
+That's why. And, uh, it warns about that. Uh, okay.
+
+314
+00:36:34,802 --> 00:36:42,122
+So let's go ahead and, uh, land these next. So we're going to do this batch first.
+
+315
+00:36:59,182 --> 00:37:06,432
+Sterling has. Make sure I make a. Sorry, I'm just going to answer a question from someone in matrix.
+
+316
+00:37:06,432 --> 00:37:10,152
+One second. It's previously landed. It's good, it's good.
+
+317
+00:37:10,392 --> 00:37:13,902
+Unresolved comments still talk about some comments.
+
+318
+00:37:16,362 --> 00:37:31,822
+Oh, yeah. That's the lambda function stuff. I would rather.
+
+319
+00:37:31,842 --> 00:37:37,202
+And so I arouses interest in those. But what is the best way to resolve such a search?
+
+320
+00:37:37,212 --> 00:37:41,802
+Okay, so I think that was a bunch of discussion that, uh, it doesn't need to block this.
+
+321
+00:37:48,982 --> 00:37:58,902
+Uh, okay. Let's try rewinding again. Once all parts are of banks, such and such are done.
+
+322
+00:37:58,912 --> 00:38:02,752
+Seems like we'll have enough to complete the restore. When to restore file is packed.
+
+323
+00:38:02,752 --> 00:38:07,782
+Should I make a bug for that? Actually, I have good news.
+
+324
+00:38:07,792 --> 00:38:14,302
+So, uh. Yes. Yes, yes. Okay, actually, I think.
+
+325
+00:38:18,352 --> 00:38:21,772
+Um, from the UI. Yes.
+
+326
+00:38:21,832 --> 00:38:46,392
+Uh, let's do that. All right, so that's done.
+
+327
+00:38:46,982 --> 00:38:51,092
+Uh, I don't know what the story is with autoland, if it's closed or.
+
+328
+00:38:51,102 --> 00:38:58,962
+Oh. So it'll. This first batch will land shortly, and then, um, I'll land the second batch shortly after that.
+
+329
+00:39:03,452 --> 00:39:08,102
+Okay, presuming that the tree doesn't get closed in the meantime.
+
+330
+00:39:08,132 --> 00:39:11,642
+Well, even if it does, I'll just queue it for Lando.
+
+331
+00:39:12,282 --> 00:39:15,662
+Uh, okay. So what's next? I did this.
+
+332
+00:39:16,272 --> 00:39:20,372
+I'm almost done. I'm done. This land.
+
+333
+00:39:20,762 --> 00:39:24,931
+And then land the legacy.
+
+334
+00:39:24,932 --> 00:39:32,542
+Back end removal patches. And then maybe some tests for the backup scheduler.
+
+335
+00:39:32,542 --> 00:39:35,662
+So I'm going to do that part. Now the backup scheduler tests.
+
+336
+00:39:36,622 --> 00:39:39,942
+So we're going to update to tip where I've got the backup scheduler.
+
+337
+00:39:39,952 --> 00:39:43,912
+We'll take a look at kind of how it works I'll explain the idea behind it.
+
+338
+00:39:43,912 --> 00:39:48,982
+And then we'll take we'll start thinking about how we can test it because I haven't actually designed any tests or anything.
+
+339
+00:39:49,432 --> 00:39:50,692
+And we'll design them together.
+
+340
+00:39:53,902 --> 00:40:00,652
+And it's might we might have to re-architect it so that it's easier to test that sometimes that sometimes happens where you like,
+
+341
+00:40:00,652 --> 00:40:07,582
+you build a thing to fix a particular problem. I mean, I think this is supposed to be white people, like some people like to do.
+
+342
+00:40:07,582 --> 00:40:11,782
+Test driven development is you. You make it so that things are designed for test.
+
+343
+00:40:12,682 --> 00:40:15,742
+Um, I think there is some wisdom in that.
+
+344
+00:40:16,072 --> 00:40:23,602
+Um, in this particular case, I had testing in mind while I was building the mechanism,
+
+345
+00:40:24,052 --> 00:40:27,351
+and then I start and I haven't even thought about what tests I want to write.
+
+346
+00:40:27,352 --> 00:40:32,692
+And so that may have been a mistake. Maybe I should have really thought more about how I'd want to test this before I built the mechanism.
+
+347
+00:40:32,692 --> 00:40:37,882
+But you live in, you learn sort of. Um, okay, so let's take a look at the mechanism itself.
+
+348
+00:40:42,052 --> 00:40:50,812
+Okay. So there's this thing. There's this thing inside of, uh, Firefox and Gecko called the idle the user idle service.
+
+349
+00:40:51,022 --> 00:40:56,092
+And what it does is it waits, it notices if no user input events are coming in.
+
+350
+00:40:57,172 --> 00:41:02,781
+And like, if there's just suddenly the user has they're just away from their keyboard.
+
+351
+00:41:02,782 --> 00:41:06,442
+So we're not getting keyboard input events or medicine input events.
+
+352
+00:41:06,742 --> 00:41:12,711
+You know, the browser might still be doing stuff like web pages, might still be animating or, you know, video is playing or something.
+
+353
+00:41:12,712 --> 00:41:17,662
+But if the user's not doing anything, then, um.
+
+354
+00:41:20,102 --> 00:41:23,882
+Uh, then, you know, we can detect that using the user idol service.
+
+355
+00:41:24,722 --> 00:41:31,772
+And the way it works is, um, you specify like there's a I've got a bunch of constants in here and default values,
+
+356
+00:41:32,012 --> 00:41:38,492
+but effectively you get access to the service and then.
+
+357
+00:41:42,112 --> 00:41:45,922
+Hang on, hang on, hang on, hang on, hang on, hang on. Um.
+
+358
+00:41:46,132 --> 00:41:53,482
+You register yourself as an idol observer. And you give it some threshold.
+
+359
+00:41:53,482 --> 00:41:57,771
+So, uh, in this particular case, I don't want to do a backup.
+
+360
+00:41:57,772 --> 00:42:00,832
+Like, every time the user just stop sending user input events. That'd be.
+
+361
+00:42:00,832 --> 00:42:02,662
+That'd be way too much. Way too much.
+
+362
+00:42:02,992 --> 00:42:12,592
+Creating a backup is we're supposed to make it as lightweight as possible, but it still takes CPU and disk, like you're you're copying all this data.
+
+363
+00:42:12,952 --> 00:42:16,222
+And so we want to try and find the right time to do it.
+
+364
+00:42:17,152 --> 00:42:20,002
+So if the users like doing stuff with a browser, that's not the right time.
+
+365
+00:42:20,542 --> 00:42:26,722
+And, uh, you know, if the browser itself is busy doing other stuff like maybe the user's not sending it user input events,
+
+366
+00:42:26,722 --> 00:42:29,692
+but it's playing a video, that's probably not a good time either.
+
+367
+00:42:30,412 --> 00:42:36,321
+Um, what you're like, the ideal scenario is the user is not using the application whatsoever.
+
+368
+00:42:36,322 --> 00:42:43,552
+They're like a paying attention to a different one. Like maybe they've got, um, uh, they've looked away and they're talking to their roommate.
+
+369
+00:42:44,062 --> 00:42:49,132
+They've left to go have lunch. Um, they have a different application in the foreground.
+
+370
+00:42:49,882 --> 00:42:53,632
+Um, they went to a meeting and came back to their machine.
+
+371
+00:42:53,632 --> 00:43:00,982
+Like, these are perfect times to do this sort of thing is when the user is just, like, away and the browser is not doing anything.
+
+372
+00:43:01,432 --> 00:43:06,532
+Um, so the user idol service is great for finding when the user's user input is not being sent,
+
+373
+00:43:07,162 --> 00:43:11,872
+but you can also supply it with some threshold in this case.
+
+374
+00:43:12,442 --> 00:43:17,422
+Um. Oh wow. I didn't realize this that I still have this line in here.
+
+375
+00:43:17,422 --> 00:43:25,282
+I need to replace that. But basically, um, you say I want to register for, uh, idol, but only after a certain period of idol time.
+
+376
+00:43:26,062 --> 00:43:34,402
+So if, um, in this particular case, I think what I really want is about five minutes of idle time.
+
+377
+00:43:34,402 --> 00:43:42,562
+So I want there I want to be called whenever the user input events have not been sent for about five minutes and then call me.
+
+378
+00:43:43,552 --> 00:43:47,752
+And at that point we will consider doing a backup. That's the idea.
+
+379
+00:43:49,162 --> 00:43:55,731
+And then like at that point, we actually check at that point to determine whether or not backups are enabled.
+
+380
+00:43:55,732 --> 00:44:00,111
+Like if backups are enabled, our callback just exits. Immediately we go, oh, guess we're not doing anything.
+
+381
+00:44:00,112 --> 00:44:04,012
+So like scheduled backups are not available. So or they're not enabled.
+
+382
+00:44:04,012 --> 00:44:11,812
+So we, um, disengage. And, you know, one could argue that, well, if backups aren't enabled, why do you still have the observer registered?
+
+383
+00:44:12,622 --> 00:44:19,402
+Um, well, by definition, these things aren't meant to run very frequently when the user is doing anything particularly useful.
+
+384
+00:44:19,402 --> 00:44:22,941
+And if we enter a function and it's like a no op, it's fairly cheap.
+
+385
+00:44:22,942 --> 00:44:30,232
+And this allows us to avoid a bunch of like observer registration deregistration, uh, shenanigans, which can go sideways.
+
+386
+00:44:30,262 --> 00:44:40,132
+Um, because one of the things about the user idle, uh, service is that you can register an observer multiple times, the same observer multiple times.
+
+387
+00:44:40,822 --> 00:44:42,262
+And, uh,
+
+388
+00:44:42,262 --> 00:44:51,381
+and it's fine with that and that I don't want to ever get into a situation where we've got multiple idle timers or idle callbacks registered due to a,
+
+389
+00:44:51,382 --> 00:44:52,492
+like a logic error.
+
+390
+00:44:53,062 --> 00:45:02,962
+And, you know, you can suddenly have like a backups being scheduled to occur sporadically throughout an entire period of idle time.
+
+391
+00:45:03,292 --> 00:45:12,022
+I do not want that. So, um, what I've done is I've made sure to only ever register one and, uh,
+
+392
+00:45:13,942 --> 00:45:17,872
+regardless of whether or not, uh, backups, scheduled backups are enabled or not.
+
+393
+00:45:17,872 --> 00:45:21,382
+And then in the callback, check to see whether backups are enabled or not.
+
+394
+00:45:21,412 --> 00:45:30,412
+That's the idea. And what we do after we, um, you know, maybe I'll open this up inside of code instead so you can see the syntax highlighting.
+
+395
+00:45:36,092 --> 00:45:40,832
+When, uh, we see the idol callback fire, we check to see whether or not we're enabled.
+
+396
+00:45:41,282 --> 00:45:49,232
+We calculate what now is, and we determine whether or not the last backup state.
+
+397
+00:45:52,002 --> 00:46:01,002
+Uh, the last backup date. Um, I just realized last backup date might actually not.
+
+398
+00:46:03,852 --> 00:46:11,082
+Exist if. Last backup date and last backup date greater than now.
+
+399
+00:46:11,622 --> 00:46:14,802
+Then that's very strange. Something has gone horribly wrong.
+
+400
+00:46:14,802 --> 00:46:20,922
+Where the last backup date was. Somehow in the future. Maybe the user's clock has been misconfigured.
+
+401
+00:46:20,922 --> 00:46:27,942
+Has changed. In which case, um, you know, we'll just pretend that the last backup date never occurred.
+
+402
+00:46:28,452 --> 00:46:32,232
+And, uh, we will then determine.
+
+403
+00:46:32,532 --> 00:46:33,702
+Then schedule one.
+
+404
+00:46:33,702 --> 00:46:42,222
+We'll basically schedule one because we we cannot we can no longer trust that the, you know, time has been monotonically moving forward.
+
+405
+00:46:42,522 --> 00:46:46,452
+If somehow the timestamp for the last backup is in the future somehow.
+
+406
+00:46:46,902 --> 00:46:52,962
+So in that case, we'll just be cautious and we'll say, okay, well, let's perform a backup.
+
+407
+00:46:54,282 --> 00:47:00,912
+Um, so we'll clear the backup date and then we will, um.
+
+408
+00:47:04,072 --> 00:47:17,462
+Uh uh uh. Determine whether or not the difference between the last backup data now is greater than some threshold.
+
+409
+00:47:18,002 --> 00:47:21,151
+And this. Yeah. Daylight savings time. Exactly, exactly.
+
+410
+00:47:21,152 --> 00:47:30,992
+Always. That time is so tricky because invariably there'll be some set of users that are idle and they have their computers on and the clocks change.
+
+411
+00:47:31,382 --> 00:47:35,522
+Clocks go back an hour or something, in which case we need to be able to handle that.
+
+412
+00:47:36,722 --> 00:47:42,152
+Um, so what we do is we take a look at the difference between now and the last backup date,
+
+413
+00:47:42,152 --> 00:47:50,582
+which at this point we can assert either doesn't exist or is less than now because of this routine up here.
+
+414
+00:47:51,212 --> 00:47:56,252
+And then if it's greater than some threshold because we don't want to create a backup every couple of minutes,
+
+415
+00:47:56,252 --> 00:48:01,922
+even if the users are idle, uh, that would be that's again, way too much, way too many, uh, CPU cycles.
+
+416
+00:48:01,922 --> 00:48:08,012
+And it's probably not that useful. We want to have some threshold of time.
+
+417
+00:48:08,012 --> 00:48:14,911
+Right now we're picking a number out of the year. We're going to say at once an hour maximum, we'll create a backup and maybe we'll adjust that.
+
+418
+00:48:14,912 --> 00:48:18,422
+Maybe it'll be once every five hours and once every half an hour and once every.
+
+419
+00:48:19,262 --> 00:48:23,552
+Who knows? We don't know yet. There's a lot of variables here that will still need tuning once this, uh,
+
+420
+00:48:23,642 --> 00:48:26,852
+starts getting tested and we start testing it on different types of hardware.
+
+421
+00:48:27,152 --> 00:48:30,662
+But for now, we're just picking an hour out of the air and we'll make it configurable.
+
+422
+00:48:31,382 --> 00:48:38,372
+Um, so for like, experimentation and stuff. And then in the event that we are there was no last backup date or we are with,
+
+423
+00:48:38,492 --> 00:48:44,551
+um, the the threshold is, is crossed, then we will create a backup backup.
+
+424
+00:48:44,552 --> 00:48:49,412
+Otherwise we'll say, hey, the last backup was two recent. Let's let's not do it this time.
+
+425
+00:48:49,412 --> 00:48:53,342
+And the idle, the idle call back will exit and we'll continue on.
+
+426
+00:48:54,182 --> 00:49:03,212
+That's how the mechanism works. Now, here's the other thing I wanted to do is I only wanted to do this when the machine is idle.
+
+427
+00:49:03,932 --> 00:49:10,682
+Because if the machine is, uh, or not, not just that the user is idle, but that the machine is also,
+
+428
+00:49:10,682 --> 00:49:17,402
+um, got some free time, like, it's it's got, uh, it's not doing something really, really busy.
+
+429
+00:49:17,942 --> 00:49:24,662
+And so what I'm going to do is I'm actually going to wrap this inside of a was it, uh, promise?
+
+430
+00:49:26,072 --> 00:49:29,222
+Um, no request, idle callback.
+
+431
+00:49:30,182 --> 00:49:33,872
+I think I have something like that on ponytails. Or is that.
+
+432
+00:49:33,872 --> 00:49:40,502
+Let's see you request I'll. Window request out a callback.
+
+433
+00:49:40,502 --> 00:49:46,051
+There's some utility. I don't have a window in this context, which is why I can't just use window dot request.
+
+434
+00:49:46,052 --> 00:49:49,922
+I will call back. Um, I I'll call back.
+
+435
+00:49:50,582 --> 00:49:55,472
+Ideal is there's something a request idle callback on window.
+
+436
+00:49:56,252 --> 00:50:05,012
+Your chrome utils idle dispatch. That's why it's called not bound or a particular Dom window at my idle request options.
+
+437
+00:50:07,112 --> 00:50:23,042
+What are they? Oops. Oh, it's just some time out that if I don't, if it doesn't occur by that timeout, um, it will come on occur.
+
+438
+00:50:23,042 --> 00:50:26,822
+So I'm going to say um Chrome utilize.
+
+439
+00:50:29,102 --> 00:50:38,162
+Idle. Dispatch. Um, I'm going to say, uh.
+
+440
+00:50:38,162 --> 00:50:54,872
+Tempting. I think it's a queuing. A backup request, cueing a backup for I next to idle and I'll say lazy log console debug for next.
+
+441
+00:50:55,022 --> 00:50:59,602
+Um. Killing a backup for next?
+
+442
+00:51:00,982 --> 00:51:04,942
+Um, yeah. Idle dispatch.
+
+443
+00:51:09,462 --> 00:51:13,662
+Um. Idol. Back up. Idol.
+
+444
+00:51:13,662 --> 00:51:17,612
+Dispatch. Fired.
+
+445
+00:51:18,072 --> 00:51:24,372
+Creating a backup. Attempting to create a backup.
+
+446
+00:51:26,032 --> 00:51:32,532
+And then I'm going to put this back. Um.
+
+447
+00:51:37,922 --> 00:51:41,112
+Uh. Sure.
+
+448
+00:51:41,312 --> 00:51:45,362
+The string. Okay.
+
+449
+00:51:46,112 --> 00:51:49,652
+Pretty happy. Now we can think about testing.
+
+450
+00:51:50,342 --> 00:51:55,022
+Um, also, has that set patches landed?
+
+451
+00:51:56,642 --> 00:52:01,622
+Yes. And there was some code formatting applied, which I'm surprised about.
+
+452
+00:52:04,842 --> 00:52:08,742
+What? Code formatting. Oh, okay. Fine.
+
+453
+00:52:08,882 --> 00:52:22,342
+Fine fine, fine. Okay, maybe I'll wait for this to merge before I land the other set of patches, which is to remove the old jobless back end.
+
+454
+00:52:22,342 --> 00:52:27,562
+And we'll do that tomorrow. This afternoon, whenever this closes out.
+
+455
+00:52:28,162 --> 00:52:38,662
+I'll do that so you don't get to see the last little bit where we finally send the old back to back end, the old legacy back end out to pasture.
+
+456
+00:52:39,382 --> 00:52:42,852
+Um, but hey, you. You saw it here first.
+
+457
+00:52:42,862 --> 00:52:47,392
+You. You know what the deal is? Oh.
+
+458
+00:52:47,392 --> 00:52:53,822
+That's interesting. Uh. Mhm mhm mhm.
+
+459
+00:52:54,052 --> 00:52:57,622
+Okay. Uh, let's not get distracted. So what have we done.
+
+460
+00:52:57,862 --> 00:53:02,362
+Done that. Done that, done that.
+
+461
+00:53:03,052 --> 00:53:06,292
+Waiting on that. Thinking about tests.
+
+462
+00:53:06,772 --> 00:53:18,752
+All right. Let's think about these tests. Danny Colon is making a joke about daylight savings time, and he's not actually saving any time today.
+
+463
+00:53:18,772 --> 00:53:24,402
+I think that's a pretty good joke. Let's let's play some sounds.
+
+464
+00:53:24,822 --> 00:53:28,002
+Let's play some sounds to celebrate that joke. Uh, yeah.
+
+465
+00:53:28,302 --> 00:53:33,252
+Hey. What happened? What happened? What do you all.
+
+466
+00:53:33,432 --> 00:53:37,472
+Uh huh? All right, just be here. Be someone.
+
+467
+00:53:39,402 --> 00:53:42,462
+Oh. Good stuff.
+
+468
+00:53:42,972 --> 00:53:48,342
+All right. Um, so let's write out a list of things we want to test.
+
+469
+00:53:48,552 --> 00:53:52,752
+Uh, test that. Um.
+
+470
+00:53:56,962 --> 00:54:02,002
+Calling on idol because I, I've exposed some of these functions.
+
+471
+00:54:02,302 --> 00:54:06,652
+So that we can write unit tests so that we don't have to like I don't want to test the idol service.
+
+472
+00:54:06,652 --> 00:54:10,762
+For example. The idol service has already tested and our test should not test that.
+
+473
+00:54:11,092 --> 00:54:13,912
+Our test should presume that the idol service works.
+
+474
+00:54:14,542 --> 00:54:21,022
+We either mock it out with our own idol service, or that that we know is like minimal and will do the job.
+
+475
+00:54:21,442 --> 00:54:32,452
+Or we we bypass it altogether. Um, so test that calling on idol and, uh, a backup has never occurred.
+
+476
+00:54:33,322 --> 00:54:37,882
+Causes a backup to get scheduled test back calling.
+
+477
+00:54:40,722 --> 00:54:48,281
+Um. That's interesting.
+
+478
+00:54:48,282 --> 00:54:57,312
+Like Idle Dispatch is going to make this kind of fun because it'll just kind of eventually be called, um.
+
+479
+00:54:59,472 --> 00:55:02,682
+So I'll just have to kind of like, wait for that to be called.
+
+480
+00:55:03,932 --> 00:55:06,842
+In the test room. I have to write a utility for that test.
+
+481
+00:55:06,842 --> 00:55:17,252
+That calling on idle and a backup has occurred recently does not cause a backup to get scheduled.
+
+482
+00:55:22,482 --> 00:55:27,072
+Um. You know, what I'll do, actually, is I'll go, like, um.
+
+483
+00:55:29,142 --> 00:55:33,282
+Schedule back up on idle.
+
+484
+00:55:39,272 --> 00:55:44,382
+Uh. Schedule. Create. Create backup on idle.
+
+485
+00:55:46,302 --> 00:55:49,922
+You know, make this something that we can override.
+
+486
+00:55:51,302 --> 00:56:03,422
+Uh, create backup on idle. Calls create idle, uh, calls.
+
+487
+00:56:04,322 --> 00:56:07,382
+Backup service. Create backup.
+
+488
+00:56:08,582 --> 00:56:13,451
+Um, add the next item on.
+
+489
+00:56:13,452 --> 00:56:21,722
+And. The next, um, moment when the event.
+
+490
+00:56:23,282 --> 00:56:27,212
+The event queue is not busy.
+
+491
+00:56:29,342 --> 00:56:32,762
+With higher priority events.
+
+492
+00:56:37,912 --> 00:56:49,822
+Um, just because the user hasn't sent us events in a while, it doesn't mean that the browser itself isn't busy.
+
+493
+00:56:50,782 --> 00:56:58,912
+It might be, for example, playing video or, um.
+
+494
+00:57:01,012 --> 00:57:08,542
+Um, uh, complex, uh, or doing or doing a complex calculation.
+
+495
+00:57:11,202 --> 00:57:14,532
+Uh uh, the user is waiting to.
+
+496
+00:57:15,822 --> 00:57:19,242
+Is actively waiting to complete.
+
+497
+00:57:21,882 --> 00:57:25,212
+And we don't want to draw resources from that.
+
+498
+00:57:26,082 --> 00:57:40,692
+Instead, we'll use, uh, Chrome utilized idle dispatch to wait until, uh, Event blue is so busy with higher priority things.
+
+499
+00:57:44,442 --> 00:57:47,742
+Uh, in the parent process. Uh.
+
+500
+00:57:49,782 --> 00:58:00,102
+This is broken, held into its own method to make it easier to, um, stub out in tests.
+
+501
+00:58:02,382 --> 00:58:05,622
+This is, uh, I guess I can mention that over here.
+
+502
+00:58:06,342 --> 00:58:15,042
+This is intentionally broken out into its own, uh, method to make it easier to step out in tests.
+
+503
+00:58:20,382 --> 00:58:26,332
+Okay. So test that calling.
+
+504
+00:58:26,422 --> 00:58:31,042
+Uh, that way we don't have to wait. We just, like, see if this gets called.
+
+505
+00:58:32,212 --> 00:58:38,032
+Um, because this should all be synchronous. Like, you'll go through this on idle synchronously.
+
+506
+00:58:38,782 --> 00:58:42,142
+Um, and then we can override.
+
+507
+00:58:42,172 --> 00:58:50,062
+We can stub this out and see if it was ever called. And that'll be our or, um, our clue that things were scheduled.
+
+508
+00:58:50,782 --> 00:58:58,372
+Um, Tesla calling on idle in a backup has occurred. Recent is not caused back up to get scheduled test that calling on idle and a backup has occurred.
+
+509
+00:58:59,752 --> 00:59:06,531
+But after the threshold does cause a backup to get scheduled test back.
+
+510
+00:59:06,532 --> 00:59:15,022
+Calling on idle and, uh, backup occurred in the future somehow causes a backup to get scheduled.
+
+511
+00:59:17,362 --> 00:59:22,982
+Um. What else?
+
+512
+00:59:32,302 --> 00:59:37,202
+Base case. Never made a backup. Covered.
+
+513
+00:59:37,252 --> 00:59:40,912
+That's the first one. Um.
+
+514
+00:59:42,082 --> 00:59:47,092
+Fairly common case. Have a recent backup that's covered.
+
+515
+00:59:47,842 --> 00:59:51,532
+Slightly uncommon case. It's time to create a backup that's covered.
+
+516
+00:59:52,162 --> 00:59:55,392
+Weird case. Um, backups.
+
+517
+00:59:55,672 --> 01:00:00,262
+Last backup was in the future. Covered. Um.
+
+518
+01:00:14,262 --> 01:00:18,431
+I think that's it. I think those are the tests. Weird case.
+
+519
+01:00:18,432 --> 01:00:24,672
+Auto config. Well, yeah, I guess someone could have fiddled with all the prefs such that, um,
+
+520
+01:00:24,912 --> 01:00:31,062
+you know, backups are happening either very aggressively or not aggressively at all.
+
+521
+01:00:31,152 --> 01:00:35,502
+Um, I don't think I'm going to write tests for that.
+
+522
+01:00:35,952 --> 01:00:41,852
+Um. I guess I will test that.
+
+523
+01:00:42,932 --> 01:00:48,482
+Um. And it backup schedule there.
+
+524
+01:00:51,892 --> 01:00:55,042
+Why is that? A color coded in a backup scheduler? Um.
+
+525
+01:00:58,402 --> 01:01:08,542
+Uh, registers, and I'll call back. Test that on a backup schedule or on registers, I don't call back.
+
+526
+01:01:12,322 --> 01:01:28,902
+Up. Test that, um.
+
+527
+01:01:30,942 --> 01:01:45,222
+Observing the idle notification calls on idle cars that observing the Quit application granted notification calls on a backup scheduler.
+
+528
+01:01:47,862 --> 01:01:49,482
+Okay, I think those are my tests.
+
+529
+01:01:50,352 --> 01:02:03,642
+So we're going to, uh, add a new test, mock, uh, test browser, compose back up test Zbc shell test backup service, uh scheduler dot js.
+
+530
+01:02:06,522 --> 01:02:13,272
+Add. That.
+
+531
+01:02:16,742 --> 01:02:21,002
+Build. Make sure we can run the tests even though it's just a stub of a test.
+
+532
+01:02:27,132 --> 01:02:31,842
+One of the things I really like about our project right now is that we have a ton of tests.
+
+533
+01:02:32,592 --> 01:02:39,821
+Back up is one of those things that has to work, um, like we need we want to have like really,
+
+534
+01:02:39,822 --> 01:02:44,471
+really rigorous testing for this, um, and not just wait until the very end.
+
+535
+01:02:44,472 --> 01:02:50,922
+Like, we will, of course, do a bunch of manual testing. We're going to have to throw a bunch of QA at this, and we have to figure out like,
+
+536
+01:02:51,492 --> 01:02:57,611
+yeah, what happens whenever a back up from 2023 gets restored in 2035.
+
+537
+01:02:57,612 --> 01:03:00,191
+Like we'll have to figure that out.
+
+538
+01:03:00,192 --> 01:03:05,382
+But, um, for now, we're just trying to make sure that the whole end to end thing, like we're going to we're testing the units,
+
+539
+01:03:05,382 --> 01:03:10,992
+but we also have end to end tests, you know, automation, um, for this, for this stuff.
+
+540
+01:03:11,262 --> 01:03:15,432
+What is the meaning of m z unified? I presume you mean Mozilla unified this?
+
+541
+01:03:16,062 --> 01:03:23,382
+Uh, that is the name of the, uh, repository that I have clone that has the, uh, Firefox and Gecko source code in it.
+
+542
+01:03:24,312 --> 01:03:34,602
+Whenever you do a, um, building Firefox, whenever you build Firefox, um, one of the first things that they ask you to do,
+
+543
+01:03:35,622 --> 01:03:40,812
+uh, as well, uh, hero building Firefox on windows, install, Mozilla build.
+
+544
+01:03:41,592 --> 01:03:47,072
+Um. Uh, it'll do.
+
+545
+01:03:47,192 --> 01:03:55,012
+At some point it tells you to clone. Um, although I think bootstrap will do it.
+
+546
+01:03:55,022 --> 01:04:00,182
+Where basically, it'll pull down the source code from the repository in the repositories called Mozilla Unified.
+
+547
+01:04:00,482 --> 01:04:05,252
+It used to be called Mozilla Central, but Mozilla Unified is interesting because it has a bunch of,
+
+548
+01:04:05,762 --> 01:04:11,612
+uh, branches that have historically been separate from central all on the same repository.
+
+549
+01:04:11,942 --> 01:04:16,592
+Um, which is very handy if you're trying to move stuff between branches.
+
+550
+01:04:17,072 --> 01:04:20,342
+Uh, long lived branches. So that's what unified is.
+
+551
+01:04:21,362 --> 01:04:26,912
+Hopefully that helped. Okay. So Mark test browser compose backup test exec shell test.
+
+552
+01:04:27,272 --> 01:04:32,282
+Backup service scheduler. All datasets.
+
+553
+01:04:32,282 --> 01:04:39,002
+Thanks. Good. You're welcome. You are welcome. Great question.
+
+554
+01:04:39,542 --> 01:04:44,132
+Keep the questions coming and I'll do my best to answer them if I can.
+
+555
+01:04:45,452 --> 01:04:50,432
+I can't always guarantee you that I can answer your questions, though. Um, I don't always have the answers.
+
+556
+01:04:51,692 --> 01:05:01,782
+I'm actually going to do these tests first. Oh, Jesus.
+
+557
+01:05:01,872 --> 01:05:08,382
+Come on. Um.
+
+558
+01:05:10,902 --> 01:05:16,152
+Tests that calling um, and that backup scheduler.
+
+559
+01:05:18,492 --> 01:05:27,102
+Um, registers a callback with the idle callback.
+
+560
+01:05:27,342 --> 01:05:30,902
+User and site. User idle callback service is that.
+
+561
+01:05:30,912 --> 01:05:34,812
+Let's called user idle callback service. Or maybe it's just user idle service.
+
+562
+01:05:37,742 --> 01:05:44,702
+Yeah, these are out of service. And one of the things we're going to need to do is we're going to have to set up a fake user idol service.
+
+563
+01:05:46,442 --> 01:05:54,892
+Um, I think I've seen this. Uh.
+
+564
+01:05:59,322 --> 01:06:02,471
+It's like a fake one here overrides ourselves.
+
+565
+01:06:02,472 --> 01:06:05,502
+A mock idol is commonly used for maintenance tasks.
+
+566
+01:06:08,282 --> 01:06:15,802
+I right? Database vacuum clean ups. Yeah, basically.
+
+567
+01:06:16,042 --> 01:06:20,432
+Oh, this is something I get for free. Fake idol service.
+
+568
+01:06:20,452 --> 01:06:27,592
+Interesting. How does this work?
+
+569
+01:06:36,462 --> 01:06:39,732
+Oh, and I had an idle observer becomes a no op.
+
+570
+01:06:42,972 --> 01:06:53,202
+Fake idle service. Do get our stores and I will service factory if needed and returns the services handle.
+
+571
+01:06:58,652 --> 01:07:02,762
+Override. I'll service by default to get out, restore the factory and get the service.
+
+572
+01:07:07,652 --> 01:07:11,442
+Do you people do that? Do you get an idol? Not really.
+
+573
+01:07:11,472 --> 01:07:19,982
+Hey, idol maintenance, do you need idol? I don't know who's to say that.
+
+574
+01:07:20,012 --> 01:07:35,012
+You need to switch to zealot for this test. I think I've seen a test where someone registered a slightly different idol service.
+
+575
+01:07:36,332 --> 01:07:39,622
+Yeah. Like this. Tests.
+
+576
+01:07:42,982 --> 01:07:54,652
+Yeah, this is kind of what I want. Fake idol service will register that one.
+
+577
+01:07:54,652 --> 01:08:03,022
+And then we mark register. So we actually just replace the existing fake idol one with a slightly different fake idol one.
+
+578
+01:08:03,922 --> 01:08:12,022
+And the thing to remember is that, uh, uh, the.
+
+579
+01:08:16,262 --> 01:08:21,872
+The idle service might be used by other stuff. Um, but I think I'm going to use this.
+
+580
+01:08:21,972 --> 01:08:25,982
+Uh, I'm gonna I'm gonna use do something similar to this.
+
+581
+01:08:26,852 --> 01:08:34,832
+Um. With idle service activity.
+
+582
+01:08:34,832 --> 01:08:39,122
+I don't need to record activity reset.
+
+583
+01:08:41,352 --> 01:08:53,072
+Fire observers. State laws that mean state observer observe state verbs final time or add an observer.
+
+584
+01:08:56,042 --> 01:09:16,332
+To lead an observer. I guess I don't.
+
+585
+01:09:16,332 --> 01:09:22,692
+Again, I don't need to test the idol service. I just need to test that the idle observer method was called.
+
+586
+01:09:25,292 --> 01:09:29,012
+So really, all I need to do. Don't need to do any of this.
+
+587
+01:09:31,452 --> 01:09:34,932
+Um, I need to implement the minimal.
+
+588
+01:09:38,412 --> 01:09:41,681
+The just the I need idle time.
+
+589
+01:09:41,682 --> 01:09:50,152
+Add, remove and disabled. Uh, disabled isn't included.
+
+590
+01:09:50,152 --> 01:09:54,922
+But, um, let's put idle time back. What's idle time supposed to be?
+
+591
+01:09:54,922 --> 01:09:59,001
+The amount of time milliseconds has passed since the last user activity. Uh, volatile.
+
+592
+01:09:59,002 --> 01:10:02,092
+Time to report. Zero is returned. Scared of the user error? Interact with the browser at all.
+
+593
+01:10:03,232 --> 01:10:06,592
+Okay. Um. Trivial services temporarily.
+
+594
+01:10:07,252 --> 01:10:11,122
+Temporarily disabled. Should only be used in automation.
+
+595
+01:10:11,572 --> 01:10:15,952
+Okay. Uh, disabled? True.
+
+596
+01:10:16,072 --> 01:10:21,202
+Sure. Um.
+
+597
+01:10:28,202 --> 01:10:32,132
+This is a very. This is, uh, very thin.
+
+598
+01:10:32,642 --> 01:10:41,912
+Um. Uh, as I use our idle service implementation, that doesn't do much.
+
+599
+01:10:42,782 --> 01:10:51,992
+But with sign on, we can stub out some parts of it to make sure that we.
+
+600
+01:10:55,112 --> 01:10:58,652
+Sure that the backup service uses it properly.
+
+601
+01:10:59,172 --> 01:11:04,832
+It uses it in the way we respect. Okay.
+
+602
+01:11:08,052 --> 01:11:11,772
+Expected method. Shorthand. Uh, okay.
+
+603
+01:11:12,852 --> 01:11:16,542
+Uh, was that mean? Like this? Probably this.
+
+604
+01:11:20,912 --> 01:11:33,302
+And these are not used. So okay, now we register the fake observer using the mock registrar.
+
+605
+01:11:36,532 --> 01:11:44,702
+Which is very handy. And we'll set it up.
+
+606
+01:11:49,142 --> 01:12:02,952
+Um. Fake idol service.
+
+607
+01:12:03,462 --> 01:12:17,612
+Uh. What does my registrar registrar return?
+
+608
+01:12:21,442 --> 01:12:32,862
+Pretty strict. Register returns the Sid.
+
+609
+01:12:38,912 --> 01:12:47,402
+Okay, so we've got our fake idol service set up and then we're going to do test in it backup scheduler.
+
+610
+01:12:48,252 --> 01:12:51,452
+We're going to create a new backup service.
+
+611
+01:12:51,602 --> 01:13:01,392
+We're going to call BS in it backup scheduler. Um, and.
+
+612
+01:13:01,982 --> 01:13:13,012
+Um, and then back up. Schedule. Air. Test and that on in a backup schedule we're going to do both.
+
+613
+01:13:14,182 --> 01:13:18,352
+So we need to clean up it's observer implementation. It's observer as well.
+
+614
+01:13:19,522 --> 01:13:23,542
+Um, so first of all, what happens if I just go like a cert okay.
+
+615
+01:13:23,602 --> 01:13:26,692
+To the test. This should pass, I think.
+
+616
+01:13:29,352 --> 01:13:36,712
+How are things going in auto land world? Filibuster.
+
+617
+01:13:37,042 --> 01:13:45,092
+Was it me? Did I do it? No, I think this is infra.
+
+618
+01:13:55,512 --> 01:14:02,662
+Right. Hope so.
+
+619
+01:14:03,202 --> 01:14:07,312
+Geez. So it looks fully broken.
+
+620
+01:14:15,582 --> 01:14:22,452
+In the unified. Did I break that?
+
+621
+01:14:23,712 --> 01:14:26,862
+No I didn't. Someone else did. Who? That's good.
+
+622
+01:14:28,122 --> 01:14:32,382
+Okay. Uh, so that all passed. That's good. Um, so here's what we're going to do.
+
+623
+01:14:32,412 --> 01:14:39,012
+We're going to say, uh, let's sandbox equal sign on, create sandbox.
+
+624
+01:14:40,482 --> 01:14:47,022
+We're going to, uh, make sure that we restore the sandbox, the end of this, and we're going to say sandbox.
+
+625
+01:14:47,442 --> 01:14:52,482
+Does stub idle service add idle observer?
+
+626
+01:14:53,592 --> 01:15:07,832
+Um. And then we're going to say, uh, we're also going to, uh, stub out, remove idol observer.
+
+627
+01:15:15,442 --> 01:15:19,372
+Uh, cert. Okay. Oh, I have to await this.
+
+628
+01:15:22,492 --> 01:15:30,712
+Cert. Okay. Um, I had a little service start, and idol observer got called once.
+
+629
+01:15:31,462 --> 01:15:34,462
+Uh, an idol observer was called.
+
+630
+01:15:43,272 --> 01:15:46,462
+Works. And then we need to make sure. Now the first argument is going to be a function.
+
+631
+01:15:46,482 --> 01:15:54,642
+We just need to make sure it's a function. And then the second one is the number that we expect in the preference um cert okay.
+
+632
+01:15:55,872 --> 01:16:00,222
+Idle service dot. Add idle observers dot.
+
+633
+01:16:02,282 --> 01:16:05,412
+Uh was it get call.
+
+634
+01:16:14,252 --> 01:16:18,152
+Get call zero. First call args.
+
+635
+01:16:19,712 --> 01:16:29,302
+First call args. Zero instance of function.
+
+636
+01:16:35,282 --> 01:16:40,622
+Um, the first argument. Was, uh.
+
+637
+01:16:42,412 --> 01:16:47,932
+There's a function first argument to add observer or a function.
+
+638
+01:16:50,372 --> 01:16:54,012
+And the second should be that value.
+
+639
+01:16:54,032 --> 01:16:59,972
+Add some fresh uh args one assert equal.
+
+640
+01:17:05,462 --> 01:17:09,982
+What is the pref? An idle observer.
+
+641
+01:17:09,992 --> 01:17:13,951
+Idle threshold seconds. Which is this end pref. Idle threshold seconds.
+
+642
+01:17:13,952 --> 01:17:22,252
+Pref name. Which is this one? Um services.
+
+643
+01:17:22,252 --> 01:17:32,432
+Perhaps. Get in track. For the idle threshold, preference value was passed.
+
+644
+01:17:34,862 --> 01:17:39,622
+Um. That's the second argument.
+
+645
+01:17:48,562 --> 01:17:52,012
+Idle observers is undefined and idle observer.
+
+646
+01:17:52,032 --> 01:18:03,111
+Sorry. First argument was a function of false equals.
+
+647
+01:18:03,112 --> 01:18:07,612
+True. It's not a function. What's it supposed to be? What was it then?
+
+648
+01:18:10,482 --> 01:18:16,282
+Server and observer. What is it then? Huh?
+
+649
+01:18:16,432 --> 01:18:23,982
+What is it? What is it? Oh, I might need to do this function dot inst.
+
+650
+01:18:24,072 --> 01:18:30,972
+Uh, is instance. This cross compartment.
+
+651
+01:18:31,512 --> 01:18:37,942
+So anything I can do. Function is instance. No.
+
+652
+01:18:42,592 --> 01:18:46,732
+Yeah. Uh.
+
+653
+01:18:50,212 --> 01:18:59,291
+Type of. Just type a assert.
+
+654
+01:18:59,292 --> 01:19:10,192
+Okay. Type of. Sort equal type of motion.
+
+655
+01:19:11,092 --> 01:19:19,782
+Is that how it works? Object.
+
+656
+01:19:20,742 --> 01:19:27,712
+It's an object. I wouldn't be an object.
+
+657
+01:19:28,522 --> 01:19:31,942
+This observer equals. This should be a function.
+
+658
+01:19:37,902 --> 01:19:41,732
+Um. All right.
+
+659
+01:19:41,972 --> 01:20:01,862
+It's debugger time. Okay.
+
+660
+01:20:04,642 --> 01:20:08,542
+Uh, idol service ad idol observer. First call.
+
+661
+01:20:09,102 --> 01:20:16,882
+It's, uh. It's, um, it's gone through the expe com gunk.
+
+662
+01:20:18,422 --> 01:20:22,382
+Somehow. Oh, yeah. Because we over.
+
+663
+01:20:22,412 --> 01:20:26,702
+Okay. It's gone through XP become okay. So I need to, um.
+
+664
+01:20:29,702 --> 01:20:33,902
+It needs to be. So I need to be able to show it to an observer.
+
+665
+01:20:34,682 --> 01:20:44,102
+Uh, so assert. Okay. Uh, instance of psi and a psi observer.
+
+666
+01:20:45,122 --> 01:20:49,562
+First, um, first argument was an observer.
+
+667
+01:20:50,782 --> 01:20:53,852
+Don't go near the bug. The debugger then.
+
+668
+01:20:57,142 --> 01:21:01,851
+Okay. That's good. Second was the, uh, the number.
+
+669
+01:21:01,852 --> 01:21:05,842
+Now. Now, let's pretend that we, um.
+
+670
+01:21:07,012 --> 01:21:11,392
+Um, the preference for the idle threshold changed.
+
+671
+01:21:13,762 --> 01:21:18,862
+Um. Before we could run in it.
+
+672
+01:21:19,432 --> 01:21:20,602
+The backup scheduler.
+
+673
+01:21:22,102 --> 01:21:41,602
+We should ensure that the, uh, this change is not reflected whenever deregistration occurs or the idle callback occurs, since it wouldn't match the.
+
+674
+01:21:42,232 --> 01:21:45,572
+Um. Uh.
+
+675
+01:21:45,572 --> 01:21:50,972
+Registration works. Look at this. Okay, so we're going to change.
+
+676
+01:21:51,662 --> 01:21:55,352
+We're also going to ensure the cert.
+
+677
+01:21:56,222 --> 01:22:01,022
+Uh, okay. Idle service. Uh, remove idle observer.
+
+678
+01:22:01,742 --> 01:22:05,042
+Not called remove idol. Observer.
+
+679
+01:22:06,842 --> 01:22:13,712
+It's not been called yet. And then we're going to set this pref.
+
+680
+01:22:18,802 --> 01:22:27,352
+Set and pref. Um, I don't know, 100.
+
+681
+01:22:36,082 --> 01:22:40,862
+Um. Let's actually get this value.
+
+682
+01:22:42,482 --> 01:22:48,392
+That original I'll let const threshold seconds equals that.
+
+683
+01:22:50,102 --> 01:22:54,572
+We'll make sure that that equals that. And then we'll add five.
+
+684
+01:22:57,252 --> 01:23:00,642
+Uh, and then we'll make sure. Services. Craft. Beer.
+
+685
+01:23:00,972 --> 01:23:03,972
+Craft. Beer.
+
+686
+01:23:04,002 --> 01:23:10,932
+User craft. This and actually let's replace this string that we keep using.
+
+687
+01:23:11,532 --> 01:23:14,652
+Const idle threshold seconds.
+
+688
+01:23:14,652 --> 01:23:28,752
+Press name equals that. We'll use that here and here uh and here.
+
+689
+01:23:31,182 --> 01:23:36,492
+Um now we should ensure that.
+
+690
+01:23:42,532 --> 01:23:45,622
+Idol observer was not called again.
+
+691
+01:23:49,842 --> 01:23:58,182
+Um. And that remove idol observer is called once actually.
+
+692
+01:24:02,122 --> 01:24:11,182
+Remove idol observer what's called. Once, then remove idle observer.
+
+693
+01:24:14,392 --> 01:24:18,442
+For instances. See that as an observer.
+
+694
+01:24:19,532 --> 01:24:22,542
+We're going to make sure that they're equal to one another.
+
+695
+01:24:22,552 --> 01:24:25,762
+I don't know if this is going to work equal. Uh.
+
+696
+01:24:30,852 --> 01:24:33,022
+Uh, server.
+
+697
+01:24:33,322 --> 01:24:46,431
+The first argument to idol observer matches the first arguments to remove idol observer and then this search that they remove idle observer.
+
+698
+01:24:46,432 --> 01:24:49,702
+First call args one is done. Yeah.
+
+699
+01:24:49,702 --> 01:24:56,332
+The idle threshold preference value. The original the unchanged idle threshold preference value is passed.
+
+700
+01:24:56,812 --> 01:25:09,302
+I'm going to say the original is passed as the second argument. Good.
+
+701
+01:25:09,932 --> 01:25:13,112
+Okay, that's that's these two.
+
+702
+01:25:16,702 --> 01:25:21,832
+Um, tests. That.
+
+703
+01:25:24,122 --> 01:25:27,712
+Uh. Uh.
+
+704
+01:25:28,232 --> 01:25:34,142
+Observing. Calling on. Observe with the idle.
+
+705
+01:25:38,492 --> 01:25:42,872
+Uh, notification causes the.
+
+706
+01:25:45,232 --> 01:25:55,281
+Uh, on idle method. Call my backup service to observe with the idol notification.
+
+707
+01:25:55,282 --> 01:26:01,282
+Causes the backup service method to be called add case.
+
+708
+01:26:03,922 --> 01:26:12,512
+Um. Test, backup service and observe.
+
+709
+01:26:15,902 --> 01:26:22,981
+Also tests that, uh, passing the, uh quit application.
+
+710
+01:26:22,982 --> 01:26:30,932
+Granted. Notification causes the remove idle backend service.
+
+711
+01:26:33,212 --> 01:26:36,842
+Remove idle callback. Not remove idle callback.
+
+712
+01:26:36,932 --> 01:26:41,792
+Um. On init. Backup. Scheduler. Default.
+
+713
+01:26:43,572 --> 01:26:47,682
+Actually, let's make that. Let's make that a separate test.
+
+714
+01:26:54,032 --> 01:26:58,382
+Uh, where? Okay, great.
+
+715
+01:26:59,892 --> 01:27:09,002
+Okay. Application granted. Notification causes the lack service.
+
+716
+01:27:10,052 --> 01:27:16,692
+Um. And it. Backup scheduler ready to be called.
+
+717
+01:27:17,472 --> 01:27:21,852
+Okay, here I am at the back of service.
+
+718
+01:27:24,262 --> 01:27:30,602
+Boss. Okay, so let's sandbox equals.
+
+719
+01:27:30,612 --> 01:27:34,632
+I know how to create sandbox server store.
+
+720
+01:27:34,962 --> 01:27:42,422
+So same structure for both. And we're going to stub out.
+
+721
+01:27:44,902 --> 01:27:50,722
+Uh, on idol. Yes.
+
+722
+01:27:50,782 --> 01:27:55,472
+Uh, observe. And it gets parents.
+
+723
+01:27:55,492 --> 01:28:00,022
+I'm just going to pass it. No. Um.
+
+724
+01:28:03,502 --> 01:28:11,692
+500. Because I think, um, uh, idle notifications get, uh.
+
+725
+01:28:15,302 --> 01:28:29,972
+What gets passed as the title as an idle user, idle service was the first argument to the callback observer.
+
+726
+01:28:29,972 --> 01:28:33,271
+The subject will always be the idle service itself.
+
+727
+01:28:33,272 --> 01:28:38,742
+Subject topic and then the data. Okay. So we're going to.
+
+728
+01:28:40,572 --> 01:28:44,882
+Pass passing. I guess the idol service.
+
+729
+01:28:45,722 --> 01:28:55,412
+Um. The subject for the idle notification is always the idle service itself.
+
+730
+01:28:59,142 --> 01:29:03,222
+Title. And then, uh.
+
+731
+01:29:03,912 --> 01:29:08,292
+Assert. Okay. Yes.
+
+732
+01:29:09,192 --> 01:29:13,332
+And I'll call the voice of backup service.
+
+733
+01:29:13,572 --> 01:29:17,292
+Oh, I know, let's call. Okay.
+
+734
+01:29:24,892 --> 01:29:29,402
+So far, so good. And then. Stubborn out.
+
+735
+01:29:32,812 --> 01:29:40,492
+On an IT backup scheduler. The leave for quit application.
+
+736
+01:29:40,492 --> 01:29:45,562
+Granted. It's no thank you for.
+
+737
+01:29:49,092 --> 01:29:54,762
+Subject for the application granted. Notification is no.
+
+738
+01:30:05,232 --> 01:30:09,042
+Let's just double check the application. Great.
+
+739
+01:30:13,162 --> 01:30:18,891
+I'm shall. Yeah.
+
+740
+01:30:18,892 --> 01:30:22,372
+Null pointer. Okay. That's good.
+
+741
+01:30:22,432 --> 01:30:27,632
+That's done. What's next? Okay.
+
+742
+01:30:27,642 --> 01:30:30,972
+Okay. It's 233. Let me just check my calendar real quick.
+
+743
+01:30:32,002 --> 01:30:35,982
+You don't have to do today. Do I have to run to anything?
+
+744
+01:30:40,882 --> 01:30:45,892
+Uh, not right away, but I'm. So I'm going to see if I can blast these last few tests real quick.
+
+745
+01:30:46,132 --> 01:30:51,462
+Um. See if I can do them in, like, the next five minutes.
+
+746
+01:30:51,472 --> 01:30:55,702
+Tesla calling on idol and a backup has never occurred. Causes a backup to get scheduled.
+
+747
+01:31:06,422 --> 01:31:12,002
+Okay. Uh.
+
+748
+01:31:14,252 --> 01:31:17,692
+Idle. No backup exists.
+
+749
+01:31:18,842 --> 01:31:25,812
+Okay. Sandbox. Um. We're going to say.
+
+750
+01:31:31,642 --> 01:31:39,652
+Effectively, what I'm going to do is going to be on idle and I need to stub out the schedule.
+
+751
+01:31:41,872 --> 01:31:45,622
+Uh, what is it? Um, I think we split out.
+
+752
+01:31:46,552 --> 01:31:59,742
+Create backup on idle. You know, I think we can call this because there's, like multiple idols on idol.
+
+753
+01:32:00,352 --> 01:32:08,822
+Create backup on idol. Dispatch. Yeah.
+
+754
+01:32:09,662 --> 01:32:21,152
+That's clear. Great back up in our dispatch box on idle, so we need to.
+
+755
+01:32:23,622 --> 01:32:27,102
+Set the prefs such that no backup has ever occurred before.
+
+756
+01:32:28,982 --> 01:32:32,482
+Uh, and the way we do that is it's.
+
+757
+01:32:35,172 --> 01:32:38,172
+We need to make sure that scheduling backups is enabled.
+
+758
+01:32:49,722 --> 01:32:58,422
+Uh, I'll do that. Probably during setup. Series is perhaps.
+
+759
+01:33:00,222 --> 01:33:03,822
+So it will press true.
+
+760
+01:33:08,632 --> 01:33:15,102
+Services. Prefs. User express. Sketch enabled.
+
+761
+01:33:20,672 --> 01:33:32,052
+Um. Okay.
+
+762
+01:33:32,142 --> 01:33:35,652
+And what's the last backup?
+
+763
+01:34:04,192 --> 01:34:12,262
+So. Make sure no backup is recorded.
+
+764
+01:34:13,642 --> 01:34:18,262
+Backup. Backup timestamp is recorded.
+
+765
+01:34:24,722 --> 01:34:29,012
+Services, crafts set and craft are clear.
+
+766
+01:34:29,022 --> 01:34:37,292
+User pressed browser clear his aircraft and its back a pref name and then.
+
+767
+01:34:42,012 --> 01:34:49,362
+Sir. Okay. Yes. Uh, create backup on, and we'll dispatch call once.
+
+768
+01:34:50,592 --> 01:34:54,191
+Backup service. Uh, create backup on an old dispatch.
+
+769
+01:34:54,192 --> 01:35:06,442
+What's called. Could no backup exist?
+
+770
+01:35:06,462 --> 01:35:09,462
+What was the next one? That's the kind.
+
+771
+01:35:11,932 --> 01:35:15,652
+I don't know if back ups occurred recently. It's not cause a back ticket schedule so recently.
+
+772
+01:35:16,192 --> 01:35:20,572
+So we have to calculate recent, uh, let's say five seconds ago.
+
+773
+01:35:21,682 --> 01:35:29,992
+Uh, let now state, uh, now divide by 5000 or how do I get five seconds ago.
+
+774
+01:35:30,862 --> 01:35:34,192
+Uh, JavaScript date five seconds ago.
+
+775
+01:35:40,362 --> 01:35:47,472
+Is that true? Let's test this date five seconds ago.
+
+776
+01:35:50,842 --> 01:35:54,652
+That looks very plausible. Yeah.
+
+777
+01:35:54,712 --> 01:36:00,232
+Okay. Um. And then I need to.
+
+778
+01:36:04,932 --> 01:36:08,262
+Yes. No. I need to get the.
+
+779
+01:36:19,192 --> 01:36:29,552
+What's the numeric date? How do I get the.
+
+780
+01:36:35,042 --> 01:36:42,302
+No no no no no no no. To. I don't want a string, I want a number.
+
+781
+01:36:42,872 --> 01:36:49,502
+JavaScript date object to milliseconds since epoch.
+
+782
+01:36:50,492 --> 01:36:54,572
+Get time. That's the one.
+
+783
+01:36:57,192 --> 01:37:03,912
+Yeah. That's how it's done. Okay, so we get five seconds ago.
+
+784
+01:37:07,422 --> 01:37:10,742
+Uh, let's calculate that date.
+
+785
+01:37:10,812 --> 01:37:17,622
+That's five seconds from now. Uh, let now equals.
+
+786
+01:37:20,682 --> 01:37:26,552
+Now equals new date. Uh, five seconds ago.
+
+787
+01:37:26,562 --> 01:37:32,932
+Equal. New date?
+
+788
+01:37:34,882 --> 01:37:40,132
+No. Not yet. Time. Minus five times a thousand.
+
+789
+01:37:43,092 --> 01:37:48,022
+You know. Seconds. And then.
+
+790
+01:37:52,992 --> 01:38:01,301
+Set in pref five seconds ago by two, by a thousand.
+
+791
+01:38:01,302 --> 01:38:06,282
+I think it's how I do this. Well, to get time.
+
+792
+01:38:19,402 --> 01:38:23,562
+Yeah. Okay. Uh. I'm a cert not called.
+
+793
+01:38:25,932 --> 01:38:42,602
+Was not call. Now is not a function now, right?
+
+794
+01:38:43,082 --> 01:38:49,802
+Oh, I also need to make sure that the threshold is sufficiently large.
+
+795
+01:38:54,612 --> 01:39:02,042
+Um. Needs to be at least.
+
+796
+01:39:06,612 --> 01:39:12,732
+Uh 300 and 128 seconds.
+
+797
+01:39:14,852 --> 01:39:21,782
+Um, we'll pretend, uh, our threshold is two minutes.
+
+798
+01:39:29,902 --> 01:39:34,072
+Threshold. Is two minutes.
+
+799
+01:39:38,102 --> 01:39:46,872
+Clear that. I don't know, actually.
+
+800
+01:39:46,872 --> 01:39:54,862
+20s. And this should pass.
+
+801
+01:40:02,192 --> 01:40:10,042
+No, because of line 39, 36 will set impressive interim.
+
+802
+01:40:14,142 --> 01:40:19,062
+All right, I gotta. I gotta wrap this up, I think. Uh, create backup on idled.
+
+803
+01:40:19,062 --> 01:40:25,452
+Dispatch was not called, but it was called. Okay, not called on idle.
+
+804
+01:40:25,632 --> 01:40:30,972
+Despite the fact that her last backup was five seconds ago.
+
+805
+01:40:34,322 --> 01:40:39,781
+Okay. I'm curious. Let's walk through it. And then we'll.
+
+806
+01:40:39,782 --> 01:40:53,052
+Then I'll call it there. Hello.
+
+807
+01:40:53,062 --> 01:40:58,152
+Hello, hello. Where are we?
+
+808
+01:41:03,972 --> 01:41:08,232
+What the heck? What? Error rate. I did not work properly.
+
+809
+01:41:08,892 --> 01:41:14,382
+Um, let's put a debugger inside of on idle.
+
+810
+01:41:21,122 --> 01:41:53,522
+Okay, let's build just in case. Oh, it's going to get called a whole bunch.
+
+811
+01:41:53,552 --> 01:41:58,522
+Um, hold on a second. Let me, uh.
+
+812
+01:41:58,592 --> 01:42:02,282
+This is going to be annoying when I know. Okay, here we go.
+
+813
+01:42:03,632 --> 01:42:07,502
+And on idle. Okay. Should be enabled.
+
+814
+01:42:08,132 --> 01:42:13,362
+Get. Now. Let's back up. Oh, I need to floor it.
+
+815
+01:42:13,382 --> 01:42:17,582
+Yeah, I need to floor that. Last backup date.
+
+816
+01:42:24,322 --> 01:42:27,532
+Why his last backup date? No.
+
+817
+01:42:39,402 --> 01:42:43,512
+Get into prayer because it's a float. That's why. Right?
+
+818
+01:42:43,542 --> 01:42:49,442
+Okay, I know what's going on. Because you can't use a float.
+
+819
+01:42:52,052 --> 01:42:59,252
+Uh, that, uh that, uh. There is a scheduler.
+
+820
+01:43:02,202 --> 01:43:07,572
+Get time out sometimes. Then divide by a thousand math.floor.
+
+821
+01:43:27,312 --> 01:43:36,521
+What? All right.
+
+822
+01:43:36,522 --> 01:43:40,302
+One. One last. One more time. Into the breach. Let's go down here.
+
+823
+01:43:44,592 --> 01:43:54,911
+What I always think of, um, Darth Vader whenever the Millennium Falcon in A new Hope, when the Millennium Falcon, um, comes in and Darth Vader was.
+
+824
+01:43:54,912 --> 01:44:01,862
+What? I think it's so funny. Uh, for some reason.
+
+825
+01:44:04,832 --> 01:44:14,152
+It. Can't stand that. Um. Or you know what I'll do.
+
+826
+01:44:27,122 --> 01:44:31,592
+Maybe a problem with the debugger? I'm not sure, but back up service on.
+
+827
+01:44:31,592 --> 01:44:39,242
+I'll break here for almost break there and break here.
+
+828
+01:44:40,082 --> 01:44:45,092
+Yes. Okay. Now and then.
+
+829
+01:44:45,722 --> 01:44:51,062
+Oh, for some reason, it's still afloat. Doesn't make any sense.
+
+830
+01:44:51,302 --> 01:44:57,392
+Let's go back up to the test here. When we set five seconds, go to be that.
+
+831
+01:45:05,262 --> 01:45:18,442
+Mhm. Why?
+
+832
+01:45:21,052 --> 01:45:29,902
+Is the last backup date. Oh, it's null right now, but date now divided by a thousand.
+
+833
+01:45:30,262 --> 01:45:33,622
+That's a float. Last backup date is null.
+
+834
+01:45:35,302 --> 01:45:38,332
+Why is it null? I've done something wrong.
+
+835
+01:45:38,362 --> 01:45:44,592
+There's a bug. I'm glad we did this. There's a bug. Last backup date.
+
+836
+01:45:44,982 --> 01:45:48,941
+We should whenever we call. Okay.
+
+837
+01:45:48,942 --> 01:45:52,902
+That's when we create a back up. When do we knit the backups?
+
+838
+01:45:52,962 --> 01:45:56,532
+Oh, have I not enlisted the backup scheduler? That's what's wrong.
+
+839
+01:45:57,752 --> 01:46:01,352
+I think need to knit the thing. Um.
+
+840
+01:46:05,232 --> 01:46:09,522
+Sandbox. Green sandbox BBS init backup scheduler.
+
+841
+01:46:10,812 --> 01:46:23,052
+Okay, that's what's wrong. Also whenever I compute now.
+
+842
+01:46:26,472 --> 01:46:35,182
+I'm going to do math.floor on it. Okay, so that I've got that sorted out.
+
+843
+01:46:35,302 --> 01:46:40,732
+Um. I still need debuggers in here now.
+
+844
+01:46:42,382 --> 01:46:45,542
+Okay. So I'm going to call it there for now.
+
+845
+01:46:45,562 --> 01:46:50,362
+We've got most of these tests written. Uh, I'm going to amend my patch.
+
+846
+01:46:50,722 --> 01:46:54,922
+Hey, thank you so much for watching episode 368 of the Joy of coding.
+
+847
+01:46:54,922 --> 01:46:58,612
+We almost got all those tests written. We landed a bunch of stuff today.
+
+848
+01:46:59,392 --> 01:47:04,752
+Uh, hopefully it all sticks. And, uh, yeah, it was fairly productive.
+
+849
+01:47:04,762 --> 01:47:09,022
+It was one of those productive episodes. I'm pretty happy about that. Um.
+
+850
+01:47:09,592 --> 01:47:17,872
+All right. Well, I'm going to call it there. Thanks again for watching. Uh, and I'll hopefully see you next week with episode 369.
+
+851
+01:47:18,562 --> 01:47:26,692
+Um, and that's fun because each number or the three times two is six times three is nine.
+
+852
+01:47:26,722 --> 01:47:33,592
+That's fun. That's a fun number three. Six, nine. Um, other than that, it should be a relatively normal episode, but maybe we'll see you then.
+
+853
+01:47:34,012 --> 01:47:37,342
+Uh, with episode 369. Should be on June 19th.
+
+854
+01:47:38,422 --> 01:47:42,262
+Uh, which is is that Juneteenth?
+
+855
+01:47:43,522 --> 01:47:47,572
+I needed to determine whether or not I'm actually going to be doing. Who knows?
+
+856
+01:47:47,812 --> 01:47:52,642
+Who knows? I might be streaming next week. We will see. I have to I have to check some things.
+
+857
+01:47:53,062 --> 01:47:56,752
+Uh, but watch, watch this space and I'll let you know.
+
+858
+01:47:57,082 --> 01:48:01,432
+All right. Well thanks again, everybody. Have yourselves a great week. I'll hopefully see you soon.
+
+859
+01:48:01,702 --> 01:48:08,092
+Take care. Bye bye. The joy.
+
+860
+01:48:08,862 --> 01:48:11,512
+0DD it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

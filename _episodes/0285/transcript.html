@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 285 - April 6, 2022</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 285 - April 6, 2022</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=dfb68d60-7431-43d8-bc92-ae4501147c1d</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=dfb68d60-7431-43d8-bc92-ae4501147c1d">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:04,218 --> 00:00:10,278
+Welcome. Through the joy of coding.
+
+2
+00:00:10,278 --> 00:00:14,838
+Hello, and welcome to episode two hundred and eighty five of the joy of coding.
+
+3
+00:00:14,838 --> 00:00:19,098
+My name is Mike Conley. It's so good to have you here. So good to have you here.
+
+4
+00:00:19,098 --> 00:00:23,508
+It's April six. Twenty twenty two. We're going to be live hacking on some Firefox stuff.
+
+5
+00:00:23,508 --> 00:00:30,468
+We're going to be reviewing some patches, answering some neat infos, working on some scripts.
+
+6
+00:00:30,468 --> 00:00:35,028
+Maybe we'll see. Maybe we'll get to some viewer questions. Let's get.
+
+7
+00:00:35,028 --> 00:00:39,558
+Let's get into it. Let's get started. I'll start by sharing my screen.
+
+8
+00:00:39,558 --> 00:00:45,138
+OK. Yeah. Let's start with the agenda here. Like I said, it's April six, 2022.
+
+9
+00:00:45,138 --> 00:00:51,068
+Episode two hundred and eighty five a reminder if you're watching the stream for the first time, no plan survives breakfast.
+
+10
+00:00:51,068 --> 00:00:57,078
+I have a sense of what I want to do today. I think I know how I want it to proceed, but hey, maybe I'll get sidelined.
+
+11
+00:00:57,078 --> 00:01:02,358
+Maybe I'll get derailed and stuck on something. You know, we might not get all the way through this stuff.
+
+12
+00:01:02,358 --> 00:01:05,838
+I might get stuck on the first thing and that's what we spend the hour and a half doing.
+
+13
+00:01:05,838 --> 00:01:09,378
+Or maybe I'll run out of stuff to do and we'll have to make some things up. That's all right.
+
+14
+00:01:09,378 --> 00:01:18,048
+This is capturing software development in the raw, which means that things might not go exactly according to plan because there is no plan.
+
+15
+00:01:18,048 --> 00:01:24,948
+It's just me working. That's the first thing. The second thing is that the agenda that we're looking at is something that you have access to.
+
+16
+00:01:24,948 --> 00:01:30,078
+If you're watching this on air, Mozilla, check out the video details.
+
+17
+00:01:30,078 --> 00:01:33,528
+If you're watching this on YouTube, check out the video description.
+
+18
+00:01:33,528 --> 00:01:41,798
+And if you're watching this on Twitch, then let me just drop the link into the Twitch chat.
+
+19
+00:01:41,798 --> 00:01:45,518
+You can follow along there. Hopefully, I'm seeing some some chatter.
+
+20
+00:01:45,518 --> 00:01:48,608
+Hopefully, everyone can hear me as this is everything working, OK?
+
+21
+00:01:48,608 --> 00:01:55,538
+I see Danny Colon typing, but it looks like my monitor is showing that I am making sounds.
+
+22
+00:01:55,538 --> 00:02:02,468
+Audio is coming through. If anything's going wrong with the stream, let me know.
+
+23
+00:02:02,468 --> 00:02:07,928
+There is also an episode guide that you should be that you know you should be made aware of.
+
+24
+00:02:07,928 --> 00:02:12,608
+It's a great resource for people who might want to know what it's been covered in previous episodes,
+
+25
+00:02:12,608 --> 00:02:19,508
+and maybe you too want to contribute to the episode guide. Maybe you want to like add your own notes or addenda to a particular episode.
+
+26
+00:02:19,508 --> 00:02:22,748
+Maybe this episode, maybe you want to like, kind of expand on a point.
+
+27
+00:02:22,748 --> 00:02:27,968
+I was I was chatting about or correct me because if I made a mistake or something, if you would like to do that,
+
+28
+00:02:27,968 --> 00:02:34,778
+there are instructions here in the agenda and how you can both get to the episode guide, but also how to contribute to the episode guide.
+
+29
+00:02:34,778 --> 00:02:39,008
+So please consider that. All right, let's get started.
+
+30
+00:02:39,008 --> 00:02:42,848
+What do I want to do today? Well, the first thing I want to do is review a patch.
+
+31
+00:02:42,848 --> 00:02:51,408
+This is a patch from a volunteer contributor who very graciously answered my call for a good first bug.
+
+32
+00:02:51,408 --> 00:02:56,498
+So I was I was digging around in the source code for unrelated reasons,
+
+33
+00:02:56,498 --> 00:03:04,388
+and I noticed that there was some code related to Flash, the Adobe Flash plugin still in the code.
+
+34
+00:03:04,388 --> 00:03:08,258
+And, you know, we stopped supporting Flash sometime back in 2020.
+
+35
+00:03:08,258 --> 00:03:12,698
+I think it was. That's when it was end of life. And so this is all dead code.
+
+36
+00:03:12,698 --> 00:03:16,118
+And so I filed the bug and I said, Hey, this is dead code,
+
+37
+00:03:16,118 --> 00:03:24,308
+let's get rid of it and a volunteer contributor I showed up to to save the day and they have a patch here.
+
+38
+00:03:24,308 --> 00:03:29,078
+So let's check it out now. This is actually already gone through a round of review.
+
+39
+00:03:29,078 --> 00:03:33,938
+I've already reviewed this once, but they there was some review feedback.
+
+40
+00:03:33,938 --> 00:03:38,678
+They've applied that review feedback, and now I'm looking at the patch again. So that's the context.
+
+41
+00:03:38,678 --> 00:03:46,868
+Let's get started. So, yeah, this is part of the review feedback.
+
+42
+00:03:46,868 --> 00:03:52,658
+Part of the things that ended up being dead code were a bunch of these prefs as well.
+
+43
+00:03:52,658 --> 00:04:02,918
+These prefs were being used to like record state related to flash and and those perhaps aren't being used in or we can actually double check that.
+
+44
+00:04:02,918 --> 00:04:05,568
+And I'll do that real quick right now as I'm going to use Search Fox,
+
+45
+00:04:05,568 --> 00:04:10,898
+make sure nothing else is referring to those prefs besides what's being removed in browser glue.
+
+46
+00:04:10,898 --> 00:04:12,998
+So, yeah, there is like a reference to it as well.
+
+47
+00:04:12,998 --> 00:04:19,868
+The same pref is duplicated for both Firefox and like just the Gecko platform in general in all that jazz.
+
+48
+00:04:19,868 --> 00:04:26,288
+And it looks like there was probably a removal for for it as well. Disable protected mode.
+
+49
+00:04:26,288 --> 00:04:36,188
+Yep. Makes sense. And then the browser glue change like will take care of the other two uses of that pref right there,
+
+50
+00:04:36,188 --> 00:04:41,138
+and they're so good to go that removal makes sense. And then there was also this one to remove.
+
+51
+00:04:41,138 --> 00:04:44,378
+Let's just double check, make sure we're not removing anything critical.
+
+52
+00:04:44,378 --> 00:04:51,758
+Yeah, it was only referred to once inside of browser glue and that that reference is being removed so we can safely remove that pref.
+
+53
+00:04:51,758 --> 00:05:00,398
+And then there's this one also only being used inside of browser glue and the two uses are being removed.
+
+54
+00:05:00,398 --> 00:05:03,158
+Now there's one last thing to consider and that's, you know,
+
+55
+00:05:03,158 --> 00:05:08,498
+sometimes press it doesn't happen often, but sometimes press aren't referred to by their full name.
+
+56
+00:05:08,498 --> 00:05:16,238
+Like, there's this kind of pseudo name spacing going on with like browser dot, flash protected mode, dash flip dot done.
+
+57
+00:05:16,238 --> 00:05:23,768
+And those dots are like a way of creating categories or branches, a tree effectively of of preferences.
+
+58
+00:05:23,768 --> 00:05:29,858
+And sometimes it's possible you don't see it too too often, but people refer to pref branches,
+
+59
+00:05:29,858 --> 00:05:35,918
+and what they're talking about is like a like an entire namespace of of prefs.
+
+60
+00:05:35,918 --> 00:05:43,328
+And then they can manipulate like individual like little nodes off of that branch.
+
+61
+00:05:43,328 --> 00:05:47,228
+It's not like a typical usage of press was possible.
+
+62
+00:05:47,228 --> 00:05:59,768
+So I just want to do a quick check to see if anything is referring to flash protected mode outside.
+
+63
+00:05:59,768 --> 00:06:09,278
+I do see there was like this. Yeah. So there's a knowledge this is more of a link to to some sumo page and that's also being removed.
+
+64
+00:06:09,278 --> 00:06:18,218
+So I think we're good. Um, and let's let's also make sure that plug ins flash disable protected mode.
+
+65
+00:06:18,218 --> 00:06:23,078
+That's what I want to look for is also not being used anywhere else.
+
+66
+00:06:23,078 --> 00:06:27,758
+Yes, we're good. We're good. So those pref removals make sense to me.
+
+67
+00:06:27,758 --> 00:06:32,348
+Let's move on. So this was the thing that I had noticed when I was digging through browser glue.
+
+68
+00:06:32,348 --> 00:06:37,358
+There's this flash plug and hang observer handler of the observer notification.
+
+69
+00:06:37,358 --> 00:06:47,638
+So that's been removed. That's good. And then this is the. Part where we both register the observer and presumably deep, where is the de-registration?
+
+70
+00:06:47,638 --> 00:06:55,138
+Do we ever de-register these observers because we add the observers right here?
+
+71
+00:06:55,138 --> 00:06:58,828
+Do we ever add them or remove them?
+
+72
+00:06:58,828 --> 00:07:06,248
+That's another way of saying that let's just double check, uh, flash hang.
+
+73
+00:07:06,248 --> 00:07:12,658
+The flash plug in a flash plug in. That's its use.
+
+74
+00:07:12,658 --> 00:07:20,578
+It doesn't look like we had ever removed it before, and maybe that's OK because Browser Glue Dog is a singleton and only runs once,
+
+75
+00:07:20,578 --> 00:07:23,848
+and it runs at the very beginning when Firefox is starting up.
+
+76
+00:07:23,848 --> 00:07:28,648
+So cleaning up if like browser glue is going away, it's because the browser is shutting down.
+
+77
+00:07:28,648 --> 00:07:35,458
+So removing the observer is just kind of like busy work because the process is already going away.
+
+78
+00:07:35,458 --> 00:07:36,658
+So it's probably OK,
+
+79
+00:07:36,658 --> 00:07:46,738
+like there's this disposal stuff and like some observers are removed and I don't know how useful those removals actually are, but it's fine.
+
+80
+00:07:46,738 --> 00:07:52,978
+Like, I don't think we have to worry about this. Certainly, if this was like something that we would have like instances of,
+
+81
+00:07:52,978 --> 00:07:57,538
+maybe there's something bound to a window and a user might open many windows and close those windows.
+
+82
+00:07:57,538 --> 00:07:59,638
+And we're adding an observer every time.
+
+83
+00:07:59,638 --> 00:08:07,258
+Then I'd want to make sure that we were removing that observer when the window closed, because then you could leak memory.
+
+84
+00:08:07,258 --> 00:08:13,018
+But because this is just a singleton only one has ever created at the beginning, we're OK.
+
+85
+00:08:13,018 --> 00:08:17,518
+There was this like property flash hanging count that was being used.
+
+86
+00:08:17,518 --> 00:08:25,888
+Let's make sure all those instances are being removed. One one four seven. It was four or five six nine, which is also being removed.
+
+87
+00:08:25,888 --> 00:08:30,418
+Uh, line numbers changed on us. Uh, that's OK.
+
+88
+00:08:30,418 --> 00:08:37,528
+And then 11:47 where it's being reset to zero?
+
+89
+00:08:37,528 --> 00:08:41,368
+Oh no, that's that's where I just was. OK, so that makes sense.
+
+90
+00:08:41,368 --> 00:08:51,078
+We're removing that property. Don't need that anymore. See you later.
+
+91
+00:08:51,078 --> 00:09:02,858
+Mm. So this is related to some review feedback I'd given because, uh, I think this had been removed.
+
+92
+00:09:02,858 --> 00:09:05,288
+OK, I see what happened.
+
+93
+00:09:05,288 --> 00:09:14,288
+This had been removed and then I asked for it to be put back because this this chunk of code is part of what we call migration's UI migrations,
+
+94
+00:09:14,288 --> 00:09:24,398
+where, you know, upon upgrade, we if if we need to like update some state somewhere, like maybe we need to update how we store permissions.
+
+95
+00:09:24,398 --> 00:09:27,608
+We'll do it once after an upgrade in one of these migrations.
+
+96
+00:09:27,608 --> 00:09:33,998
+If you've ever done like database migrations, it's kind of like that, but it's not necessarily for for databases.
+
+97
+00:09:33,998 --> 00:09:39,398
+And that's what these things are. They're kind of like very simple migrations.
+
+98
+00:09:39,398 --> 00:09:43,418
+And it might be for things too like if we've introduced a new button,
+
+99
+00:09:43,418 --> 00:09:47,798
+we'll want to introduce it in a place that makes sense among a users customizations.
+
+100
+00:09:47,798 --> 00:09:57,008
+So we might do that insertion once on an upgrade or something. And this is related to flash and it was removed.
+
+101
+00:09:57,008 --> 00:09:59,108
+But we generally don't want to remove migrations,
+
+102
+00:09:59,108 --> 00:10:04,898
+will eventually want to like retire a bunch of them after we do what's called a watershed release where,
+
+103
+00:10:04,898 --> 00:10:14,238
+you know, a watershed release is a release where a users must upgrade to a particular release before they can upgrade to ones after that.
+
+104
+00:10:14,238 --> 00:10:16,268
+And I don't know when the last watershed was,
+
+105
+00:10:16,268 --> 00:10:21,638
+but we probably only want to remove these after a watershed to make sure that users have gone through them.
+
+106
+00:10:21,638 --> 00:10:27,968
+So we should probably keep this, keep it here. But it looks like what happened was it was duplicated accidentally.
+
+107
+00:10:27,968 --> 00:10:30,728
+So this is going to be my first piece of review feedback.
+
+108
+00:10:30,728 --> 00:10:42,668
+It looks like it looks like this got accidentally do accidentally duplicated instead of just restored,
+
+109
+00:10:42,668 --> 00:10:52,178
+so we can just go ahead and remove this duplicate migration.
+
+110
+00:10:52,178 --> 00:10:58,358
+Look, even if this did land, it would be a no op. I'm pretty sure, because, well, no, it wouldn't.
+
+111
+00:10:58,358 --> 00:11:04,088
+It would make it would make it run twice because we don't update the current UI version until the very end.
+
+112
+00:11:04,088 --> 00:11:13,418
+So we do want to definitely remove that. And then this removal is what I remember from the first revision of this patch.
+
+113
+00:11:13,418 --> 00:11:18,998
+And this all made sense and what one of the things I had noticed about it is.
+
+114
+00:11:18,998 --> 00:11:25,148
+It's a little tricky to read because I'm so zoomed in, but there were some strings being used,
+
+115
+00:11:25,148 --> 00:11:35,438
+like the flash hang message and Flash Hang Help button, and I figured we could probably remove those.
+
+116
+00:11:35,438 --> 00:11:40,148
+And I have a feeling that's what's happening down here. Yes, good. Get those being removed, too.
+
+117
+00:11:40,148 --> 00:11:44,798
+So we're in good shape. This is this is basically good to go.
+
+118
+00:11:44,798 --> 00:11:52,928
+I'm very happy with this great work. Um, let me get the i r WP great work.
+
+119
+00:11:52,928 --> 00:12:00,758
+I WP. This looks fantastic. Just one last thing to address before landing,
+
+120
+00:12:00,758 --> 00:12:13,568
+which is that the migration migration thing chunk of code seemed to have gotten duplicated when you restored it.
+
+121
+00:12:13,568 --> 00:12:22,638
+Once that's removed, I think we're going to go here. So I will request changes and submit.
+
+122
+00:12:22,638 --> 00:12:28,948
+So there's our review. And did I just break my shirt?
+
+123
+00:12:28,948 --> 00:12:32,338
+No, it's a it's a snap button, we're OK. All right.
+
+124
+00:12:32,338 --> 00:12:34,198
+So we are done that code review.
+
+125
+00:12:34,198 --> 00:12:45,108
+Let's now go through a neat info because someone gave me a need info and we were going to address this last week and then we ran out of time.
+
+126
+00:12:45,108 --> 00:12:53,908
+Hmm. So I filed this last hour, two months ago.
+
+127
+00:12:53,908 --> 00:12:59,038
+So back in February, steps to reproduce? Visit Google Calendar, click on any events such as the event, pop up,
+
+128
+00:12:59,038 --> 00:13:03,988
+Apple appears and a new session history entries created via a push that open the browser console.
+
+129
+00:13:03,988 --> 00:13:07,768
+Execute this. Get the count. Get the entry.
+
+130
+00:13:07,768 --> 00:13:11,188
+Get the load type. The emitted low type should be eight eight.
+
+131
+00:13:11,188 --> 00:13:16,198
+Since this history entry is created via Push State, the emitted load type of zero.
+
+132
+00:13:16,198 --> 00:13:21,298
+I don't think we've ever said it to anything but zero or load history in the old implementation implementation.
+
+133
+00:13:21,298 --> 00:13:25,288
+Why do you need to know this? Own a small point at some of the old.
+
+134
+00:13:25,288 --> 00:13:34,348
+Some of the load reload values and use of load type can be quite surprising since it depends on the most recent load the entry was used for.
+
+135
+00:13:34,348 --> 00:13:43,508
+Oh. It's typically low history, except when Reloads pressed, it has.
+
+136
+00:13:43,508 --> 00:14:15,148
+World history. Load type, I said it should be eight since it was created by Bush State.
+
+137
+00:14:15,148 --> 00:14:36,338
+Well, type. State.
+
+138
+00:14:36,338 --> 00:14:46,668
+Uh. We have all these load types.
+
+139
+00:14:46,668 --> 00:15:00,148
+There's one called load push the. So whereas load push they use, then if it's never used for.
+
+140
+00:15:00,148 --> 00:15:09,758
+It's set on the dock, shall dock, shall not the session, so maybe I was mistaken, maybe what we have here is a case of.
+
+141
+00:15:09,758 --> 00:15:21,168
+Mistaken identity and poor naming. The load type for the document load type item is defined.
+
+142
+00:15:21,168 --> 00:15:27,028
+Oh, I see. So the load type on A. I.
+
+143
+00:15:27,028 --> 00:15:42,978
+S entry is not some kind of indication of what load type was on the inside dog show.
+
+144
+00:15:42,978 --> 00:15:52,798
+When this S.H. entry was last loaded.
+
+145
+00:15:52,798 --> 00:16:02,818
+If that's the case, then. Sure, I guess this is invalid, but.
+
+146
+00:16:02,818 --> 00:16:08,048
+I find I guess I guess I find load type.
+
+147
+00:16:08,048 --> 00:16:18,958
+It's meaning kind of confusing then. White tapes, meaning in the context.
+
+148
+00:16:18,958 --> 00:16:36,148
+And assess each entry kind of confusing, then I'll ask Peter V.
+
+149
+00:16:36,148 --> 00:16:42,208
+I guess this should be an invalid bug, not a invalid bug and invalid bug.
+
+150
+00:16:42,208 --> 00:16:49,288
+OK, so need info answered? Boom, boom, where we're blasting right through this?
+
+151
+00:16:49,288 --> 00:16:55,448
+Let's now go to this thing. We're working on this the week before last.
+
+152
+00:16:55,448 --> 00:17:04,868
+This is a limiting tool, a limiting rule, rather for our Moki Test manifest files for test manifests to make sure that they're in alphabetical order,
+
+153
+00:17:04,868 --> 00:17:10,448
+and the reason for that is because they're actually executed in alphabetical order, regardless of what order they're in in the manifests.
+
+154
+00:17:10,448 --> 00:17:14,438
+And we would like the two to always be in sync with one another,
+
+155
+00:17:14,438 --> 00:17:21,878
+because then that makes it easier for us to look sort of reasonable doubt about, you know, what order the tests are in?
+
+156
+00:17:21,878 --> 00:17:27,218
+Yeah. So I had built a work in progress.
+
+157
+00:17:27,218 --> 00:17:41,098
+Let's see if we can find that patch. Here we go.
+
+158
+00:17:41,098 --> 00:17:50,758
+And we're going to base that on top of Central. He was going to bring it back into the into the present.
+
+159
+00:17:50,758 --> 00:18:02,658
+Yank it into the future. And the reason I want to work on this is because I got some review feedback, which was, Hey, this looks great.
+
+160
+00:18:02,658 --> 00:18:07,728
+I added a couple of comments. Docs probably aren't super necessary in this case, though a quick test would be appreciated.
+
+161
+00:18:07,728 --> 00:18:14,388
+OK, great. So there was some review feedback for this stuff.
+
+162
+00:18:14,388 --> 00:18:26,718
+Uh. This will catch all test manifest, not just mock tests, will either need to add some exclusions here.
+
+163
+00:18:26,718 --> 00:18:35,118
+Example XP Seashell Unfortunately, I, as I recall correctly, we don't support globs and they include key.
+
+164
+00:18:35,118 --> 00:18:39,768
+Otherwise, I'd recommend we specifically include the Moki Test manifests.
+
+165
+00:18:39,768 --> 00:18:51,438
+I yeah, I remember that from last time too. It would be nice if we could have globs in include globs being these things where you can like,
+
+166
+00:18:51,438 --> 00:18:58,608
+use a string with these stars to kind of indicate what you mean. I'd recommend making this a warning for now.
+
+167
+00:18:58,608 --> 00:19:01,728
+How we can turn on immediately without fixing all preexisting instances of the air and
+
+168
+00:19:01,728 --> 00:19:05,328
+treat will help prevent new instances from landing while we convert the existing ones over.
+
+169
+00:19:05,328 --> 00:19:17,828
+OK, so how do we make this a warning? Um, I can't exactly remember how you do warnings.
+
+170
+00:19:17,828 --> 00:19:26,738
+Um, and it looks like I failed to put new lines at the end of these.
+
+171
+00:19:26,738 --> 00:19:32,308
+OK, well, let's first, let's start by checking out the patch.
+
+172
+00:19:32,308 --> 00:19:36,808
+But just re based it on to Central. And here it is.
+
+173
+00:19:36,808 --> 00:19:44,538
+So let's update to. Hmm.
+
+174
+00:19:44,538 --> 00:19:56,738
+So the first thing I want to do is I want to put that new line at the bottom of this file so that the lender will stop complaining.
+
+175
+00:19:56,738 --> 00:20:02,928
+Um, it really wants me to reformat my python.
+
+176
+00:20:02,928 --> 00:20:11,128
+Um, so maybe I can use the Lynton tool.
+
+177
+00:20:11,128 --> 00:20:21,258
+To do that. Um, if I just pass in that path, will it tell me what my problems are?
+
+178
+00:20:21,258 --> 00:20:36,498
+And if so, it might even be able to fix them automatically. That is one of the nice things about some of our letters.
+
+179
+00:20:36,498 --> 00:20:43,948
+Pound for pound bomb, hey, did oh, I've got like some floor leaking out here, that's kind of annoying.
+
+180
+00:20:43,948 --> 00:20:49,498
+I'm trying to fix that. Uh.
+
+181
+00:20:49,498 --> 00:21:03,278
+One sec. Change too far.
+
+182
+00:21:03,278 --> 00:21:07,388
+All right. Better fun news, by the way.
+
+183
+00:21:07,388 --> 00:21:14,708
+OK, so it did find those errors. Let's try and fix them next week.
+
+184
+00:21:14,708 --> 00:21:18,218
+I might be back in the office to stream.
+
+185
+00:21:18,218 --> 00:21:28,238
+It's been like when was my first at home? Episode of The Joy of Coding was probably back in 2021, maybe around.
+
+186
+00:21:28,238 --> 00:21:37,188
+Or was it 20 20? Oh my goodness, it would have been 2020. It would have been probably February.
+
+187
+00:21:37,188 --> 00:21:45,348
+March. March 24th.
+
+188
+00:21:45,348 --> 00:21:50,418
+When did I know, sorry? I'm in the wrong month again?
+
+189
+00:21:50,418 --> 00:21:57,558
+2020 it would have been in March of 2020. Holy smokes.
+
+190
+00:21:57,558 --> 00:22:07,308
+Yeah. Back in March 18th was my very first home stream because before episode two 08, I was doing it all from the office.
+
+191
+00:22:07,308 --> 00:22:15,478
+More or less, I'd never really stream from home. And then since episode two, it's been almost 300 is are not there and it's been almost 100 episodes.
+
+192
+00:22:15,478 --> 00:22:18,738
+We're getting up there of me streaming from home.
+
+193
+00:22:18,738 --> 00:22:24,058
+That is wild. It is wild. But next week I might be back in the office to stream.
+
+194
+00:22:24,058 --> 00:22:27,528
+That sounds. That sounds pretty exciting.
+
+195
+00:22:27,528 --> 00:22:34,308
+I might even be able to get some special guests, you know, like people who could sit next to me and we could like hack on some things together.
+
+196
+00:22:34,308 --> 00:22:38,838
+We could parents and things, and you could hear us chatting and nattering back and forth.
+
+197
+00:22:38,838 --> 00:22:45,408
+That is more possible whenever we have, even when we're back in the office, OK?
+
+198
+00:22:45,408 --> 00:22:57,138
+It looks like it fixed the issues. That's great. Um. It seemed to want me to use double quotes and fixed some spacing.
+
+199
+00:22:57,138 --> 00:23:04,578
+OK, great. I'll just amend those changes for now and we can not worry about them.
+
+200
+00:23:04,578 --> 00:23:13,158
+Now the other thing he wanted me to make these warnings, and I'm trying to remember how to do that.
+
+201
+00:23:13,158 --> 00:23:28,038
+These results. This result structure, I think, is what I need to do something with result from config.
+
+202
+00:23:28,038 --> 00:23:49,958
+There was this documentation that I was referring to, and I think that's what I want to pull up.
+
+203
+00:23:49,958 --> 00:23:55,478
+That's the how you define a limiting job, and this is how you write a letter.
+
+204
+00:23:55,478 --> 00:24:05,188
+How do you make it a warning level? Want to set up a Level two warning?
+
+205
+00:24:05,188 --> 00:24:15,568
+That's what it looks like. So let's open up this file again. I guess I had never opened it.
+
+206
+00:24:15,568 --> 00:24:28,008
+Level warning. And.
+
+207
+00:24:28,008 --> 00:24:32,328
+A quick test would be appreciated. Sure, no problem.
+
+208
+00:24:32,328 --> 00:24:41,848
+What would be great is if we could make this apply to.
+
+209
+00:24:41,848 --> 00:24:54,308
+Unfortunately, we don't support globs include and we we might need to add wood.
+
+210
+00:24:54,308 --> 00:25:00,758
+Is it intentional that we don't support globs in include? Maybe that's something I can ask.
+
+211
+00:25:00,758 --> 00:25:11,408
+About. Um, let me see if I can find a good room where a how, uh, tools and automation.
+
+212
+00:25:11,408 --> 00:25:19,048
+Um. Renting.
+
+213
+00:25:19,048 --> 00:25:27,918
+I'm looking for like tools, I'm looking for a good matrix room and then I can chat with him to have tools.
+
+214
+00:25:27,918 --> 00:25:35,908
+No, no, no, no automation. Army engineers.
+
+215
+00:25:35,908 --> 00:25:43,798
+Maybe this is the one. Who's in here?
+
+216
+00:25:43,798 --> 00:25:48,898
+People yell at me now.
+
+217
+00:25:48,898 --> 00:25:54,628
+OK. Wrong room. Um, how do I find out where a house is?
+
+218
+00:25:54,628 --> 00:26:02,518
+You know what? I'll just use the the fallback, which is Firefox desktop development.
+
+219
+00:26:02,518 --> 00:26:08,398
+So I'm going to bring this is a public channel.
+
+220
+00:26:08,398 --> 00:26:16,828
+I'm going to bring it here. Um.
+
+221
+00:26:16,828 --> 00:26:20,458
+Oh, a house on PTO eight hours away,
+
+222
+00:26:20,458 --> 00:26:31,948
+so maybe we can maybe we can try and see what would be required in order to make this use globs include use gloves.
+
+223
+00:26:31,948 --> 00:26:41,878
+Um, so let's see how that works. So the limiting stuff, where is it?
+
+224
+00:26:41,878 --> 00:27:03,758
+Tools lint? Presumably, some a bunch of this is going to be inside of Python, but like the actual like lifting command.
+
+225
+00:27:03,758 --> 00:27:14,698
+Where does that occur? I guess one of the things we can do is we can look for.
+
+226
+00:27:14,698 --> 00:27:18,988
+Mars lint, yeah, where's Mars lint, I think that's what we're looking for.
+
+227
+00:27:18,988 --> 00:27:29,798
+Mars lint. Python was linked.
+
+228
+00:27:29,798 --> 00:27:38,538
+There you are. Um, and then.
+
+229
+00:27:38,538 --> 00:27:42,138
+Path utils. There's something in here about globs.
+
+230
+00:27:42,138 --> 00:27:48,348
+High school clouds are always paths and should always exist, exclude paths with and without gloves will be handled separately.
+
+231
+00:27:48,348 --> 00:28:00,398
+Pull them apart and now. P and exclude, if not this match, exclude globs.
+
+232
+00:28:00,398 --> 00:28:05,168
+A list of paths that should be included, required list of paths that should be excluded.
+
+233
+00:28:05,168 --> 00:28:15,198
+Optional. Clouds are always paths and should always exist.
+
+234
+00:28:15,198 --> 00:28:23,628
+Maybe we can add support for globs, how is globs working?
+
+235
+00:28:23,628 --> 00:28:30,348
+So a list of excludes, for example, looks like this.
+
+236
+00:28:30,348 --> 00:28:34,468
+Normalize what is normalized.
+
+237
+00:28:34,468 --> 00:28:46,288
+Oh, so we have some functional code here. What happens is it looks at a string sees whether or not there's a star in it.
+
+238
+00:28:46,288 --> 00:29:00,118
+And if it's not got a star in it and it is not an absolute f, I guess it will create a path, otherwise it will create a filter path.
+
+239
+00:29:00,118 --> 00:29:10,528
+Filter path. Which is a thing that allows us to see whether or not a path matches.
+
+240
+00:29:10,528 --> 00:29:17,878
+OK, so we run that across all of the clouds as well.
+
+241
+00:29:17,878 --> 00:29:31,238
+That's interesting. So include.
+
+242
+00:29:31,238 --> 00:29:43,408
+Like the globs is path for pea and exclude, if not pea exists.
+
+243
+00:29:43,408 --> 00:29:54,048
+Include, but do we ever use doubt exists or something like handle include exclude that exist, don't have globs?
+
+244
+00:29:54,048 --> 00:30:12,438
+Next, expand excludes with globs. I wonder.
+
+245
+00:30:12,438 --> 00:30:23,988
+I think what I should do before I go too deep into this is figure out if it was an intentional choice to not allow for globs in the include Ah yeah,
+
+246
+00:30:23,988 --> 00:30:27,468
+we removed the ability in this bug.
+
+247
+00:30:27,468 --> 00:30:46,668
+It was an intentional choice. Throughout.
+
+248
+00:30:46,668 --> 00:30:51,678
+The only exception of this rule is to exclude arms directly might be useful in the future,
+
+249
+00:30:51,678 --> 00:30:55,038
+since it's causing unnecessary complexity I'd like to remove it can always revisit
+
+250
+00:30:55,038 --> 00:31:00,828
+adding it back in or implementing something different to solve our future needs. This was four years ago.
+
+251
+00:31:00,828 --> 00:31:07,098
+Hmm. We might want to keep gloves for exclude. They're useful for things like excluding all node modules directories.
+
+252
+00:31:07,098 --> 00:31:15,918
+I can't think of any good reason to allow them and include and none of our existing winters use that feature anyway,
+
+253
+00:31:15,918 --> 00:31:29,048
+so we might be able to restore some of this. And, Phil, to pass the test path, utils be plus which launchers are used for functions.
+
+254
+00:31:29,048 --> 00:31:35,708
+And then this last one remove the ability to specify gloves and include directive.
+
+255
+00:31:35,708 --> 00:31:36,998
+Maybe we should put this back.
+
+256
+00:31:36,998 --> 00:31:44,678
+There's only a single limiter that uses gloppy include path that uses is easily replaced by using the extensions key instead.
+
+257
+00:31:44,678 --> 00:31:52,808
+How did they do it? Which which test?
+
+258
+00:31:52,808 --> 00:32:04,278
+Test, disable YAML. What how did that one get updated?
+
+259
+00:32:04,278 --> 00:32:22,408
+Or was it was it actually changed in this patch?
+
+260
+00:32:22,408 --> 00:32:43,438
+Maybe there's a different related bug. Well, what we could do now that we know that is, we could look at the history of test disable.
+
+261
+00:32:43,438 --> 00:32:50,258
+Excuse me. It doesn't exist anymore.
+
+262
+00:32:50,258 --> 00:33:05,338
+It's referred to. Fascinating.
+
+263
+00:33:05,338 --> 00:33:16,418
+OK, let's see if we can figure out when this thing did exist at one point. Um, let's look back and ESR, 91 did exist back then.
+
+264
+00:33:16,418 --> 00:33:25,698
+Oh, really, tools, lint test, dash, disable tools, lint.
+
+265
+00:33:25,698 --> 00:33:31,848
+Yeah, it's not there. So if it was before 91, let's go back further.
+
+266
+00:33:31,848 --> 00:33:38,558
+78. Ha.
+
+267
+00:33:38,558 --> 00:34:02,618
+Hmm. So this is kind of a glob, I guess, represents a whole bunch of things, and it's just saying, Hey, use, just look at any instead.
+
+268
+00:34:02,618 --> 00:34:11,468
+So that's what they're meaning from from this by using extensions key since globs include dresses aren't very useful,
+
+269
+00:34:11,468 --> 00:34:19,928
+it's disallowed, and this will allow us to simplify the filter pathologic quite substantially. Make future factories in this area easier.
+
+270
+00:34:19,928 --> 00:34:30,998
+OK. Oh, so yeah, and they did change you here. Sorry, I missed that.
+
+271
+00:34:30,998 --> 00:34:38,528
+OK, well, what I'm going to do is I'm going to ask. Hey, how it looks.
+
+272
+00:34:38,528 --> 00:34:44,848
+Well, you may I'll do it in the code review, or I'll do it here with a need info.
+
+273
+00:34:44,848 --> 00:34:56,548
+It looks like globs for include directors was removed intentionally in such and such.
+
+274
+00:34:56,548 --> 00:35:05,328
+Bug. Um, this book.
+
+275
+00:35:05,328 --> 00:35:22,508
+Do you think this is a good reason to reintroduce it this winter is a good reason to introduce reintroduce it so we can match on Moki Test that any.
+
+276
+00:35:22,508 --> 00:35:32,578
+Uh, monkey test. Chrome.
+
+277
+00:35:32,578 --> 00:35:47,528
+The. Browser on any request information from AHow, so you can let me.
+
+278
+00:35:47,528 --> 00:36:06,078
+Yes. OK. So while we're waiting for that information, we're not blocked because we can write a test for our winter.
+
+279
+00:36:06,078 --> 00:36:10,048
+Good. Good point. Need in.
+
+280
+00:36:10,048 --> 00:36:17,748
+You in the book about maybe reintroducing.
+
+281
+00:36:17,748 --> 00:36:39,828
+Barbed support for include. OK, let's push what we've got up.
+
+282
+00:36:39,828 --> 00:36:55,078
+And then we'll start on that test of submit tips and go with, UM.
+
+283
+00:36:55,078 --> 00:36:58,348
+Now, how did their tests work?
+
+284
+00:36:58,348 --> 00:37:04,678
+Every new checker must have tests associated, it should be pretty easy to write as most of the work is managed by the Maslin framework.
+
+285
+00:37:04,678 --> 00:37:12,148
+I like it. The key declaration is the linear variable, which must match the linker declaration.
+
+286
+00:37:12,148 --> 00:37:19,808
+What do you mean? The linear declaration linker?
+
+287
+00:37:19,808 --> 00:37:31,228
+Clinton variable, I don't know what that means.
+
+288
+00:37:31,228 --> 00:37:36,928
+OK. Anyways, flag gate test looks like the following snippet import mods,
+
+289
+00:37:36,928 --> 00:37:45,508
+so they're using Moore's unit, which I guess is some kind of unit test framework. You define some function that starts with test underscore.
+
+290
+00:37:45,508 --> 00:37:51,238
+Oh, this is the linear directive. You must match the Lintern declaration.
+
+291
+00:37:51,238 --> 00:37:58,498
+I'm going to maybe supply a follow up patch to fix that typo.
+
+292
+00:37:58,498 --> 00:38:04,948
+Results equals lint paths bad than a bunch of asserts than to run.
+
+293
+00:38:04,948 --> 00:38:10,758
+You run that. Some sweet to run a specific test.
+
+294
+00:38:10,758 --> 00:38:17,628
+Yeah, that's what I want to do. OK, let's take a look at some of the existing tests.
+
+295
+00:38:17,628 --> 00:38:34,408
+Um. OK.
+
+296
+00:38:34,408 --> 00:38:41,738
+All right, well, let's add a new one, so we're going to create a new file at.
+
+297
+00:38:41,738 --> 00:38:47,948
+Was it, uh, tools, lint test tools, lint test?
+
+298
+00:38:47,948 --> 00:38:58,038
+We're gonna call this one. Um. Test Manifest Alpha.
+
+299
+00:38:58,038 --> 00:39:07,728
+So what I called it before you test Manifest Alpha. Why?
+
+300
+00:39:07,728 --> 00:39:26,518
+And we'll make sure we track it. And let's take a look at this file.
+
+301
+00:39:26,518 --> 00:39:36,048
+OK. Pretty empty. No surprise. Interestingly, no license header, uh, some of them have a license header.
+
+302
+00:39:36,048 --> 00:39:42,618
+Maybe it's implied. Um, I thought I saw a license letter.
+
+303
+00:39:42,618 --> 00:39:53,728
+Did I not see a license letter? There's one. Here's one.
+
+304
+00:39:53,728 --> 00:39:59,138
+All right. I'm just going to be cautious and make sure I had a license header.
+
+305
+00:39:59,138 --> 00:40:07,648
+Uh, OK, so I'm going to call this winter Manifest Alpha or test manifest alpha.
+
+306
+00:40:07,648 --> 00:40:15,958
+Test Manifest Alpha. Because. That's the name of it right here.
+
+307
+00:40:15,958 --> 00:40:19,648
+And then, uh, what is the test look like?
+
+308
+00:40:19,648 --> 00:40:36,698
+It's like, here's a bunch of things. Lint and then you pass it some paths, and presumably we can have some test files like where's bad p?
+
+309
+00:40:36,698 --> 00:40:42,068
+Why? I see.
+
+310
+00:40:42,068 --> 00:40:58,968
+I'm guessing there's some special. Magic, that's yeah, doing the mapping for us.
+
+311
+00:40:58,968 --> 00:41:09,328
+So what I can do is maybe I can create a new folder here. Test Manifest Alpha.
+
+312
+00:41:09,328 --> 00:41:23,108
+And, uh, we're going to. Well, let's let's get an example, test manifest, um.
+
+313
+00:41:23,108 --> 00:41:33,018
+Let's do a simple one. Uh, let's do picture in picture.
+
+314
+00:41:33,018 --> 00:41:44,328
+Tests browser, not any. This is not simple, but I'll copy this and then we're going to simplify it.
+
+315
+00:41:44,328 --> 00:41:59,298
+Um. New file.
+
+316
+00:41:59,298 --> 00:42:07,918
+Call it, um, browser Dot and.
+
+317
+00:42:07,918 --> 00:42:14,278
+I did find the bagpipe. Now I actually had looked at black, but you're right, it's in flake, a bad pie.
+
+318
+00:42:14,278 --> 00:42:18,088
+This is the one. Flight eight bagpipe pie.
+
+319
+00:42:18,088 --> 00:42:24,688
+There she be. OK, so we've got our we've got a file in here.
+
+320
+00:42:24,688 --> 00:42:31,538
+Let's just make sure we're tracking this stuff. H.G tools lint test.
+
+321
+00:42:31,538 --> 00:42:44,218
+Files test manifest. Test met with dashes, I guess, Manifest Alpha.
+
+322
+00:42:44,218 --> 00:42:57,378
+OK. And then in our test file or a test script here, we're going to open up test our browser about any.
+
+323
+00:42:57,378 --> 00:43:01,818
+And we are going to fail these assertions, I presume.
+
+324
+00:43:01,818 --> 00:43:12,718
+But let's that's OK. I just want to run the tests, so let's copy this mock BlackBerry Blue Manifest.
+
+325
+00:43:12,718 --> 00:43:18,768
+See what happens now. I just added this test, it's possible it's going to want me to do mock build faster to register.
+
+326
+00:43:18,768 --> 00:43:26,708
+Oh, well, hold up. No, it's regenerating the back end, so it knows it knows to look.
+
+327
+00:43:26,708 --> 00:43:43,108
+No tests collected for some sweet McCausland. Hmm.
+
+328
+00:43:43,108 --> 00:43:56,818
+What? Walk by some sweet muslin.
+
+329
+00:43:56,818 --> 00:44:07,588
+Um. Maybe this is a that's an out-of-date way of invoking the tests.
+
+330
+00:44:07,588 --> 00:44:14,218
+I guess that's possible some sweet maslin right there.
+
+331
+00:44:14,218 --> 00:44:19,708
+Oh, I need to add it to this, this manifest, right? It's so recursive.
+
+332
+00:44:19,708 --> 00:44:23,368
+I'm hopefully this manifest is in is in alphabetical.
+
+333
+00:44:23,368 --> 00:44:32,878
+I guess it's not in alphabetical, but maybe it doesn't matter because the way the Python framework works, the test runner works.
+
+334
+00:44:32,878 --> 00:44:38,158
+Maybe it does run it and whatever it's defined in, like it's only the monkey test runner that runs in alphabetical.
+
+335
+00:44:38,158 --> 00:44:45,748
+So I guess I'll just add it to the end here. Test Manifest Alpha.
+
+336
+00:44:45,748 --> 00:44:50,208
+He. All right.
+
+337
+00:44:50,208 --> 00:45:02,708
+Let's try. OK.
+
+338
+00:45:02,708 --> 00:45:09,128
+Unexpected fail, um. Right.
+
+339
+00:45:09,128 --> 00:45:16,058
+There were thirty two problems. Not surprising because I'll bet you all of this is like out of order.
+
+340
+00:45:16,058 --> 00:45:29,038
+Let's. Let's simplify this a little bit.
+
+341
+00:45:29,038 --> 00:45:43,538
+And then put some of these out of order. And we'll get rid of a bunch down here, a bunch of this stuff.
+
+342
+00:45:43,538 --> 00:45:56,648
+So what's out of order? Well, I would expect something with.
+
+343
+00:45:56,648 --> 00:46:03,988
+Capital A. To actually run. First.
+
+344
+00:46:03,988 --> 00:46:12,918
+But that that is going to fail right there and then. Let's see.
+
+345
+00:46:12,918 --> 00:46:18,768
+Yeah, so we've reduced the issues and would be nice if we could see what the results are, we can actually do that.
+
+346
+00:46:18,768 --> 00:46:30,928
+Mark Lin. What's the way to invoke this mock lint winters to run our test manifest alpha?
+
+347
+00:46:30,928 --> 00:46:38,008
+Python. No tools, lint.
+
+348
+00:46:38,008 --> 00:46:47,158
+Test, test, test, manifest. Files test Manifest Alpha browser without any.
+
+349
+00:46:47,158 --> 00:46:51,838
+OK, what?
+
+350
+00:46:51,838 --> 00:47:03,268
+That is not what I expected. Does it not care?
+
+351
+00:47:03,268 --> 00:47:13,458
+OK, it is looking at the path. Saying that there are zero errors, zero warning, zero fixed if there are.
+
+352
+00:47:13,458 --> 00:47:17,418
+Can I make it really aggressive like maybe its needs?
+
+353
+00:47:17,418 --> 00:47:22,278
+I want to hear about all issues display and fail on warnings in addition to errors.
+
+354
+00:47:22,278 --> 00:47:31,248
+Dasht w me, that's what I want. No.
+
+355
+00:47:31,248 --> 00:47:47,648
+Did I somehow fix it like this should obviously break if I do this.
+
+356
+00:47:47,648 --> 00:48:02,778
+Hmm. Let's run Test Manifest Alpha on tool kit components picture, which, of course, browser on any.
+
+357
+00:48:02,778 --> 00:48:28,028
+Yeah. Oh, and that one got 32 warnings. OK.
+
+358
+00:48:28,028 --> 00:48:41,018
+Pause. So how come?
+
+359
+00:48:41,018 --> 00:48:50,638
+How come this one's OK? Sorry, not that one, um.
+
+360
+00:48:50,638 --> 00:48:57,958
+Let's dig in.
+
+361
+00:48:57,958 --> 00:49:14,798
+Um, you use a debugger. What what, uh, can can I print stuff?
+
+362
+00:49:14,798 --> 00:49:26,768
+Hello. Well, it.
+
+363
+00:49:26,768 --> 00:49:51,038
+What's? Oh, am I somehow skipping it?
+
+364
+00:49:51,038 --> 00:50:11,198
+No. What is happening, why is this, is this even running in my running, my script here, like if I like raise?
+
+365
+00:50:11,198 --> 00:50:26,248
+Oh, no. Yeah, that's that should have exploded.
+
+366
+00:50:26,248 --> 00:50:36,768
+Right. So somehow whenever I do this. It doesn't like it now, if I were to run the test with the test framework.
+
+367
+00:50:36,768 --> 00:50:45,878
+Maybe that's the problem is that I have I can't just run the test file directly.
+
+368
+00:50:45,878 --> 00:50:56,988
+It looks like I can sprint to the console, though. That's good, um.
+
+369
+00:50:56,988 --> 00:51:04,048
+So let's look and see what the results are.
+
+370
+00:51:04,048 --> 00:51:18,468
+Um. Print.
+
+371
+00:51:18,468 --> 00:51:30,228
+Breads. Message.
+
+372
+00:51:30,228 --> 00:51:49,028
+OK. Now this this looks right, like, yeah, that's out of alphabetical order, it's alphabet, it's all out of alphabetical order.
+
+373
+00:51:49,028 --> 00:51:53,498
+So let's do one where there's like lots of things and not in alphabetical order,
+
+374
+00:51:53,498 --> 00:51:57,848
+and then we'll do one where there's one thing that's been put out of alphabetical order.
+
+375
+00:51:57,848 --> 00:52:01,568
+So we'll call this one.
+
+376
+00:52:01,568 --> 00:52:12,118
+Let's actually rename this one. I was there are no tools.
+
+377
+00:52:12,118 --> 00:52:22,638
+Test files browser. Test Manifest Alpha, we're going to call this instead of browser, we're going to call it tools, lint files.
+
+378
+00:52:22,638 --> 00:52:28,108
+Test Manifest Alpha. When test.
+
+379
+00:52:28,108 --> 00:52:35,128
+Whilst Test Manifest Alpha, we're going to call it very.
+
+380
+00:52:35,128 --> 00:52:51,278
+Very out of order. OK, we're going to update our test to refer to very.
+
+381
+00:52:51,278 --> 00:53:01,288
+Out of order. Tests. Very out of order.
+
+382
+00:53:01,288 --> 00:53:13,698
+We should expect 17 failures, right?
+
+383
+00:53:13,698 --> 00:53:28,128
+OK. Then the things that are out of order, let's buy hand, try and come up with the list.
+
+384
+00:53:28,128 --> 00:53:44,318
+Expected. Out of order equals, and then we're going to put a bunch of test names in a row.
+
+385
+00:53:44,318 --> 00:53:55,948
+Very out of order. So this one.
+
+386
+00:53:55,948 --> 00:54:04,498
+Well, hole in one two three four five six seven, eight, nine, 10, 11, 12, 13, 14, 15, 16, 17.
+
+387
+00:54:04,498 --> 00:54:09,538
+So some of the is in order and some of it is not. This is out of order.
+
+388
+00:54:09,538 --> 00:54:14,548
+This one's out of order. You're out of order. You're out of order.
+
+389
+00:54:14,548 --> 00:54:26,658
+This whole file is out of order. Out of order.
+
+390
+00:54:26,658 --> 00:54:36,408
+For result of our end results. Index result in innumerate results.
+
+391
+00:54:36,408 --> 00:54:45,248
+I think that's how you do that assert. Expected out.
+
+392
+00:54:45,248 --> 00:54:49,618
+Order index to be equal to results.
+
+393
+00:54:49,618 --> 00:55:02,608
+Index. Equals expected land.
+
+394
+00:55:02,608 --> 00:55:13,838
+Respected. We'll fix that later.
+
+395
+00:55:13,838 --> 00:55:21,788
+Issue object is not subscript BBL. What subs is, not subs, what does that mean?
+
+396
+00:55:21,788 --> 00:55:34,098
+Object is not some script. Oh, I can't just use.
+
+397
+00:55:34,098 --> 00:55:39,698
+Oh, right or sorry, result? Dot.
+
+398
+00:55:39,698 --> 00:55:48,018
+Um, was it Pat A.?
+
+399
+00:55:48,018 --> 00:55:54,638
+Hmm. Can I include other things?
+
+400
+00:55:54,638 --> 00:56:06,058
+Test name. I do that.
+
+401
+00:56:06,058 --> 00:56:27,128
+Tested. Is it just a bag and put stuff in?
+
+402
+00:56:27,128 --> 00:56:37,338
+Warnings in syntax error? Right, and a comma here.
+
+403
+00:56:37,338 --> 00:56:50,178
+OK. Cert issue object has no attribute test name, so I can't just like throw something in like that.
+
+404
+00:56:50,178 --> 00:57:03,498
+All right. So I guess it's the line numbers that I need to care about unless there's like additional is there an additional information bucket?
+
+405
+00:57:03,498 --> 00:57:16,038
+Um, I never call them hint source rule, source code, context name the rule that was violated line offset.
+
+406
+00:57:16,038 --> 00:57:22,188
+Message line number, I might just have to do it by line number.
+
+407
+00:57:22,188 --> 00:57:31,328
+Oh, man. All right. Um, it's kind of annoying.
+
+408
+00:57:31,328 --> 00:57:38,578
+All right, well, let's put this side by side. Oops!
+
+409
+00:57:38,578 --> 00:57:43,348
+We can look at our line numbers, what is wrong with you? Come on, go into here.
+
+410
+00:57:43,348 --> 00:57:48,888
+Thank you. OK. Um.
+
+411
+00:57:48,888 --> 00:58:01,338
+Context menu. His line 12.
+
+412
+00:58:01,338 --> 00:58:15,898
+And then. Uh, this one is light and dirty, and this one's line 14.
+
+413
+00:58:15,898 --> 00:58:21,778
+See if that works, index result expected out of order.
+
+414
+00:58:21,778 --> 00:58:38,368
+Line, no. Equals result line, no.
+
+415
+00:58:38,368 --> 00:58:54,588
+Thirteen equals 14. So it does think that this is in the right spot.
+
+416
+00:58:54,588 --> 00:58:59,718
+It doesn't expect triple aid to be there.
+
+417
+00:58:59,718 --> 00:59:06,318
+OK, I guess it really depends because what it's doing is it like puts everything in alphabetical order and just does a line by line,
+
+418
+00:59:06,318 --> 00:59:15,798
+a line by line search or comparison. And I guess if one of them is in the right order, it's going to skip it.
+
+419
+00:59:15,798 --> 00:59:20,868
+And so presumably these two just need to be swapped, and that's why this is in the right spot.
+
+420
+00:59:20,868 --> 00:59:28,658
+So then this one's probably in the right spot and this one's in the right spot, right?
+
+421
+00:59:28,658 --> 00:59:39,488
+Now these clothes unpack this, some of these are going to be wrong context menu it complains about next.
+
+422
+00:59:39,488 --> 00:59:46,688
+Oh yeah, well, we already did that one and then cannot trigger from content is out of order.
+
+423
+00:59:46,688 --> 00:59:54,268
+16. I was there cannot trigger from content.
+
+424
+00:59:54,268 --> 01:00:08,368
+Yes. Um.
+
+425
+01:00:08,368 --> 01:00:37,748
+Clothes on PIP focus and clothes, page navigation and clothes, Pippa's corner snapping, all of these are out, so 17 through 21 are 17, 18, 19 and 21.
+
+426
+01:00:37,748 --> 01:00:49,318
+Teen. And we probably don't have to do all that, I can simplify this a bit further.
+
+427
+01:00:49,318 --> 01:00:56,498
+Like, maybe I can. I can do just a few more.
+
+428
+01:00:56,498 --> 01:01:17,408
+Corner snapping, and I'm close. Close tab twenty three, twenty four.
+
+429
+01:01:17,408 --> 01:01:29,938
+And flip icon with RTL, let's do that one last. And then we can get rid of these.
+
+430
+01:01:29,938 --> 01:01:40,628
+And then we'll put this like that. Let's see what it thinks of this.
+
+431
+01:01:40,628 --> 01:01:52,068
+Failed expected out of order is not defined, right? Change the name.
+
+432
+01:01:52,068 --> 01:02:04,698
+Failed. 16 is not 15.
+
+433
+01:02:04,698 --> 01:02:36,478
+Oh, I missed one background tab. And it's another one.
+
+434
+01:02:36,478 --> 01:03:02,738
+You know, I can make this easier for myself. Um. Line, no.
+
+435
+01:03:02,738 --> 01:03:18,418
+OK. 12, 14, 15, 16, 17, 18, 19, 21, 23, 24 and not 26.
+
+436
+01:03:18,418 --> 01:03:26,058
+OK. I believe it.
+
+437
+01:03:26,058 --> 01:03:32,828
+I believe. OK.
+
+438
+01:03:32,828 --> 01:03:36,038
+And then I want to do one where it's like almost everything is in order,
+
+439
+01:03:36,038 --> 01:03:42,728
+except for one thing like something's been ingested, injected at the end or something.
+
+440
+01:03:42,728 --> 01:03:54,268
+Um, so let's use the same format.
+
+441
+01:03:54,268 --> 01:04:02,438
+We're going to call it. Mostly in order, not any.
+
+442
+01:04:02,438 --> 01:04:11,918
+So let's put this mostly in order. B.
+
+443
+01:04:11,918 --> 01:04:27,878
+C. And no, p q r.
+
+444
+01:04:27,878 --> 01:04:36,248
+Close player. Close to half close. H I J K L.
+
+445
+01:04:36,248 --> 01:04:46,418
+He has taken. You know, so this should all be in order, mostly in order, actually, you know what I'm going to call.
+
+446
+01:04:46,418 --> 01:04:58,108
+I'm going to say this is what I'm going to do, one that's in order. Uh, in order.
+
+447
+01:04:58,108 --> 01:05:04,918
+OK, and then mostly in order, I'm going to put one at the Animal Court browsers new test.
+
+448
+01:05:04,918 --> 01:05:12,598
+Except that that is an order. I was called a new test jackass that should be out of order.
+
+449
+01:05:12,598 --> 01:05:23,318
+So mostly in order. It's going to be one that's.
+
+450
+01:05:23,318 --> 01:05:43,898
+In order. We expect the number of results to be zero.
+
+451
+01:05:43,898 --> 01:05:57,388
+Hmm. Fourteen is not zero.
+
+452
+01:05:57,388 --> 01:06:11,138
+14. But there are only four reported.
+
+453
+01:06:11,138 --> 01:06:21,428
+These aren't related to one another. Right, keeping stayed around early.
+
+454
+01:06:21,428 --> 01:06:30,218
+We are keeping state around. What went lint?
+
+455
+01:06:30,218 --> 01:06:58,848
+Results equals lint. So it's a bad result, is this thing, and then you just have pending, oh, it's got this global, oh yeah, that's no good.
+
+456
+01:06:58,848 --> 01:07:10,328
+That's no good. We need. Yeah, we need that to be function scope.
+
+457
+01:07:10,328 --> 01:07:15,038
+I don't know why that was globally scoped. It's a bad idea.
+
+458
+01:07:15,038 --> 01:07:31,408
+All right. OK, so it thinks that in order is actually out of order, it thinks that close pip focus,
+
+459
+01:07:31,408 --> 01:07:42,568
+close unpicked focus is out of alphabetical order and close pip pause is alphabetical order and close player.
+
+460
+01:07:42,568 --> 01:07:55,418
+Close tab is out of alphabetical order. Is this supposed to be at the end somehow?
+
+461
+01:07:55,418 --> 01:08:01,558
+This underscore ranked. Huh.
+
+462
+01:08:01,558 --> 01:08:05,868
+OK. Scores ranked higher.
+
+463
+01:08:05,868 --> 01:08:17,488
+All right, and then pet navigation changes pip because underscores ranked higher, OK, so these two need to be reorganized.
+
+464
+01:08:17,488 --> 01:08:39,468
+OK, so that's an order. So we're going to replace this stuff, uh, test in order test, mostly in order.
+
+465
+01:08:39,468 --> 01:08:45,358
+Where you say we expect one result and that the result.
+
+466
+01:08:45,358 --> 01:08:56,668
+Cert. Results zero line number equals thirty.
+
+467
+01:08:56,668 --> 01:09:07,308
+Browser, new test jazz. Invalid syntax.
+
+468
+01:09:07,308 --> 01:09:14,058
+Oh, assert. Equals equals. Close equals.
+
+469
+01:09:14,058 --> 01:09:28,508
+Failed. Oh, of course, because it expects this to be up there.
+
+470
+01:09:28,508 --> 01:09:37,928
+Uh, um. How about.
+
+471
+01:09:37,928 --> 01:10:02,828
+Something like that. Hmm.
+
+472
+01:10:02,828 --> 01:10:10,208
+You almost want to generate the minimal movements in order to sort something,
+
+473
+01:10:10,208 --> 01:10:15,818
+because what it's doing right now is it's sorting them, comparing them line by line and going like, well, these are out of sync.
+
+474
+01:10:15,818 --> 01:10:31,008
+So these are all failures and what you want it to do is sort of describe like this is the minimum number of movements in order to put this in order.
+
+475
+01:10:31,008 --> 01:10:43,438
+Minimum swaps to put. To order her, Ray.
+
+476
+01:10:43,438 --> 01:10:52,178
+Uh, I look I know that that's like. That's that's quick sort.
+
+477
+01:10:52,178 --> 01:11:04,748
+It's like, I want an instruction, a set of instructions for the user to be like, OK, now put this one up there, put that one down there, um.
+
+478
+01:11:04,748 --> 01:11:12,538
+Or maybe what we could do is we could print out the order that they're supposed to be in.
+
+479
+01:11:12,538 --> 01:11:39,598
+So they're like, um. Result definition.
+
+480
+01:11:39,598 --> 01:11:50,248
+Yeah, I wonder if it'd be better if instead of for each line doing this.
+
+481
+01:11:50,248 --> 01:11:56,968
+Then what we should do is just all at once a single result of this is out of order.
+
+482
+01:11:56,968 --> 01:12:29,148
+This is the order it should be in. And I don't need this line hash thing.
+
+483
+01:12:29,148 --> 01:12:44,568
+OK, I think I like that better. Now that we've kind of set this all up and I can see what the output is kind of going to be.
+
+484
+01:12:44,568 --> 01:12:51,798
+If test is not, then we can break immediately.
+
+485
+01:12:51,798 --> 01:12:58,368
+We can and we can stop. And the result.
+
+486
+01:12:58,368 --> 01:13:06,758
+So the line number will be zero. Column Zero Path is a file name message.
+
+487
+01:13:06,758 --> 01:13:18,018
+The test manifest. And the Moki Test Test Manifest is out of alphabetical order.
+
+488
+01:13:18,018 --> 01:13:36,188
+And then the hint. Um, the order should be.
+
+489
+01:13:36,188 --> 01:13:45,948
+And then. Expected sort of test names.
+
+490
+01:13:45,948 --> 01:13:55,838
+Join. Sorted test names.
+
+491
+01:13:55,838 --> 01:14:06,018
+See what happens if I just run that against. A picture and pictures.
+
+492
+01:14:06,018 --> 01:14:19,738
+Invalid syntax light, yes, sir, I need a comma. Line number is not defined.
+
+493
+01:14:19,738 --> 01:14:27,868
+Right. One one.
+
+494
+01:14:27,868 --> 01:14:35,208
+Let's get that warning. It's out of alphabetical order.
+
+495
+01:14:35,208 --> 01:14:52,678
+Can I get hints? Like, how do you get the hint?
+
+496
+01:14:52,678 --> 01:15:02,168
+It's the hint actually used, and I actually have to put it in the message because I don't think the hint is actually used.
+
+497
+01:15:02,168 --> 01:15:38,578
+Expected ordering. Oops!
+
+498
+01:15:38,578 --> 01:15:51,688
+Uh, my python's garbage, uh, one of my say in here, but it's a sort of double collar, no good.
+
+499
+01:15:51,688 --> 01:16:34,458
+Expected ordering, yeah, that's what I want. Um.
+
+500
+01:16:34,458 --> 01:16:47,688
+It's just manifest, it's out of order and. And do it to honor here, vertical order.
+
+501
+01:16:47,688 --> 01:17:10,128
+Can I do it? Can I do that? Well, my phone. Yes.
+
+502
+01:17:10,128 --> 01:17:18,078
+Good. OK, so then back to our test, we're not going to get lie numbers or anything.
+
+503
+01:17:18,078 --> 01:17:26,328
+We should. Results equals one.
+
+504
+01:17:26,328 --> 01:17:39,018
+And the. Well, maybe that's enough.
+
+505
+01:17:39,018 --> 01:17:48,818
+In order zero. Mostly in order.
+
+506
+01:17:48,818 --> 01:17:53,768
+Sorry, I didn't mean to run that file again. I want to run the tests.
+
+507
+01:17:53,768 --> 01:18:14,488
+I wonder if this is sufficient. Yeah, maybe that's fine.
+
+508
+01:18:14,488 --> 01:18:29,118
+Um, I'm going to amend that. Do I have everything test manifest alpha, uh, uh, tests.
+
+509
+01:18:29,118 --> 01:18:35,658
+Lint and tools, lint test, best manifest test files.
+
+510
+01:18:35,658 --> 01:18:53,788
+Test Manifest Alpha. Anything that any you know, we had to add those two.
+
+511
+01:18:53,788 --> 01:19:08,738
+OK. Moore's fab submit tip, single whip, because I still want to hear back about this glob and stuff, but once I've got that sorted out,
+
+512
+01:19:08,738 --> 01:19:13,628
+this might be something that we could land soon and then we can start getting our manifests in alphabetical order.
+
+513
+01:19:13,628 --> 01:19:18,278
+And that's good. All right. I think I'm going to go now to questions.
+
+514
+01:19:18,278 --> 01:19:22,598
+We're done with the source code portion of the joy of coding.
+
+515
+01:19:22,598 --> 01:19:30,998
+So let's let's look at some questions here. Question from the sorted haha smurf dd.
+
+516
+01:19:30,998 --> 01:19:37,838
+I do like the way you think. And speaking of Smurf, DD Hey, have I dreamt or have you said to use a site called Rule 20?
+
+517
+01:19:37,838 --> 01:19:44,078
+I have used Rule 20 before. Rule 20 is a tool I use to play dirty with some friends.
+
+518
+01:19:44,078 --> 01:19:45,758
+It's like an online web browser,
+
+519
+01:19:45,758 --> 01:19:54,518
+tabletop browser based tabletop for doing like tabletop games like my daddy seems as of late is not working so good with webcams,
+
+520
+01:19:54,518 --> 01:19:58,388
+and Firefox was thinking of filing a bug for it, but not sure how to give a good bug report.
+
+521
+01:19:58,388 --> 01:20:03,368
+I can see my camera, but my friends can't see my camera and I can't see theirs that they use Firefox.
+
+522
+01:20:03,368 --> 01:20:07,868
+But if they use, say, Chrome, I can see them. But they can't see me until I switch to Chrome.
+
+523
+01:20:07,868 --> 01:20:18,158
+So it sounds like we're having trouble sending a feed for the camera feed.
+
+524
+01:20:18,158 --> 01:20:25,628
+The the camera to the correct camera device isn't being used.
+
+525
+01:20:25,628 --> 01:20:31,548
+So how to file a good bug for this?
+
+526
+01:20:31,548 --> 01:20:44,248
+I would start by going to, uh, Bugzilla, sorry, not search Fox Bugzilla, I'd say new bug for web artsy.
+
+527
+01:20:44,248 --> 01:20:48,388
+Audio video or you know what?
+
+528
+01:20:48,388 --> 01:20:55,708
+I wouldn't even go here, I would go to I'd start with webcam pat because our webcam pat people can help figure out whether or not it's the device.
+
+529
+01:20:55,708 --> 01:21:02,568
+That's the problem or not. I would go to webcam PACOM, I describe.
+
+530
+01:21:02,568 --> 01:21:09,168
+The steps to reproduce. Report the bug, so it's like what site?
+
+531
+01:21:09,168 --> 01:21:16,308
+And then like you can fill in more details and how you're testing it and stuff.
+
+532
+01:21:16,308 --> 01:21:18,978
+That's what I would recommend in this particular case.
+
+533
+01:21:18,978 --> 01:21:25,368
+And then our web combat team will do the right thing depending on what the results of their investigation is,
+
+534
+01:21:25,368 --> 01:21:35,028
+because they'll do some investigation on it. Enjoy coding Episode 237, which was back in October 2021.
+
+535
+01:21:35,028 --> 01:21:46,728
+January 13th My birthday, actually, you received a MSU capstone patch for prevent picture in picture windows from opening on top of one another.
+
+536
+01:21:46,728 --> 01:21:49,488
+Bug patches subsequently failed to land,
+
+537
+01:21:49,488 --> 01:21:57,198
+and I thought it would be interesting to revisit with an overview mortem of what caused a submitted patch to fail.
+
+538
+01:21:57,198 --> 01:21:59,988
+Summary of patch behavior from the episode.
+
+539
+01:21:59,988 --> 01:22:05,118
+Hopefully, you can either purpose or fix the patch, ultimately add a comment to the bug, indicating a likely method to fix it.
+
+540
+01:22:05,118 --> 01:22:11,238
+So this is actually fortuitous timing because there's been a lot of attention to picture in picture lately.
+
+541
+01:22:11,238 --> 01:22:17,298
+We're about to ship like subtitles, support and caption support, and we're making improvements to picture in picture.
+
+542
+01:22:17,298 --> 01:22:29,118
+And this was sort of an interesting and interesting patch because it was trying to.
+
+543
+01:22:29,118 --> 01:22:35,388
+It was trying to prevent. Picture in picture player windows from overlapping one another.
+
+544
+01:22:35,388 --> 01:22:41,348
+And so maybe we could. And it was like accepted, but then the patch bounced it like per.
+
+545
+01:22:41,348 --> 01:22:46,718
+For this commentary and here, so maybe we could revisit this.
+
+546
+01:22:46,718 --> 01:22:55,988
+So let's let's set that up for next time for next episode. Yeah, let's look at that next episode here.
+
+547
+01:22:55,988 --> 01:23:03,488
+Say I'll even set up next week's episode Create Note Joy of Coding Agenda.
+
+548
+01:23:03,488 --> 01:23:16,338
+Next week, uh, seven days from now. The April 13th, 2022 Episode 286, we will look at this.
+
+549
+01:23:16,338 --> 01:23:22,158
+Let's see if we can bring this patch back from the dead.
+
+550
+01:23:22,158 --> 01:23:26,508
+All right. We can look at that next week, so that looks like that's it for Question six,
+
+551
+01:23:26,508 --> 01:23:33,138
+for saying those in if you have any other questions or things you want me to to to talk about, send a question into the episode.
+
+552
+01:23:33,138 --> 01:23:37,338
+There's this rate, this episode Lincoln. There's a section in there where you can submit questions.
+
+553
+01:23:37,338 --> 01:23:42,318
+I love reading everything that comes in, and next week, maybe I'll even be back in the office to stream.
+
+554
+01:23:42,318 --> 01:23:49,248
+Who knows? Who knows? Fingers crossed. It'll be nice to be a slightly different location.
+
+555
+01:23:49,248 --> 01:23:53,628
+I've been in this void for so long. All right.
+
+556
+01:23:53,628 --> 01:23:57,468
+Well, thanks again for watching episode 285 of the joy of Coding. I hope that was interesting.
+
+557
+01:23:57,468 --> 01:24:04,098
+Let me know what you thought. Rate this episode and smashed the buttons for engagement.
+
+558
+01:24:04,098 --> 01:24:09,298
+Yeah, subscribe and stuff, and I will see you all.
+
+559
+01:24:09,298 --> 01:24:16,048
+Virtually soon, have yourselves a great week, take care of everybody, bye bye.
+
+560
+01:24:16,048 --> 01:24:26,347
+The joy. Oh, they see it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

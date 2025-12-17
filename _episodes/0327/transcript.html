@@ -1,0 +1,2885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 327 - June 7, 2023</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 327 - June 7, 2023</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c6f65d06-1abc-4efd-911e-aff600f14d46</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c6f65d06-1abc-4efd-911e-aff600f14d46">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,806 --> 00:00:07,106
+Welcome. Through the Joy Cup.
+
+2
+00:00:07,676 --> 00:00:13,876
+Oh, dear. Hello and welcome to Episode 327 of The Joy of Coding.
+
+3
+00:00:13,886 --> 00:00:21,056
+My name is Mike Conley. It's so good to have you here. It's so good to have you with me while we're going to be hacking on some Firefox stuff today.
+
+4
+00:00:21,206 --> 00:00:25,345
+Excuse me. I say we as if I've got like a whole team of people here.
+
+5
+00:00:25,346 --> 00:00:30,175
+It's just me. But you're going to be with me, whoever you are, wherever you're watching,
+
+6
+00:00:30,176 --> 00:00:35,636
+if you're watching in the future, if you're watching in the past, somehow I'm not going to judge.
+
+7
+00:00:36,026 --> 00:00:40,046
+Well, you're with me, and that's great. And we're going to work on this stuff together. Thanks for being here.
+
+8
+00:00:40,496 --> 00:00:43,915
+I'll start by sharing my screen. Right.
+
+9
+00:00:43,916 --> 00:00:47,216
+So this is today's agenda. Excuse me.
+
+10
+00:00:47,456 --> 00:00:50,546
+A quick reminder, I say this every time no plan survives breakfast.
+
+11
+00:00:50,546 --> 00:00:58,015
+I kind of know what I want to do today. I have a sense of where I want the episode to go, but who knows how it'll go?
+
+12
+00:00:58,016 --> 00:01:06,446
+It might go completely sideways, it might fall over, the stream, might fall apart, or we might get stuck, or we might be waiting for builds to finish.
+
+13
+00:01:06,446 --> 00:01:09,536
+And so we get switched over to something completely different.
+
+14
+00:01:09,926 --> 00:01:12,326
+That's all possible. And that's okay.
+
+15
+00:01:12,626 --> 00:01:22,526
+You're watching me tackle things in real time with software development in the raw and and so I've got this little gap here in my green screen,
+
+16
+00:01:22,676 --> 00:01:27,116
+I just realized. And so, I mean, that's one of the sorts of things that can go wrong.
+
+17
+00:01:27,116 --> 00:01:31,346
+Let me adjust that real quick, see if that helps that better.
+
+18
+00:01:31,526 --> 00:01:34,976
+That's a little bit better. Hang on.
+
+19
+00:01:35,186 --> 00:01:40,856
+I might be able to do a bit better one second little bit better.
+
+20
+00:01:40,856 --> 00:01:45,446
+Cuts off my my mouth a little bit. Yeah. Let me just. Ooh, there we go.
+
+21
+00:01:46,406 --> 00:01:50,096
+Yeah. So things might go wrong. Things like that. My green screen might fall over.
+
+22
+00:01:50,246 --> 00:01:54,055
+Yeah. Suddenly bees just bees everywhere.
+
+23
+00:01:54,056 --> 00:02:01,826
+Anything can happen. So just be be prepared for anything. The second thing to to remember or to note is that the agenda that we're looking
+
+24
+00:02:01,826 --> 00:02:07,946
+at is something that you have access to if you're watching this on air. Mozilla, check out the details section over there.
+
+25
+00:02:08,246 --> 00:02:14,215
+If you're watching this on YouTube or diode zone, check it down below. In the details are the description of the video for a link to the agenda.
+
+26
+00:02:14,216 --> 00:02:23,216
+And if you're watching this on Twitch, it's down in the channel details and as I update the agenda, it will save and it should sync in the background.
+
+27
+00:02:23,216 --> 00:02:26,695
+Yes. Be prepared. Be prepared.
+
+28
+00:02:26,696 --> 00:02:31,286
+Very good. Very good. All right. So what are we working on today?
+
+29
+00:02:31,526 --> 00:02:34,556
+So we tried to work on this last week and we've been trying to work on it.
+
+30
+00:02:35,396 --> 00:02:40,555
+We keep like I keep getting pulled off on other stuff because this isn't like a high priority task for me right now,
+
+31
+00:02:40,556 --> 00:02:48,266
+but I want to keep getting back to it. The Windows Jump stuff, which we were working on for a while, we got something working, got pulled away,
+
+32
+00:02:48,296 --> 00:02:55,015
+came back to it a little bit, thought about testing it, did some consulting, and we're back.
+
+33
+00:02:55,016 --> 00:02:57,686
+I'm waiting to work on this today for the Stream.
+
+34
+00:02:57,686 --> 00:03:04,106
+And something that we had talked about during the last episode was a plan for trying to split out what we'd done.
+
+35
+00:03:04,106 --> 00:03:08,006
+We have this all asks, Isn't this a minor feature?
+
+36
+00:03:08,456 --> 00:03:11,816
+I wouldn't. Yeah, I'd say that I wouldn't even call this a feature.
+
+37
+00:03:11,816 --> 00:03:15,955
+This isn't a desktop integration. This is an operating system.
+
+38
+00:03:15,956 --> 00:03:22,525
+System integration. What we're talking about is the the list that appears when you like right click on the
+
+39
+00:03:22,526 --> 00:03:29,366
+browser and it like shows a list of places you've been and like things you can do.
+
+40
+00:03:32,076 --> 00:03:39,065
+And so, yeah, it's it's one of the things that I wanted to do is revisit our our approach.
+
+41
+00:03:39,066 --> 00:03:48,246
+Our current approach was that the back end, the new and old back end was basically using the same chunk of code,
+
+42
+00:03:48,636 --> 00:03:51,726
+but it was like it had a new method on it,
+
+43
+00:03:51,726 --> 00:03:56,826
+on part of it, and it shared there was like some sharing of,
+
+44
+00:03:57,216 --> 00:04:02,916
+of a mechanism in the background, but like it was basically two modes of the same component.
+
+45
+00:04:03,306 --> 00:04:07,715
+And I will actually want to split that out because we actually like when we do that,
+
+46
+00:04:07,716 --> 00:04:14,406
+we inherit a lot of the baggage from the old component and, and I don't want to have to do that.
+
+47
+00:04:16,656 --> 00:04:19,986
+Minor feature, but requires a deep dive in over four live streams.
+
+48
+00:04:21,666 --> 00:04:26,166
+Yeah. I mean it's yeah.
+
+49
+00:04:26,166 --> 00:04:35,106
+We've, we've been taking your time. I will, I will stress that like we've been, I've been kind of working on this on the side of my desk.
+
+50
+00:04:35,496 --> 00:04:38,705
+I haven't had the clearest plan going into this.
+
+51
+00:04:38,706 --> 00:04:42,396
+Like if this was a serious project, I say serious project.
+
+52
+00:04:42,396 --> 00:04:48,696
+If this was like something tied to a particular timeline and like I've got to get this done in a month or something,
+
+53
+00:04:49,146 --> 00:04:56,675
+I would probably have written out a plan and worked with some other engineers at Mozilla to sort of like have a roadmap and a plan.
+
+54
+00:04:56,676 --> 00:05:00,786
+But we you have been watching me feel this out in real time.
+
+55
+00:05:00,786 --> 00:05:04,236
+Like I haven't really been thinking about this very much outside of the stream.
+
+56
+00:05:04,536 --> 00:05:06,335
+And so that's why it's taking a long time.
+
+57
+00:05:06,336 --> 00:05:12,726
+If you sum up the number of streams where we've been working on this, it's probably something like ten or 12 hours in total,
+
+58
+00:05:13,566 --> 00:05:21,546
+and that's about a day and a half of full time work, which yeah, that's about right where we'd be right now.
+
+59
+00:05:21,846 --> 00:05:25,206
+So we're let let's keep going.
+
+60
+00:05:25,566 --> 00:05:36,456
+So what I want to do today is carry out this plan where I'm actually going to copy some of this over to here.
+
+61
+00:05:42,096 --> 00:05:50,436
+How do I? There's a lot of complexity we're dealing with architecturally because we're trying to maintain the old black and white and the new
+
+62
+00:05:50,436 --> 00:05:56,165
+capability with new back end we want to do is to turn if we do a better job of separating the jumbos back end by reading a perfect runtime,
+
+63
+00:05:56,166 --> 00:06:06,756
+choosing the right implementation. So the first step I want to do, and actually I'm going to turn these into like a to do list, um, uh, oh geez.
+
+64
+00:06:07,506 --> 00:06:11,346
+So I'm going to split this out into a new list to do.
+
+65
+00:06:13,566 --> 00:06:18,156
+Is I'm going to start by renaming Jump List Builders a legacy jobless builder.
+
+66
+00:06:19,236 --> 00:06:23,886
+And then here's what we're going to do. I'm going to check out Central.
+
+67
+00:06:26,356 --> 00:06:31,946
+I'm going to start as if I hadn't made a change. Um, I'm going to start right from the tip.
+
+68
+00:06:31,966 --> 00:06:41,476
+We've got our, like, we basically drilled a couple of pilot holes here and through trial and error have developed a kind of a plan.
+
+69
+00:06:41,806 --> 00:06:50,116
+You know, we were we ran down one alleyway and we got a sense of its characteristics and we learned a bit.
+
+70
+00:06:50,446 --> 00:06:54,886
+And now we've got a clear sense of how to proceed. We're not going to throw away this work.
+
+71
+00:06:54,886 --> 00:07:03,946
+We're going to reuse a bunch of it. But I want to start kind of from scratch, at least to make it so that I don't have to.
+
+72
+00:07:04,246 --> 00:07:08,656
+This is easier than like trying to take the patch that I've written and split it into these things.
+
+73
+00:07:09,376 --> 00:07:13,546
+I'm going to start from scratch and try and recycle a bunch of the changes from the old patch.
+
+74
+00:07:14,296 --> 00:07:19,906
+But I'm going to start by this step. Rename and aside jumbles builder to legacy jump list builder.
+
+75
+00:07:20,836 --> 00:07:24,946
+Okay, can do so. Where is NCAI jump list builder?
+
+76
+00:07:26,676 --> 00:07:32,016
+Woops. We use search forks. Where is that all sort of like declared.
+
+77
+00:07:32,016 --> 00:07:37,296
+So there is the ideal under widget. We're going to start there by just renaming the file.
+
+78
+00:07:37,626 --> 00:07:46,026
+Oh, I got t delivery. Thank you very much. So we're going to start by renaming widget and a side jump list builder.
+
+79
+00:07:47,856 --> 00:07:53,846
+The widget and its high jump a legacy jump plus builder is what our decision was.
+
+80
+00:07:57,746 --> 00:08:08,216
+Was that the decision? Legacy job loss builder. Okay. And then we have to change the actual Idol declaration inside of it.
+
+81
+00:08:08,906 --> 00:08:17,246
+So let's do that next. So NCAI Legacy Jump List Builder.
+
+82
+00:08:18,266 --> 00:08:24,186
+So we're going to call us. The legacy jobless builder.
+
+83
+00:08:24,426 --> 00:08:27,666
+And what does a jump list committed call back?
+
+84
+00:08:31,656 --> 00:08:39,096
+And we probably want to rename that as well to legacy jump list committed callback.
+
+85
+00:08:42,246 --> 00:08:47,246
+Okay. And then jump list builder is used inside.
+
+86
+00:08:47,256 --> 00:08:51,486
+I mean, there's jobless builder dot H, we're going to rename that to Legacy Jobless Builder.
+
+87
+00:08:52,896 --> 00:08:56,436
+But the actual build we're going to we're going to start by changing.
+
+88
+00:08:57,776 --> 00:09:04,006
+Widget. Moore's dot build would point it to a different weight.
+
+89
+00:09:05,006 --> 00:09:15,236
+That's widget like I want widget models that build that one jump list.
+
+90
+00:09:16,356 --> 00:09:19,646
+Okay. So we're going to. Legacy.
+
+91
+00:09:21,446 --> 00:09:25,386
+Legacy. Is there anything else in here?
+
+92
+00:09:25,386 --> 00:09:33,606
+Jump listed. Okay. And then all the usages need to be updated.
+
+93
+00:09:34,776 --> 00:09:39,876
+So, for example, when taskbar. Was it?
+
+94
+00:09:40,086 --> 00:09:44,526
+CP needs to know that this is now the legacy.
+
+95
+00:09:46,756 --> 00:09:52,516
+Bless Builder. Jumps list.
+
+96
+00:09:53,086 --> 00:09:56,326
+Jumps to list. Um.
+
+97
+00:09:58,286 --> 00:10:05,616
+Like a sea jump list builder. Uh.
+
+98
+00:10:07,156 --> 00:10:13,516
+When? Where does this come from? In. Define in widget side.
+
+99
+00:10:16,096 --> 00:10:20,506
+Okay, fine. I'm going to, uh, update that.
+
+100
+00:10:20,656 --> 00:10:25,666
+And this. What's. The D.
+
+101
+00:10:29,806 --> 00:10:37,136
+C.I.D. Jump list. No need to be case sensitive.
+
+102
+00:10:38,276 --> 00:10:42,836
+That's when legacy. There.
+
+103
+00:10:49,746 --> 00:10:53,076
+Legacy. So this is going to cause a hole like.
+
+104
+00:10:56,246 --> 00:10:58,736
+A slew of compilation problems.
+
+105
+00:10:58,886 --> 00:11:06,386
+Almost certainly we're probably going to be wrestling with this rename for the first hour while we sort of like have the.
+
+106
+00:11:10,396 --> 00:11:14,626
+Go through the hoops of making our build system happy with this rename.
+
+107
+00:11:19,646 --> 00:11:24,566
+All of the associated renames. Okay.
+
+108
+00:11:24,586 --> 00:11:31,126
+So there was that and one else. There's going to be a bit of trial and error here, getting this stuff to build.
+
+109
+00:11:32,746 --> 00:11:36,576
+We're going to want to rename widget windows jump plus builder H.
+
+110
+00:11:37,996 --> 00:11:43,095
+Uh, what? No, don't open zoom. No, no, don't open.
+
+111
+00:11:43,096 --> 00:11:46,726
+Zoom, move.
+
+112
+00:11:47,026 --> 00:11:51,786
+Widget Jump list builder. Was it Windows?
+
+113
+00:11:53,416 --> 00:12:00,966
+John Bliss Builder. H to widget Windows Legacy.
+
+114
+00:12:02,716 --> 00:12:10,926
+Jump list builder H. And then there's probably an associated CP.
+
+115
+00:12:17,316 --> 00:12:20,466
+Okay. And then.
+
+116
+00:12:21,216 --> 00:12:27,886
+Jobless. Believe it or not, age needs to know. Jump list builder.
+
+117
+00:12:28,356 --> 00:12:32,196
+H legacy jump this builder.
+
+118
+00:12:32,316 --> 00:12:42,936
+H ran a. Basically we're going to look for a jump list.
+
+119
+00:12:45,016 --> 00:12:49,206
+And so I legacy. I'm just going to copy that to the clipboard.
+
+120
+00:12:49,206 --> 00:12:57,336
+Legacy. Legacy. Legacy.
+
+121
+00:12:58,476 --> 00:13:03,836
+Legacy. And my legacy.
+
+122
+00:13:06,746 --> 00:13:15,516
+Plus builder. I guess. Uh.
+
+123
+00:13:26,396 --> 00:13:30,026
+What else you got that I already talk about?
+
+124
+00:13:30,036 --> 00:13:37,446
+Yeah. A.I. When Taskbar will need to be updated. Sigh.
+
+125
+00:13:37,616 --> 00:13:48,126
+Legacy jumpers fill their. Create.
+
+126
+00:13:50,896 --> 00:13:53,896
+Legacy. I'm blessed.
+
+127
+00:13:53,896 --> 00:13:58,795
+Bill there. Copy that.
+
+128
+00:13:58,796 --> 00:14:01,976
+Clipboard. Go. Doo doo doo.
+
+129
+00:14:04,226 --> 00:14:08,956
+Leave a legacy. What else?
+
+130
+00:14:10,506 --> 00:14:16,346
+Being else in here. Okay, that's it. Oh, we already modified that.
+
+131
+00:14:17,006 --> 00:14:21,406
+We already modified that. Plus builder itself.
+
+132
+00:14:21,416 --> 00:14:28,286
+The CPP needs to be. Legacy jobless bill there.
+
+133
+00:14:31,726 --> 00:14:35,076
+Like I say. Andre legacy.
+
+134
+00:14:36,456 --> 00:14:41,466
+That's just a tennis joke. Um, so I.
+
+135
+00:14:43,566 --> 00:14:47,865
+Like I said. Committed callback.
+
+136
+00:14:47,866 --> 00:14:55,906
+We also retained that. Uh huh.
+
+137
+00:14:56,686 --> 00:15:01,396
+But no bom bom bom bom bom bom bop bop.
+
+138
+00:15:01,396 --> 00:15:05,206
+Uh, this is manual stuff.
+
+139
+00:15:09,786 --> 00:15:14,766
+The internals. I don't think we need to update. Um, I don't think that's necessary.
+
+140
+00:15:16,086 --> 00:15:34,056
+Uh. Mm hmm.
+
+141
+00:15:34,746 --> 00:15:39,846
+So all of the usages of Jump Plus Builder, I'm going to just find and replace.
+
+142
+00:15:44,166 --> 00:15:47,616
+Jump list builder. Anything with a space in front of it.
+
+143
+00:15:47,646 --> 00:15:53,276
+I say you are all now going to be. I guess a jump list builder.
+
+144
+00:15:56,446 --> 00:16:01,406
+Okay. Anything else? Jump.
+
+145
+00:16:07,976 --> 00:16:13,256
+We're definitely going to find stuff in our in our attempts to build this.
+
+146
+00:16:16,606 --> 00:16:20,686
+That's going to need to be renamed Jim. List separator.
+
+147
+00:16:35,266 --> 00:16:46,906
+I guess. Uh hmm.
+
+148
+00:16:55,566 --> 00:17:03,976
+All right. I'm actually quite curious to see what's going to fall apart whenever we build.
+
+149
+00:17:04,446 --> 00:17:09,096
+Mm hmm. Build with.
+
+150
+00:17:12,236 --> 00:17:19,706
+Opt or default. Let's just see what happens if we do like mock build widget.
+
+151
+00:17:23,536 --> 00:17:26,596
+I'm very curious. Shark.
+
+152
+00:17:27,016 --> 00:17:30,046
+Howdy, Shark. Good to see you. Good to hear from you.
+
+153
+00:17:30,356 --> 00:17:33,706
+Hope things are well. I've got.
+
+154
+00:17:33,706 --> 00:17:37,696
+I've got, like, leftover coffee and brand new tea.
+
+155
+00:17:37,876 --> 00:17:46,616
+I'm like, no, if you can see this. So good.
+
+156
+00:17:47,426 --> 00:17:52,466
+Oh, okay. So not a fan. Uh.
+
+157
+00:17:52,466 --> 00:17:59,906
+We're, uh. Does not. That report error is legacy jump list item.
+
+158
+00:18:00,116 --> 00:18:03,776
+Not ideal doesn't exist. Right. I think we failed to rename that one.
+
+159
+00:18:05,246 --> 00:18:09,176
+Oh. Move. Widget.
+
+160
+00:18:12,116 --> 00:18:23,576
+Jump this item to widget and its I legacy jump list item dot idle and is there another one there probably others widget side jump.
+
+161
+00:18:25,276 --> 00:18:40,396
+No. Okay, well, that's good. So now we can look inside an aside legacy jump list item, and we're going to do the.
+
+162
+00:18:43,476 --> 00:18:54,425
+And there are few in here and a legacy jump list separator legacy jump list link and legacy jump.
+
+163
+00:18:54,426 --> 00:18:59,016
+This shortcut inherits from an inside legacy jump list item.
+
+164
+00:18:59,016 --> 00:19:03,336
+I think we had another one up here that did that and. Some inheritance.
+
+165
+00:19:04,426 --> 00:19:08,766
+Mm. I think you're smiling.
+
+166
+00:19:10,216 --> 00:19:13,686
+Uh, let's see. Uh, I think I'll do it.
+
+167
+00:19:13,986 --> 00:19:18,156
+And then we have to update our build widget.
+
+168
+00:19:20,256 --> 00:19:23,676
+Mazda build. Oh, yeah.
+
+169
+00:19:23,706 --> 00:19:28,386
+Okay. We already. We already did do that. Okay, let's try again. Oh, okay.
+
+170
+00:19:29,796 --> 00:19:33,216
+Built widget. Great to see you.
+
+171
+00:19:33,216 --> 00:19:40,596
+Still hacking away? Of course. Of course. Oh, good to see you, too.
+
+172
+00:19:44,816 --> 00:19:49,465
+Now it's mad about jump plus builder dot.
+
+173
+00:19:49,466 --> 00:19:52,646
+CP doesn't exist because I guess that's being referred to in here.
+
+174
+00:19:58,516 --> 00:20:03,976
+It's making. Oh. I'll bet you. Under widget windows.
+
+175
+00:20:05,636 --> 00:20:09,176
+Yeah. Widget windows.
+
+176
+00:20:09,446 --> 00:20:13,556
+There is a mars dot build and these all need to be renamed.
+
+177
+00:20:13,566 --> 00:20:18,736
+Okay, so we've got more to do. Simplest.
+
+178
+00:20:20,586 --> 00:20:28,786
+So first of all, that's got to be. Legacy.
+
+179
+00:20:30,786 --> 00:20:37,566
+I'll be here. Each of us build their.
+
+180
+00:20:38,386 --> 00:20:43,246
+Well, makes sense there. Okay. And then what was the other thing?
+
+181
+00:20:43,906 --> 00:20:52,096
+Um, I saw in here that there's also jump list item is still here, so that needs to be moved.
+
+182
+00:20:52,306 --> 00:21:02,116
+H.G. Move Widget Window's Jump List Item H needs to be widget Windows Legacy Jump.
+
+183
+00:21:03,266 --> 00:21:10,576
+This item, Dark Age, and similarly, C.P.
+
+184
+00:21:14,226 --> 00:21:24,816
+Okay. So far, so good. And then inside those files, the legacy.
+
+185
+00:21:40,926 --> 00:21:44,346
+Mm mm mm mm mm mm mm mm.
+
+186
+00:21:55,666 --> 00:22:06,686
+I guess. This cycle collection mapping.
+
+187
+00:22:07,466 --> 00:22:14,816
+Okay. And then I'm going to do a rename find replace jump list.
+
+188
+00:22:19,626 --> 00:22:24,366
+Uh, I say legacy jump list, and we're going to do them one at a time.
+
+189
+00:22:24,386 --> 00:22:30,066
+Replace or replace? Yes.
+
+190
+00:22:30,066 --> 00:22:33,316
+Yes, yes. Go. Go. Yep.
+
+191
+00:22:33,606 --> 00:22:36,846
+Yep. Yep, yep. Yep, yep.
+
+192
+00:22:41,296 --> 00:22:45,435
+No. No.
+
+193
+00:22:45,436 --> 00:22:49,936
+No. Oh, yes. That one I found previous shoot.
+
+194
+00:22:49,966 --> 00:22:53,116
+Okay. Replace. Yes.
+
+195
+00:22:54,336 --> 00:22:57,406
+No, no. No, no.
+
+196
+00:22:58,046 --> 00:23:01,906
+No. No. Yes. No.
+
+197
+00:23:01,906 --> 00:23:09,425
+No. No. No. No. No. Internals.
+
+198
+00:23:09,426 --> 00:23:14,586
+I do not care about renaming. Am I just going in a loop?
+
+199
+00:23:16,776 --> 00:23:19,816
+396. I've been looping this entire.
+
+200
+00:23:19,836 --> 00:23:31,046
+Yes, I have been. Okay. I thought there was one I failed to rename.
+
+201
+00:23:31,586 --> 00:23:37,586
+You know what? I probably looped around and fixed it because. What happened? Okay, let's see what happens now.
+
+202
+00:23:41,126 --> 00:23:45,086
+How deep does the rabbit hole go? As deep as you can dig.
+
+203
+00:23:46,166 --> 00:23:54,326
+Oh. Oh, wow. You can. You can dig and dig and dig till the cows come home.
+
+204
+00:24:01,856 --> 00:24:04,966
+Smurfs like search for NCAI jump list as well. Okay.
+
+205
+00:24:06,536 --> 00:24:09,826
+Oh, yeah. He searches for jumpers, so it's included. That's true.
+
+206
+00:24:09,836 --> 00:24:16,376
+I don't think there's any inside jump list in here. Oh, no, you're right.
+
+207
+00:24:17,186 --> 00:24:21,616
+You're right. Couple of places.
+
+208
+00:24:24,026 --> 00:24:27,806
+You were right. Smurf d as usual.
+
+209
+00:24:29,036 --> 00:24:33,136
+You saw with your eagle eyes. Something I missed.
+
+210
+00:24:39,306 --> 00:24:44,906
+Hmm hmm hmm hmm hmm hmm hmm hmm hmm. I could probably do this with find a replace.
+
+211
+00:24:46,836 --> 00:24:53,336
+And so I jump list and as I legacy jump this place I'll just do it.
+
+212
+00:24:54,736 --> 00:25:05,036
+All right. Type error and a side jump plus committed callback not found in.
+
+213
+00:25:08,766 --> 00:25:19,366
+Legacy Jump List builder. But I thought I renamed you to Legacy Jobless.
+
+214
+00:25:19,366 --> 00:25:24,466
+Committed to call back. Oh.
+
+215
+00:25:30,136 --> 00:25:38,876
+That's why I rename that. All right again?
+
+216
+00:25:39,006 --> 00:25:46,016
+Mm hmm. Still not happy.
+
+217
+00:25:46,366 --> 00:25:49,916
+As I jump list item not found. No surprise.
+
+218
+00:26:09,866 --> 00:26:13,336
+Where's that airing. And so I legacy journalist item.
+
+219
+00:26:29,946 --> 00:26:33,816
+Who would have thought that a rename would be such a pain?
+
+220
+00:26:33,846 --> 00:26:42,906
+I'm sure there are some refactoring tools that if we weren't so special would could make short work of this.
+
+221
+00:26:42,906 --> 00:26:47,506
+But. XP guard.
+
+222
+00:26:49,306 --> 00:26:53,686
+Okay, so we missed one. We missed a destructor here, missed a bunch of stuff.
+
+223
+00:26:54,226 --> 00:27:07,256
+Okay, I get it. In the destructor of legacy jump list builder dot H.
+
+224
+00:27:15,666 --> 00:27:21,706
+Yeah. I missed the destructor. What else did I miss?
+
+225
+00:27:23,836 --> 00:27:29,436
+What else did I miss? Yeah.
+
+226
+00:27:29,626 --> 00:27:36,076
+Well, that's related to the first thing. That's, I think, also related.
+
+227
+00:27:38,896 --> 00:27:41,896
+It's like, hey, that should be destructible. Never heard of this thing.
+
+228
+00:27:42,376 --> 00:27:46,696
+Uncleared identifier. Okay, here we go. Jobless legacy. Jobless Builder, line 225.
+
+229
+00:27:51,896 --> 00:28:01,336
+Uh, 25. Okay.
+
+230
+00:28:03,666 --> 00:28:14,536
+And then line 340. Legacy.
+
+231
+00:28:23,956 --> 00:28:34,486
+Uh, more. All right, find replace A.I. jump list with A.I. legacy jump list.
+
+232
+00:28:34,666 --> 00:28:38,216
+Just replace. All right.
+
+233
+00:28:38,996 --> 00:28:45,386
+Are we happy now? Walker says refactoring tools are probably more painful in the short term.
+
+234
+00:28:45,416 --> 00:28:53,906
+Do you agree? Comment below if you agree, couldn't open Moore's glue.
+
+235
+00:28:55,946 --> 00:29:01,376
+Okay. Well, it's probably because I'm trying to build just a single directory and I just.
+
+236
+00:29:01,376 --> 00:29:09,056
+I need to do the full mock build. This is all just to try and sniff out anything I missed.
+
+237
+00:29:15,196 --> 00:29:27,326
+Like sea jumbles separator it's never heard of. Uh, jump list separator would probably be item.
+
+238
+00:29:29,666 --> 00:29:34,806
+Legacy Jump List Item dot H. Huh?
+
+239
+00:29:36,416 --> 00:29:40,286
+An update this. I guess.
+
+240
+00:29:42,446 --> 00:30:06,076
+I guess. This is going to be worth it, y'all.
+
+241
+00:30:07,246 --> 00:30:17,616
+Trust me. Uh.
+
+242
+00:30:39,216 --> 00:30:42,326
+Hmm. Hmm hmm hmm hmm.
+
+243
+00:30:43,436 --> 00:30:47,996
+This will make it easier to migrate off the old thing.
+
+244
+00:30:48,836 --> 00:30:51,866
+Trust me, I'm pretty sure I'm right.
+
+245
+00:30:52,436 --> 00:30:59,096
+I could be wrong, but I'm pretty sure I'm right. BP b2 doo doo do.
+
+246
+00:31:00,276 --> 00:31:05,036
+But you do? Mm hmm. Mm hmm. Lexi, jump.
+
+247
+00:31:05,186 --> 00:31:08,886
+Shortcut. No, I'm doing this thing. Legacy.
+
+248
+00:31:11,126 --> 00:31:17,276
+About. Uh mm mm mm mm mm mm mm mm mm mm.
+
+249
+00:31:18,326 --> 00:31:29,676
+Whoops. Should probably have done this for fun replaced, but we're almost done anyway.
+
+250
+00:31:40,626 --> 00:31:48,386
+All right. How about now? To eternity is later.
+
+251
+00:31:56,826 --> 00:32:02,166
+Missed another one. Legacy jobless builder was out lambda in 482.
+
+252
+00:32:11,476 --> 00:32:22,136
+And then when taskbar c.p. Uh oh.
+
+253
+00:32:23,336 --> 00:32:27,446
+Do I not save this file? I guess I didn't save this file.
+
+254
+00:32:27,896 --> 00:32:36,996
+All right, try now. This will be worth it, gang.
+
+255
+00:32:37,026 --> 00:32:50,936
+Trust me. Okay.
+
+256
+00:32:52,706 --> 00:33:00,206
+I mean, Taskbar 38. Right.
+
+257
+00:33:00,266 --> 00:33:06,806
+Um. For 11.
+
+258
+00:33:17,906 --> 00:33:26,996
+Do we really need that K legacy? 411.
+
+259
+00:33:26,996 --> 00:33:36,416
+414. Should be legacy.
+
+260
+00:33:41,586 --> 00:33:44,616
+416. And got that one.
+
+261
+00:33:46,356 --> 00:33:55,346
+And then for 11, that's done. It's all done for 16.
+
+262
+00:33:57,416 --> 00:34:03,156
+Yes. Yes.
+
+263
+00:34:04,806 --> 00:34:08,256
+That's all done. Okay. Save. Try again.
+
+264
+00:34:10,236 --> 00:34:15,126
+Okay. Jump lists. Did I have that? Do I still have a job listing here in.
+
+265
+00:34:30,236 --> 00:34:33,536
+Oh, no. The Nasdaq is down 1.10.
+
+266
+00:34:35,096 --> 00:34:41,066
+Everyone freaking out about something. Wonder what that's all about.
+
+267
+00:34:43,106 --> 00:34:46,106
+All right. So the directory built.
+
+268
+00:34:46,736 --> 00:34:50,576
+So now if I just do a normal build, let's see what happens.
+
+269
+00:34:50,906 --> 00:34:56,846
+Now, this might actually take a while. In which case we can switch our attention to something else while we wait for this to build.
+
+270
+00:34:57,326 --> 00:35:03,776
+But I think if all goes well, this should.
+
+271
+00:35:08,596 --> 00:35:12,316
+This should build and that can be our first patch.
+
+272
+00:35:16,696 --> 00:35:23,756
+Okay. So let's let that sit for a little bit. Uh, the other thing I want to do, I want to review a patch that was put in my queue today.
+
+273
+00:35:23,776 --> 00:35:31,786
+This is a pretty straightforward one. And we pump up the fonts so you can see, um.
+
+274
+00:35:35,296 --> 00:35:40,726
+Oh. Fun news. We started to roll out the new migration wizard to people on the release channel, so that's exciting.
+
+275
+00:35:42,316 --> 00:35:49,836
+I started to slowly roll it out to some people, not everybody, but just some people, or just seeing how it behaves in the wild.
+
+276
+00:35:50,616 --> 00:35:58,855
+But that's exciting. Why was that?
+
+277
+00:35:58,856 --> 00:36:09,086
+Why the Moores glue failed. You only build the widgets folder. It was because I had built the rest of the Mozilla Central Directory.
+
+278
+00:36:09,116 --> 00:36:19,916
+Like it was like Mars Glue is probably some part of like X3 or some other directory that it was depended on its like way that things are built.
+
+279
+00:36:20,526 --> 00:36:28,266
+And that's because yeah, it had failed to build the other directories earlier and had built the other directory.
+
+280
+00:36:28,296 --> 00:36:37,226
+So now we're actually doing a legit build. So, you know, it go through its paces and while we wait, we can review this patch.
+
+281
+00:36:38,786 --> 00:36:45,115
+So this patch is something we had reviewed something similar to this a couple of
+
+282
+00:36:45,116 --> 00:36:53,845
+weeks ago where we are putting some of our test manifests in alphabetical order.
+
+283
+00:36:53,846 --> 00:36:57,925
+And this is because the manifests should reflect the actual execution.
+
+284
+00:36:57,926 --> 00:37:01,146
+Order execution is already in alphabetical order.
+
+285
+00:37:01,406 --> 00:37:07,166
+And so changing the manifest to be in alphabetical order just causes them to be reflective of reality.
+
+286
+00:37:07,376 --> 00:37:11,006
+And then we can like add lifting to ensure they stay in alphabetical order.
+
+287
+00:37:12,356 --> 00:37:17,636
+So this looks like a fairly trivial move to keep things in alphabetical order.
+
+288
+00:37:18,356 --> 00:37:22,356
+Let's make sure that our alphabetical ordering stuff is still happy with it.
+
+289
+00:37:22,376 --> 00:37:33,316
+Mark Lint. I think it's called test manifest toolkit modules tests browser browser any and will ask for warnings.
+
+290
+00:37:40,116 --> 00:37:49,546
+One problem. Uh oh. Because it doesn't know what the test manifest run using valid entries are.
+
+291
+00:37:49,546 --> 00:37:56,056
+No letters. Uh, maybe if I just run it on that file, it'll know what I'm talking about.
+
+292
+00:37:56,986 --> 00:38:03,706
+I can't remember what the manifest letters called I thought was test manifest, but maybe it's lint manifest.
+
+293
+00:38:03,826 --> 00:38:07,106
+Maybe that's what it was. Okay.
+
+294
+00:38:07,156 --> 00:38:12,016
+At any rate, we passed our listing, which means that it's in alphabetical order.
+
+295
+00:38:12,676 --> 00:38:17,026
+And, you know, this is a fairly trivial move. Find our highlighter moves up here.
+
+296
+00:38:17,386 --> 00:38:20,746
+The Skip F's are these old Skip F's.
+
+297
+00:38:20,746 --> 00:38:24,285
+Our comment today, we're sticking around, but that's okay. That's out of scope for this patch.
+
+298
+00:38:24,286 --> 00:38:28,306
+It's a little strange, but we just want to put this in alphabetical order. I'm happy about this.
+
+299
+00:38:28,636 --> 00:38:37,636
+I say thank you. It was an error in the build or error.
+
+300
+00:38:37,786 --> 00:38:48,826
+Oh yeah. So I see this sometimes whenever I run lifting it's it's error ring out trying to load some of these android limiters.
+
+301
+00:38:49,306 --> 00:38:55,056
+And that's okay. That's not like a fatal a fatal error or anything.
+
+302
+00:38:55,066 --> 00:39:03,106
+It actually did run the listing and if we wanted verify, we can get the list of limiters with like Maclin was list.
+
+303
+00:39:05,646 --> 00:39:09,516
+Here we go. And what's the name of the test manifest Alpha.
+
+304
+00:39:09,546 --> 00:39:13,476
+Oh, that was the name of the litter test.
+
+305
+00:39:13,476 --> 00:39:20,266
+Manifest Alpha. Good.
+
+306
+00:39:20,446 --> 00:39:24,776
+Okay, so we're in good shape. So I'm going to approve this patch.
+
+307
+00:39:24,786 --> 00:39:28,476
+Thank you so much to the, uh.
+
+308
+00:39:28,766 --> 00:39:34,186
+Thanks. Looks great. Thank you so much to the submitter.
+
+309
+00:39:34,486 --> 00:39:39,856
+Anwar r h sl who's helping us put these things into alphabetical order.
+
+310
+00:39:41,116 --> 00:39:49,606
+And we're out in Milan this. And remind me.
+
+311
+00:39:50,416 --> 00:39:57,466
+I need to figure out what else there is to do here under tool kit.
+
+312
+00:39:59,806 --> 00:40:04,666
+Uh, components. Tool kit, components. All that needs to go in alphabetical order.
+
+313
+00:40:05,206 --> 00:40:12,916
+And there is a patch here that. It's still waiting on a new revision.
+
+314
+00:40:16,176 --> 00:40:20,406
+So wait on that. And then talk at content.
+
+315
+00:40:22,236 --> 00:40:25,776
+Here's another one that's waiting on a revision.
+
+316
+00:40:29,496 --> 00:40:34,956
+Modules is the one we just reviewed. So we're almost we're almost done here.
+
+317
+00:40:35,136 --> 00:40:40,715
+So that's good. That should reduce the number of things I was supposed to be reviewing.
+
+318
+00:40:40,716 --> 00:40:46,056
+Oh, I already did. Automatically. Great. So landing is queued.
+
+319
+00:40:47,676 --> 00:40:51,576
+Next up, let's well, first of all, let's see how we're doing. You're still building under Dom.
+
+320
+00:40:52,686 --> 00:40:56,976
+Well, now, while we're waiting for this to build, we can sort of plan our next steps.
+
+321
+00:40:58,866 --> 00:41:01,746
+So we've actually done this and this.
+
+322
+00:41:02,196 --> 00:41:14,706
+We need to update jump list builder windows jump plus builder to use the legacy windows jump list to use the legacy interface.
+
+323
+00:41:18,306 --> 00:41:23,526
+And then we're going to create a new A.I. jump list builder and implement it using the code we've got.
+
+324
+00:41:26,466 --> 00:41:46,605
+Um. Then they have create jumpers builder in win as I when taskbar use that if pressed to do so oh to use that there will be no preference.
+
+325
+00:41:46,606 --> 00:41:49,816
+It will just be through a different access points or windows jump list will
+
+326
+00:41:49,816 --> 00:41:53,445
+check the pref based on the pref and treat them correctly based on that pref.
+
+327
+00:41:53,446 --> 00:41:56,136
+Yeah. Okay.
+
+328
+00:41:58,226 --> 00:42:10,456
+So the way I see us doing this, by the way, is instead of creating like a bare windows jump list file in a bear or a bear jump list builder files,
+
+329
+00:42:10,466 --> 00:42:16,826
+I'm going to use copy to copy these old legacy files to the new ones,
+
+330
+00:42:16,826 --> 00:42:23,935
+basically naming them back to what they used to be and then emptying them all out basically,
+
+331
+00:42:23,936 --> 00:42:28,316
+and starting to like scrape out a lot of their behaviors and just leave a shell in the.
+
+332
+00:42:28,916 --> 00:42:40,806
+The rationale being, then we get to maintain a lot of the mercurial history, you know, for the file as a as we sort of evolve it.
+
+333
+00:42:40,826 --> 00:42:46,195
+So what we've done is we've taken this file, these old files, jumbles builder files,
+
+334
+00:42:46,196 --> 00:42:51,276
+and we've basically branch them where we've created this legacy set of variants.
+
+335
+00:42:51,296 --> 00:42:57,706
+And I'm going to copy those legacy set variants to do our development on and we can like update those to,
+
+336
+00:42:57,726 --> 00:43:05,875
+to be all fancy and do our new things and then have the Windows Jump List module choose the right one.
+
+337
+00:43:05,876 --> 00:43:11,185
+And when we're happy with the new ones, we can just always choose the right one, remove those ones,
+
+338
+00:43:11,186 --> 00:43:21,896
+and then the new ones will have the history like the, the mercurial history of the, of the old legacy files as well, because they got branched.
+
+339
+00:43:22,856 --> 00:43:26,306
+And the advantage of that is for archeology sake.
+
+340
+00:43:26,756 --> 00:43:34,346
+You know, if, if I had created new files just starting from scratch, then when we remove the old ones,
+
+341
+00:43:34,346 --> 00:43:40,346
+it's much more difficult to sort of like see the lineage of the jump list support in Firefox.
+
+342
+00:43:40,346 --> 00:43:46,616
+Like in the future you might go back through the new mechanism and then you'd hit a wall when I introduced those new files and go like,
+
+343
+00:43:46,616 --> 00:43:52,076
+Well, okay, well, there was jump of support back in 2020, so where was it?
+
+344
+00:43:52,076 --> 00:43:56,246
+And then you'd have to like go find these other files and then work your way up.
+
+345
+00:43:56,246 --> 00:43:59,455
+So this is a way of saving time for any future code.
+
+346
+00:43:59,456 --> 00:44:05,756
+Archeologists, you won't recheck the tests if they still pass with a legacy jump list.
+
+347
+00:44:07,616 --> 00:44:10,766
+So, yeah, we're going to need we're gonna need some people to test this stuff.
+
+348
+00:44:11,786 --> 00:44:19,946
+Like we're going to want I'm going to want to make sure that all this stuff is still working with the legacy back end hasn't changed behavior.
+
+349
+00:44:24,356 --> 00:44:27,686
+Yeah, for sure. For sure. We'll want that.
+
+350
+00:44:29,006 --> 00:44:32,756
+Okay, well, this is going to take longer than I thought just to do this rebuild.
+
+351
+00:44:33,146 --> 00:44:42,956
+So let's move on to something else while we wait for that. Um, let's see, um.
+
+352
+00:44:43,766 --> 00:44:47,666
+Migration Wizard. I just worked on a patch.
+
+353
+00:44:48,056 --> 00:44:53,996
+We just enabled the new migration wizard by default to ride the trains yesterday.
+
+354
+00:44:55,736 --> 00:44:59,186
+Um, so that that patch landed.
+
+355
+00:44:59,546 --> 00:45:02,666
+That's this one profit to ride the train. So that's exciting.
+
+356
+00:45:04,466 --> 00:45:10,046
+And then the summit across is asking, how about profiling the build system?
+
+357
+00:45:11,126 --> 00:45:20,156
+I don't know how to do that, but that'd be interesting. Um, off and on, we've had people work on improving build performance primarily.
+
+358
+00:45:20,156 --> 00:45:26,576
+I think they focused on, you know, improving a lot of that effort.
+
+359
+00:45:26,576 --> 00:45:30,235
+It was like we realized, oh, the rust compiler could be faster.
+
+360
+00:45:30,236 --> 00:45:33,896
+And so we like with upstream patches to make the rust compiler faster.
+
+361
+00:45:35,726 --> 00:45:42,536
+Other times it was like, oh, there are things you can do on your system to improve, build time performance.
+
+362
+00:45:42,686 --> 00:45:50,876
+I wonder if, for example, have I got Windows Defender, uh, doing the right thing here?
+
+363
+00:45:50,876 --> 00:45:54,536
+I should have, like, denial listed. It's access to the.
+
+364
+00:45:58,096 --> 00:46:01,906
+Windows Defender or system settings.
+
+365
+00:46:02,116 --> 00:46:08,416
+I should like. Threat protection and scan options.
+
+366
+00:46:09,766 --> 00:46:16,966
+No. No, no. Wrong app and browser control.
+
+367
+00:46:18,286 --> 00:46:23,476
+Isolate browsing, exploit protection. I've turned a bunch of this stuff off recently.
+
+368
+00:46:24,316 --> 00:46:30,946
+Cause security is the way you can just sort of say like, hey, don't.
+
+369
+00:46:31,186 --> 00:46:36,626
+Don't scan this directory. Don't ever do that. Baba dark mode or.
+
+370
+00:46:38,366 --> 00:46:41,876
+The settings are. What? What are you talking about?
+
+371
+00:46:41,906 --> 00:46:45,766
+I. Yeah.
+
+372
+00:46:46,456 --> 00:46:53,616
+No, that's not what I wanted. No allowed threats.
+
+373
+00:46:53,626 --> 00:46:59,146
+My allowed to have allowed threats. Protection settings.
+
+374
+00:46:59,356 --> 00:47:03,226
+Real time protection is on exclusions.
+
+375
+00:47:05,626 --> 00:47:11,906
+Protect marriage. Yeah.
+
+376
+00:47:11,906 --> 00:47:15,295
+Maybe that's what I want. Uh. Uh. Uh. Debited.
+
+377
+00:47:15,296 --> 00:47:19,526
+Uh. Yes. I have excluded my mozilla folder.
+
+378
+00:47:21,446 --> 00:47:26,246
+Or have I? That's my old username. Oh, my.
+
+379
+00:47:26,666 --> 00:47:31,346
+I wonder if I can make things faster by excluding under.
+
+380
+00:47:34,696 --> 00:47:44,006
+Uh. M Connelly not my Connelly AM Connelly HO.
+
+381
+00:47:44,036 --> 00:47:52,506
+Thanks for pointing this out. This might actually speed things up a great deal.
+
+382
+00:47:55,536 --> 00:48:08,426
+Um. We'll see what happens. But if I wonder if, like, are we going to see, like, is Windows Defender like, eating up a ton of my CPU?
+
+383
+00:48:08,436 --> 00:48:18,396
+Who knows? It's mostly clang and something called the anti-malware service executable has been running.
+
+384
+00:48:18,396 --> 00:48:27,606
+So maybe, maybe this will speed things up a little bit now that I've like denial listed it or allow listed it,
+
+385
+00:48:28,236 --> 00:48:33,306
+it might need to sort of like catch up to the fact that I don't want this folder scanned anymore.
+
+386
+00:48:34,536 --> 00:48:42,366
+I don't know when it checks its settings. At any rate, that's exciting.
+
+387
+00:48:46,216 --> 00:48:49,816
+All right. So this is something I got pinged about that maybe we can take a look at,
+
+388
+00:48:50,026 --> 00:48:55,956
+which is there is a you may have heard me talking about the migration wizard.
+
+389
+00:48:55,966 --> 00:49:02,865
+It's great, it's new, it's fantastic. And one of the variants of the migration wizard is this sort of embedded experience where it sits
+
+390
+00:49:02,866 --> 00:49:10,515
+inside of like the about welcome allows you to like import a bunch of stuff inside of our onboarding.
+
+391
+00:49:10,516 --> 00:49:13,096
+It's nice and slick. It doesn't involve opening up a new window.
+
+392
+00:49:13,966 --> 00:49:22,846
+And there's a variant of onboarding that shows itself inside of what we call a spotlight model.
+
+393
+00:49:24,436 --> 00:49:28,816
+And we want to be able to embed the migration wizard inside of the spotlight model.
+
+394
+00:49:29,776 --> 00:49:33,076
+And apparently it's not working currently.
+
+395
+00:49:33,076 --> 00:49:43,216
+So I want to figure out what's going wrong with that. We can do that on on screen while we wait for this stuff to build in the background.
+
+396
+00:49:48,336 --> 00:49:53,165
+Okay. So we're going to build faster over here and we're going to read our instructions.
+
+397
+00:49:53,166 --> 00:50:00,126
+So we're going to set a pref to enable the new tab devtools to spawn the message, the spotlight message.
+
+398
+00:50:03,126 --> 00:50:06,646
+Migration was just miles from the air, not visible in the spotlight dialog.
+
+399
+00:50:08,416 --> 00:50:12,576
+Okay. Okay. We're going to figure out what's going wrong there.
+
+400
+00:50:12,876 --> 00:50:18,756
+I think that is something I'm quite confident we can sort out before the end of the stream.
+
+401
+00:50:20,316 --> 00:50:23,706
+Allowing threats. It's probably good for cybersecurity experts.
+
+402
+00:50:25,746 --> 00:50:28,866
+I mean. I.
+
+403
+00:50:30,316 --> 00:50:38,826
+I just know that if you are scanning all of the stuff that we're constantly building inside of like the Mozilla Central folder,
+
+404
+00:50:38,856 --> 00:50:46,356
+it you're adding a lot of overhead and I appear to have been doing that for many years now, which thank you for bringing that to my attention.
+
+405
+00:50:46,896 --> 00:50:50,016
+Think of all the time I could have saved. What a cluster.
+
+406
+00:50:50,046 --> 00:50:59,676
+Okay, so mock run. But the good news is, I don't do the majority of my development on Windows, so I haven't really had to deal.
+
+407
+00:51:00,336 --> 00:51:07,596
+This probably hasn't eaten into too much of my time. We're going to go to about config and we're going to set that pref.
+
+408
+00:51:08,136 --> 00:51:12,996
+What was it? This one. True.
+
+409
+00:51:13,446 --> 00:51:20,015
+And we go here. Click on The Wrench. We're going to search for this message.
+
+410
+00:51:20,016 --> 00:51:23,106
+We're going to add below inside screen 88 PIN.
+
+411
+00:51:23,106 --> 00:51:27,246
+Firefox is same level as logo, property tiles type.
+
+412
+00:51:27,456 --> 00:51:39,856
+Okay. So we're going to update the structure. Add blow inside screen with ID pin firefox at same level as logo.
+
+413
+00:51:40,126 --> 00:51:47,116
+So in here I'm going to say tiles hit modify.
+
+414
+00:51:49,546 --> 00:51:53,705
+Okay. Now.
+
+415
+00:51:53,706 --> 00:52:01,246
+Is it supposed to be in there? Screen with embedded migration, message and spotlight.
+
+416
+00:52:01,516 --> 00:52:08,736
+So is the migration wizard in there. See? It is.
+
+417
+00:52:11,276 --> 00:52:14,596
+But it's not doing anything.
+
+418
+00:52:14,606 --> 00:52:18,056
+And why is that? What is the name of this document?
+
+419
+00:52:21,756 --> 00:52:29,266
+Uh, document. I need to get, like, windowed location.
+
+420
+00:52:30,666 --> 00:52:34,776
+Uh, document. Plans document? No, I'm in the wrong place.
+
+421
+00:52:34,806 --> 00:52:46,106
+What is this? Elements document. Browser current your ie spec spotlight dot html.
+
+422
+00:52:46,126 --> 00:52:52,266
+That's why it's not showing up. It's because that needs to be added to the allow list.
+
+423
+00:52:56,726 --> 00:52:59,816
+Wow. What is it? Migration wizard.
+
+424
+00:53:01,466 --> 00:53:09,466
+We need to add it to this allowed list. I'll bet you now if I.
+
+425
+00:53:10,426 --> 00:53:24,676
+We start. Mm.
+
+426
+00:53:25,546 --> 00:53:30,066
+Mm hmm. Mm hmm. And run through those steps again.
+
+427
+00:53:37,776 --> 00:53:41,436
+Oh, we're done. Oh, we're moving along quite nicely there.
+
+428
+00:53:41,916 --> 00:53:59,026
+Very good. We're going to find this and we're going to copy this and put it under logo or at the same level as logo hit modify.
+
+429
+00:54:01,116 --> 00:54:04,786
+Huh. Still not there. You know.
+
+430
+00:54:04,806 --> 00:54:10,936
+Why is that? Okay.
+
+431
+00:54:10,946 --> 00:54:20,366
+We can debug that. We can debug this. Well, Juan, where is it?
+
+432
+00:54:20,386 --> 00:54:25,066
+Where is the migration wizard? Uh.
+
+433
+00:54:26,206 --> 00:54:31,096
+Query selector. Yeah, it exists.
+
+434
+00:54:37,186 --> 00:54:40,306
+Hmm. Okay. Let's try it again. But this time.
+
+435
+00:54:41,326 --> 00:54:46,576
+Oh, wait. I'm going to use the debugger to figure out why it's not getting populated.
+
+436
+00:54:49,096 --> 00:54:58,996
+Migration wizard. Oh. Let's open up a different migration wizard so that we get access to the child.
+
+437
+00:55:01,546 --> 00:55:11,146
+Migration wizard. Child. And when we're gonna go there, we run this again.
+
+438
+00:55:12,226 --> 00:55:22,636
+And, yeah, we don't see the event. This is after saying that the spotlight Earl is allowed to use it.
+
+439
+00:55:26,816 --> 00:55:35,736
+Um. All right, hold on.
+
+440
+00:55:38,816 --> 00:55:42,166
+Uh, Otto. Quest.
+
+441
+00:55:42,786 --> 00:55:49,056
+Quest State. So let's see if that shows up.
+
+442
+00:55:51,156 --> 00:55:58,776
+Hmm. It doesn't. Okay, then that makes more sense.
+
+443
+00:55:59,136 --> 00:56:03,606
+Probably the reason is because it doesn't know what a migration wizard is.
+
+444
+00:56:04,656 --> 00:56:08,106
+The, uh. Oh, we probably haven't loaded the scripts for the.
+
+445
+00:56:08,706 --> 00:56:12,696
+Yeah. Okay. Okay. I know what's going wrong here.
+
+446
+00:56:13,836 --> 00:56:20,246
+So we had part of the problem fixed. The other part of the problem is that spotlight dot html.
+
+447
+00:56:21,086 --> 00:56:24,096
+Like, what is it about? Welcome.
+
+448
+00:56:24,546 --> 00:56:30,966
+HTML needs to load, uh, this and this and this.
+
+449
+00:56:38,726 --> 00:56:42,956
+And we need to get the fluent strings.
+
+450
+00:56:49,386 --> 00:56:56,265
+All right, let's try that. Hey, we're.
+
+451
+00:56:56,266 --> 00:56:59,386
+We're already down at Widget. Good stuff. Gang.
+
+452
+00:57:02,276 --> 00:57:23,106
+We should be done this build shortly. Um.
+
+453
+00:57:29,296 --> 00:57:33,236
+Mm hmm. Put this under here.
+
+454
+00:57:38,746 --> 00:57:42,765
+Okay. Now it's showing up, and now it's not behaving. It's not styled.
+
+455
+00:57:42,766 --> 00:57:48,646
+Right. But like it should work. Now, if I, like, choose to import from safari.
+
+456
+00:57:51,076 --> 00:58:00,076
+Yay! Okay, so that works. So now I just need to supply that information to the reporter.
+
+457
+00:58:04,596 --> 00:58:11,186
+Um. Let's see, what's the best way of doing that?
+
+458
+00:58:14,836 --> 00:58:26,416
+Uh. I peed higher.
+
+459
+00:58:27,916 --> 00:58:40,696
+The problem is that the spot light document both needs to import the migration wizard modules, strings and modules, but also needs to.
+
+460
+00:58:48,506 --> 00:59:01,996
+But also needs to. Be added to the list of your eyes that can use the migration wizard in browser glitter dot systems.
+
+461
+00:59:02,016 --> 00:59:08,706
+Yes. This patch allows the wizard to show up in the spotlight.
+
+462
+00:59:08,706 --> 00:59:18,446
+Mobile for me. I would say that this is a land diff that.
+
+463
+00:59:21,246 --> 00:59:28,866
+Is there a better way of fencing that lang patch? Or maybe I should say Patch.
+
+464
+00:59:31,806 --> 00:59:36,156
+Jazz kind of, uh, diff.
+
+465
+00:59:39,076 --> 00:59:44,536
+Yeah. All right. There we go. Okay.
+
+466
+00:59:45,346 --> 00:59:49,816
+Clear that need info. Booyah, shaka.
+
+467
+00:59:52,036 --> 00:59:55,696
+Oh. Oh. Linking error. Linking error.
+
+468
+00:59:57,256 --> 01:00:03,756
+I thank. Warning, warning, warning, warning, warning, warning.
+
+469
+01:00:03,756 --> 01:00:07,866
+And then over here, fatal error while building static components.
+
+470
+01:00:09,636 --> 01:00:19,116
+Static components CPP Jobless Builder File Not found jump list builder dot CBP.
+
+471
+01:00:19,206 --> 01:00:26,806
+Whereas that also defines static. Well, it's that age.
+
+472
+01:00:28,756 --> 01:00:34,366
+It's built there. Not a. Widget Windows components.
+
+473
+01:00:34,386 --> 01:00:39,696
+I can't. I missed one widget.
+
+474
+01:00:41,436 --> 01:00:46,526
+Windows Components icon. Jump.
+
+475
+01:00:46,856 --> 01:00:49,916
+List building. Contract IDs.
+
+476
+01:00:57,306 --> 01:01:00,486
+Oh, I should make sure. Like, what is using this contract?
+
+477
+01:01:00,726 --> 01:01:05,266
+Let me see. Yeah.
+
+478
+01:01:05,296 --> 01:01:11,156
+Nothing. Okay. Okay.
+
+479
+01:01:11,556 --> 01:01:15,635
+Uh. And, uh. Uh.
+
+480
+01:01:15,636 --> 01:01:22,386
+Is anything using this? Yes.
+
+481
+01:01:22,386 --> 01:01:28,416
+The tests. So I'll have to update those. Um.
+
+482
+01:01:30,276 --> 01:01:37,606
+That's okay. Journalist I'd like to see jumper separator.
+
+483
+01:01:49,656 --> 01:01:58,006
+You're wondering what these files that I'm changing are. These are the this is what we do to, like, sort of statically build.
+
+484
+01:01:58,426 --> 01:02:02,446
+Like register the XP com components and build time kind of.
+
+485
+01:02:04,226 --> 01:02:09,476
+To like construct the list at build time for static registration of these x become components.
+
+486
+01:02:13,396 --> 01:02:23,846
+All right. Where are we? Um, so that's going to do its thing again.
+
+487
+01:02:23,856 --> 01:02:32,526
+That should be fairly straightforward. This builds on the study and then we should update our tests and make sure that the tests still run.
+
+488
+01:02:40,066 --> 01:02:43,546
+Some looks like some warnings inside of a third party library.
+
+489
+01:02:43,846 --> 01:02:58,946
+Okay. Let's see what happens.
+
+490
+01:03:00,986 --> 01:03:11,596
+It's building tests. Building tool kit components as soon as it builds tool kit library, that means its linking linking lib.
+
+491
+01:03:12,796 --> 01:03:20,025
+And that is like the big last step. There are other steps that occur right after it, but it's it's like the big last step.
+
+492
+01:03:20,026 --> 01:03:24,706
+And if we pass linking, that means we're in relatively good shape.
+
+493
+01:03:25,316 --> 01:03:28,426
+Like through static analysis of, like, all of our naming.
+
+494
+01:03:28,576 --> 01:03:32,656
+Okay, here we go to. Okay, library. Here we go. Let's see if it links.
+
+495
+01:03:33,886 --> 01:03:37,996
+Oh, hold on. It's. It built some subdirectories first.
+
+496
+01:03:41,256 --> 01:03:45,186
+Now it's building tool kit, Moore's apps, the updater and stuff.
+
+497
+01:03:45,446 --> 01:03:51,996
+Okay. Almost at the end of the alphabet, it's doing it in alphabetical order. Now we're at X tool kit, x x.
+
+498
+01:03:51,996 --> 01:03:56,496
+Sorry. Okay. Okay. We got past that.
+
+499
+01:03:57,726 --> 01:04:02,676
+Now we're an x because I guess it's going to come back to Tool Kit Library.
+
+500
+01:04:05,796 --> 01:04:09,786
+It's building that Mars glue thing that we needed because it like reached the end of tool kit.
+
+501
+01:04:10,146 --> 01:04:20,736
+And now I think it's going back and building all of the stuff that requires all of the build built like artifacts.
+
+502
+01:04:21,306 --> 01:04:26,106
+And one of those is going to be tool kit library, which is labs all.
+
+503
+01:04:27,096 --> 01:04:35,586
+So let's go here. Oh, easy peasy.
+
+504
+01:04:35,706 --> 01:04:41,046
+I'm trying to figure out if there's anything else we can do in the meantime while we're waiting for this to finish.
+
+505
+01:04:42,816 --> 01:04:49,296
+Something small. Let me just check my list of things to review or things to do.
+
+506
+01:04:57,816 --> 01:05:02,946
+We can review. Yeah, we could review this maybe.
+
+507
+01:05:07,896 --> 01:05:12,666
+Okay. Well.
+
+508
+01:05:17,156 --> 01:05:21,656
+Looks like India found some new research time because I guess I need to go to you have.
+
+509
+01:05:29,186 --> 01:05:47,606
+Oh, I see. I see. I see. Um. Yeah.
+
+510
+01:05:47,626 --> 01:05:53,566
+All right. That works for me. Um.
+
+511
+01:05:57,756 --> 01:06:04,226
+I'd suggest an early return here and not calling get extension list.
+
+512
+01:06:04,296 --> 01:06:08,316
+If a browser key is not equal to Chrome.
+
+513
+01:06:15,206 --> 01:06:21,836
+So that we only run and get extension lists if the other browser happens.
+
+514
+01:06:22,646 --> 01:06:28,696
+The Chrome. Um.
+
+515
+01:06:35,116 --> 01:06:41,136
+Waiting. To add this for when we have the UI.
+
+516
+01:06:41,166 --> 01:07:07,366
+Makes sense. Thanks. Ah equals me with the below change.
+
+517
+01:07:08,686 --> 01:07:12,226
+Presuming our automated tests also pass.
+
+518
+01:07:12,736 --> 01:07:13,726
+Thanks.
+
+519
+01:07:16,856 --> 01:07:25,546
+So what's going on here, if you're curious, is we're looking at ways that we could attempt to migrate extensions from other browsers into Firefox.
+
+520
+01:07:25,556 --> 01:07:30,686
+So if you're we're starting with Chrome, really look at Chrome's extension list for other you know,
+
+521
+01:07:31,046 --> 01:07:36,206
+if you're importing from your other Chrome profile that has extensions installed,
+
+522
+01:07:36,536 --> 01:07:46,586
+we can scan Chrome that profile for those extensions and then have a mapping of Chrome add ons with Firefox extensions, Firefox add ons.
+
+523
+01:07:46,946 --> 01:07:51,386
+We can try and do a 1 to 1 mapping as either Firefox equivalents.
+
+524
+01:07:51,386 --> 01:07:55,195
+And if there are, then we'll install those ones as well.
+
+525
+01:07:55,196 --> 01:07:59,036
+The Firefox equivalents and Firefox is the idea and who knows down the line,
+
+526
+01:07:59,036 --> 01:08:06,056
+maybe we could even like transfer offer the user the ability to transfer settings from add ons and storage and stuff.
+
+527
+01:08:06,446 --> 01:08:16,736
+That might be a little tricky, but we're going to start with just seeing if we can transfer, just install the add ons, just being able, for example,
+
+528
+01:08:16,736 --> 01:08:26,336
+to get the most popular ones like you block or something, install their video, download helper or those sorts of things I think would be helpful.
+
+529
+01:08:27,446 --> 01:08:31,616
+And again, it's like it's it's just going to be another option in the list of things that a user can bring over.
+
+530
+01:08:32,666 --> 01:08:37,286
+They don't have to. They don't want to. Okay.
+
+531
+01:08:37,286 --> 01:08:45,376
+So I reviewed that. There was something else I wanted to review, which was.
+
+532
+01:08:49,236 --> 01:08:58,265
+This one, spirit notes can land first as high as duplicate micro indicator window on Wayland and X11 on WAV, which includes X Wayland in this aspect.
+
+533
+01:08:58,266 --> 01:09:01,386
+No. Excellent. Katie. Excellent on microphone icon as shown in the taskbar.
+
+534
+01:09:01,386 --> 01:09:04,685
+As long as the microphone is used by an app, clicking on it means the microphone scrolling and changes.
+
+535
+01:09:04,686 --> 01:09:08,765
+Mike Fine on Wayland Windows can set themselves always on top with a Firefox duplicate
+
+536
+01:09:08,766 --> 01:09:12,216
+microphone to care when it takes focus from the tab this bug and when clicking into the tab,
+
+537
+01:09:13,956 --> 01:09:18,365
+the duplicate indicator becomes a background window behind Firefox's screen sharing on Wayland,
+
+538
+01:09:18,366 --> 01:09:23,796
+which includes x one on the pipe wire screen sharing indicators red down the taskbar which only appears capturing has been approved in the pipe.
+
+539
+01:09:23,796 --> 01:09:27,185
+Asking chain dialog which opens up screen sharing has been allowed in Firefox clicking
+
+540
+01:09:27,186 --> 01:09:32,226
+on stop screen sharing on X11 pipe wires and using a red dot is shown on the taskbar.
+
+541
+01:09:32,226 --> 01:09:35,406
+So Firefox is screen sharing indicator needs to stay there.
+
+542
+01:09:35,406 --> 01:09:36,396
+I understand.
+
+543
+01:09:36,936 --> 01:09:47,856
+So that's in this bug we're going to basically suppress the indicator the the screen sharing indicator if you're using pipe wire on Wayland,
+
+544
+01:09:48,156 --> 01:09:51,366
+otherwise we'll use the built in one. Okay. That works for me.
+
+545
+01:09:52,986 --> 01:10:05,906
+Uh. Setting testing exception and not use elsewhere.
+
+546
+01:10:05,926 --> 01:10:22,196
+I'm going to say other. Because there are is a suite of existing tests for the new my new web RTC indicator.
+
+547
+01:10:25,086 --> 01:10:34,446
+That. Have been running on Linux.
+
+548
+01:10:35,696 --> 01:10:39,806
+Honestly, at least. Or why?
+
+549
+01:10:48,666 --> 01:10:58,516
+And I should say thanks. Okay.
+
+550
+01:11:04,476 --> 01:11:13,176
+Looks like CPU is mostly wrapped like we're we're waiting on a couple of things to be compiled using the rust compiler.
+
+551
+01:11:14,166 --> 01:11:17,796
+Bind gen we're probably building some bindings.
+
+552
+01:11:21,036 --> 01:11:25,925
+So my CPU has gone down. It's just like we're building.
+
+553
+01:11:25,926 --> 01:11:35,616
+The one thing I don't think that can be sort of paralyzed and some of it's being pulled from our cache.
+
+554
+01:11:35,616 --> 01:11:44,686
+That's nice. I guess some of these were like dependent on one another, which is why it's not being done in parallel.
+
+555
+01:11:45,136 --> 01:11:50,806
+Do you use multiple monitors in your workflow? Do you think an XR headset would ever be used for placement in years to come?
+
+556
+01:11:50,836 --> 01:11:57,676
+Asks Nerd Bloke Well, that's a good question. Yes, I use multiple monitors.
+
+557
+01:11:57,886 --> 01:12:02,536
+This is my primary, the one that's got my mouse on it and my MacBook Pro,
+
+558
+01:12:02,566 --> 01:12:08,746
+which is the machine I'm using it screen is kind of my secondary where I have like for now obvious running
+
+559
+01:12:09,076 --> 01:12:14,235
+and the background chat that I'm reading right now is running on over here on the secondary monitor,
+
+560
+01:12:14,236 --> 01:12:20,836
+which is the screen on my MacBook. And do I think that an XLR headset would ever be useful replacement?
+
+561
+01:12:23,696 --> 01:12:28,136
+Maybe the resolution would have to be pretty good. Pretty good.
+
+562
+01:12:28,136 --> 01:12:36,296
+And I can imagine being annoyed if there's ever any sort of tracking glitch or drift.
+
+563
+01:12:37,166 --> 01:12:42,186
+Um. But who knows?
+
+564
+01:12:42,186 --> 01:12:52,836
+Maybe. Maybe I'm kind of, uh, not super excited to be just surrounded by code on all sides.
+
+565
+01:12:54,426 --> 01:12:59,266
+Uh, but maybe who knows?
+
+566
+01:12:59,346 --> 01:13:04,606
+I don't currently have the, uh, the budget for one of those apple headsets.
+
+567
+01:13:04,626 --> 01:13:08,136
+I don't know if anyone saw the the price there. That was pretty high.
+
+568
+01:13:08,826 --> 01:13:14,255
+Who knows? Maybe someone I. Maybe I'll get to borrow one, one, one time and try it out and maybe I'll change my tune.
+
+569
+01:13:14,256 --> 01:13:19,656
+But for now, I'm not convinced that it's going to have a big benefit for me.
+
+570
+01:13:19,656 --> 01:13:24,425
+But I could be wrong. I'd have to try it. And I don't have one right now.
+
+571
+01:13:24,426 --> 01:13:28,636
+And. And who knows? Um. Yeah.
+
+572
+01:13:28,656 --> 01:13:32,256
+Things slipping, trying to get my attention in my entire field of vision.
+
+573
+01:13:33,156 --> 01:13:38,436
+If, like you, you know, Slack is going off or email Thunderbirds, bhupen, and, you know,
+
+574
+01:13:38,526 --> 01:13:42,426
+I'm getting messages, and it's like I'm fully enveloped in my field of vision.
+
+575
+01:13:42,816 --> 01:13:49,296
+I, I would probably lose my marbles. So the fact that it's all kind of contained within a monitor is helpful.
+
+576
+01:13:50,226 --> 01:13:55,746
+At least I know where all the noise is going to come from this rectangle and I can look away and it's not going to,
+
+577
+01:13:55,746 --> 01:14:01,626
+like, jump out at me from over here. That's helpful. Uh, all right.
+
+578
+01:14:02,076 --> 01:14:04,356
+So that's done. This is actually a big deal.
+
+579
+01:14:04,836 --> 01:14:15,966
+What what is being talked about here, which is the Web RTC Global Indicator, which we've had for a while, enabled by default on Linux.
+
+580
+01:14:15,966 --> 01:14:22,386
+This is just about Linux because we've had that shipped by default on Windows and Mac OS, uh, for years now.
+
+581
+01:14:22,386 --> 01:14:34,566
+But on Linux we didn't do it because we didn't have the integration into the taskbar for things like controlling the microphone, um, and whatnot.
+
+582
+01:14:34,566 --> 01:14:38,976
+And now I think we can just kind of do it.
+
+583
+01:14:40,056 --> 01:14:45,335
+Um, let me, let me just refresh my memory on how the, the indicator works.
+
+584
+01:14:45,336 --> 01:14:54,386
+Web RTC indicator. Apparently part of the reason why we can just go ahead and do it is because the operating system, most Linux distros,
+
+585
+01:14:54,386 --> 01:14:59,935
+major Linux distros will show you that you're using your microphone or your camera, which is all we really wanted to do.
+
+586
+01:14:59,936 --> 01:15:04,406
+That was what we were waiting for. We thought we needed to build the integration to tell the operating system, Hey,
+
+587
+01:15:04,406 --> 01:15:09,566
+Firefox is using the camera or the microphone, but it seems like they're kind of like taking care of it for us.
+
+588
+01:15:12,216 --> 01:15:16,166
+The status bar. Oh, that's good.
+
+589
+01:15:16,186 --> 01:15:21,886
+So, like. Yeah. We'll only do the status bar integration on Mac OS or Windows.
+
+590
+01:15:23,116 --> 01:15:28,816
+Otherwise we can just rely on the. On the operating system doing it.
+
+591
+01:15:29,056 --> 01:15:32,056
+It works for me. Works for me.
+
+592
+01:15:34,676 --> 01:15:40,226
+Um. Hey, Bill.
+
+593
+01:15:40,226 --> 01:15:50,786
+Done, gang. Did it. All right, let's fix up these tests and then and then maybe we'll copy those files and then we'll call it a day.
+
+594
+01:15:51,416 --> 01:15:57,086
+So the tests that I'm thinking of are the where are these tests?
+
+595
+01:15:57,086 --> 01:16:02,256
+The jump list tests. I thought they'd be under windows.
+
+596
+01:16:03,666 --> 01:16:12,046
+Get out. Someone. Put them under a widget. All right. Yeah.
+
+597
+01:16:13,456 --> 01:16:16,486
+Uh. Taskbar. Legacy.
+
+598
+01:16:16,486 --> 01:16:21,016
+I'm going to rename this. I'm going to say this is now legacy.
+
+599
+01:16:24,596 --> 01:16:28,846
+Uh. Skip, if we're on Windows ten.
+
+600
+01:16:28,856 --> 01:16:34,166
+That's interesting, Zo'or. Okay, we're going to rename this file.
+
+601
+01:16:35,336 --> 01:16:43,476
+H.G. Move. Widget Tests Unit tests.
+
+602
+01:16:43,486 --> 01:16:48,576
+Taskbar. When I say widget tests, unit test.
+
+603
+01:16:48,816 --> 01:16:55,326
+Legacy Taskbar. Legacy jump list items such as.
+
+604
+01:16:58,056 --> 01:17:08,466
+Okay. And then in here, we're just going to, uh, put in our favorite word, like I say, for all these.
+
+605
+01:17:14,906 --> 01:17:30,376
+Legacy, legacy, legacy. Hopefully this test will pass.
+
+606
+01:17:30,406 --> 01:17:35,006
+I've never tried running this locally. Post.
+
+607
+01:17:35,126 --> 01:17:42,686
+Your post. Uh.
+
+608
+01:17:52,706 --> 01:17:57,866
+Mm mm mm mm mm. That's legacy generalists.
+
+609
+01:18:00,496 --> 01:18:07,966
+Taskbar create legacy plus builder false seven and up only.
+
+610
+01:18:30,626 --> 01:18:35,036
+All right. Test, I think. Legacy jumpers.
+
+611
+01:18:36,756 --> 01:18:41,516
+No test. Jumpers.
+
+612
+01:18:41,846 --> 01:18:54,356
+Test this. That's like the sea jump.
+
+613
+01:18:55,086 --> 01:19:05,406
+Yeah. Oh, woops.
+
+614
+01:19:05,736 --> 01:19:12,126
+All right, let me close this file because I need to open up this new one, but I can paste in the changes that we made.
+
+615
+01:19:13,296 --> 01:19:17,765
+All right, let's see now if we can run this test after Mark.
+
+616
+01:19:17,766 --> 01:19:31,656
+Build faster for the repackaging. Hmm.
+
+617
+01:19:31,876 --> 01:19:36,976
+Mm hmm. Hmm hmm hmm hmm hmm hmm.
+
+618
+01:19:37,026 --> 01:19:45,316
+Hmm hmm hmm hmm. Scooby doo doo doo doo doo doo doo doo.
+
+619
+01:19:46,636 --> 01:20:03,246
+Mm mm mm mm mm mm mm. Okay.
+
+620
+01:20:04,176 --> 01:20:08,706
+Let's run the test. Mock test widget. Tests unit.
+
+621
+01:20:09,726 --> 01:20:13,916
+Test Taskbar legacy. It happens.
+
+622
+01:20:33,156 --> 01:20:45,766
+Okay. What's going on here?
+
+623
+01:20:50,866 --> 01:20:58,776
+It's taken a little while. It's saying that it can't find the terminal SIGUEN But that's a warning.
+
+624
+01:21:01,936 --> 01:21:10,756
+Okay. But the test doesn't even run.
+
+625
+01:21:12,076 --> 01:21:15,496
+And that's because it's being skipped. And why is that?
+
+626
+01:21:21,416 --> 01:21:27,116
+Intermittent due to this intermittent. It was disabled 11 months ago.
+
+627
+01:21:27,116 --> 01:21:31,286
+So we had temporarily removed these skips to just.
+
+628
+01:21:32,416 --> 01:21:47,486
+From the test. The other thing we need to do is we need to update the references inside of Windows jump lists.
+
+629
+01:21:48,626 --> 01:21:55,996
+The module. We can actually start doing that now. And a side jump.
+
+630
+01:21:57,436 --> 01:22:01,486
+So we're going to change all of these.
+
+631
+01:22:02,716 --> 01:22:20,766
+I legacy. Create a jump list builder.
+
+632
+01:22:20,886 --> 01:22:24,186
+I mean, be create legacy jump list building.
+
+633
+01:22:32,066 --> 01:22:39,326
+We query interfacing that all? No. So not a whole lot of usage of an inside jump list in here.
+
+634
+01:22:39,336 --> 01:22:45,076
+That's interesting. So it passed. So now if I run mock build faster and mock run.
+
+635
+01:22:45,076 --> 01:22:49,566
+Let's see if the if we properly update the.
+
+636
+01:22:51,996 --> 01:23:09,056
+The item in the tray. Tray. And if so, wow.
+
+637
+01:23:09,076 --> 01:23:16,666
+Yeah, that was a long rename, everybody. Meet now.
+
+638
+01:23:18,976 --> 01:23:35,356
+Um. Hey, look, all our stuff.
+
+639
+01:23:35,806 --> 01:23:39,766
+All our stuff. Very good.
+
+640
+01:23:41,236 --> 01:23:51,346
+It all still works. Not super surprising, considering, you know, I can't wait to remove the list.
+
+641
+01:23:51,946 --> 01:23:59,686
+Yeah, it all kind of works. We just did a rename, so nothing too dramatic.
+
+642
+01:24:03,346 --> 01:24:09,286
+But now. Now all we can do is we can save or commit that change.
+
+643
+01:24:09,766 --> 01:24:13,276
+I'm going to revert the test. Change the test file.
+
+644
+01:24:13,276 --> 01:24:26,746
+Change. Because. We need to probably keep those rules to keep our tests from being all silly bug.
+
+645
+01:24:27,046 --> 01:24:30,496
+I don't even remember when those jump.
+
+646
+01:24:32,256 --> 01:24:35,726
+Was it this one? Yeah.
+
+647
+01:24:36,686 --> 01:24:46,466
+We started this four months ago. Rename the old jump windows jump lists mechanisms.
+
+648
+01:24:47,466 --> 01:24:51,166
+To. Legacy Jump List builder.
+
+649
+01:24:52,856 --> 01:24:55,886
+At step one. He did step one.
+
+650
+01:24:58,406 --> 01:25:03,566
+And now we're going to copy Jump List Builder.
+
+651
+01:25:06,536 --> 01:25:10,346
+We're going to copy it. HD copy widget.
+
+652
+01:25:13,566 --> 01:25:17,436
+And A.I. Legacy Jump List Builder.
+
+653
+01:25:18,946 --> 01:25:22,456
+We're going to copy it to NCAI Jump List Builder.
+
+654
+01:25:25,336 --> 01:25:29,576
+So what we're going to do. Yeah.
+
+655
+01:25:31,376 --> 01:25:51,066
+Uh, much simpler interface. And we're going to copy which Windows uh, legacy jump list builder dot H2 Widget.
+
+656
+01:25:52,296 --> 01:25:55,236
+Legacy Jump. We're just going to call it Jump List Builder.
+
+657
+01:25:55,236 --> 01:26:01,026
+So I know this seems backwards, like, wait, didn't you just, didn't you just rename all this stuff?
+
+658
+01:26:01,416 --> 01:26:08,646
+Remember, we're doing this so that we can maintain the history, but I'm just, ah, emptying these new copies out of most of their contents.
+
+659
+01:26:09,276 --> 01:26:14,696
+But we're doing this to maintain the history. Yeah.
+
+660
+01:26:14,816 --> 01:26:20,656
+CPB, CPB. Um.
+
+661
+01:26:22,426 --> 01:26:29,926
+Okay. And then in a side jump list builder ideal.
+
+662
+01:26:34,076 --> 01:26:46,116
+We can remove much of this. We're actually going to, I think, use some of the old code that we had written as inspiration.
+
+663
+01:26:48,816 --> 01:26:51,906
+So what did we. Yeah.
+
+664
+01:26:51,906 --> 01:26:59,076
+Actually, we had it posted up here. What were the changes we had originally made to the Idol file?
+
+665
+01:27:11,466 --> 01:27:15,156
+Yeah. I don't know how much this is still necessary. Now is some of the hackery.
+
+666
+01:27:16,746 --> 01:27:24,586
+Yeah, this hackery. I don't think we need that anymore. But this.
+
+667
+01:27:27,466 --> 01:27:37,906
+Obtain and cache five icon. Uh.
+
+668
+01:27:38,246 --> 01:27:42,716
+That's what I'm going to copy. Over. All right.
+
+669
+01:27:44,246 --> 01:27:55,466
+So most of this we can just get rid of. I'm going to empty this out for now.
+
+670
+01:28:02,216 --> 01:28:09,146
+Think. Who calls set app user model I.D.
+
+671
+01:28:14,936 --> 01:28:25,786
+It's only called by. The Native stuff here.
+
+672
+01:28:33,776 --> 01:28:41,356
+So I don't think we need to expose that. So instead, we're just going to.
+
+673
+01:28:47,556 --> 01:28:50,706
+And what's obtained in cash favs common was that used for.
+
+674
+01:28:56,356 --> 01:29:01,576
+Oh, I see. We needed that for custom descriptions.
+
+675
+01:29:01,576 --> 01:29:09,996
+Okay. All right, let's do that.
+
+676
+01:29:12,526 --> 01:29:25,266
+And then. We need to put this back in the list of idle files, widget files that build XP idle sources.
+
+677
+01:29:32,176 --> 01:29:35,636
+And as I jump this bill builder dot idea.
+
+678
+01:29:41,596 --> 01:29:46,216
+And what else did I say in here?
+
+679
+01:29:46,246 --> 01:29:52,166
+It's like I talked about all these different things. Don't need that.
+
+680
+01:29:52,176 --> 01:29:55,566
+Don't need that. But we need it.
+
+681
+01:29:55,566 --> 01:29:59,036
+Interface. And you or I. Okay.
+
+682
+01:29:59,456 --> 01:30:11,026
+So I think this'll still build once I do this. Let's find out.
+
+683
+01:30:13,126 --> 01:30:18,466
+And we're going to start this is now when we can start bringing stuff over that we had built in the
+
+684
+01:30:18,466 --> 01:30:23,686
+other patch and we can start we have our own little playground to do all that development we don't get.
+
+685
+01:30:23,836 --> 01:30:31,606
+We don't have to deal with the baggage of the old back end, and then we need to have the front end use that preference that we have.
+
+686
+01:30:31,606 --> 01:30:35,896
+We import some of that stuff too, to choose the right back end, so to speak.
+
+687
+01:30:37,606 --> 01:30:41,746
+So that'll be exciting. All right. I think I'm going to call it here.
+
+688
+01:30:43,036 --> 01:30:47,866
+Thank you so much for watching. Episode 327 of The Joy of Coding.
+
+689
+01:30:49,666 --> 01:30:56,206
+Yeah, that was done. Done partially.
+
+690
+01:30:59,246 --> 01:31:05,155
+Implement it using the code we've got. Create a new nested jump list builder.
+
+691
+01:31:05,156 --> 01:31:09,516
+Populate an inside jump list builder. Using the code.
+
+692
+01:31:12,446 --> 01:31:18,196
+Developed in the previous iteration. Okay.
+
+693
+01:31:18,206 --> 01:31:22,286
+So that's what we'll do next time. Who doesn't like it?
+
+694
+01:31:22,686 --> 01:31:26,786
+Your wife. Jesse. Oh, because I need a new I.D.
+
+695
+01:31:27,716 --> 01:31:31,016
+New you I.D.? Uh, all right.
+
+696
+01:31:31,706 --> 01:31:34,796
+I have that anymore. Oh. All right.
+
+697
+01:31:36,266 --> 01:31:47,816
+You I.D. Jane. This is just stuff that the old XP parser expects, but it's not actually used for anything anymore.
+
+698
+01:31:47,816 --> 01:31:54,736
+But we have to put in like a unique I.D. Yeah.
+
+699
+01:31:54,766 --> 01:31:57,316
+Thank you so much for watching. Episode 327 of The Joy of Coding.
+
+700
+01:31:57,316 --> 01:32:02,326
+We can keep going on this stuff next week making some inroads and maybe we can start porting some of that code over.
+
+701
+01:32:02,326 --> 01:32:04,815
+Just a reminder, I'm not doing any of the work outside of the stream.
+
+702
+01:32:04,816 --> 01:32:07,875
+So if you're wondering, like the work for the jungle stuff outside of the stream,
+
+703
+01:32:07,876 --> 01:32:11,566
+if you're wondering why this is happening so slowly, it's because I'm only doing it on the stream.
+
+704
+01:32:13,006 --> 01:32:17,326
+So we'll inch forward again next time. Let me know what you thought.
+
+705
+01:32:17,336 --> 01:32:21,036
+There's a link at the end of the agenda here to rate this episode. I read everything that comes in.
+
+706
+01:32:21,046 --> 01:32:22,785
+You can let me know if you enjoyed the episode.
+
+707
+01:32:22,786 --> 01:32:32,116
+If there's stuff that you want me to to work on or adjust or you know, something you want me to focus on or talk about, let me know.
+
+708
+01:32:32,356 --> 01:32:33,376
+I read everything that comes in.
+
+709
+01:32:33,396 --> 01:32:41,866
+I take your feedback seriously, so go ahead and click on that link and fill in the form and you get to you can I don't know,
+
+710
+01:32:43,006 --> 01:32:46,036
+I've got a photo at the end of the the ratings thing.
+
+711
+01:32:46,036 --> 01:32:52,066
+I don't know if some people don't see it apparently, but I put photos like a unique photo at the end is like a reward for filling out the form.
+
+712
+01:32:52,306 --> 01:32:56,265
+And the most recent. When you get to see my guitar, you can see my my guitar if you want.
+
+713
+01:32:56,266 --> 01:33:00,166
+So go ahead, fill it out just to see the guitar. All right.
+
+714
+01:33:00,406 --> 01:33:03,525
+Well, that's it. Thanks again for watching Episode 327.
+
+715
+01:33:03,526 --> 01:33:07,336
+And we will see you next week. Take care, everybody.
+
+716
+01:33:10,156 --> 01:33:13,366
+Bye bye. Hold on.
+
+717
+01:33:13,456 --> 01:33:22,066
+Where's the music? The music. Here we go. The joy of holding the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

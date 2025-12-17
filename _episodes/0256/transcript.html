@@ -1,0 +1,3197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 256 - July 28, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 256 - July 28, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=491eb672-dd53-4669-9f3e-ad4f017d5743</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=491eb672-dd53-4669-9f3e-ad4f017d5743">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:02,758 --> 00:00:15,498
+More welcome. To the joy oh, hello and welcome to Episode 256 of The Joy of Coding.
+
+2
+00:00:15,498 --> 00:00:21,268
+My name is Mike Connelly. It's so good to see you. We're going to be hacking on some Firefox stuff today, going to be reviewing some code.
+
+3
+00:00:21,268 --> 00:00:25,958
+I'm really happy to have you here. It's July twenty eighth. Twenty twenty one.
+
+4
+00:00:25,958 --> 00:00:31,738
+Let's get into it. Let's let's do this.
+
+5
+00:00:31,738 --> 00:00:39,168
+If this is your first time seeing the stream, welcome, so happy to have you and if you're a returning visitor, welcome back.
+
+6
+00:00:39,168 --> 00:00:46,048
+And I forgot I wanted to answer some questions from previous episode forms.
+
+7
+00:00:46,048 --> 00:00:49,348
+So there were some questions I just taking, you know, to myself.
+
+8
+00:00:49,348 --> 00:00:56,878
+And that is a perfect segue way into mentioning that this agenda that we're looking at is available to you.
+
+9
+00:00:56,878 --> 00:01:03,448
+So if you were watching this on air, Mazola, check out the details section to the left of this video.
+
+10
+00:01:03,448 --> 00:01:06,308
+And if you're watching this on YouTube, check out the video description.
+
+11
+00:01:06,308 --> 00:01:14,158
+And if you're watching this on Twitch, the link in the Twitch chat is let's see here, right here.
+
+12
+00:01:14,158 --> 00:01:20,038
+I'm going to put this in the twitch chat right now.
+
+13
+00:01:20,038 --> 00:01:24,508
+And the agenda is handy. If you want to follow along, click on links for the things that I'm working on.
+
+14
+00:01:24,508 --> 00:01:30,628
+And as I change it, it will slowly synchronize with the with the servers.
+
+15
+00:01:30,628 --> 00:01:34,018
+So eventually, it should say more cleanup bugs over here.
+
+16
+00:01:34,018 --> 00:01:42,878
+I think if I've done my job right. There, yeah, so what are we working on today?
+
+17
+00:01:42,878 --> 00:01:46,298
+Well, before I start, I want to remind you, no plan survives breakfast.
+
+18
+00:01:46,298 --> 00:01:50,888
+In fact, normally I start the stream by saying that and I did it out of order today.
+
+19
+00:01:50,888 --> 00:01:54,488
+And that's OK because, again, no plan survives breakfast.
+
+20
+00:01:54,488 --> 00:01:58,748
+I don't have a really sort of strict script on how things are going to go today.
+
+21
+00:01:58,748 --> 00:02:05,078
+Things might go completely off the rails. I might start reviewing one patch and get completely sidelined or something else.
+
+22
+00:02:05,078 --> 00:02:08,408
+I'll show up on the Internet that I have to take care of and that's OK.
+
+23
+00:02:08,408 --> 00:02:13,388
+What we're trying to do is capture software development, the kind of software development I do in the raw.
+
+24
+00:02:13,388 --> 00:02:20,708
+And that means watching me struggle, watching me deal with interruptions are going down blind alleys or rabbit holes.
+
+25
+00:02:20,708 --> 00:02:26,258
+So if that's your cup of tea, then welcome to the Tea Party,
+
+26
+00:02:26,258 --> 00:02:31,028
+not the not the political party or the band, but it's a good Canadian band, the Tea Party.
+
+27
+00:02:31,028 --> 00:02:36,638
+They're very good. Let's see here. What are we talking about?
+
+28
+00:02:36,638 --> 00:02:41,258
+Yeah, I want to review some code today. So I've got some patches of MICU to review.
+
+29
+00:02:41,258 --> 00:02:48,548
+They are related to clearing up some some sort of Polish issues in the clear recent history dialog,
+
+30
+00:02:48,548 --> 00:02:51,338
+which, if you recall, is something that we were working on.
+
+31
+00:02:51,338 --> 00:02:59,858
+I believe in the last episode and the episode before that, we were supporting that dialog from being sort of a standalone window,
+
+32
+00:02:59,858 --> 00:03:05,858
+a standalone old school dialog to being a more modern, what we call it,
+
+33
+00:03:05,858 --> 00:03:11,618
+a proton style of dialogs to sort of more match the the theme that went in Firefox.
+
+34
+00:03:11,618 --> 00:03:20,708
+Eighty nine. And in doing that, there were some issues with the you know, with the work we did now, like we did good work.
+
+35
+00:03:20,708 --> 00:03:25,328
+But there are some Polish things like that's what happens whenever, you know, you,
+
+36
+00:03:25,328 --> 00:03:29,978
+you, you do this sort of like conversion conversion from one thing to another.
+
+37
+00:03:29,978 --> 00:03:34,518
+Sometimes that conversion, even though you get like ninety five percent of it, the way there,
+
+38
+00:03:34,518 --> 00:03:40,718
+that last five percent is like little Polish issues, little fit and finish issues and they're worth looking at.
+
+39
+00:03:40,718 --> 00:03:47,408
+So in this particular case, this bug was filed because there was like a weird lack of gap,
+
+40
+00:03:47,408 --> 00:03:54,578
+like a sort of an unexpected small gap between these checkboxes and the buttons.
+
+41
+00:03:54,578 --> 00:04:04,868
+And and Heisse took this patch on my this is my colleague Hice, and he writes, I'm not really sure what the where the expected case came from.
+
+42
+00:04:04,868 --> 00:04:08,258
+I think the proton spec is probably a bit more space than in the expected one.
+
+43
+00:04:08,258 --> 00:04:12,698
+But I think the horizontal spacing also looks wrong on windows more wrong than the Mac screenshots.
+
+44
+00:04:12,698 --> 00:04:21,458
+So I'm fixing a bunch of it. So what we might need is my my Windows machine, my Windows VM to to start up.
+
+45
+00:04:21,458 --> 00:04:29,358
+So I'm going to start that up in the background while we're while we're looking at this patch.
+
+46
+00:04:29,358 --> 00:04:39,368
+OK, so let's take a look at the patch that he submitted for review.
+
+47
+00:04:39,368 --> 00:04:46,448
+Improved spacing in the window, Motal clear recent history dialog and for the people who aren't familiar, maybe you weren't watching this last time.
+
+48
+00:04:46,448 --> 00:04:50,498
+This dialog is the one that if you go into the history menu here and you choose clear recent history,
+
+49
+00:04:50,498 --> 00:04:56,798
+it's this one right here and we want to improve the spacing.
+
+50
+00:04:56,798 --> 00:05:08,498
+So let's start. Hang on. I'm just telling telling my VM to update so that we have the most up to date version of the Trigg's.
+
+51
+00:05:08,498 --> 00:05:13,418
+I think it's been a couple of days. Yeah, it's been like half a month. OK, hold on.
+
+52
+00:05:13,418 --> 00:05:22,178
+I'm going to update that while we while we review this patch.
+
+53
+00:05:22,178 --> 00:05:26,408
+I don't want to distract you with it. Or maybe you do want to watch me do it.
+
+54
+00:05:26,408 --> 00:05:37,878
+Maybe that's OK. So what I'm happening what's happening here is I'm updating to Central and I'm going to pull my latest changes from Central.
+
+55
+00:05:37,878 --> 00:05:43,248
+What's conflicting changed now, this is actually this is an interesting thing, I actually don't,
+
+56
+00:05:43,248 --> 00:05:51,768
+I believe, have any conflicting changes if I do a diff, I believe there aren't any conflict o there is.
+
+57
+00:05:51,768 --> 00:05:59,538
+Never mind. Never mind. I thought I was about to show you an interesting issue that recently hit our mercurial using folk.
+
+58
+00:05:59,538 --> 00:06:02,298
+But I don't I don't think that's going to be the case.
+
+59
+00:06:02,298 --> 00:06:09,978
+If this works, then I won't show you that problem, although maybe I will end up showing it to you on the host machine.
+
+60
+00:06:09,978 --> 00:06:13,638
+So yeah, that works properly. Now I'm going to pull from Central.
+
+61
+00:06:13,638 --> 00:06:22,518
+So what this command means is pull the recent commits on Central and then that desu means update to the very top like it's going to do it.
+
+62
+00:06:22,518 --> 00:06:23,718
+Two things in one,
+
+63
+00:06:23,718 --> 00:06:34,598
+pull that stuff and then take me to the very top and then I'm going to have this build in the background while we look at the patch.
+
+64
+00:06:34,598 --> 00:06:42,228
+Scooby Doo. So that's adding file changes. Yeah, there's a lot it was about when was the last time I updated this tree was about July 14th.
+
+65
+00:06:42,228 --> 00:06:51,548
+So this is about two weeks ago. Two weeks ago. So I don't I hadn't used this VM in a while.
+
+66
+00:06:51,548 --> 00:06:57,128
+Plus, I think it was a way for a little bit. OK, so we're going to pull that stuff down.
+
+67
+00:06:57,128 --> 00:07:03,728
+We're going to kick off a build. And while that's building, we can then take a look at what this patch is doing.
+
+68
+00:07:03,728 --> 00:07:10,898
+What I like to do, especially with patches like these where it's not, you know, CSFs.
+
+69
+00:07:10,898 --> 00:07:15,768
+I love the CSFs language like it's so powerful.
+
+70
+00:07:15,768 --> 00:07:20,948
+There are certain things that are non obvious about it. And so especially for things like this that are really visual.
+
+71
+00:07:20,948 --> 00:07:26,108
+What I like to do, I mean, I like to do this with most patches I review, but what I like to do is actually test drive them,
+
+72
+00:07:26,108 --> 00:07:34,238
+you know, apply them, take a look, pull out the measuring stick, you know, make sure that that, you know, the spacing makes sense.
+
+73
+00:07:34,238 --> 00:07:36,668
+And that's what we'll probably be doing today.
+
+74
+00:07:36,668 --> 00:07:42,998
+So this, again, is called improve spacing in the window model, clear recent history, dialog, dialog and improve the spacing.
+
+75
+00:07:42,998 --> 00:07:46,598
+And it actually has a dependency ad title.
+
+76
+00:07:46,598 --> 00:07:52,178
+So maybe we should actually review that one first since that's a dependency.
+
+77
+00:07:52,178 --> 00:07:57,708
+And thankfully, that was the that was the other one I was going to review.
+
+78
+00:07:57,708 --> 00:08:03,338
+So this this works out nicely. I'm just going to reorder. Oh, man.
+
+79
+00:08:03,338 --> 00:08:08,168
+What is wrong with Joplin? Go. It doesn't know about this other [INAUDIBLE].
+
+80
+00:08:08,168 --> 00:08:12,158
+This is like a ghost mystery bullet that is confusing it.
+
+81
+00:08:12,158 --> 00:08:16,928
+More cleanup bugs. There's like some weird white space that's confusing it.
+
+82
+00:08:16,928 --> 00:08:20,558
+There we go. OK, so we're going to review this one first.
+
+83
+00:08:20,558 --> 00:08:27,338
+So this one is add title to clear recent history dialog when opened as a sub dialog in the browser window.
+
+84
+00:08:27,338 --> 00:08:34,928
+And what's this bug about? So if you're not sure why I'm hopping around, just to sort of reiterate,
+
+85
+00:08:34,928 --> 00:08:41,888
+I was going to review one thing and then realized that the patch for it is based on another patch for a different bug.
+
+86
+00:08:41,888 --> 00:08:45,278
+And so if these two are dependent on one another,
+
+87
+00:08:45,278 --> 00:08:52,718
+if there's a dependency from the first one on this one I'm looking at now, then I want to review this one now.
+
+88
+00:08:52,718 --> 00:08:56,948
+So I'm familiar with what it's doing because that's what the other one's building on top of.
+
+89
+00:08:56,948 --> 00:09:02,708
+So that's why I've sort of switched subjects here. But let's let's take a quick look at what this bug is trying to fix.
+
+90
+00:09:02,708 --> 00:09:07,448
+The new redesign clear recent history. Min Window Motal Hi.
+
+91
+00:09:07,448 --> 00:09:11,378
+Lack's title. So the old one had a title.
+
+92
+00:09:11,378 --> 00:09:19,508
+Yeah, that's an old native style window and then the new one does not have a title.
+
+93
+00:09:19,508 --> 00:09:23,288
+The new redesigned clear recent history window. Motal lacks title.
+
+94
+00:09:23,288 --> 00:09:27,848
+This is in contradiction to all the other existing window models. Also, someone actually open this resign model.
+
+95
+00:09:27,848 --> 00:09:29,408
+They might have no idea what it is for.
+
+96
+00:09:29,408 --> 00:09:37,388
+Unfortunately, since I don't have access to the protocol mockups by the Firefox design team, I like the photo ones which were publicly available.
+
+97
+00:09:37,388 --> 00:09:41,228
+I'm not sure if the lack of title is an intentional change or simply an oversight.
+
+98
+00:09:41,228 --> 00:09:50,378
+The new design window model should have a title just like the old one, and that's where this patch comes in.
+
+99
+00:09:50,378 --> 00:09:55,718
+Ad title, OK, and it looks like there's already been some review activity.
+
+100
+00:09:55,718 --> 00:10:04,838
+One of our contributors here who I think is itself is one of the pillars of the theme module.
+
+101
+00:10:04,838 --> 00:10:08,768
+So the look and feel of Firefox desktop was reviewing some of this.
+
+102
+00:10:08,768 --> 00:10:13,508
+There was some conversation here around some chaining operator.
+
+103
+00:10:13,508 --> 00:10:16,868
+And then Heisse himself is commenting. This is kind of yucky.
+
+104
+00:10:16,868 --> 00:10:33,378
+But I think because of this bug, whatever, this bug is a regression where Clearys in history does not open when all windows are closed.
+
+105
+00:10:33,378 --> 00:10:36,798
+But because of this, we'll need to support the dialog opening as an actual window,
+
+106
+00:10:36,798 --> 00:10:41,508
+opening as a model on top of the Firefox's window and opening as a model in press.
+
+107
+00:10:41,508 --> 00:10:50,538
+So although the non oh, OK. So it sounds like clearing the recent history dialog, whenever we did the original report, we forgot a case.
+
+108
+00:10:50,538 --> 00:10:59,028
+And that's what this bugs about. There's a case where we want the window, the dialog to open when all the other browser windows are closed.
+
+109
+00:10:59,028 --> 00:11:02,778
+And this is in particular and Mac OS, because you can actually get in that state where you,
+
+110
+00:11:02,778 --> 00:11:06,348
+like, close all your windows, but the process is still running.
+
+111
+00:11:06,348 --> 00:11:14,388
+That is not something that happens on Windows windows. I mean, for most applications anyways, and at least for Firefox,
+
+112
+00:11:14,388 --> 00:11:19,008
+when you close all the browser windows, you've closed Firefox and the process stops running.
+
+113
+00:11:19,008 --> 00:11:25,908
+But on Mac OS, there is this convention where the application will continue to run even if all of its windows are closed.
+
+114
+00:11:25,908 --> 00:11:31,518
+And that's true for for Firefox. So you'll still see it in the top menu.
+
+115
+00:11:31,518 --> 00:11:39,738
+And you can still access menu items, including the clear recent history from the menu bar menu item and what happens whenever someone chooses
+
+116
+00:11:39,738 --> 00:11:45,438
+that if the conversion that we've done assumes that there's a preexisting browser window to attach to?
+
+117
+00:11:45,438 --> 00:11:59,258
+And the answer is, well, we don't have a good place. And so I believe that's what we're going to have to hopefully support at some point.
+
+118
+00:11:59,258 --> 00:12:08,768
+I wonder if this is something that he is fixing in this bug or if he's going to fix it in the separate regression bug,
+
+119
+00:12:08,768 --> 00:12:18,558
+but let's take a look at what he did. Looks like they had this conversation about the chaining operator.
+
+120
+00:12:18,558 --> 00:12:24,168
+And so we don't have to really worry about that, that chaining operators conversation closed,
+
+121
+00:12:24,168 --> 00:12:33,558
+so the way that Heise is doing this is he's adding a title text to the dialog and then styling it.
+
+122
+00:12:33,558 --> 00:12:42,498
+And then there's this like attribute where you're saying, hey, if I'm in the nonprofit sub dialog,
+
+123
+00:12:42,498 --> 00:12:50,618
+don't show it, don't show the dialog or sorry, don't show the title text.
+
+124
+00:12:50,618 --> 00:12:57,308
+And it looks like check if we're nested in a window and not nested in the press as the preps provide their own title for us,
+
+125
+00:12:57,308 --> 00:13:02,828
+so if we have an embed, better element. Yeah, a browser, that's what we are.
+
+126
+00:13:02,828 --> 00:13:13,868
+The window, if what we're embedded in is itself hosted in a browser, which is true if you're loaded in like an iFrame check to see.
+
+127
+00:13:13,868 --> 00:13:30,658
+Oh, man. Yeah, I can understand why he is saying that this is kind of yucky, you have to he's checking the I.D. of the IV frames.
+
+128
+00:13:30,658 --> 00:13:35,848
+Ephram's document element, seeing if it matches preferences route.
+
+129
+00:13:35,848 --> 00:13:43,348
+So then we will set this attribute to true and then update Title four changes, OK, and update Title four changes.
+
+130
+00:13:43,348 --> 00:13:51,218
+What it does is it says that, hey, a title changed.
+
+131
+00:13:51,218 --> 00:14:05,078
+Also, let's add a mutation observer that makes it so that if the title ever changes.
+
+132
+00:14:05,078 --> 00:14:14,418
+Then we'll run title changed, which is to find the title text.
+
+133
+00:14:14,418 --> 00:14:21,838
+I see, so if somehow if the document that were in.
+
+134
+00:14:21,838 --> 00:14:35,048
+If the title changes on if the attribute is that how it works, there's a title on the document element.
+
+135
+00:14:35,048 --> 00:14:45,368
+OK, OK, just serve refreshing my memory here on how all this works, tentatively, this makes sense.
+
+136
+00:14:45,368 --> 00:14:55,298
+I'm wondering if there's a better way of doing this, if there's a better way of knowing that we are in.
+
+137
+00:14:55,298 --> 00:15:00,248
+If there's a way of knowing that we're embedded and and and not in press, in fact,
+
+138
+00:15:00,248 --> 00:15:23,878
+I seem to recall that there was some code that I ended up removing in here that might that might do the job.
+
+139
+00:15:23,878 --> 00:15:44,048
+Dialog has attributes, sub dialog.
+
+140
+00:15:44,048 --> 00:15:53,288
+OK, could we do that instead, so we'd like check to see if we're a sub dialog where the case is again opening as an actual window,
+
+141
+00:15:53,288 --> 00:15:58,658
+that's something that we don't do anymore. A model on top of Firefox's window.
+
+142
+00:15:58,658 --> 00:16:05,768
+No problem. Got that opening as a model in press. So that's the sub dialog case.
+
+143
+00:16:05,768 --> 00:16:18,888
+And what he's doing is he's checking to see if we're nested in a window and not nested in the press.
+
+144
+00:16:18,888 --> 00:16:26,178
+Right. That's this case, actually, we're loaded in a sub dialog when we use the new mechanism.
+
+145
+00:16:26,178 --> 00:16:40,098
+OK. Now, do we have the sub dialog attribute whenever we.
+
+146
+00:16:40,098 --> 00:16:43,668
+Like, if this is stuff that was being used for preferences before it, does,
+
+147
+00:16:43,668 --> 00:16:47,448
+the sub dialog attribute actually signal that we're loaded inside of preferences?
+
+148
+00:16:47,448 --> 00:16:53,958
+That's the one thing that's something I want to check. So let's pull down this patch and apply it and find out.
+
+149
+00:16:53,958 --> 00:16:59,388
+Because the first that thing that I sort of pointed out there is the first thing that I would like.
+
+150
+00:16:59,388 --> 00:17:04,728
+That's the first smell here. I'm also sorry, let me pump up the phone so you can see what I'm doing.
+
+151
+00:17:04,728 --> 00:17:08,418
+I'm also going to say so I'm pulling down this patch.
+
+152
+00:17:08,418 --> 00:17:15,498
+That's the idea of the patch and this is the tool. Masab, I'm going to tell it, OK, we're going to patch this is the ID, I can say apply to here,
+
+153
+00:17:15,498 --> 00:17:20,118
+rather than trying to replay the patch onto the revision that he originally wrote it on.
+
+154
+00:17:20,118 --> 00:17:23,898
+I'm saying like, OK, I've applied to here and I'm also going to tell it to skip dependencies.
+
+155
+00:17:23,898 --> 00:17:28,398
+I don't want to apply any of the parent or child. Woops, I spelled that wrong.
+
+156
+00:17:28,398 --> 00:17:36,938
+I don't want to apply to the parent or child commits. Just this one commit.
+
+157
+00:17:36,938 --> 00:17:55,628
+But. Yeah, the clearest in the history dialogue's kind of special because it's loaded in all of these different ways, I guess.
+
+158
+00:17:55,628 --> 00:18:00,028
+But I seem to recall us never doing this whenever we were.
+
+159
+00:18:00,028 --> 00:18:06,848
+Oh, it failed to apply. So maybe I knew I do need to.
+
+160
+00:18:06,848 --> 00:18:10,928
+Oh did I. I pulled the wrong one down. Nine eight four.
+
+161
+00:18:10,928 --> 00:18:20,318
+No. Ninety four is right. One two oh nine eight four.
+
+162
+00:18:20,318 --> 00:18:25,868
+Well, it's upset about it, so I'm going to I guess I'll I'll trust him to rebase it.
+
+163
+00:18:25,868 --> 00:18:26,738
+He knows what he's doing.
+
+164
+00:18:26,738 --> 00:18:33,128
+So what I'll do is instead of saying apply to here like I did, I'll I'll actually apply it on top of the revision that he wrote it on,
+
+165
+00:18:33,128 --> 00:18:41,498
+because that way I know I don't have to worry about it, so I'll just get rid of apply to here.
+
+166
+00:18:41,498 --> 00:18:49,268
+And what Miles will do is it will check out the revision that he wrote the patch on.
+
+167
+00:18:49,268 --> 00:18:54,758
+There's an unknown revision, unknown dependency here.
+
+168
+00:18:54,758 --> 00:19:04,438
+So he may have had something else on the stack. Um hmm.
+
+169
+00:19:04,438 --> 00:19:16,138
+OK, well, I guess the the only thing we can do is try to just sort of hand apply this patch, which I think should be possible.
+
+170
+00:19:16,138 --> 00:19:22,168
+So, yeah, we hit some we hit some conflicts, but let's try and clean those up.
+
+171
+00:19:22,168 --> 00:19:28,008
+So this is what didn't apply and let's open up sanitized dialog.
+
+172
+00:19:28,008 --> 00:19:40,858
+Yes. And let's see if we can find this line in knitted spelled it wrong, but that's OK.
+
+173
+00:19:40,858 --> 00:19:45,118
+Check if we're. Oh no, it's did this stuff already.
+
+174
+00:19:45,118 --> 00:19:49,978
+Land preferences route. Because it's here. Had I.
+
+175
+00:19:49,978 --> 00:19:59,878
+OK, hold on a second. Is the reason that this isn't applying cleanly because I had already applied the patch folks.
+
+176
+00:19:59,878 --> 00:20:08,608
+I think that might be the situation here. I think before this episode started, I'd already applied the patch and now I'm trying to apply it again.
+
+177
+00:20:08,608 --> 00:20:13,418
+And that's what. Yeah, that's exactly what's happening here. So I'm very embarrassed.
+
+178
+00:20:13,418 --> 00:20:25,438
+I'm sorry for wasting your time. Let's build this thing. Let's take a look.
+
+179
+00:20:25,438 --> 00:20:43,968
+OK, Mark, run. OK, so the dialog is this one, and what I'm going to do before I open it is I'm going to open up the browser toolbox.
+
+180
+00:20:43,968 --> 00:20:50,058
+There's actually a really great keyboard shortcut. I used to access it through the menu here, but there's a keyboard shortcut on Mac OS.
+
+181
+00:20:50,058 --> 00:20:54,858
+It's command, I believe it's.
+
+182
+00:20:54,858 --> 00:21:00,468
+Yeah, command option shift. I will do it.
+
+183
+00:21:00,468 --> 00:21:08,488
+That's presuming you have the toolbox enabled. OK, and what I'm going to do is I'm going to say, well, you know what,
+
+184
+00:21:08,488 --> 00:21:12,808
+I'm actually going to I'm going to open it once because a lot of these scripts are lazy, loaded.
+
+185
+00:21:12,808 --> 00:21:16,258
+So, I mean, I saw the title there, which is nice.
+
+186
+00:21:16,258 --> 00:21:26,608
+I saw the title here. Very good. What I'm going to do now is I'm going to tell it to go to sanitized dialog.
+
+187
+00:21:26,608 --> 00:21:30,778
+That is, I think the debuggers currently confused.
+
+188
+00:21:30,778 --> 00:21:35,008
+It doesn't know about any scripts. I'm going to reload the debugger.
+
+189
+00:21:35,008 --> 00:21:39,838
+Sometimes I can happen where our debuggers confused. There we go.
+
+190
+00:21:39,838 --> 00:21:49,158
+OK, sanitized dialog. And what I want to do is.
+
+191
+00:21:49,158 --> 00:21:58,788
+I think I'm going to break here, so let's open this dialog, we've hit our break point.
+
+192
+00:21:58,788 --> 00:22:07,998
+Let's go next. What I want to know is, does this dialog has an attribute, some dialog?
+
+193
+00:22:07,998 --> 00:22:13,218
+It does. OK, let's take a look with this dialog is.
+
+194
+00:22:13,218 --> 00:22:19,428
+Yeah, some dialog. So we can't use that old mechanism that we were using before.
+
+195
+00:22:19,428 --> 00:22:25,788
+I guess I had removed it because it's assumption that it was being open in preferences is no longer true.
+
+196
+00:22:25,788 --> 00:22:30,558
+So then the other thing I wanted to look at is whether or not there are other places where we have
+
+197
+00:22:30,558 --> 00:22:39,558
+multiple like we have a dialog that opens both here in the browser window as well as over in preferences,
+
+198
+00:22:39,558 --> 00:22:45,588
+because I want to see if there's like prior art or prior prior best practices.
+
+199
+00:22:45,588 --> 00:22:53,838
+I guess, you know, stuff that's already landed and we felt comfortable with a preexisting pattern that we could use.
+
+200
+00:22:53,838 --> 00:23:00,198
+And if there isn't, well, then we'll just give a quick thing to see if we can think of anything that's a little less brittle than this.
+
+201
+00:23:00,198 --> 00:23:09,268
+And if not, then I guess we'll go with this. But let's start by seeing if there is a preexisting pattern.
+
+202
+00:23:09,268 --> 00:23:17,608
+First of all, is anyone actually using this pattern, maybe this is a preexisting pattern, so let's see if anyone is.
+
+203
+00:23:17,608 --> 00:23:27,028
+No, I don't see it being referenced in the script. And if we take a look at preferences.
+
+204
+00:23:27,028 --> 00:23:41,358
+There's going to be some dialogs in here. And new container dialog, some of these dialogs only open up in here, and that's not what I want.
+
+205
+00:23:41,358 --> 00:23:49,898
+What I want is to see dialogs where we might open them both here and anchored to the main window.
+
+206
+00:23:49,898 --> 00:23:57,498
+So I'm just kind of hunting around, um.
+
+207
+00:23:57,498 --> 00:24:09,228
+No, that's not a dialog anymore. I don't think we bring these up either.
+
+208
+00:24:09,228 --> 00:24:21,078
+No. Certificates, maybe certificate manager, I can see this one being opened up if you, for example,
+
+209
+00:24:21,078 --> 00:24:32,708
+go to if we go here and we say, hey, give me more information, tell me about the certificate.
+
+210
+00:24:32,708 --> 00:24:42,698
+Do we have access to the dialog here, certificate manager?
+
+211
+00:24:42,698 --> 00:24:54,468
+Maybe not. No, no.
+
+212
+00:24:54,468 --> 00:24:58,358
+Hmm, so there might not be a whole lot of examples here.
+
+213
+00:24:58,358 --> 00:25:08,438
+I want to just check a couple more things. So preferences, I think it's like Jesus dialog is the yeah.
+
+214
+00:25:08,438 --> 00:25:18,458
+That's the main like API for opening stuff in a dialog, in preferences.
+
+215
+00:25:18,458 --> 00:25:21,848
+And so I'm going to check to see if there are any of these that are opened elsewhere.
+
+216
+00:25:21,848 --> 00:25:31,388
+Well, obviously, if they're opened under preferences, like if they're hosted under preferences, they're not going to be opened elsewhere.
+
+217
+00:25:31,388 --> 00:25:35,918
+So we're going to look for something that's not hosted under preferences at all.
+
+218
+00:25:35,918 --> 00:25:39,158
+Looks like it is. This is all the same file. I can just see.
+
+219
+00:25:39,158 --> 00:25:49,868
+I just do this some dialog, open preferences, preferences, preferences, preferences, preferences.
+
+220
+00:25:49,868 --> 00:25:54,798
+Here's one the history of installed updates.
+
+221
+00:25:54,798 --> 00:26:04,398
+Do we ever open this elsewhere? In about support, it looks like.
+
+222
+00:26:04,398 --> 00:26:14,388
+So here, let me do this over here. So update history opens this dialog.
+
+223
+00:26:14,388 --> 00:26:28,438
+OK, now my question now is, does history html, this dialog, does it know how to behave differently based on what context it's in?
+
+224
+00:26:28,438 --> 00:26:40,028
+Um. Let's find that file. There's a script history.
+
+225
+00:26:40,028 --> 00:26:47,368
+OK, does it know, does it care?
+
+226
+00:26:47,368 --> 00:26:58,408
+It doesn't look like it. All right, let's move on to another one, um, Epicor, a high.
+
+227
+00:26:58,408 --> 00:27:06,688
+At Epicor, that one. OK, this is a great example of one Epicor, so whenever you have a.
+
+228
+00:27:06,688 --> 00:27:13,088
+Whenever you are. What's it where where is apps, apps?
+
+229
+00:27:13,088 --> 00:27:22,758
+I think it's under general. You know, you're choosing what application to open for a particular file type?
+
+230
+00:27:22,758 --> 00:27:27,338
+Use other. And maybe that's not the right one.
+
+231
+00:27:27,338 --> 00:27:36,058
+What was that application details? Yeah, this thing, this app picker, I believe this is what's called app Epicor.
+
+232
+00:27:36,058 --> 00:27:45,778
+Oops. Um. How does this one work, first of all, is this at Picker?
+
+233
+00:27:45,778 --> 00:27:51,968
+Dialog box browser where you host it at.
+
+234
+00:27:51,968 --> 00:27:58,068
+What's your address? Woops, I lost it, I lost it.
+
+235
+00:27:58,068 --> 00:28:04,458
+Let's try that again. OK, let's get the.
+
+236
+00:28:04,458 --> 00:28:09,498
+Browser, and then let's see what its current you are.
+
+237
+00:28:09,498 --> 00:28:17,388
+Is it OK application manager and that is under preferences, so that's not what I want.
+
+238
+00:28:17,388 --> 00:28:22,758
+What is App Picker? Maybe I should just open it manually.
+
+239
+00:28:22,758 --> 00:28:28,698
+Can I just do that here, Gece of dialog. Do I have that? I do.
+
+240
+00:28:28,698 --> 00:28:45,618
+Then close and call back and Pyramus. Hmm, oh, this is only if you are on windows, that might explain it.
+
+241
+00:28:45,618 --> 00:29:02,358
+Well, at any rate, let's see if this thing behaves differently, depending on what context it's in.
+
+242
+00:29:02,358 --> 00:29:17,058
+Um. It doesn't look like it.
+
+243
+00:29:17,058 --> 00:29:31,078
+What triggers this Epicor? Um.
+
+244
+00:29:31,078 --> 00:29:37,978
+I have pictures whenever you do choose app on Windows.
+
+245
+00:29:37,978 --> 00:29:48,148
+OK, let's try it. I have to shut this one down.
+
+246
+00:29:48,148 --> 00:29:57,668
+I may have confused it by shutting that one down. Yeah, hold up.
+
+247
+00:29:57,668 --> 00:30:14,628
+Or we're just super crash right now. Um.
+
+248
+00:30:14,628 --> 00:30:29,958
+Mark Klauber, oh, yeah, my claver Mocksville run, let's try destroying that that profile, building a new one and running again, huh?
+
+249
+00:30:29,958 --> 00:30:38,358
+OK, well I don't think at Picador [INAUDIBLE] behaves differently either, but I'm curious to know what it does about its title.
+
+250
+00:30:38,358 --> 00:30:43,398
+Um, let's keep looking. No, no.
+
+251
+00:30:43,398 --> 00:30:49,488
+Have I worked my way back to the beginning again. I think I have. Yeah I have.
+
+252
+00:30:49,488 --> 00:30:54,558
+So if at Picker doesn't have a title then.
+
+253
+00:30:54,558 --> 00:31:00,028
+We are doing something new. I think we've got ourselves a.
+
+254
+00:31:00,028 --> 00:31:06,418
+Well, that was just under main maybe maybe privacy. Let's let's check a couple of other areas.
+
+255
+00:31:06,418 --> 00:31:11,788
+Satie's that's that's the one we were just. This is the one we care about.
+
+256
+00:31:11,788 --> 00:31:18,958
+So we can't look at that one. Um, preferences, preferences, preferences, preferences, preferences, preferences,
+
+257
+00:31:18,958 --> 00:31:25,618
+preferences, preferences, preferences, preferences, preferences, remove master password.
+
+258
+00:31:25,618 --> 00:31:35,288
+Does this one ever get called by anything else? No, it does not.
+
+259
+00:31:35,288 --> 00:31:40,518
+OK. And I think that was the last one here, right?
+
+260
+00:31:40,518 --> 00:31:53,578
+Oh, no, certa manager TML. Is that one open by anyone else?
+
+261
+00:31:53,578 --> 00:32:01,848
+Nope. What about, um, device manager?
+
+262
+00:32:01,848 --> 00:32:13,448
+Salon opened by anyone else. Nope, about, uh.
+
+263
+00:32:13,448 --> 00:32:27,348
+Hmm. OK, well, I don't think we're going to have any luck here, so let's get out of privacy and we'll go to the next one search.
+
+264
+00:32:27,348 --> 00:32:33,958
+Also, preferences, no good sync. Preferences.
+
+265
+00:32:33,958 --> 00:32:38,978
+Preferences no good. And I think that's all she wrote.
+
+266
+00:32:38,978 --> 00:32:44,578
+So now I'm starting to get more and more convinced that.
+
+267
+00:32:44,578 --> 00:32:50,208
+That what we're doing here is kind of like cutting edge state of the art, that's why we don't have any preexisting patterns.
+
+268
+00:32:50,208 --> 00:32:56,238
+So we're actually going to be establishing a pattern that this excuse me ends up being more of a thing.
+
+269
+00:32:56,238 --> 00:33:01,818
+So let's say I choose an application picker.
+
+270
+00:33:01,818 --> 00:33:12,098
+Is this the dialog? Is this the app pick dialog that's actually open up the inspector?
+
+271
+00:33:12,098 --> 00:33:15,918
+How do I do that on Windows control. I know. Control shift.
+
+272
+00:33:15,918 --> 00:33:23,418
+I yeah. And use other this thing.
+
+273
+00:33:23,418 --> 00:33:30,968
+What are you? You are a browser and you are in.
+
+274
+00:33:30,968 --> 00:33:40,898
+Epicor, OK, so this one has a title. This one has a title and is it used elsewhere at Picador HTML?
+
+275
+00:33:40,898 --> 00:33:50,738
+Yes. And the helper. Help or dialog, so like if I try and choose an app.
+
+276
+00:33:50,738 --> 00:33:59,958
+On Windows. This will come up, this can come up if I choose to have the app users.
+
+277
+00:33:59,958 --> 00:34:06,148
+So let's let's see here. Let's what's like Zoom links?
+
+278
+00:34:06,148 --> 00:34:12,138
+Let me find a good zoom link room link.
+
+279
+00:34:12,138 --> 00:34:18,908
+Um. The public publican's.
+
+280
+00:34:18,908 --> 00:34:29,268
+Or even better, let's let's go to I'll make it so that male to.
+
+281
+00:34:29,268 --> 00:34:37,908
+We'll always ask, and I'm just going to go to a male to link, and I think that should bring it up.
+
+282
+00:34:37,908 --> 00:34:44,728
+So. OK, so now if I say choose.
+
+283
+00:34:44,728 --> 00:34:54,388
+Oh, no, that's not what I wanted to choose other application, what causes this thing to open?
+
+284
+00:34:54,388 --> 00:35:01,668
+If. There's a bunch of like.
+
+285
+00:35:01,668 --> 00:35:06,818
+OK, foreign windows, Kagan's lack of extension is no exception. We're trying to open.
+
+286
+00:35:06,818 --> 00:35:17,058
+There's no tape stream and do all the stuff we're starting, assemblies, programs, object, then we're going to open up this dialog at Picador TML.
+
+287
+00:35:17,058 --> 00:35:24,008
+That's only if we're on windows. Is that what we're doing here and help Harrap dialog?
+
+288
+00:35:24,008 --> 00:35:35,948
+Let's find out. Let's find out. Let's open up the browser toolbox.
+
+289
+00:35:35,948 --> 00:35:45,308
+Helper. No, I don't think so, because it would be in memory, so we didn't we didn't open this helper app dialog.
+
+290
+00:35:45,308 --> 00:35:54,678
+Jassim, who opens this? Oh, it's when we're downloading a file, when we're downloading a file that we don't know what to do with.
+
+291
+00:35:54,678 --> 00:35:59,498
+Yes. OK, so we need to find a download.
+
+292
+00:35:59,498 --> 00:36:06,728
+So, um, test download files.
+
+293
+00:36:06,728 --> 00:36:17,708
+I believe we just want something small. Oh, here's an ad, OK, open with other.
+
+294
+00:36:17,708 --> 00:36:27,848
+OK, so this is a nade interesting, this is a native window, not a proton style window.
+
+295
+00:36:27,848 --> 00:36:34,058
+And I guess that's the difference is like the reason we're doing it this way is because,
+
+296
+00:36:34,058 --> 00:36:39,458
+like the rest of the dialog window, like the download window is also still native and we haven't converted it yet.
+
+297
+00:36:39,458 --> 00:36:50,048
+So why would you have converted this one, especially since this would be rendering over top of a if like if we'd made this proton themed window model,
+
+298
+00:36:50,048 --> 00:36:55,928
+this would be rendering over like underneath this one,
+
+299
+00:36:55,928 --> 00:37:02,868
+which is weird because this is the one that's being like that's most recently asking you a question.
+
+300
+00:37:02,868 --> 00:37:10,748
+OK, I think I'm going to give up on trying to find a preexisting art, I think we've done a good search.
+
+301
+00:37:10,748 --> 00:37:19,538
+Now, what's he doing? So we're cutting new ground here, what he's doing is he's checking to see if we're embedding.
+
+302
+00:37:19,538 --> 00:37:35,348
+Is it I'll ask here, is it sufficient to use to check this dialog has attribute some dialog.
+
+303
+00:37:35,348 --> 00:37:51,778
+Rather than seeing if where we have a better element, there was prior art during that.
+
+304
+00:37:51,778 --> 00:38:09,898
+And here. So we check to see if we're a sub dialog and then we want to make sure that we're not the preferences window.
+
+305
+00:38:09,898 --> 00:38:25,828
+So how is this one open? How is sanitize? Was it sanitize dialogs, which is open via sanitized HTML, I believe?
+
+306
+00:38:25,828 --> 00:38:38,388
+The. Yeah, how is this loaded?
+
+307
+00:38:38,388 --> 00:38:49,048
+We say it's not a sizable. In its features.
+
+308
+00:38:49,048 --> 00:39:01,918
+Is the new one sizable? No.
+
+309
+00:39:01,918 --> 00:39:12,678
+And I wonder if we can do something here, we're able to pass some arguments, for example, um,
+
+310
+00:39:12,678 --> 00:39:29,498
+and that all ends up being like plumbed through this sub dialoged stuff features what happens to these features, preload, dialog, open features.
+
+311
+00:39:29,498 --> 00:39:34,378
+If features, then the dialog features include those things,
+
+312
+00:39:34,378 --> 00:39:45,358
+then we say open dialog and we add features and then there are also these additional programs programs.
+
+313
+00:39:45,358 --> 00:39:57,998
+Perens. Prams is coming at us from.
+
+314
+00:39:57,998 --> 00:40:08,528
+Anything else that we pass to open as additional programs?
+
+315
+00:40:08,528 --> 00:40:20,318
+And where does that get plumbed to? Stay open and what do we do with them?
+
+316
+00:40:20,318 --> 00:40:25,268
+We just pass them along, I think we just like.
+
+317
+00:40:25,268 --> 00:40:36,308
+We say open dialog and we pass those programs along open dialog, and where are the arguments to open dialog?
+
+318
+00:40:36,308 --> 00:40:41,678
+Is that window not open dialog?
+
+319
+00:40:41,678 --> 00:40:59,888
+Where where do we define that? That's something that's defined and web idol, yeah, I think it is extra arguments and who handles that open dialog?
+
+320
+00:40:59,888 --> 00:41:05,198
+Global window, inner forwards probably to global into outer arguments opens.
+
+321
+00:41:05,198 --> 00:41:13,718
+Oh, sorry. Rather it goes to open internal. Extra arguments is an eye.
+
+322
+00:41:13,718 --> 00:41:29,818
+It's expecting something Neci supports. And what's it doing with them?
+
+323
+00:41:29,818 --> 00:41:40,588
+And passes them to open window to. Oh, boy, we're going deep strapon, we're going deep into arguments.
+
+324
+00:41:40,588 --> 00:41:52,908
+Virts ARGs into an array and Aragvi is being passed to open window internal.
+
+325
+00:41:52,908 --> 00:42:02,648
+RV, RV, we say set, oh, I see.
+
+326
+00:42:02,648 --> 00:42:18,208
+I see. So what's happening is there is a there's a global object, I'm not sure if this is something that yeah, I don't think websites get it,
+
+327
+00:42:18,208 --> 00:42:28,868
+but whenever you open up dialogs or windows, you can pass stuff to them and then access them in the open window using window arguments.
+
+328
+00:42:28,868 --> 00:42:41,768
+And I wonder if we have any of our dialogs using them dialog arguments, yeah, handler info programs.
+
+329
+00:42:41,768 --> 00:42:50,528
+So we've got like preexisting art here of passing stuff through programs like site data remove.
+
+330
+00:42:50,528 --> 00:43:04,958
+This is also a way of getting stuff out is you can like send out programs through these arguments, I think.
+
+331
+00:43:04,958 --> 00:43:14,158
+So let's let's see if we can use this as an example and then we can maybe put together a plan for.
+
+332
+00:43:14,158 --> 00:43:22,808
+An alternative way of doing what he is doing, that's maybe a little more opt in args, so you just passed the structure, OK?
+
+333
+00:43:22,808 --> 00:43:33,978
+OK. OK, here's what I'm thinking, um.
+
+334
+00:43:33,978 --> 00:43:47,448
+I'm worried that this might be a bit brittle, having the dialog, I know about preferences like this because,
+
+335
+00:43:47,448 --> 00:43:53,298
+yeah, what we're doing is we're almost we're kind of tightly coupling these concepts together.
+
+336
+00:43:53,298 --> 00:44:01,728
+You know, this dialog suddenly knows very concretely that it might be within the preferences document.
+
+337
+00:44:01,728 --> 00:44:07,608
+And the less you can sort of have these concrete notions, usually the better.
+
+338
+00:44:07,608 --> 00:44:09,708
+That's that's from my experience anyways.
+
+339
+00:44:09,708 --> 00:44:17,478
+Like this sort of tight coupling of concepts can burn you down the line, especially when you have a thing that can exist in multiple contexts.
+
+340
+00:44:17,478 --> 00:44:25,068
+So in general, it's it's sometimes better and, you know, use your best judgment, obviously, like, don't go crazy with abstraction,
+
+341
+00:44:25,068 --> 00:44:30,858
+but usually it's best if you can be a little more general so that something like this,
+
+342
+00:44:30,858 --> 00:44:37,848
+which is designed to be reusable, is less it needs to know less about the ways it's being used.
+
+343
+00:44:37,848 --> 00:44:46,308
+If that makes sense, maybe it takes instructions rather than it like sort of inspecting or introspecting to see how it's being used.
+
+344
+00:44:46,308 --> 00:44:51,348
+Have it be told how it should be used, if that makes sense.
+
+345
+00:44:51,348 --> 00:44:58,188
+So the logic, the choice of how to use it is made from the person who's using it.
+
+346
+00:44:58,188 --> 00:45:11,228
+So how about instead of checking what we're embedded in, we have preferences.
+
+347
+00:45:11,228 --> 00:45:27,758
+Pass in some arguments here, so sanitize, so what I like to do whenever I'm reviewing is I like to.
+
+348
+00:45:27,758 --> 00:45:39,408
+Link to code to see describe, I'm talking about kind of how we pass our eggs here.
+
+349
+00:45:39,408 --> 00:45:51,868
+Um, I had an example, right, args. Um.
+
+350
+00:45:51,868 --> 00:46:01,118
+I believe Jesus dialog open, like I do have an example of Jesus dialog open and someone passing arguments,
+
+351
+00:46:01,118 --> 00:46:06,418
+let's see, because like the one we were just looking at actually is not Jesus of dialog open.
+
+352
+00:46:06,418 --> 00:46:19,918
+It's using open dialog. I see an example of someone using Jesus dialog open and and passing arguments.
+
+353
+00:46:19,918 --> 00:46:28,238
+So we're going to just quickly go through these again Giese dialog open.
+
+354
+00:46:28,238 --> 00:46:43,838
+Aha, this thing. This is a better example of how we pass ops here.
+
+355
+00:46:43,838 --> 00:46:54,408
+I think I believe if I'm understanding correctly, these will then these ops.
+
+356
+00:46:54,408 --> 00:47:09,588
+Will then be available as window dot arguments in sanitized dialog that Jass now at this point, I think will get where I'm going with this.
+
+357
+00:47:09,588 --> 00:47:22,548
+But just for posterity, I think I'm going to keep explaining, like, let's see if we can find how browser languages users that.
+
+358
+00:47:22,548 --> 00:47:30,398
+And so who uses this, who loads this group or what script does this load, rather, browser languages digest?
+
+359
+00:47:30,398 --> 00:47:35,138
+So let's let's look at this file and I believe.
+
+360
+00:47:35,138 --> 00:47:43,668
+Yeah. Here and retrieves them here.
+
+361
+00:47:43,668 --> 00:47:56,588
+Will be then be available as window arguments that way maybe we can pass in something like no title or.
+
+362
+00:47:56,588 --> 00:48:17,978
+Yeah, no titles. True. To tell the dialog, to suppress it's built in title.
+
+363
+00:48:17,978 --> 00:48:24,668
+OK, so I actually think I'm you know, we'll see we'll see what he thinks about that.
+
+364
+00:48:24,668 --> 00:48:30,898
+But we've got, I think, a suggestion here that takes us to a better place.
+
+365
+00:48:30,898 --> 00:48:35,798
+OK, what else did I want to look at here? This title change things.
+
+366
+00:48:35,798 --> 00:48:44,588
+So I guess the title can change. I guess that's not super surprising, but I'm actually a little surprised by that.
+
+367
+00:48:44,588 --> 00:48:50,408
+So what changes the title if I go to like history, clear recent history?
+
+368
+00:48:50,408 --> 00:48:55,298
+Oh, yeah. I want to I want to stay in this space.
+
+369
+00:48:55,298 --> 00:49:00,218
+Do I have a title document title clear recent history.
+
+370
+00:49:00,218 --> 00:49:08,778
+I want to set a breakpoint for whenever, say, the.
+
+371
+00:49:08,778 --> 00:49:21,928
+The selection in the dropdown changes. Select by time span that what it is and it's selected time span.
+
+372
+00:49:21,928 --> 00:49:29,228
+Yeah. Uh. On the select hand, her handler.
+
+373
+00:49:29,228 --> 00:49:32,738
+OK, so, yeah, we're going to open this thing up, first of all,
+
+374
+00:49:32,738 --> 00:49:42,758
+I'm going to go like I'm going to change scope so that the debugger is running or the console is running inside this dialog.
+
+375
+00:49:42,758 --> 00:49:46,138
+So document title should be clear.
+
+376
+00:49:46,138 --> 00:49:54,878
+Recent history. So if I say document title equals M. Connelly was here, boom, that works.
+
+377
+00:49:54,878 --> 00:50:00,068
+Now what what is the situation where that would occur like obviously that works now and that's great.
+
+378
+00:50:00,068 --> 00:50:24,198
+But like is anything updating the title in here? Oh, dialog, title, everything, what is going on here?
+
+379
+00:50:24,198 --> 00:50:33,738
+So if I, like, change this.
+
+380
+00:50:33,738 --> 00:50:37,428
+Clear all history, it updates it again, clear recent history.
+
+381
+00:50:37,428 --> 00:50:39,018
+Oh, I see what it does.
+
+382
+00:50:39,018 --> 00:50:46,188
+So whenever you choose everything, then it goes like, OK, we're clear in all history and that, OK, that is what we need to support.
+
+383
+00:50:46,188 --> 00:50:51,108
+I understand. I understand. I'm with you. I'm with you, sir.
+
+384
+00:50:51,108 --> 00:51:20,468
+OK. I'm going to suggest that I'm going to suggest a tie to a different method name here, since this isn't since.
+
+385
+00:51:20,468 --> 00:51:29,728
+Updating the title is.
+
+386
+00:51:29,728 --> 00:51:38,748
+The title Change is more of a is.
+
+387
+00:51:38,748 --> 00:51:50,268
+I guess more of a byproduct. Of what this method is really responsible for.
+
+388
+00:51:50,268 --> 00:51:56,488
+Maybe this should be titled.
+
+389
+00:51:56,488 --> 00:52:04,548
+Update. No.
+
+390
+00:52:04,548 --> 00:52:15,078
+Observe Title four changes. Um.
+
+391
+00:52:15,078 --> 00:52:29,678
+And then we say observe title four changes here.
+
+392
+00:52:29,678 --> 00:52:37,328
+And do we call title change anywhere else title changed?
+
+393
+00:52:37,328 --> 00:52:46,548
+One place. Here and here, I see.
+
+394
+00:52:46,548 --> 00:52:53,468
+OK. The title say a title text makes sense.
+
+395
+00:52:53,468 --> 00:53:00,008
+OK, so in terms of the actual appearance, because I haven't even paid any attention to that yet,
+
+396
+00:53:00,008 --> 00:53:06,228
+what's OK, just get rid of all these breakpoints I have in here.
+
+397
+00:53:06,228 --> 00:53:19,078
+In terms of the actual appearance, I think this is great and let's make sure that the when we open it inside of the.
+
+398
+00:53:19,078 --> 00:53:22,528
+When we open it inside here, yeah, we get our own.
+
+399
+00:53:22,528 --> 00:53:28,748
+It's got its own, like built in title, so we don't have to show it.
+
+400
+00:53:28,748 --> 00:53:34,298
+Yeah, looks good, looks good.
+
+401
+00:53:34,298 --> 00:53:39,638
+So I'm going to request changes on this. Thanks, guys.
+
+402
+00:53:39,638 --> 00:53:44,198
+Just a few small suggestions below.
+
+403
+00:53:44,198 --> 00:53:49,178
+Let me know what you think. Always thank your contributor.
+
+404
+00:53:49,178 --> 00:53:58,078
+Always say thank you. They worked hard on the patch. OK.
+
+405
+00:53:58,078 --> 00:54:04,498
+Let's look at the next one, so this is based on top of what we just did.
+
+406
+00:54:04,498 --> 00:54:07,798
+I don't know. Yeah, it looks like it was sort of reliant on it.
+
+407
+00:54:07,798 --> 00:54:15,848
+It probably wouldn't have applied cleanly. Let's apply this patch and then we'll take a look and see what it does.
+
+408
+00:54:15,848 --> 00:54:33,218
+So let's shut down. Was Fab Patch applied to here skip dependencies, because we've already got the dependancy applied?
+
+409
+00:54:33,218 --> 00:54:38,858
+I also don't want to forget, like I said at the beginning, I think there are some questions that were submitted,
+
+410
+00:54:38,858 --> 00:54:43,508
+so maybe we can answer some questions after we do this review.
+
+411
+00:54:43,508 --> 00:54:52,048
+I would just pull those up. Joy of quoting, joy of Khoder.
+
+412
+00:54:52,048 --> 00:54:59,638
+Hold up. Open up the joy of coopting I should have had these prepared,
+
+413
+00:54:59,638 --> 00:55:05,038
+but it was only at the last minute I remembered that there were questions that had been asked.
+
+414
+00:55:05,038 --> 00:55:15,778
+Um. OK.
+
+415
+00:55:15,778 --> 00:55:27,388
+Here we go. Yeah, got me some questions. Uh, let me just put them up here.
+
+416
+00:55:27,388 --> 00:55:39,788
+Maybe I can even paste them in. OK, so we're improving the spacing in the window model, clear recent history dialog,
+
+417
+00:55:39,788 --> 00:55:45,848
+and so what he is doing is adding it looks like he's adding a class called warning box separator
+
+418
+00:55:45,848 --> 00:55:52,178
+and he's adding a bunch of rules that only apply if we're not running it inside the preferences.
+
+419
+00:55:52,178 --> 00:56:05,088
+Sub dialog, OK? Um, and I don't know whether or not that's going to.
+
+420
+00:56:05,088 --> 00:56:11,138
+Hmm, yeah, I wonder how that's going to affect things with my original suggestion and the other patch,
+
+421
+00:56:11,138 --> 00:56:15,938
+which was about the not caring or knowing or caring whether or not we're in preferences,
+
+422
+00:56:15,938 --> 00:56:24,468
+it's knowing whether or not we're embedded in another page is sub dialog.
+
+423
+00:56:24,468 --> 00:56:33,248
+Um. All of this to make the two things separate, does not take up space, some of them were in boxes hidden.
+
+424
+00:56:33,248 --> 00:56:43,328
+Otherwise, the gap with the content below looks unnaturally large. Toggle attribute, warning, dialog displayed.
+
+425
+00:56:43,328 --> 00:56:49,718
+I see this hides a bunch of stuff, OK?
+
+426
+00:56:49,718 --> 00:57:00,508
+Oh, wow, hold up. What are we doing here? Then we resize the window.
+
+427
+00:57:00,508 --> 00:57:08,448
+This is very interesting. If we change the size of the dialog.
+
+428
+00:57:08,448 --> 00:57:21,628
+Oh, really? So.
+
+429
+00:57:21,628 --> 00:57:29,918
+All right. Well, we were already doing this kind of like funky.
+
+430
+00:57:29,918 --> 00:57:41,408
+Funky mathematics. I guess this isn't too surprising, and then we say that the warning box is not displayed, it makes sense, the warning box.
+
+431
+00:57:41,408 --> 00:57:52,328
+Well, hold on a second. If the warning box is not hidden, then say warning box displayed is false.
+
+432
+00:57:52,328 --> 00:58:02,748
+What is? Oh, oh, oh, I see if the warning box isn't hidden, but we want to hide it,
+
+433
+00:58:02,748 --> 00:58:10,178
+then do all these calculations set warning box display to false and set warning box hidden to true.
+
+434
+00:58:10,178 --> 00:58:19,058
+OK, I think I get it. OK, let's take a look at what it looks like he's got.
+
+435
+00:58:19,058 --> 00:58:30,258
+Oh, come on, what happened here? Why didn't that apply?
+
+436
+00:58:30,258 --> 00:58:35,688
+Some dialog, jazz regg versus sub dialog.
+
+437
+00:58:35,688 --> 00:58:41,928
+Do we happen to have this one also applied magically wild?
+
+438
+00:58:41,928 --> 00:58:46,608
+We do. How did that happen? Did I did I pull it down twice?
+
+439
+00:58:46,608 --> 00:58:50,538
+Did I try and apply it twice? People? Is that what happened?
+
+440
+00:58:50,538 --> 00:58:58,968
+I'm going to watch this back. And if I did Fab Patch twice, that will have explain this.
+
+441
+00:58:58,968 --> 00:59:02,838
+But I don't actually remember doing it the first time. I only remember doing the most recent time.
+
+442
+00:59:02,838 --> 00:59:07,908
+I think I'm getting ahead of myself. Wow. Today. What a day.
+
+443
+00:59:07,908 --> 00:59:12,738
+So yeah. Do I still have. Yeah. Improved space. I still have it here so I must have done it twice.
+
+444
+00:59:12,738 --> 00:59:19,498
+Brilliant. Good job. Mike has twice in one day. I made that mistake.
+
+445
+00:59:19,498 --> 00:59:26,618
+Waka waka. How's it going in the chat?
+
+446
+00:59:26,618 --> 00:59:33,498
+Oh, you know what, I don't think my Twitch chat board is working.
+
+447
+00:59:33,498 --> 00:59:42,638
+You know what I think? My twitch mirror, if there's twitch chat, I might not be seeing it, but what happened to my twitch bot?
+
+448
+00:59:42,638 --> 00:59:49,958
+I tested it earlier. Sorry folks, if there's if there's been some dialog inside of the Twitch chat, I haven't been seen.
+
+449
+00:59:49,958 --> 00:59:55,718
+Let me quickly open up the twitch chat. Uh, chat settings, switch to non mod.
+
+450
+00:59:55,718 --> 01:00:00,278
+Pop it out. Here it is. Here's the twitch chat. Oh, there's all this dialog.
+
+451
+01:00:00,278 --> 01:00:07,748
+I'm sorry, folks. I haven't been paying any attention to you. Let's see here.
+
+452
+01:00:07,748 --> 01:00:11,498
+Hi, can I ask a question about careers, of course you can. Amphetamine.
+
+453
+01:00:11,498 --> 01:00:16,328
+I'm sorry. I'm so sorry. I was like I was not intentionally ignoring you.
+
+454
+01:00:16,328 --> 01:00:27,608
+Amphetamines. I apologize. You you just you happened to chat on the on the day that my mirror bot wasn't working properly.
+
+455
+01:00:27,608 --> 01:00:31,568
+So I apologize. Go ahead. Ask your question about careers.
+
+456
+01:00:31,568 --> 01:00:36,998
+I hope you're still in the room. I'll happily try and answer it again. Apologies.
+
+457
+01:00:36,998 --> 01:00:43,418
+And if you've already left and maybe you're watching this recording after the fact, just there's a link in the agenda.
+
+458
+01:00:43,418 --> 01:00:48,818
+You can always ask me questions in this rate, this episode form, you can fill it out.
+
+459
+01:00:48,818 --> 01:00:59,498
+And at the end there's like a question thing. You think of it as like mailbox where, you know, you can submit questions and I can try and answer them.
+
+460
+01:00:59,498 --> 01:01:07,658
+All right, I just got distracted. What am I doing? Oh, yeah, let's open up this thing, OK?
+
+461
+01:01:07,658 --> 01:01:18,338
+Now, what is what did it look like before? If I open it up now, I've got dark theme enabled, but it definitely looks a little, you know, a lot more.
+
+462
+01:01:18,338 --> 01:01:23,168
+I don't know. The spacing is definitely different and I think it's improved.
+
+463
+01:01:23,168 --> 01:01:29,528
+What happens if I say, like, everything that grows? What happens if I say everything here?
+
+464
+01:01:29,528 --> 01:01:42,328
+This grows. Today is shrinks. Interesting.
+
+465
+01:01:42,328 --> 01:01:47,278
+There's a lot of weird mathematics going on in that patch, and I wonder what it's for.
+
+466
+01:01:47,278 --> 01:01:55,448
+And what about over here? Whenever I say clear recent history? In here.
+
+467
+01:01:55,448 --> 01:02:11,888
+Gros. Shrinks now, is this is this tightness, OK, let's take a look at the inside about preferences in.
+
+468
+01:02:11,888 --> 01:02:19,588
+Here, yeah, that's what we've currently got. OK.
+
+469
+01:02:19,588 --> 01:02:26,488
+All right. Let's see if we can figure out how it works and also we want to run it on this Windows machine,
+
+470
+01:02:26,488 --> 01:02:31,878
+so let's let's open up that clear history dialog and take a look.
+
+471
+01:02:31,878 --> 01:02:37,758
+Oh, yeah, this looks awful. This looks like garbage. This looks like garbage people.
+
+472
+01:02:37,758 --> 01:02:42,168
+I must have I must not have been testing properly on windows. We need to fix this.
+
+473
+01:02:42,168 --> 01:02:47,328
+Thank you for taking this on. That is garbage. Garbage.
+
+474
+01:02:47,328 --> 01:03:10,528
+Let's apply this patch and see how it fixes it. Patch W do apply to here skip dependencies.
+
+475
+01:03:10,528 --> 01:03:19,848
+I'm really bummed, I think amphetamine left. Oh, hi, this is here, Heisse, so good to see you.
+
+476
+01:03:19,848 --> 01:03:34,378
+I, I reviewed your first patch, and if you're curious about what I went through to do that, you can watch the episode.
+
+477
+01:03:34,378 --> 01:03:40,528
+I mean, so he's saying, I don't know if you can see that here, I'll bring the chat up so you can see what he's saying.
+
+478
+01:03:40,528 --> 01:03:44,768
+He's saying that the old dialog, the one that I had done on Windows seven, is not that garbage.
+
+479
+01:03:44,768 --> 01:03:50,248
+I'm like, well, it's pretty bad. Like, let's see what I'm sure what you've done is, is an improvement.
+
+480
+01:03:50,248 --> 01:03:54,688
+It's let's see. Hang on a second.
+
+481
+01:03:54,688 --> 01:04:02,258
+I'll expect the same. Did I? I don't think I update. I did.
+
+482
+01:04:02,258 --> 01:04:14,598
+I thought there'd be more space on the left. History.
+
+483
+01:04:14,598 --> 01:04:20,418
+OK. Now,
+
+484
+01:04:20,418 --> 01:04:26,088
+do we have any preexisting art we've got like this this edge that's going along are
+
+485
+01:04:26,088 --> 01:04:30,918
+along the sides and I figure if that's relatively even then we're in good shape.
+
+486
+01:04:30,918 --> 01:04:37,198
+So let's pull out its scope and we'll take a close peek.
+
+487
+01:04:37,198 --> 01:04:45,938
+Xcode. Well, the tools I like to use with scope is this dimension's tool, and I will not be updating for now.
+
+488
+01:04:45,938 --> 01:04:51,968
+So we've got eight pixels on the left, nine pixels on the bottom, but that's probably due to a rounding error.
+
+489
+01:04:51,968 --> 01:05:09,348
+So I'm OK with that. Now, this gap is 14 and this gap is 10, probably a rounding error, again, 11, is it a rounding error?
+
+490
+01:05:09,348 --> 01:05:23,358
+OK. Let's pull out the inspector and see if we can get a sense of where this stuff's coming from.
+
+491
+01:05:23,358 --> 01:05:32,998
+WAPs. There it is. The edge should be 16 pixels.
+
+492
+01:05:32,998 --> 01:05:43,408
+Says heis all right, the edge should be 16 pixels that.
+
+493
+01:05:43,408 --> 01:05:51,858
+It's now what I'm seeing. Is that what we have on Mako's, what we what do we do over here?
+
+494
+01:05:51,858 --> 01:05:58,068
+Uh, 14, 14.
+
+495
+01:05:58,068 --> 01:06:02,928
+Eighteen on Tom, 18 were pretty inconsistent.
+
+496
+01:06:02,928 --> 01:06:08,748
+We've got 14 along the top, 18 along the right and this isn't a criticism.
+
+497
+01:06:08,748 --> 01:06:20,888
+I just want to be clear. It's not a criticism of his work. I have a feeling that this dialog was always a little bit of a, you know, uneven.
+
+498
+01:06:20,888 --> 01:06:28,478
+And I was the one who reported it, so, you know, I'm in many ways I'm responsible for having landed a patch where we have,
+
+499
+01:06:28,478 --> 01:06:36,238
+like, a bunch of stuff that doesn't look that great. Um, so 14 and then over here, it's eight.
+
+500
+01:06:36,238 --> 01:06:45,558
+What is the deal, where is that? Right here, uh.
+
+501
+01:06:45,558 --> 01:06:53,628
+So if we look at the rules on the left side, we've got no padding her margin, we've got this V box.
+
+502
+01:06:53,628 --> 01:07:05,718
+In an age box, in a group box, inside a dialog, and the dialog has interestingly uneven padding all the way around.
+
+503
+01:07:05,718 --> 01:07:10,038
+We've got eight on the left, eight on the top, 10 on the right, 10 on the bottom.
+
+504
+01:07:10,038 --> 01:07:16,978
+That's interesting. And where are these coming from? Where are these rules coming from?
+
+505
+01:07:16,978 --> 01:07:26,128
+Where is this pattern coming from? Padang, Padang, Padang, Padang.
+
+506
+01:07:26,128 --> 01:07:35,638
+I guess we're just kind of like inheriting them somehow. From oh, wait, uh, show Browsr Styles.
+
+507
+01:07:35,638 --> 01:07:42,178
+Patrick, is that. Can you tell me?
+
+508
+01:07:42,178 --> 01:07:47,428
+Yeah, no, I thought I would. I thought it would.
+
+509
+01:07:47,428 --> 01:08:11,368
+Is it because of. Something I read, this is something I said, where is this pattern coming from?
+
+510
+01:08:11,368 --> 01:08:17,008
+Oh, here we go, here we go, the host, the host.
+
+511
+01:08:17,008 --> 01:08:24,678
+So in dialog that says we've got this rule where we want to do this and this is.
+
+512
+01:08:24,678 --> 01:08:33,048
+Is this true on? On just Windows dialog and success,
+
+513
+01:08:33,048 --> 01:08:47,688
+so we've got some Mac OS specific things and we've got some Windows specific things and then we've got yeah, this is a Windows specific rule.
+
+514
+01:08:47,688 --> 01:08:55,488
+This is from back in the day. Um.
+
+515
+01:08:55,488 --> 01:09:02,658
+Yeah, the egg should be 60 pixels, but somehow you don't have my parent patch. Not sure why Fab hasn't implied that the parent patch sorry.
+
+516
+01:09:02,658 --> 01:09:08,628
+Maybe I've applied all this wrong. Let me shut down. Am I doing this all wrong?
+
+517
+01:09:08,628 --> 01:09:13,278
+I've got these two six six four six six and two six two.
+
+518
+01:09:13,278 --> 01:09:22,568
+Is that what we're supposed to have here? Four, six, six and two, six to watch one of my missing.
+
+519
+01:09:22,568 --> 01:09:27,968
+Like the the one that adds the title we definitely have that applied, did I?
+
+520
+01:09:27,968 --> 01:09:39,018
+Is there another patch in the series that's missing? My styles don't seem to be applying.
+
+521
+01:09:39,018 --> 01:09:46,098
+Hmm. Well, let's take a look at these styles and find out why they're not applying.
+
+522
+01:09:46,098 --> 01:09:53,568
+So the things that heisted was he said, hey, grid padding, 16 pixels,
+
+523
+01:09:53,568 --> 01:10:01,578
+use that and grid padding is yeah, he's applying this padding of 16 pixels all the way around.
+
+524
+01:10:01,578 --> 01:10:06,288
+That makes sense to me. Why doesn't he have that? Let's take a look.
+
+525
+01:10:06,288 --> 01:10:24,748
+Let's take a look in here. Do we have nonprofit sub dialog where we're missing that?
+
+526
+01:10:24,748 --> 01:10:36,298
+We're missing that attribute, so, like if I were to apply that attribute on sub dialog, OK, then that looks a lot better.
+
+527
+01:10:36,298 --> 01:10:44,098
+Well, it's OK. The buttons got pushed, but that's something that it would take care of if the attribute had been there in the first place.
+
+528
+01:10:44,098 --> 01:10:49,888
+So why isn't the nonprofit sub dialog applying? Like, why aren't we getting that attribute?
+
+529
+01:10:49,888 --> 01:10:56,128
+So let's take a look at that stuff.
+
+530
+01:10:56,128 --> 01:11:05,728
+So under what was it? Sanitized dialoged jazz nonprofit sub dialog.
+
+531
+01:11:05,728 --> 01:11:13,198
+What do I not or what did I not?
+
+532
+01:11:13,198 --> 01:11:20,608
+You know what it is, Heisse. I think I know what it is. I think I know what it is on my Windows box here.
+
+533
+01:11:20,608 --> 01:11:24,868
+I've only applied for one patch too many machines.
+
+534
+01:11:24,868 --> 01:11:31,588
+That's the problem. Too many machines, too many files open too many machines.
+
+535
+01:11:31,588 --> 01:11:37,918
+Let's just simplify everything here. I'm starting to I think I'm over caffeinated is my problem.
+
+536
+01:11:37,918 --> 01:11:43,918
+So let's not skip dependencies. I make too much a habit to do that of doing that.
+
+537
+01:11:43,918 --> 01:11:48,508
+Let's apply both patches. Let's rebuild. Let's take another look.
+
+538
+01:11:48,508 --> 01:11:58,538
+Sorry for wasting everyone's time. Oh, I apologize.
+
+539
+01:11:58,538 --> 01:12:03,738
+Hi, how embarrassing for me I am now that you're seeing how I review.
+
+540
+01:12:03,738 --> 01:12:09,108
+It's a it's a whirlwind. You're taking a peek behind the curtain.
+
+541
+01:12:09,108 --> 01:12:16,398
+I'm a real mess over here. OK, so let's put this up again and take another look.
+
+542
+01:12:16,398 --> 01:12:21,168
+All right. So that looks a lot better.
+
+543
+01:12:21,168 --> 01:12:25,548
+Obviously, this is what I was looking for. This looks great.
+
+544
+01:12:25,548 --> 01:12:33,318
+And if we change the size of the dialog, that works correctly.
+
+545
+01:12:33,318 --> 01:12:42,618
+The other condition I think that was being fiddled with is, you know, what happens when it's opened up in here?
+
+546
+01:12:42,618 --> 01:12:52,028
+And that looks right. I think that looks right, I mean, is that gap supposed to be like that?
+
+547
+01:12:52,028 --> 01:12:59,258
+Let's see here. Um, let's open up another instance.
+
+548
+01:12:59,258 --> 01:13:04,178
+Yes. We should really set up voice chat for this. You know, it would be interesting is if.
+
+549
+01:13:04,178 --> 01:13:13,538
+Yeah. If when I'm reviewing your patch next, I have you as like a guess, you can be on like a call with me and you can like.
+
+550
+01:13:13,538 --> 01:13:19,178
+Army through it, that might be really interesting, I you know what, we should pursue that.
+
+551
+01:13:19,178 --> 01:13:25,238
+We should pursue that. So this is the before shot such garbage, this is the after shot.
+
+552
+01:13:25,238 --> 01:13:32,108
+And I'll do it this way. This is the after shot. So much better. Amazing.
+
+553
+01:13:32,108 --> 01:13:43,048
+I'm very pleased. Very pleased. Now, the thing I was just looking at, I just wanted to double check is what happens whenever you have the,
+
+554
+01:13:43,048 --> 01:13:48,018
+uh, this dialog and we say everything is that gap, right?
+
+555
+01:13:48,018 --> 01:13:52,608
+It's about the same. It's about the same. I don't mind keeping it the same.
+
+556
+01:13:52,608 --> 01:13:58,328
+You know, this is this is fine the way it was. And, you know, you know, maybe it could be tightened up, but that's not the goal.
+
+557
+01:13:58,328 --> 01:14:04,238
+The goal is to fix the standalone dialog that or the window modal dialog.
+
+558
+01:14:04,238 --> 01:14:12,728
+So I think we're in great shape here. Let's take a look at the patch again and see how he's doing it.
+
+559
+01:14:12,728 --> 01:14:19,748
+So like we said, he's added this class. And I guess it's because we have other separators in here.
+
+560
+01:14:19,748 --> 01:14:35,968
+Do we have other separators? Just separator separator, we've got a menu separator.
+
+561
+01:14:35,968 --> 01:14:48,848
+These separators. OK.
+
+562
+01:14:48,848 --> 01:14:55,268
+So what he's doing is he's saying, OK, if I am not being open and preferences make my padding 16 pixels,
+
+563
+01:14:55,268 --> 01:15:09,018
+but also compute my padding such that it's like my top, I think this is like.
+
+564
+01:15:09,018 --> 01:15:14,508
+How does this work, wherever you do two terms, I think it's like top bottom,
+
+565
+01:15:14,508 --> 01:15:24,398
+I always have to look it up the short form for padding and margin whenever you do two terms.
+
+566
+01:15:24,398 --> 01:15:38,438
+Vertical and horizontal. So this is like the block padding and then this is the inline padding,
+
+567
+01:15:38,438 --> 01:15:44,948
+so we were evening and I were removing four pixels on the sides, I guess, because we've got some extra padding.
+
+568
+01:15:44,948 --> 01:15:52,628
+Yeah, it's because of this padding or rather we put some margin on the inside.
+
+569
+01:15:52,628 --> 01:15:55,988
+Is that necessary if we, like, get rid of this calculation?
+
+570
+01:15:55,988 --> 01:16:03,038
+Part of me wonders if we can remove this or do we get to remove this as well, like are those to those cancel?
+
+571
+01:16:03,038 --> 01:16:09,408
+So let's find out. That's just speculation, but I want to find out.
+
+572
+01:16:09,408 --> 01:16:15,718
+So let's go back to. You know what, I think I may have just closed the wrong build.
+
+573
+01:16:15,718 --> 01:16:27,108
+Let's go back to build, you know, make sure I've got a nice chat open, but I'm going to put it over here so I can keep an eye on it and.
+
+574
+01:16:27,108 --> 01:16:33,798
+I'm going to open up the tool box. And.
+
+575
+01:16:33,798 --> 01:16:41,518
+We're going to take a look to see what happens if I.
+
+576
+01:16:41,518 --> 01:16:47,158
+What was the rule again? Sanitized dialog access.
+
+577
+01:16:47,158 --> 01:16:58,718
+We can go over here. So my my question was like, can I get rid of this for pixel subtraction here?
+
+578
+01:16:58,718 --> 01:17:07,968
+By getting rid of this four pixel edition over here and the answer is maybe.
+
+579
+01:17:07,968 --> 01:17:17,528
+I guess the problem is that the look at the title, the title isn't moving.
+
+580
+01:17:17,528 --> 01:17:26,408
+So if we want everything to line up with the title, which I think we do.
+
+581
+01:17:26,408 --> 01:17:32,508
+But it's also got a four pixel margin, so what if I get rid of that?
+
+582
+01:17:32,508 --> 01:17:37,608
+Get rid of that. Get rid of that.
+
+583
+01:17:37,608 --> 01:17:42,158
+Does that get us? It gives us the equivalent.
+
+584
+01:17:42,158 --> 01:17:48,308
+But Heise is saying it's annoying to try to get rid of the four pixels in the anonymous content of the button box,
+
+585
+01:17:48,308 --> 01:17:53,118
+the multiple tabs warning and other dogs do the same kind of thing. OK, so there's a good reason for that.
+
+586
+01:17:53,118 --> 01:18:01,958
+This isn't just like, you know, we accidentally added some four pixels somewhere and like where, you know, and then we're working around ourselves.
+
+587
+01:18:01,958 --> 01:18:10,828
+This is like this is a legitimate workaround because of how our button boxes have.
+
+588
+01:18:10,828 --> 01:18:19,138
+Four pixels of padding in here, I think so, these things, so that's the problem, is these darn buttons.
+
+589
+01:18:19,138 --> 01:18:24,488
+OK. Arguably, perhaps you should fix the button box.
+
+590
+01:18:24,488 --> 01:18:30,608
+True, true, but out of scope, let's say, out of scope for now.
+
+591
+01:18:30,608 --> 01:18:40,688
+OK, so this passes muster and then the label, we're going to say, OK, no margin in line on the duration label.
+
+592
+01:18:40,688 --> 01:18:47,738
+What's that one? This one. Yeah, no margin in line here.
+
+593
+01:18:47,738 --> 01:18:52,278
+Because labels, I believe, by default, have some kind of.
+
+594
+01:18:52,278 --> 01:19:04,588
+Oh. Because the label by default has an inline margin, but we don't want to have it, I think maybe what we could do is we could adjust.
+
+595
+01:19:04,588 --> 01:19:17,728
+Instead of undoing it, we could have this be like, um, because where is this defined in line ten?
+
+596
+01:19:17,728 --> 01:19:30,338
+Wait, really? Hold up, I'm confused where where is this coming from, sanitized dialog, Xcellent.
+
+597
+01:19:30,338 --> 01:19:40,618
+Oh, I see, this is a another instance of Windows specific stuff happening, I believe.
+
+598
+01:19:40,618 --> 01:19:47,248
+So I believe we have like a separate state or a separate stylesheet.
+
+599
+01:19:47,248 --> 01:19:52,658
+For Windows, that's how our Heisey OK.
+
+600
+01:19:52,658 --> 01:20:01,438
+And so we're getting rid of that in the nonprofit sub dialog case, same thing here.
+
+601
+01:20:01,438 --> 01:20:13,068
+And then if we're the last item, we're going to give us ourselves a 16 pixel.
+
+602
+01:20:13,068 --> 01:20:25,708
+Margin at the end makes sense. So that means that there's that that's this gap right here.
+
+603
+01:20:25,708 --> 01:20:32,308
+And then if we're saying that, hey, we don't want we're not showing the warning box, then we're going to collapse the warning box separators now.
+
+604
+01:20:32,308 --> 01:20:39,698
+Well, what's the deal with these separators? Where are these separators? Because I actually didn't realize that there were separators in here.
+
+605
+01:20:39,698 --> 01:20:45,648
+There's separators around, above and below the warning box.
+
+606
+01:20:45,648 --> 01:20:55,028
+And I guess they're like invisible because I don't actually see any. Separator.
+
+607
+01:20:55,028 --> 01:21:01,038
+Yeah, it actually it it has a height of six pixels.
+
+608
+01:21:01,038 --> 01:21:10,238
+It just doesn't have any, like, visual representation, it's almost like an additional margin.
+
+609
+01:21:10,238 --> 01:21:21,148
+It's kind of wild. Part of me, OK, so part of me wonders if these separators.
+
+610
+01:21:21,148 --> 01:21:30,108
+Should really just be margins. On the sanitize.
+
+611
+01:21:30,108 --> 01:21:42,408
+I can spell sanitize everything warning box, not something for here, but maybe as a follow up.
+
+612
+01:21:42,408 --> 01:21:49,828
+Unless you want to do it. Um.
+
+613
+01:21:49,828 --> 01:22:00,368
+Yeah, because I don't think the separators, like even whenever we have this thing embedded inside of settings, the preferences, dialog, where are we?
+
+614
+01:22:00,368 --> 01:22:04,798
+I don't think these these separators actually like show up.
+
+615
+01:22:04,798 --> 01:22:18,218
+I think they really just act as spacers and like maybe maybe there was a time when these things had some appearance to them.
+
+616
+01:22:18,218 --> 01:22:25,838
+But right now, they're really just acting as spacers and we can get rid of a bunch of, I think, logic here,
+
+617
+01:22:25,838 --> 01:22:31,658
+we can sort of simplify some logic by just having them be margins that exist around this V box,
+
+618
+01:22:31,658 --> 01:22:36,308
+because when the V box goes away, then the margins go away and then things collapse on themselves.
+
+619
+01:22:36,308 --> 01:22:44,928
+And then we don't have to worry about, like this stuff down here. And there might actually be.
+
+620
+01:22:44,928 --> 01:22:50,728
+That means I think we can also get rid of this. I believe we don't need that attribute anymore.
+
+621
+01:22:50,728 --> 01:23:03,438
+That means we also get rid of this. And then I also think that we get to not change these.
+
+622
+01:23:03,438 --> 01:23:09,958
+I think a lot of this stays the same, I'm not entirely certain.
+
+623
+01:23:09,958 --> 01:23:14,368
+He says he's not sure if they have visual lines when used as a native dialog.
+
+624
+01:23:14,368 --> 01:23:19,288
+Good question. We can actually find that out by by looking at the old version.
+
+625
+01:23:19,288 --> 01:23:27,148
+So if we download, say, mock regression launch, so this is a trick.
+
+626
+01:23:27,148 --> 01:23:33,088
+If you've never used Markman's regression, you can use to run like a particular build of Firefox, I'm pretty sure.
+
+627
+01:23:33,088 --> 01:23:37,828
+July 1st, we had. Well, actually, how long before I do that?
+
+628
+01:23:37,828 --> 01:23:46,888
+I have to find when the patch got backed out because like we had that patch in.
+
+629
+01:23:46,888 --> 01:23:54,118
+In nightly for a while, and then we backed it out just before the uplift, so what might actually be better is to run Beita.
+
+630
+01:23:54,118 --> 01:23:59,008
+Do I have regression launch?
+
+631
+01:23:59,008 --> 01:24:03,988
+Let's run today's beta 20. Twenty one zero.
+
+632
+01:24:03,988 --> 01:24:10,168
+I don't know if I've ever done this before and you say channel, can I say Beda, does that work?
+
+633
+01:24:10,168 --> 01:24:24,228
+I do that. OK, well, my observation just updated itself,
+
+634
+01:24:24,228 --> 01:24:31,418
+Heisse mentions that the diff thing would still need to change because the height of the warning box doesn't include margins.
+
+635
+01:24:31,418 --> 01:24:42,528
+Oh, annoying, right? Right, but I guess we can like.
+
+636
+01:24:42,528 --> 01:24:50,638
+We just have to add them, um. Uh, nothing easy.
+
+637
+01:24:50,638 --> 01:25:00,168
+Does this thing allow me to choose Bita? Build type.
+
+638
+01:25:00,168 --> 01:25:13,198
+Build, release, change, set, build Eid. Yeah.
+
+639
+01:25:13,198 --> 01:25:25,878
+Classic classic launch. Hmmm, repo equals Mesilla Dash.
+
+640
+01:25:25,878 --> 01:25:31,868
+Oh, thank you, heisse repo equals Mazola Dash Beda.
+
+641
+01:25:31,868 --> 01:25:35,558
+Good man, see, you should always be watching me stream.
+
+642
+01:25:35,558 --> 01:25:43,118
+I think we should always be sitting next to each other. Heise.
+
+643
+01:25:43,118 --> 01:25:53,068
+You can save me so much time and then I could go fetch you drinks, I could go fetch you like candy whenever you help me.
+
+644
+01:25:53,068 --> 01:25:58,738
+All right, so what we're doing here is this is the dialog now, I don't.
+
+645
+01:25:58,738 --> 01:26:05,468
+Yeah, I don't see any separators being rendered here, and I also have Beita, I think, for Mac OS.
+
+646
+01:26:05,468 --> 01:26:12,938
+So let me I think one of these is bad. I think it's Firefox two is Beta.
+
+647
+01:26:12,938 --> 01:26:22,228
+This is Batur, right? Eighty nine Baida. Well, that should be good enough, actually.
+
+648
+01:26:22,228 --> 01:26:30,948
+Yeah, I don't see any rendered separators here, so my guess is that separators never really.
+
+649
+01:26:30,948 --> 01:26:37,078
+Or at least they've never really needed to appear. Heise is going to burn them with fire.
+
+650
+01:26:37,078 --> 01:26:44,008
+Amazing. I think I'm pretty happy with everything else, though, like this, I think makes a lot of sense.
+
+651
+01:26:44,008 --> 01:26:50,158
+I really like how it cleans things up at some point.
+
+652
+01:26:50,158 --> 01:27:09,208
+I guess at some point we should probably fix the padding on button box so that we didn't have to keep doing this, but a challenge for another time.
+
+653
+01:27:09,208 --> 01:27:13,348
+So I'm going to mark that as done, I always like whenever I do these sort of commentaries,
+
+654
+01:27:13,348 --> 01:27:17,368
+I don't wanna make Heisse have to click done because there's nothing to do here is just me being like,
+
+655
+01:27:17,368 --> 01:27:23,468
+hey, I noticed this thing, so I'm going to click done for him.
+
+656
+01:27:23,468 --> 01:27:29,398
+Excuse me. And this one not because he's expressed an interest in actually doing this,
+
+657
+01:27:29,398 --> 01:27:34,888
+so I'm not going to click down there, but I'm actually pretty, pretty happy with this.
+
+658
+01:27:34,888 --> 01:27:39,188
+So I'm going to say except so thank you, Heisse.
+
+659
+01:27:39,188 --> 01:27:43,588
+Uh, yeah. Thank you.
+
+660
+01:27:43,588 --> 01:27:55,768
+I always think your contributor, this really tightens things up on Windows.
+
+661
+01:27:55,768 --> 01:28:00,678
+Submit. Abuja.
+
+662
+01:28:00,678 --> 01:28:02,718
+All right, so that's our reviews for the day.
+
+663
+01:28:02,718 --> 01:28:12,708
+Before we go, I want to answer a quick couple of questions that had shown up in the on the Internet via the rate this episode forms.
+
+664
+01:28:12,708 --> 01:28:18,408
+So just a reminder in the agenda which I linked to, there's this rate, this episode link.
+
+665
+01:28:18,408 --> 01:28:24,778
+You can let me know what you thought of the episode, but also you can leave me a question and I will try and answer it during the next stream.
+
+666
+01:28:24,778 --> 01:28:31,578
+So here are some of the questions I got. First person has a couple of questions they ask.
+
+667
+01:28:31,578 --> 01:28:37,758
+Can you describe your team? Like, how many people are there and how long have you known some of the members and how do you communicate with them?
+
+668
+01:28:37,758 --> 01:28:40,218
+OK, so that that's that's the first question.
+
+669
+01:28:40,218 --> 01:28:52,848
+So my team so currently I work on the Firefox desktop front end engineering team, and I think there's something like.
+
+670
+01:28:52,848 --> 01:29:04,508
+Ten of us. I could be wrong, I haven't done a count 10 or 11, I'd say, and there are people who like work on the front end of the browser,
+
+671
+01:29:04,508 --> 01:29:10,238
+like there are people, for example, who work on this stuff, which is arguably the front end of the browser.
+
+672
+01:29:10,238 --> 01:29:17,378
+But they're on a separate team, like there are sort of specialized teams that will like specialize on a particular part of the browser.
+
+673
+01:29:17,378 --> 01:29:25,088
+And my team is sort of a general set of people who are pretty good at most of the front end of the browser.
+
+674
+01:29:25,088 --> 01:29:26,378
+You know, that's that's what we do.
+
+675
+01:29:26,378 --> 01:29:35,708
+So the recent reform effort that happened in 89, that was like I'd say mostly our team where we're the kind of the front end generalists.
+
+676
+01:29:35,708 --> 01:29:40,868
+I think there's about 11 of us in total. How long have I known some of the members?
+
+677
+01:29:40,868 --> 01:29:46,028
+Well, I mean, probably it spans from some people.
+
+678
+01:29:46,028 --> 01:29:54,848
+I've only gotten to know within this past year, I'd say really gotten to know, rather maybe I was familiar with them when they were on other teams.
+
+679
+01:29:54,848 --> 01:30:01,058
+But I got to know them this year, spanning to like people I've known since I pretty much started working on Firefox desktop,
+
+680
+01:30:01,058 --> 01:30:05,288
+which is like eight years ago, I think eight years ago.
+
+681
+01:30:05,288 --> 01:30:12,068
+So it really spans the gamut. Yeah, some people have been around for a long time, just, you know, just like me.
+
+682
+01:30:12,068 --> 01:30:17,378
+I've been around for a long time and I've known some of them that entire time.
+
+683
+01:30:17,378 --> 01:30:21,128
+And let's see, how do you communicate with them?
+
+684
+01:30:21,128 --> 01:30:26,738
+So primarily I'd say we communicate using what's called matrix.
+
+685
+01:30:26,738 --> 01:30:33,878
+So Matrix, there's some instructions on how to use Matrix somewhere in the agenda for chat here where the live hacking changes,
+
+686
+01:30:33,878 --> 01:30:42,428
+but that we switched away from what used to be our primary like chat system, which was called IAC to Matrix.
+
+687
+01:30:42,428 --> 01:30:47,768
+And that is, I'd say, where most of engineering is communicating now.
+
+688
+01:30:47,768 --> 01:30:53,438
+We also have some teams that use slack, and so some of us end up living in two worlds.
+
+689
+01:30:53,438 --> 01:30:58,148
+We have like Matrix World and then we have some teams that really like to use slack and we're in slack world.
+
+690
+01:30:58,148 --> 01:31:02,318
+But I'd say the the majority of engineering likes to hang around in Matrix.
+
+691
+01:31:02,318 --> 01:31:06,698
+That's my impression anyways. So we also communicate.
+
+692
+01:31:06,698 --> 01:31:10,898
+I mean, when we're sitting in offices where it's been a while since I've been in an office,
+
+693
+01:31:10,898 --> 01:31:15,408
+I'll communicate by going up to someone's desk or speaking with them over lunch at a lunch table.
+
+694
+01:31:15,408 --> 01:31:20,528
+Now, I have plenty of colleagues who are remote heisse, for example, who is watching, who might still be watching.
+
+695
+01:31:20,528 --> 01:31:25,388
+I don't know if he's still watching is a remote employee.
+
+696
+01:31:25,388 --> 01:31:31,448
+And so the way I generally communicate with Heisse in the way of always communicated with Heisse whenever I'm not with him in person,
+
+697
+01:31:31,448 --> 01:31:37,328
+is over zoom or like video conferencing. Right now we use Zoom, I think, for the majority of our video conferencing.
+
+698
+01:31:37,328 --> 01:31:45,428
+And I think besides that fabricator bugs and email, I think that accounts for the vast majority of the way we communicate.
+
+699
+01:31:45,428 --> 01:31:53,618
+So let me review Matrix Slack Fabricator Bug Zillah Email Zoome.
+
+700
+01:31:53,618 --> 01:31:58,928
+That's how we communicate. And theoretically, can you change your team?
+
+701
+01:31:58,928 --> 01:32:02,378
+Yes. Yes, you can. I've known people to do it.
+
+702
+01:32:02,378 --> 01:32:14,408
+How often does the lineup change? You know, we've gotten people people transferred to my team within the year.
+
+703
+01:32:14,408 --> 01:32:20,448
+You know, we've had, I think two people transfer out of the team. There are.
+
+704
+01:32:20,448 --> 01:32:29,598
+Always so the structure of the team is designed to fit the problem that the team is trying to solve, so the structure of the team is never like done.
+
+705
+01:32:29,598 --> 01:32:34,638
+So the team like subthemes will form based on what problems we're trying to solve.
+
+706
+01:32:34,638 --> 01:32:39,048
+And that might include engineers from other teams as well, because we like to work together.
+
+707
+01:32:39,048 --> 01:32:47,208
+And, you know, we sometimes need people who have like different specialties from different teams and so like form and combine and collapse.
+
+708
+01:32:47,208 --> 01:32:51,768
+But we all kind of have this umbrella team where we're like the front end engineers.
+
+709
+01:32:51,768 --> 01:32:57,738
+And so you do change your lineup based usually based on what problem you're solving.
+
+710
+01:32:57,738 --> 01:33:02,898
+So like during the reform effort that we did for Firefox's eighty nine, it was like the whole bunch of us working together,
+
+711
+01:33:02,898 --> 01:33:07,248
+but like these little sub teams formed based on what parts we were working on.
+
+712
+01:33:07,248 --> 01:33:13,068
+And then as those parts finished up, you know, people would contribute to various parts of the other teams work.
+
+713
+01:33:13,068 --> 01:33:21,078
+And and so the lineup changes often, like I'm not always working with the same people sometimes sometimes I'm working on the same stuff as Hice.
+
+714
+01:33:21,078 --> 01:33:27,138
+And then sometimes I'm working on not the same stuff as ice. And we don't we don't work on the same stuff for months.
+
+715
+01:33:27,138 --> 01:33:31,878
+Who knows? So it changes often. What does my team responsible for?
+
+716
+01:33:31,878 --> 01:33:34,758
+I think I've answered that the front end of Firefox desktop.
+
+717
+01:33:34,758 --> 01:33:39,018
+Can you say something about other teams that, you know, do you collaborate with other teams?
+
+718
+01:33:39,018 --> 01:33:45,138
+So, yes, we definitely I think I mentioned this. We definitely collaborate with other teams. We have to.
+
+719
+01:33:45,138 --> 01:33:50,928
+And, you know, if we're going to get anything done, we have to work together. So, I mean, it's not just other engineering teams.
+
+720
+01:33:50,928 --> 01:33:57,858
+Like we're always working with other engineering teams. We like there aren't really hard borders we don't like.
+
+721
+01:33:57,858 --> 01:34:02,598
+You know, you can't touch my code. You can't change my code, that sort of thing.
+
+722
+01:34:02,598 --> 01:34:04,638
+We will cross borders all the time.
+
+723
+01:34:04,638 --> 01:34:09,018
+We just have to make sure that people who know the code or who is reviewing the code and they accept the patches and then
+
+724
+01:34:09,018 --> 01:34:13,758
+we're communicating the sorts of stuff that we're trying to do and what plans that we have and what our priorities are.
+
+725
+01:34:13,758 --> 01:34:18,378
+So engineering is constantly talking, but also we have different teams like the UX team.
+
+726
+01:34:18,378 --> 01:34:24,648
+So they're the ones who are designing the experience in the flow and the visual appearance of the products.
+
+727
+01:34:24,648 --> 01:34:28,698
+And then you have the product management team whose design issues like figuring out
+
+728
+01:34:28,698 --> 01:34:33,738
+what people want and like what's important to do and has priority and what doesn't.
+
+729
+01:34:33,738 --> 01:34:38,448
+What's the vision? And then you have like the privacy and security team who's there,
+
+730
+01:34:38,448 --> 01:34:45,918
+like the specialists and making sure that we don't accidentally make really dangerous software for
+
+731
+01:34:45,918 --> 01:34:52,578
+people that will cause people to have their privacy compromised or their security threatened.
+
+732
+01:34:52,578 --> 01:34:58,908
+You know, people who are really good at security audits and privacy audits and data data collection
+
+733
+01:34:58,908 --> 01:35:02,778
+audits to make sure that we're not accidentally collecting way too much data than we need,
+
+734
+01:35:02,778 --> 01:35:08,418
+which is something we don't want to do. So, yeah, we we collaborate with other teams all of the time.
+
+735
+01:35:08,418 --> 01:35:12,648
+And I haven't even there are other like the user research team, there's Kuai team,
+
+736
+01:35:12,648 --> 01:35:20,238
+there's localization team, you know, leadership teams like too many to count.
+
+737
+01:35:20,238 --> 01:35:25,008
+Like I'm definitely missing some. But, you know, we definitely collaborate.
+
+738
+01:35:25,008 --> 01:35:32,838
+We have to if we're going to get anything done. So that was the first set of questions I'm going to answer to more they ask.
+
+739
+01:35:32,838 --> 01:35:38,208
+I'd love to learn how your team. Oh, wait. I love to learn how your team does communication.
+
+740
+01:35:38,208 --> 01:35:42,258
+OK, I already answer that. I think I answer that question so we can move on.
+
+741
+01:35:42,258 --> 01:35:45,738
+But they also mentioned that they prefer the new mic setup, that it sounds better.
+
+742
+01:35:45,738 --> 01:35:53,298
+I agree. The last question is, how has working remotely for the past year affected you and your team?
+
+743
+01:35:53,298 --> 01:35:59,928
+So for me, I generally use like the vast majority of my work.
+
+744
+01:35:59,928 --> 01:36:08,278
+Whenever I was working with Mozilla, I would work in an office, I worked in an office and in Toronto where I live and.
+
+745
+01:36:08,278 --> 01:36:18,478
+That I have not been able to do during the pandemic, and so I've been working here and in this basement and I've gotten used to it,
+
+746
+01:36:18,478 --> 01:36:26,638
+but the good news is that I think the majority it's a it's the majority of our employees are remote.
+
+747
+01:36:26,638 --> 01:36:34,048
+So we already had, like, a huge infrastructure set up, like we have all of our tooling is designed to support remote employees.
+
+748
+01:36:34,048 --> 01:36:39,748
+So whenever the pandemic hit and they were like, we're closing offices, everyone work from home, it wasn't a huge leap.
+
+749
+01:36:39,748 --> 01:36:44,878
+Like I did have to do a couple of things, like I had to bring some hardware home that I generally work with in the office.
+
+750
+01:36:44,878 --> 01:36:49,168
+Like I brought my big windows to our home and plugged it into my home network.
+
+751
+01:36:49,168 --> 01:36:56,188
+And what else did I bring home? I mean, I brought all the streaming stuff like my green screen that I generally had in the office.
+
+752
+01:36:56,188 --> 01:37:00,208
+I brought all that home and some testing hardware that I used. I brought that home.
+
+753
+01:37:00,208 --> 01:37:06,838
+And then it's been it's been fine. You know, we've adapted and we were actually well suited.
+
+754
+01:37:06,838 --> 01:37:08,908
+Like we didn't skip a beat.
+
+755
+01:37:08,908 --> 01:37:15,988
+Like, I'm pretty sure when the office is closed the next Monday, I was working and it was fine, you know, like just using the same tools I always use.
+
+756
+01:37:15,988 --> 01:37:23,338
+It's just it's a lot lonelier. And I well, for lunch I leftovers that are in the fridge upstairs in our kitchen,
+
+757
+01:37:23,338 --> 01:37:28,408
+you know, rather than going and going to the office cafeteria, I go into the kitchen,
+
+758
+01:37:28,408 --> 01:37:32,028
+my kitchen, you know, and I'm,
+
+759
+01:37:32,028 --> 01:37:39,028
+I'm surrounded by my basement clutter as opposed to being in an office with my colleagues who I love hearing the chatter of.
+
+760
+01:37:39,028 --> 01:37:44,878
+That's the thing that I miss. I miss the chatter. I miss the the you know, not even the food.
+
+761
+01:37:44,878 --> 01:37:49,438
+I mean, the food's fine. We would periodically get food brought in, which is great.
+
+762
+01:37:49,438 --> 01:37:56,458
+But I miss the chatter around the lunch table and talking to my peers and hearing what they're up to, which, you know,
+
+763
+01:37:56,458 --> 01:38:04,738
+that's a thing that I think we've struggled in the past to foster with our remote contributors are remote employees,
+
+764
+01:38:04,738 --> 01:38:11,968
+is like, how do you get that sort of lunchtime feel? And now we're all kind of feeling it like we're all remote.
+
+765
+01:38:11,968 --> 01:38:24,118
+Now everyone's working from home pretty much. And so we I think this is going to do a lot to hopefully hopefully we keep this memory alive.
+
+766
+01:38:24,118 --> 01:38:28,588
+Eventually the offices will open, but hopefully we all are able to empathize of like, OK,
+
+767
+01:38:28,588 --> 01:38:32,998
+this is what it's like to work from home, you know, and this is what rheumatiz have to go through.
+
+768
+01:38:32,998 --> 01:38:40,738
+And this is what this is what it's like. And to like make sure that we don't forget and make sure that, you know, we value the skill like this.
+
+769
+01:38:40,738 --> 01:38:44,638
+This posturing of being able to work remotely is really powerful.
+
+770
+01:38:44,638 --> 01:38:53,748
+And like, let's not forget how powerful is allowed us to adapt really quickly and and like, let's not forget that.
+
+771
+01:38:53,748 --> 01:39:05,068
+OK, so that was the last question in in the that was submitted via the forms and.
+
+772
+01:39:05,068 --> 01:39:12,338
+It's. It's tough being rheumatiz sometimes as far, but it's usually very nice forays on the dog team.
+
+773
+01:39:12,338 --> 01:39:18,038
+Hey, Farai, good to see you. Yeah, the ficca or lunch breaks is the hardest to adapt for remote work.
+
+774
+01:39:18,038 --> 01:39:24,098
+I'm not sure what Ficca is. I'm guessing that that is some kind of as a word in the language I'm not familiar with.
+
+775
+01:39:24,098 --> 01:39:26,078
+But yeah, that is a really hard thing.
+
+776
+01:39:26,078 --> 01:39:32,858
+I think we tried a couple of times to like have a like a tablet with a camera set up to try and create that shared space.
+
+777
+01:39:32,858 --> 01:39:41,768
+It's really hard. It's like trying to have lunch with people through this little window and they can all hear each other a lot better.
+
+778
+01:39:41,768 --> 01:39:46,838
+And and you're like, hey, can anyone hear me? I have got a question. You're like waving your arms.
+
+779
+01:39:46,838 --> 01:39:52,618
+You know, it's it's difficult. It's difficult, I think, and.
+
+780
+01:39:52,618 --> 01:39:56,008
+I hope we're able to sort of take this experience when we move,
+
+781
+01:39:56,008 --> 01:40:00,178
+when people move back into the offices and I'm going to be one of them because I miss my office peeps.
+
+782
+01:40:00,178 --> 01:40:05,038
+But when we move back in that, we remember what this was like and we we do a better job of trying to find ways
+
+783
+01:40:05,038 --> 01:40:09,058
+of taking what we value from the office and making it more available for people.
+
+784
+01:40:09,058 --> 01:40:13,498
+And I don't know how you do that. Do you do that via technology? Do you do that via.
+
+785
+01:40:13,498 --> 01:40:17,818
+I don't know. I don't know, but.
+
+786
+01:40:17,818 --> 01:40:23,128
+It's important, it's important I missed that stuff, it's not it's not like it's really critical to my life, obviously.
+
+787
+01:40:23,128 --> 01:40:27,448
+I mean, I've been able to work for a year without going into an office, but I really miss it.
+
+788
+01:40:27,448 --> 01:40:31,798
+I miss the people. All right. I'm going to call it there. Thank you so much for watching.
+
+789
+01:40:31,798 --> 01:40:35,188
+Episode two hundred and fifty six of the joy of Coding. Let me know what you thought.
+
+790
+01:40:35,188 --> 01:40:38,338
+Send in your questions. There's this link in the agenda to read this episode.
+
+791
+01:40:38,338 --> 01:40:45,478
+Even if you're one of my colleagues who's known me for a number of years, you're going to ask me a question and I'll answer it on air.
+
+792
+01:40:45,478 --> 01:40:51,508
+So just send something in that form. Even if that question is why haven't you reviewed my patch yet?
+
+793
+01:40:51,508 --> 01:40:56,458
+Go ahead and send that question in and I will see you all next week.
+
+794
+01:40:56,458 --> 01:41:00,268
+So that's it. Have yourselves a great week.
+
+795
+01:41:00,268 --> 01:41:15,824
+Take care. Bye bye. The joy, according to.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

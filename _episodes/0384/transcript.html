@@ -1,0 +1,3170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 384 - November 20, 2024</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 384 - November 20, 2024</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=265b8e00-ad7c-4dfc-98fc-b2130140b923</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=265b8e00-ad7c-4dfc-98fc-b2130140b923">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,661 --> 00:00:09,081
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome. Through the joy of coding.
+
+2
+00:00:09,471 --> 00:00:13,841
+Hello and welcome to episode 384 of the Joy of coding.
+
+3
+00:00:13,851 --> 00:00:18,801
+My name is Mike Connelly. It's so good to have you here. We're going to be live hacking on some Firefox stuff today.
+
+4
+00:00:18,921 --> 00:00:24,381
+I'm very excited about that. We're going to be continuing our deep dive into documentation.
+
+5
+00:00:24,411 --> 00:00:29,141
+Um, I almost said purgatory, but not exactly.
+
+6
+00:00:29,151 --> 00:00:35,631
+We're we're documenting a fairly gnarly piece of, uh, component of the desktop browser,
+
+7
+00:00:35,931 --> 00:00:43,491
+that part that manages, um, uh, customization of your toolbars and panels, the overflow panel.
+
+8
+00:00:44,211 --> 00:00:48,291
+And there's a lot a long history, like I worked on the first version of that in 2014.
+
+9
+00:00:48,771 --> 00:00:54,441
+And, you know, there have been some changes here and there over the years, but for the most part, it hasn't changed.
+
+10
+00:00:54,441 --> 00:00:56,301
+But the things around it have changed.
+
+11
+00:00:56,301 --> 00:01:05,361
+And so there's like a lot of history and, um, probably dead code sitting around in that module that needs to be cleaned up.
+
+12
+00:01:05,391 --> 00:01:13,341
+You know, it's it works, it does its job, but the conditions under which it under which it exists have changed.
+
+13
+00:01:13,491 --> 00:01:20,601
+So for example, in 2014, um, it was possible for add ons to insert new toolbars at runtime, for example.
+
+14
+00:01:20,601 --> 00:01:24,231
+And like, we don't do that anymore. That's not a thing that add ons can do.
+
+15
+00:01:24,231 --> 00:01:28,791
+That's not a thing that we would uh, um, there's, there's no API for doing that.
+
+16
+00:01:29,181 --> 00:01:35,660
+And so there are chunks of the, the customizable UI mechanism that can probably go away.
+
+17
+00:01:35,661 --> 00:01:43,881
+They don't need to be supported anymore. But, uh, our job isn't to judge, and our job here isn't to fix so much as it is to document,
+
+18
+00:01:44,181 --> 00:01:47,811
+document and maybe, uh, clean up a little bit here and there.
+
+19
+00:01:47,871 --> 00:01:57,110
+Um, so I yeah, in a way, documentation like by way of, um, doing documentation,
+
+20
+00:01:57,111 --> 00:02:00,141
+we're finding little things, a little shopping list of things to change.
+
+21
+00:02:00,141 --> 00:02:05,271
+And some of the things that we're doing as part of our documentation journey also involve cleaning some things up.
+
+22
+00:02:05,511 --> 00:02:16,221
+So, for example, we've done some conversions from some old school prototype classes to some, um, uh, uh, what we call like ES6 classes.
+
+23
+00:02:16,581 --> 00:02:23,301
+Uh, and that actually makes things better because we can use like private, real private methods, real private members, um,
+
+24
+00:02:23,301 --> 00:02:32,210
+which helps with encapsulation and, uh, and that helps sort of like draw a very clear line about, like, what's within the scope of the module.
+
+25
+00:02:32,211 --> 00:02:39,200
+What's the responsibility of the module? And what is, uh, sort of like external what touches the outside world.
+
+26
+00:02:39,201 --> 00:02:41,270
+And it's the inside and outside.
+
+27
+00:02:41,271 --> 00:02:55,701
+Was it the open closed principle, the, uh, the man, the, uh, the Demeter print Dempster's law, whatever principle of least knowledge, basically.
+
+28
+00:02:56,271 --> 00:03:02,451
+Um, also, I realized I never checked to see whether or not the chat was working, so let me do that real quick.
+
+29
+00:03:02,991 --> 00:03:06,081
+Uh, bridge, just please ignore.
+
+30
+00:03:06,141 --> 00:03:09,261
+Let's just see if that's going to go through one second.
+
+31
+00:03:12,351 --> 00:03:17,901
+Checking, checking. There it is. Okay. Chat's working and you're you're you're, uh.
+
+32
+00:03:17,901 --> 00:03:22,921
+We're all set to go. So let's start by sharing my screen. You can see, uh, what.
+
+33
+00:03:23,571 --> 00:03:29,991
+You can see where we're at. Yeah. It's November 20th, 2024, episode 384 A reminder.
+
+34
+00:03:29,991 --> 00:03:34,941
+No plan survives breakfast. I think I know what I want to do today with that documentation stuff, but it might go wrong.
+
+35
+00:03:34,941 --> 00:03:39,201
+It might go sideways. We might get distracted, get sent down some kind of rabbit hole.
+
+36
+00:03:39,201 --> 00:03:44,211
+Someone might kick me out of this room and, uh, and tell me that I need to move, and I have to end the stream early.
+
+37
+00:03:44,211 --> 00:03:48,081
+Who knows what'll happen. We're just going to take.
+
+38
+00:03:48,111 --> 00:03:53,331
+We're just going to roll with the punches, as I think they say, in martial arts or something.
+
+39
+00:03:53,931 --> 00:03:56,871
+So that's the first thing. The second thing is that there is an agenda.
+
+40
+00:03:56,871 --> 00:04:01,820
+We're looking at it right now, and depending on where you're watching this, uh, stream the agenda, a link to it will be in a different place.
+
+41
+00:04:01,821 --> 00:04:04,221
+So if you're watching this on YouTube, it's down the video description.
+
+42
+00:04:04,551 --> 00:04:07,880
+If you're watching this on air Mozilla, it'll be over there in the details section.
+
+43
+00:04:07,881 --> 00:04:11,030
+If you're watching this on, uh, where's the last place?
+
+44
+00:04:11,031 --> 00:04:15,410
+Twitch. It's down in the, uh, the channel details. There's also an episode guide.
+
+45
+00:04:15,411 --> 00:04:17,091
+Hey, did you know this? I haven't plug this in a while.
+
+46
+00:04:17,301 --> 00:04:23,960
+There's an episode guide to the joy of coding, and, uh, you are, uh, you know, you're able to contribute to the episode guide.
+
+47
+00:04:23,961 --> 00:04:25,430
+If you visit the episode guide,
+
+48
+00:04:25,431 --> 00:04:33,381
+you can see episode guides going all the way back to pretty much the very beginning in 2015, um, when I started doing this.
+
+49
+00:04:33,381 --> 00:04:37,370
+And we've got episodes leading right up to while episode 372.
+
+50
+00:04:37,371 --> 00:04:40,490
+So I'm actually a little bit behind updating this actually.
+
+51
+00:04:40,491 --> 00:04:45,051
+Maybe that's where we'll start, because I have a feeling that there are some pull requests here for some episodes.
+
+52
+00:04:45,561 --> 00:04:49,160
+Uh, from Smurf d that I need to start, um, uh, folding in.
+
+53
+00:04:49,161 --> 00:04:56,421
+So maybe we'll start there. Let's let's do that. I realize this is not this isn't a perfect example of things.
+
+54
+00:04:56,421 --> 00:05:00,681
+Uh, not going according to plan. I've decided to pivot on this completely.
+
+55
+00:05:00,771 --> 00:05:04,491
+We're just going to quickly look at some of these, uh, pull requests and, uh, to.
+
+56
+00:05:04,741 --> 00:05:07,951
+To the episode guide and hopefully merge them in. So.
+
+57
+00:05:10,081 --> 00:05:13,591
+This first pull request adds episode 373, four and five.
+
+58
+00:05:14,101 --> 00:05:21,311
+Uh, and so, you know, classic. Uh, but if you've never seen me review these before, I'm pretty relaxed about it.
+
+59
+00:05:21,331 --> 00:05:26,281
+I'm not doing, like, a fine grained check. Um, and, uh.
+
+60
+00:05:26,281 --> 00:05:29,651
+Oh, it smurfd0 says that there are a few behind. Don't worry about it. Like the.
+
+61
+00:05:29,671 --> 00:05:33,511
+I'm. I'm just so grateful that you supply any of these, so.
+
+62
+00:05:33,511 --> 00:05:33,901
+Thank you.
+
+63
+00:05:34,411 --> 00:05:41,821
+Um, uh, one thing I like to do is I like to make sure that the dates all line up, that they're correct, because sometimes copy paste errors occur.
+
+64
+00:05:41,851 --> 00:05:47,070
+So this was on July 17th. First, make sure that we've got that episode 373.
+
+65
+00:05:47,071 --> 00:05:50,601
+That's correct. Um, and what did I do that day?
+
+66
+00:05:50,611 --> 00:05:54,711
+I fixed up some nest. I was working on the backup stuff and Unicode characters.
+
+67
+00:05:54,721 --> 00:05:58,170
+Oh, yeah. That was that was fun. If it might be worth checking.
+
+68
+00:05:58,171 --> 00:06:02,431
+Uh. That episode out, if you don't know what I'm talking about.
+
+69
+00:06:02,431 --> 00:06:06,000
+And then, uh, there were some reviews that I ended up not getting too. Um.
+
+70
+00:06:06,001 --> 00:06:08,291
+But that all looks right. Uh, I'm happy with that.
+
+71
+00:06:08,311 --> 00:06:18,271
+Moving right along, then, to episode 374, which was, uh, a week later, uh, almost two weeks later, uh, I had to skip, I guess a week.
+
+72
+00:06:18,601 --> 00:06:24,180
+Yeah, there's no stream next week because I was I went on vacation and, uh, there was some travel I had to mention.
+
+73
+00:06:24,181 --> 00:06:26,910
+And, uh, so some more episodes were going to be missed.
+
+74
+00:06:26,911 --> 00:06:35,331
+But on 374, I talked about the sidebar and auto pip, uh, which has been, uh, available in release now for a little while.
+
+75
+00:06:35,341 --> 00:06:38,821
+There's actually something really nice coming, uh, next week.
+
+76
+00:06:39,061 --> 00:06:43,050
+Uh, version 133 I think releases let me just said correct.
+
+77
+00:06:43,051 --> 00:06:48,000
+Do I have that right? 133 ships in six days.
+
+78
+00:06:48,001 --> 00:06:50,791
+So next week, 133 goes out.
+
+79
+00:06:50,791 --> 00:06:56,461
+And if you tried using the auto pip feature, and if you're not familiar with the auto pip feature, let me show you what it is.
+
+80
+00:06:56,971 --> 00:07:00,331
+Uh, the auto pip feature here. I'll do it on my own stream. This will be hilarious.
+
+81
+00:07:01,171 --> 00:07:04,201
+Um, so this is a stream I'll meet.
+
+82
+00:07:04,201 --> 00:07:07,381
+I'll meet this. But this is my stream right now. It's a little bit behind.
+
+83
+00:07:08,071 --> 00:07:11,251
+Uh, and if I tab, if I, like, create a new tab.
+
+84
+00:07:11,401 --> 00:07:17,820
+I have the auto pip feature enabled. If I, uh, open a new tab, then pip automatically opens.
+
+85
+00:07:17,821 --> 00:07:21,121
+You can't, um, my head's in the way, but Pip automatically open for that video,
+
+86
+00:07:21,541 --> 00:07:25,921
+and it looks like two actually got created because two videos exist on that page.
+
+87
+00:07:26,551 --> 00:07:34,471
+Um, that's kind of a special page. Anyways, uh, we made it a little smarter, so we made it so that, um,
+
+88
+00:07:34,861 --> 00:07:41,791
+pip auto pip was pretty aggressive whenever we first rolled it out or we first made it available for for people to try.
+
+89
+00:07:42,271 --> 00:07:48,301
+And, uh, we've made it. So that is, it is a little more choosy about which videos it will attempt to auto pip.
+
+90
+00:07:49,231 --> 00:07:52,920
+Um, and we think we found the right balance for that choosing us.
+
+91
+00:07:52,921 --> 00:07:58,261
+So if you had tried Auto Pip and you were like, uh, it's really opening up things that I don't care about,
+
+92
+00:07:58,261 --> 00:08:05,431
+like advertisements or like these little GIFs on pages, like it was a little too, um, excited to auto pip.
+
+93
+00:08:06,721 --> 00:08:10,290
+Um, we've made some, uh, corrections.
+
+94
+00:08:10,291 --> 00:08:13,591
+We've done some attenuation. So this is the thing that you have to opt into.
+
+95
+00:08:13,621 --> 00:08:16,141
+You go if it is at all interesting.
+
+96
+00:08:16,621 --> 00:08:23,251
+Uh, if you're using 133 on beta or night, uh, 134 a nightly, you already have these corrections if you're on release,
+
+97
+00:08:23,581 --> 00:08:27,001
+uh, wait a week or so and then the release will come out, you'll get the update.
+
+98
+00:08:27,001 --> 00:08:33,931
+And then if you want to try it out, it's in Firefox Labs. It'll be under Pip picture in picture auto open on tab switch.
+
+99
+00:08:34,291 --> 00:08:38,521
+So you can um you can flip that on and try it out. It takes effect immediately.
+
+100
+00:08:38,941 --> 00:08:45,031
+Okay. So yeah, we were working on auto Pip. Uh, I talked about some that's what when I did some episode guide updates apparently.
+
+101
+00:08:45,361 --> 00:08:50,041
+So this is a blast from the past. Looks great. The dates are right, I am happy.
+
+102
+00:08:50,041 --> 00:08:53,911
+Let's move on on August 7th, episode 375.
+
+103
+00:08:55,441 --> 00:08:59,101
+Um, that the dates look right? What did I do?
+
+104
+00:08:59,491 --> 00:09:03,841
+I talked about, uh, puppeteer support, and we wrote some tests for backup regeneration.
+
+105
+00:09:03,841 --> 00:09:09,451
+Right. Uh, that all looks right. I'm happy with this. Let's merge it in merge.
+
+106
+00:09:10,141 --> 00:09:16,741
+Merge. Thanks, always. Thank your contributors for their work.
+
+107
+00:09:18,541 --> 00:09:23,251
+Episode 366 and 367. Uh, here we go.
+
+108
+00:09:25,201 --> 00:09:28,291
+All right. 376 and 377.
+
+109
+00:09:28,291 --> 00:09:31,741
+Rather. Sorry about that. Uh. September 4th.
+
+110
+00:09:31,981 --> 00:09:37,381
+That is correct. Um, the links and the dates look right.
+
+111
+00:09:38,161 --> 00:09:41,551
+Um, I started talking about using git rather than mercurial.
+
+112
+00:09:41,581 --> 00:09:48,051
+We're switching over. I'm using get via git. Cinnabar. Back when 130 was released.
+
+113
+00:09:48,071 --> 00:09:53,741
+Oh, like feels like yesterday. Uh, and we worked on some stuff.
+
+114
+00:09:53,981 --> 00:09:57,031
+These two bugs. I don't remember what those are about, but that looks right.
+
+115
+00:09:57,041 --> 00:10:02,270
+Next up was, uh, September 18th. Uh, 377.
+
+116
+00:10:02,271 --> 00:10:05,740
+Milk's right how it all looks.
+
+117
+00:10:05,741 --> 00:10:16,091
+Right? And then this is when we started our journey for creating documents, documentation for customizable UI and that I'm all pretty happy with.
+
+118
+00:10:16,091 --> 00:10:19,871
+And we start talking about JS doc. So we're going to go ahead merge.
+
+119
+00:10:21,491 --> 00:10:28,781
+Thanks. And last but not least episodes 378 379 380.
+
+120
+00:10:28,811 --> 00:10:33,761
+All of these are going to be, uh, customizable UI, uh, documentation.
+
+121
+00:10:33,971 --> 00:10:40,631
+I did a what, a week? I must have had a weird week or a hard week because I did the what a week, um, meme.
+
+122
+00:10:42,401 --> 00:10:46,241
+Uh. It's not PNG.
+
+123
+00:10:46,931 --> 00:10:50,651
+No, I don't know where that image is. Um.
+
+124
+00:10:53,361 --> 00:11:01,501
+I'm pretty sure that's the. It's a png. Um, but for some reason, I guess the episode guy let me.
+
+125
+00:11:01,851 --> 00:11:06,981
+What happened here? Okay. Agendas for episode 378.
+
+126
+00:11:06,991 --> 00:11:11,631
+Did it not attach correctly? 378. It just inserts it.
+
+127
+00:11:11,661 --> 00:11:14,781
+Oh, okay. I see what happened here. Uh, what a week.
+
+128
+00:11:14,811 --> 00:11:18,110
+Captain, it's Wednesday, and we're reading more documentation.
+
+129
+00:11:18,111 --> 00:11:25,401
+Yeah, that sounds right. Uh, on October 16th, uh, that was episode 379.
+
+130
+00:11:27,651 --> 00:11:32,691
+Keep trucking. I have a hard stop. Baa baa baa baa baa. Okay, so 380.
+
+131
+00:11:33,741 --> 00:11:37,311
+1023. Yep. More documentation.
+
+132
+00:11:37,341 --> 00:11:41,691
+We did, uh, panel multiview, and then I listed out the stuff we still need to do.
+
+133
+00:11:41,721 --> 00:11:47,361
+We're actually the point now where we're doing customize mode. Uh, we haven't done customizable widgets yet, but we have done these three.
+
+134
+00:11:47,571 --> 00:11:52,171
+So we're going to be working on customize mode today. So I'm pretty happy with that.
+
+135
+00:11:52,191 --> 00:11:55,670
+Let's go ahead and merge those in. I want to draw your attention to something else.
+
+136
+00:11:55,671 --> 00:11:59,391
+So it's kind of neat. Uh, I'd forgotten that I hadn't talked about it.
+
+137
+00:11:59,691 --> 00:12:05,571
+Um, but the, uh. Did I talk at all about profiles?
+
+138
+00:12:06,681 --> 00:12:15,351
+Um, some of the profiles work has evolved a little bit, and I wanted to, uh, like, maybe you'd seen me, uh, create a profile.
+
+139
+00:12:15,351 --> 00:12:18,711
+I've got this, like, other profile called selectable tester.
+
+140
+00:12:19,131 --> 00:12:20,391
+Um, which is kind of neat.
+
+141
+00:12:20,721 --> 00:12:31,991
+And, uh, you know, these are light, um, conceptually similar to the profile mechanism that Firefox has had since before I even started working on it.
+
+142
+00:12:32,001 --> 00:12:35,301
+But, yeah, they're much easier for people to use. You can add icons.
+
+143
+00:12:35,301 --> 00:12:40,351
+And one of the things I want to draw your attention to is that whenever you have a profile, you can supply an icon to represent it.
+
+144
+00:12:40,371 --> 00:12:46,121
+In this case, I have a little briefcase for my default nightly, and we're starting to add those icons to the taskbar.
+
+145
+00:12:46,131 --> 00:12:53,211
+So the idea being that, uh, if you've got multiple profiles open, I'll actually still have this one.
+
+146
+00:12:53,631 --> 00:12:54,171
+Yeah. There we go.
+
+147
+00:12:54,471 --> 00:13:02,451
+Uh, then you can sort of tell them apart in your taskbar because of the, uh, the little icon there, which I think is, is kind of nice.
+
+148
+00:13:02,841 --> 00:13:06,501
+So, um. Yeah, pretty stoked about that.
+
+149
+00:13:07,221 --> 00:13:11,511
+Um, all right, let's get back to that documentation work.
+
+150
+00:13:11,541 --> 00:13:15,411
+Where am I? Let's take a look at where I am here.
+
+151
+00:13:15,441 --> 00:13:18,861
+Do I have any changes locally? Do I have uncommitted changes?
+
+152
+00:13:22,511 --> 00:13:26,531
+No. All right, check it out. Customizable UI documentation.
+
+153
+00:13:26,531 --> 00:13:35,071
+This is the branch we've been working on. We're going to rebase this on the central.
+
+154
+00:13:35,281 --> 00:13:41,971
+Like we do every time we start the stream. Good.
+
+155
+00:13:42,421 --> 00:13:45,871
+And then we are going to mark. Um.
+
+156
+00:13:46,621 --> 00:13:50,971
+We're going to build artifact build with artifact, uh, build.
+
+157
+00:13:55,121 --> 00:13:59,231
+Maybe we did some documentation for it? Or was it that you looked at Safari a long time ago?
+
+158
+00:13:59,831 --> 00:14:10,991
+The profile stuff. We definitely looked at Safari's profile stuff a couple of like months ago because Safari 17 came out with profile support.
+
+159
+00:14:11,171 --> 00:14:16,091
+I think it was 17, and we wanted to understand how we could import from separate Safari profiles.
+
+160
+00:14:16,181 --> 00:14:22,001
+We ended up doing a bit of research there to see how Safari stores profile data, because they don't document it.
+
+161
+00:14:22,271 --> 00:14:24,131
+So we had to kind of like figure it out.
+
+162
+00:14:24,581 --> 00:14:30,401
+Um, but I think it was a couple of episodes ago where I talked about at the very beginning, like I was excited about profiles and I showed them off.
+
+163
+00:14:30,641 --> 00:14:36,371
+If you're interested in trying them out now, caveat this profile selectable profile stuff.
+
+164
+00:14:36,821 --> 00:14:40,511
+Very early days still. You know it's still in development.
+
+165
+00:14:41,441 --> 00:14:47,080
+Things could break. If you're using profiles like this, you may find that you know,
+
+166
+00:14:47,081 --> 00:14:52,391
+the schema changes and all of a sudden all your profiles are hosed because, you know, you weren't actually we hadn't pressed it on yet.
+
+167
+00:14:53,261 --> 00:15:04,570
+So, uh, but if you're willing to be a space monkey and to, uh, try stuff like that out, the, uh, pref is browser profiles enabled.
+
+168
+00:15:04,571 --> 00:15:09,551
+If you set that to true, then, um, you can I think it's immediate.
+
+169
+00:15:09,551 --> 00:15:10,660
+It takes effect immediately.
+
+170
+00:15:10,661 --> 00:15:16,331
+Or maybe you need to restart the browser, but then you should get this item in here which allows you to to create user profiles.
+
+171
+00:15:19,001 --> 00:15:24,251
+Uh, Swifty asks not related to Pip, but are you aware of a bug or feature for iOS that when you play a video switch,
+
+172
+00:15:24,341 --> 00:15:27,911
+uh, off the tab it keeps playing and switch back and close a tab keeps playing?
+
+173
+00:15:28,331 --> 00:15:35,471
+I don't have an iOS device. Um, I am not aware of such a bug, but, uh, if you're able to reproduce that reliably, that's worth filing.
+
+174
+00:15:35,471 --> 00:15:42,250
+I think that to me is like the decoder is still running. Maybe even the whole, like, content is somehow still running.
+
+175
+00:15:42,251 --> 00:15:46,721
+Maybe there's like a is it the will it just sit there and keep playing until it's done?
+
+176
+00:15:46,721 --> 00:15:52,031
+Or is there just like a little bit of a delay? Um, because maybe there's like some slow cleanup that's occurring?
+
+177
+00:15:52,271 --> 00:16:05,231
+I don't know, but, uh, how would you file that? I would, I suspect that there is a, uh, a section under any OS, Firefox for iOS.
+
+178
+00:16:10,201 --> 00:16:16,501
+Maybe just under general. Let's. Let's browser the UI for browsing the web.
+
+179
+00:16:17,371 --> 00:16:21,031
+Maybe I'd start with, uh, Firefox for iOS general.
+
+180
+00:16:21,871 --> 00:16:26,341
+Um, and see if you can. Uh.
+
+181
+00:16:29,131 --> 00:16:32,820
+Well, I think I just my display just flaked out.
+
+182
+00:16:32,821 --> 00:16:37,871
+Hold on. Just a quick sack. What's going on here?
+
+183
+00:16:41,171 --> 00:16:46,341
+Can you still see? You can still see me. Okay. My display is really freaking out.
+
+184
+00:16:46,361 --> 00:16:50,231
+I don't know exactly why. But, uh, this might be a rough one.
+
+185
+00:16:51,131 --> 00:16:54,591
+Uh, because I'm, uh. I don't see it in the in the monitor here.
+
+186
+00:16:54,611 --> 00:16:58,631
+Like, I don't think you can see it, but I'm getting a lot of, like, ghosted fragments of stuff.
+
+187
+00:16:59,381 --> 00:17:05,731
+I'm seeing, like, fragments of the GitHub page. And I think it's like my monitor is is fuzzing out.
+
+188
+00:17:05,741 --> 00:17:09,501
+I might turn off the monitor and turn it back on. Just bear with me.
+
+189
+00:17:09,521 --> 00:17:13,241
+This may cause some issues. Standby.
+
+190
+00:17:13,721 --> 00:17:17,261
+Um, I'm just gonna. I'm just going to. Just one minute.
+
+191
+00:17:17,381 --> 00:17:31,921
+Just one moment. Okay.
+
+192
+00:17:32,191 --> 00:17:35,461
+Not better. So powering off the monitor did not help.
+
+193
+00:17:35,851 --> 00:17:39,301
+But there is something super up with, uh, with the screen.
+
+194
+00:17:39,511 --> 00:17:43,621
+But we're going to we're just going to hang in there and do our best. You know this is the joy of coding.
+
+195
+00:17:44,131 --> 00:17:51,481
+Okay. So we've got our documentation being built out under browser components, customizable UI docs.
+
+196
+00:17:51,841 --> 00:17:58,170
+And then the, uh, the other argument we were supplying because of reasons was disable fatal warnings.
+
+197
+00:17:58,171 --> 00:18:01,471
+I think I just need to double check that that's the right syntax.
+
+198
+00:18:01,471 --> 00:18:04,651
+And when I run, help it and install a bunch of stuff. So hold on.
+
+199
+00:18:06,301 --> 00:18:10,860
+Wow. Okay. Uh, okay. Disable warning warnings.
+
+200
+00:18:10,861 --> 00:18:18,871
+Check. Oh, the background is not moved.
+
+201
+00:18:18,931 --> 00:18:23,401
+Oh, man. Something is up. Okay. One second. The background is not moving.
+
+202
+00:18:24,421 --> 00:18:31,531
+Uh, what is going on here? Window capture.
+
+203
+00:18:32,591 --> 00:18:35,821
+No. You see?
+
+204
+00:18:36,181 --> 00:18:39,581
+You see this? You can see that. Okay.
+
+205
+00:18:40,211 --> 00:18:45,641
+Better now you can see. Thank you for letting me know. I appreciate that, and I apologize.
+
+206
+00:18:46,541 --> 00:18:53,861
+Okay. So we've got our documentation here. Uh, and we did a bunch of documentation last week on area position.
+
+207
+00:18:54,101 --> 00:18:59,051
+We're starting with. We're starting now in customize mode. Uh, and we're starting to flesh this out.
+
+208
+00:19:00,131 --> 00:19:04,451
+So let's take a look at customize mode. Oh, wrong.
+
+209
+00:19:05,981 --> 00:19:09,341
+Customize mode. Uh, system JS.
+
+210
+00:19:10,751 --> 00:19:18,461
+And we are pretty early on what we were doing here. Like if I remember correctly, what we were doing was we were, uh,
+
+211
+00:19:18,461 --> 00:19:24,881
+changing a bunch of members from being sort of like underscore pseudo private to being actually private,
+
+212
+00:19:25,151 --> 00:19:27,821
+because we were turning this into a proper ES6 class.
+
+213
+00:19:28,901 --> 00:19:36,011
+So, uh, one thing we learned is that customize mode, dot browser, uh, was being used externally, I think.
+
+214
+00:19:36,851 --> 00:19:40,781
+Uh, let's double check that G customize mode dot browser.
+
+215
+00:19:41,891 --> 00:19:47,951
+No. Um, maybe we can make, uh.
+
+216
+00:19:51,171 --> 00:19:55,311
+We can probably make this, uh, private as well. This browser.
+
+217
+00:19:55,551 --> 00:20:00,961
+So let's do that. And what was it? G customize mode areas.
+
+218
+00:20:00,981 --> 00:20:14,391
+That one was used by a test. So we want to like to do make this private and expose a new, uh, expose uh, a read only list of areas instead.
+
+219
+00:20:15,051 --> 00:20:18,591
+This is used by um.
+
+220
+00:20:22,521 --> 00:20:29,501
+Really this is by such and such. Okay.
+
+221
+00:20:29,511 --> 00:20:36,181
+So we're going to make browser. Um. Private.
+
+222
+00:20:37,801 --> 00:20:41,911
+And then we're going to change all these edges to this dot browser.
+
+223
+00:20:42,871 --> 00:20:49,741
+Not too many. Perhaps we must be declared in an enclosing class.
+
+224
+00:20:51,811 --> 00:20:56,981
+Didn't I? Oh, you know what?
+
+225
+00:20:57,281 --> 00:21:01,631
+I didn't. I didn't declare it. Around there?
+
+226
+00:21:02,021 --> 00:21:05,861
+No. And I already had a comment about this area.
+
+227
+00:21:08,941 --> 00:21:13,741
+Okay. Oh I see. We were working our way down through this list.
+
+228
+00:21:14,551 --> 00:21:19,681
+Okay. We'd already done stowed pallet drag over item.
+
+229
+00:21:22,261 --> 00:21:27,821
+Enabled commands handler on a net. Okay.
+
+230
+00:21:28,161 --> 00:21:35,441
+What I think I'd like to do now, before we leave this area, is we can start, um, documenting some of these members.
+
+231
+00:21:37,901 --> 00:21:43,571
+So let's do that. So this is um.
+
+232
+00:21:45,821 --> 00:21:49,801
+Type boolean. Uh, true.
+
+233
+00:21:49,811 --> 00:22:00,191
+If the if customize mode is in the process of being transitioned into or out of.
+
+234
+00:22:02,871 --> 00:22:11,271
+I believe that's the case. Yeah, because it's an async operation.
+
+235
+00:22:13,701 --> 00:22:25,161
+Okay. This a reference to the top level browser window that, um, this instance, uh, customize mode.
+
+236
+00:22:27,621 --> 00:22:38,901
+Is uh, can uh configure to use type um window document,
+
+237
+00:22:40,491 --> 00:22:53,571
+uh reference to the top level browser window document that this instance of customized uh is configured to use type document.
+
+238
+00:22:56,301 --> 00:22:59,870
+Browser. Now remind me what is this again.
+
+239
+00:22:59,871 --> 00:23:03,321
+Browser. So this is obviously uh browser type.
+
+240
+00:23:03,921 --> 00:23:08,631
+Um who is all browser. But what is the.
+
+241
+00:23:11,351 --> 00:23:14,651
+What is it? What is it? What is it?
+
+242
+00:23:16,421 --> 00:23:23,221
+Oh, it's G browser. Oh, um, this, uh, this is in this little browser.
+
+243
+00:23:23,291 --> 00:23:34,061
+This is a this is a tab browser. Uh, which is, uh, is also a, um.
+
+244
+00:23:34,361 --> 00:23:38,171
+Yes. It's class now. That's.
+
+245
+00:23:41,311 --> 00:23:48,801
+Lowercase b. Tab browser.
+
+246
+00:23:50,061 --> 00:23:59,241
+The G browser. Uh, time the Tab browser instance.
+
+247
+00:24:01,221 --> 00:24:05,661
+A reference to the Tab browser instance.
+
+248
+00:24:07,541 --> 00:24:11,021
+That belongs to the browser Toplevel browser window.
+
+249
+00:24:13,181 --> 00:24:18,341
+Uh, customize. Uh is configured to use.
+
+250
+00:24:20,441 --> 00:24:28,481
+All right. Is is used to cache the customizable areas well in customize mode.
+
+251
+00:24:29,561 --> 00:24:35,710
+I don't know why, but. All right. Uh, and so it's sometimes now it looks like.
+
+252
+00:24:35,711 --> 00:24:45,801
+But sometimes. Areas push areas.
+
+253
+00:24:47,691 --> 00:24:53,691
+So sometimes it's in areas it's a copy of an array.
+
+254
+00:24:53,781 --> 00:25:02,691
+So it's an array of strings. Um.
+
+255
+00:25:09,221 --> 00:25:20,061
+I am going to buy. Okay. And, uh, an array of customizable UI areas.
+
+256
+00:25:23,001 --> 00:25:29,331
+Right. This instance of customized models can be used to manipulate.
+
+257
+00:25:31,371 --> 00:25:34,791
+Um, so okay. Area IDs.
+
+258
+00:25:36,501 --> 00:25:43,071
+So it is either no or uh, uh, string array.
+
+259
+00:25:43,581 --> 00:25:50,961
+It starts as null. Why do we cache this stuff?
+
+260
+00:25:52,071 --> 00:25:57,021
+Keep the method fast. It's used during drags to avoid multiple Dom loops.
+
+261
+00:26:00,341 --> 00:26:06,881
+So we create a copy of the keys and then we go through the areas.
+
+262
+00:26:12,541 --> 00:26:15,931
+We get the Dom element.
+
+263
+00:26:16,111 --> 00:26:25,401
+We get the customization target. And then we're adding the customization target ID to areas.
+
+264
+00:26:28,481 --> 00:26:33,371
+And if there's an overflow target we'll also add that areas.
+
+265
+00:26:34,811 --> 00:26:41,201
+And then while node and node parent node parent equals know if areas includes parent ID return node.
+
+266
+00:26:42,071 --> 00:26:55,691
+Oh. We're checking whatever it is that we're dragging against the list of areas.
+
+267
+00:26:55,691 --> 00:27:03,671
+We're trying to find which area it belongs to. This is. It's a pretty weird routine, but okay.
+
+268
+00:27:08,471 --> 00:27:12,581
+It seems weird to create this every time you start dragging to do this operation.
+
+269
+00:27:14,141 --> 00:27:17,531
+But okay, not here to judge. Not here to judge.
+
+270
+00:27:18,011 --> 00:27:33,581
+What else do we use areas for? Grab toolbar item target and get customizable target for the area.
+
+271
+00:27:33,701 --> 00:27:39,201
+It's just it's just an array. Again.
+
+272
+00:27:39,491 --> 00:27:43,541
+Customizable target. What is that? That's an element.
+
+273
+00:27:43,541 --> 00:27:47,261
+So we've got this mixed. So areas is more than just.
+
+274
+00:27:49,841 --> 00:27:57,341
+Areas. Oh, this is wild.
+
+275
+00:27:57,431 --> 00:28:01,361
+This area's equals a set.
+
+276
+00:28:02,531 --> 00:28:06,591
+And then add. Oh, you know what?
+
+277
+00:28:06,611 --> 00:28:13,881
+I think I got confused. I got confused because there this term is overloaded.
+
+278
+00:28:13,901 --> 00:28:17,351
+There's this dot areas and then there's areas.
+
+279
+00:28:18,191 --> 00:28:22,751
+Not the same thing. Not referring to the same thing here. Okay.
+
+280
+00:28:23,291 --> 00:28:27,051
+So this is not actually null or string array.
+
+281
+00:28:27,071 --> 00:28:31,361
+This is an element array or rather um node array.
+
+282
+00:28:31,991 --> 00:28:37,601
+An array of customizable target Dom nodes.
+
+283
+00:28:40,101 --> 00:28:45,711
+That this instance of customized mode can be used to manipulate.
+
+284
+00:28:48,651 --> 00:29:04,401
+Um. Customizable your customizable UI customizable, target, customizable, and PC areas.
+
+285
+00:29:06,081 --> 00:29:08,211
+Get customize target for area.
+
+286
+00:29:08,511 --> 00:29:17,541
+Yeah customize target Domino's of this instance of customizable can be used to manipulate and to what end was is used for.
+
+287
+00:29:18,051 --> 00:29:23,871
+We check to see whether or not. A particular target.
+
+288
+00:29:30,091 --> 00:29:36,401
+Target. Get customized target for area. If it areas.
+
+289
+00:29:39,241 --> 00:29:43,291
+If we already have the 000, then then we wrap.
+
+290
+00:29:43,651 --> 00:29:51,391
+We do the wrapping and we add the target. Target in Désormais target.
+
+291
+00:29:55,711 --> 00:30:01,891
+Then we add the drag handlers. For wrap each of the children.
+
+292
+00:30:03,791 --> 00:30:12,161
+Rap toolbar. Item sync. Unwrap toolbar items.
+
+293
+00:30:16,781 --> 00:30:22,361
+Area node registered. Wrap the items.
+
+294
+00:30:22,691 --> 00:30:28,451
+The containers on every node unregistered. That's in the event that we're in customize mode.
+
+295
+00:30:28,451 --> 00:30:29,530
+And someone see like,
+
+296
+00:30:29,531 --> 00:30:36,731
+this is the sort of thing that we wouldn't support anymore is because at registering new new areas while you're in customize mode.
+
+297
+00:30:38,081 --> 00:30:45,961
+Um, okay. An array of customized target dominoes that this instant customized mode can be used to manipulate.
+
+298
+00:30:46,671 --> 00:30:55,771
+Uh, it is assumed. That when, uh, targets are in this set, it's a set.
+
+299
+00:30:59,321 --> 00:31:17,081
+Not an array. When targets are in this set that they have drag and drop listeners attached, and that their children have been wrapped as uh,
+
+300
+00:31:17,921 --> 00:31:29,891
+where they called, uh, toolbar item wrapper, toolbar item wrapper, wrapper wrap toolbar item.
+
+301
+00:31:31,331 --> 00:31:35,651
+Create or update wrapper. Toolbar palette item.
+
+302
+00:31:35,651 --> 00:31:40,421
+That's what it is. Wrapped as a toolbar palette.
+
+303
+00:31:40,501 --> 00:31:43,601
+I their, uh, customizable.
+
+304
+00:31:46,301 --> 00:31:51,281
+Children have been wrapped as a tool as toolbar palette items, so.
+
+305
+00:31:52,361 --> 00:32:03,301
+Okay. Good. Uh, stowed pallet.
+
+306
+00:32:03,541 --> 00:32:11,311
+What is this? When in customizing mode, we swap out the reference to the invisible pallet in the nav toolbox pallet for our visible pallet.
+
+307
+00:32:11,321 --> 00:32:15,331
+This way for the customizing browser window when widgets are removed.
+
+308
+00:32:18,771 --> 00:32:19,910
+And added to the power there.
+
+309
+00:32:19,911 --> 00:32:25,911
+Added to the visible pallet stowed pallet is a reference to the old invisible palette, so we can restore power to its original state after.
+
+310
+00:32:25,911 --> 00:32:29,811
+Oh right right right right right right right right. Okay okay.
+
+311
+00:32:32,541 --> 00:32:39,190
+So back in the day. With Zul add ons.
+
+312
+00:32:39,191 --> 00:32:45,941
+If you wanted to have a toolbar item exist in the palette, you would overlay it into this,
+
+313
+00:32:46,991 --> 00:32:52,181
+uh, invisible palette that we didn't actually want to be part of.
+
+314
+00:32:52,181 --> 00:32:55,741
+The we didn't want to calculate layout for.
+
+315
+00:32:55,751 --> 00:33:01,331
+It was like fully invisible is just part of the Dom tree, but it wasn't part of what was styled or laid out or drawn.
+
+316
+00:33:02,501 --> 00:33:08,381
+And then when you're in customize mode, we actually make we create a visible palette,
+
+317
+00:33:08,471 --> 00:33:17,741
+which is a little more sophisticated than the invisible one, which is just a container, a Dom, just a box that you, um, overlay your items into.
+
+318
+00:33:18,881 --> 00:33:27,280
+And so when we entered customize mode, we would like move the items from the customize mode palette, the invisible palette into this visible one.
+
+319
+00:33:27,281 --> 00:33:35,231
+And we would do all the manipulation that we needed to, um, and uh, whenever you exit customize mode,
+
+320
+00:33:35,231 --> 00:33:39,551
+we would tear down the visible panel and put everything back into the invisible palette.
+
+321
+00:33:40,061 --> 00:33:45,011
+And that's what Stowed palette is, is holding on to the, um, invisible palette.
+
+322
+00:33:46,061 --> 00:33:53,231
+So okay. This is type. Dom uh null or Dom node.
+
+323
+00:33:55,481 --> 00:34:04,921
+And we're going to move this documentation in here. Okay.
+
+324
+00:34:10,181 --> 00:34:14,231
+We swap out the reference, the invisible palette for our visible palette.
+
+325
+00:34:14,241 --> 00:34:17,511
+That way for the customizing browser window one which is removed for customizable areas.
+
+326
+00:34:17,551 --> 00:34:22,180
+Out of the palette there added the visible palette stowed palette is reference to the old invisible palette,
+
+327
+00:34:22,181 --> 00:34:27,341
+so we can restore Grab Toolbox palette to its original state after exiting customization mode.
+
+328
+00:34:27,971 --> 00:34:31,301
+Okay, what is drag over item?
+
+329
+00:34:35,381 --> 00:34:38,501
+Presumably that is the item that we are currently dragging over.
+
+330
+00:34:45,481 --> 00:34:51,111
+Yeah. Uh, yeah. That's the item that we're currently dragging over.
+
+331
+00:34:51,121 --> 00:34:55,291
+If we have a drag under way.
+
+332
+00:34:59,111 --> 00:35:06,831
+And when we do drag, leave. Or if drag ends, we clear it out.
+
+333
+00:35:06,851 --> 00:35:15,011
+Okay. The current item. The current customizable item.
+
+334
+00:35:16,031 --> 00:35:19,421
+Is it. The current customizable item is really just any item.
+
+335
+00:35:24,031 --> 00:35:29,940
+It could be any item. It's whatever's the next sibling can use a sibling, and it doesn't matter what the next sibling is.
+
+336
+00:35:29,941 --> 00:35:34,651
+We'll just go ahead and say, okay, the the current item.
+
+337
+00:35:37,021 --> 00:35:48,271
+Uh, if a drag operation is underway, drag and drop operation is underway for a customizable toolbar item.
+
+338
+00:35:49,381 --> 00:35:53,031
+The current item that is being dragged over is, uh.
+
+339
+00:35:55,201 --> 00:36:00,751
+Uh, this member is set to the, uh, current item being dragged over.
+
+340
+00:36:03,421 --> 00:36:09,541
+Tight. No Dom node. Customizing.
+
+341
+00:36:09,541 --> 00:36:19,661
+False. What is this used? If customizing his entering customize mode.
+
+342
+00:36:21,411 --> 00:36:27,501
+And so if not customizing. False.
+
+343
+00:36:31,051 --> 00:36:35,761
+Okay, so this is just a state variable.
+
+344
+00:36:36,061 --> 00:36:42,961
+Uh, true. If we're in the state of customizing this browser window.
+
+345
+00:36:46,021 --> 00:36:51,660
+A boolean. Skip source node.
+
+346
+00:36:51,661 --> 00:37:04,791
+Check. What is that? So that is a pref.
+
+347
+00:37:09,831 --> 00:37:22,591
+Skip source node. Check. The synthesized events for test generated by playing dragon derived synthesized driving monk test result.
+
+348
+00:37:22,591 --> 00:37:28,681
+For testing where the right data is being put in the data transfer. Neither cause a real drop to occur, so they don't, said the source.
+
+349
+00:37:28,681 --> 00:37:34,891
+Note this isn't a means of testing real drag and drop, so this prev checks skips the check, but it should only be set by test code.
+
+350
+00:37:37,751 --> 00:37:41,771
+Skip source node. Check. Otherwise.
+
+351
+00:37:43,871 --> 00:37:49,691
+I see discarded fragments originated from a separate window to prevent content Chrome privilege escalations.
+
+352
+00:37:50,061 --> 00:37:55,571
+Hmm. Okay, this may be from back in the day.
+
+353
+00:37:56,051 --> 00:38:00,581
+I don't know. This shouldn't be possible anymore with our current architecture.
+
+354
+00:38:01,221 --> 00:38:07,311
+Source node is now an endurance test event handler if the drag event originated in an external application.
+
+355
+00:38:07,331 --> 00:38:12,241
+I see, I see. Okay.
+
+356
+00:38:14,251 --> 00:38:20,101
+Uh, so this is. This should be false, not null.
+
+357
+00:38:23,161 --> 00:38:30,741
+Uh, true. If we're in the, uh, we're using customize mode.
+
+358
+00:38:30,751 --> 00:38:40,201
+We're manipulating customize mode. Synthesizing drag and drop for automated tests.
+
+359
+00:38:42,871 --> 00:38:47,671
+Customize mode. For automated tests.
+
+360
+00:38:48,361 --> 00:38:51,481
+And want to skip the source app?
+
+361
+00:38:51,481 --> 00:39:01,291
+Um, skip the checks that ensure that the source of the drag events was the.
+
+362
+00:39:02,071 --> 00:39:10,031
+Was this browser window? Top level level browser window.
+
+363
+00:39:12,621 --> 00:39:27,221
+Type Boolean. Um. Okay.
+
+364
+00:39:29,671 --> 00:39:39,871
+And then it's mapped to this pref. This is controllable via okay.
+
+365
+00:39:41,311 --> 00:39:44,911
+These are the commands we continue to leave enabled while in customize mode.
+
+366
+00:39:45,001 --> 00:39:55,491
+Okay. So this is a set of strings. Type string and how you do it.
+
+367
+00:39:57,621 --> 00:40:05,271
+Oh, yeah. And can I do.
+
+368
+00:40:05,811 --> 00:40:11,111
+Yeah. Here we go. These are the commands we continue to leave enabled on customize mode.
+
+369
+00:40:11,141 --> 00:40:16,661
+All the commands are disabled and we remove the disabled attribute when leaving customize mode.
+
+370
+00:40:18,761 --> 00:40:23,231
+Perfect. So far so good.
+
+371
+00:40:24,371 --> 00:40:28,091
+Hey, we're making good headway here. This is good documentation, gang.
+
+372
+00:40:30,341 --> 00:40:35,891
+Smurfd0 filed their bug. YouTube's audio keeps playing after its tab is closed.
+
+373
+00:40:37,951 --> 00:40:41,221
+I'm going to subscribe to this and see what happens.
+
+374
+00:40:42,061 --> 00:40:47,431
+The EOS team will get back to you shortly. Um.
+
+375
+00:40:50,421 --> 00:40:53,871
+Customization handler. What is customization handler?
+
+376
+00:40:53,881 --> 00:40:59,171
+I never heard of that. Oh, yes.
+
+377
+00:40:59,351 --> 00:41:03,311
+Yes. This is like the the thing that's external,
+
+378
+00:41:03,311 --> 00:41:10,931
+the customized mode that belongs to an individual window that just sort of like prepares the window for entering and exiting customized mode.
+
+379
+00:41:12,161 --> 00:41:20,411
+Okay. So this is a a getter that returns an object.
+
+380
+00:41:22,181 --> 00:41:29,740
+Um, returns this, uh, the customization handler.
+
+381
+00:41:29,741 --> 00:41:36,371
+Uh, browser window, global object. Uh, returns.
+
+382
+00:41:36,371 --> 00:41:42,011
+Yeah. See.
+
+383
+00:41:44,261 --> 00:41:54,781
+Browser customization. Okay under net.
+
+384
+00:42:04,761 --> 00:42:10,131
+Uh, detaches. Uh, this seems like it's not doing nearly enough.
+
+385
+00:42:11,001 --> 00:42:14,411
+I don't even think we ever unlearn it, to be completely honest. Like what?
+
+386
+00:42:14,421 --> 00:42:18,891
+Unlearn. It's. It's not on the net. On window unload.
+
+387
+00:42:18,901 --> 00:42:36,551
+Okay. Um. Uh, does clean up um, of any observer, uh, cleanup of any listeners or observers.
+
+388
+00:42:38,741 --> 00:42:52,061
+Uh, when the, uh, browser window. Closes the browser window that this customized mode instance is configured to use.
+
+389
+00:42:52,061 --> 00:42:57,071
+Close. It unloads. And it doesn't return anything.
+
+390
+00:42:59,141 --> 00:43:14,681
+ID oh boy. Okay, so this is this takes a string, uh, with, uh, dom id to look, uh, to return a result for this is a shortcut to.
+
+391
+00:43:16,461 --> 00:43:20,211
+Uh, this is a shortcut for this, uh, document.
+
+392
+00:43:20,241 --> 00:43:27,031
+Uh, get element by id. Turns either Dom node or.
+
+393
+00:43:32,861 --> 00:43:37,271
+Okay, let's build the documentation again.
+
+394
+00:43:45,601 --> 00:43:52,241
+Take a look at what we've got. Okay.
+
+395
+00:43:53,141 --> 00:43:59,391
+A lot more stuff in here. Looking good.
+
+396
+00:44:05,541 --> 00:44:11,121
+Okay. Let's keep going.
+
+397
+00:44:14,671 --> 00:44:18,781
+Set tab. So presumably this needs to be public.
+
+398
+00:44:18,931 --> 00:44:25,701
+Let's just double check that. Yeah, it's used by sessions store, at least.
+
+399
+00:44:28,061 --> 00:44:31,241
+I guess that's in the event that you were in customize mode.
+
+400
+00:44:32,741 --> 00:44:36,731
+Um. Oh, I remember what this is for. I know what this is for.
+
+401
+00:44:38,021 --> 00:44:43,511
+Okay, so if you check this out, check, check this out, gang.
+
+402
+00:44:44,381 --> 00:44:56,461
+Let's, uh, let's launch the browser. So customize mode.
+
+403
+00:44:56,911 --> 00:45:02,401
+If you look at the tabs right now, I've got like all these like app tabs and stuff.
+
+404
+00:45:02,761 --> 00:45:05,911
+If Y is where these play buttons so big.
+
+405
+00:45:08,481 --> 00:45:13,641
+Is that a recent regression? Huh?
+
+406
+00:45:15,341 --> 00:45:22,931
+All right, um, if you check out customize mode, it looks like it's another tab, but this is definitely not a normal tab.
+
+407
+00:45:22,931 --> 00:45:28,391
+Like, uh, it is not. It does not behave like one, but it looks like one.
+
+408
+00:45:28,391 --> 00:45:31,540
+And when you close the tab, it goes away.
+
+409
+00:45:31,541 --> 00:45:34,871
+And we're back in normal browsing mode. But it's not a tab.
+
+410
+00:45:35,531 --> 00:45:45,221
+Okay. But, uh, in order to make it seem like one, we have to add some glue, um, to sort of create this illusion.
+
+411
+00:45:45,221 --> 00:45:53,021
+That's it, that it's a tab. And I think what happens is, yeah, this is this is that glue.
+
+412
+00:45:58,391 --> 00:46:06,731
+And it allows it so that in the event that you, uh, shut down while you have customize mode opened whenever you restore your session,
+
+413
+00:46:06,731 --> 00:46:10,241
+if you happened to be in customize mode, it will reenter customize mode for you.
+
+414
+00:46:11,021 --> 00:46:12,071
+That's what this part does.
+
+415
+00:46:13,151 --> 00:46:24,820
+Um, a tab g tab set attribute customize mode owner global set tab title for a tab tab close uh details programs if selected.
+
+416
+00:46:24,821 --> 00:46:28,301
+Okay, so this is a resizable tab. Um.
+
+417
+00:46:30,821 --> 00:46:42,231
+So we'll have, um, sets the, um, sets the fake tab element that will be associated.
+
+418
+00:46:43,901 --> 00:46:47,231
+Uh, tab element from, uh, this.
+
+419
+00:46:49,541 --> 00:46:55,841
+That will be associated. Um.
+
+420
+00:46:58,541 --> 00:47:02,411
+With, uh, being in customize mode.
+
+421
+00:47:05,321 --> 00:47:12,971
+Uh. Customize mode looks like.
+
+422
+00:47:14,511 --> 00:47:21,831
+Uh, customize mode looks similar to a special kind of tab.
+
+423
+00:47:24,551 --> 00:47:30,281
+And when that tab is closed, we exit customize mode.
+
+424
+00:47:32,201 --> 00:47:36,941
+When that tab is switched to, we enter customize mode.
+
+425
+00:47:37,511 --> 00:47:44,081
+If that tab is restored in the foreground. We enter customize mode.
+
+426
+00:47:46,801 --> 00:47:49,171
+Okay. Tab returns nothing.
+
+427
+00:47:53,491 --> 00:48:09,811
+Uh, this method assigns the special Special visual tab that will represent customize mode for this window, and sets up the relevant listeners to it.
+
+428
+00:48:11,221 --> 00:48:18,981
+Okay. The, uh, the tab will have.
+
+429
+00:48:19,221 --> 00:48:22,791
+Customize mode a customize mode attribute.
+
+430
+00:48:23,181 --> 00:48:31,041
+Set to true on it, as well as a special uh five icon item.
+
+431
+00:48:31,641 --> 00:48:38,641
+A fab icon. Okay.
+
+432
+00:48:42,521 --> 00:48:46,511
+Enter. Enter a tab.
+
+433
+00:48:47,351 --> 00:48:51,101
+The tab to, uh, act as the.
+
+434
+00:48:52,311 --> 00:48:57,201
+Um, act as the tab representation of customized mode.
+
+435
+00:48:57,591 --> 00:49:04,611
+I don't know how clear that is. Uh, syntax error does not like the tab.
+
+436
+00:49:06,991 --> 00:49:14,321
+How about that? Do you like that? When I used, uh.
+
+437
+00:49:16,471 --> 00:49:23,191
+Maybe it. I don't think it likes it.
+
+438
+00:49:23,231 --> 00:49:27,721
+Likes them. All right, all right. So then, I mean, I'll just call it Tab.
+
+439
+00:49:29,791 --> 00:49:34,080
+What do we call tab. Browser tab.
+
+440
+00:49:34,081 --> 00:49:38,881
+Dot js. Tab.
+
+441
+00:49:38,881 --> 00:49:45,221
+Browser tab. Let's look at this source here.
+
+442
+00:49:48,301 --> 00:49:59,331
+Components. Have a loader tab.
+
+443
+00:49:59,361 --> 00:50:04,191
+Browser tab. Dodges the Mars browser tab.
+
+444
+00:50:05,541 --> 00:50:10,921
+Bars tab. Browser tab. Okay.
+
+445
+00:50:12,091 --> 00:50:16,741
+All right, let's move on. So this is pretty interesting.
+
+446
+00:50:17,191 --> 00:50:20,191
+Um, this entering is doing a lot.
+
+447
+00:50:20,191 --> 00:50:25,861
+And I think I helped write some of this back when I was younger.
+
+448
+00:50:26,791 --> 00:50:30,181
+More. Fancy free.
+
+449
+00:50:31,141 --> 00:50:34,801
+So what's interesting is that this method does a lot as some asynchronous stuff.
+
+450
+00:50:37,381 --> 00:50:41,821
+But, uh, these promises are just kind of, like thrown away.
+
+451
+00:50:44,641 --> 00:50:47,880
+Okay. Um. Kicks off.
+
+452
+00:50:47,881 --> 00:50:51,571
+This kicks off, returns nothing.
+
+453
+00:50:52,561 --> 00:51:07,561
+So this kicks off the process of entering customize mode for the, uh, window that this customize mode instance was constructed with.
+
+454
+00:51:10,431 --> 00:51:13,731
+Um, entering customize mode.
+
+455
+00:51:15,891 --> 00:51:20,511
+Is a multi-step asynchronous operations.
+
+456
+00:51:25,351 --> 00:51:28,711
+But this method, uh, returns immediately.
+
+457
+00:51:31,281 --> 00:51:37,281
+While this operation is underway. Um.
+
+458
+00:51:40,211 --> 00:51:43,361
+Is there some kind of signal when entering? Yeah. Customization.
+
+459
+00:51:43,601 --> 00:51:52,991
+Ready? A customization ready.
+
+460
+00:51:53,351 --> 00:51:57,371
+Uh, custom event is dispatched on.
+
+461
+00:52:00,071 --> 00:52:07,991
+Um. The toolbox. Um, the G toolbox.
+
+462
+00:52:08,561 --> 00:52:11,741
+When this process has completed.
+
+463
+00:52:16,991 --> 00:52:23,531
+All right. How are we doing out there? All right, quick shout out to all the people watching.
+
+464
+00:52:23,831 --> 00:52:27,941
+Um, shout out to my mom who might be watching.
+
+465
+00:52:28,241 --> 00:52:32,111
+I don't know, shout out to my aunt and uncle who might be watching. Sometimes they watch this stuff.
+
+466
+00:52:33,131 --> 00:52:38,711
+Um, quick shout out if your name is, uh, Emilio.
+
+467
+00:52:39,311 --> 00:52:42,761
+If you're out there and your name is Emilio, shout out.
+
+468
+00:52:43,661 --> 00:52:45,221
+I don't think we're doing enough shout outs.
+
+469
+00:52:45,671 --> 00:52:51,611
+And, uh, shout out to Bearded Mike's as Smurf D quick shout out to all the bearded Mike's out there, myself included.
+
+470
+00:52:52,811 --> 00:52:57,401
+Um, and a shout out to Smurf D, who's hanging out in the chat, and I really appreciate you.
+
+471
+00:52:59,231 --> 00:53:02,741
+It's good shout outs, everyone. Good shout outs. All right, let's keep moving.
+
+472
+00:53:05,491 --> 00:53:16,561
+Um. Right.
+
+473
+00:53:30,941 --> 00:53:41,051
+I don't think there's much else in here. To do.
+
+474
+00:53:46,421 --> 00:53:50,671
+Before customization event fires.
+
+475
+00:53:52,591 --> 00:53:59,761
+Notify start. We set up a bunch of two bunch of operations here.
+
+476
+00:54:00,181 --> 00:54:07,081
+Begin our transition. We wrap everything. Then we fire another event.
+
+477
+00:54:08,521 --> 00:54:16,131
+And then. Set up an observer and a listener for a visibility change.
+
+478
+00:54:16,241 --> 00:54:22,271
+We update a bunch of things. And then to the palette.
+
+479
+00:54:22,271 --> 00:54:26,981
+Now the transition is finished. For slavery fo sho. Ensure the animations make it a sinks.
+
+480
+00:54:26,981 --> 00:54:30,700
+It doesn't affect the time. There is no animation anymore. That's the thing.
+
+481
+00:54:30,701 --> 00:54:39,190
+Like there used to be a kind of a slick animation, but we had our hard time making that animation, uh, work smoothly.
+
+482
+00:54:39,191 --> 00:54:49,061
+We were so naive back then and didn't understand on the front end team about things like layout flushes.
+
+483
+00:54:49,541 --> 00:54:54,070
+Um, we didn't have the right tooling to profile it. We didn't have the right understanding.
+
+484
+00:54:54,071 --> 00:54:59,591
+These days, I think we're a lot better at understanding like style and layout flushes, what's expensive, how to animate things smoothly.
+
+485
+00:54:59,591 --> 00:55:09,551
+But back then it was it was a lot harder. And you know, the animation would be really janky at times, which is too bad.
+
+486
+00:55:10,091 --> 00:55:15,761
+Uh, so I think we ended up cutting the animation was too bad because it was a pretty killer animation.
+
+487
+00:55:16,811 --> 00:55:22,341
+But, um. Maybe now we could revisit it at some point.
+
+488
+00:55:23,031 --> 00:55:26,781
+Um. All right. Let us move on.
+
+489
+00:55:27,001 --> 00:55:30,831
+Uh, I don't think there's much else to say in here, even though there's a lot going on.
+
+490
+00:55:31,221 --> 00:55:34,851
+Um, I think we've said what we want to say. Um.
+
+491
+00:55:37,371 --> 00:55:44,781
+I should also mention, uh, this method is.
+
+492
+00:55:46,311 --> 00:55:55,331
+If you don't do. Uh.
+
+493
+00:55:59,381 --> 00:56:04,151
+Will return early if customize mode already.
+
+494
+00:56:06,221 --> 00:56:09,581
+Uh is already active in this window.
+
+495
+00:56:15,911 --> 00:56:23,561
+Okay. So one of those customized mode instance with was construct with.
+
+496
+00:56:23,891 --> 00:56:31,271
+If this window happens to be a pop up window, um, the source window will enter customize mode.
+
+497
+00:56:32,171 --> 00:56:35,591
+The original the opener window will enter customize mode.
+
+498
+00:56:37,541 --> 00:56:41,121
+It is in the. Yeah.
+
+499
+00:56:44,701 --> 00:56:52,681
+Okay. Uh, exit customize mode if we haven't happened to be in it.
+
+500
+00:56:54,821 --> 00:56:59,891
+This is a no op. If we are not in customize mode.
+
+501
+00:57:02,411 --> 00:57:15,491
+Uh, this is a multi-step, asynchronous operation, but this method returns early returns synchronously after the operation begins.
+
+502
+00:57:17,141 --> 00:57:25,661
+Hey, I think another event is fired when we're done exiting a after customization notify end customization.
+
+503
+00:57:25,841 --> 00:57:32,341
+What is that? What if I end customizing? Yeah.
+
+504
+00:57:32,761 --> 00:57:36,091
+Come on. Customize. And. Okay.
+
+505
+00:57:36,481 --> 00:57:44,281
+And after customization. Uh, event.
+
+506
+00:57:44,731 --> 00:57:51,511
+Customer event is dispatched from the G and F toolbox.
+
+507
+00:57:51,901 --> 00:57:57,151
+Once the operation is completed, it doesn't return a thing.
+
+508
+00:58:02,861 --> 00:58:08,871
+Okay. The overflow panel and customize mode should have its arrow pointing at the overflow button.
+
+509
+00:58:08,871 --> 00:58:12,320
+In order to do this correctly, we pass the distance between the inside of the window in the middle of the button.
+
+510
+00:58:12,321 --> 00:58:15,381
+In the customize mode markup, in which the arrow in the panel are placed.
+
+511
+00:58:17,081 --> 00:58:22,701
+Oof! Okay. We get the size and position of things, we lay it out.
+
+512
+00:58:22,721 --> 00:58:25,871
+Okay, so this, uh, returns a promise.
+
+513
+00:58:28,391 --> 00:58:32,351
+And that promise either returns with.
+
+514
+00:58:36,281 --> 00:58:43,411
+It doesn't return with anything. I know it looks like we return, um, something here, but that's for this promise.
+
+515
+00:58:43,421 --> 00:58:47,741
+The offset. This is the offset is what this is returning.
+
+516
+00:58:48,521 --> 00:58:56,591
+And, um, then the property is set on the customize and station panel wrapper.
+
+517
+00:58:57,671 --> 00:59:03,971
+Um, the print, the return promise resolves once the style.
+
+518
+00:59:05,031 --> 00:59:08,481
+The offset has been set on the panel wrapper.
+
+519
+00:59:12,291 --> 00:59:16,281
+All right. And this is, uh, a private method.
+
+520
+00:59:16,491 --> 00:59:20,871
+Great. Where are we?
+
+521
+00:59:22,221 --> 00:59:27,641
+We are on line 687 of, uh, nearly 3000.
+
+522
+00:59:27,711 --> 00:59:32,281
+Just over 3000 lines. So we're like, almost a third of the way through.
+
+523
+00:59:32,301 --> 00:59:35,360
+Actually, I know I sounded, uh, a little bit like.
+
+524
+00:59:35,361 --> 00:59:38,771
+Oh, boy. Uh, little. I think we're.
+
+525
+00:59:38,781 --> 00:59:42,621
+Let's get to see if we can get to a thousand. Let's see if we can get to a thousand today.
+
+526
+00:59:42,861 --> 00:59:48,981
+I don't think that's too bad, but let's double check. That's going to take us one, two.
+
+527
+00:59:50,001 --> 00:59:55,101
+Three. Four, five.
+
+528
+00:59:56,101 --> 01:00:03,121
+6789 ten.
+
+529
+01:00:03,151 --> 01:00:10,320
+If we can document ten more methods within the next half an hour, we'll have a thousand lines of this thing of the methods documented.
+
+530
+01:00:10,321 --> 01:00:16,111
+And that's pretty good. So let's see if we can do that. Get customizable child for node.
+
+531
+01:00:16,321 --> 01:00:19,981
+Okay. So given some node.
+
+532
+01:00:22,261 --> 01:00:29,551
+Given some uh Dom node. Uh attempts to find the child.
+
+533
+01:00:31,051 --> 01:00:34,651
+Find the uh relevant child node.
+
+534
+01:00:36,871 --> 01:00:43,561
+Um, that you can have customizable items placed within it.
+
+535
+01:00:45,451 --> 01:00:48,451
+This may be the Dom node.
+
+536
+01:00:49,471 --> 01:01:02,481
+Uh, if the Dom node. Happens to be, uh, such, uh.
+
+537
+01:01:02,661 --> 01:01:09,741
+Happens to be able to have such items placed directly within it.
+
+538
+01:01:10,941 --> 01:01:14,721
+This will just return that that.
+
+539
+01:01:14,721 --> 01:01:26,481
+No, no attempts to, uh, resolve attempts to resolve to the relevant child node that can have customizable placed within it,
+
+540
+01:01:26,901 --> 01:01:33,291
+or to be a node itself, if it can have it is placed directly in it.
+
+541
+01:01:41,251 --> 01:01:53,891
+Um, what's the other rule here? Uh.
+
+542
+01:01:58,131 --> 01:02:07,101
+If customization target the target for an area node. If the target doesn't happen to be the area node, then we will.
+
+543
+01:02:12,131 --> 01:02:17,570
+Push the target. Onto the end of the list.
+
+544
+01:02:17,571 --> 01:02:20,331
+So we're manipulating the list that we're looping through. Okay, cool.
+
+545
+01:02:20,331 --> 01:02:28,431
+And then in the event that the area node has a default overflow target, then we'll push the overflow target.
+
+546
+01:02:31,161 --> 01:02:35,981
+Into areas. This seems really bad.
+
+547
+01:02:40,481 --> 01:02:43,481
+Overflow target? No.
+
+548
+01:02:43,511 --> 01:02:47,561
+Okay. Sorry. I thought this was the node itself. Okay, so the overflow target will be an ID.
+
+549
+01:02:48,281 --> 01:02:53,231
+So this is all IDs for a second there, I thought this was a node.
+
+550
+01:02:53,231 --> 01:03:00,791
+So we had this mixture, uh, an array of a mixture of items and like, strings and nodes and like, that's a bad idea.
+
+551
+01:03:01,091 --> 01:03:06,641
+Um, but okay, this, it's just IDs, and then we'll loop through it.
+
+552
+01:03:09,301 --> 01:03:18,981
+Uh. Child or, uh, overflow target?
+
+553
+01:03:20,781 --> 01:03:25,471
+No. That can have customizable ads placed within or to the node itself.
+
+554
+01:03:26,151 --> 01:03:29,561
+Directly within. Um.
+
+555
+01:03:32,231 --> 01:03:44,891
+I'm going to have this be a new sentence. It may resolve to a node itself if a node can have customizable items placed directly within it.
+
+556
+01:03:48,551 --> 01:04:00,491
+Uh, returns uh if the node does not appear to have, uh, a relevant.
+
+557
+01:04:03,021 --> 01:04:10,391
+Have such a relevant child. So, uh, how such a child's.
+
+558
+01:04:11,441 --> 01:04:17,531
+This method will return null. Returns Dom node.
+
+559
+01:04:20,621 --> 01:04:23,740
+Dom node or no. No.
+
+560
+01:04:23,741 --> 01:04:26,861
+Good. Nick writes good day. Good day.
+
+561
+01:04:26,861 --> 01:04:33,430
+No good. Nick. Good day. Okay, so, uh, we're we're in an area now where we haven't.
+
+562
+01:04:33,431 --> 01:04:41,081
+I think we didn't touch any of this stuff. Um, because I can see we're using still the underscore, pseudo private, um, business.
+
+563
+01:04:42,191 --> 01:04:48,731
+This looks to be an only internal method. So we're going to go ahead and make this a proper, uh, private method.
+
+564
+01:04:49,331 --> 01:04:52,751
+And we're going to change the, uh, usage.
+
+565
+01:04:56,171 --> 01:05:00,491
+Okay. Promised widget animation out. So what does this do?
+
+566
+01:05:03,161 --> 01:05:06,461
+I don't think I've seen that. What does the hash at the start of the method name mean?
+
+567
+01:05:06,491 --> 01:05:16,211
+Great question. So if, um, if you're writing modern JavaScript, if it's been a while since you've written JavaScript, um, we have classes now.
+
+568
+01:05:16,811 --> 01:05:23,410
+We had, you know, JavaScript, had this notion of classes, has had a notion of object orientation in classes,
+
+569
+01:05:23,411 --> 01:05:29,531
+but it had the special flavor of it called like prototype inheritance, which I don't think it invented it.
+
+570
+01:05:29,531 --> 01:05:36,160
+I think that's like something that, um, uh, it the idea was borrowed from other languages,
+
+571
+01:05:36,161 --> 01:05:43,451
+but it's if you're used to like, like classes from other languages like Java or C plus.
+
+572
+01:05:43,451 --> 01:05:53,921
+Plus, um, the way that you did object orientation and uh, inheritance in sort of classical JavaScript was very strange.
+
+573
+01:05:54,251 --> 01:05:59,201
+So ES6 included classes, proper classes.
+
+574
+01:06:00,281 --> 01:06:05,801
+And one of the things that also offers us is private methods, private methods and private members.
+
+575
+01:06:06,011 --> 01:06:11,561
+And the hash in front of a uh, method name or in front of a member is how you indicate that it is private.
+
+576
+01:06:11,561 --> 01:06:19,151
+And, you know, that's enforced at runtime so that, you know, external callers cannot access, cannot call, cannot access.
+
+577
+01:06:20,561 --> 01:06:25,300
+No good. Nick writes. I'm familiar with both classes and prototypes. So that's how we spell the private keyword here.
+
+578
+01:06:25,301 --> 01:06:29,711
+Got it. Yep. That's exactly right. That's how we say it's private. Is, uh, with the hash.
+
+579
+01:06:30,371 --> 01:06:34,840
+Sorry if I was being a little too verbose there. No good. Nick, I don't know. I don't know what you're interested in.
+
+580
+01:06:34,841 --> 01:06:38,531
+I know your about your background is. But, uh, hopefully that was that was useful.
+
+581
+01:06:39,461 --> 01:06:43,930
+All right. Promise. Widget animation out. Um, what does this thing do?
+
+582
+01:06:43,931 --> 01:06:51,641
+Let's find out. So first of all, we check to see if we are configured to not animate much.
+
+583
+01:06:53,261 --> 01:06:57,011
+And if so we're going to return null. So we know that this thing will at least return null.
+
+584
+01:07:02,381 --> 01:07:08,261
+We're passing in a node. If the node happens to be.
+
+585
+01:07:14,221 --> 01:07:21,001
+Anchor for the node happens to be the nav bar overflow button, or the node happens to be a toolbar item,
+
+586
+01:07:21,421 --> 01:07:31,080
+and the tag name or the tag name is not toolbar item or toolbar button, or the node is the downloads button and the it's the hidden downloads button.
+
+587
+01:07:31,081 --> 01:07:35,131
+Then forget it. We're done. Otherwise.
+
+588
+01:07:37,801 --> 01:07:42,571
+We'll get the parent node. And if it starts with wrapper.
+
+589
+01:07:42,601 --> 01:07:48,301
+If the ID starts with wrapper, which is the convention for when we wrap these things whenever we're in customize mode,
+
+590
+01:07:49,261 --> 01:07:55,740
+then the thing animating is the pair node. Otherwise we'll say that the thing animating is the node itself.
+
+591
+01:07:55,741 --> 01:08:04,621
+And then oh boy, what are we doing? We return a promise, so we're returning null or a promise.
+
+592
+01:08:08,971 --> 01:08:22,620
+That will resolve. We wait until the next frame for setting the class to ensure we do start the animation.
+
+593
+01:08:22,621 --> 01:08:27,421
+So we request an animation frame. Then we request another animation frames who skipped a single frame?
+
+594
+01:08:29,011 --> 01:08:39,931
+We add animate out to the node. We wait for the customize a customization exit event, and we also listen for the animation end event.
+
+595
+01:08:42,201 --> 01:08:48,511
+If customization event exit event occurs, then we go ahead and resolve the promise right away.
+
+596
+01:08:48,531 --> 01:08:52,971
+We clean everything up and when we resolve and return the animation node otherwise.
+
+597
+01:08:55,791 --> 01:09:01,761
+Oh boy. What is happening on animation and if the animation is widget animate out.
+
+598
+01:09:04,011 --> 01:09:08,750
+And target id equals the animation node that we identified.
+
+599
+01:09:08,751 --> 01:09:12,921
+Then we will resolve the animation promise which also cleans everything up and we resolve with the animation.
+
+600
+01:09:13,011 --> 01:09:18,891
+So this is going to resolve with a Dom node. Or null.
+
+601
+01:09:19,101 --> 01:09:22,671
+But to what end. What is this animate out.
+
+602
+01:09:24,231 --> 01:09:34,911
+What is this. Would you animate out?
+
+603
+01:09:37,101 --> 01:09:45,951
+When would we fire this? Promise widget animation out when we add to toolbar.
+
+604
+01:09:51,261 --> 01:10:03,981
+A particular node. And what we'll do is we will find the node and we'll run widget animation out,
+
+605
+01:10:05,391 --> 01:10:09,921
+widget animate out, which is we're going to change the opacity from 1 to 0.
+
+606
+01:10:12,041 --> 01:10:18,101
+Your enemy out. So we transition from something that's invisible to visible, and then we.
+
+607
+01:10:20,771 --> 01:10:30,381
+Bring it scale to half. Item added to the overflow menu should scale down and fade out.
+
+608
+01:10:30,411 --> 01:10:34,881
+This is from 2017. Oh, good.
+
+609
+01:10:36,871 --> 01:10:44,821
+Let's look. Oh, uh, whenever things are going away, we like scale it away.
+
+610
+01:10:45,541 --> 01:10:49,421
+I see, I see. Uh.
+
+611
+01:10:49,621 --> 01:10:57,851
+All right, hold on, hold on, hold on. Backup, backup, backup. So we're making it invisible.
+
+612
+01:10:58,121 --> 01:11:05,761
+We scale it away. We're animating it away. And then.
+
+613
+01:11:05,851 --> 01:11:15,671
+Okay. Okay. I understand when we add to the panel.
+
+614
+01:11:17,141 --> 01:11:22,181
+Okay, let's see if we still do this stuff. So if I like move this to the over.
+
+615
+01:11:22,361 --> 01:11:28,451
+Yeah, it goes away. I understand. Okay. Unpin brings it back.
+
+616
+01:11:30,161 --> 01:11:37,901
+Uh, any time an item. What are the other cases that will promise widget animation out when we add to the toolbar?
+
+617
+01:11:39,611 --> 01:11:44,981
+Is that because if we've got, like the panel open, let's append overflow menu.
+
+618
+01:11:49,821 --> 01:11:53,351
+Unpin. Hmhm.
+
+619
+01:11:55,961 --> 01:12:01,891
+Widget. Animation. Promise. Let's let's do that again.
+
+620
+01:12:02,161 --> 01:12:07,471
+But let's do some debugging here. I really want to understand this customize mode.
+
+621
+01:12:08,341 --> 01:12:14,611
+Uh, promise animation. What's the promise widget animation out.
+
+622
+01:12:16,531 --> 01:12:24,171
+Promise widget animation out. Okay.
+
+623
+01:12:24,531 --> 01:12:28,431
+So we're going to pin. So that one makes sense.
+
+624
+01:12:29,121 --> 01:12:38,241
+Um the node happens to be. Okay.
+
+625
+01:12:41,451 --> 01:12:49,131
+So we're in here. We actually what I'm going to do is I'm going to log.
+
+626
+01:12:52,381 --> 01:12:57,901
+A node uh or state promise widget animation out.
+
+627
+01:12:59,101 --> 01:13:03,481
+We're going to log the node. So let's do that again.
+
+628
+01:13:03,481 --> 01:13:07,801
+Let's pin this one. And we should see in our log here.
+
+629
+01:13:09,121 --> 01:13:12,991
+It was optimized out. Okay I'm going to restart the browser.
+
+630
+01:13:13,321 --> 01:13:17,191
+I'm going to quit. I'm going to build. Because one thing I've noticed is that the source has changed.
+
+631
+01:13:19,681 --> 01:13:25,221
+But that the execution. Are you officially on Firefox?
+
+632
+01:13:25,251 --> 01:13:30,231
+Yes, I am employed by Mozilla to work on Firefox. That is correct. That is correct.
+
+633
+01:13:34,881 --> 01:13:41,511
+Okay, let's do this again and we'll open up customize mode.
+
+634
+01:13:44,121 --> 01:13:48,141
+Which I think we have to wait until it's loaded customize mode.
+
+635
+01:13:48,141 --> 01:13:55,641
+And then we're going to let's add our log here promise widget animation out.
+
+636
+01:14:02,061 --> 01:14:06,341
+Okay. Let's go ahead and pin this one.
+
+637
+01:14:09,021 --> 01:14:17,711
+And did it get logged? No.
+
+638
+01:14:20,271 --> 01:14:24,821
+Didn't. Um.
+
+639
+01:14:27,011 --> 01:14:36,491
+So we must not be entering that condition. Uh, maybe, uh, I'll add a condition here.
+
+640
+01:14:39,921 --> 01:14:47,781
+Um, on this widget animation and, you know, also had a, uh, that's a no.
+
+641
+01:14:52,521 --> 01:14:55,521
+Uh, we're going to remove that. Uh, sorry. I wanted a log point.
+
+642
+01:14:57,741 --> 01:15:02,691
+And then here as well. Patient out bailing early.
+
+643
+01:15:03,921 --> 01:15:08,371
+Okay. And then we'll have fewer logging here.
+
+644
+01:15:08,391 --> 01:15:13,251
+Let's re let's rejigger windows to make this a little easier to read.
+
+645
+01:15:14,601 --> 01:15:17,661
+And let's go ahead and move some stuff. So pen.
+
+646
+01:15:18,891 --> 01:15:33,170
+Still nothing. Why would. Why aren't we logging? Why are we logging promise widget animation out?
+
+647
+01:15:33,171 --> 01:15:36,931
+Am I can I just set a normal breakpoint here?
+
+648
+01:15:38,801 --> 01:15:48,141
+What? Okay. So why aren't we calling these add to toolbar.
+
+649
+01:15:48,171 --> 01:15:52,251
+Add to panel. Am I in here at all. And.
+
+650
+01:15:53,531 --> 01:15:57,041
+Something is up. Something is up.
+
+651
+01:15:57,341 --> 01:16:00,761
+I am skeptical that things are working properly right now.
+
+652
+01:16:05,151 --> 01:16:14,841
+Let's do a quick build. I am skeptical that the debugger was working properly.
+
+653
+01:16:15,711 --> 01:16:27,051
+Let's try it again. This time with feeling. And one thing I'll do this time is I will.
+
+654
+01:16:29,081 --> 01:16:33,491
+Um, also add a breakpoint at exit.
+
+655
+01:16:36,701 --> 01:16:42,401
+I don't think. I don't think we're going to meet our goal. Okay, so our break, our debugger is working.
+
+656
+01:16:43,331 --> 01:16:48,311
+That's good. Uh, let's go ahead and unpin.
+
+657
+01:16:48,581 --> 01:16:53,681
+Okay, here we go. And we said bailing early.
+
+658
+01:16:55,631 --> 01:17:02,620
+Bailing early because it wasn't wrapped because the tag name or why?
+
+659
+01:17:02,621 --> 01:17:09,791
+Why would we get attribute. If the anchor is nav bar overflow button.
+
+660
+01:17:09,821 --> 01:17:17,321
+Yeah, that would have been it. Uh, if the CI anchor ID his nav bar overflow button, that's why.
+
+661
+01:17:18,071 --> 01:17:23,731
+So we're not doing it because. Of this for this second condition.
+
+662
+01:17:25,021 --> 01:17:28,861
+Okay. I think we can get rid of. Uh.
+
+663
+01:17:31,881 --> 01:17:36,500
+Those and then I'm fairly certain pinned to overflow.
+
+664
+01:17:36,501 --> 01:17:42,691
+Menu. I had to panel. Okay. And then we do animated.
+
+665
+01:17:42,691 --> 01:17:46,741
+Okay, so there's some, I think a little bit of, uh.
+
+666
+01:17:49,251 --> 01:17:53,721
+To toolbar. When would we call add to toolbar from G customize mode.
+
+667
+01:17:58,871 --> 01:18:03,571
+On the context menu and a toolbar. So.
+
+668
+01:18:06,171 --> 01:18:09,981
+Would we do it if we had an item?
+
+669
+01:18:12,651 --> 01:18:19,200
+In the bookmarks bar. No, can't.
+
+670
+01:18:19,201 --> 01:18:26,181
+Right click. That's interesting. How about up here?
+
+671
+01:18:30,691 --> 01:18:34,411
+Remove. Okay. So when we remove from that toolbar.
+
+672
+01:18:37,371 --> 01:18:41,811
+Customize mode. Um.
+
+673
+01:18:44,741 --> 01:18:48,221
+Well. And then if I like.
+
+674
+01:18:48,551 --> 01:18:53,241
+Can I? Why can't I?
+
+675
+01:18:53,301 --> 01:18:57,351
+Context menu. Click now customize you over here.
+
+676
+01:19:02,861 --> 01:19:08,501
+These are kind of funny. I don't think I can context click the let's try this button.
+
+677
+01:19:10,161 --> 01:19:17,531
+I can't I can't click these. That seems like a bug. Um, maybe it is.
+
+678
+01:19:18,431 --> 01:19:24,681
+Yeah. Okay. I must have triggered some kind of bug there that's worth filing if I can figure out some steps.
+
+679
+01:19:24,701 --> 01:19:28,181
+I might watch this recording afterwards to get some steps to reproduce.
+
+680
+01:19:29,831 --> 01:19:35,591
+But if I see, like, pinned overflow menu, then these will. Animate.
+
+681
+01:19:35,861 --> 01:19:42,401
+It's really so it's really whenever um, items are from the context menu.
+
+682
+01:19:43,631 --> 01:20:09,521
+Like if I grab. It's only one of her items are removed that this animation event occurs.
+
+683
+01:20:10,961 --> 01:20:15,161
+Okay, so I think that's that's given me the information I need.
+
+684
+01:20:15,371 --> 01:20:22,061
+Um, uh, kicks off a, uh, an animation.
+
+685
+01:20:24,071 --> 01:20:39,161
+For a node that, um, causes it to shrink, to scale down and, uh, become transparent before being removed from our toolbar.
+
+686
+01:20:43,561 --> 01:20:48,181
+133 since you started streaming. Thank you. Smurfd0. Are you thinking ahead?
+
+687
+01:20:49,081 --> 01:21:04,291
+Um. This is, uh, this can be seen when using the context menu panel to remove it.
+
+688
+01:21:04,321 --> 01:21:10,501
+To remove context menu. To remove an item from a toolbar.
+
+689
+01:21:12,571 --> 01:21:19,261
+A node Dom node. The node to be removed from.
+
+690
+01:21:22,081 --> 01:21:34,141
+The toolbar returns returns null if no animation is going to occur.
+
+691
+01:21:34,891 --> 01:21:40,351
+For example, if the node being, uh removed.
+
+692
+01:21:43,301 --> 01:21:50,921
+Okay. Um, for nodes that are, uh, within the overflow panel.
+
+693
+01:21:55,501 --> 01:22:00,271
+Art. Um. Toolbar item.
+
+694
+01:22:00,271 --> 01:22:08,731
+Toolbar button. Or is the hidden downloads button?
+
+695
+01:22:10,831 --> 01:22:16,741
+Um, this returns null immediately and no animation is performed.
+
+696
+01:22:17,221 --> 01:22:26,671
+If this, uh, if, um reduced motion is enabled, this returns early and no animation is performed.
+
+697
+01:22:29,631 --> 01:22:35,551
+Um. This. Returns early in an animation is performed.
+
+698
+01:22:38,471 --> 01:22:42,851
+No. Early and no. No.
+
+699
+01:22:43,001 --> 01:22:47,021
+Immediate. Animation is performed.
+
+700
+01:22:49,821 --> 01:23:01,971
+Um, returns null if no animation is going to occur, or the Dom knows that the animation is going to be performed on.
+
+701
+01:23:03,861 --> 01:23:07,881
+Uh, that the animation was performed on.
+
+702
+01:23:10,371 --> 01:23:20,181
+Uh, or after the animation has call has finished is completed.
+
+703
+01:23:21,951 --> 01:23:25,461
+Okay. I think we can do one more.
+
+704
+01:23:25,641 --> 01:23:28,701
+Um, yeah. Not my favorite.
+
+705
+01:23:28,881 --> 01:23:32,061
+Not my favorite. All this stuff. Okay.
+
+706
+01:23:32,331 --> 01:23:37,041
+Add to toolbar. And I believe this is a public method that we have to keep public.
+
+707
+01:23:37,041 --> 01:23:40,551
+We saw is being used, um, moves. Uh.
+
+708
+01:23:42,561 --> 01:23:47,361
+An item from, uh.
+
+709
+01:23:49,571 --> 01:23:54,941
+It was a customizable item to the nav.
+
+710
+01:23:55,631 --> 01:23:59,561
+The nav bar. Right.
+
+711
+01:23:59,681 --> 01:24:03,381
+The nav bar. Um.
+
+712
+01:24:04,251 --> 01:24:09,111
+This is used primarily by the context menus.
+
+713
+01:24:09,801 --> 01:24:23,241
+Uh, when outside, um, the, uh, toolbar item, uh, context menus, regardless of whether or not we're in customize mode.
+
+714
+01:24:23,751 --> 01:24:31,371
+Um, moves customize my my usable item to the end, to the end of the nav bar.
+
+715
+01:24:39,251 --> 01:24:47,061
+Um. Uh.
+
+716
+01:24:48,801 --> 01:24:54,941
+Now, what happens if the items already in the nav bar? Um.
+
+717
+01:24:57,651 --> 01:25:00,891
+Sorry. Uh, g customize mode. Let's.
+
+718
+01:25:03,201 --> 01:25:12,521
+Let's shut down some of these windows. Cancel.
+
+719
+01:25:12,531 --> 01:25:17,861
+Let's close this window. Okay. Let's say I have this item.
+
+720
+01:25:18,851 --> 01:25:23,231
+Let's say I have an item that's already in the nav bar. This item.
+
+721
+01:25:25,211 --> 01:25:29,861
+I'll say G customize mode, add to toolbar.
+
+722
+01:25:31,031 --> 01:25:39,861
+What happens? Does it move to the end? Uh, I think, um.
+
+723
+01:25:45,991 --> 01:25:51,921
+Okay, let's see what happens. So I've selected this, uh, that that accounts button.
+
+724
+01:25:51,931 --> 01:25:55,231
+I'm going to sag customize mode. Uh, to toolbar.
+
+725
+01:25:56,581 --> 01:26:02,251
+What happens moves it to the end even if it's in the same toolbar.
+
+726
+01:26:03,751 --> 01:26:08,911
+Um, right. Dom node.
+
+727
+01:26:11,001 --> 01:26:28,111
+And it returns a promise. Once this kicks off, an animation, um, that shows the list if this item is within a toolbar.
+
+728
+01:26:29,941 --> 01:26:33,691
+This kicks off an animation like regardless of.
+
+729
+01:26:35,471 --> 01:26:39,591
+Like if it's from. Here.
+
+730
+01:26:42,411 --> 01:26:45,651
+Yeah. Regardless of, um, it's the same as within a toolbar.
+
+731
+01:26:45,651 --> 01:26:49,701
+This kicks off an animation. Um.
+
+732
+01:26:51,361 --> 01:27:04,231
+That shrinks the item and causes it to become shrinks the icon item icon and causes it to become transparent before the move uh, occurs.
+
+733
+01:27:05,761 --> 01:27:10,021
+Uh, the return promise resolves once the move has completed.
+
+734
+01:27:11,071 --> 01:27:19,681
+Once the animation and the move has completed, uh, if the item is within two, this may kick off.
+
+735
+01:27:19,681 --> 01:27:23,101
+May kick off an animation that shrinks the item. Okay. Um.
+
+736
+01:27:25,851 --> 01:27:35,421
+Returns, uh, takes it Domino the node to be added to the end to be moved to the end of the nav bar area.
+
+737
+01:27:36,111 --> 01:27:39,771
+Uh, returns a promise that resolves. With what?
+
+738
+01:27:44,151 --> 01:27:48,321
+Nothing undefined. Um.
+
+739
+01:27:49,431 --> 01:27:52,431
+Results. Once the move has completed.
+
+740
+01:27:55,181 --> 01:28:00,321
+Okay. I think we're going to stop there. Um, but we're making good progress.
+
+741
+01:28:00,341 --> 01:28:06,611
+We didn't get to the thousand lines that I wanted to by now.
+
+742
+01:28:06,731 --> 01:28:11,560
+Uh, we got a little, I think, distracted. Or I did at least, uh, by this fun stuff.
+
+743
+01:28:11,561 --> 01:28:20,410
+I was learning how it works. Um, yeah, I, I kind of wonder whether or not this whether or not this belongs here in customize mode,
+
+744
+01:28:20,411 --> 01:28:30,071
+because, um, it almost feels like something that should belong to browser customization.
+
+745
+01:28:31,841 --> 01:28:36,311
+Um, because this is this is kind of external to the mode.
+
+746
+01:28:36,311 --> 01:28:42,851
+It is used both by the mode. Like if I'm in customize mode, I can use it in here.
+
+747
+01:28:45,161 --> 01:28:49,491
+Uh, but it also is the case that I can use it outside of customize mode.
+
+748
+01:28:51,981 --> 01:28:56,421
+Uh, okay. So that's that's worth taking a note of.
+
+749
+01:28:56,451 --> 01:29:02,181
+In fact, let me let me go to today's notes. Um, things to file.
+
+750
+01:29:04,011 --> 01:29:12,051
+Um. Do we still need the transitioning?
+
+751
+01:29:16,791 --> 01:29:21,261
+The transitioning. Uh, member of customize mode.
+
+752
+01:29:21,621 --> 01:29:31,521
+If we're, uh. Not doing an animation and should.
+
+753
+01:29:33,651 --> 01:29:38,741
+Add to panel, add toolbar and the, uh.
+
+754
+01:29:38,991 --> 01:29:45,411
+Uh the was it promise with promise widget animation out.
+
+755
+01:29:47,751 --> 01:29:51,351
+Stuff live inside uh customization handler.
+
+756
+01:29:56,151 --> 01:30:00,801
+Instead. Okay, so that's stuff I will file when this is all done.
+
+757
+01:30:01,371 --> 01:30:05,061
+Uh, we're we're we're making good progress.
+
+758
+01:30:05,061 --> 01:30:13,161
+And then there was like, um, the bug where we couldn't get the, uh, context menu to appear.
+
+759
+01:30:14,661 --> 01:30:17,781
+Uh, 133, around 133.
+
+760
+01:30:19,821 --> 01:30:24,051
+Of the stream. Okay. And we're going to stop there.
+
+761
+01:30:24,201 --> 01:30:27,440
+Hey, thank you so much for watching episode 384 of the Joy of coding.
+
+762
+01:30:27,441 --> 01:30:32,600
+I hope that was interesting. I hope that, uh, you know, I know we're we're just writing documentation here.
+
+763
+01:30:32,601 --> 01:30:39,261
+We're not fixing bugs, but we're we're doing stuff and we're learning, and, uh, and I hope that was I hope that was interesting.
+
+764
+01:30:39,591 --> 01:30:41,631
+And I think we're making things better, you know,
+
+765
+01:30:41,631 --> 01:30:48,021
+by converting this to an Essex class and particularly by doing this deep dive and trying to document things.
+
+766
+01:30:48,321 --> 01:30:53,361
+I think we're making it a little bit easier for future hackers to sort of understand what's going on here.
+
+767
+01:30:53,751 --> 01:30:57,581
+And that's important because I think there's a lot of simplification work that can occur in here.
+
+768
+01:30:57,591 --> 01:30:59,571
+There's a lot of tech debt that can be paid down.
+
+769
+01:30:59,991 --> 01:31:07,161
+And the I've said this for a couple episodes now, the first step, when have you got something mature and,
+
+770
+01:31:07,701 --> 01:31:13,761
+you know, battle tested but complicated that you want to kind of simplify, boil down, refactor the first step.
+
+771
+01:31:14,691 --> 01:31:15,411
+Document it.
+
+772
+01:31:15,771 --> 01:31:24,621
+Document the existing state of it and like make sure that you've got decent test coverage of its behaviors before you do any of that conversion.
+
+773
+01:31:24,771 --> 01:31:30,861
+Before you do any of that technique burn down or like trying to get rid of, um, uh,
+
+774
+01:31:30,861 --> 01:31:36,531
+you know, dead code or something because you need to make sure that if you change behavior,
+
+775
+01:31:36,531 --> 01:31:42,021
+it's by design, you know, you want to reduce the probability that you're going to introduce bugs by trying to make the code better.
+
+776
+01:31:42,621 --> 01:31:46,221
+Um, so that that's my tip of the day. Tip of the day.
+
+777
+01:31:46,311 --> 01:31:51,471
+But yeah, documentation is good. And we've been making some decent changes and I'm going to stop there.
+
+778
+01:31:51,921 --> 01:31:57,711
+All right. Well, let me know what you thought of this episode. There is a link in the agenda here to rate this episode.
+
+779
+01:31:57,711 --> 01:32:02,931
+I'm going to drop a link in the chat, uh, link to rate this episode.
+
+780
+01:32:03,351 --> 01:32:06,531
+And, uh, let me know what you thought. You know, fill in some the form.
+
+781
+01:32:06,531 --> 01:32:10,641
+But this is an also that's an also a place where you can ask me questions.
+
+782
+01:32:10,641 --> 01:32:14,991
+If you've got questions that you want me to try and answer in the stream, go ahead and send them in with that form.
+
+783
+01:32:15,141 --> 01:32:19,251
+Um, and, you know, I read everything that comes in. I'll use it to make this stream better.
+
+784
+01:32:19,581 --> 01:32:22,671
+Uh, do more of what you want to see. Do less of what you don't want to see.
+
+785
+01:32:22,671 --> 01:32:26,990
+And and I'll try and answer your questions if I have the answers. So go ahead, fill that form.
+
+786
+01:32:26,991 --> 01:32:32,661
+Let me know what you think. And with that, we'll call there. Thanks, everybody. Have yourselves a great week and hopefully I will see you next week.
+
+787
+01:32:32,781 --> 01:32:40,371
+Take care everybody. Bye bye. Hey, the joy of coding.
+
+788
+01:32:40,731 --> 01:32:41,091
+See it.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

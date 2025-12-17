@@ -1,198 +1,345 @@
 #!/usr/bin/env python
 
 from argparse import ArgumentParser
-from deepspeech.model import Model
-from os import close, path
-from progressbar import ProgressBar
-from pyvtt import (WebVTTFile, WebVTTItem, WebVTTTime)
-from re import sub
-from requests import get
-from subprocess import call
+from os import path
+from re import search
+from requests import get, post
 from sys import argv, exit
-from tempfile import NamedTemporaryFile, mkstemp
-from textwrap import fill
+from time import sleep
+from urllib.parse import urlparse, parse_qs
 import logging as log
-import scipy.io.wavfile as wav
+import json
 
-MODEL_DIR = "models"
-MODEL_FILE = "output_graph.pb"
-MODEL_ALPHABET = "alphabet.txt"
-MODEL_LANG_MODEL = "lm.binary"
-MODEL_TRIE = "trie"
+CONFIG_FILE = "config.json"
+EPISODES_BASE_DIR = path.join(path.dirname(__file__), "..", "..", "_episodes")
 
-# Number of MFCC features to use
-N_FEATURES = 26
-# Size of the context window used for producing timesteps in the input vector
-N_CONTEXT = 9
-# Beam width used in the CTC decoder when building candidate transcriptions
-BEAM_WIDTH = 500
-# The alpha hyperparameter of the CTC decoder. Language Model weight
-LM_WEIGHT = 1.75
-# The beta hyperparameter of the CTC decoder. Word insertion weight (penalty)
-WORD_COUNT_WEIGHT = 1.00
-# Valid word insertion weight. This is used to lessen the word insertion penalty
-# when the inserted word is part of the vocabulary
-VALID_WORD_COUNT_WEIGHT = 1.00
+def extract_panopto_session_id(url):
+    parsed = urlparse(url)
+    if 'id=' in parsed.query:
+        query_params = parse_qs(parsed.query)
+        return query_params.get('id', [None])[0]
 
-AUDIO_SEGMENT_SAMPLES = 16000 * 5  # 5 seconds
+    match = search(r'/Sessions/([a-f0-9-]+)', parsed.path)
+    if match:
+        return match.group(1)
 
-DOWNLOAD_CHUNK_SIZE = 4096  # bytes
+    return None
 
-MAX_CAPTION_WIDTH = 40
+def get_panopto_access_token(server, client_id, client_secret):
+    token_url = f"https://{server}/Panopto/oauth2/connect/token"
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {
+        "grant_type": "client_credentials",
+        "scope": "api",
+        "client_id": client_id,
+        "client_secret": client_secret
+    }
 
-INFERENCE_REPLACEMENTS = {
-    "cant": "can't",
-    "dont": "don't",
-    "i": "I",
-    "im": "I'm",
-    "joy of coding": "Joy of Coding",
-    "mike": "Mike",
-}
+    log.info(f"Requesting OAuth2 token from {token_url}")
+    response = post(token_url, headers=headers, data=data)
 
+    if response.status_code != 200:
+        log.error(f"Token request failed with status {response.status_code}")
+        log.error(f"Response: {response.text}")
 
-def sample_index_to_time(index):
-    duration_seconds = index / 16000
-    duration_minutes, duration_seconds = divmod(duration_seconds, 60)
-    duration_hours, duration_minutes = divmod(duration_minutes, 60)
-    return duration_hours, duration_minutes, duration_seconds
+    response.raise_for_status()
 
+    token_data = response.json()
+    return token_data.get("access_token")
 
-def run_ffmpeg(args):
-    try:
-        all_args = ["ffmpeg"] + args
-        print "Running: %s" % (' '.join(all_args))
-        call(["ffmpeg"] + args)
-        return True
-    except OSError as e:
-        return False
+def get_panopto_session(server, session_id, access_token):
+    api_url = f"https://{server}/Panopto/api/v1/sessions/{session_id}"
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
 
+    log.info(f"Fetching session data from {api_url}")
+    response = get(api_url, headers=headers)
+    response.raise_for_status()
 
-def main(options):
-    # Ensure ffmpeg is around
-    if not run_ffmpeg(['-version']):
-        log.error(
-            "ffmpeg needs to be available to strip audio from the video file.")
-        exit(1)
+    return response.json()
 
-    with NamedTemporaryFile(delete=True) as vid_file:
-        log.info("Downloading %s - this might take a while." % options.vid_url)
-        response = get(options.vid_url, stream=True)
-        total_length = response.headers.get("content-length")
-        if total_length is None:  # no content length header
-            log.info("Unknown length - can't predict how long this will take.")
-            f.write(response.content)
-        else:
-            bar = ProgressBar(max_value=int(total_length))
-            dl = 0
-            for data in response.iter_content(chunk_size=DOWNLOAD_CHUNK_SIZE):
-                dl += len(data)
-                vid_file.write(data)
-                vid_file.flush()
-                bar.update(dl)
+def get_panopto_folder_sessions(server, folder_id, access_token):
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
 
-        log.info("Download done. Stripping audio.")
-        (wav_file, wav_file_name) = mkstemp('.wav')
-        result = run_ffmpeg([
-            "-y", "-i", vid_file.name, "-vn", "-acodec", "pcm_s16le", "-ar",
-            "16000", "-ac", "1", wav_file_name
-        ])
-        if not result:
-            close(wav_file)
-            log.error("ffmpeg failed. Bailing.")
-            exit(1)
+    all_sessions = []
+    page = 0
+    page_size = 50
+    max_retries = 3
+    consecutive_errors = 0
 
-        fs, audio = wav.read(wav_file_name)
-        close(wav_file)
+    while True:
+        api_url = f"https://{server}/Panopto/api/v1/folders/{folder_id}/sessions"
+        params = {
+            "pageNumber": page,
+            "maxResults": page_size
+        }
 
-    log.info("Will write VTT to %s" % options.output)
-    # Make sure the WAV is to code...
-    log.info("Loading up WAV file...")
+        log.info(f"Fetching sessions page {page} from folder {folder_id}")
 
-    if fs != 16000:
-        log.error("Only 16000hz WAV files are usable.")
-        exit(1)
+        retry_count = 0
+        while retry_count < max_retries:
+            response = get(api_url, headers=headers, params=params)
 
-    total_samples = len(audio)
-    duration_hours, duration_minutes, duration_seconds = sample_index_to_time(
-        len(audio))
-    log.info("Approximate duration: %d:%02d:%02d" %
-             (duration_hours, duration_minutes, duration_seconds))
+            if response.status_code == 500:
+                retry_count += 1
+                if retry_count < max_retries:
+                    log.warning(f"Got 500 error on page {page}, retrying ({retry_count}/{max_retries})...")
+                    sleep(2)
+                    continue
+                else:
+                    log.error(f"Got 500 error on page {page} after {max_retries} retries")
+                    consecutive_errors += 1
+                    if consecutive_errors >= 3:
+                        log.warning(f"Got {consecutive_errors} consecutive errors, stopping pagination")
+                        return all_sessions
+                    break
 
-    # Let's load up DeepSpeech and get it ready.
-    log.info("Loading pre-trained DeepSpeech model...")
-    root_model_dir = path.join(options.deepspeech_model_dir, MODEL_DIR)
+            response.raise_for_status()
+            break
 
-    model = path.join(root_model_dir, MODEL_FILE)
-    alphabet = path.join(root_model_dir, MODEL_ALPHABET)
-    lang_model = path.join(root_model_dir, MODEL_LANG_MODEL)
-    trie = path.join(root_model_dir, MODEL_TRIE)
-
-    deepspeech = Model(model, N_FEATURES, N_CONTEXT, alphabet, BEAM_WIDTH)
-    log.info("Done loading model.")
-
-    log.info("Loading language model...")
-    deepspeech.enableDecoderWithLM(alphabet, lang_model, trie, LM_WEIGHT,
-                                   WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
-    log.info("Done loading model.")
-
-    playhead = 0
-
-    out = WebVTTFile()
-
-    bar = ProgressBar(max_value=total_samples)
-    while playhead < (total_samples - 1):
-        end_point = min(playhead + AUDIO_SEGMENT_SAMPLES, (total_samples - 1))
-        segment = audio[playhead:end_point]
-        inference = deepspeech.stt(segment, fs)
-        log.debug("Inferred: %s" % inference)
-
-        start_hours, start_minutes, start_seconds = sample_index_to_time(
-            playhead)
-        playhead = end_point
-        end_hours, end_minutes, end_seconds = sample_index_to_time(playhead)
-
-        if not inference or inference == "ah":
+        if retry_count >= max_retries:
+            page += 1
             continue
 
-        for search, replace in INFERENCE_REPLACEMENTS.iteritems():
-            inference = sub(r"\b" + search + r"\b", replace, inference)
+        data = response.json()
+        results = data.get('Results', [])
 
-        inference = fill(inference, width=MAX_CAPTION_WIDTH)
+        if not results:
+            break
 
-        start = WebVTTTime(start_hours, start_minutes, start_seconds)
-        end = WebVTTTime(end_hours, end_minutes, end_seconds)
+        consecutive_errors = 0
+        all_sessions.extend(results)
+        log.info(f"Retrieved {len(results)} sessions (total so far: {len(all_sessions)})")
 
-        item = WebVTTItem(0, start, end, inference)
-        out.append(item)
-        bar.update(playhead)
+        total_results = data.get('TotalNumberResults')
+        if total_results is not None:
+            log.info(f"API reports {total_results} total results")
+            if len(all_sessions) >= total_results:
+                break
 
-        out.save(options.output, encoding="utf-8")
+        if len(results) < page_size:
+            break
 
-    out.clean_indexes()
-    out.save(options.output, encoding="utf-8")
+        page += 1
+
+    return all_sessions
+
+def extract_episode_number(session_name):
+    match = search(r'Episode\s+(\d+)', session_name, )
+    if match:
+        episode_num = match.group(1)
+        return episode_num.zfill(4)
+    return None
+
+def download_panopto_transcript(download_url):
+    log.info(f"Downloading transcript from {download_url}")
+    response = get(download_url)
+    response.raise_for_status()
+    return response.text
+
+def generate_html_transcript(session_data, transcript_text, video_url):
+    episode_num = extract_episode_number(session_data.get('Name', ''))
+    if not episode_num:
+        log.error(f"Could not extract episode number from session name: {session_data.get('Name')}")
+        return None, None
+
+    title = session_data.get('Name', 'Unknown Episode')
+    description = session_data.get('Description', '')
+
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{title}</title>
+</head>
+<body>
+    <article>
+        <h1>{title}</h1>
+        <div data-pagefind-meta="url">{video_url}</div>
+        <p><a href="{video_url}">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>{transcript_text}</pre>
+        </div>
+    </article>
+</body>
+</html>"""
+
+    return episode_num, html_content
+
+def process_session(config, session_data, video_url, force_overwrite=False):
+    episode_num = extract_episode_number(session_data.get('Name', ''))
+    if not episode_num:
+        log.error(f"Could not extract episode number from: {session_data.get('Name')}")
+        return False
+
+    episode_dir = path.join(EPISODES_BASE_DIR, episode_num)
+    if not path.exists(episode_dir):
+        log.warning(f"Episode directory not found: {episode_dir}, skipping")
+        return False
+
+    output_path = path.join(episode_dir, "transcript.html")
+    if path.exists(output_path) and not force_overwrite:
+        log.info(f"Transcript already exists for episode {episode_num}, skipping")
+        return True
+
+    caption_url = session_data.get('Urls', {}).get('CaptionDownloadUrl')
+    if not caption_url:
+        log.error(f"No caption download URL found for session: {session_data.get('Name')}")
+        return False
+
+    transcript_text = download_panopto_transcript(caption_url)
+
+    episode_num, html_content = generate_html_transcript(
+        session_data,
+        transcript_text,
+        video_url
+    )
+
+    if not episode_num:
+        log.error(f"Could not extract episode number from: {session_data.get('Name')}")
+        return False
+
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(html_content)
+
+    log.info(f"Transcript successfully saved to {output_path}")
+    return True
+
+def check_non_public_sessions(config, sessions):
+    non_public_urls = []
+    for session in sessions:
+        is_public = session.get('IsPublic', False)
+        if not is_public:
+            viewer_url = session.get('Urls', {}).get('ViewerUrl')
+            if viewer_url:
+                non_public_urls.append(viewer_url)
+    return non_public_urls
+
+def main(options):
+    with open(CONFIG_FILE) as f:
+        config = json.load(f)
+
+    log.info("Loaded config.json")
+
+    access_token = get_panopto_access_token(
+        config['panopto_server'],
+        config['panopto_client_id'],
+        config['panopto_client_secret']
+    )
+    log.info("Successfully obtained access token")
+
+    if options.check_for_non_public:
+        if options.folder_id:
+            sessions = get_panopto_folder_sessions(
+                config['panopto_server'],
+                options.folder_id,
+                access_token
+            )
+            non_public_urls = check_non_public_sessions(config, sessions)
+            for url in non_public_urls:
+                print(url)
+            return 0
+        else:
+            session_id = extract_panopto_session_id(options.vid_url)
+            if not session_id:
+                log.error(f"Could not extract session ID from URL: {options.vid_url}")
+                return 1
+
+            session_data = get_panopto_session(
+                config['panopto_server'],
+                session_id,
+                access_token
+            )
+
+            is_public = session_data.get('IsPublic', False)
+            if not is_public:
+                print(options.vid_url)
+            return 0
+
+    if options.folder_id:
+        sessions = get_panopto_folder_sessions(
+            config['panopto_server'],
+            options.folder_id,
+            access_token
+        )
+
+        log.info(f"Found {len(sessions)} sessions in folder")
+
+        success_count = 0
+        processed_count = 0
+        for session in sessions:
+            session_id = session.get('Id')
+            viewer_url = session.get('Urls', {}).get('ViewerUrl')
+
+            if not session_id or not viewer_url:
+                log.warning(f"Skipping session with missing data: {session.get('Name')}")
+                continue
+
+            log.info(f"Processing: {session.get('Name')}")
+
+            if process_session(config, session, viewer_url, options.force_overwrite):
+                success_count += 1
+
+            processed_count += 1
+
+            if processed_count % 50 == 0:
+                log.info(f"Processed {processed_count} sessions, resting for 5 seconds...")
+                sleep(5)
+
+        log.info(f"Successfully processed {success_count}/{len(sessions)} sessions")
+        return 0
+
+    else:
+        session_id = extract_panopto_session_id(options.vid_url)
+        if not session_id:
+            log.error(f"Could not extract session ID from URL: {options.vid_url}")
+            return 1
+
+        log.info(f"Extracted session ID: {session_id}")
+
+        session_data = get_panopto_session(
+            config['panopto_server'],
+            session_id,
+            access_token
+        )
+
+        if process_session(config, session_data, options.vid_url, options.force_overwrite):
+            return 0
+        else:
+            return 1
+
 
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument(
-        "--deepspeech-model-dir",
-        type=str,
-        required=True,
-        help="The folder where the Deepspeech pre-trained model is.")
-    parser.add_argument(
+
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
         "--vid-url",
         type=str,
-        required=True,
-        help="URL of video to download, strip audio and transcribe.")
-    parser.add_argument(
-        "--output",
+        help="URL of video to download transcript for")
+    group.add_argument(
+        "--folder-id",
         type=str,
-        required=True,
-        help="Place to write the WebVTT output.")
+        help="Panopto folder ID to process all sessions from")
+
     parser.add_argument(
         "--verbose",
         action="store_true",
         help="Print debugging messages to the console.")
+    parser.add_argument(
+        "--force-overwrite",
+        action="store_true",
+        help="Overwrite existing transcript files")
+    parser.add_argument(
+        "--check-for-non-public",
+        action="store_true",
+        help="Check if video(s) are non-public and echo URL(s) if so")
 
     options, extra = parser.parse_known_args(argv[1:])
 

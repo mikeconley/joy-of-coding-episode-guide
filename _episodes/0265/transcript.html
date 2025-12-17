@@ -1,0 +1,2773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 265 - October 13, 2021</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 265 - October 13, 2021</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a75fa65e-94be-4f08-9ee3-adb200ff1f73</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a75fa65e-94be-4f08-9ee3-adb200ff1f73">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:04:41,220 --> 00:04:52,850
+Welcome. The joy comes, hello and welcome to Episode two hundred and sixty five of The Joy of Cotting.
+
+2
+00:04:52,850 --> 00:05:00,290
+My name is Mike Conley. It's so good to have you here. Going to be hacking on some live, but I'm going to be live hacking on some Firefox stuff today.
+
+3
+00:05:00,290 --> 00:05:07,940
+You'd think, having said this, like this exact same sentence going through this exact same ritual for like four years, I'd have it down pat.
+
+4
+00:05:07,940 --> 00:05:15,410
+It'd be like muscle memory. But still, my mouth will sometimes trip over the words, we're going to be live hacking on some Firefox stuff.
+
+5
+00:05:15,410 --> 00:05:16,430
+It's going to be great.
+
+6
+00:05:16,430 --> 00:05:21,500
+We're going to be looking at some patches we're going to review and we're going to investigate some test intermittent test failures,
+
+7
+00:05:21,500 --> 00:05:25,980
+which, you know, it's always good to hammer those out. Let's let's get started.
+
+8
+00:05:25,980 --> 00:05:33,260
+Let me start by sharing my screen. So there is a preamble that I generally do for the joy of coding.
+
+9
+00:05:33,260 --> 00:05:38,750
+If you're a long time viewer, you will be familiar the idea. The first one is that no plan survives breakfast.
+
+10
+00:05:38,750 --> 00:05:43,130
+I think I know what I want to do today. I think I have a sense of where this episode is going to go.
+
+11
+00:05:43,130 --> 00:05:47,960
+But it might I might be wrong, you know, like we're kind of improvising as we go.
+
+12
+00:05:47,960 --> 00:05:52,880
+I have a vague timeline, but you can think of me as almost as like I use this metaphor the other day,
+
+13
+00:05:52,880 --> 00:05:57,230
+like a or an analogy the other day, like an easily distractible tourguide.
+
+14
+00:05:57,230 --> 00:06:03,500
+So if there's something that we see like that's very interesting that, you know, I hadn't originally planned on checking out,
+
+15
+00:06:03,500 --> 00:06:08,360
+we might pull over and like, take a closer look just because I'm easily distracted. So that's the first thing.
+
+16
+00:06:08,360 --> 00:06:11,960
+No plan survives breakfast. Things might go wrong, might get stuck. We might figure stuff out.
+
+17
+00:06:11,960 --> 00:06:17,330
+We might not. That's OK. Second thing is that there is an agenda that we're looking at.
+
+18
+00:06:17,330 --> 00:06:23,570
+Oh, the sound. Is it just me or the sound is in mono, right?
+
+19
+00:06:23,570 --> 00:06:28,130
+Is that is that the case? Or people only experiencing the sound in one ear?
+
+20
+00:06:28,130 --> 00:06:31,820
+That's what Danny Colon is saying.
+
+21
+00:06:31,820 --> 00:06:40,190
+I don't think I've changed any of my sound settings and I don't actually think that there's stereo output on this on this thing.
+
+22
+00:06:40,190 --> 00:06:47,030
+Let me just quickly check real quick one moment, one moment.
+
+23
+00:06:47,030 --> 00:06:51,740
+Audio and capture a monitor of it's mono, it's mono.
+
+24
+00:06:51,740 --> 00:06:56,420
+This is a mono track going out. Yeah, could be the same for me.
+
+25
+00:06:56,420 --> 00:07:00,800
+A Smurf don't know. OBEs is is like sending out a mono track.
+
+26
+00:07:00,800 --> 00:07:06,140
+I don't know why you're only getting in one ear. I apologize.
+
+27
+00:07:06,140 --> 00:07:11,480
+I don't know what's going on there, but I don't know if there's anything I can do to fix it.
+
+28
+00:07:11,480 --> 00:07:15,140
+But we'll we'll check it out. We'll check it out after maybe after the episode.
+
+29
+00:07:15,140 --> 00:07:18,800
+I'll listen to the recording and see whether or not there is something I can do on my side.
+
+30
+00:07:18,800 --> 00:07:26,750
+It might, depending on where you are. Maybe if you're watching this on Twitch, try the YouTube channel, the YouTube stream,
+
+31
+00:07:26,750 --> 00:07:33,530
+because there are multiple streams and I wonder if it's stereo over there or if it's in both both ears.
+
+32
+00:07:33,530 --> 00:07:38,120
+OK, the agenda. So what we're looking at right here in front of us is an agenda.
+
+33
+00:07:38,120 --> 00:07:41,930
+It's got like lots of handy dandy links apparently on Twitch.
+
+34
+00:07:41,930 --> 00:07:45,320
+It sounds fine, says Zhuge Machine. OK, that makes me feel better.
+
+35
+00:07:45,320 --> 00:07:52,610
+It makes me think that maybe the issue is not on my end. Maybe the issue is on YouTube's end on twitchers end or whoever the end points.
+
+36
+00:07:52,610 --> 00:07:58,730
+And so it makes me feel better. The agenda is something that you have access to.
+
+37
+00:07:58,730 --> 00:08:03,140
+If you're watching this on YouTube, for example, check out the video description for a link.
+
+38
+00:08:03,140 --> 00:08:06,650
+If you're watching this on your Mazola, it'll be in the video details to my left.
+
+39
+00:08:06,650 --> 00:08:14,090
+And if you're watching this on Twitch, then let me quickly just drop the twitch, the link into the twitch chat.
+
+40
+00:08:14,090 --> 00:08:23,750
+Wow. All it took was one week off and my entire ability to speak extemporaneously completely shot.
+
+41
+00:08:23,750 --> 00:08:26,540
+So there you go. That's that's the agenda. That's the first thing.
+
+42
+00:08:26,540 --> 00:08:30,560
+The second thing is there is an episode guide is a completely viewer driven episode guide you.
+
+43
+00:08:30,560 --> 00:08:34,700
+You should check it out. If you want to know what I've done in previous episodes, maybe you want to add your own notes,
+
+44
+00:08:34,700 --> 00:08:38,060
+addenda, corrections, maybe you want to expand on something. Maybe you, too,
+
+45
+00:08:38,060 --> 00:08:42,830
+are an easily distracted tour guide and want to like kind of go off on a tangent about a thing
+
+46
+00:08:42,830 --> 00:08:47,600
+that I touched on in a in a previous episode or in this episode when the episode guy shows up,
+
+47
+00:08:47,600 --> 00:08:51,800
+you can contribute if you're not sure what a pull request is or a repository.
+
+48
+00:08:51,800 --> 00:08:54,800
+There's a guide here on what that's all about.
+
+49
+00:08:54,800 --> 00:09:03,560
+And if you are familiar, if you're more comfortable with using pull, request the repository, go to the GitHub where I'm hosting the The Episode Guide.
+
+50
+00:09:03,560 --> 00:09:12,050
+You can send a poll request in and I'll add your changes in. OK, so what are we doing today now that we've gotten over the sort of the ceremony,
+
+51
+00:09:12,050 --> 00:09:16,760
+the, the, the beginning of the, the stream, what did we, what are we doing today?
+
+52
+00:09:16,760 --> 00:09:21,650
+Well, the first thing I want to do was take a look at a patch that someone had sent me to review.
+
+53
+00:09:21,650 --> 00:09:25,610
+And I want to show you what that's like whenever I'm reviewing a patch. I have not looked at this patch at all.
+
+54
+00:09:25,610 --> 00:09:30,830
+I just saw that it ended up in my review queue. And I don't know what this bugs about.
+
+55
+00:09:30,830 --> 00:09:35,540
+I don't know what this patch is about. I haven't even I've been averting my eyes. I was just like, oh, this thing just showed up.
+
+56
+00:09:35,540 --> 00:09:41,150
+So you're about to see you're about to see what happens. Whenever I like, I just see it.
+
+57
+00:09:41,150 --> 00:09:45,690
+And I've never seen it before, like. I'm not I haven't even read it yet, I haven't I'm looking at my monitor.
+
+58
+00:09:45,690 --> 00:09:50,340
+I don't even know what's on my screen. So I'm going to look right now. Here we go.
+
+59
+00:09:50,340 --> 00:10:01,750
+What's this about hiding? About tab crashed, should hide extra fields' by default and let it be opened with a toggle.
+
+60
+00:10:01,750 --> 00:10:10,080
+OK, and it looks like what happened was today I was redirected.
+
+61
+00:10:10,080 --> 00:10:16,440
+Someone redirected me to this review request.
+
+62
+00:10:16,440 --> 00:10:20,670
+And it sounds like I'm a mentor on this, but.
+
+63
+00:10:20,670 --> 00:10:32,050
+Oh yeah. OK, so I'm I'm a mentor on this bug. It looks like there have been a number of different stabs at this.
+
+64
+00:10:32,050 --> 00:10:37,450
+What does I have to sort of refresh my memory about what this is about? OK, let's start from the top.
+
+65
+00:10:37,450 --> 00:10:47,350
+This is filed six years ago by by Philippe Goma's, the form asking the user to provide extra information like email,
+
+66
+00:10:47,350 --> 00:10:53,680
+comments etc, and about tab crashes tied to the same toggle that lets users decide whether to submit the report at all or not.
+
+67
+00:10:53,680 --> 00:10:58,150
+In order to not let that discourage users from sending the report, the two options should be untied in the form.
+
+68
+00:10:58,150 --> 00:11:05,740
+Asking for extra info should only be shown if the user chooses to. So let's take a look like this was filed back in the day like six years ago.
+
+69
+00:11:05,740 --> 00:11:10,630
+Let's take a look at what this looks like now. I've got to build here a recent build of Firefox.
+
+70
+00:11:10,630 --> 00:11:16,180
+I'll do is I'll go knock, run. And then with local builds, you actually have to do something special.
+
+71
+00:11:16,180 --> 00:11:21,970
+If you're dealing with crash reports or the crash report, you have to enable the crash report or by default.
+
+72
+00:11:21,970 --> 00:11:26,500
+That's actually something that shows up in the help of of moch run.
+
+73
+00:11:26,500 --> 00:11:30,220
+And the reason for that is because, like, we disabled it by default for local builds,
+
+74
+00:11:30,220 --> 00:11:39,370
+because usually local build crashes are not interesting, because if you build it locally, chances are you've made some modifications.
+
+75
+00:11:39,370 --> 00:11:48,190
+And so the simple server won't have symbols. So like accepting the crash report from a custom build, a Firefox is usually useless.
+
+76
+00:11:48,190 --> 00:11:56,290
+But in this case, we actually do want to see the crash reporter interface. So what we'll do is you can go to any page.
+
+77
+00:11:56,290 --> 00:12:03,940
+I'm going to show you a trick on how you can easily, quickly and easily crash a tab for testing.
+
+78
+00:12:03,940 --> 00:12:09,140
+I believe it's about crash content. If you do that, it will crash the tab.
+
+79
+00:12:09,140 --> 00:12:13,660
+Now, actually, what I wanted to do was not crash the content and just show this.
+
+80
+00:12:13,660 --> 00:12:18,460
+I want to show the crash reporter form. So let's go back to where we were just now.
+
+81
+00:12:18,460 --> 00:12:24,670
+What we need to do is we actually have to kill this content process five two nine four.
+
+82
+00:12:24,670 --> 00:12:27,920
+So ignore what I just said about going to crash content. That's good.
+
+83
+00:12:27,920 --> 00:12:35,740
+Not that's not good enough. You to go a bit further. So the process ID was five to nine four in the way I crash it.
+
+84
+00:12:35,740 --> 00:12:40,060
+As I say, sig abort five two nine four.
+
+85
+00:12:40,060 --> 00:12:45,820
+That should crash the tab. Now what's interesting is I'm still not getting the form.
+
+86
+00:12:45,820 --> 00:12:56,700
+Where is the form. Huh?
+
+87
+00:12:56,700 --> 00:13:06,780
+Is the crash reporter, is the crash reporter on services crash crashes is there like a crash manager crash?
+
+88
+00:13:06,780 --> 00:13:18,930
+What's the enabled? There's some kind of UI for determining whether or not the crash reporters enabled our user interface or API or something.
+
+89
+00:13:18,930 --> 00:13:34,610
+How do I find out whether the crash reporters enabled or not? There is a crash manager of this crash.
+
+90
+00:13:34,610 --> 00:13:43,600
+Yeah, the naval tests of the crash reporter, I want this thing, how do I get at the crash reporter interface?
+
+91
+00:13:43,600 --> 00:13:53,740
+Is it on services, it is not. So I have to can get an instance of it myself.
+
+92
+00:13:53,740 --> 00:14:01,540
+Crash manager. So here's the crash reporter.
+
+93
+00:14:01,540 --> 00:14:08,470
+Crash reportedly enabled false, so it's passing and that's the reason why the forms aren't showing up,
+
+94
+00:14:08,470 --> 00:14:12,220
+is that for some reason saying enable crash reporter was not enough.
+
+95
+00:14:12,220 --> 00:14:17,260
+Did I spell it right? Oh, I got to put a. I got to put a dash in between.
+
+96
+00:14:17,260 --> 00:14:21,940
+That's why I didn't pass the right flag.
+
+97
+00:14:21,940 --> 00:14:29,110
+That's what was going wrong. OK, so maybe now if I go to about crash content.
+
+98
+00:14:29,110 --> 00:14:33,700
+Yeah. Now we get the form. OK, ok. Here that makes more sense.
+
+99
+00:14:33,700 --> 00:14:40,960
+OK, so what, what has happened is like this, the style has somewhat changed in this page.
+
+100
+00:14:40,960 --> 00:14:47,980
+If we compare the two screenshots of before and now the icon is gone.
+
+101
+00:14:47,980 --> 00:14:53,020
+Here, let me try and put these side by side so we can kind of get a sense of it.
+
+102
+00:14:53,020 --> 00:15:07,450
+The the strings have changed. Um, there was a checkbox outside here to submit a crash report, and it looks like.
+
+103
+00:15:07,450 --> 00:15:16,810
+We high show and hide some fields whenever we say to submit the crash report.
+
+104
+00:15:16,810 --> 00:15:25,660
+So some of this is the same. Now, what what was being suggested in here is some way of providing more details.
+
+105
+00:15:25,660 --> 00:15:33,490
+So, like, centered on a crash report and then like making it so that the user can opt in to provide more details.
+
+106
+00:15:33,490 --> 00:15:41,290
+So rather than, like, overwhelming them with more like more fields to fill out, we just try and encourage them like.
+
+107
+00:15:41,290 --> 00:15:45,580
+Yes. And the crash report because crash records are really useful for us.
+
+108
+00:15:45,580 --> 00:15:53,920
+They help us. We want users to send them because they help us make the browser more stable.
+
+109
+00:15:53,920 --> 00:16:01,290
+OK, so this went through a whole bunch of.
+
+110
+00:16:01,290 --> 00:16:20,830
+A bunch of like iterations, and I was working with a volunteer contributor and didn't I think they ended up like not getting very far and then.
+
+111
+00:16:20,830 --> 00:16:34,340
+Uh oh, you know, I'm I feel really bad, it looks like there were a bunch of people who have been trying to, like, do stuff on this.
+
+112
+00:16:34,340 --> 00:16:43,200
+And like, for some reason, it's just not been showing up in my like.
+
+113
+00:16:43,200 --> 00:16:51,220
+It's in my review, my need info backlog and these messages, I haven't been seeing them or they just not been surfaced to me,
+
+114
+00:16:51,220 --> 00:16:55,720
+so I feel really bad because they're a bunch of volunteer contributors here who have, like, reached out.
+
+115
+00:16:55,720 --> 00:17:01,960
+And I didn't say anything. So if you're one of these people, I apologize.
+
+116
+00:17:01,960 --> 00:17:12,580
+That's not cool. So let's take a look at what the someone actually just ended up picking this patch, this this up and submitting a patch.
+
+117
+00:17:12,580 --> 00:17:21,030
+And I'm curious to know what it looks like. So let's let's just go ahead and apply it and see what it does.
+
+118
+00:17:21,030 --> 00:17:41,350
+Uh, so I'm going to go ahead and quit, we're going to apply the patch with Mars, that patch.
+
+119
+00:17:41,350 --> 00:17:57,900
+OK, rebuild it. Scooby Doo, and then we'll run it.
+
+120
+00:17:57,900 --> 00:18:08,060
+Oh, we got to run with a naval crash reporter. Sorry, it's not the default, so let's try that again.
+
+121
+00:18:08,060 --> 00:18:22,160
+Uh, naval crash reporter. OK, so let's go to some page and then we'll go about crash content.
+
+122
+00:18:22,160 --> 00:18:32,375
+So it looks like some kind of a button was added here, um.
+
+123
+00:18:32,585 --> 00:18:39,755
+Additional form fields, what is that, that pixel there is there's something there's something she puts on my screen, I think.
+
+124
+00:18:39,755 --> 00:18:44,925
+Yeah, OK. But there's no there's like the strings are broken on here.
+
+125
+00:18:44,925 --> 00:18:50,015
+That's one thing worth pointing out. A lot of stuff's broken.
+
+126
+00:18:50,015 --> 00:19:01,105
+OK, so. We need to clean this up.
+
+127
+00:19:01,105 --> 00:19:24,635
+Targets. More details. Uh, what's happening here, Talton idea, data, more details.
+
+128
+00:19:24,635 --> 00:19:36,525
+Box. Just as space was added there, it looks like a hardcoded string ended up going in here, that we can't do that can't.
+
+129
+00:19:36,525 --> 00:19:49,185
+Can't do that. OK, OK, hold up, hold up, hold up.
+
+130
+00:19:49,185 --> 00:20:21,265
+So what do we want to do here? Also, not a fan of using this down arrow from the Unicode.
+
+131
+00:20:21,265 --> 00:20:30,395
+For provide more details, I think what we probably want. Trying to think what this should look like.
+
+132
+00:20:30,395 --> 00:20:38,505
+Um. Oops, didn't mean open slicer.
+
+133
+00:20:38,505 --> 00:20:44,495
+No, no, no, no, no, no. Go away. Go for squared away.
+
+134
+00:20:44,495 --> 00:20:51,875
+OK, um. Restore the tab will go back to crash content.
+
+135
+00:20:51,875 --> 00:21:14,835
+Watch this look like. We like provide more details.
+
+136
+00:21:14,835 --> 00:21:17,645
+It's almost like a tree arrow.
+
+137
+00:21:17,645 --> 00:21:30,205
+Is what the original screenshot was trying to are, the original is trying to allude to is like a twisty kind of have stuff like that inside of our.
+
+138
+00:21:30,205 --> 00:21:37,125
+Side of our bookmarks toolbar, like if you go to hear. Um, do we have Twisties?
+
+139
+00:21:37,125 --> 00:21:43,635
+Yeah, like we have these sorts of things, I wonder if we should reuse this sort of metaphor.
+
+140
+00:21:43,635 --> 00:21:50,185
+Where it's like a button with a down. To expand.
+
+141
+00:21:50,185 --> 00:21:57,045
+Collapse, and we also have these twisties here, you could use these. But.
+
+142
+00:21:57,045 --> 00:22:03,725
+That's if there's like a tree of information, and I think this might be.
+
+143
+00:22:03,725 --> 00:22:09,955
+Better something like. Um.
+
+144
+00:22:09,955 --> 00:22:24,405
+What would this look like? Let's. Let's go to a boat crash content to get in here.
+
+145
+00:22:24,405 --> 00:22:35,545
+It's just hand decorate this. Provide more.
+
+146
+00:22:35,545 --> 00:22:46,275
+Well, come on, provide what's the strings supposed to be, provide more details about tax content, is that.
+
+147
+00:22:46,275 --> 00:22:53,715
+Provide more detail. OK, well, first of all. Way too big, way too big, um.
+
+148
+00:22:53,715 --> 00:23:06,465
+And this button. The margin, what's wrong with the margin on its left, we probably won't be in line start zero.
+
+149
+00:23:06,465 --> 00:23:14,645
+We probably want the font size to not be one point five ram.
+
+150
+00:23:14,645 --> 00:23:31,415
+Do we want the to be 14? Hmm.
+
+151
+00:23:31,415 --> 00:23:36,025
+Do we have examples of us having icons?
+
+152
+00:23:36,025 --> 00:23:42,655
+In buttons, in any of our content pages, that's the other thing to think about, like, do we know about preferences?
+
+153
+00:23:42,655 --> 00:23:48,015
+Do we we've got drop downs. Like that.
+
+154
+00:23:48,015 --> 00:24:04,895
+But like if we choose to. Show more.
+
+155
+00:24:04,895 --> 00:24:12,355
+We have these. We don't mean text inside them.
+
+156
+00:24:12,355 --> 00:24:18,835
+What are these? Those are buttons.
+
+157
+00:24:18,835 --> 00:24:29,085
+For background image, those looks and image.
+
+158
+00:24:29,085 --> 00:24:36,585
+But in Class Arrowhead. Interesting.
+
+159
+00:24:36,585 --> 00:24:49,145
+I don't know if I'm allowed to use Class Arrowhead. Above all, we should try not to invent new things here.
+
+160
+00:24:49,145 --> 00:24:56,005
+We should try and reuse. Preexisting patterns.
+
+161
+00:24:56,005 --> 00:25:14,045
+So what comes to mind is. He's enable disable.
+
+162
+00:25:14,045 --> 00:25:31,595
+I wonder if this should be a check box. Provide more details.
+
+163
+00:25:31,595 --> 00:26:01,365
+And off by default checkbox. Unless the user we can remember, if a user has set this before, we can remember that they like to provide more details.
+
+164
+00:26:01,365 --> 00:26:11,465
+And we can keep it open. I think.
+
+165
+00:26:11,465 --> 00:26:19,115
+I think that's why I'm going to recommend there are a number of issues with this patch.
+
+166
+00:26:19,115 --> 00:26:29,235
+It's a good stab, but we should. We should. We should rethink this.
+
+167
+00:26:29,235 --> 00:26:36,805
+So first of all, we should thank our contributor.
+
+168
+00:26:36,805 --> 00:26:47,155
+Hi, thanks for working on this. I think I have some suggestions.
+
+169
+00:26:47,155 --> 00:26:54,115
+Thanks for working on this and dusting off the old patch now that I've had some.
+
+170
+00:26:54,115 --> 00:27:02,055
+Now that. I've had a chance to come back to this problem.
+
+171
+00:27:02,055 --> 00:27:08,265
+I think a button isn't really the right solution here for the toggle.
+
+172
+00:27:08,265 --> 00:27:20,185
+Instead, what I suggest is that we use a checkbox instead.
+
+173
+00:27:20,185 --> 00:27:34,705
+And it looks like this. Um.
+
+174
+00:27:34,705 --> 00:27:43,775
+OK, I need to go to the we're going to we're basically going to try and mock up.
+
+175
+00:27:43,775 --> 00:27:50,545
+Mahgoub, what I think it's supposed to look like or what I think it should look like.
+
+176
+00:27:50,545 --> 00:27:54,865
+Like, hopefully users aren't seeing this tab crash page too often.
+
+177
+00:27:54,865 --> 00:28:04,075
+That is the ideal is like in the best case scenario, people never see this thing, but when they do, we want it to be friendly and useful.
+
+178
+00:28:04,075 --> 00:28:15,595
+And not scary, and we want to like sort of want users to feel confident that they can send us information to help us make things better.
+
+179
+00:28:15,595 --> 00:28:27,365
+So let me start by taking a screenshot of this. And then, uh, let's drop it in Tikrit.
+
+180
+00:28:27,365 --> 00:28:35,975
+Uh. Uh.
+
+181
+00:28:35,975 --> 00:28:41,435
+You know, let me switch over to here, OK?
+
+182
+00:28:41,435 --> 00:28:48,695
+So what I'm thinking we should do and I've never used Croteau like this before with a mouse, so this might be a really interesting exercise.
+
+183
+00:28:48,695 --> 00:28:55,375
+But I think what I want to do is like move all of this down a bit.
+
+184
+00:28:55,375 --> 00:29:01,085
+Um, hang on, how do I move? Can I just move like no.
+
+185
+00:29:01,085 --> 00:29:05,685
+How do I move a region center like?
+
+186
+00:29:05,685 --> 00:29:14,175
+There we go, I want to move a region, but stick to the vertical shift, will do it or not create some space there.
+
+187
+00:29:14,175 --> 00:29:20,055
+And what I want to do is I want to copy this style.
+
+188
+00:29:20,055 --> 00:29:27,835
+Right here, this is sort of like. Thing, we're going to paste it.
+
+189
+00:29:27,835 --> 00:29:32,675
+And we're going to move it and we're going to create like.
+
+190
+00:29:32,675 --> 00:29:38,215
+We're going to create a lengthening here of this.
+
+191
+00:29:38,215 --> 00:29:49,195
+It's probably an easier way of doing this, but I want to, like, fill this gap. And I believe I believe I think I got it.
+
+192
+00:29:49,195 --> 00:29:59,215
+Uh, let's make sure let's go a little bit lower, actually, I want to make sure I don't get any of the bottom text or the bottom of the checkbox.
+
+193
+00:29:59,215 --> 00:30:03,875
+Come on. Why it's so easy to, like, accidentally.
+
+194
+00:30:03,875 --> 00:30:09,675
+Is it snapping? Is that what it's doing? Yeah, it's like.
+
+195
+00:30:09,675 --> 00:30:19,125
+OK, I'm just not used to where creative places the it's the top left of it, you'd think it'd be the middle of the crosshairs,
+
+196
+00:30:19,125 --> 00:30:33,955
+but it's like the top left of the crosshairs is critics snapping show pixel grid, snap image, bounce, snap images that are turn snapping off.
+
+197
+00:30:33,955 --> 00:30:36,145
+There we go. I was wondering what was going on there?
+
+198
+00:30:36,145 --> 00:30:43,915
+I'm like, man, that thing is I am way more precise than I thought, but I'm very good at choosing the wrong region.
+
+199
+00:30:43,915 --> 00:30:50,815
+That's what I thought was happening. OK, Paiste, again, I'm not an expert at Koryta.
+
+200
+00:30:50,815 --> 00:30:54,505
+I'm still like learning it and oh man.
+
+201
+00:30:54,505 --> 00:31:03,955
+As a smaller region than I thought. What's going on here?
+
+202
+00:31:03,955 --> 00:31:13,685
+What are my layers? Merge, all, merge, merge, all like, come on, flatting image, let's let's do this.
+
+203
+00:31:13,685 --> 00:31:21,585
+I want just this. And now I'm going to move.
+
+204
+00:31:21,585 --> 00:31:23,505
+Like this, you're watching an amateur.
+
+205
+00:31:23,505 --> 00:31:39,805
+This is amateur hour, folks, but that's OK, merge, merge, flying image and now again, paste, oops, paste and we're going to paste.
+
+206
+00:31:39,805 --> 00:31:48,835
+There we go. OK, so we at long last, we've created this gap, that's what I wanted.
+
+207
+00:31:48,835 --> 00:31:55,815
+And what I want to do is I want to copy this checkbox.
+
+208
+00:31:55,815 --> 00:32:02,195
+Uh, um, really just this checkbox.
+
+209
+00:32:02,195 --> 00:32:08,495
+And. Well, say like.
+
+210
+00:32:08,495 --> 00:32:14,515
+So text. This is something like a virgin image, all right?
+
+211
+00:32:14,515 --> 00:32:20,205
+I don't need layers right now, and I do anything super fancy, but I am going to.
+
+212
+00:32:20,205 --> 00:32:36,505
+Write some text here that says, wow, I've never had this interface up here, provide more details and what font I use or use Intr if I have it.
+
+213
+00:32:36,505 --> 00:32:49,025
+Save clothes, provide more details. Right.
+
+214
+00:32:49,025 --> 00:32:56,695
+And. So the idea being that when it's checked.
+
+215
+00:32:56,695 --> 00:33:07,115
+We'll show these fields. And when it's not checked, we'll hide the fields and if the user fills out these fields and then uncheck them,
+
+216
+00:33:07,115 --> 00:33:09,455
+we should like keep the fields populated,
+
+217
+00:33:09,455 --> 00:33:15,575
+but not send the information because the user is like opted out of sending stuff when they say don't provide the details,
+
+218
+00:33:15,575 --> 00:33:20,235
+like seasoned traffic, can't use the standard stricter custom ones.
+
+219
+00:33:20,235 --> 00:33:23,255
+And about preferences and privacy, you can probably move the select.
+
+220
+00:33:23,255 --> 00:33:26,385
+What's the problem of always showing the optional common sex instead of hiding it?
+
+221
+00:33:26,385 --> 00:33:31,445
+I mean, do they really scare use from some crash reports? I guess doing a B testing would give us more data.
+
+222
+00:33:31,445 --> 00:33:35,405
+I think the idea is that, like, this is already really overwhelming.
+
+223
+00:33:35,405 --> 00:33:41,045
+The user has just experienced like the worst thing, which is a crash of the browser.
+
+224
+00:33:41,045 --> 00:33:48,015
+And like, we're trying to apologize a little bit and then we're trying to like.
+
+225
+00:33:48,015 --> 00:33:56,495
+We're trying to make them feel comfortable sending us more information, the less we can intimidate them and overwhelm them with choices, the better.
+
+226
+00:33:56,495 --> 00:34:00,365
+When you give them too many things to feel, it almost feels feels like you're doing your taxes.
+
+227
+00:34:00,365 --> 00:34:05,795
+If you got all these fields like this says optional. But if a user sees all these things, they might be like, oh, to [INAUDIBLE] with it.
+
+228
+00:34:05,795 --> 00:34:09,395
+And they just like close the tab or just close the browser because they lost their session.
+
+229
+00:34:09,395 --> 00:34:14,675
+Because you have to remember, a user who has just experienced this is probably very frustrated.
+
+230
+00:34:14,675 --> 00:34:20,165
+They just lost work. They lost their state. They're in no mood to be trifled with there.
+
+231
+00:34:20,165 --> 00:34:28,265
+They are probably very upset. So we want to treat them gingerly with respect and we want to get out of their way.
+
+232
+00:34:28,265 --> 00:34:31,775
+So, you know, try and reduce how much we're showing them right off the bat.
+
+233
+00:34:31,775 --> 00:34:41,885
+Be helpful, but don't overwhelm them with a bunch of choices when they're in that vulnerable position.
+
+234
+00:34:41,885 --> 00:34:45,565
+So this image that we are.
+
+235
+00:34:45,565 --> 00:34:53,655
+This oh, I just realized I was pointing at the wrong thing, I should have been pointing at this, but this is what I'm going to paste.
+
+236
+00:34:53,655 --> 00:35:02,435
+Into the bug, into bugs, into fabricator, actually. So let me go back to fabricator.
+
+237
+00:35:02,435 --> 00:35:12,525
+Uh. So I can paint that image in here.
+
+238
+00:35:12,525 --> 00:35:23,805
+That checkbox can then be. Can here's how I envision this behaving one.
+
+239
+00:35:23,805 --> 00:35:37,185
+The check box. Checked state is used to show or hide the text area and the include the URL of
+
+240
+00:35:37,185 --> 00:35:41,445
+the page I was on because that's the thing include the URL of the page I was on.
+
+241
+00:35:41,445 --> 00:35:46,455
+The term you URL is already like there's a significant proportion of your audience where they're like,
+
+242
+00:35:46,455 --> 00:35:54,315
+I don't know what you're talking about, what is the URL? And, you know, I don't know if I want to include your URL.
+
+243
+00:35:54,315 --> 00:35:59,775
+I'm scared about you URLs like I don't know what like and they're not in the mood for us to be like,
+
+244
+00:35:59,775 --> 00:36:12,845
+OK, well let's teach you what are you is like we should. We should try and get out of their way, if best we can, in this very specific situation.
+
+245
+00:36:12,845 --> 00:36:21,835
+Show or hide the text area and the include the URL of the page, I was on checkbox.
+
+246
+00:36:21,835 --> 00:36:28,955
+If the check box is not checked, then when the.
+
+247
+00:36:28,955 --> 00:36:36,285
+Uh. Form when?
+
+248
+00:36:36,285 --> 00:36:48,995
+Any information then the text area contents, if there are any or.
+
+249
+00:36:48,995 --> 00:37:03,545
+Your URL checkbox state. Should be cleared before submission, i.e., if a user chooses to provide more information,
+
+250
+00:37:03,545 --> 00:37:10,985
+fills out the fields and then changes their minds by UN checking,
+
+251
+00:37:10,985 --> 00:37:26,285
+provide more information, provide more details, we should honor that choice to not provide those details.
+
+252
+00:37:26,285 --> 00:37:34,415
+OK, what else we should remember if the user.
+
+253
+00:37:34,415 --> 00:37:47,255
+Provided more details. In the past and if so, have the provide more details.
+
+254
+00:37:47,255 --> 00:38:01,525
+Um, checked box checked. That way, if a user is comfortable sending more details.
+
+255
+00:38:01,525 --> 00:38:13,625
+They don't have to keep opting into it. Every time.
+
+256
+00:38:13,625 --> 00:38:27,065
+What else? Uh.
+
+257
+00:38:27,065 --> 00:38:38,485
+So on top of that, I have a few other notes about the patch as it currently stands that.
+
+258
+00:38:38,485 --> 00:38:49,805
+Will also apply to the. Uh, next iteration that fits the requirements above.
+
+259
+00:38:49,805 --> 00:39:03,245
+OK, so let's see here. Options display none.
+
+260
+00:39:03,245 --> 00:39:11,795
+And then it looks like what they were doing was. Having like more details.
+
+261
+00:39:11,795 --> 00:39:18,095
+Like using scripts to set display block, what I'm going to suggest is.
+
+262
+00:39:18,095 --> 00:39:28,585
+Um. More details, options, what we can do is we can like.
+
+263
+00:39:28,585 --> 00:39:37,125
+Uh, does this need to be inside of a div? Toggle container with text.
+
+264
+00:39:37,125 --> 00:39:45,655
+And I guess it does. Um.
+
+265
+00:39:45,655 --> 00:39:53,075
+I believe we can just use the hidden attribute to hide and show things like, if I am in here and I say like.
+
+266
+00:39:53,075 --> 00:40:02,465
+Uh, this options list, I'm going to say hidden equals true, yeah, you can just you can just do that.
+
+267
+00:40:02,465 --> 00:40:06,915
+That's the thing that we get for free. And so that means you can go like hidden.
+
+268
+00:40:06,915 --> 00:40:11,735
+Michael's true. Yeah, he knew it was false.
+
+269
+00:40:11,735 --> 00:40:16,555
+So that's what I would recommend doing instead. Uh.
+
+270
+00:40:16,555 --> 00:40:28,885
+What I would recommend, instead of using display nun and display setting display equals block in script,
+
+271
+00:40:28,885 --> 00:40:40,225
+there is a better way of there's a more idiomatic, I'll say, of showing and a collapse in content.
+
+272
+00:40:40,225 --> 00:40:45,865
+What we do is use the hidden attribute on the node.
+
+273
+00:40:45,865 --> 00:40:55,675
+So, for example, on the, uh, you i.e. the equals options node.
+
+274
+00:40:55,675 --> 00:41:02,375
+I think that's what it's called. It equals options. No, you could modify it to be you.
+
+275
+00:41:02,375 --> 00:41:08,035
+Well, ID equals options here equals true to hide it by default.
+
+276
+00:41:08,035 --> 00:41:22,405
+And then a reference to the node can be used to show it by using the associated hidden properties like I was Jass.
+
+277
+00:41:22,405 --> 00:41:35,375
+What was it. Uh, options.
+
+278
+00:41:35,375 --> 00:41:44,595
+Document options hidden equals false. OK, um.
+
+279
+00:41:44,595 --> 00:41:53,175
+We kind of we kind of do that with the request email field as well, which is strange, like this request email field, I think we removed it by default.
+
+280
+00:41:53,175 --> 00:42:06,885
+This field has been removed, has been removed in the most recent versions of the crash page, and we shouldn't reintroduce it.
+
+281
+00:42:06,885 --> 00:42:16,465
+We used to ask users for their email address. Shouldn't reintroduce, but, um.
+
+282
+00:42:16,465 --> 00:42:28,935
+But we don't do that anymore. Label.
+
+283
+00:42:28,935 --> 00:42:41,615
+Why are we going to check box with label? Some new style.
+
+284
+00:42:41,615 --> 00:43:00,365
+This looks like an older version, like some unrelated changes that actually revert us back to an older, uh, set of conventions for this page.
+
+285
+00:43:00,365 --> 00:43:11,975
+Can you please revert this? Um.
+
+286
+00:43:11,975 --> 00:43:26,885
+Same with this. It's not just conventions and refers back to an older set of conventions and no longer existing string.
+
+287
+00:43:26,885 --> 00:43:35,255
+Please revert. Uh, right, we can't.
+
+288
+00:43:35,255 --> 00:43:49,145
+Uh, put in hard coded strings like this. Um, and I don't believe it's a crash course, so we can fix issues like this.
+
+289
+00:43:49,145 --> 00:43:55,315
+Is that. I'm not sure where that string came from.
+
+290
+00:43:55,315 --> 00:44:14,105
+Uh. I don't believe we need we need to set this string, the string provided by crashed send report to is fine.
+
+291
+00:44:14,105 --> 00:44:32,225
+Um. Let me know if you have any questions about how to proceed.
+
+292
+00:44:32,225 --> 00:44:39,635
+Thanks. So I'm going to request changes.
+
+293
+00:44:39,635 --> 00:44:53,435
+We'll also probably will also need to have tests, right, a test for this change, but I can guide you there when we're done.
+
+294
+00:44:53,435 --> 00:45:06,155
+Adding the checkbox. All right, and there we go.
+
+295
+00:45:06,155 --> 00:45:09,905
+So, yeah, I mean it we're adding yet another checkbox,
+
+296
+00:45:09,905 --> 00:45:17,255
+but what it's going to look like is like I can probably just hack together a version of what this would look like.
+
+297
+00:45:17,255 --> 00:45:30,835
+Um. It's going to look like.
+
+298
+00:45:30,835 --> 00:45:42,765
+Provide more details. It's going to look like that and then what I'll do is, uh, input check box.
+
+299
+00:45:42,765 --> 00:45:51,665
+Um. An event listener.
+
+300
+00:45:51,665 --> 00:46:06,665
+Change the document, that element by the options hidden equals E to target that checked.
+
+301
+00:46:06,665 --> 00:46:11,945
+The opposite of that. I think that'll work.
+
+302
+00:46:11,945 --> 00:46:18,635
+So there you go. That's what that's the idea, you know, so this is what I look like by default, a little less overwhelming.
+
+303
+00:46:18,635 --> 00:46:25,505
+We might need to actually add a little bit of padding in here. I don't know, like above the checkbox.
+
+304
+00:46:25,505 --> 00:46:29,885
+But then whenever users like, hey, I do want to provide more details, boom, OK,
+
+305
+00:46:29,885 --> 00:46:36,105
+we can add more information here, we can test this out and then we can provide the URL.
+
+306
+00:46:36,105 --> 00:46:41,615
+And then if the user clears that, if they uncheck that, we should keep the state like.
+
+307
+00:46:41,615 --> 00:46:46,655
+So if the user changes their mind and comes back, it's still there. But if they uncheck it, we shouldn't send that stuff.
+
+308
+00:46:46,655 --> 00:46:51,155
+That's what's important. All right.
+
+309
+00:46:51,155 --> 00:46:56,975
+So we are done that review. We are done that review. And hopefully that was useful to the contributor.
+
+310
+00:46:56,975 --> 00:47:01,355
+Phalcon Islam 12. Thank you for your patch.
+
+311
+00:47:01,355 --> 00:47:11,855
+Hopefully this is actionable information. And again, apologies for everyone else who's ever commented on this.
+
+312
+00:47:11,855 --> 00:47:17,505
+Uh. So what's what's your name?
+
+313
+00:47:17,505 --> 00:47:28,505
+Fulgoni, Islam. I found it, so I've left a review on the patch.
+
+314
+00:47:28,505 --> 00:47:37,085
+Let me know if you have any questions. On how to proceed, thanks.
+
+315
+00:47:37,085 --> 00:47:40,795
+Clear. All right, that's one.
+
+316
+00:47:40,795 --> 00:47:48,995
+What else did I want to do today? Uh, well, there was some intermittent test failures that I wanted to look at.
+
+317
+00:47:48,995 --> 00:47:56,175
+You know, I got needin for a couple of these, and this is a good opportunity to check those out.
+
+318
+00:47:56,175 --> 00:48:05,435
+Oh, yeah, I'm not even the one fixing this, this is a thing this is related to some stuff that one of my colleagues is trying to fix.
+
+319
+00:48:05,435 --> 00:48:14,325
+OK, Stretch, I need to clear the slate, clear my brain slate, because this one is going to be a little complicated.
+
+320
+00:48:14,325 --> 00:48:28,115
+OK, there is a test failure that occurs. In this test browser, delay auto play, multiple media, and if I remember correctly, this test,
+
+321
+00:48:28,115 --> 00:48:32,855
+this is one of those tests that just makes sure that we don't accidentally play
+
+322
+00:48:32,855 --> 00:48:38,705
+like we apply the right like auto play policy to things that there are multiple,
+
+323
+00:48:38,705 --> 00:48:49,705
+multiple chunks of media on the page. So like it opens a background tab and loads the page that presumably has some media on it.
+
+324
+00:48:49,705 --> 00:48:59,585
+Audio, I guess. The tab has it's like media, it's like a background tab, so the media is auto blocked.
+
+325
+00:48:59,585 --> 00:49:06,675
+And then. If script tries to start playback, it will fail.
+
+326
+00:49:06,675 --> 00:49:13,625
+And then we switch to it and then that will allow for the audio to play.
+
+327
+00:49:13,625 --> 00:49:18,165
+OK. And the test is timing out.
+
+328
+00:49:18,165 --> 00:49:25,705
+This was filed two years ago, but the test was timing it because of something.
+
+329
+00:49:25,705 --> 00:49:35,445
+Tab should be blocked. At times that waiting, presumably it's times that waiting for something.
+
+330
+00:49:35,445 --> 00:49:44,575
+There's a bunch of. Comments here, sheriffs are like, hey, this thing keeps happening, what is going on, robots checking it out.
+
+331
+00:49:44,575 --> 00:49:52,245
+Years ago, Bryce takes a look, redirects to Alistar Allaster signs themselves.
+
+332
+00:49:52,245 --> 00:49:58,515
+Resolved, incomplete, because it started going away and then it showed up again, more failure.
+
+333
+00:49:58,515 --> 00:50:04,305
+I was six months ago. More recent failure log. Forty one total failures.
+
+334
+00:50:04,305 --> 00:50:12,255
+Alistar, any updates? We haven't modified this phone for a while. Not sure what happened from a log I captured from the tri server.
+
+335
+00:50:12,255 --> 00:50:15,715
+This shows that the document has been resumed before starting playing media,
+
+336
+00:50:15,715 --> 00:50:23,445
+so we should never receive the block of the document has been resumed before we started playing media,
+
+337
+00:50:23,445 --> 00:50:28,305
+so we should never receive the block of it for the tab over the tab should be in the background of that time.
+
+338
+00:50:28,305 --> 00:50:35,135
+So it seems that the documents visibility got changed incorrectly.
+
+339
+00:50:35,135 --> 00:50:39,275
+Do you know if there's any recent change that would affect the document's visibility state,
+
+340
+00:50:39,275 --> 00:50:48,495
+why would the document become visible even if it's still a background tab? I try to reproduce it with Penasco.
+
+341
+00:50:48,495 --> 00:50:57,995
+Here's the Penasco Trece. And set is background internal, which is explicitly change the window to foreground,
+
+342
+00:50:57,995 --> 00:51:03,985
+which seems wrong, and it was called from activeness, maybe changed.
+
+343
+00:51:03,985 --> 00:51:12,605
+And that comes because the browser Frontin explicitly calls browser Cockshell is active equals true.
+
+344
+00:51:12,605 --> 00:51:18,295
+Oh, yes, yes, I trust Penasco. Uh, what's going on here?
+
+345
+00:51:18,295 --> 00:51:21,825
+Uh. Yes, that's fine.
+
+346
+00:51:21,825 --> 00:51:41,825
+I trust Penasco. Where am I was the stack?
+
+347
+00:51:41,825 --> 00:51:48,575
+Dump. Of what? Output's.
+
+348
+00:51:48,575 --> 00:52:07,955
+Test status test timed out. Right, tool box where the console.
+
+349
+00:52:07,955 --> 00:52:13,955
+Smurf, he asks, what is Panozzo Penasco is a tool that was developed by some XMA zillions,
+
+350
+00:52:13,955 --> 00:52:19,925
+if you're familiar with Danny Collins says it's a software with an awful UI.
+
+351
+00:52:19,925 --> 00:52:28,135
+Yeah, I think no one would disagree that the UI is a little rough, but it's an incredibly powerful tool.
+
+352
+00:52:28,135 --> 00:52:38,735
+If you're familiar with RR, Panozzo is from the same people who built our hours, a time travel debugger, written, written and rust it.
+
+353
+00:52:38,735 --> 00:52:45,515
+You can use it on Linux to do recording of Trace's in due time travel debugging with GDB effectively.
+
+354
+00:52:45,515 --> 00:52:57,075
+And Penasco is a web front end to a panozzo of or RR recording that allows you to do like deep querying and hopping hopping around.
+
+355
+00:52:57,075 --> 00:53:04,985
+It's basically a new front end for an hour recording and it's a little bit like you you can
+
+356
+00:53:04,985 --> 00:53:10,685
+search for every time a function is called and then hop around to all of those individual times.
+
+357
+00:53:10,685 --> 00:53:22,535
+If you go to you can find out more by going to Panozzo per nost dot CEO, fast fun, omniscient debugging record failures anywhere rapidly debug.
+
+358
+00:53:22,535 --> 00:53:26,225
+Share your recordings. Revolutionary Penasco.
+
+359
+00:53:26,225 --> 00:53:34,705
+Omniscient Debugger. Um.
+
+360
+00:53:34,705 --> 00:53:40,905
+Check it out, pricing. Here's the pricing.
+
+361
+00:53:40,905 --> 00:53:46,335
+Help them out, OK? So what are we doing here?
+
+362
+00:53:46,335 --> 00:53:52,005
+So whenever the browser seems to like do a redirect load switch and then we change
+
+363
+00:53:52,005 --> 00:54:01,345
+remoteness and then we say that it becomes active browser custom element 407.
+
+364
+00:54:01,345 --> 00:54:16,595
+For 07. And did change in TAB browser, did change event.
+
+365
+00:54:16,595 --> 00:54:20,395
+When the Browns have changed remoteness.
+
+366
+00:54:20,395 --> 00:54:25,435
+This shouldn't really be necessary, you should always have the same value as actresses correctly preserved across Ramona's changes.
+
+367
+00:54:25,435 --> 00:54:33,175
+However, this is the side effect. So this is something that Amelio had added before.
+
+368
+00:54:33,175 --> 00:54:43,845
+Um. And I think I reviewed this.
+
+369
+00:54:43,845 --> 00:54:55,655
+I didn't review this. Let's go back in time and see more about this.
+
+370
+00:54:55,655 --> 00:55:01,295
+Oh, uh, someone wanted a link to the Penasco let me, uh, go back.
+
+371
+00:55:01,295 --> 00:55:19,495
+Here's the link to Panozzo. There you go, synchronized galvanize and what's interesting about it is like you actually have a.
+
+372
+00:55:19,495 --> 00:55:28,405
+You have a full blown GDB here, and I think you're at we're at the state of this state like I p seastar,
+
+373
+00:55:28,405 --> 00:55:38,975
+I get the string, um, you can go back in time, like break and as Doc shall internal load.
+
+374
+00:55:38,975 --> 00:55:46,485
+Um, like it's a full blown. Debugger here and I will reverse, continue, hit and turn a load.
+
+375
+00:55:46,485 --> 00:55:56,375
+Um. It's pretty neat.
+
+376
+00:55:56,375 --> 00:56:04,355
+Um, I'm basically just using this as a front end for our hour right now, because this is this is our our in here and that's free.
+
+377
+00:56:04,355 --> 00:56:17,545
+You can just use our hour. But the. Yeah, Panozzo linked to Penasco trace link to per nasco itself.
+
+378
+00:56:17,545 --> 00:56:24,565
+There you. Anyway, what are we doing here?
+
+379
+00:56:24,565 --> 00:56:28,015
+I got distracted, I got distracted like I so easily do.
+
+380
+00:56:28,015 --> 00:56:33,565
+So Amelio had added this thing.
+
+381
+00:56:33,565 --> 00:56:40,945
+And oh, here this is important, switching a browser's Ramona's will create a new frame loader as frameline to start out with an active dock.
+
+382
+00:56:40,945 --> 00:56:50,325
+Shall we have to deactivate it if this is not the selected Tab's browser or the browser window is minimized?
+
+383
+00:56:50,325 --> 00:56:59,765
+So before we would like after we. Flipped it.
+
+384
+00:56:59,765 --> 00:57:07,205
+It's common got changed, the activist status replaced Winston Hamlin consumers.
+
+385
+00:57:07,205 --> 00:57:19,255
+And then. Which just as the result of this function, which means the tab is probably actually in the foreground.
+
+386
+00:57:19,255 --> 00:57:31,315
+Get the state the state is loading or loaded. If it is, then it's a bug because we only change it to foreground in near the end of the test,
+
+387
+00:57:31,315 --> 00:57:41,525
+the situation was happening before media started playing, which is around here. So they added a tab.
+
+388
+00:57:41,525 --> 00:57:52,775
+Loaded at. And this is where the test is failing.
+
+389
+00:57:52,775 --> 00:57:57,005
+Just just above this shows the tab should be in the background sort of, and, you know,
+
+390
+00:57:57,005 --> 00:58:00,545
+either person am I guess I wrote this joke about how it seems that the tabs,
+
+391
+00:58:00,545 --> 00:58:12,375
+which is confused and things that should activate a tab and it really shouldn't. Do you know how that could possibly happen?
+
+392
+00:58:12,375 --> 00:58:26,025
+Well. It decided that it decided that it should activate.
+
+393
+00:58:26,025 --> 00:58:40,035
+The dog show. There's a redirect load switch, so we open the background tab.
+
+394
+00:58:40,035 --> 00:58:42,735
+It does like a.
+
+395
+00:58:42,735 --> 00:58:55,835
+A process flipped because it begins to load a different page, I guess it loads because it starts by being at about blank and then we load this page.
+
+396
+00:58:55,835 --> 00:59:07,015
+So we do a process flip, I think. And then for some reason, we seem to think that.
+
+397
+00:59:07,015 --> 00:59:23,045
+The state is loading or loaded. Uh.
+
+398
+00:59:23,045 --> 00:59:30,015
+So let me answer this. Do you know how this could possibly happen, hmm?
+
+399
+00:59:30,015 --> 00:59:36,595
+In theory, the only way that the.
+
+400
+00:59:36,595 --> 00:59:50,595
+Tab could be in a state such that should activate Doc Shell returns true.
+
+401
+00:59:50,595 --> 00:59:57,455
+Is that we entered one of state loading or state loaded?
+
+402
+00:59:57,455 --> 01:00:24,945
+This starts at Tab's DE. State loading, state unloaded, state loading.
+
+403
+01:00:24,945 --> 01:00:36,375
+Fires in the layers become available. Sir, that we're loading or loaded?
+
+404
+01:00:36,375 --> 01:00:46,205
+Is that. It's layers were quested.
+
+405
+01:00:46,205 --> 01:01:01,975
+Is that we had requested that it send its display list to the compositor.
+
+406
+01:01:01,975 --> 01:01:08,525
+The only, uh, only ways I think this can happen.
+
+407
+01:01:08,525 --> 01:01:29,815
+Without. Switching the tab to the foreground is if the tab is being warmed up because the mouse is hovering it.
+
+408
+01:01:29,815 --> 01:01:47,145
+For. It's a browser being used for print preview, which is which is in the case, which isn't happening in this case.
+
+409
+01:01:47,145 --> 01:01:52,335
+I actually like to see a instance of this test failure.
+
+410
+01:01:52,335 --> 01:02:03,445
+If, like, I can see a screenshot of one of these test failures. So we can go into one of these comments, we can pull up one of the more recent.
+
+411
+01:02:03,445 --> 01:02:15,305
+Instances where I want to get back here, so common stuff, um, but then we can pull up the screenshot, where is the mouse?
+
+412
+01:02:15,305 --> 01:02:27,075
+That's interesting, so it didn't go into the foreground. But it thinks it's in the foreground.
+
+413
+01:02:27,075 --> 01:02:32,635
+What I would recommend, what I'd be interested.
+
+414
+01:02:32,635 --> 01:02:43,975
+Getting is a log from the async tabs, which are from this test failure to try to pin down what's happening.
+
+415
+01:02:43,975 --> 01:02:50,565
+How easy is this failure to reproduce, if possible, could?
+
+416
+01:02:50,565 --> 01:03:07,025
+Um, it's like used for logging.
+
+417
+01:03:07,025 --> 01:03:17,005
+Uh. Yeah.
+
+418
+01:03:17,005 --> 01:03:33,305
+So. Could try build be pushed that sets this flag to true.
+
+419
+01:03:33,305 --> 01:03:39,625
+The log that produces could help us understand.
+
+420
+01:03:39,625 --> 01:03:47,165
+Um, how this background tab is passed is being made.
+
+421
+01:03:47,165 --> 01:04:03,525
+Active when it shouldn't. OK, I'm going to ask for that from Alistar.
+
+422
+01:04:03,525 --> 01:04:10,325
+All right. So answered that question.
+
+423
+01:04:10,325 --> 01:04:15,845
+Next question. Uh, there's another intermittent.
+
+424
+01:04:15,845 --> 01:04:28,335
+Let's check it out. Intermittent test failures, it's my favorite, it's my jam.
+
+425
+01:04:28,335 --> 01:04:33,275
+Oh, you know, it'd be great as if, like, my camera.
+
+426
+01:04:33,275 --> 01:04:43,445
+I what I need is like a better camera so that I could, like, really sort of like dove across, like I just need a wider frame so that, you know,
+
+427
+01:04:43,445 --> 01:04:50,945
+I can just be sitting here and I can reach across like this, the sort of like barrier that exists right here, if I can get rid of it.
+
+428
+01:04:50,945 --> 01:04:56,825
+And I could just like be over here, too, because I find that I move around a lot and probably be nice if I didn't just kind of,
+
+429
+01:04:56,825 --> 01:05:03,455
+like, suddenly slice in half like this. OK, so what's this test failure about Intiman Browsr.
+
+430
+01:05:03,455 --> 01:05:09,305
+Ba ba ba ba ba ba ba. Browser overate cache found the target element null equals true.
+
+431
+01:05:09,305 --> 01:05:14,615
+This is a test that I added. This is that has to do with the about home startup cash.
+
+432
+01:05:14,615 --> 01:05:28,805
+And let's take a quick peek at a recent failure.
+
+433
+01:05:28,805 --> 01:05:36,465
+Failures have been going up. Looks like a lot of Windows failures.
+
+434
+01:05:36,465 --> 01:05:41,855
+And in this case. It looks like the page never actually loads.
+
+435
+01:05:41,855 --> 01:05:54,955
+Let's take a look at a couple of other instances. It is the page never load.
+
+436
+01:05:54,955 --> 01:06:06,085
+It's not their. Let's just do a random sample.
+
+437
+01:06:06,085 --> 01:06:12,265
+OK, nothing. Now, the good news is that we actually get like a really nice log from the about home startup cash,
+
+438
+01:06:12,265 --> 01:06:18,205
+which might help us determine why loading the page is failing, like that's why the test is failing.
+
+439
+01:06:18,205 --> 01:06:28,375
+Is that like loading? There's this assertion where it's like, OK, well, I expect to see some content here and we're failing that.
+
+440
+01:06:28,375 --> 01:06:34,585
+Like, what's the what's the actual search? And it's like found the target element.
+
+441
+01:06:34,585 --> 01:06:45,225
+Let's actually look at the test and you can see it. So we're actually looking for this.
+
+442
+01:06:45,225 --> 01:06:49,675
+Um. Tested, tested.
+
+443
+01:06:49,675 --> 01:06:57,155
+We're looking for this something new header. And it's definitely not loading, OK, so let's find out why.
+
+444
+01:06:57,155 --> 01:07:00,815
+Let's read the log and see if we can understand what's happening here.
+
+445
+01:07:00,815 --> 01:07:07,115
+So let's open up the raw log. So that's what I prefer.
+
+446
+01:07:07,115 --> 01:07:12,175
+Uh, and we'll go right to the start of the last.
+
+447
+01:07:12,175 --> 01:07:22,015
+Start over cash. Simulating restart of the browser.
+
+448
+01:07:22,015 --> 01:07:26,195
+That happens right here. So we simulate a shutdown, right?
+
+449
+01:07:26,195 --> 01:07:30,785
+We never wrote a cash, so then we Kashnow, we write the cash.
+
+450
+01:07:30,785 --> 01:07:36,805
+This the whole thing's done shutdown. Right, complete Starchild on and it's.
+
+451
+01:07:36,805 --> 01:07:45,005
+Um, popular in cash, ran cash on initialized, we're done, we completely shut down.
+
+452
+01:07:45,005 --> 01:07:52,775
+And then, uh, waiting for about Homestar cash and got about, oh, I'm sorry, cash insuring cash bikes are available, then we're.
+
+453
+01:07:52,775 --> 01:07:56,135
+Where is this stuff come from waiting for about Homestar cash entry?
+
+454
+01:07:56,135 --> 01:08:03,745
+I think that's from the test itself. Yeah. In like in the simulate restart thing.
+
+455
+01:08:03,745 --> 01:08:09,445
+We wait for the cash entry, that's where the stuff is written to.
+
+456
+01:08:09,445 --> 01:08:12,225
+We're waiting for that to show up.
+
+457
+01:08:12,225 --> 01:08:20,275
+We get it, we ensure that there are bytes of available that we initialize against, we construct pipes, we retrieve the.
+
+458
+01:08:20,275 --> 01:08:30,845
+The cash entry and we show the version all good, waiting for about home to load received usage result.
+
+459
+01:08:30,845 --> 01:08:38,365
+Is that was similarly restart does does actually like. Waiting for about home to load, yes, and that load's.
+
+460
+01:08:38,365 --> 01:08:45,445
+OK, so we finished simulating the restart.
+
+461
+01:08:45,445 --> 01:08:56,485
+Success is true. About home loaded and then we populate the cash and we do the old entry and we're doing that with this inject into cash things.
+
+462
+01:08:56,485 --> 01:09:08,815
+So about home cash head was this do writes a page, string and script string into the cash for the next about home loan.
+
+463
+01:09:08,815 --> 01:09:15,965
+The way that works is we ensure that there's a cash entry.
+
+464
+01:09:15,965 --> 01:09:22,565
+And then we get we create some streams and then we call into populate cash, populating the cash, doing the old entry.
+
+465
+01:09:22,565 --> 01:09:28,325
+We clear the cash, opening the pageau stream, running the page cash, running the page that is complete now, opening the script output stream.
+
+466
+01:09:28,325 --> 01:09:41,025
+Running the script cash. Now. Do we complete this, writing the script, cash that we're missing?
+
+467
+01:09:41,025 --> 01:09:52,545
+Do we never I guess we never say that it's done writing the script cash, this happens in browser glued GSM.
+
+468
+01:09:52,545 --> 01:10:06,455
+We should say writing the script, cash is done setting version, but we never do.
+
+469
+01:10:06,455 --> 01:10:16,435
+Oh, wait. Writing the script, cash, and then we restart and then we say writing the script cashes done.
+
+470
+01:10:16,435 --> 01:10:37,825
+That seems wrong. This seems out of order, let's actually see if we can find an instance where this test runs, where the order is correct.
+
+471
+01:10:37,825 --> 01:10:47,635
+So what I'm going to suggest is we go to. Well, actually, we can do it ourselves if we run this test ourselves.
+
+472
+01:10:47,635 --> 01:10:56,105
+Mark Mokey tests. Browsr overate cash.
+
+473
+01:10:56,105 --> 01:11:22,305
+Now, Jesus, headless. Scooby Doo.
+
+474
+01:11:22,305 --> 01:11:34,775
+OK. So. Da ba da ba da, never a cash arm, the Fagih shut her down, it's ordinated.
+
+475
+01:11:34,775 --> 01:11:43,855
+OK then we inet. Then we populate the cash, we wrote the script, cash.
+
+476
+01:11:43,855 --> 01:11:49,195
+So interestingly, we do the same thing here where we simulate the restart of the browser
+
+477
+01:11:49,195 --> 01:11:54,085
+intentionally skipping shut down right away for about Homestar Cash child on a it,
+
+478
+01:11:54,085 --> 01:12:03,755
+and then we say that writing the script cache is done. Popular cash is finished.
+
+479
+01:12:03,755 --> 01:12:13,715
+That's weird, like. Is that maybe the race like popular cash, you'd think?
+
+480
+01:12:13,715 --> 01:12:20,445
+Async we await. A promise.
+
+481
+01:12:20,445 --> 01:12:30,535
+It should resolve here. And then popular cash has finished.
+
+482
+01:12:30,535 --> 01:12:50,725
+Wait, poppy async, popular cash. And for some reason, whether we like, simulate the restarted the browser.
+
+483
+01:12:50,725 --> 01:13:13,725
+Like is inject into cash, not waiting properly, populist cash, a wait for it.
+
+484
+01:13:13,725 --> 01:13:24,655
+I mean, maybe we're rejecting are we rejecting?
+
+485
+01:13:24,655 --> 01:13:33,525
+I guess that's possible, but then they expected to, like, throw an exception, failed to write, to write.
+
+486
+01:13:33,525 --> 01:13:47,535
+Failed to write a page to output stream. I guess that's possible.
+
+487
+01:13:47,535 --> 01:13:55,235
+Except no, no, no, that's not what's happening, we have we eventually get to.
+
+488
+01:13:55,235 --> 01:14:07,235
+Here. We must. Is it possible that the logging tool is.
+
+489
+01:14:07,235 --> 01:14:17,915
+Out of order. This dialog equals what or basic Consolo Pender.
+
+490
+01:14:17,915 --> 01:14:25,815
+If I use dump, append or. I wonder if the console is Bufford.
+
+491
+01:14:25,815 --> 01:14:36,025
+In which case, I can understand being slightly out of order. In which case, this might also be a bit of a red herring.
+
+492
+01:14:36,025 --> 01:14:55,165
+And we're on. So I intentionally skipping.
+
+493
+01:14:55,165 --> 01:15:02,205
+Popular cash is finished. Yeah, here we go, dooming all entries so that this is the right order.
+
+494
+01:15:02,205 --> 01:15:15,555
+Right here. And. The reason that I guess it was appearing out of order over here was because.
+
+495
+01:15:15,555 --> 01:15:24,875
+Console is its reordering things between dump and the console, and it's not super great, but I guess we can ignore that.
+
+496
+01:15:24,875 --> 01:15:29,475
+That's not the issue, at least I don't think it's the issue.
+
+497
+01:15:29,475 --> 01:15:39,345
+So this is a little not not great, but we can assume popular cash is finished, then we simulate restarted the browser.
+
+498
+01:15:39,345 --> 01:15:50,415
+On Initialized. Kashani page script is done, populate cash is finished, and then on initialized.
+
+499
+01:15:50,415 --> 01:15:53,445
+It's uninvented waiting for the cash injury, got it,
+
+500
+01:15:53,445 --> 01:15:59,895
+waiting for about home to load it needed constructed pipes, blah, blah, blah, we get it privileged.
+
+501
+01:15:59,895 --> 01:16:04,275
+Oh here this is interesting. Then the controversies launches.
+
+502
+01:16:04,275 --> 01:16:06,545
+I think that's actually not unusual, that's what we want.
+
+503
+01:16:06,545 --> 01:16:16,185
+Yeah, launching with 80 to 90 one in this case, I guess it's OK saying input's dreams page pae perceived usage result.
+
+504
+01:16:16,185 --> 01:16:36,245
+Success is false. A high. Perceived usage result.
+
+505
+01:16:36,245 --> 01:16:44,655
+Um, that's going to be about New Tab's service.
+
+506
+01:16:44,655 --> 01:17:10,355
+The usage result comes from here. Success is false.
+
+507
+01:17:10,355 --> 01:17:20,845
+Um. Nine.
+
+508
+01:17:20,845 --> 01:17:35,515
+I don't think we're ensuring that bites are available. Are we version three? Cash entry is available and hitting.
+
+509
+01:17:35,515 --> 01:17:50,035
+Sure, cash wins race. I don't think we're doing this part.
+
+510
+01:17:50,035 --> 01:17:56,635
+Why aren't we doing this to ensure cash wins, raise it should default to true.
+
+511
+01:17:56,635 --> 01:18:03,435
+Unless we're intentionally saying. Oh. No, um.
+
+512
+01:18:03,435 --> 01:18:11,485
+Simulate, restart. Second argument.
+
+513
+01:18:11,485 --> 01:18:18,115
+Should be this. Oh.
+
+514
+01:18:18,115 --> 01:18:26,645
+What's going on here? That's the problem. We need to be like, uh.
+
+515
+01:18:26,645 --> 01:18:46,785
+Using the right arguments here, you. With auto shut down, right, false, and then we should ensure the cash wins the race.
+
+516
+01:18:46,785 --> 01:18:53,605
+And that's the default. Expect time out false.
+
+517
+01:18:53,605 --> 01:19:16,815
+I think that's our problem here, so we should expect to see a new couple of logging lines in here about ensuring the cash wins the race.
+
+518
+01:19:16,815 --> 01:19:28,195
+Waiting for about half hour, uh. Simulating.
+
+519
+01:19:28,195 --> 01:19:56,395
+Intentionally skipping, waiting for it to unknown it. Do we somehow not a. not if a knitted why would we not be a knitted?
+
+520
+01:19:56,395 --> 01:20:19,185
+Start cash and net. Under initialized.
+
+521
+01:20:19,185 --> 01:20:34,835
+Um, just a little confused and never get another return. Why would that have failed so unenacted?
+
+522
+01:20:34,835 --> 01:20:40,555
+And then a knitting. Sending input.
+
+523
+01:20:40,555 --> 01:20:58,685
+Street, oh, initialized here, initialized. So it did get an added.
+
+524
+01:20:58,685 --> 01:21:04,905
+OK, sorry. Waiting for about oh, I'm sorry. Yeah, I got about on cash entry.
+
+525
+01:21:04,905 --> 01:21:15,725
+Why isn't your cash wins race not doing the thing? Sharing cash wins race should be true.
+
+526
+01:21:15,725 --> 01:21:38,175
+Like, if I say this. Touring cash plates are available, yeah, so that's what I want.
+
+527
+01:21:38,175 --> 01:21:47,345
+So this might be a case of me not understanding how Default ARGs works with JavaScript.
+
+528
+01:21:47,345 --> 01:21:54,965
+So I thought whenever you do stuff like this. You're setting default arguments.
+
+529
+01:21:54,965 --> 01:22:05,815
+Let's do a quick test, still a quick test. How does Deep Blue Jasmine Dutko, how did you default arguments work?
+
+530
+01:22:05,815 --> 01:22:10,225
+Uh, I don't even think I need to go Jaspin Dotcom, I just do it here.
+
+531
+01:22:10,225 --> 01:22:33,285
+So function um. And then what was I doing, like A, B, C, and if nothing is set, then I want O then I want A to be one, B to B to C to be three.
+
+532
+01:22:33,285 --> 01:22:39,945
+And then my function is just going to log A, B and C what function.
+
+533
+01:22:39,945 --> 01:22:45,315
+Statement, function test phone. OK, test func.
+
+534
+01:22:45,315 --> 01:22:51,855
+Call it one, two, three. Make sense if I say a zero.
+
+535
+01:22:51,855 --> 01:23:05,355
+Ha that's the problem. That's the problem if you supply any one of them, the other ones don't have their default values set.
+
+536
+01:23:05,355 --> 01:23:17,855
+Argh! Um, what's the right pattern, JavaScript named arguments object.
+
+537
+01:23:17,855 --> 01:23:29,435
+Uh. Object approach, stack overflow time.
+
+538
+01:23:29,435 --> 01:23:40,915
+With defaults. With defaults, you do it this way.
+
+539
+01:23:40,915 --> 01:23:56,505
+Interesting. So like console, dot, log, name, age, my funk default user into my funk name test.
+
+540
+01:23:56,505 --> 01:24:05,925
+Test, and that's what we want. Mike, age one hundred.
+
+541
+01:24:05,925 --> 01:24:11,385
+Undefined, you get any nothing.
+
+542
+01:24:11,385 --> 01:24:24,825
+That's what we want. I did it wrong. That's the problem. OK, so the format for default arguments should actually be with auto shut down, right?
+
+543
+01:24:24,825 --> 01:24:34,715
+Equals true. Insurer Cash wins race equals true.
+
+544
+01:24:34,715 --> 01:24:44,035
+And then expect timeout equals false and then this.
+
+545
+01:24:44,035 --> 01:24:51,295
+I guess that is the actual. That's what's expected.
+
+546
+01:24:51,295 --> 01:24:58,755
+Let's see what prettier things pretty happy with that, that's while the prettier is happy with that.
+
+547
+01:24:58,755 --> 01:25:09,795
+Can we do better? I can't believe, like, come on.
+
+548
+01:25:09,795 --> 01:25:23,735
+OK, that's what it wants. So now if I run this.
+
+549
+01:25:23,735 --> 01:25:28,655
+We should be ensuring bites, yes, we are.
+
+550
+01:25:28,655 --> 01:25:39,455
+So now what I think we should do is rerun the entire suite components, new TAB test browser about Homestar cash from the whole suite.
+
+551
+01:25:39,455 --> 01:25:44,945
+Then we should check to see every other usage of simulate restart because it looks
+
+552
+01:25:44,945 --> 01:25:50,795
+like I may not have updated every single version of it that was using the old.
+
+553
+01:25:50,795 --> 01:26:10,295
+Argument style. Bubu failures.
+
+554
+01:26:10,295 --> 01:26:20,855
+Yeah, this is so. With auto shut down, there were a bunch of places where I didn't use this right.
+
+555
+01:26:20,855 --> 01:26:32,095
+With auto shutdown, right, should be false.
+
+556
+01:26:32,095 --> 01:26:46,455
+Um, so that should fix browser version, right?
+
+557
+01:26:46,455 --> 01:27:02,595
+No. Line one 14.
+
+558
+01:27:02,595 --> 01:27:08,965
+One forty four, rather. Wait for condition.
+
+559
+01:27:08,965 --> 01:27:14,475
+Try this should definitely be available return.
+
+560
+01:27:14,475 --> 01:27:20,425
+We'll throw an exception. Um.
+
+561
+01:27:20,425 --> 01:27:27,285
+Lights weren't available, people and so.
+
+562
+01:27:27,285 --> 01:27:34,185
+Yeah, I believe if we try and get available on an input stream.
+
+563
+01:27:34,185 --> 01:27:46,105
+Yes, I input stream. Come on.
+
+564
+01:27:46,105 --> 01:27:55,705
+Page stream. I input stream available.
+
+565
+01:27:55,705 --> 01:28:06,415
+Throws at the stream is closed, normally streams close to some air conditioned.
+
+566
+01:28:06,415 --> 01:28:21,785
+Stream is a viable nightclothes return zero bites available. Knoblock Extreme does not have any data, should return zero, it must not throw woodblock.
+
+567
+01:28:21,785 --> 01:28:31,995
+Um. Stream wasn't available.
+
+568
+01:28:31,995 --> 01:28:46,225
+Hmm. Wait. Test that if the version on the cash entry doesn't match the explanation, we ignore the cash flow, the dynamic about home document.
+
+569
+01:28:46,225 --> 01:28:56,695
+Preexisting cash exists. And then we.
+
+570
+01:28:56,695 --> 01:29:11,405
+Shut down, right, we're going to oh, right, we can actually not do this, what we need to do is not insure the cash wins the race.
+
+571
+01:29:11,405 --> 01:29:23,415
+That's what we need to do. We don't need to shut down, right, or ensure the cash wins the race,
+
+572
+01:29:23,415 --> 01:29:34,685
+since we expect the cash to be blown away because the version number has been bumped.
+
+573
+01:29:34,685 --> 01:29:44,795
+So that that should be fine. Great.
+
+574
+01:29:44,795 --> 01:29:51,825
+So what were the other failures? Um. Bumpe version.
+
+575
+01:29:51,825 --> 01:30:02,695
+And then. It was all just Bumpe version.
+
+576
+01:30:02,695 --> 01:30:12,095
+What were the other usages of Simulant restart? At home.
+
+577
+01:30:12,095 --> 01:30:20,825
+So most of them just use the defaults and then we did one modification for Bome version already Browsr Local Change.
+
+578
+01:30:20,825 --> 01:30:37,125
+Browsr local change. Simulate, restart with close it shut down right with auto shut down, right, false.
+
+579
+01:30:37,125 --> 01:30:47,205
+Here is the Apple core changes. Hmmm, don't, uh.
+
+580
+01:30:47,205 --> 01:31:04,385
+Right. Don't accidentally override the cash, preexisting cash.
+
+581
+01:31:04,385 --> 01:31:14,525
+Uh, uh, don't accidentally. Right, the cash on shut down for the past.
+
+582
+01:31:14,525 --> 01:31:19,425
+You know, I guess it didn't really matter. And then.
+
+583
+01:31:19,425 --> 01:31:35,405
+Browser, no cash. Wow, here's another place where this whole thing is like where type's would have been really helpful.
+
+584
+01:31:35,405 --> 01:31:42,435
+Taseff, There's no question that we love the dynamic about home documented startup, yeah.
+
+585
+01:31:42,435 --> 01:31:51,375
+Uh, Browsr overwrite cash, that's the one we were working with.
+
+586
+01:31:51,375 --> 01:32:02,295
+And then browser's same consumer. Um, simulate, restart.
+
+587
+01:32:02,295 --> 01:32:14,105
+With auto shut down, right? Uh, browser's Satie's.
+
+588
+01:32:14,105 --> 01:32:17,935
+All right, these look OK. That's the definition.
+
+589
+01:32:17,935 --> 01:32:25,405
+OK, so now let's run the whole sweet. Feels good.
+
+590
+01:32:25,405 --> 01:32:33,635
+I so tell the R on this one when I modified some tests, a test function,
+
+591
+01:32:33,635 --> 01:32:41,425
+I didn't actually update all of the colors and I wasn't actually using like default named parameter pattern correctly in JavaScript.
+
+592
+01:32:41,425 --> 01:32:49,175
+And, you know, JavaScript is just happy to accept false instead of an object and.
+
+593
+01:32:49,175 --> 01:32:58,525
+That all blew up in my face and so the local change.
+
+594
+01:32:58,525 --> 01:33:07,245
+I guess we are not expecting some streams in those cases.
+
+595
+01:33:07,245 --> 01:33:17,735
+And share cash wins, raise false. Yeah.
+
+596
+01:33:17,735 --> 01:33:27,985
+Uh, Browsr, no cash. Insured cash funds raised false.
+
+597
+01:33:27,985 --> 01:33:41,535
+Browser's Satie's. We didn't modify that one.
+
+598
+01:33:41,535 --> 01:33:53,905
+Should we have, oh, stimulate, restart? Share cash wins, raise false.
+
+599
+01:33:53,905 --> 01:34:22,735
+All right. Running, running, running, running.
+
+600
+01:34:22,735 --> 01:34:36,265
+OK. We're going to revert the dump appended change here.
+
+601
+01:34:36,265 --> 01:34:48,265
+Um, we're going to update maybe some comments for each of these so Browsr sanitize here, I say since we're.
+
+602
+01:34:48,265 --> 01:35:00,295
+Um. Blowing away the cash, we don't want to write to it on shut down.
+
+603
+01:35:00,295 --> 01:35:14,275
+We don't want the system to write a new one, we don't want for the purposes of blowing away the for the purposes of the test.
+
+604
+01:35:14,275 --> 01:35:24,175
+We don't want the right on shutdown behavior here, so.
+
+605
+01:35:24,175 --> 01:35:32,915
+We because we just want to test what it's like to.
+
+606
+01:35:32,915 --> 01:35:42,955
+Uh, test. That the cash doesn't exist on startup.
+
+607
+01:35:42,955 --> 01:35:57,115
+If the history data was cleared. We also, therefore, don't need to ensure.
+
+608
+01:35:57,115 --> 01:36:05,675
+That the not the cash wins the race.
+
+609
+01:36:05,675 --> 01:36:14,965
+Um, OK, that's one. Same consumer.
+
+610
+01:36:14,965 --> 01:36:20,545
+Page loads, transcript of the page three that will fail and get to the full non cached page
+
+611
+01:36:20,545 --> 01:36:30,155
+censullo the script stream without having also the page story that will fail. Yeah, um.
+
+612
+01:36:30,155 --> 01:36:35,045
+I guess we don't need the.
+
+613
+01:36:35,045 --> 01:36:47,235
+It's it's a catch can see true on the window to ensure that we try to load the script from a different response to this property is not set.
+
+614
+01:36:47,235 --> 01:36:52,605
+OK, that's fine, we want to keep. We do want to wait for the cash to be available.
+
+615
+01:36:52,605 --> 01:37:06,535
+All right. Um, overwrite cash.
+
+616
+01:37:06,535 --> 01:37:18,645
+In this case, yeah, we we. Don't want to over right here, we have Browsr, no cash.
+
+617
+01:37:18,645 --> 01:37:30,635
+We we don't need to because we're testing the no cash case.
+
+618
+01:37:30,635 --> 01:37:50,685
+So bypass the we bypass the automatic writing of the cash and shut down, and we also don't need to wait for the cash to be available.
+
+619
+01:37:50,685 --> 01:38:05,265
+OK, how change? We're testing.
+
+620
+01:38:05,265 --> 01:38:12,375
+We're testing that switching locales blows away the cash.
+
+621
+01:38:12,375 --> 01:38:17,445
+So we bypass the automatic writing of the cash and shut down.
+
+622
+01:38:17,445 --> 01:38:23,695
+We all need to wait for the cash to be available.
+
+623
+01:38:23,695 --> 01:38:31,275
+OK. I am happy with this patch, so what I'm going to do is I'm going to create a new commit.
+
+624
+01:38:31,275 --> 01:38:43,865
+And. And. I signed myself to this one take.
+
+625
+01:38:43,865 --> 01:38:52,625
+Such and such, uh, fix some broken about home.
+
+626
+01:38:52,625 --> 01:38:59,995
+Some. Busted tests for the about hormone startup cash.
+
+627
+01:38:59,995 --> 01:39:07,125
+Let's see if Amy feels up to reviewing this.
+
+628
+01:39:07,125 --> 01:39:22,835
+Amy, what is your, um. Churchwell, what is your fabricator account name, SECC.
+
+629
+01:39:22,835 --> 01:39:30,845
+So just Amy, it's just Amy. OK. So our equals, Amy.
+
+630
+01:39:30,845 --> 01:39:38,005
+We should go into more detail on this also. So Sneyd, like any.
+
+631
+01:39:38,005 --> 01:39:47,595
+Prettier action. Mark Lynch browser, Capello's new tab test browser cache.
+
+632
+01:39:47,595 --> 01:40:00,795
+Not line lente. And then I'm going to end the stream before I posted, just after I post this for review excuse me,
+
+633
+01:40:00,795 --> 01:40:27,435
+I'm going to write a I'm going to write a quick comment to try and make it more clear what I'm doing in here.
+
+634
+01:40:27,435 --> 01:40:37,265
+Come on, Lanting. Oh, while I'm waiting for this, I can quickly answer some questions, the first ones I actually a questions,
+
+635
+01:40:37,265 --> 01:40:42,705
+more of a request, a person, someone Rodin's like I'd like a part two of this episode.
+
+636
+01:40:42,705 --> 01:40:47,525
+So my last episode, I did sort of a deep dove into doc shells and browse and contexts they write.
+
+637
+01:40:47,525 --> 01:40:55,195
+I'd like a part two of this episode where you explain how add ons or web extensions interact with all of the Doc Schell's, chrome content, etc.
+
+638
+01:40:55,195 --> 01:41:00,835
+OK, I can I can try doing that.
+
+639
+01:41:00,835 --> 01:41:09,175
+Oh, here we go. Yeah, fix them up, fix that up then don't just complain, fix it up.
+
+640
+01:41:09,175 --> 01:41:13,085
+So yeah I could try and do that. If people would be interested in that, just let me know.
+
+641
+01:41:13,085 --> 01:41:19,405
+Use the rate this episode links. Tell me whether or not this person's idea would be interesting because I'll do it.
+
+642
+01:41:19,405 --> 01:41:22,165
+And the second question is, how did you learn to be a mentor?
+
+643
+01:41:22,165 --> 01:41:28,135
+Well, the the answer is I was mentored by people and I paid attention to what they were doing for me.
+
+644
+01:41:28,135 --> 01:41:35,305
+And, you know, I think about what a person like a mentoring is all about, thinking about what another person needs,
+
+645
+01:41:35,305 --> 01:41:44,555
+paying very close attention to what they need, don't just and not giving them the answers, but giving them tools to, like, find answers to grow them.
+
+646
+01:41:44,555 --> 01:41:51,295
+You know, it's tempting sometimes to want to just sort of like get out of the, you know,
+
+647
+01:41:51,295 --> 01:41:55,855
+push someone out of the way and just take over the keyboard and say, there I did it for you just to get a thing done.
+
+648
+01:41:55,855 --> 01:41:59,305
+But, you know, a person needs the opportunity to grow themselves.
+
+649
+01:41:59,305 --> 01:42:09,145
+And so giving someone guidance for how they can stretch and grow and build themselves up to build their confidence,
+
+650
+01:42:09,145 --> 01:42:16,195
+I think that I pay attention to that sort of thing. Like is something an opportunity for someone to stretch their understanding
+
+651
+01:42:16,195 --> 01:42:21,255
+and flex their muscles and like their brain muscles and grow a bit and if so,
+
+652
+01:42:21,255 --> 01:42:29,535
+like, give them that opportunity, you know, that that's what I recommend.
+
+653
+01:42:29,535 --> 01:42:33,615
+So this should now, if I remember correctly, if I understand correctly,
+
+654
+01:42:33,615 --> 01:42:38,965
+this should have fixed some things with Lintang and then I can update the commit message.
+
+655
+01:42:38,965 --> 01:42:44,565
+I'll push this up for review. Amy can take a look at it and then we can call it a day.
+
+656
+01:42:44,565 --> 01:42:49,725
+Call it a day. Yeah, he'd commit.
+
+657
+01:42:49,725 --> 01:42:56,265
+And then. So when did I accident. Where did I simulate restart.
+
+658
+01:42:56,265 --> 01:43:05,555
+I must have added this like. Yeah, add some tests.
+
+659
+01:43:05,555 --> 01:43:15,525
+Make sure about Chotiner is used for tests that expected back in June, I think.
+
+660
+01:43:15,525 --> 01:43:38,835
+Um. Simulate, restart.
+
+661
+01:43:38,835 --> 01:43:52,085
+Yeah, uh. When the tests for the Ebola home startup Cash were first introduced, I made a mistake.
+
+662
+01:43:52,085 --> 01:43:59,595
+I used the wrong format for.
+
+663
+01:43:59,595 --> 01:44:08,535
+Default argument, default named arguments in JavaScript, I made I made a few mistakes.
+
+664
+01:44:08,535 --> 01:44:13,755
+One, I use the wrong format for default named arguments in JavaScript.
+
+665
+01:44:13,755 --> 01:44:23,945
+I accidentally used. Named AAG.
+
+666
+01:44:23,945 --> 01:44:35,805
+One named after two equals. Uh, named our one default one.
+
+667
+01:44:35,805 --> 01:44:46,855
+Named are to default to. Uh, instead of.
+
+668
+01:44:46,855 --> 01:44:59,415
+And it should be. Uh, named arge one equals.
+
+669
+01:44:59,415 --> 01:45:15,615
+Default one named after two equals default to equals two, and then, too, um, I put some of the tests.
+
+670
+01:45:15,615 --> 01:45:24,535
+We're passing a boolean as the second argument to simulate restart.
+
+671
+01:45:24,535 --> 01:45:30,565
+Which is not correct, which is not expected.
+
+672
+01:45:30,565 --> 01:45:52,365
+Um. This caused a whole host of issues, including some tests not waiting for the cash to be ready when not waiting for the cash to be ready.
+
+673
+01:45:52,365 --> 01:46:00,575
+When doing the simulation. Restart simulation.
+
+674
+01:46:00,575 --> 01:46:09,055
+The two is what ultimately caused the intermittent.
+
+675
+01:46:09,055 --> 01:46:26,625
+Failure or bug one six four eight eight eight six, the test was failing to wait in some in some cases, uh, there.
+
+676
+01:46:26,625 --> 01:46:37,055
+Sometimes the about home startup cash would win the race.
+
+677
+01:46:37,055 --> 01:46:48,395
+And the cash data would be available and sometimes it would lose the race.
+
+678
+01:46:48,395 --> 01:47:09,085
+Um. Lose the race now, we correctly wait for the cash to be available before proceeding with the test.
+
+679
+01:47:09,085 --> 01:47:20,615
+So that the cash wins every time. OK.
+
+680
+01:47:20,615 --> 01:47:25,445
+Let's and we'll call it a day.
+
+681
+01:47:25,445 --> 01:47:29,555
+Hey, thank you so much for watching episode two hundred and something.
+
+682
+01:47:29,555 --> 01:47:33,485
+Two hundred and sixty five of the Joy of Cotting. I hope that was interesting.
+
+683
+01:47:33,485 --> 01:47:37,475
+Maybe next week we'll do this thing where we talk about add ons and web extensions
+
+684
+01:47:37,475 --> 01:47:40,725
+and how they latch on to various talk shows and browse and context and stuff.
+
+685
+01:47:40,725 --> 01:47:46,925
+I actually don't know that stuff myself. We can figure it out together. Let me know what you thought of this episode.
+
+686
+01:47:46,925 --> 01:47:54,215
+Use this form to rate the episode. You can ask me questions. You can let me know what I can do to make this stream better for you.
+
+687
+01:47:54,215 --> 01:47:58,865
+Tell your friends. And with that, I think I'm going to call it so. Thanks again for watching.
+
+688
+01:47:58,865 --> 01:48:06,225
+Have yourselves a great week. Take care, bye bye.
+
+689
+01:48:06,225 --> 01:51:44,831
+The joy holding the.
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,2918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Joy of Coding - Episode 399 - April 23, 2025</title>
+</head>
+<body>
+    <article>
+        <h1>The Joy of Coding - Episode 399 - April 23, 2025</h1>
+        <div data-pagefind-meta="url">https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5050953a-d997-474e-b979-b2b801516be3</div>
+        <p><a href="https://mozilla.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5050953a-d997-474e-b979-b2b801516be3">Watch Video</a></p>
+        <div data-pagefind-body>
+            <pre>1
+00:00:03,528 --> 00:00:08,968
+[Auto-generated transcript. Edits may have been applied for clarity.]
+Welcome to the Joy. Oh, dear.
+
+2
+00:00:09,268 --> 00:00:14,038
+Hello and welcome to episode 399 of the Joy of coding.
+
+3
+00:00:14,068 --> 00:00:19,828
+My name is Mike Conley. It's so good to have you here. We're going to be hacking on some Firefox stuff today.
+
+4
+00:00:20,128 --> 00:00:25,378
+Some rust stuff, if that interests you. If you don't find that outrageously boring.
+
+5
+00:00:25,588 --> 00:00:29,907
+Um, we're going to be down in the in the weeds inside of application services and
+
+6
+00:00:29,908 --> 00:00:33,418
+trying to write a Rest component or continuing writing our rust component.
+
+7
+00:00:33,418 --> 00:00:37,878
+Or rather, we're writing a utility that will feed into our rust component today.
+
+8
+00:00:37,888 --> 00:00:43,558
+So fun times. Uh, everything, uh, everything is part of itself, uh, in and of itself.
+
+9
+00:00:43,588 --> 00:00:48,237
+All right. Let's start by sharing my screen. Hey, it's April 23rd, 2025.
+
+10
+00:00:48,238 --> 00:00:52,388
+It's episode 399. We're one episode away from episode 400.
+
+11
+00:00:52,408 --> 00:00:58,318
+Holy cow. That's pretty exciting. Um, maybe next week I'll wear a funny hat.
+
+12
+00:00:58,348 --> 00:01:01,648
+We'll see. It's a big episode. Bring your popcorn.
+
+13
+00:01:01,768 --> 00:01:05,258
+Maybe I'll play guitar. Maybe I'll sing a song.
+
+14
+00:01:05,278 --> 00:01:08,908
+Who knows? Um, maybe I'll do all of the above while eating spicy wings.
+
+15
+00:01:09,488 --> 00:01:13,328
+I'll come up with something. But that's a big milestone. 400 episodes.
+
+16
+00:01:13,348 --> 00:01:17,578
+Wow. What a what a milestone. Uh, a reminder, no plan survives breakfast.
+
+17
+00:01:17,608 --> 00:01:18,818
+I think I know what's going to go on today.
+
+18
+00:01:18,838 --> 00:01:27,508
+I think I'm going to, you know, approach, um, this particular problem and, uh, I have, like, a kind of a vague idea of it, but my gut might get stuck.
+
+19
+00:01:27,508 --> 00:01:31,047
+Might get sidelined. Mike, uh, go sideways, and that's okay. That's all part of this.
+
+20
+00:01:31,048 --> 00:01:35,158
+None of what I'm about to write or do has been sort of like prewritten.
+
+21
+00:01:35,188 --> 00:01:38,428
+And I'm not just, like, looking at my notes on how to write it out.
+
+22
+00:01:38,438 --> 00:01:41,398
+We're going to be figuring it out together. Uh, that's the first thing.
+
+23
+00:01:41,428 --> 00:01:44,667
+The second thing is that the agenda that we're looking at is something you have access to.
+
+24
+00:01:44,668 --> 00:01:47,727
+If you're watching this on Mozilla, check out the detail section for a link.
+
+25
+00:01:47,728 --> 00:01:50,908
+If you're watching this on YouTube, it's down in the video description.
+
+26
+00:01:50,908 --> 00:01:55,198
+Or same with the Twitch channel. Uh, just details. There's a link to the agenda down there.
+
+27
+00:01:55,528 --> 00:01:58,978
+Uh, hello, Chris. Good to have you. Let's get right into it.
+
+28
+00:01:59,008 --> 00:02:05,648
+First thing is, there was a question that came in from, uh, the the feedback form is the filter adult component.
+
+29
+00:02:05,668 --> 00:02:12,688
+That's the thing that we've been trying to port to rust only for the new tab top sites in Firefox.
+
+30
+00:02:12,688 --> 00:02:15,808
+Or does it get reused in other places like the jump less frequent sites?
+
+31
+00:02:16,258 --> 00:02:20,668
+I actually think it's only used, uh, by new tab.
+
+32
+00:02:21,148 --> 00:02:24,148
+Let's just double check that, uh, sorry filter. Adult.
+
+33
+00:02:30,418 --> 00:02:33,688
+It's definitely used inside of top sites.
+
+34
+00:02:35,998 --> 00:02:43,648
+I don't see it being used by the jobless, so maybe this is another example of a place where we'd want to use filter adult to to,
+
+35
+00:02:43,858 --> 00:02:48,838
+you know, not show, um, you know, adult websites inside of your jump list.
+
+36
+00:02:49,948 --> 00:02:54,478
+Although right now what you can do in the event that something is in your jump is that you don't want to be there.
+
+37
+00:02:54,658 --> 00:02:58,377
+You should be able to right click on it and remove it, but still, that can be fairly embarrassing.
+
+38
+00:02:58,378 --> 00:03:02,457
+So yeah, that seems like a decent idea. You know, any any time.
+
+39
+00:03:02,458 --> 00:03:09,598
+We're kind of like creating these curated list lists of of history, maybe trying to like, filter out the adult stuff.
+
+40
+00:03:09,658 --> 00:03:14,338
+Uh, it is not it's not a bad idea. All right. Uh, hopefully that answers the question.
+
+41
+00:03:14,728 --> 00:03:20,818
+Let's keep going, Russ. Components stuff. Now, where were we last?
+
+42
+00:03:20,818 --> 00:03:27,358
+We were here. We had started work on this, uh, import site list.
+
+43
+00:03:27,748 --> 00:03:40,498
+Um, utility is very, very simple. Um, and this is about as far as we'd gotten, we gotten to the point where we could, like, read from the file.
+
+44
+00:03:40,828 --> 00:03:52,018
+We read the, um, the in this particular case, the file contents of the filter adult, um, script, we read that into memory.
+
+45
+00:03:52,678 --> 00:03:57,058
+And, uh, and then we knew that we had to enter one of these two code paths.
+
+46
+00:03:57,358 --> 00:04:07,648
+And so we know that if we type in, um, cargo run, import site list, dash, dash, help, it'll tell us.
+
+47
+00:04:09,448 --> 00:04:16,258
+Okay, I guess I had to build things first. It'll give us our, um, Auto Inc major.
+
+48
+00:04:17,038 --> 00:04:22,588
+Why do we have Auto Inc major? I think that is not accurate.
+
+49
+00:04:22,618 --> 00:04:28,908
+We should get rid of that. Um, and then we can do, uh, from filter.
+
+50
+00:04:28,918 --> 00:04:32,038
+Adult filter adult mjs.
+
+51
+00:04:32,188 --> 00:04:35,578
+I think in order to pipe things through, though, I have to do this.
+
+52
+00:04:35,878 --> 00:04:45,748
+It's kind of annoying. And then I'll give it the path to, um, you know, my currently projects Mozilla unified, uh, browser modules.
+
+53
+00:04:45,748 --> 00:04:52,477
+Filter. Adult. Filter adult. Let's see what it thinks of that unexpected argument from filter.
+
+54
+00:04:52,478 --> 00:04:55,678
+Adult. Mjs found dash from filter.
+
+55
+00:04:55,678 --> 00:05:00,408
+Adult dash you unexpected argument from filter.
+
+56
+00:05:00,658 --> 00:05:07,348
+Did I spell that wrong? From filter adult dash mjs.
+
+57
+00:05:07,498 --> 00:05:12,468
+That's filter adult. That's one of the arguments.
+
+58
+00:05:12,478 --> 00:05:24,118
+Was I not supposed to do it that way? Unexpected argument from filter adult mjs found.
+
+59
+00:05:28,408 --> 00:05:36,598
+Is it because, oh, it's because it's supposed to be a bool. Um, and then you pass in the path.
+
+60
+00:05:38,568 --> 00:05:43,518
+So. Was I supposed to do it this way?
+
+61
+00:05:43,518 --> 00:05:51,858
+Like. Yeah. You say from from filter adult dash mjs and you pass from the filter file.
+
+62
+00:05:54,118 --> 00:06:00,868
+What if I say ad instead? Is that also wrong? Unexpected argument add found.
+
+63
+00:06:03,008 --> 00:06:06,718
+Or remove. Doesn't know what I mean.
+
+64
+00:06:07,048 --> 00:06:11,278
+How didn't we have this working? Why does it think these are wrong?
+
+65
+00:06:15,738 --> 00:06:20,288
+Should. These are. Should these be? Bulls.
+
+66
+00:06:20,578 --> 00:06:25,528
+Why are these. Argh! Long! Hmhm.
+
+67
+00:06:27,058 --> 00:06:32,188
+These are the actions. What happens if I don't supply the input file?
+
+68
+00:06:32,728 --> 00:06:36,088
+I feel like we had this working last week. I don't know why it's suddenly broken.
+
+69
+00:06:36,088 --> 00:06:39,717
+I didn't change anything. Unexpected argument.
+
+70
+00:06:39,718 --> 00:06:42,898
+Remove. Okay, what if I if I just, like, run.
+
+71
+00:06:45,788 --> 00:06:51,698
+The, uh. Uh.
+
+72
+00:06:51,878 --> 00:06:56,028
+For cyclist. I go add.
+
+73
+00:06:57,278 --> 00:07:03,128
+Okay. There we go. There we go. So it has something with how I'm invoking it.
+
+74
+00:07:04,718 --> 00:07:10,928
+So if I do now, um, from, uh, from filter adult.
+
+75
+00:07:13,478 --> 00:07:17,798
+There. Right. So how was I doing it last week? Let's let's quickly review.
+
+76
+00:07:18,128 --> 00:07:23,078
+Let's watch last week's episode, joy of coding episode 398.
+
+77
+00:07:23,168 --> 00:07:27,728
+How did I do it last week? A little bit of YouTube ception here.
+
+78
+00:07:27,968 --> 00:07:34,388
+Um. Let's find a point in the scrubber where I was executing it.
+
+79
+00:07:34,388 --> 00:07:38,197
+That's what I should say. Mute. So I did a cargo build.
+
+80
+00:07:38,198 --> 00:07:45,138
+Cargo run. Oh, I didn't supply the name of the executable when I did it.
+
+81
+00:07:45,408 --> 00:07:50,058
+I just did, um. Cargo run.
+
+82
+00:07:50,418 --> 00:07:53,448
+How did it know which one to run? I guess maybe because only one.
+
+83
+00:07:58,048 --> 00:08:01,498
+One executable got generated. Cargo run.
+
+84
+00:08:02,068 --> 00:08:07,258
+Dash. Dash. Okay, that's that's what we'll do for now.
+
+85
+00:08:07,768 --> 00:08:13,358
+Uh, it'll be interesting whenever we start generating, uh, the other part.
+
+86
+00:08:13,378 --> 00:08:16,618
+Well, I guess it's not an executable. It's a library. So maybe we're okay.
+
+87
+00:08:17,548 --> 00:08:21,238
+Um. All right, so we have entered this code path.
+
+88
+00:08:21,268 --> 00:08:30,898
+That's great. So, um, what we'll say is we're, we'll say importing from filter adult system mjs.
+
+89
+00:08:32,368 --> 00:08:38,848
+And then what we need to do is we want to ignore everything except these lines.
+
+90
+00:08:43,018 --> 00:08:48,918
+Um, these are the important lines, and everything else is, um, superfluous.
+
+91
+00:08:48,928 --> 00:08:56,788
+And specifically we we just want everything in between these two lines, these two quotes as a string.
+
+92
+00:08:57,838 --> 00:08:59,428
+We don't want the quotes themselves.
+
+93
+00:09:01,438 --> 00:09:10,707
+Um, and so the good news is that we have a fairly regular pattern here where we've got, you know, two spaces, a quote, some set of characters,
+
+94
+00:09:10,708 --> 00:09:17,068
+and then I'm pretty sure it's pretty consistent that we have these two equal signs at the end, and then a quote and then a comma.
+
+95
+00:09:17,068 --> 00:09:22,078
+And we want everything in between. So that smells like doing regular expression matching.
+
+96
+00:09:23,158 --> 00:09:31,068
+Um. Now I've read into this as a single string.
+
+97
+00:09:32,318 --> 00:09:35,678
+I wonder if what I should be doing is reading in lines instead.
+
+98
+00:09:36,868 --> 00:09:40,098
+Uh, I've read to shrink. And what's the rest?
+
+99
+00:09:40,558 --> 00:09:45,478
+Read lines. I may have thought about this last week.
+
+100
+00:09:45,808 --> 00:09:49,138
+Yeah. Yeah, this looks familiar.
+
+101
+00:09:54,588 --> 00:10:00,678
+And then what I did was I read to string and then I called dot lines on it.
+
+102
+00:10:00,678 --> 00:10:04,218
+And then you just like, iterate the lines. Okay.
+
+103
+00:10:05,178 --> 00:10:12,648
+So for example, if I go for line in file contents.
+
+104
+00:10:14,878 --> 00:10:19,968
+Dot lines. Can I go print line?
+
+105
+00:10:21,348 --> 00:10:24,978
+Line. Is that.
+
+106
+00:10:26,778 --> 00:10:30,408
+Is that sensical? Yeah. That works.
+
+107
+00:10:30,558 --> 00:10:37,518
+That'll print out everything. Okay, so I have each line. And now we need our regular expression.
+
+108
+00:10:37,528 --> 00:10:41,748
+So, um. Rust regex.
+
+109
+00:10:45,348 --> 00:10:50,388
+This is how you do regex. Now is regex a thing that's built into the standard library?
+
+110
+00:10:52,668 --> 00:10:56,508
+Um. Kit grep regex.
+
+111
+00:10:59,288 --> 00:11:07,898
+So no one else is using regular expressions. Cargo add reg x you have to add reg X is a dependency.
+
+112
+00:11:08,528 --> 00:11:17,588
+So rest standard lib reg acts. There's no it doesn't include the regular expression library because there's no compelling reason to do so.
+
+113
+00:11:17,618 --> 00:11:21,258
+Okay well here's the reg crate. Wow.
+
+114
+00:11:21,728 --> 00:11:25,958
+So now I have to look at like what's what's the licensing on this thing?
+
+115
+00:11:27,788 --> 00:11:31,628
+I've got him. Come on. What do you know?
+
+116
+00:11:32,258 --> 00:11:36,438
+Source. This is.
+
+117
+00:11:38,368 --> 00:11:42,538
+Where's the website? Who owns this? Who owns this crate?
+
+118
+00:11:43,738 --> 00:11:47,428
+Rust rejects. Crate. This crate studio.
+
+119
+00:11:50,668 --> 00:11:54,298
+License MIT. Okay. So compatible.
+
+120
+00:11:54,328 --> 00:11:59,338
+License compatible. All right, let's bring it in.
+
+121
+00:11:59,668 --> 00:12:04,708
+Um. Usage cargo add reg x.
+
+122
+00:12:05,098 --> 00:12:15,728
+Let's do that. So now we have Reg X and now we can say use Reg X.
+
+123
+00:12:19,958 --> 00:12:25,408
+And will you still build. Yep.
+
+124
+00:12:26,278 --> 00:12:30,657
+Okay. Now we need to match on something. Okay.
+
+125
+00:12:30,658 --> 00:12:39,787
+So this is how you define a regular expression. Okay.
+
+126
+00:12:39,788 --> 00:12:46,398
+New. And then. It's two spaces.
+
+127
+00:12:47,268 --> 00:12:50,727
+So. Space.
+
+128
+00:12:50,728 --> 00:12:54,508
+Or is it? Oh, what's the space character? Oh, geez.
+
+129
+00:12:54,538 --> 00:13:01,978
+Regex syntax for single space character matches any whitespace character.
+
+130
+00:13:04,918 --> 00:13:08,428
+I guess I could do backspace backslash s.
+
+131
+00:13:08,428 --> 00:13:13,698
+Sure. Backslash s. Um.
+
+132
+00:13:17,838 --> 00:13:30,308
+And then quote. And then some set of characters.
+
+133
+00:13:32,278 --> 00:13:38,478
+Um. And those characters?
+
+134
+00:13:40,398 --> 00:13:45,678
+Uh, anything in the alphabet capitalized uncapitalized in equal signs.
+
+135
+00:13:47,518 --> 00:13:50,718
+Oh, I'm being sent to regex 101 by Smurf D.
+
+136
+00:13:51,858 --> 00:13:55,878
+Oh, interesting. This is a tool for, like, evaluating regular expressions.
+
+137
+00:13:56,358 --> 00:13:59,478
+Okay, so let's evaluate some regular expressions.
+
+138
+00:14:01,488 --> 00:14:10,158
+And let's put in some lines from filter adult. So we've matched that.
+
+139
+00:14:11,868 --> 00:14:17,358
+Okay. Now, uh, these have pluses in front of them, but they don't all have pluses in front of them.
+
+140
+00:14:17,358 --> 00:14:21,108
+Some of them slashes. So we're going to I'll add some of those as well.
+
+141
+00:14:22,818 --> 00:14:35,078
+So it's any character. Uh.
+
+142
+00:14:38,788 --> 00:14:42,208
+How do I say any character?
+
+143
+00:14:45,188 --> 00:14:52,348
+I want to say any character that really any character before two equal signs.
+
+144
+00:14:55,848 --> 00:14:59,448
+Use the rust flavor, though. There's a rust flavor.
+
+145
+00:14:59,538 --> 00:15:03,328
+Ooh, a rust flavor. Okay.
+
+146
+00:15:06,358 --> 00:15:09,358
+Text matches the character plus with index.
+
+147
+00:15:09,868 --> 00:15:18,908
+Oh, that's not exactly what I'm trying to say. Between one and unlimited times, many times giving back as needed.
+
+148
+00:15:20,718 --> 00:15:31,408
+It's more like this. Kind of want.
+
+149
+00:15:33,418 --> 00:15:38,578
+That I want that group. Match the single character.
+
+150
+00:15:39,148 --> 00:15:45,358
+I guess it because it's a single character. Can I do it that way? Now, currently nothing is matching.
+
+151
+00:15:46,288 --> 00:15:53,838
+Uh oh. This token has no special meaning. Not supported by the selected flavor.
+
+152
+00:15:53,858 --> 00:16:00,398
+How do I do quotes with the with rust flavored regex?
+
+153
+00:16:01,598 --> 00:16:05,828
+How do I do quotes? Rust regex quotes.
+
+154
+00:16:12,388 --> 00:16:26,238
+To match a double quote, you can use the regex create. You can use it right there.
+
+155
+00:16:26,568 --> 00:16:29,688
+It's great. Finds powerful way to match strings using regular expressions.
+
+156
+00:16:30,768 --> 00:16:38,148
+This creates a new regex object from the given regular expression. The syntax here was used to create a raw literal string.
+
+157
+00:16:38,898 --> 00:16:48,768
+Okay. Okay. Let's create a raw literal string, although we're already violating it with our change delimiter.
+
+158
+00:16:48,798 --> 00:16:54,198
+Let's do this. Ah. Um.
+
+159
+00:16:57,648 --> 00:17:08,198
+Quote, quote. There we go.
+
+160
+00:17:11,698 --> 00:17:14,948
+Um. And then we got our group.
+
+161
+00:17:14,948 --> 00:17:26,658
+That's exactly what we want. Um, and so our matches are exactly the strings that we want it.
+
+162
+00:17:28,488 --> 00:17:31,968
+And then we also have that new line.
+
+163
+00:17:34,468 --> 00:17:37,828
+Yeah. Now this one doesn't match because there's no new line.
+
+164
+00:17:37,828 --> 00:17:42,898
+So I'm not going to do the new line part. Um, that should be enough.
+
+165
+00:17:44,098 --> 00:17:48,688
+So that equals over here. We're going to go Russ.
+
+166
+00:17:49,138 --> 00:17:57,558
+Uh, regex for. Like that.
+
+167
+00:18:01,918 --> 00:18:07,638
+Or is it more like this? Yeah.
+
+168
+00:18:11,918 --> 00:18:15,218
+Let's say it's like that for now. Let's see what it thinks of that.
+
+169
+00:18:15,788 --> 00:18:20,288
+Um, now using the test.
+
+170
+00:18:21,698 --> 00:18:25,208
+Is match. If.
+
+171
+00:18:27,468 --> 00:18:33,278
+Our report is match line. We'll print the line.
+
+172
+00:18:36,248 --> 00:18:43,688
+Very simple. Invalid character only.
+
+173
+00:18:47,838 --> 00:18:52,278
+Only pound is allowed in raw string to limit the limitation.
+
+174
+00:18:52,468 --> 00:18:59,048
+Invalid character only pound. You removed the wrong second quote.
+
+175
+00:19:02,608 --> 00:19:10,378
+I removed the wrong second quote. Did I, did I want this.
+
+176
+00:19:14,128 --> 00:19:17,928
+Oh because it's pound quote and then quote pound.
+
+177
+00:19:17,938 --> 00:19:22,558
+Is that how it works. Yes okay. Now it's not running anything though.
+
+178
+00:19:26,608 --> 00:19:37,288
+Quote. Like so it's our pound quote slash slash slash s quote these things.
+
+179
+00:19:40,808 --> 00:19:44,678
+Uh, and then it's that.
+
+180
+00:19:44,738 --> 00:19:49,388
+Yes, I had the wrong. There we go.
+
+181
+00:19:49,418 --> 00:19:54,038
+There we go. Nothing else should get printed.
+
+182
+00:19:54,068 --> 00:19:58,838
+This is a very long. List.
+
+183
+00:20:01,158 --> 00:20:05,838
+When we run it. Did it. And then that stuff got printed.
+
+184
+00:20:07,278 --> 00:20:11,068
+Okay. And then I ran it again, and then it just printed out those bits.
+
+185
+00:20:11,088 --> 00:20:16,278
+Okay, great. Now I want the group items I want from the.
+
+186
+00:20:16,518 --> 00:20:21,508
+How do I get the group. I need to extract the group. Group.
+
+187
+00:20:21,888 --> 00:20:26,688
+Group. Group captures capturing group named capture groups.
+
+188
+00:20:29,948 --> 00:20:36,338
+They don't need. I mean, fine, sure, we can use named, um, some caps in recaptures.
+
+189
+00:20:37,648 --> 00:20:47,948
+The haystack. Okay.
+
+190
+00:20:51,088 --> 00:21:00,298
+So if the line matches well, is there a way that I can just run this regex on the entire file and get the groups out?
+
+191
+00:21:00,958 --> 00:21:06,268
+That seems plausible. Like run it globally instead of doing it line by line.
+
+192
+00:21:09,598 --> 00:21:13,378
+Like this. Um.
+
+193
+00:21:14,518 --> 00:21:22,948
+Captures. What's that?
+
+194
+00:21:23,128 --> 00:21:27,238
+I need? Captures pub start.
+
+195
+00:21:27,238 --> 00:21:37,888
+Cat represents the capture group's capture group's. Okay captures unwrap caps, so it's going to be some kind of vector.
+
+196
+00:21:38,668 --> 00:21:43,678
+Okay. Doesn't matter how many years of experience we have, you'll still.
+
+197
+00:21:43,678 --> 00:21:47,398
+You'll still struggle with remembering regex rules. Absolutely. Regex.
+
+198
+00:21:48,718 --> 00:21:54,388
+It's wild. Okay, so what we'll do is we're going to run.
+
+199
+00:21:56,878 --> 00:22:04,198
+Our regex on the string let captures equal.
+
+200
+00:22:04,898 --> 00:22:11,578
+Ari dot captures file contents dot.
+
+201
+00:22:11,578 --> 00:22:17,428
+Unwrap. For capture.
+
+202
+00:22:17,428 --> 00:22:20,458
+In captures.
+
+203
+00:22:22,078 --> 00:22:29,398
+Print capture. See what he thinks of that.
+
+204
+00:22:29,818 --> 00:22:35,518
+No, no. Super hates it. Okay. Expected a slice.
+
+205
+00:22:35,528 --> 00:22:38,968
+So I think I have to pass it a slice like that.
+
+206
+00:22:41,098 --> 00:22:45,178
+And now captures is not an iterator. What is it instead?
+
+207
+00:22:45,568 --> 00:22:56,028
+The tree iterator is not implemented for this. So how do I go through the list of captures that we get back?
+
+208
+00:22:57,438 --> 00:23:03,528
+Caps. It's not.
+
+209
+00:23:03,768 --> 00:23:08,358
+I can't iterate it. Iterator.
+
+210
+00:23:08,898 --> 00:23:13,578
+Turn an iterator over all capture groups. Okay. Capacitor.
+
+211
+00:23:13,638 --> 00:23:18,498
+Okay. Okay. Okay. Captures iter.
+
+212
+00:23:19,068 --> 00:23:27,438
+How about that? Cannot be formatted with the default formatter because that capture is.
+
+213
+00:23:30,908 --> 00:23:34,178
+Hit next. Unwrap. Map as string.
+
+214
+00:23:35,588 --> 00:23:40,358
+Can I do like as string or is do I have to unwrap it?
+
+215
+00:23:41,648 --> 00:23:46,598
+Expect right unwrap as string.
+
+216
+00:23:48,728 --> 00:23:52,058
+Not good enough. Um.
+
+217
+00:23:52,268 --> 00:23:55,358
+Oh, I have to do a global global regex.
+
+218
+00:23:55,358 --> 00:24:05,858
+That's the first one. How do I do the whole thing? Um, global like flags.
+
+219
+00:24:06,488 --> 00:24:14,368
+These are red flags. Grouping and flags.
+
+220
+00:24:26,388 --> 00:24:29,478
+Multi-line mode. Allow. Enables.
+
+221
+00:24:35,438 --> 00:24:41,588
+So this was OGM global multiline I'm learning.
+
+222
+00:24:41,828 --> 00:24:48,278
+This is a very cool tool. So if I go GM what do you think of that.
+
+223
+00:24:49,268 --> 00:24:53,708
+Is that right. Has no idea what I'm talking about.
+
+224
+00:24:54,668 --> 00:24:58,598
+So how do I use flags. So this isn't exactly right.
+
+225
+00:24:58,958 --> 00:25:07,698
+How do I use flags? Um, read the wrong documentation.
+
+226
+00:25:14,608 --> 00:25:20,138
+Are. Multi-line.
+
+227
+00:25:31,438 --> 00:25:36,058
+So at the beginning, do you put it in. In this, in these question marks.
+
+228
+00:25:37,438 --> 00:25:44,428
+Okay. Let's try that. This is bizarre GM like that.
+
+229
+00:25:47,298 --> 00:25:50,628
+Unrecognized flagged. Doesn't know what G means.
+
+230
+00:25:51,838 --> 00:25:57,768
+Regex. Uh. Tool. Uh.
+
+231
+00:26:15,108 --> 00:26:24,218
+Hmhm. Huh?
+
+232
+00:26:25,168 --> 00:26:32,608
+Global search. Same document.
+
+233
+00:26:33,028 --> 00:26:38,608
+Output for objects. Global flags as Range Explorer.
+
+234
+00:26:38,848 --> 00:26:50,178
+Uh uh. Which isn't matched multiple times, which is inherent in find editor.
+
+235
+00:26:51,318 --> 00:27:03,058
+So. Oh, so it really wants us to, like, go through.
+
+236
+00:27:04,168 --> 00:27:11,628
+Okay. It wants us to do it line by line. Hmhm.
+
+237
+00:27:17,728 --> 00:27:35,938
+Okay. So what we'll do is for like, um, for match in uh, rv dot find itor file contents.
+
+238
+00:27:42,078 --> 00:27:50,078
+Um. For match the line.
+
+239
+00:27:52,838 --> 00:27:56,818
+Print. Matched line.
+
+240
+00:27:56,828 --> 00:28:05,968
+So that's not too different from what we were doing earlier. But that's not quite it.
+
+241
+00:28:18,418 --> 00:28:23,848
+How do you like me now? Okay, that's more like it.
+
+242
+00:28:29,508 --> 00:28:32,628
+Match start and end. That's the line.
+
+243
+00:28:33,348 --> 00:28:38,298
+Start and end. Okay, so now I need to get the captured.
+
+244
+00:28:41,518 --> 00:28:46,888
+String out, so captures.
+
+245
+00:28:57,208 --> 00:29:02,758
+Uh let capture equal. Was it matched?
+
+246
+00:29:02,938 --> 00:29:07,567
+Line die. What is?
+
+247
+00:29:07,568 --> 00:29:12,478
+Find it or return. Find it or. Oh.
+
+248
+00:29:12,758 --> 00:29:16,178
+Return what? Find it or regex. Find it.
+
+249
+00:29:16,178 --> 00:29:24,608
+Or returns a matches vector or a matches a matches struct, rather.
+
+250
+00:29:25,238 --> 00:29:36,128
+Okay. And then on that I can call enumerate for each iterate.
+
+251
+00:29:38,048 --> 00:29:42,278
+And each one will give me back a match.
+
+252
+00:29:42,758 --> 00:29:48,968
+And on a match I can call. Is there something in here about capture?
+
+253
+00:29:50,288 --> 00:29:53,528
+For example? Other APIs can create match values.
+
+254
+00:29:53,738 --> 00:30:03,358
+How do I get the capture on the line? So empty range returns the substring of the hate string that matched.
+
+255
+00:30:06,768 --> 00:30:11,778
+Maybe I don't want that. Maybe I want. Oh, boy.
+
+256
+00:30:11,808 --> 00:30:17,298
+All right. Captures. Yeah, I think I liked what I had before, actually.
+
+257
+00:30:19,458 --> 00:30:32,428
+Right. Like captures. I think we're going to go with the simplest thing.
+
+258
+00:30:35,458 --> 00:30:42,178
+Which is actually to. Iterate each line.
+
+259
+00:30:51,398 --> 00:30:55,788
+Well. Oh, boy.
+
+260
+00:30:56,118 --> 00:31:00,738
+No, this seems so silly. I'm going to run the regular expression again.
+
+261
+00:31:00,768 --> 00:31:11,588
+That seems so silly. So we're going to if we get a match.
+
+262
+00:31:11,608 --> 00:31:16,018
+How do I get a capture from a match?
+
+263
+00:31:20,398 --> 00:31:25,108
+Capture matches. How do I get that?
+
+264
+00:31:25,128 --> 00:31:28,848
+That sounds good. How do I get capture? Uh. Captures it.
+
+265
+00:31:29,448 --> 00:31:34,278
+That's what I want. I want not find it, or I want captures it or.
+
+266
+00:31:43,068 --> 00:31:47,808
+That's more like it. I think that's a big old mess. But from the capture.
+
+267
+00:31:53,678 --> 00:31:59,358
+Captures. I can get a. Capture.
+
+268
+00:32:07,208 --> 00:32:14,858
+For 40 match line. I'm instead of doing that, I'm going to go matched line.
+
+269
+00:32:17,018 --> 00:32:20,918
+Uh, so we get. Captures or.
+
+270
+00:32:24,048 --> 00:32:29,688
+Map and then extract. What is extract to extract.
+
+271
+00:32:31,458 --> 00:32:39,548
+Extracting the substring. Was that?
+
+272
+00:32:47,238 --> 00:32:50,458
+And for our students, you may be able to use. Uh, okay.
+
+273
+00:32:58,498 --> 00:33:02,068
+Cannot infer the value of a cause parameter in an extract.
+
+274
+00:33:04,988 --> 00:33:12,728
+So what? What do they normally do? Extract. Extract gives you back a.
+
+275
+00:33:16,058 --> 00:33:26,338
+A string slice. So I don't mind.
+
+276
+00:33:28,498 --> 00:33:33,718
+I don't mind this pattern. Let, um.
+
+277
+00:33:36,268 --> 00:33:42,328
+I'll call them string hashes for.
+
+278
+00:33:48,538 --> 00:33:54,698
+File contents. String hashes.
+
+279
+00:33:54,708 --> 00:33:57,828
+Push string hash.
+
+280
+00:33:59,988 --> 00:34:07,428
+Well, copy paste never hurt anybody. And then can we print out our vector?
+
+281
+00:34:12,438 --> 00:34:17,048
+Yeah. Mhm.
+
+282
+00:34:18,918 --> 00:34:21,918
+That looks right. Okay.
+
+283
+00:34:22,308 --> 00:34:29,188
+So we've got our vector. Uh now we need to convert these into bytes.
+
+284
+00:34:29,208 --> 00:34:35,418
+So uh so the way that filter adult works is it.
+
+285
+00:34:40,708 --> 00:34:47,608
+Is an MD5 hash of the base domain, that is.
+
+286
+00:34:50,398 --> 00:34:59,188
+Um. You get the base domain of the URL, I get the paste me and you md5 hash and you add to the set.
+
+287
+00:35:00,088 --> 00:35:04,478
+When this thing is constructed. G adults.
+
+288
+00:35:09,528 --> 00:35:17,668
+25 hash. You take the text. Take the text.
+
+289
+00:35:21,708 --> 00:35:29,628
+For the text to a byte array, you map each of the characters into the character codes.
+
+290
+00:35:31,798 --> 00:35:42,288
+And then you get. The hash result as Ascii base64.
+
+291
+00:35:42,528 --> 00:35:45,948
+So this is base64 encoded Ascii text.
+
+292
+00:35:46,548 --> 00:35:50,928
+So what we need to do is turn this from. We need to decode our base64.
+
+293
+00:35:52,978 --> 00:35:57,178
+Turn it into bytes. And then write.
+
+294
+00:35:57,328 --> 00:36:00,358
+So generate rust from rust.
+
+295
+00:36:00,388 --> 00:36:03,448
+What tools do they have? Um.
+
+296
+00:36:06,248 --> 00:36:10,928
+Code generation in rust. Yeah, that's what we should call it.
+
+297
+00:36:11,378 --> 00:36:26,838
+Rust. Code generation. Run rust format after code generation.
+
+298
+00:36:28,848 --> 00:36:31,547
+Quote is a great tool. Cherry rust source code from within rust.
+
+299
+00:36:31,548 --> 00:36:37,308
+It will generate a proc macro two token string, which can then be converted into a string.
+
+300
+00:36:51,198 --> 00:36:56,858
+Quote. I don't know what I'm looking at here.
+
+301
+00:36:58,178 --> 00:37:03,668
+I can't read any of this. Um, let's go back to what I think it was.
+
+302
+00:37:03,998 --> 00:37:09,488
+Nero Tour had, um, a few weeks ago.
+
+303
+00:37:10,028 --> 00:37:19,548
+Had a playground that we were looking at. Euro hotter.
+
+304
+00:37:23,398 --> 00:37:35,448
+Let's see. Let's see. Nearer to. Where is your playground?
+
+305
+00:37:35,868 --> 00:37:49,558
+Here. So this does the work that we want of base64 decoding into the bytes.
+
+306
+00:37:49,558 --> 00:37:55,828
+And then we want to generate basically this square bracket then the numbers from the bytes.
+
+307
+00:37:56,368 --> 00:38:03,478
+I just got a t delivery. Okay I'm going to ask does the tea delivery person want to dip their head in and say hello?
+
+308
+00:38:03,508 --> 00:38:08,248
+This may be a stream first. There's no pressure here. If you don't want to say hello, you don't have to say hello.
+
+309
+00:38:08,668 --> 00:38:12,178
+Do you want to do that? Thumbs up.
+
+310
+00:38:12,188 --> 00:38:15,428
+All right, come on in. Why don't you say hello? Introduce yourself.
+
+311
+00:38:16,778 --> 00:38:21,938
+Hello? Hello. There you go. That was, uh.
+
+312
+00:38:22,208 --> 00:38:28,178
+That was my, uh, my partner Emily, uh, introducing herself, um, mystery.
+
+313
+00:38:28,228 --> 00:38:32,348
+Uh oh. People are going off in the chat. Healthy person.
+
+314
+00:38:32,858 --> 00:38:37,538
+Uh, thank you very much. Um, she just gave a thumbs up and, uh.
+
+315
+00:38:37,568 --> 00:38:45,428
+Oh. Hi. Excellent, excellent. There you go. All right, so, um, what are we doing here?
+
+316
+00:38:45,428 --> 00:38:48,577
+We are going to. What is this?
+
+317
+00:38:48,578 --> 00:38:51,848
+Base 64 standard? Where does that global come from?
+
+318
+00:39:01,248 --> 00:39:06,438
+I guess it's some. You just get it for free from base64 prelude.
+
+319
+00:39:06,468 --> 00:39:11,748
+Okay. And then you can decode one of these things and to get the bytes out.
+
+320
+00:39:12,018 --> 00:39:16,068
+Okay. Let's just try that for now. Um.
+
+321
+00:39:19,628 --> 00:39:23,998
+And so instead of iterating again, let's take a look at our hash here.
+
+322
+00:39:24,008 --> 00:39:43,298
+Let's um, let hash uh byte hashes byte hash equals base64 standard decode string hash unwrap.
+
+323
+00:39:45,128 --> 00:39:49,058
+And then we'll push our byte hashes.
+
+324
+00:40:00,388 --> 00:40:05,128
+A 400 episode idea joins us to learn rust. Great idea.
+
+325
+00:40:05,998 --> 00:40:13,348
+Uh, she does have a day job. I don't know if she'll get it off for that, but thank you for the idea.
+
+326
+00:40:14,248 --> 00:40:19,048
+Uh, I think I need to get the prelude. So let's get that.
+
+327
+00:40:21,598 --> 00:40:27,968
+Um, let's do that. Cannot find value.
+
+328
+00:40:27,978 --> 00:40:31,328
+Base64 use of undeclared create or module.
+
+329
+00:40:31,338 --> 00:40:36,588
+So do I have to. Cargo. Base64.
+
+330
+00:40:36,648 --> 00:40:44,758
+Prelude. I have to install that, I guess.
+
+331
+00:40:49,518 --> 00:40:52,638
+Uh, how did I do that with Reg X? It was like, uh.
+
+332
+00:40:55,758 --> 00:41:02,608
+Cargo add. Um.
+
+333
+00:41:02,608 --> 00:41:15,498
+Cargo at Bay 64. Crates that I, uh.
+
+334
+00:41:16,128 --> 00:41:20,118
+Uh. Whoops. Base 64.
+
+335
+00:41:23,758 --> 00:41:27,958
+It's MIT licensed. Okay. Cargo add.
+
+336
+00:41:32,788 --> 00:41:36,418
+Okay. Now, what do you what? How do you like me now?
+
+337
+00:41:36,448 --> 00:41:41,818
+Hey, there we go. There are a bunch of bytes now. We'll definitely want to write some tests for this.
+
+338
+00:41:42,598 --> 00:41:46,948
+Uh, I think, uh, we got a couple of examples there from.
+
+339
+00:41:49,928 --> 00:41:53,258
+Narrator last week. We've got a spammer in the chat. Feel free to kick them.
+
+340
+00:41:55,938 --> 00:41:59,158
+Um, but now we have our bytes.
+
+341
+00:41:59,238 --> 00:42:06,138
+Now, can we just, like, write that to a file that looks like.
+
+342
+00:42:08,618 --> 00:42:20,148
+This. What might be nice is to put the, uh, the hash next to it.
+
+343
+00:42:27,388 --> 00:42:31,138
+So instead, what we'll do. We'll do what we did before where we, um.
+
+344
+00:42:32,398 --> 00:42:41,798
+We'll collect the string hashes. Uh.
+
+345
+00:42:44,078 --> 00:42:47,708
+Uh, what was it? Um. String hashes.
+
+346
+00:42:48,368 --> 00:43:00,108
+Push string hash. No, wait wait wait.
+
+347
+00:43:00,128 --> 00:43:05,818
+Why do I want to do here? We really only need to iterate this once.
+
+348
+00:43:05,828 --> 00:43:09,668
+Why am I creating this collection? Yeah. There's no need to create this collection.
+
+349
+00:43:09,998 --> 00:43:14,137
+I'm only doing that for. For debugging sake.
+
+350
+00:43:14,138 --> 00:43:19,168
+But now that I'm in here in this loop, I have everything I need. I have the string hash, I have the byte hash.
+
+351
+00:43:19,178 --> 00:43:23,758
+I just need to start writing this file. Um, and so what does this file look like?
+
+352
+00:43:23,768 --> 00:43:28,278
+It's going to say static. Um.
+
+353
+00:43:36,838 --> 00:43:42,028
+Adult list. Static. Static. We'll call it adult set.
+
+354
+00:43:43,798 --> 00:43:54,228
+Adult set. And that will be. Like, the naive thing to do is to just, like, write bytes.
+
+355
+00:43:54,238 --> 00:43:58,188
+Maybe that's fine. Like, right? Right. These strings.
+
+356
+00:44:00,198 --> 00:44:03,528
+Like is this if I just do this? Is this valid?
+
+357
+00:44:04,068 --> 00:44:09,967
+Is this valid? Rest. Warning.
+
+358
+00:44:09,968 --> 00:44:13,718
+Never used. Never used.
+
+359
+00:44:13,718 --> 00:44:18,458
+But if it's part of. Yeah. Like, if I can just write this, then we're good.
+
+360
+00:44:20,108 --> 00:44:24,217
+So that's what I'm going to do. Uh, rust io.
+
+361
+00:44:24,218 --> 00:44:32,678
+I need to learn how to write a file. Right by freed.
+
+362
+00:44:32,678 --> 00:44:39,338
+Buff reader. Buff writer. We're going to create a file.
+
+363
+00:44:53,718 --> 00:44:57,168
+Hmhm. Now, how do we make this nice and testable?
+
+364
+00:45:31,578 --> 00:45:36,168
+Okay, here's what I'm thinking. Let's create a helper function.
+
+365
+00:45:38,268 --> 00:45:42,318
+Whose job it will be to do all of this. And it's going to return.
+
+366
+00:45:43,668 --> 00:45:50,817
+A HashMap. Hashing the base64 representation.
+
+367
+00:45:50,818 --> 00:45:55,018
+That'll be the key and the value will be the byte representation.
+
+368
+00:45:56,188 --> 00:46:01,228
+We can write tests for that. That should be easy enough to test.
+
+369
+00:46:02,458 --> 00:46:08,848
+And then we will have a separate function that will then take that hash map and generate.
+
+370
+00:46:10,338 --> 00:46:14,058
+The file because we're going to want something similar for for down here as well.
+
+371
+00:46:17,408 --> 00:46:27,158
+Okay. So let's, let's create a, a function um in ingest filter adult mjs.
+
+372
+00:46:28,388 --> 00:46:34,808
+And that will take a string. How do you create a function that takes a string.
+
+373
+00:46:36,548 --> 00:46:43,538
+Um, well rest define function takes a string.
+
+374
+00:46:44,198 --> 00:46:51,148
+I feel like, um. God's preferred type.
+
+375
+00:46:56,208 --> 00:47:00,468
+Yeah, this is how I've seen it. So function in jest. And then we give it a name.
+
+376
+00:47:00,738 --> 00:47:10,188
+We'll call it the, um, filter, adult filter, adult mjs file, uh, or contents.
+
+377
+00:47:12,578 --> 00:47:17,618
+Stir and what it's going to return is a HashMap.
+
+378
+00:47:19,908 --> 00:47:31,258
+Boop HashMap. Um.
+
+379
+00:47:44,428 --> 00:47:51,688
+HashMap. Can I? Do HashMap values.
+
+380
+00:47:53,598 --> 00:47:57,438
+So let's see if we can find some examples.
+
+381
+00:47:58,008 --> 00:48:02,848
+HashMap. Yeah.
+
+382
+00:48:02,938 --> 00:48:06,418
+String, string. Well, it won't be a string. It'll be a HashMap.
+
+383
+00:48:09,708 --> 00:48:16,198
+A string and then a set of bytes.
+
+384
+00:48:16,918 --> 00:48:22,348
+Um, this what we saw in the playground.
+
+385
+00:48:27,558 --> 00:48:39,148
+Um. You 816.
+
+386
+00:48:40,078 --> 00:48:45,658
+Vector. Can I say that?
+
+387
+00:48:50,708 --> 00:48:53,738
+You wait 16 back? Or do you say vec?
+
+388
+00:48:55,988 --> 00:49:03,128
+VEC. That's what you say. Say vec and then some o or this.
+
+389
+00:49:05,048 --> 00:49:08,998
+Oh, no. That's it. Returning a thing or that's it. Accepting an argument.
+
+390
+00:49:09,008 --> 00:49:17,948
+We're going to be turning returning a vector. Of updates.
+
+391
+00:49:22,148 --> 00:49:25,748
+Specifically 16 u s.
+
+392
+00:49:32,808 --> 00:49:36,948
+Um. Rust vector.
+
+393
+00:49:37,458 --> 00:49:43,878
+Return value. Declare size. Frac.
+
+394
+00:49:50,928 --> 00:49:57,588
+I want to be able to say that you will return a vector of size such.
+
+395
+00:50:00,258 --> 00:50:03,888
+Creating a vector of zeros for a specific size.
+
+396
+00:50:11,108 --> 00:50:18,347
+Maybe you can't say that. The return value. Rest vector.
+
+397
+00:50:18,348 --> 00:50:23,568
+Return function. Return value with size.
+
+398
+00:50:40,068 --> 00:50:52,388
+Well. Maybe it's fine.
+
+399
+00:50:53,378 --> 00:51:04,508
+Maybe I'll just say evacuate. Um.
+
+400
+00:51:09,848 --> 00:51:14,558
+So now let's see examples of doing that. Um.
+
+401
+00:51:18,038 --> 00:51:24,248
+So it creates a HashMap. Let's just return the HashMap.
+
+402
+00:51:26,858 --> 00:51:30,848
+Could not compile. Not found. Doesn't know what I mean by a HashMap.
+
+403
+00:51:39,718 --> 00:51:45,448
+Collections use standard collections.
+
+404
+00:51:53,098 --> 00:52:00,958
+I think we'll want hash set as well at some point. Okay.
+
+405
+00:52:01,798 --> 00:52:10,148
+So now we're going to. Do this work.
+
+406
+00:52:13,808 --> 00:52:17,408
+Take the filter. Adult file contents.
+
+407
+00:52:20,028 --> 00:52:25,028
+And get the string hash out. The byte hash.
+
+408
+00:52:25,038 --> 00:52:28,188
+We've got the string hash the byte hash. And then we are going to set.
+
+409
+00:52:34,218 --> 00:52:37,578
+HashMap rez entry or insert with.
+
+410
+00:52:40,228 --> 00:52:44,088
+And three. Or insert with.
+
+411
+00:52:58,178 --> 00:53:03,398
+Okay. All right. Browse HashMap.
+
+412
+00:53:03,818 --> 00:53:10,478
+Insert. Insert two string.
+
+413
+00:53:12,548 --> 00:53:15,998
+And then the value. So can I. Is it is that.
+
+414
+00:53:16,208 --> 00:53:20,048
+Is it that easy? Is it? Um. Result.
+
+415
+00:53:23,658 --> 00:53:27,218
+Result. Dot. Insert string. Hash.
+
+416
+00:53:27,428 --> 00:53:32,468
+Byte. Hash. Is it that easy? It's never that easy.
+
+417
+00:53:35,118 --> 00:53:38,288
+Doesn't know what I mean by bite hashes. What?
+
+418
+00:53:39,378 --> 00:53:45,338
+I thought I removed the notion of byte hashes. Oh, yeah.
+
+419
+00:53:45,578 --> 00:53:58,568
+Okay. Here. Could not compile because mismatch types expected a hash map because of the return type.
+
+420
+00:54:02,688 --> 00:54:06,768
+This should be two string. Okay.
+
+421
+00:54:14,728 --> 00:54:33,898
+I guess we needed a new string, and that worked. And now can I, uh, HashMap let HashMap equal ingest filter adult Mjs.
+
+422
+00:54:35,728 --> 00:54:39,088
+Uh. File contents.
+
+423
+00:54:41,878 --> 00:54:45,028
+Print line got back HashMap.
+
+424
+00:54:49,008 --> 00:54:55,388
+HashMap. Does that work? Expected.
+
+425
+00:54:55,448 --> 00:55:04,358
+Oh. Other way round. Okay, now we're cooking.
+
+426
+00:55:05,468 --> 00:55:09,098
+We are cooking. So what's nice is that this is testable.
+
+427
+00:55:09,098 --> 00:55:12,548
+We can write a test for this, and maybe we should do that.
+
+428
+00:55:12,788 --> 00:55:15,968
+Maybe we should do that right now.
+
+429
+00:55:16,878 --> 00:55:22,798
+Um. Right.
+
+430
+00:55:25,098 --> 00:55:28,908
+Well. And then we're going to have a separate function that's, um.
+
+431
+00:55:30,738 --> 00:55:33,738
+Right. Uh.
+
+432
+00:55:37,078 --> 00:55:41,098
+Adult set. Rs.
+
+433
+00:55:41,308 --> 00:55:44,698
+HashMap. And that will take.
+
+434
+00:55:46,498 --> 00:55:50,188
+Right adult said Rs.
+
+435
+00:55:53,428 --> 00:56:03,358
+Wow. Two words. Naming is hard and that will take a HashMap, which is a.
+
+436
+00:56:07,488 --> 00:56:10,488
+Uh. How do you accept a HashMap as an argument?
+
+437
+00:56:32,348 --> 00:56:36,877
+It's a structure. Pub function.
+
+438
+00:56:36,878 --> 00:56:42,928
+Matt. Okay, here we go from map. And then I just say HashMap.
+
+439
+00:56:44,668 --> 00:56:53,078
+And then. The kind string back you U8.
+
+440
+00:56:55,688 --> 00:57:00,368
+And what it's going to return is a result, I would presume.
+
+441
+00:57:03,968 --> 00:57:11,668
+Uh. Um. Although maybe what this should be is.
+
+442
+00:57:13,678 --> 00:57:21,148
+Uh, let adult set equals generate adult set.
+
+443
+00:57:26,398 --> 00:57:29,818
+And what this will return is a string.
+
+444
+00:57:35,248 --> 00:57:39,328
+Right. Stir or stirring?
+
+445
+00:57:43,558 --> 00:57:54,998
+All right. It's going to return a new string. Is that better than returning a.
+
+446
+00:58:06,438 --> 00:58:09,498
+So you've got string from unwrap. Okay. What?
+
+447
+00:58:09,768 --> 00:58:24,708
+Result equals string from. Test results.
+
+448
+00:58:25,728 --> 00:58:31,068
+Will you compile? Yes.
+
+449
+00:58:31,088 --> 00:58:35,888
+Okay. Um, so what we can do then is we.
+
+450
+00:58:36,518 --> 00:58:41,108
+This is what gets written to disk, right? Adults get adults.
+
+451
+00:58:45,078 --> 00:58:49,278
+Function right at all. Set. That takes.
+
+452
+00:58:51,798 --> 00:58:55,008
+A string that's gonna return a result.
+
+453
+00:58:56,568 --> 00:59:03,708
+Um, how do you return an okay. What's, uh.
+
+454
+00:59:06,668 --> 00:59:15,998
+Return. Okay. So how you do that for now?
+
+455
+00:59:17,228 --> 00:59:21,508
+Will you compile? No. No.
+
+456
+00:59:21,628 --> 00:59:24,868
+Don't like it? Expected stir.
+
+457
+00:59:25,588 --> 00:59:32,818
+Found stirring. Cannot compile.
+
+458
+00:59:35,188 --> 00:59:39,148
+Result expected two generic arguments. Result of what?
+
+459
+00:59:46,918 --> 00:59:50,608
+Or salt. It's either going to be success.
+
+460
+00:59:58,098 --> 01:00:01,508
+Try right string. Salt.
+
+461
+01:00:05,308 --> 01:00:11,668
+And the empty. Let's do that for now.
+
+462
+01:00:18,678 --> 01:00:39,078
+Let's go to two generic arguments. Can I say result?
+
+463
+01:00:40,218 --> 01:00:46,308
+Uh, bull. Okay.
+
+464
+01:00:46,318 --> 01:01:01,617
+Uh, rust file io return result. Why you need a structure hole and general areas are constructed within Erica's and
+
+465
+01:01:01,618 --> 01:01:07,018
+handle are doing works because they are kind of like others are more concise. Version result error.
+
+466
+01:01:19,118 --> 01:01:22,688
+Doesn't know what error is. Standard IO error.
+
+467
+01:01:30,878 --> 01:01:43,358
+There we go. Okay. So now I can say like writing adult set.rs.
+
+468
+01:01:45,248 --> 01:01:53,318
+Uh. Generating idle set from HashMap.
+
+469
+01:01:56,798 --> 01:02:01,328
+Good. Okay. So I think we've got the bits and pieces that we need for this first part.
+
+470
+01:02:02,888 --> 01:02:07,538
+I know this seems probably really simple. If I was banging this out in Python, we'd be done by now.
+
+471
+01:02:07,568 --> 01:02:12,328
+Python or JavaScript or any of my lingua franca as well.
+
+472
+01:02:12,908 --> 01:02:23,108
+I'm really learning a lot here though. Um, I want to try writing a test for this before we've got about 23 minutes remaining rust testing.
+
+473
+01:02:24,218 --> 01:02:30,608
+Here we go. Mod tests.
+
+474
+01:02:40,088 --> 01:02:48,988
+Let's try this. Um, what's the what's the convention for where you put the test?
+
+475
+01:02:55,988 --> 01:03:07,898
+Right at the very bottom. Okay. Um.
+
+476
+01:03:11,618 --> 01:03:14,848
+And bring him everything. Test.
+
+477
+01:03:14,858 --> 01:03:19,748
+It works. Assert equal for four.
+
+478
+01:03:23,518 --> 01:03:26,968
+Cargo test.
+
+479
+01:03:29,488 --> 01:03:33,878
+It works. Okay. So now we've got our test framework.
+
+480
+01:03:33,898 --> 01:03:36,928
+Let's test ingest. Filter.
+
+481
+01:03:36,928 --> 01:03:40,528
+Adult. Um.
+
+482
+01:03:51,018 --> 01:03:55,308
+Uh, so function test, ingest, filter, adult.
+
+483
+01:03:56,298 --> 01:03:59,868
+We are going to call that with, um.
+
+484
+01:04:01,578 --> 01:04:09,558
+Uh, let's see, uh, multi-line string rust tests with syntax for multi-line string literal.
+
+485
+01:04:17,698 --> 01:04:21,028
+Raw string literal notation. Right. Okay.
+
+486
+01:04:27,258 --> 01:04:40,128
+So let. And then we're going to say.
+
+487
+01:04:46,178 --> 01:04:55,907
+Let's put that stuff in there. Ingest filter.
+
+488
+01:04:55,908 --> 01:05:00,618
+Adult shader. But HashMap.
+
+489
+01:05:06,818 --> 01:05:13,028
+Equal that, now do I? I'm going to assert that the size of the HashMap.
+
+490
+01:05:14,768 --> 01:05:25,628
+Rust HashMap length assert length should be two.
+
+491
+01:05:27,788 --> 01:05:32,058
+Let's see if it likes that. Incredible.
+
+492
+01:05:33,198 --> 01:05:37,728
+Incredible. Okay, now let's assert that the first entry in the HashMap.
+
+493
+01:05:39,728 --> 01:05:50,408
+Is, uh. Let's let's look at, um, the playground that, uh, we got from.
+
+494
+01:05:54,238 --> 01:06:02,968
+Let's actually put this in. Let's get this in here.
+
+495
+01:06:05,418 --> 01:06:10,278
+Let's get a few more. Let's get all of these in here. We're going to just repurpose.
+
+496
+01:06:13,458 --> 01:06:18,998
+Um. And then we're going to put some other stuff.
+
+497
+01:06:19,008 --> 01:06:28,968
+We're going to put the clothes. Perrins. Let's put, um.
+
+498
+01:06:51,118 --> 01:06:57,148
+So we expect there to be one, two, three, four, five, six items now in there.
+
+499
+01:06:59,668 --> 01:07:13,268
+Good. And we expect these to be the hashes. So static.
+
+500
+01:07:18,358 --> 01:07:24,178
+Or like. Let expected ashes equal.
+
+501
+01:07:28,378 --> 01:07:33,208
+So how that works. And now we're going to zip.
+
+502
+01:07:41,238 --> 01:07:49,888
+Um. Expected bytes.
+
+503
+01:07:54,988 --> 01:08:01,558
+If we're going to say expected. But.
+
+504
+01:08:03,768 --> 01:08:08,568
+Expected hashes equal these.
+
+505
+01:08:14,928 --> 01:08:21,668
+And then we'll do. Exactly. What narrator did.
+
+506
+01:08:24,608 --> 01:08:28,628
+We're going to bring in this zip thing. Use standard.
+
+507
+01:08:33,188 --> 01:08:37,988
+Hitters if we're going to say expected hashes.
+
+508
+01:08:38,708 --> 01:08:45,028
+Expected bytes. And then we're going to.
+
+509
+01:08:58,778 --> 01:09:09,218
+Assert equal. Uh.
+
+510
+01:09:12,788 --> 01:09:19,098
+The hashes. Ash.
+
+511
+01:09:20,238 --> 01:09:45,588
+Ash bites. And then assert.
+
+512
+01:09:49,008 --> 01:09:56,218
+That the. If we pull from. The HashMap.
+
+513
+01:09:57,108 --> 01:10:03,688
+The value. Insert equal.
+
+514
+01:10:06,148 --> 01:10:11,428
+Hash. Map. Get. Hash.
+
+515
+01:10:13,438 --> 01:10:21,428
+Is equal to hash bytes. Doesn't like it.
+
+516
+01:10:25,918 --> 01:10:34,008
+Oh, okay. Um, it's. We don't need that.
+
+517
+01:10:37,058 --> 01:10:42,478
+Yeah. Still unhappy.
+
+518
+01:10:48,738 --> 01:10:51,958
+The trait poor is not implemented for standard string. String.
+
+519
+01:10:53,658 --> 01:11:09,078
+So is it like that? Expected option vec equal expected option FAC found U8 16.
+
+520
+01:11:11,168 --> 01:11:23,358
+Hash bites. So the get you get back the option get gives you back an option.
+
+521
+01:11:26,488 --> 01:11:40,398
+Assert equal. So I say some. Hmhm VQ.
+
+522
+01:11:40,538 --> 01:11:49,598
+That's not the same thing. Expected option.
+
+523
+01:11:49,598 --> 01:11:59,268
+Vacua eight found. Option.
+
+524
+01:12:11,488 --> 01:12:18,058
+Did I do this wrong? Director of humane.
+
+525
+01:12:23,128 --> 01:12:28,628
+Option. 16.
+
+526
+01:12:31,368 --> 01:12:35,908
+How do I compare? Characters.
+
+527
+01:12:36,588 --> 01:12:45,128
+Let's. To bite vectors.
+
+528
+01:13:00,628 --> 01:13:14,998
+Hmhm. Woof!
+
+529
+01:13:18,558 --> 01:13:24,768
+Write the following byte. String. Bite factor.
+
+530
+01:13:25,888 --> 01:13:41,358
+Directions inspired. So if I turn both of those.
+
+531
+01:13:43,058 --> 01:13:47,958
+Into strings. I assert that they're equal.
+
+532
+01:13:59,378 --> 01:14:09,038
+Unwrap. I'm gonna get one of these.
+
+533
+01:14:17,158 --> 01:14:24,508
+What it has. How do I do it?
+
+534
+01:14:26,098 --> 01:14:30,118
+Um. Rust. Turn by vector into strength.
+
+535
+01:14:32,558 --> 01:14:35,758
+From UTF eight string from effect u8.
+
+536
+01:14:35,768 --> 01:14:40,148
+Oh, okay. From.
+
+537
+01:14:41,508 --> 01:14:46,398
+UTF eight. If I just have bytes.
+
+538
+01:14:52,038 --> 01:15:00,408
+So string from UTF eight. Can I just do this from UTF eight HashMap?
+
+539
+01:15:05,668 --> 01:15:08,968
+Equal strength from utf8.
+
+540
+01:15:11,188 --> 01:15:25,128
+Hash bytes. So that. Try using a conversion method.
+
+541
+01:15:29,878 --> 01:15:34,288
+For example, two vac expected vac found.
+
+542
+01:15:36,608 --> 01:15:41,538
+A fake reference. Perfect slice.
+
+543
+01:15:45,368 --> 01:15:52,898
+I don't know what it's talking about. Uh, spoke to this truck and found a reference instead.
+
+544
+01:15:59,388 --> 01:16:06,158
+Or maybe it's this some. No, no.
+
+545
+01:16:06,168 --> 01:16:11,297
+Hold on. HashMap.
+
+546
+01:16:11,298 --> 01:16:21,398
+HashMap. HashMap. Not get.
+
+547
+01:16:40,798 --> 01:16:50,627
+Here's what I'm gonna do. I'm gonna go print line. HashMap dot.
+
+548
+01:16:50,628 --> 01:16:55,428
+Get hash. What does that do?
+
+549
+01:16:58,708 --> 01:17:02,668
+Nothing. Didn't actually print anything. I guess the output gets.
+
+550
+01:17:09,248 --> 01:17:13,118
+Suppressed. Hello.
+
+551
+01:17:28,058 --> 01:17:36,697
+For. Uh, cargo test.
+
+552
+01:17:36,698 --> 01:17:47,778
+Get standard out. No capture.
+
+553
+01:18:01,538 --> 01:18:08,298
+What? Test fails.
+
+554
+01:18:14,018 --> 01:18:17,828
+Doesn't like it, because why? Unexpected argument.
+
+555
+01:18:17,848 --> 01:18:22,618
+No Captcha found. Wait, no, that's. And then I went like this.
+
+556
+01:18:24,118 --> 01:18:27,178
+And then. Warning warning warning warning warning.
+
+557
+01:18:29,368 --> 01:18:34,968
+Unrecognized option no capture. Since from 2014.
+
+558
+01:18:34,978 --> 01:18:39,418
+Oh. Cargo test. No capture. No capture.
+
+559
+01:18:39,418 --> 01:18:44,028
+No longer works. Is it no capture like this?
+
+560
+01:18:44,038 --> 01:18:47,918
+Uh. That's why. Okay. Uh.
+
+561
+01:18:48,538 --> 01:18:57,008
+Uh. Okay. So I get back some and then I get the bites.
+
+562
+01:18:59,708 --> 01:19:07,478
+And I basically just want to compare. Two vectors get unwrapped.
+
+563
+01:19:12,318 --> 01:19:17,358
+And then I'm also going to. Write.
+
+564
+01:19:19,608 --> 01:19:25,938
+The hash bytes. Those look the same.
+
+565
+01:19:27,918 --> 01:19:31,238
+How do I know? Although.
+
+566
+01:19:31,758 --> 01:19:35,388
+Hold on, hold on, hold on. Are they the same?
+
+567
+01:19:37,908 --> 01:19:44,268
+Why does this look slightly longer? 123456789 1011 1213.
+
+568
+01:19:44,268 --> 01:19:49,037
+14. 1516. 123456789 ten.
+
+569
+01:19:49,038 --> 01:19:52,308
+11. 12. 13. 14. 15. 16.
+
+570
+01:19:52,848 --> 01:19:59,628
+Yeah. 16. Okay. It's just. My eyes are deceiving me. So we've got two vectors.
+
+571
+01:20:01,308 --> 01:20:05,298
+How do I compare them? Uh. What? I didn't mean to copy the link.
+
+572
+01:20:05,778 --> 01:20:11,058
+Rust test. Compare two byte vectors.
+
+573
+01:20:34,588 --> 01:20:38,548
+Uh. Okay. Can I generate?
+
+574
+01:20:41,098 --> 01:20:53,168
+Print line. String from Utf8 hash bytes.
+
+575
+01:20:53,558 --> 01:21:01,538
+Can I do that? No, because.
+
+576
+01:21:02,778 --> 01:21:07,098
+Can't use the default formatter. Can I do this?
+
+577
+01:21:09,708 --> 01:21:17,658
+No, because it expects vacua and it found whatever this is.
+
+578
+01:21:19,008 --> 01:21:26,238
+I don't know what that is. What is in rust?
+
+579
+01:21:30,968 --> 01:21:38,898
+This thing says it's a fixed size array. That's not the same thing as a vector.
+
+580
+01:21:44,028 --> 01:21:50,768
+Let's raise interest. Fixed size.
+
+581
+01:21:51,098 --> 01:21:56,308
+Oh. So maybe.
+
+582
+01:21:56,518 --> 01:22:01,348
+Yeah. What? I should be returning the HashMap hash map.
+
+583
+01:22:02,208 --> 01:22:07,528
+Okay. Rest hash map to array HashMap.
+
+584
+01:22:07,528 --> 01:22:10,798
+No half HashMap mapping to array.
+
+585
+01:22:14,188 --> 01:22:23,018
+Can I? And.
+
+586
+01:22:29,748 --> 01:22:38,508
+HashMap. This is a single byte.
+
+587
+01:23:00,058 --> 01:23:05,008
+HashMap to byte array. Rust.
+
+588
+01:23:11,558 --> 01:23:17,948
+No no no no no. No.
+
+589
+01:23:21,028 --> 01:23:28,917
+Keys. Read the suggestion, try read the suggestion.
+
+590
+01:23:28,918 --> 01:23:32,788
+Try with two vec says Smurf d where's the suggestion?
+
+591
+01:23:34,528 --> 01:23:40,678
+Try using a conversion method to vec. Okay, maybe I'm freaking out.
+
+592
+01:23:42,838 --> 01:23:48,238
+Two vec. Okay, UTF eight error.
+
+593
+01:23:49,438 --> 01:23:54,598
+Uh, so it doesn't know how to do that string.
+
+594
+01:23:57,458 --> 01:24:06,488
+Two vac. Um, comparing byte arrays in rust with strings.
+
+595
+01:24:26,398 --> 01:24:35,048
+Does this. Can I, like, go? Instead of string to back like that?
+
+596
+01:24:35,068 --> 01:24:52,088
+Can I go? Mhm.
+
+597
+01:24:52,558 --> 01:24:58,728
+Okay. Now assert equal.
+
+598
+01:25:02,128 --> 01:25:11,728
+HashMap. Star Ash by Star two back.
+
+599
+01:25:17,068 --> 01:25:22,828
+Incredible. Somehow that does it.
+
+600
+01:25:25,048 --> 01:25:28,648
+So silly. Okay, so let's document what we're doing.
+
+601
+01:25:29,218 --> 01:25:32,548
+Let's ensure that we've properly, um.
+
+602
+01:25:34,078 --> 01:25:48,478
+Uh. Uh, compute the, um, byte representation of the hash, which we should and assert.
+
+603
+01:25:50,878 --> 01:25:57,028
+And ensure. It matches our expectations.
+
+604
+01:26:02,178 --> 01:26:10,158
+I even think we don't need this anymore. We don't need the static fight list.
+
+605
+01:26:13,368 --> 01:26:26,208
+What we'll do is. And then we don't need zip. That's what we'll do for hash and expected hashes.
+
+606
+01:26:32,298 --> 01:26:41,858
+And then. Well.
+
+607
+01:26:49,388 --> 01:27:01,858
+Assert, like we'll say, let hash bytes equal that and then assert that that's what was stored.
+
+608
+01:27:02,338 --> 01:27:07,018
+Yeah. Okay. Sure.
+
+609
+01:27:08,038 --> 01:27:12,178
+It is what the hash has been mapped to.
+
+610
+01:27:13,978 --> 01:27:22,738
+String hash has been mapped to, uh, comparing byte vectors is.
+
+611
+01:27:24,798 --> 01:27:38,598
+But isn't something that apparently string comparison is how rust byte vectors can be compared in tests.
+
+612
+01:27:40,808 --> 01:27:58,088
+All right. I'm sure we got the expected number of hashes out, despite all the, uh, noise and, um, red herrings around them.
+
+613
+01:28:02,948 --> 01:28:06,848
+I guess that's not necessary to mention. And then.
+
+614
+01:28:10,628 --> 01:28:14,588
+Test. Simple. Do a simple one. Let's do another one.
+
+615
+01:28:16,868 --> 01:28:31,928
+This one? Uh, there won't be any. Simple empty expected hashes, so there shouldn't be any.
+
+616
+01:28:37,138 --> 01:28:40,738
+Oh, it shouldn't be called shader. What am I doing? Shader. Let, um.
+
+617
+01:28:43,168 --> 01:28:54,008
+Filter. Adult contents. And a cert.
+
+618
+01:28:56,438 --> 01:29:02,288
+We got none out. You should not have found any ashes.
+
+619
+01:29:07,348 --> 01:29:10,648
+Okay. Um.
+
+620
+01:29:12,978 --> 01:29:16,848
+It's 234. How much time until my next meeting?
+
+621
+01:29:22,288 --> 01:29:26,818
+Got a little bit of time. I kind of want to keep going just a little bit.
+
+622
+01:29:28,188 --> 01:29:34,188
+Let us see if we can generate the adult set.
+
+623
+01:29:34,608 --> 01:29:38,178
+And what we'll do is we're just going to generate a string and return it.
+
+624
+01:29:40,518 --> 01:29:44,088
+So, um, Rust's stringbuilder pattern.
+
+625
+01:29:44,718 --> 01:29:52,488
+What do they have for Stringbuilder? Uh, rest string building.
+
+626
+01:30:26,838 --> 01:30:37,067
+A vector of strings is probably fine. Um, okay.
+
+627
+01:30:37,068 --> 01:30:45,068
+So let's, um. Output equal a new vector.
+
+628
+01:30:46,448 --> 01:30:49,498
+And then we're going to push.
+
+629
+01:30:52,088 --> 01:30:58,208
+String from and then the static.
+
+630
+01:31:02,968 --> 01:31:06,268
+Value that we had was while playground.
+
+631
+01:31:11,698 --> 01:31:21,998
+Static byte hashes. Uh.
+
+632
+01:31:22,328 --> 01:31:26,438
+All set. Equals that.
+
+633
+01:31:29,648 --> 01:31:36,148
+And then. For.
+
+634
+01:31:38,578 --> 01:31:43,467
+Each of the values we're going to, uh, iterate the HashMap.
+
+635
+01:31:43,468 --> 01:31:54,548
+Uh rust HashMap iterator. And that will give us.
+
+636
+01:32:03,088 --> 01:32:12,098
+At her. What is the key and the value?
+
+637
+01:32:12,128 --> 01:32:18,617
+What? HashMap.
+
+638
+01:32:18,618 --> 01:32:35,418
+Iterator. Okay.
+
+639
+01:32:35,448 --> 01:32:40,138
+So for. Uh.
+
+640
+01:32:42,238 --> 01:32:50,848
+String hash bytes in HashMap.
+
+641
+01:32:55,088 --> 01:33:01,748
+Can I go? Output dot push string from string hash.
+
+642
+01:33:05,538 --> 01:33:08,928
+Um, can I do formatting?
+
+643
+01:33:10,158 --> 01:33:21,988
+Be nice if I could do formatting. Um.
+
+644
+01:33:24,298 --> 01:33:39,468
+So on. Uh. Probably just do string hash.
+
+645
+01:33:42,078 --> 01:33:45,888
+I'll do one, two, three, four spaces.
+
+646
+01:33:46,548 --> 01:33:55,188
+And then. Let's just say for now string hash.
+
+647
+01:33:55,518 --> 01:34:04,978
+String hash. Okay.
+
+648
+01:34:05,788 --> 01:34:09,448
+Hope you don't have to borrow. Just take the output.
+
+649
+01:34:12,298 --> 01:34:21,008
+And then output. Oh.
+
+650
+01:34:21,028 --> 01:34:25,838
+Uh uh. Return output.
+
+651
+01:34:28,118 --> 01:34:42,968
+Dot, join. You need to join them. Okay, now, whenever I say generate old set.
+
+652
+01:34:43,508 --> 01:34:47,848
+How about if I say print line? Adult set?
+
+653
+01:34:51,428 --> 01:34:55,688
+What's that going to do? Oh. I'm sorry. Instead of running the test.
+
+654
+01:34:56,318 --> 01:35:00,188
+Let's just run the executable and see what happens. Cargo run.
+
+655
+01:35:03,368 --> 01:35:06,908
+Okay, so I think we need some new lines in here.
+
+656
+01:35:15,488 --> 01:35:21,188
+Right. That's correct. And then we're going to instead of using the string hash we use the bytes.
+
+657
+01:35:23,018 --> 01:35:26,048
+And I need to do that thing where I like.
+
+658
+01:35:28,898 --> 01:35:32,018
+Star. All right. Ampersand.
+
+659
+01:35:32,288 --> 01:35:35,768
+Star. No.
+
+660
+01:35:37,108 --> 01:35:41,498
+VEC cannot be formatted. Um.
+
+661
+01:35:47,668 --> 01:35:57,848
+That's more like it. That's looking good. And then we put a comma.
+
+662
+01:36:01,218 --> 01:36:11,178
+And then we close it. Right.
+
+663
+01:36:11,688 --> 01:36:16,728
+That's what. I hash.
+
+664
+01:36:18,228 --> 01:36:22,968
+Yeah. So that looks good to me.
+
+665
+01:36:30,418 --> 01:36:33,988
+So we get all the stuff and then we're we get.
+
+666
+01:36:34,228 --> 01:36:43,958
+We get our definition here. And so. Uh, then let's let's write it.
+
+667
+01:36:44,258 --> 01:36:48,478
+Um, let's quickly write some, uh, rust file.
+
+668
+01:36:48,488 --> 01:36:53,018
+I, uh, write file. Standard at this, right?
+
+669
+01:36:53,018 --> 01:36:56,518
+I want to write a file. Right.
+
+670
+01:37:11,138 --> 01:37:15,258
+Sir. Write some bytes to a file.
+
+671
+01:37:15,278 --> 01:37:20,048
+Write a buffer. It's like a rest write string to file.
+
+672
+01:37:25,118 --> 01:37:29,708
+Write a file. Incredible.
+
+673
+01:37:29,838 --> 01:37:34,878
+This is what I want. I want to do, right.
+
+674
+01:37:37,518 --> 01:37:42,288
+Adult sex, adults said.
+
+675
+01:37:47,278 --> 01:37:56,338
+Boom! Adult set. Hey, hey. All right, now, if I load adult set into our playground.
+
+676
+01:38:04,978 --> 01:38:11,528
+Hmhm mismatch types. I don't know if the size of 220.
+
+677
+01:38:13,748 --> 01:38:18,428
+000. Woops. More than six.
+
+678
+01:38:19,298 --> 01:38:22,958
+More than six. Um.
+
+679
+01:38:27,018 --> 01:38:32,798
+Don't know. Do we have to? Declare how many hoops?
+
+680
+01:38:38,078 --> 01:38:46,398
+Well, it like this now. The size cannot be known at compile time.
+
+681
+01:38:46,998 --> 01:38:51,648
+So I guess I can know. I could say like. All right.
+
+682
+01:38:54,778 --> 01:38:58,108
+String from format.
+
+683
+01:39:02,718 --> 01:39:07,358
+Where, say. HashMap learn.
+
+684
+01:39:13,158 --> 01:39:24,258
+Closing delimiter. What does that look like now?
+
+685
+01:39:31,398 --> 01:39:36,048
+Hooray! Hooray! Okay, we've got our thing now.
+
+686
+01:39:36,058 --> 01:39:45,618
+Um, I think we want to not necessarily write that in the same directory we want to write that into.
+
+687
+01:39:51,668 --> 01:40:03,008
+Um. What was the example that we were looking at?
+
+688
+01:40:03,038 --> 01:40:06,748
+It was, uh, import site lists? No, not import site list.
+
+689
+01:40:06,758 --> 01:40:20,538
+It was. Generate test data and where how does it write it stuff out?
+
+690
+01:40:26,538 --> 01:40:32,918
+File it creates. Just test data.
+
+691
+01:40:35,258 --> 01:40:39,578
+Out. Put it in the test data file. Okay.
+
+692
+01:40:58,378 --> 01:41:02,738
+Test data. Relevancy.
+
+693
+01:41:15,968 --> 01:41:30,948
+Okay. I kind of wonder.
+
+694
+01:41:33,378 --> 01:41:38,868
+If instead of writing to a file, this should just write to standard out.
+
+695
+01:41:48,598 --> 01:41:58,238
+It's like so that. The caller is responsible for piping it to the right place.
+
+696
+01:42:04,758 --> 01:42:11,468
+Oh. So then if I go.
+
+697
+01:42:14,408 --> 01:42:19,448
+Lib or source at all, set that Rs.
+
+698
+01:42:22,798 --> 01:42:32,028
+Then. Okay?
+
+699
+01:42:32,448 --> 01:42:37,608
+Yeah. We don't want all that stuff. We just want this stuff so I can get.
+
+700
+01:42:37,728 --> 01:42:45,768
+Start getting getting rid of the logging. Uh.
+
+701
+01:43:06,078 --> 01:43:11,588
+Yeah. Now this might need to have like a license preamble.
+
+702
+01:43:11,668 --> 01:43:17,658
+Do we need to put a license preamble? Yeah.
+
+703
+01:43:22,138 --> 01:43:26,008
+Generate adults. Uh uh. Site list.
+
+704
+01:43:31,348 --> 01:43:34,707
+All right. This is the last thing I'll do. But.
+
+705
+01:43:34,708 --> 01:43:39,508
+License. Preamble. Equal.
+
+706
+01:43:52,028 --> 01:44:07,178
+Computer crash since. Cannot compile.
+
+707
+01:44:08,788 --> 01:44:15,678
+Expected stir found. Stir. Two strip.
+
+708
+01:44:23,198 --> 01:44:34,478
+There we go. That's looking pretty good. Hey, now we've got a thing that we can potentially now import into this library.
+
+709
+01:44:34,838 --> 01:44:37,958
+Like, we've kind of bootstrapped ourselves. An adult set here.
+
+710
+01:44:38,948 --> 01:44:42,938
+Now we can start, like, building it in for, like, the add and remove parts.
+
+711
+01:44:43,538 --> 01:44:51,608
+Okay. So I'm going to end it there. Uh, hey, thanks for watching episode 399 of the Joy of coding.
+
+712
+01:44:51,848 --> 01:44:55,568
+Next week is episode 400. Holy cow. What regular do.
+
+713
+01:44:55,598 --> 01:45:00,848
+I don't know. I don't know. Um, we got we got some rust written.
+
+714
+01:45:01,538 --> 01:45:04,928
+Maybe we'll we'll keep going, but maybe I'll wear a funny hat.
+
+715
+01:45:04,958 --> 01:45:10,528
+I have no idea. Maybe I'll be resting while eating spicy wings.
+
+716
+01:45:10,918 --> 01:45:16,638
+That's always a hit. Um, maybe M will show up and we'll do a dance.
+
+717
+01:45:16,848 --> 01:45:21,768
+Um, send your ideas in anyways. Thanks again for watching episode 399 of the Joy of coding.
+
+718
+01:45:21,768 --> 01:45:24,797
+My name is my colleague. Let me know. We thought there's a link here. To rate this episode.
+
+719
+01:45:24,798 --> 01:45:29,868
+I'm going to drop a link into the chat link to rate this episode.
+
+720
+01:45:30,918 --> 01:45:34,608
+It's going into the chat. Um, yeah.
+
+721
+01:45:34,608 --> 01:45:37,907
+And, uh, you can send in questions that way.
+
+722
+01:45:37,908 --> 01:45:42,797
+You can, uh, you can? Yeah. Let me know what you thought. And with that, I'll call it there.
+
+723
+01:45:42,798 --> 01:45:46,038
+Thanks, everybody. Have yourselves a great week. See you next week.
+
+724
+01:45:46,338 --> 01:45:54,218
+Take care. Bye bye. The joy of coding.
+
+725
+01:45:54,398 --> 01:45:54,788
+See it?
+
+</pre>
+        </div>
+    </article>
+</body>
+</html>
