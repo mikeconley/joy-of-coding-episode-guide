@@ -55,13 +55,13 @@ def get_panopto_session(server, session_id, access_token):
         "Authorization": f"Bearer {access_token}"
     }
 
-    log.info(f"Fetching session data from {api_url}")
+    log.debug(f"Fetching session data from {api_url}")
     response = get(api_url, headers=headers)
     response.raise_for_status()
 
     return response.json()
 
-def get_panopto_folder_sessions(server, folder_id, access_token):
+def get_panopto_folder_sessions(server, folder_id, access_token, limit=0):
     headers = {
         "Authorization": f"Bearer {access_token}"
     }
@@ -122,7 +122,7 @@ def get_panopto_folder_sessions(server, folder_id, access_token):
             if len(all_sessions) >= total_results:
                 break
 
-        if len(results) < page_size:
+        if len(results) < page_size or (limit > 0 and len(results) > limit):
             break
 
         page += 1
@@ -210,15 +210,24 @@ def process_session(config, session_data, video_url, force_overwrite=False):
     log.info(f"Transcript successfully saved to {output_path}")
     return True
 
-def check_non_public_sessions(config, sessions):
-    non_public_urls = []
+def check_unavailable_sessions(server, sessions, access_token):
+    unavailable_urls = []
     for session in sessions:
-        is_public = session.get('IsPublic', False)
-        if not is_public:
-            viewer_url = session.get('Urls', {}).get('ViewerUrl')
-            if viewer_url:
-                non_public_urls.append(viewer_url)
-    return non_public_urls
+        session_id = session.get('Id')
+        viewer_url = session.get('Urls', {}).get('ViewerUrl')
+
+        if not session_id or not viewer_url:
+            continue
+
+        try:
+            get_panopto_session(server, session_id, access_token)
+        except Exception as e:
+            if hasattr(e, 'response') and e.response.status_code == 404:
+                unavailable_urls.append(viewer_url)
+            else:
+                raise
+
+    return unavailable_urls
 
 def main(options):
     with open(CONFIG_FILE) as f:
@@ -233,33 +242,41 @@ def main(options):
     )
     log.info("Successfully obtained access token")
 
-    if options.check_for_non_public:
+    if options.limit > 0:
+        log.debug(f"Limiting to {options.limit} sessions")
+
+    if options.check_for_not_available:
         if options.folder_id:
             sessions = get_panopto_folder_sessions(
                 config['panopto_server'],
                 options.folder_id,
-                access_token
+                access_token,
+                options.limit
             )
-            non_public_urls = check_non_public_sessions(config, sessions)
-            for url in non_public_urls:
-                print(url)
-            return 0
+        elif options.url_file:
+            sessions = []
+            with open(options.url_file, 'r') as f:
+                for line in f:
+                    url = line.strip()
+                    if not url or url.startswith('#'):
+                        continue
+                    session_id = extract_panopto_session_id(url)
+                    if session_id:
+                        sessions.append({'Id': session_id, 'Urls': {'ViewerUrl': url}})
+                    else:
+                        log.warning(f"Could not extract session ID from URL: {url}")
         else:
             session_id = extract_panopto_session_id(options.vid_url)
             if not session_id:
                 log.error(f"Could not extract session ID from URL: {options.vid_url}")
                 return 1
+            sessions = [{'Id': session_id, 'Urls': {'ViewerUrl': options.vid_url}}]
 
-            session_data = get_panopto_session(
-                config['panopto_server'],
-                session_id,
-                access_token
-            )
-
-            is_public = session_data.get('IsPublic', False)
-            if not is_public:
-                print(options.vid_url)
-            return 0
+        print("Not available videos:\n")
+        unavailable_urls = check_unavailable_sessions(config['panopto_server'], sessions, access_token)
+        for url in unavailable_urls:
+            print(url)
+        return 0
 
     if options.folder_id:
         sessions = get_panopto_folder_sessions(
@@ -327,6 +344,10 @@ if __name__ == "__main__":
         "--folder-id",
         type=str,
         help="Panopto folder ID to process all sessions from")
+    group.add_argument(
+        "--url-file",
+        type=str,
+        help="File containing list of video URLs (one per line)")
 
     parser.add_argument(
         "--verbose",
@@ -337,9 +358,14 @@ if __name__ == "__main__":
         action="store_true",
         help="Overwrite existing transcript files")
     parser.add_argument(
-        "--check-for-non-public",
+        "--check-for-not-available",
         action="store_true",
-        help="Check if video(s) are non-public and echo URL(s) if so")
+        help="Check if video(s) return 404s and echo URL(s) if so")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=0,
+        help="Debug tool for --folder-id that limits the number of sessions to process")
 
     options, extra = parser.parse_known_args(argv[1:])
 

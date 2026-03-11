@@ -1,0 +1,106 @@
+**Reminder - no plan survives breakfast.**
+
+[Episode guide](https://mikeconley.github.io/joy-of-coding-episode-guide/)
+
+- Feel free to send [pull requests](https://help.github.com/articles/about-pull-requests/) to the [repo](https://github.com/mikeconley/joy-of-coding-episode-guide)!
+- [Here’s a contributing guide!](https://github.com/mikeconley/joy-of-coding-episode-guide/blob/master/CONTRIBUTING.md)
+- [Here’s the guide for creating pull requests that smurfd used and recommends](https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/%20)!
+
+**Today**
+
+- Brought to you by [HTTP Error Code 431](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/431)!
+    - ![eb1d09bad5e8b6ea5419fcf8f1fca2a7.png](images/6b2852e03a62474293c223c1c94a3205)
+        - via [keanu.codes](https://www.keanu.codes)
+- Today will be a slightly shorter episode.
+- No episode next week!
+- Is it cleaner to just create a specialized protocol handler for cached newtab resources in this configuration?
+
+&nbsp;
+
+```HTML
+<html>
+<head>
+<title>New Tab</title>
+  <script src="moz-newtab-cached://script.js"></script>
+  <link rel="stylesheet" href="moz-newtab-cached://styles.css" />
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
+
+
+```
+
+Add a moz-newtab-cached protocol handler that can run in the privileged about content process.
+
+It's job will be to get a remote stream from the parent for script, or for styles.
+
+When the parent receives the request, the parent will get the hash value from prefs.  
+Will retrieve the cache entry for the particular resource - like, moz-newtab-cached://script.js - and check that the hash matches the expectation. If not, blow away all caches, fallback to streaming out the packaged script.
+
+After retrieving the stream, kick off a DeferredTask that will eventually kick a check to see  
+if we need to refresh the cache. Once that fires, check RemoteSettings to see if the hash and/or  
+version has changed.
+
+If the hash and/or version has changed, download them and stream them into the cache:
+
+Writing to the cache. When it's time to write to the cache:
+
+- Recreate the entries for script and styles, and hold onto the new references.
+- Write the new hash into prefs.
+- Set the metadata to include the hash and version numbers.
+- Begin streaming, this puts the entries into WRITING mode.
+- Parallel stream scripts and styles into the cache output streams
+    - If either fail, doom the cache entry. Clear the pref value for the hash. Try again later.
+
+moz-newtab-cached protocol has one job: get a remote stream from the parent that will either pull from the valid cache entry OR will fallback to the built-in one. Which means that we have a bit of separation here:
+
+moz-newtab-cached protocol handler is the "read-only" parts here. It just knows how to read from the cache. It does not know how to write to it. It knows how to fall back.
+
+The other part is the business around noticing that a newtab loaded, and kicking off the DeferredTask to maybe write an update to the cache.
+
+**[Rate this episode](https://forms.gle/ZkVYmmZskFNaaNFV7)**
+
+**Chat**
+
+- [Join us in the Livehacking room on Mozilla’s Matrix instance!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist) Here’s [documentation on how to join](https://wiki.mozilla.org/Matrix). I’m only sorta monitoring the Twitch chat. A bot will try to bridge Matrix and Twitch (joc-bridgebot).
+
+**Links**
+
+- [Nathan Baggs](https://www.youtube.com/@nathanbaggs/videos)
+- [Felicia Bacon](https://www.youtube.com/channel/UCMtqVykGztIYmj7OpFf7oeQ/videos)
+- [nbp hacks on the SpiderMonkey JS engine](https://www.twitch.tv/BackToTheCode)
+- [Alessandro Castellani has been streaming himself livehacking on Thunderbird](https://www.youtube.com/c/AlessandroCastellani/videos)
+- [emilio hacks on Firefox!](https://www.youtube.com/channel/UCYbsdvH4_52BFAijFVgYGgA)
+- [Compiler Compiler - watch a Mozilla engineer hack on the SpiderMonkey JavaScript engine!](https://www.twitch.tv/codehag)
+- [How mconley uses Mercurial](https://mikeconley.github.io/documents/How_mconley_uses_Mercurial_for_Mozilla_code)
+- [Andreas Kling hacks on a custom browser engine for a hand-rolled OS called SerenityOS](https://www.youtube.com/playlist?list=PLMOpZvQB55be0Nfytz9q2KC_drvoKtkpS)
+- [The Joy of Coding: Community-Run Episode guide](https://mikeconley.github.io/joy-of-coding-episode-guide/)
+    - Feel free to send [pull requests](https://help.github.com/articles/about-pull-requests/) to the [repo](https://github.com/mikeconley/joy-of-coding-episode-guide)!
+    - [Here’s the guide for creating pull requests that smurfd used and recommends](https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/%20)!
+- [I've been mirroring the episodes to YouTube](https://www.youtube.com/playlist?list=PLmaFLMwlbk8wKMvfEEzp9Hfdlid8VYpL5)
+- [Code Therapy with Danny O’Brien](https://www.youtube.com/channel/UCDShi-SQdFVRnQrMla9G_kQ)
+- Watch a developer put together a Windows game from scratch (no third-part engines) - really great explanations: https://handmadehero.org/
+- [/r/WatchPeopleCode](https://www.reddit.com/r/WatchPeopleCode) for more livehacking!
+
+**Glossary**
+
+- BHR - “Background Hang Reporter”, a thing that records information about when Firefox performs poorly and sends it over Telemetry
+- e10s ("ee ten ESS") - short for [Electrolysis, which is the multi-process Firefox project](https://wiki.mozilla.org/Electrolysis)
+- CPOW ("ka-POW" or sometimes "SEE-pow") = Cross-Process Object Wrapper. [See this blog post.](http://mikeconley.ca/blog/2015/02/17/on-unsafe-cpow-usage-in-firefox-desktop-and-why-is-my-nightly-so-sluggish-with-e10s-enabled/)
+- Deserialize - "turn a serialized object back into the complex object”
+- Serialize - "turn a complex object into something that can be represented as primitives, like strings, integers, etc
+- Regression - something that made behaviour worse rather than better. Regress means to “go backward”, more or less.
+- l10n - localization
+- a11y - accessibility
+- i18n - internationalization
+- k8s - kubernetes
+
+**Feedback**
+
+- [@mconley@mozilla.social on Mastodon](https://mozilla.social/@mconley)
+- [@mike_conley on Twitter](https://twitter.com/mike_conley)
+- You can chat with me on [Matrix](https://wiki.mozilla.org/Matrix) at @mconley:mozilla.org
+- [mikeconley.ca/blog](http://mikeconley.ca/blog/)
+- mconley at mozilla dot com
