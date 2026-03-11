@@ -19,7 +19,7 @@ If you're new to Git, here's some resources to help you:
    cd /path/to/joy-of-coding-episode-guide
    ```
 0. Update your master branch
-   
+
    ```
    git pull upstream master
    ```
@@ -39,19 +39,19 @@ If you're new to Git, here's some resources to help you:
    date: YYYY-MM-DD
    number: 1234
    ---
-   
+
    ## Episode 1234: MMM DD, YYYY
 
    ### Links
-   
+
    ### Topics
-   
+
    ### Other
    ```
 0. Edit your `index.md` as needed. You can look other episodes' files to see an
    example.
 0. Save your changes to your fork
-   
+
    ```
    git add 1234
    git commit -m "add episode 1234
@@ -67,10 +67,11 @@ If you're new to Git, here's some resources to help you:
    ```
    cd /path/to/joy-of-coding-episode-guide
    ```
-0. Install the dependencies 
+0. Install the dependencies
 
    ```
-   bundle install --path vendor/bundle
+   bundle config set path 'vendor/bundle'
+   bundle install
    ```
 0. Run Jekyll
 
