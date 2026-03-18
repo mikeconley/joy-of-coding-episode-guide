@@ -8,16 +8,22 @@
 
 **Today**
 
-- No HTTP error code 432 in the standard
-- Let's get the episode guide up-to-date!
-    - Also I can talk about the local search engine thing
-- Let's clean up our new implementation for the newtab remote renderer coordinator, do proper version checks, and add the DeferredTask for updating from RemoteSettings.
-    - [x] Use Services.vc.compare to compare version numbers to always ensure that the highest version number wins between bundled and cached renderer
-    - [x] Add a DeferredTask mechanism to update from RemoteSettings
-- TODO:
-    - Post Episode 423 to YouTube. It's missing!
+- Go through more review feedback on the remote renderer
+- Do some reviews
+- A very cool Kit wallpaper
+    - https://drive.google.com/file/d/1vLL_Q_Gq5zjle1gUUjUGGhFLVtGOSJBa/view
+- Q: 
+    
+    "I don't have a technical question rather ask for guidance. I'm a recent CS grad and am working for a small company in Analytics. One of the reason why I got into tech was to build great products and try to solve people's problems with the help of coding. I was always inspired by the work Apple does with their devices and that's my end goal. With the introduction of AI, and how much of AI is being used at my workplace as well, I don't know if its still important to learn to code. I pretty much don't know the syntax of but I do know what I'm looking for in terms of the solutions that I'm building towards.
+    
+    What advice would you give someone who would want to have strong fundamentals and grasp of all things software engineering especially for someone who is just starting career out in the tech field. Its scary sometimes thinking about it.
+    
+    I'd love to hear your thoughts, &lt;email address&gt;"
+    
 
-**[Rate this episode](https://forms.gle/uxusn4rxdiKjL6Ki9)**
+&nbsp;
+
+**[Rate this episode](https://forms.gle/vfQCHugyqakFRWwb9)**
 
 **Chat**
 
@@ -30,8 +36,7 @@
 - [nbp hacks on the SpiderMonkey JS engine](https://www.twitch.tv/BackToTheCode)
 - [Alessandro Castellani has been streaming himself livehacking on Thunderbird](https://www.youtube.com/c/AlessandroCastellani/videos)
 - [emilio hacks on Firefox!](https://www.youtube.com/channel/UCYbsdvH4_52BFAijFVgYGgA)
-- [Compiler Compiler - watch a Mozilla engineer hack on the SpiderMonkey JavaScript engine!](https://www.twitch.tv/codehag)
-- [How mconley uses Mercurial](https://mikeconley.github.io/documents/How_mconley_uses_Mercurial_for_Mozilla_code)
+- [Compiler Compiler - watch a Mozilla engineer hack on the SpiderMonkey JavaScript engine!](https://www.twitch.tv/codehag)[](https://mikeconley.github.io/documents/How_mconley_uses_Mercurial_for_Mozilla_code)
 - [Andreas Kling hacks on a custom browser engine for a hand-rolled OS called SerenityOS](https://www.youtube.com/playlist?list=PLMOpZvQB55be0Nfytz9q2KC_drvoKtkpS)
 - [The Joy of Coding: Community-Run Episode guide](https://mikeconley.github.io/joy-of-coding-episode-guide/)
     - Feel free to send [pull requests](https://help.github.com/articles/about-pull-requests/) to the [repo](https://github.com/mikeconley/joy-of-coding-episode-guide)!
@@ -56,7 +61,7 @@
 
 **Feedback**
 
-- [@mconley@fosstodon.org on Mastodon](https://fosstodon.org/@mconley/) [](https://twitter.com/mike_conley)
+- [https://fosstodon.org/@mconley/ on Mastodon](https://fosstodon.org/@mconley/)[](https://twitter.com/mike_conley)
 - You can chat with me on [Matrix](https://wiki.mozilla.org/Matrix) at @mconley:mozilla.org
 - [mikeconley.ca/blog](http://mikeconley.ca/blog/)
 - mconley at mozilla dot com

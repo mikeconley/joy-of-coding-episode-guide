@@ -8,16 +8,16 @@
 
 **Today**
 
-- No HTTP error code 432 in the standard
-- Let's get the episode guide up-to-date!
-    - Also I can talk about the local search engine thing
-- Let's clean up our new implementation for the newtab remote renderer coordinator, do proper version checks, and add the DeferredTask for updating from RemoteSettings.
-    - [x] Use Services.vc.compare to compare version numbers to always ensure that the highest version number wins between bundled and cached renderer
-    - [x] Add a DeferredTask mechanism to update from RemoteSettings
-- TODO:
-    - Post Episode 423 to YouTube. It's missing!
+- No keanu.codes today, or for the next while.
+- New QR Code sharing mechanism from overholt!
+- Let's merge in the rest of the episode guide pull requests
+- I made Episode 419 available. Strangely, was marked as "private"? I made it public.
+    - https://www.youtube.com/watch?v=F-FuliHCoy8&feature=youtu.be
+- Let's look at the patches in https://bugzilla.mozilla.org/show_bug.cgi?id=2011754
+- A bug I filed about vertical tabs and DevTools zoom level: https://bugzilla.mozilla.org/show_bug.cgi?id=2019067
+- [Bug 2024348 - Make it possible backups to be created with an alternative ArchiveEncryptionState](https://bugzilla.mozilla.org/show_bug.cgi?id=2024348)
 
-**[Rate this episode](https://forms.gle/uxusn4rxdiKjL6Ki9)**
+**[Rate this episode](https://forms.gle/rn9d2bksX6gsBojS6)**
 
 **Chat**
 
@@ -30,8 +30,7 @@
 - [nbp hacks on the SpiderMonkey JS engine](https://www.twitch.tv/BackToTheCode)
 - [Alessandro Castellani has been streaming himself livehacking on Thunderbird](https://www.youtube.com/c/AlessandroCastellani/videos)
 - [emilio hacks on Firefox!](https://www.youtube.com/channel/UCYbsdvH4_52BFAijFVgYGgA)
-- [Compiler Compiler - watch a Mozilla engineer hack on the SpiderMonkey JavaScript engine!](https://www.twitch.tv/codehag)
-- [How mconley uses Mercurial](https://mikeconley.github.io/documents/How_mconley_uses_Mercurial_for_Mozilla_code)
+- [Compiler Compiler - watch a Mozilla engineer hack on the SpiderMonkey JavaScript engine!](https://www.twitch.tv/codehag)[](https://mikeconley.github.io/documents/How_mconley_uses_Mercurial_for_Mozilla_code)
 - [Andreas Kling hacks on a custom browser engine for a hand-rolled OS called SerenityOS](https://www.youtube.com/playlist?list=PLMOpZvQB55be0Nfytz9q2KC_drvoKtkpS)
 - [The Joy of Coding: Community-Run Episode guide](https://mikeconley.github.io/joy-of-coding-episode-guide/)
     - Feel free to send [pull requests](https://help.github.com/articles/about-pull-requests/) to the [repo](https://github.com/mikeconley/joy-of-coding-episode-guide)!
@@ -56,7 +55,7 @@
 
 **Feedback**
 
-- [@mconley@fosstodon.org on Mastodon](https://fosstodon.org/@mconley/) [](https://twitter.com/mike_conley)
+- [https://fosstodon.org/@mconley/ on Mastodon](https://fosstodon.org/@mconley/)[](https://twitter.com/mike_conley)
 - You can chat with me on [Matrix](https://wiki.mozilla.org/Matrix) at @mconley:mozilla.org
 - [mikeconley.ca/blog](http://mikeconley.ca/blog/)
 - mconley at mozilla dot com
