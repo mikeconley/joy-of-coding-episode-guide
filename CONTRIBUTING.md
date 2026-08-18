@@ -35,7 +35,6 @@ If you're new to Git, here's some resources to help you:
 
    ```
    ---
-   layout: default
    date: YYYY-MM-DD
    number: 1234
    ---
@@ -45,8 +44,6 @@ If you're new to Git, here's some resources to help you:
    ### Links
 
    ### Topics
-
-   ### Other
    ```
 0. Edit your `index.md` as needed. You can look other episodes' files to see an
    example.
