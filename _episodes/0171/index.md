@@ -17,8 +17,3 @@ number: 171
 * [Bug 1497996](https://bugzilla.mozilla.org/show_bug.cgi?id=1497996) - Persist Activity Stream DOM content to disk at shutdown, and load that cache on start-up
 * Time travel debugging on Windows via Visual Studio
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://forms.gle/6JwENY8TLryUR3496)

@@ -23,8 +23,3 @@ number: 179
 * Mozilla will in the future, stop using [IRC](http://exple.tive.org/blarg/2019/04/26/synchronous-text/) as public chat platform, follow the [subject](http://exple.tive.org/blarg/category/irc/)
 * Mike is thinking of trying out [Matrix](http://www.matrix.org) for #Livehacking, get in touch with @mconley if you have used it
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://forms.gle/HTjMjNdRD73gRkii8)

@@ -17,8 +17,3 @@ number: 163
   - Figured this one out - [Read comment](https://bugzilla.mozilla.org/show_bug.cgi?id=1509250#c28)
   - Check on the try build before the end of the episode
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://goo.gl/forms/Ymr9QvxnolEtsqnQ2)
