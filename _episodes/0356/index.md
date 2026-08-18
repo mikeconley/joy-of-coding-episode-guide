@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2024-02-21
 number: 356
 ---

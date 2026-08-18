@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-07-08
 number: 221
 ---

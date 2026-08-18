@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-09-25
 number: 190
 ---

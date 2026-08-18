@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2017-04-12
 number: 97
 ---

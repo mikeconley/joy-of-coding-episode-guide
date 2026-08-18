@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-04-18
 number: 136
 ---

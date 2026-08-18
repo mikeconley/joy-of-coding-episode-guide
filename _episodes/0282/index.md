@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-03-09
 number: 282
 ---

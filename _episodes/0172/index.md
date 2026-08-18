@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-04-03
 number: 172
 ---

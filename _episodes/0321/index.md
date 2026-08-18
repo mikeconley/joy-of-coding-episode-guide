@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-04-12
 number: 321
 ---

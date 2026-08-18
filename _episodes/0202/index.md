@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-01-08
 number: 202
 ---

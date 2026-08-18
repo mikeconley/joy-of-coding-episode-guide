@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2024-03-13
 number: 359
 ---

@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2021-02-03
 number: 239
 ---

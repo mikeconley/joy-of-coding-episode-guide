@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-11-16
 number: 307
 ---

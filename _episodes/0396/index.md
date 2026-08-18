@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-03-19
 number: 396
 ---

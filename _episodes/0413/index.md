@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-08-13
 number: 413
 ---

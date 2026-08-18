@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-06-03
 number: 217
 ---

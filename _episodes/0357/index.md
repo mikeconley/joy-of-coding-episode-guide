@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2024-02-28
 number: 357
 ---

@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-07-12
 number: 332
 ---

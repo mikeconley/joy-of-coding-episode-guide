@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2026-01-21
 number: 426
 ---

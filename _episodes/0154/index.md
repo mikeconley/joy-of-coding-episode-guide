@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-10-24
 number: 154
 ---

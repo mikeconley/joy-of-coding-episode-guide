@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2024-04-03
 number: 361
 ---

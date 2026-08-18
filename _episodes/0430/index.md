@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2026-02-18
 number: 430
 ---

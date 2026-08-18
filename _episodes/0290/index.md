@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-06-01
 number: 290
 ---

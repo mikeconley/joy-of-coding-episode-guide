@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2021-11-10
 number: 269
 ---

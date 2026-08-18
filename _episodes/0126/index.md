@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-01-17
 number: 126
 ---

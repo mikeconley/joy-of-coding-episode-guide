@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-06-28
 number: 330
 ---

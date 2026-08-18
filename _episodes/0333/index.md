@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-07-26
 number: 333
 ---

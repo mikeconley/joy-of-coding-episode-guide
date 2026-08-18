@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-08-17
 number: 297
 ---

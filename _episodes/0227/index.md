@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-09-30
 number: 227
 ---

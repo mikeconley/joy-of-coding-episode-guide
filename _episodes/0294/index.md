@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-07-13
 number: 294
 ---

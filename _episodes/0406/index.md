@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-06-18
 number: 406
 ---

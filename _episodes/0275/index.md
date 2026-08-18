@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-01-19
 number: 275
 ---

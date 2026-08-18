@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2026-02-11
 number: 429
 ---

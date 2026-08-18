@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-09-06
 number: 337
 ---

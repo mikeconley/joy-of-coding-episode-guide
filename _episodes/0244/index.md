@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2021-03-24
 number: 244
 ---

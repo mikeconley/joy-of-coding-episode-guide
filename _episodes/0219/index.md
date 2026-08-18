@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-06-24
 number: 219
 ---

@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2024-10-02
 number: 378
 ---

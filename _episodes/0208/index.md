@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-03-18
 number: 208
 ---

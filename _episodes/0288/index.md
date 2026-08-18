@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-05-04
 number: 288
 ---

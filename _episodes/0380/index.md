@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2024-10-23
 number: 380
 ---

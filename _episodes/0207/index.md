@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-02-26
 number: 207
 ---

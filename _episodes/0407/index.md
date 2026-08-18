@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-06-25
 number: 407
 ---

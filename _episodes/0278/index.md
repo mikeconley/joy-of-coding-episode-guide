@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-02-09
 number: 278
 ---

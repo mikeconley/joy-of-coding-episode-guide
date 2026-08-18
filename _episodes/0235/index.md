@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-12-16
 number: 235
 ---

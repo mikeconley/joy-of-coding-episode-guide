@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-04-19
 number: 322
 ---

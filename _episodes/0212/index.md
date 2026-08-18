@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-04-15
 number: 212
 ---

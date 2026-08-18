@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-10-18
 number: 343
 ---

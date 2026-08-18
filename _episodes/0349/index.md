@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-12-06
 number: 349
 ---

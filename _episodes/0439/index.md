@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2026-05-06
 number: 439
 ---

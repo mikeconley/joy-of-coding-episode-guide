@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-09-14
 number: 300
 ---

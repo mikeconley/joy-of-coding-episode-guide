@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2017-11-29
 number: 122
 ---

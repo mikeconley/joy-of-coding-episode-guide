@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-09-04
 number: 188
 ---

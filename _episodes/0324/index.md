@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-05-10
 number: 324
 ---

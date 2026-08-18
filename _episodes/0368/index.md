@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2024-06-12
 number: 368
 ---

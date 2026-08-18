@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2024-01-31
 number: 353
 ---

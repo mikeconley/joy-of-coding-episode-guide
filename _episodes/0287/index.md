@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-04-20
 number: 287
 ---

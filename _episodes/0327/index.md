@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-06-07
 number: 327
 ---

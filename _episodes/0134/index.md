@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-03-28
 number: 134
 ---

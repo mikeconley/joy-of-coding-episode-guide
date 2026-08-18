@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-03-25
 number: 209
 ---

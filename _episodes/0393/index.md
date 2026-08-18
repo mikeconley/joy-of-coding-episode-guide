@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-02-05
 number: 393
 ---

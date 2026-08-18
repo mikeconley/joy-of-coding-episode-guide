@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2016-11-02
 number: 78
 ---

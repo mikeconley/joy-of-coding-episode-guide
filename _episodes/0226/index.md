@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-09-16
 number: 226
 ---

@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-07-01
 number: 220
 ---

@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-11-19
 number: 420
 ---

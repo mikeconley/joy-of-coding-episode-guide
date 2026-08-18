@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-10-11
 number: 342
 ---

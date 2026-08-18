@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-08-14
 number: 186
 ---

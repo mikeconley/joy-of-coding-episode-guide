@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2016-07-20
 number: 64
 ---

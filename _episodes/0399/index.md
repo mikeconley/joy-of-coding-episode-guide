@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-04-23
 number: 399
 ---

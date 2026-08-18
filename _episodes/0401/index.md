@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-05-14
 number: 401
 ---

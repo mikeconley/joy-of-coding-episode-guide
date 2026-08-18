@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-05-23
 number: 140
 ---

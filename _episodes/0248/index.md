@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2021-05-05
 number: 248
 ---

@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-08-09
 number: 335
 ---

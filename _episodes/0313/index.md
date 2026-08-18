@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-01-25
 number: 313
 ---

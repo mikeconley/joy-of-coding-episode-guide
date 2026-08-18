@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2021-07-28
 number: 256
 ---

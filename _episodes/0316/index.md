@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-02-15
 number: 316
 ---

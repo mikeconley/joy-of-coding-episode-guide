@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-03-21
 number: 133
 ---

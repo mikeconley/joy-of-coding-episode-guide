@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-07-16
 number: 410
 ---

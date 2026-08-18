@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2021-12-01
 number: 272
 ---

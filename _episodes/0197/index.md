@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-11-13
 number: 197
 ---

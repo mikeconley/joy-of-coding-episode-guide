@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-02-23
 number: 280
 ---

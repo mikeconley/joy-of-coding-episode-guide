@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2022-12-21
 number: 310
 ---

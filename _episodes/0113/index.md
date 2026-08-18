@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2017-09-20
 number: 113
 ---

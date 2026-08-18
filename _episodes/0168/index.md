@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-03-06
 number: 168
 ---

@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2021-02-10
 number: 240
 ---

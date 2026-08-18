@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2017-09-13
 number: 112
 ---

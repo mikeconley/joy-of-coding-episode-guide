@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-05-01
 number: 176
 ---

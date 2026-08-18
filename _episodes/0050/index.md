@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2016-03-23
 number: 50
 ---

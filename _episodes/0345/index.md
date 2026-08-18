@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2023-11-01
 number: 345
 ---

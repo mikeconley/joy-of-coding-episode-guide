@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2025-10-01
 number: 417
 ---

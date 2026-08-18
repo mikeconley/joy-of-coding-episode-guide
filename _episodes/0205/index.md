@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2020-02-12
 number: 205
 ---
