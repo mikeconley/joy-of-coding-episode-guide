@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2017-06-21
 number: 103
 ---

@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-05-08
 number: 177
 ---
@@ -24,10 +23,4 @@ number: 177
 **
 ## Rate this episode
 * [Rate this episode](https://forms.gle/gcnbhnzS3LgApfT86)
-
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-
 

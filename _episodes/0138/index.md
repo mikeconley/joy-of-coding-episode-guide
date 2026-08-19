@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-05-09
 number: 138
 ---

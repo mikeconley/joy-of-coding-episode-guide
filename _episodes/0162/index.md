@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-01-16
 number: 162
 ---
@@ -26,8 +25,3 @@ Happy New Year!
 * Building is still a pain. :(
   - Don’t run backups in the background!!!
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://goo.gl/forms/pHHaPFKnRR5Auccs1)

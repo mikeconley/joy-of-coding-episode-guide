@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-04-17
 number: 174
 ---
@@ -24,8 +23,3 @@ number: 174
 * [Bug 1545168](https://bugzilla.mozilla.org/show_bug.cgi?id=1545168) - Picture-in-Picture context menu and toggle should be disabled for broken videos
 * [Bug 1545189](https://bugzilla.mozilla.org/show_bug.cgi?id=1545189) - Overlapped videos can't get Picture-in-Picture opened on them
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://forms.gle/47HQARyEGvYm7Vjx8)

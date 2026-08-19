@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-12-19
 number: 160
 ---
@@ -23,8 +22,3 @@ number: 160
 * Faster builds, because OBS will be running on a different machine.
 * Renewed effort on auto-transcriptions.
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes most recent Firefox Color Theme](https://color.firefox.com/?theme=XQAAAAIcAQAAAAAAAABBqYhm849SCia2CaaEGccwS-xNKlhWuMf1GDDK9CdlG87shVNGVzQTuym_qOfYLbua3E9nxN7LpROj0ykMpIgOhuZoyEKeh2-5oZj1rnplfthj5aA4gjsqRk0zLkxblhqqcHh7nWwstRQKsXL_0n4obgX7u0zhqphvdPqdXBsqLTAMT0G1jht8KKE8hhxwEXABrfUX1yZWOGxMYXATEuhOaA9UMAMyShoK1Jdh0s9OFREHlv9lF1KbM1wZPTbX3YRe0HEfJv_kMYOA)
-* [Rate this episode](https://goo.gl/forms/Om3S7MidMokDnYBy1)

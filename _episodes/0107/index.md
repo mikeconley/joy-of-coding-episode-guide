@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2017-07-26
 number: 107
 ---

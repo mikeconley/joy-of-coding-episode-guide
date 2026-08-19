@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-07-31
 number: 185
 ---
@@ -19,8 +18,3 @@ number: 185
 * [Codetribute](https://codetribute.mozilla.org/) - Go here to find Mentored bugs to hack on, ie good for beginners 
 * moz-phab submit tip --wip : Does not automaticly add reviewers to your patch
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://forms.gle/WeYMRCE26o4Z19Dg9)

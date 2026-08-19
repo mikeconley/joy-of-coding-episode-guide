@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-03-07
 number: 131
 ---

@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-08-14
 number: 186
 ---
@@ -21,8 +20,3 @@ number: 186
 * [Firefox Nightly logo wallpaper](https://share.riseup.net/#wzzlPjdPBs3UtmmuYj-7cw)
 * Browser toolbox issues in Nightly, found a tip on reddit where you can try to remove the 'chrome_debugger_profile' folder in the Profile folder.
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://forms.gle/tHqw2YUUqM8PTTag8)

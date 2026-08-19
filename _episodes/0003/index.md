@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2015-02-25
 number: 3
 ---

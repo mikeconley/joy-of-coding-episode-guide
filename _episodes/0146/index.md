@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-08-08
 number: 146
 ---

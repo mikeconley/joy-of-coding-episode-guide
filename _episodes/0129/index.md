@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-02-21
 number: 129
 ---

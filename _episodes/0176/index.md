@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-05-01
 number: 176
 ---
@@ -21,8 +20,3 @@ number: 176
 * 'mach addtest path/to/new/test.js' - creates a new Test
 * Filed bug for 'mach addtest' [Bug 1548319](https://bugzilla.mozilla.org/show_bug.cgi?id=1548319)
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://forms.gle/VKMvb9Wn9FHYDbNk9)

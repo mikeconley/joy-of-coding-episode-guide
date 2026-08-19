@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-07-10
 number: 182
 ---
@@ -19,8 +18,3 @@ number: 182
 * TODO after the stream:
   - Add “Programming” and “Software Development” tag(s) to Twitch stream settings
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://forms.gle/3AjjMGUqUrymr3GJ6)

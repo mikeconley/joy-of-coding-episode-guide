@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2017-03-08
 number: 94
 ---

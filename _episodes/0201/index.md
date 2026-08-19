@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-12-11
 number: 201
 ---
@@ -16,10 +15,3 @@ number: 201
 * Next week : Special guest, Youri Wims from the Mozilla Foundation!
 * [Rate this episode](https://forms.gle/fa3kp5LwLWtHU7T77)
 
-## Other
-* [Fission](https://firefox-source-docs.mozilla.org/dom/dom/Fission.html) - Read more about it
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Codetribute](https://codetribute.mozilla.org/) - Go here to find Mentored bugs to hack on, ie good for beginners
-* Check if a service you are using, has been part of a breach via [Firefox Monitor](https://monitor.firefox.com/breaches)

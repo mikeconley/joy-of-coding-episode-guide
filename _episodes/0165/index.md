@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-02-06
 number: 165
 ---
@@ -19,8 +18,3 @@ number: 165
   * [Mark-up for the page](https://searchfox.org/mozilla-central/rev/e00ea598e52bbb35f8c45abf9c2eade17962bb5e/browser/components/aboutconfig/content/aboutconfig.html)
   * [Source code for the page](https://searchfox.org/mozilla-central/rev/9eb30227b21e0aa40d51d9f9b08bb0b113c5fadb/browser/components/aboutconfig/content/aboutconfig.js)
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://goo.gl/forms/uobi8aFhGQE4tLgu2)

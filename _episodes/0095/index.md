@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2017-03-15
 number: 95
 ---

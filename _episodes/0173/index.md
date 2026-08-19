@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2019-04-10
 number: 173
 ---
@@ -20,8 +19,3 @@ number: 173
   - testing https://twitch.tv (some issues with overlays)
 * Creating a nested iframe test due to twitch issue
 
-## Other
-* [mozconfigwrapper](https://github.com/ahal/mozconfigwrapper) - A Wrapper to keep different mozconfigs
-* [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/) Mikes Addon for showing how many reviews are in your review queue - [Source at Github](https://github.com/mikeconley/myqonly)
-* [Mikes Firefox Color Theme](https://addons.mozilla.org/en-US/firefox/addon/electricbluegaloo/)
-* [Rate this episode](https://forms.gle/LhmdMFpmTPiu53iQA)

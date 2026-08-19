@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2018-06-06
 number: 141
 ---

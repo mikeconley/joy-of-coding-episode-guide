@@ -1,5 +1,4 @@
 ---
-layout: default
 date: 2017-12-06
 number: 123
 ---
