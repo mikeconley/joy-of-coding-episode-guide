@@ -1,12 +1,12 @@
 ---
-date: 2026-08-18
+date: 2026-08-19
 number: 447
 ---
 
-# Episode 447: Aug 18th, 2026
+# Episode 447: Aug 19th, 2026
 
 ## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2026-08-18)
+* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2026-08-19)
 * [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0447.html)
 
 ## Topics
