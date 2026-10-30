@@ -1,22 +1,20 @@
 ---
 date: 2021-09-29
 number: 264
+airmozilla: https://mzl.la/joy-of-coding-2021-09-29
+agenda: https://mikeconley.ca/joc/agendas/Episode-0264.html
+rating: https://forms.gle/ninYYnQ6tc4KDc6U6
 ---
 
-# Episode 264: Sep 29th, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-09-29)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0264.html)
-
 ## Topics
-* [Fixing a security bug blog](https://blog.mozilla.org/attack-and-defense/2021/09/29/fixing-a-security-bug-by-changing-a-function-signature/)
-* Let's talk about BrowsingContexts! And DocShells!
+
+- [Fixing a security bug blog](https://blog.mozilla.org/attack-and-defense/2021/09/29/fixing-a-security-bug-by-changing-a-function-signature/)
+- Let's talk about BrowsingContexts! And DocShells!
   - [Site Isolation Architecture in Firefox](https://hacks.mozilla.org/2021/05/introducing-firefox-new-site-isolation-security-architecture/)
     - Goes into detail about Meltdown / Spectre vulnerabilities
-* No episode next week due to unavoidable meetings. Sorry!
-* Special shout out to "shittyskydiver" on YouTube
-* Question time!
+- No episode next week due to unavoidable meetings. Sorry!
+- Special shout out to "shittyskydiver" on YouTube
+- Question time!
   - Yes I really get confused like how build system work. How they create binaries. And How do cpp gets build? The Firefox source seems to be a bit esoteric. It would be helpful like how jar.mn moz.build etc integrates together. Thanks.
     - moz.build are Python instructions that build dependency graphs that ultimately get fed into something like Makefile, and then we do a thing like `make`. moz.build helps define what gets packaged in omni.ja ("resources", JSMs)
     - jar.mn, which goes into more detail on HTML, XUL, CSS, JS what gets packaged in omni.ja
@@ -39,9 +37,3 @@ number: 264
     - Knoppix was my first introduction to Linux (booted off of a CD)
     - Fedora
     - Ubuntu
-
-* [Rate this episode](https://forms.gle/ninYYnQ6tc4KDc6U6)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

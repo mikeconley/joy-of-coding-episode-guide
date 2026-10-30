@@ -1,20 +1,15 @@
 ---
 date: 2019-09-04
 number: 188
+airmozilla: https://air.mozilla.org/event-redirect/341688/
+agenda: https://www.evernote.com/shard/s434/client/snv?noteGuid=b2bb44db-0e70-4a04-a8e8-61f737a807fe&noteKey=7b48d0ff8c5c1a42&sn=https%3A%2F%2Fwww.evernote.com%2Fshard%2Fs434%2Fsh%2Fb2bb44db-0e70-4a04-a8e8-61f737a807fe%2F7b48d0ff8c5c1a42&title=September%2B4th%252C%2B2019%2B-%2BEpisode%2B188
+rating: https://forms.gle/NkcjNW31RYA4LaKz7
 ---
 
-# Episode 188: Sep 4th, 2019
-
-## Links
-* [Watch this episode on new Air Mozilla](https://air.mozilla.org/event-redirect/341688/)
-* [Evernote Agenda](https://www.evernote.com/shard/s434/client/snv?noteGuid=b2bb44db-0e70-4a04-a8e8-61f737a807fe&noteKey=7b48d0ff8c5c1a42&sn=https%3A%2F%2Fwww.evernote.com%2Fshard%2Fs434%2Fsh%2Fb2bb44db-0e70-4a04-a8e8-61f737a807fe%2F7b48d0ff8c5c1a42&title=September%2B4th%252C%2B2019%2B-%2BEpisode%2B188)
-
 ## Topics
-* Review : [Bug 1578709](https://bugzilla.mozilla.org/show_bug.cgi?id=1578709) - Set flash-only pref on a per-manifest/suite basis instead of for all feature tests
-* Landed : [Bug 1546931](https://bugzilla.mozilla.org/show_bug.cgi?id=1546931) - installs.ini and profiles.ini should not be both stat'ed and read using main thread I/O during early startup
-* [Bug 1566196](https://bugzilla.mozilla.org/show_bug.cgi?id=1566196) - Enable subframe crashing regression test
+
+- Review : [Bug 1578709](https://bugzilla.mozilla.org/show_bug.cgi?id=1578709) - Set flash-only pref on a per-manifest/suite basis instead of for all feature tests
+- Landed : [Bug 1546931](https://bugzilla.mozilla.org/show_bug.cgi?id=1546931) - installs.ini and profiles.ini should not be both stat'ed and read using main thread I/O during early startup
+- [Bug 1566196](https://bugzilla.mozilla.org/show_bug.cgi?id=1566196) - Enable subframe crashing regression test
   - Added a big [comment](https://bugzilla.mozilla.org/show_bug.cgi?id=1566196#c12)
-* Debug Artifact builds will not give you the possibillity to view the source in gdb
-
-* [Rate this episode](https://forms.gle/NkcjNW31RYA4LaKz7)
-
+- Debug Artifact builds will not give you the possibillity to view the source in gdb

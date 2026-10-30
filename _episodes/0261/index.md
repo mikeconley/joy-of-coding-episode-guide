@@ -1,33 +1,31 @@
 ---
 date: 2021-09-08
 number: 261
+airmozilla: https://mzl.la/joy-of-coding-2021-09-08
+agenda: https://mikeconley.ca/joc/agendas/Episode-0261.html
+rating: https://forms.gle/p537sYotHfqzvTdG7
 ---
 
-# Episode 261: Sep 8th, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-09-08)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0261.html)
-
 ## Topics
-* Exploring about:unloads
+
+- Exploring about:unloads
   - [aboutUnload](https://searchfox.org/mozilla-central/rev/a166f59fba89fc70ebfab287f4edb8e05ed4f6da/browser/components/tabunloader/content/)
   - [aboutUnloads.js](https://searchfox.org/mozilla-central/rev/a166f59fba89fc70ebfab287f4edb8e05ed4f6da/browser/components/tabunloader/content/aboutUnloads.js)
   - [aboutUnloads.html](https://searchfox.org/mozilla-central/rev/a166f59fba89fc70ebfab287f4edb8e05ed4f6da/browser/components/tabunloader/content/aboutUnloads.html)
   - Part of Firefox :: Tabbed Browser in Bugzilla
-  - Maybe fact: URLs is a subset of URIs 
+  - Maybe fact: URLs is a subset of URIs
     - URI: "about:home", "about:about", "viewsource:https://google.ca", "https://mikeconley.ca"
       - about:unloads
     - URLs: "https://mikeconley.ca", "https://example.com", "http://badssl.com"
       - chrome://version
   - OOM small (Out Of Memory)
   - OOM large (Out Of Memory)
-* [OpenSearch](https://developer.mozilla.org/en-US/docs/Web/OpenSearch)
-* [Bug 1674827](https://bugzilla.mozilla.org/show_bug.cgi?id=1674827) - Re-enable startup_about_home_paint_cached Talos test
+- [OpenSearch](https://developer.mozilla.org/en-US/docs/Web/OpenSearch)
+- [Bug 1674827](https://bugzilla.mozilla.org/show_bug.cgi?id=1674827) - Re-enable startup_about_home_paint_cached Talos test
   - [Mikes blog about Firefox startup time](https://mikeconley.ca/blog/2020/07/13/improving-firefox-startup-time-with-the-abouthome-startup-cache/)
-* Feedback:
+- Feedback:
   - People are digging the questions. Going to keep doing that. Thanks for the feedback!
-* Question time!
+- Question time!
   - As a normal user: What other products of Mozilla (e.g. Pocket, Mozilla VPN, Firefox Relay, Thunderbird) do you use on a daily basis? What are the features of Firefox you can't live without (e.g. Containers, Picture-in-Picture etc.)?
     - Firefox
       - Picture-in-Picture
@@ -60,9 +58,3 @@ number: 261
   - Have you ever made / co-developed add-ons, or is it not your cup of tea?
     - [MyQOnly](https://addons.mozilla.org/en-US/firefox/addon/myqonly/)
     - [Balcony](https://github.com/mikeconley/balcony/)
-
-* [Rate this episode](https://forms.gle/p537sYotHfqzvTdG7)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

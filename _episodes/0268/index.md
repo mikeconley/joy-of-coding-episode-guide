@@ -1,27 +1,25 @@
 ---
 date: 2021-11-03
 number: 268
+airmozilla: https://mzl.la/joy-of-coding-2021-11-03
+agenda: https://mikeconley.ca/joc/agendas/Episode-0268.html
+rating: https://forms.gle/iEq2Eq6s4zWEC66g7
 ---
 
-# Episode 268: Nov 3rd, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-11-03)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0268.html)
-
 ## Topics
-* Episode naming!
-* Better mic settings, hopefully. More dynamic compression!
-* Needinfos:
+
+- Episode naming!
+- Better mic settings, hopefully. More dynamic compression!
+- Needinfos:
   - [Bug 1706981](https://bugzilla.mozilla.org/show_bug.cgi?id=1706981) - Bookmarks Menu Toolbar button submenu items have incorrectly placed chevron on Windows
   - [Bug 1707279](https://bugzilla.mozilla.org/show_bug.cgi?id=1707279) - picture-in-picture control do not always disappear
     - [Getting set up](https://firefox-source-docs.mozilla.org/setup/index.html)
     - [Contributor](https://firefox-source-docs.mozilla.org/contributing/contribution_quickref.html) quick reference. You can submit patches using either Mercurial or Git!
     - [Guide](https://firefox-source-docs.mozilla.org/setup/index.html) on building Firefox
-* [Good first bugs](https://codetribute.mozilla.org/)
-* Shirshak55 gets assigned their 1st PiP bug
+- [Good first bugs](https://codetribute.mozilla.org/)
+- Shirshak55 gets assigned their 1st PiP bug
 
-* Question time!
+- Question time!
   - Where do Services.wm.functions exist?
     - The properties for Services.jsm are defined using `jsname` in the `components.conf` file when registering XPCOM components statically at build time.
     - Services.wm points to [nsWindowMediator](https://searchfox.org/mozilla-central/rev/1e7f7235cf822e79cd79ba9e200329ede3d37925/xpfe/appshell/nsWindowMediator.cpp) which implements the [nsIWindowMediator](https://searchfox.org/mozilla-central/rev/1e7f7235cf822e79cd79ba9e200329ede3d37925/xpfe/appshell/nsIWindowMediator.idl) interface
@@ -49,9 +47,3 @@ number: 268
     - https://www.mozilla.org/en-US/firefox/94.0/releasenotes/
     - https://wiki.mozilla.org/ProjectFission
     - [VPN!](https://www.mozilla.org/en-US/products/vpn/) Give it a shot!
-
-* [Rate this episode](https://forms.gle/iEq2Eq6s4zWEC66g7)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

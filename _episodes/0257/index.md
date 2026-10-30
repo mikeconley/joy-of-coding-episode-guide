@@ -1,19 +1,17 @@
 ---
 date: 2021-08-04
 number: 257
+airmozilla: https://mzl.la/joy-of-coding-2021-08-04
+agenda: https://mikeconley.ca/joc/agendas/Episode-0257.html
+rating: https://forms.gle/TKrepDkMDogFzX916
 ---
 
-# Episode 257: Aug 4th, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-08-04)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0257.html)
-
 ## Topics
-* [Bug 1721454](https://bugzilla.mozilla.org/show_bug.cgi?id=1721454) - Second "Manage bookmarks" item is not at bottom of Bookmarks Menu after landing patch from bug #1720534
-* Reviewing bugs
-* Background hang monitor - a tool for monitoring hangs that happen in firefox
-* Question time!
+
+- [Bug 1721454](https://bugzilla.mozilla.org/show_bug.cgi?id=1721454) - Second "Manage bookmarks" item is not at bottom of Bookmarks Menu after landing patch from bug #1720534
+- Reviewing bugs
+- Background hang monitor - a tool for monitoring hangs that happen in firefox
+- Question time!
   - If you could snap your fingers and instantly fix one part of the Firefox code base, which part would it be?
   - You have been working remotely for over a year now - how does your work-life balance look like?
   - Do you have strict or flexible working hours?
@@ -23,13 +21,7 @@ number: 257
     - [The Art of Point-and-Click Adventure Games](https://www.bitmapbooks.co.uk/products/the-art-of-point-click-adventure-games)
     - [Double fine book](https://doublefinebook.com/)
   - Are you still exploring/trying to find new passions or have you got plenty to choose from already?
-* No episode next week! Sorry about that.
-* Save Firefox build time and disc space with Artifact builds:
+- No episode next week! Sorry about that.
+- Save Firefox build time and disc space with Artifact builds:
   - disc usage, after build, for artifact build : 8.9gb (Linux)
   - disc usage, after build, for non-artifact build : 24gb (Linux)
-
-* [Rate this episode](https://forms.gle/TKrepDkMDogFzX916)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

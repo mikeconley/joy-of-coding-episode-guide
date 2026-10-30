@@ -1,28 +1,26 @@
 ---
 date: 2023-11-08
 number: 346
+airmozilla: https://mzl.la/joy-of-coding-2023-11-08
+agenda: https://mikeconley.ca/joc/agendas/Episode-0346.html
+rating: https://forms.gle/Cji7TkVYSTFi6wk29
 ---
 
-# Episode 346: Nov 8th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-11-08)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0346.html)
-
 ## Topics
-* Q/A:
+
+- Q/A:
   - In this episode , the word "U" you explained may wrong? It is just unsigned , not related to hex. Ref: https://en.cppreference.com/w/cpp/language/integer_literal
   - Q1: Advanced usage of searchfox. Is there any documentations on the search query syntax? I've learned an useful query "calls-to:'function-name' depth:4" on someone's toots in mozilla.social before (sorry that i can't found the original post). is there more?
     - https://mozilla.social/@asutherland
-    -  ^-- That's asuth, who works on diagramming in searchfox in his spare time. I think what you're pointing at maybe only works when diagramming is enabled?
+    - ^-- That's asuth, who works on diagramming in searchfox in his spare time. I think what you're pointing at maybe only works when diagramming is enabled?
   - Q2: Not a technical question. Your Firefox theme looks great , however the link to the theme may be broken , in https://mikeconley.github.io/joy-of-coding-episode-guide/episodes/0343/index.html -> Others. Ok , i found that the theme in the link is not what you currently using. Could you share it again ? Also I've never known that the theme could also change the pages' color. (found that while you browsing spidermonkey.dev) ,Am i understand this correctly?
-    -  Current theme: https://addons.mozilla.org/en-US/firefox/addon/cheers-bold/
+    - Current theme: https://addons.mozilla.org/en-US/firefox/addon/cheers-bold/
     - BlueShift is here: https://addons.mozilla.org/en-US/firefox/addon/blueshift/
   - https://github.com/mikeconley/taburdle/pull/6/files
   - Q: i saw you posted about the eidas, is there a mail you can tip mozilla foundation about similar horrible things that might happen?
     - https://foundation.mozilla.org/newsletter/
 
-* [] Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
+- [] Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -67,9 +65,3 @@ number: 346
   - [ ] Consider making the rejection value of populateJumpList not an nsresult but a more descriptive ErrorResult type.
   - [ ] See if we should ClearJumpList on kPrefTaskbarEnabled pref change or TOPIC_CLEAR_PRIVATE_DATA
   - [ ] Make it so that if gtest fails to build that the test will fail to run.
-
-* [Rate this episode](https://forms.gle/Cji7TkVYSTFi6wk29)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

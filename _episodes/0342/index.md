@@ -1,16 +1,14 @@
 ---
 date: 2023-10-11
 number: 342
+airmozilla: https://mzl.la/joy-of-coding-2023-10-11
+agenda: https://mikeconley.ca/joc/agendas/Episode-0342.html
+rating: https://forms.gle/3wNYz9ou1CoFBUkY7
 ---
 
-# Episode 342: Oct 11th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-10-11)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0342.html)
-
 ## Topics
-* [ ] While we wait for builds, let's start cleaning out the old migration wizard.
+
+- [ ] While we wait for builds, let's start cleaning out the old migration wizard.
   - [ ] Bug 1855280 - Remove the ability to switch to the old migration wizard
     - [x] browser/base/content/test/menubar/browser_file_menu_import_wizard.js
     - [x] browser/components/aboutlogins/tests/browser/browser_noLoginsView.js
@@ -23,7 +21,7 @@ number: 342
     - [x] toolkit/components/passwordmgr/test/browser/browser_autocomplete_import.js
   - [ ] Bug 1818237 - Make it possible to import from other browsers when Firefox is installed as a Snap package
 
-* Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
+- Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -62,9 +60,3 @@ number: 342
     - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
   - [ ] Consider making the rejection value of populateJumpList not an nsresult but a more descriptive ErrorResult type.
   - [ ] See if we should ClearJumpList on kPrefTaskbarEnabled pref change or TOPIC_CLEAR_PRIVATE_DATA
-
-* [Rate this episode](https://forms.gle/3wNYz9ou1CoFBUkY7)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

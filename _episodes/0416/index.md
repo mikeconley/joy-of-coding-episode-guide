@@ -1,20 +1,18 @@
 ---
 date: 2025-09-24
 number: 416
+airmozilla: https://mzl.la/joy-of-coding-2025-09-24
+agenda: https://mikeconley.ca/joc/agendas/Episode-0416.html
+rating: https://forms.gle/pfQKtJqBA81V4AMx5
 ---
 
-# Episode 416: Sep 24th, 2025
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2025-09-24)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0416.html)
-
 ## Topics
-* ![Alt text](https://mikeconley.ca/joc/agendas/images/9c953d188c7f402086dc6c26a551d5b3 "keanu code 416")
+
+- ![Alt text](https://mikeconley.ca/joc/agendas/images/9c953d188c7f402086dc6c26a551d5b3 "keanu code 416")
   - https://www.keanu.codes/?code=416
   - 416 - Range Not Satisfiable
     - https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/416
-* TODO
+- TODO
   - [x] Get rid of spurious semicolon
   - [x] Test that jobs go red if there are more than 2 failures per job/platform pair and no passes
   - [ ] Clean up the locales report
@@ -26,9 +24,3 @@ number: 416
     - [x] When expanded, I want the list to be more readable and maybe to link out to Pontoon for the missing string
     - [x] I want the list of missing / pending strings to be constrained and scrollable
   - [ ] Use jq-web library (https://github.com/fiatjaf/jq-web) to query Experimenter for active deploys, rollouts and experiments.
-
-* [Rate this episode](https://forms.gle/pfQKtJqBA81V4AMx5)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

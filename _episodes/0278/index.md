@@ -1,16 +1,14 @@
 ---
 date: 2022-02-09
 number: 278
+airmozilla: https://mzl.la/joy-of-coding-2022-02-09
+agenda: https://mikeconley.ca/joc/agendas/Episode-0278.html
+rating: https://forms.gle/xnGneA1xnB2uM5u46
 ---
 
-# Episode 278: Feb 9th, 2022
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2022-02-09)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0278.html)
-
 ## Topics
-* How to debug Firefox's native code on macOS (lldb), then Linux (gdb), then Windows (Visual Studio)!
+
+- How to debug Firefox's native code on macOS (lldb), then Linux (gdb), then Windows (Visual Studio)!
   - Optimized builds, unoptimized / debug builds, artifact builds
     - Why can't we do native code debugging of artifact builds?
       - [Configure Build Options](https://firefox-source-docs.mozilla.org/setup/configuring_build_options.html)
@@ -24,9 +22,3 @@ number: 278
         - https://bugzilla.mozilla.org/showbug.cgi?id=1495040
         - MOZ_DEBUG_BROWSERPAUSE=15
     - Attaching to the content process
-
-* [Rate this episode](https://forms.gle/xnGneA1xnB2uM5u46)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

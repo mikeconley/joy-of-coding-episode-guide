@@ -1,21 +1,13 @@
 ---
 date: 2023-04-05
 number: 320
+airmozilla: https://mzl.la/joy-of-coding-2023-04-05
+agenda: https://mikeconley.ca/joc/agendas/Episode-0320.html
+rating: https://forms.gle/aYra3LgpsSQyv5jk9
 ---
 
-# Episode 320: Apr 5th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-04-05)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0320.html)
-
 ## Topics
-* New Migration Wizard - working on file import for bookmarks!
+
+- New Migration Wizard - working on file import for bookmarks!
   - See bugs in the new migration wizard? [File them here](https://bugzilla.mozilla.org/enter_bug.cgi?assigned_to=nobody%40mozilla.org&bug_ignored=0&bug_severity=--&bug_status=NEW&cf_a11y_review_project_flag=---&cf_fx_iteration=---&cf_fx_points=---&cf_has_str=---&cf_performance_impact=---&cf_status_firefox111=---&cf_status_firefox112=---&cf_status_firefox113=---&cf_status_firefox_esr102=---&cf_tracking_firefox111=---&cf_tracking_firefox112=---&cf_tracking_firefox113=---&cf_tracking_firefox_esr102=---&cf_tracking_firefox_relnote=---&cf_webcompat_priority=---&component=Migration&contenttypemethod=list&contenttypeselection=text%2Fplain&defined_groups=1&filed_via=standard_form&flag_type-203=X&flag_type-37=X&flag_type-41=X&flag_type-607=X&flag_type-708=X&flag_type-721=X&flag_type-737=X&flag_type-748=X&flag_type-787=X&flag_type-799=X&flag_type-800=X&flag_type-803=X&flag_type-846=X&flag_type-855=X&flag_type-864=X&flag_type-930=X&flag_type-936=X&flag_type-952=X&form_name=enter_bug&maketemplate=Remember%20values%20as%20bookmarkable%20template&op_sys=Unspecified&priority=--&product=Firefox&rep_platform=Unspecified&target_milestone=---&version=unspecified)
   - `browser.migrate.content-modal.enabled` to `true`
-
-* [Rate this episode](https://forms.gle/aYra3LgpsSQyv5jk9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

@@ -1,19 +1,17 @@
 ---
 date: 2023-07-26
 number: 333
+airmozilla: https://mzl.la/joy-of-coding-2023-07-26
+agenda: https://mikeconley.ca/joc/agendas/Episode-0333.html
+rating: https://forms.gle/9H7fhG69rdGg4Cx98
 ---
 
-# Episode 333: Jul 26th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-07-26)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0333.html)
-
 ## Topics
-* Episode Guide!!
-* [sdk's patch to add tooltips to the All Tabs menu panel](https://phabricator.services.mozilla.com/D183102)
-* WindowsJumpLists! <b>Let's keep going!</b>
-* TODO
+
+- Episode Guide!!
+- [sdk's patch to add tooltips to the All Tabs menu panel](https://phabricator.services.mozilla.com/D183102)
+- WindowsJumpLists! <b>Let's keep going!</b>
+- TODO
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -36,14 +34,8 @@ number: 333
   - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
   - [ ] Let's update WinTaskbar to have a new method that can be accessed from native code (so not through XPCOM), called, like, DoCreateJumpListBuilder or something. Have it take an argument that is a reference to something that implements a JumpListManager interface. Have JumpListBuilder move that thing to the background thread - the background thread owns it. Then, in our tests, have our GTest call DoCreateJumpListBuilder, passing it something that mocks out JumpListManager. And then call it's populateJumpList method for testing.
 
- (abstract) class JumpListBackend HRESULT BeginList HRESULT AddUserTasks HRESULT AppendCategory HRESULT CommitList
+(abstract) class JumpListBackend HRESULT BeginList HRESULT AddUserTasks HRESULT AppendCategory HRESULT CommitList
 
 // Two implementations: // 1: "Real" one that wraps one of these things: RefPtr jumpListMgr; HRESULT hr = ::CoCreateInstance( CLSIDDestinationList, nullptr, CLSCTXINPROCSERVER, IIDICustomDestinationList, getter_AddRefs(jumpListMgr));
 
 // 2: "Fake" one that allows us to interrogate it for things it has been passed, for testing. class MockJumpListManager HRESULT BeginList(outparam maxitems and outparam IObjectArray) Wants to be prepared to provide an outparam which is an IObjectArray. We can do that by creating an empty collection, or a collection that returns ShellLinks. HRESULT AddUserTasks(collection) Takes an array of tasks and returns an HRESULT. We can then examine what was passed. HRESULT AppendCategory(string, collection) Takes a string and collection for the custom list. HRESULT CommitList Just returns an HRESULT.
-
-* [Rate this episode](https://forms.gle/9H7fhG69rdGg4Cx98)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

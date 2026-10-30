@@ -1,24 +1,22 @@
 ---
 date: 2021-10-27
 number: 267
+airmozilla: https://mzl.la/joy-of-coding-2021-10-27
+agenda: https://mikeconley.ca/joc/agendas/Episode-0267.html
+rating: https://forms.gle/gxAQXX5ixFzUCSu47
 ---
 
-# Episode 267: Oct 27th, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-10-27)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0267.html)
-
 ## Topics
-* [Bug 1736690](https://bugzilla.mozilla.org/show_bug.cgi?id=1736690) - Remove or update probes expiring in Firefox 96: pictureinpicture.most_concurrent_players
+
+- [Bug 1736690](https://bugzilla.mozilla.org/show_bug.cgi?id=1736690) - Remove or update probes expiring in Firefox 96: pictureinpicture.most_concurrent_players
   - That was easy! Patch posted.
-* r? means: request review from
-* Mike looks at some of his Needinfos
-* `mach try` can some times take time
-* Mostly running Python-3.9
-* about:memory can be a good place to see where the memory that Firefox uses goes
-* [modelled vs modeled](https://wikidiff.com/modeled/modelled)
-* Question time!
+- r? means: request review from
+- Mike looks at some of his Needinfos
+- `mach try` can some times take time
+- Mostly running Python-3.9
+- about:memory can be a good place to see where the memory that Firefox uses goes
+- [modelled vs modeled](https://wikidiff.com/modeled/modelled)
+- Question time!
   - How is gBrowser and xpcom used? Can you talk about it too?
     - gBrowser
       - gBrowser is the name of the component in a Firefox browser window that manages tabs, and the underlying infrastructure for switching tabs, adding tabs, knowing about tab switches, etc.
@@ -51,9 +49,3 @@ number: 267
   - Can you explain the process of writing "These Weeks in Firefox" (from start to finish) ?
   - WebExtensions and how they interact with DocShells / BrowsingContexts
   - How a patch gets into Firefox, from start to finish!
-
-* [Rate this episode](https://forms.gle/gxAQXX5ixFzUCSu47)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

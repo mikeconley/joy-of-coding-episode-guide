@@ -1,16 +1,14 @@
 ---
 date: 2024-07-03
 number: 371
+airmozilla: https://mzl.la/joy-of-coding-2024-07-03
+agenda: https://mikeconley.ca/joc/agendas/Episode-0371.html
+rating: https://forms.gle/tFjRn2B37jPDGmGu9
 ---
 
-# Episode 371: Jul 3rd, 2024
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2024-07-03)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0371.html)
-
 ## Topics
-* Designing and writing tests for the OSKeyStore recovery mechanism
+
+- Designing and writing tests for the OSKeyStore recovery mechanism
   - Firefox has the ability to store payment methods (credit cards)
   - We never want to store the credit cards in plaintext on the filesystem
   - So therefore, we must encrypt the credit cards, and only decrypt them on demand
@@ -34,11 +32,4 @@ number: 371
     - Make sure that CredentialsAndSecurityBackupResource will do the decryption and re-encryption properly and produce encrypted bytes for the cards
       - Making sure we don't accidentally store a plaintext credit card number inside of autofill-profiles.json during recovery in CredentialsAndSecurityBackupResource
       - Make sure this will work if the secret is common between the device that was backed up, and the device that was recovered on, or if the secret is different between the two.
-* Must end at precisely 2:30ET due to a meeting. Sorry!
-
-
-* [Rate this episode](https://forms.gle/tFjRn2B37jPDGmGu9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+- Must end at precisely 2:30ET due to a meeting. Sorry!

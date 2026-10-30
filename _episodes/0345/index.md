@@ -1,22 +1,20 @@
 ---
 date: 2023-11-01
 number: 345
+airmozilla: https://mzl.la/joy-of-coding-2023-11-01
+agenda: https://mikeconley.ca/joc/agendas/Episode-0345.html
+rating: https://forms.gle/Ew9115uVRZqpm5in9
 ---
 
-# Episode 345: Nov 1st, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-11-01)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0345.html)
-
 ## Topics
-* Q: I would love if you could explain how to see what the MSRV of a specific Firefox release is using. The schedule on https://firefox-source-docs.mozilla.org/writing-rust-code/update-policy.html#schedule hasn't been updated for Firefox 117 and 118 (and now 119). I filed a docs bug (https://bugzilla.mozilla.org/show_bug.cgi?id=1860181), but it hasn't gained any traction. Not that I'm expecting you to do anything about this, I was just hoping you could point me in the right direction of figuring out what the MSRV for a specific Firefox release is.
+
+- Q: I would love if you could explain how to see what the MSRV of a specific Firefox release is using. The schedule on https://firefox-source-docs.mozilla.org/writing-rust-code/update-policy.html#schedule hasn't been updated for Firefox 117 and 118 (and now 119). I filed a docs bug (https://bugzilla.mozilla.org/show_bug.cgi?id=1860181), but it hasn't gained any traction. Not that I'm expecting you to do anything about this, I was just hoping you could point me in the right direction of figuring out what the MSRV for a specific Firefox release is.
   - A: I think it's defined here in mozilla-central: https://searchfox.org/mozilla-central/rev/01a0d864a9442d0fe2dbd4beee5c88b9b46e96bd/python/mozboot/mozboot/util.py#14
   - A: I've needinfo'd glandium to see if my assumptions on the MSRV's for 117-120 are correct, and if so, we can go ahead and update that doc. It might be worth automating the construction of that document at some point!
-* https://hacks.mozilla.org/2023/10/down-and-to-the-right-firefox-got-faster-for-real-users-in-2023/
-* Also https://blog.mozilla.org/en/products/quick-as-a-fox-firefox-keeps-getting-faster/
+- https://hacks.mozilla.org/2023/10/down-and-to-the-right-firefox-got-faster-for-real-users-in-2023/
+- Also https://blog.mozilla.org/en/products/quick-as-a-fox-firefox-keeps-getting-faster/
 
-* [] Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
+- [] Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -60,9 +58,3 @@ number: 345
     - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
   - [ ] Consider making the rejection value of populateJumpList not an nsresult but a more descriptive ErrorResult type.
   - [ ] See if we should ClearJumpList on kPrefTaskbarEnabled pref change or TOPIC_CLEAR_PRIVATE_DATA
-
-* [Rate this episode](https://forms.gle/Ew9115uVRZqpm5in9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

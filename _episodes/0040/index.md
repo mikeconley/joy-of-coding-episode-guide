@@ -1,10 +1,6 @@
 ---
 date: 2016-01-13
 number: 40
+airmozilla: https://air.mozilla.org/the-joy-of-coding-episode-40/
+agenda: https://www.evernote.com/l/AbIa5typpAdBFZsc7GXj2DMBWcnpIYzMqMg
 ---
-
-# Episode 40: January 13th, 2016 - Agenda
-
-## Links
-* [Watch this episode on air mozilla](https://air.mozilla.org/the-joy-of-coding-episode-40/)
-* [Evernote Agenda](https://www.evernote.com/l/AbIa5typpAdBFZsc7GXj2DMBWcnpIYzMqMg)

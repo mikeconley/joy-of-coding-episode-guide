@@ -1,17 +1,15 @@
 ---
 date: 2023-02-15
 number: 316
+airmozilla: https://mzl.la/joy-of-coding-2023-02-15
+agenda: https://mikeconley.ca/joc/agendas/Episode-0316.html
+rating: https://forms.gle/xJKmY3CwVPDeveRq6
 ---
 
-# Episode 316: Feb 15th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-02-15)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0316.html)
-
 ## Topics
-* [Bug 1529276](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276) - resource:///modules/WindowsJumpLists.jsm still does main thread I/O
-* Still hacking on WindowsJumpLists!
+
+- [Bug 1529276](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276) - resource:///modules/WindowsJumpLists.jsm still does main thread I/O
+- Still hacking on WindowsJumpLists!
   - Goal: I want the JumpListManager to only ever be accessed off of the main thread, so that the main thread in the parent process never has to await a lock.
     - [x] Get rid of maxListItems, since it doesn't appear to be used
     - [x] Get rid of isListCommitted
@@ -33,10 +31,4 @@ number: 316
     - [ ] Figure out how to make the above testable. Then write tests.
       - [ ] Let's update WinTaskbar to have a new method that can be accessed from native code (so not through XPCOM), called, like, DoCreateJumpListBuilder or something. Have it take an argument that is a reference to something that implements a JumpListManager interface. Have JumpListBuilder move that thing to the background thread - the background thread owns it. Then, in our tests, have our GTest call DoCreateJumpListBuilder, passing it something that mocks out JumpListManager. And then call it's populateJumpList method for testing.
     - [ ] Make our approach preffable. Put all the old stuff back (gulp), and update WindowsJumpList to use the new mechanism on a pref.
-* [Thunderbird's upcoming re-theme!](https://blog.thunderbird.net/2023/02/thunderbird-115-supernova-preview-the-new-folder-pane/)
-
-* [Rate this episode](https://forms.gle/xJKmY3CwVPDeveRq6)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+- [Thunderbird's upcoming re-theme!](https://blog.thunderbird.net/2023/02/thunderbird-115-supernova-preview-the-new-folder-pane/)

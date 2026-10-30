@@ -1,18 +1,16 @@
 ---
 date: 2023-03-08
 number: 318
+airmozilla: https://mzl.la/joy-of-coding-2023-03-08
+agenda: https://mikeconley.ca/joc/agendas/Episode-0318.html
+rating: https://forms.gle/g5kepskvpVnYEU5H6
 ---
 
-# Episode 318: Mar 8th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-03-08)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0318.html)
-
 ## Topics
-* [Bug 1529276](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276) - resource:///modules/WindowsJumpLists.jsm still does main thread I/O
 
-* Still hacking on WindowsJumpLists!
+- [Bug 1529276](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276) - resource:///modules/WindowsJumpLists.jsm still does main thread I/O
+
+- Still hacking on WindowsJumpLists!
   - Goal: I want the JumpListManager to only ever be accessed off of the main thread, so that the main thread in the parent process never has to await a lock.
     - [x] Get rid of maxListItems, since it doesn't appear to be used
     - [x] Get rid of isListCommitted
@@ -41,13 +39,7 @@ number: 318
 
 // Two implementations: // 1: "Real" one that wraps one of these things: RefPtr jumpListMgr; HRESULT hr = ::CoCreateInstance( CLSIDDestinationList, nullptr, CLSCTXINPROCSERVER, IIDICustomDestinationList, getter_AddRefs(jumpListMgr));
 
-// 2: "Fake" one that allows us to interrogate it for things it has been passed, for testing. class MockJumpListManager HRESULT BeginList(outparam maxitems and outparam IObjectArray) Wants to be prepared to provide an outparam which is an IObjectArray. We can do that by creating an empty collection, or a collection that returns ShellLinks. HRESULT AddUserTasks(collection) Takes an array of tasks and returns an HRESULT. We can then examine what was passed. HRESULT AppendCategory(string, collection) Takes a string and collection for the custom list. HRESULT CommitList Just returns an HRESULT. 
+// 2: "Fake" one that allows us to interrogate it for things it has been passed, for testing. class MockJumpListManager HRESULT BeginList(outparam maxitems and outparam IObjectArray) Wants to be prepared to provide an outparam which is an IObjectArray. We can do that by creating an empty collection, or a collection that returns ShellLinks. HRESULT AddUserTasks(collection) Takes an array of tasks and returns an HRESULT. We can then examine what was passed. HRESULT AppendCategory(string, collection) Takes a string and collection for the custom list. HRESULT CommitList Just returns an HRESULT.
 ```
 
 We're going to be calling PopulateJumpList method on the JumpListBuilder, and then what we can do is take the returned DOM Promise and [use a DOMPromiseListener](https://searchfox.org/mozilla-central/rev/cd2121e7d83af1b421c95e8c923db70e692dab5f/docshell/base/CanonicalBrowsingContext.cpp#2045-2051) to set up some lambda functions that write into some Maybe's [like this](https://searchfox.org/mozilla-central/rev/cd2121e7d83af1b421c95e8c923db70e692dab5f/dom/media/gtest/WaitFor.h#51-63), and then we spin the event loop (like that prior example) to wait until the Promise either resolves or rejects and then we assert the resolving or the rejecting.
-
-* [Rate this episode](https://forms.gle/g5kepskvpVnYEU5H6)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

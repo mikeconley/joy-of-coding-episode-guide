@@ -1,16 +1,14 @@
 ---
 date: 2026-05-06
 number: 439
+airmozilla: https://mzl.la/joy-of-coding-2026-05-06
+agenda: https://mikeconley.ca/joc/agendas/Episode-0439.html
+rating: https://forms.gle/G82dS9igNarahUgi9
 ---
 
-# Episode 439: May 6th, 2026
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2026-05-06)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0439.html)
-
 ## Topics
-* Q:
+
+- Q:
   "missed the submission window, so here is my question again:
   There was a regression on 10th April 2026 breaking the functionality of middle clicking the "Go to the address in Location Bar" arrow button to open the address in a new tab.
 
@@ -39,21 +37,16 @@ number: 439
   I used the functionality as a workaround for what has caused internal Mozilla debate: 724239, 776167, 1415136
   and there is still inconsistent behaviour between about:newtab, about:blank and about:privatebrowsing"
   - This bug: https://bugzilla.mozilla.org/show_bug.cgi?id=2037361, which is assigned (as of this writing, an hour ago!)
-* [Query](https://bugzilla.mozilla.org/buglist.cgi?quicksearch=keyword%3Aregressionwindow-wanted&list_id=17963114) for finding regressionwindow-wanted bugs
+
+- [Query](https://bugzilla.mozilla.org/buglist.cgi?quicksearch=keyword%3Aregressionwindow-wanted&list_id=17963114) for finding regressionwindow-wanted bugs
   - ./mach mozregression to find the regressor
-* Let's solve a mystery!
+- Let's solve a mystery!
   - Where are those spans going? Where is the progress going?!
     - Our self-closing tags were confusing things. Got rid of them!
   - Build fluent migration for the strings we moved
     - Still to do
   - Fix button styling to match existing button behaviour
     - Done
-* TODO:
+- TODO:
   - Talk to emilio about center cropping support in CSS for privileged markup / layout
   - Factor out download item UI into a reusable Lit element
-
-* [Rate this episode](https://forms.gle/G82dS9igNarahUgi9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

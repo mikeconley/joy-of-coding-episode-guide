@@ -1,22 +1,21 @@
 ---
 date: 2026-02-25
 number: 431
+airmozilla: https://mzl.la/joy-of-coding-2026-02-25
+agenda: https://mikeconley.ca/joc/agendas/Episode-0431.html
+rating: https://forms.gle/ZkVYmmZskFNaaNFV7
 ---
 
-# Episode 431: Feb 25th, 2026
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2026-02-25)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0431.html)
-
 ## Topics
-* ![Alt text](https://mikeconley.ca/joc/agendas/images/6b2852e03a62474293c223c1c94a3205 "keanu code 431")
+
+- ![Alt text](https://mikeconley.ca/joc/agendas/images/6b2852e03a62474293c223c1c94a3205 "keanu code 431")
   - https://www.keanu.codes/?code=431
   - Brought to you by HTTP code 431
     - https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/431
-* Today will be a slightly shorter episode.
-* No episode next week!
-* Is it cleaner to just create a specialized protocol handler for cached newtab resources in this configuration?
+- Today will be a slightly shorter episode.
+- No episode next week!
+- Is it cleaner to just create a specialized protocol handler for cached newtab resources in this configuration?
+
 ```HTML
 * Add a moz-newtab-cached protocol handler that can run in the privileged about content process.
 * It's job will be to get a remote stream from the parent for script, or for styles.
@@ -36,9 +35,3 @@ number: 431
 * moz-newtab-cached protocol handler is the "read-only" parts here. It just knows how to read from the cache. It does not know how to write to it. It knows how to fall back.
 * The other part is the business around noticing that a newtab loaded, and kicking off the DeferredTask to maybe write an update to the cache.
 ```
-
-* [Rate this episode](https://forms.gle/ZkVYmmZskFNaaNFV7)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
