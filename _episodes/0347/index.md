@@ -1,16 +1,14 @@
 ---
 date: 2023-11-15
 number: 347
+airmozilla: https://mzl.la/joy-of-coding-2023-11-15
+agenda: https://mikeconley.ca/joc/agendas/Episode-0347.html
+rating: https://forms.gle/P8qR1FjHzb9tAH2H9
 ---
 
-# Episode 347: Nov 15th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-11-15)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0347.html)
-
 ## Topics
-* Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
+
+- Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -52,17 +50,10 @@ number: 347
   - [x] Write a patch that allows us to enable the new backend remotely via Remote Settings
   - [x] Manually test long title
 
-* [ ] File follow-up bugs
+- [ ] File follow-up bugs
   - [ ] Further de-duplicate tests (especially PopulateJumpList tests) by putting preamble and post-amble into a helper function
   - [ ] Write a front-end test that registers a fake nsIWinTaskbar or otherwise produces a fake nsIJumpListBuilder to make sure it gets passed the right things.
   - [ ] Migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
   - [ ] Consider making the rejection value of populateJumpList not an nsresult but a more descriptive ErrorResult type.
   - [ ] See if we should ClearJumpList on kPrefTaskbarEnabled pref change or TOPIC_CLEAR_PRIVATE_DATA
   - [ ] Make it so that if gtest fails to build that the test will fail to run.
-
-
-* [Rate this episode](https://forms.gle/P8qR1FjHzb9tAH2H9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

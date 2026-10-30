@@ -1,24 +1,22 @@
 ---
 date: 2025-10-29
 number: 418
+airmozilla: https://mzl.la/joy-of-coding-2025-10-29
+agenda: https://mikeconley.ca/joc/agendas/Episode-0418.html
+rating: https://forms.gle/Qn3SPSzPmqW13qpt9
 ---
 
-# Episode 418: Oct 29th, 2025
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2025-10-29)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0418.html)
-
 ## Topics
-* Sorry for the delays!
+
+- Sorry for the delays!
   - More travel coming soon though...
-* ![Alt text](https://mikeconley.ca/joc/agendas/images/709d846bd7c54d23b8057994de48ec64 "keanu code 418")
+- ![Alt text](https://mikeconley.ca/joc/agendas/images/709d846bd7c54d23b8057994de48ec64 "keanu code 418")
   - https://www.keanu.codes/?code=418 - mikes favourite
   - Brought to you by HTTP code 418
     - https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/418
-* Previewing split view!
+- Previewing split view!
   - browser.tabs.splitView.enabled
-* Testing a punch out of a hole for newtab
+- Testing a punch out of a hole for newtab
   - nsICategoryManager
   - Hand-off Search Component
     - Has a SearchComponents.manifest
@@ -32,10 +30,4 @@ number: 418
       - This will then create a structure which can be send down in the state object that each New Tab receives - A class (or component?) will be responsible for parsing that structure and holding it per page - Yes, it's awkward that each instance of newtab has one of these, but that's already a problem with the state object - The Search.jsx component will get the definition for the lone "search" item in the registry. When it finds it, it will insert the script and insert a web component (React, Lit, vanilla) that is responsible for adding stylesheet dependencies within its shadow dom or via CSS modules.
         - I need to start an Engineering Design document to start shopping around with these ideas, at least show Gijs and Scott, but probably a bunch of others as well.
         - File a bug to get rid of non-handoff behaviour to simplify Search.jsx and contentSearchUI
-* Reviewing?
-
-* [Rate this episode](https://forms.gle/Qn3SPSzPmqW13qpt9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+- Reviewing?

@@ -1,26 +1,18 @@
 ---
 date: 2024-02-07
 number: 354
+airmozilla: https://mzl.la/joy-of-coding-2024-02-07
+agenda: https://mikeconley.ca/joc/agendas/Episode-0354.html
+rating: https://forms.gle/2L95wBwL9wk5CsMW9
 ---
 
-# Episode 354: Feb 7th, 2024
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2024-02-07)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0354.html)
-
 ## Topics
-* Updates:
+
+- Updates:
   - Windows Jump List is going through QA testing right now, and so far, no bugs!
-* Greg Wilson! My grad supervisor was recently interviewed and he mentioned The Joy of Coding, and this is a good opportunity to learn more about Greg and his work.
+- Greg Wilson! My grad supervisor was recently interviewed and he mentioned The Joy of Coding, and this is a good opportunity to learn more about Greg and his work.
   - https://third-bit.com/sdxjs/
   - https://corecursive.com/beautiful-code-with-greg-wilson/
-* https://spidermonkey.dev/areweesmifiedyet/
-*  https://firefoxux.github.io/firefox-desktop-components/?path=/story/docs-lit-guide--page
-* We did it! Got the tests all running! Just need to clean up the patch and split it up into absorbtions into the prior patches and a new patch for the resourceUriPlugin changes.
-
-* [Rate this episode](https://forms.gle/2L95wBwL9wk5CsMW9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+- https://spidermonkey.dev/areweesmifiedyet/
+- https://firefoxux.github.io/firefox-desktop-components/?path=/story/docs-lit-guide--page
+- We did it! Got the tests all running! Just need to clean up the patch and split it up into absorbtions into the prior patches and a new patch for the resourceUriPlugin changes.

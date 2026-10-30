@@ -1,22 +1,20 @@
 ---
 date: 2023-07-12
 number: 332
+airmozilla: https://mzl.la/joy-of-coding-2023-07-12
+agenda: https://mikeconley.ca/joc/agendas/Episode-0332.html
+rating: https://forms.gle/Jzk5Z7QQhoc4Lxdo9
 ---
 
-# Episode 332: Jul 12th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-07-12)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0332.html)
-
 ## Topics
-* No episode next week due to vacation!
-* Special shoutout to the Thunderbird gang!
+
+- No episode next week due to vacation!
+- Special shoutout to the Thunderbird gang!
   - [Thunderbird 115 is here](https://blog.thunderbird.net/2023/07/our-fastest-most-beautiful-release-ever-thunderbird-115-supernova-is-here/)
   - [Thundercast episode 2 - guest Mike](https://blog.thunderbird.net/2023/05/thundercast-episode-2-with-special-mozilla-guest-mike-conley/)
 
-* WindowsJumpLists! <b>Let's keep going!</b>
-* TODO
+- WindowsJumpLists! <b>Let's keep going!</b>
+- TODO
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -37,10 +35,4 @@ number: 332
   - [ ] Write a gtest for the JumpListBuilder
   - [ ] Write a front-end test that registers a fake nsIWinTaskbar or otherwise produces a fake nsIJumpListBuilder to make sure it gets passed the right things.
   - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
-* [sdk's patch](https://phabricator.services.mozilla.com/D183102) to add tooltips to the All Tabs menu panel
-
-* [Rate this episode](https://forms.gle/Jzk5Z7QQhoc4Lxdo9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+- [sdk's patch](https://phabricator.services.mozilla.com/D183102) to add tooltips to the All Tabs menu panel

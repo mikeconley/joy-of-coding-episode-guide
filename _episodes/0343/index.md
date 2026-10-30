@@ -1,18 +1,16 @@
 ---
 date: 2023-10-18
 number: 343
+airmozilla: https://mzl.la/joy-of-coding-2023-10-18
+agenda: https://mikeconley.ca/joc/agendas/Episode-0343.html
+rating: https://forms.gle/W8P1R9vnr7iCBTNv5
 ---
 
-# Episode 343: Oct 18th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-10-18)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0343.html)
-
 ## Topics
-* Update on [Bug 1818237](https://bugzilla.mozilla.org/show_bug.cgi?id=1818237) - Make it possible to import from other browsers when Firefox is installed as a Snap package
-* [AreWeEsmifiedYet](https://spidermonkey.dev/areweesmifiedyet/)
-* Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
+
+- Update on [Bug 1818237](https://bugzilla.mozilla.org/show_bug.cgi?id=1818237) - Make it possible to import from other browsers when Firefox is installed as a Snap package
+- [AreWeEsmifiedYet](https://spidermonkey.dev/areweesmifiedyet/)
+- Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -51,9 +49,3 @@ number: 343
     - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
   - [ ] Consider making the rejection value of populateJumpList not an nsresult but a more descriptive ErrorResult type.
   - [ ] See if we should ClearJumpList on kPrefTaskbarEnabled pref change or TOPIC_CLEAR_PRIVATE_DATA
-
-* [Rate this episode](https://forms.gle/W8P1R9vnr7iCBTNv5)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

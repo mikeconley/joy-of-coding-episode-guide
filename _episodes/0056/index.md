@@ -1,10 +1,6 @@
 ---
 date: 2016-05-11
 number: 56
+airmozilla: https://air.mozilla.org/the-joy-of-coding-episode-56/
+agenda: https://www.evernote.com/l/AbLcMRtrkM1L9IIdd9rkFcjiVAi9dPLSdj0
 ---
-
-# Episode 56: May 11, 2016
-
-## Links
-* [Watch this episode on air mozilla](https://air.mozilla.org/the-joy-of-coding-episode-56/)
-* [Evernote Agenda](https://www.evernote.com/l/AbLcMRtrkM1L9IIdd9rkFcjiVAi9dPLSdj0)

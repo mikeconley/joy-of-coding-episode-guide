@@ -1,17 +1,15 @@
 ---
 date: 2022-11-30
 number: 309
+airmozilla: https://mzl.la/joy-of-coding-2022-11-30
+agenda: https://mikeconley.ca/joc/agendas/Episode-0309.html
+rating: https://forms.gle/4yWxPMt4PtXTPDy76
 ---
 
-# Episode 309: Nov 30th, 2022
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2022-11-30)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0309.html)
-
 ## Topics
-* Migrator reusable component infrastructure is being added in [this patch](https://phabricator.services.mozilla.com/D162623)
-* Still hacking on WindowsJumpLists!
+
+- Migrator reusable component infrastructure is being added in [this patch](https://phabricator.services.mozilla.com/D162623)
+- Still hacking on WindowsJumpLists!
   - Goal: I want the JumpListManager to only ever be accessed off of the main thread, so that the main thread in the parent process never has to await a lock.
     - [x] Get rid of maxListItems, since it doesn't appear to be used
     - [x] Get rid of isListCommitted
@@ -34,12 +32,6 @@ number: 309
     - [ ] Update WindowsJumpList.jsm to be simpler so that it doesn't try to do so much lazy stuff since now it's all off of the main thread
     - [ ] Remove the old implementation! Hooray!
     - [ ] Migrate off of dedicated lazy thread to background thread pool
-* Question: When will WebGPU be available in the main release?
+- Question: When will WebGPU be available in the main release?
   - [This](https://bugzilla.mozilla.org/show_bug.cgi?id=1746245) is the bug to enable it in Nightly
-* No episode next week!
-
-* [Rate this episode](https://forms.gle/4yWxPMt4PtXTPDy76)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+- No episode next week!

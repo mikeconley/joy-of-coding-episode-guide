@@ -1,18 +1,15 @@
 ---
 date: 2022-07-06
 number: 293
+airmozilla: https://mzl.la/joy-of-coding-2022-07-06
+agenda: https://mikeconley.ca/joc/agendas/Episode-0293.html
 ---
 
-# Episode 293: Jul 6st, 2022
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2022-07-06)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0293.html)
-
 ## Topics
-* [Bug 1778204](https://bugzilla.mozilla.org/show_bug.cgi?id=1778204) - LightweightThemeChild doesn't call update() for non-sidebar parent process documents
-* Only 7 episodes until Episode 300! Any more ideas on what to do for 300? Let me know in the [Rate this episode](https://forms.gle/n8FbeWEDFtmfnExQ9) form!
-* Question time!
+
+- [Bug 1778204](https://bugzilla.mozilla.org/show_bug.cgi?id=1778204) - LightweightThemeChild doesn't call update() for non-sidebar parent process documents
+- Only 7 episodes until Episode 300! Any more ideas on what to do for 300? Let me know in the [Rate this episode](https://forms.gle/n8FbeWEDFtmfnExQ9) form!
+- Question time!
 
   - Could you please give an overview of the reason for the functional split between bugzilla, phabricator, jira. Also, should mozilla's jira be publicly accessible, there are links from bugzilla to both but it seems only phabricator are public?
     - JIRA is good as a project management tool. It is less good as a bug tracker. It is much worse as a tool for doing development in the open, since we (Mozilla) have to pay a seat license per user for our instance.
@@ -37,8 +34,4 @@ number: 293
   - What is the easiest way to figure out which try jobs should get run to get maximum confidence?
     - `./mach try auto`
 
-* [Rate this episode]( https://forms.gle/n8FbeWEDFtmfnExQ9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+- [Rate this episode](https://forms.gle/n8FbeWEDFtmfnExQ9)

@@ -1,18 +1,16 @@
 ---
 date: 2023-09-27
 number: 340
+airmozilla: https://mzl.la/joy-of-coding-2023-09-27
+agenda: https://mikeconley.ca/joc/agendas/Episode-0340.html
+rating: https://forms.gle/Km16yJ6z42y65xcKA
 ---
 
-# Episode 340: Sep 27th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-09-27)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0340.html)
-
 ## Topics
-* Firefox 118! With translations!
-* Firefox 119 is coming soon with some goodies - in particular, a revamped Firefox View.
-* [] Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
+
+- Firefox 118! With translations!
+- Firefox 119 is coming soon with some goodies - in particular, a revamped Firefox View.
+- [] Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -48,9 +46,3 @@ number: 340
     - [ ] Maybe all of our mocks should be StrictMocks?
   - [ ] Write a front-end test that registers a fake nsIWinTaskbar or otherwise produces a fake nsIJumpListBuilder to make sure it gets passed the right things.
     - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
-
-* [Rate this episode](https://forms.gle/Km16yJ6z42y65xcKA)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

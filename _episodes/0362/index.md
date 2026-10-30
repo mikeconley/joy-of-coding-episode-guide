@@ -1,16 +1,14 @@
 ---
 date: 2024-04-10
 number: 362
+airmozilla: https://mzl.la/joy-of-coding-2024-04-10
+agenda: https://mikeconley.ca/joc/agendas/Episode-0362.html
+rating: https://forms.gle/wNVrp498YkmsArqd7
 ---
 
-# Episode 362: Apr 10th, 2024
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2024-04-10)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0362.html)
-
 ## Topics
-* WindowsJumpList favicon stuff!
+
+- WindowsJumpList favicon stuff!
   - We need tests
     - We have added a new method called obtainAndCacheFaviconAsync on nsIJumpListBuilder
     - The expectation is that we should be able to use this method to asynchronously clone a favicon from the Favicon Database to our disk cache for Jump List, and that this can happen off of the main thread, and that we get the path back if it exists or an non-success result code in the event that the favicon is not in the database or some other error occurs.
@@ -22,7 +20,7 @@ number: 362
       - Add documentation to nsIJumpListBuilder for a new method
     - The patches are a little messy, and could be broken up better <-- "a refactor"
 
-* Questions:
+- Questions:
   - I'm seeing you doing special builds (thunderbird, debug, etc). I'm really curious where and how this is working. How do mach knows what folders/files it needs to use, override (in the case of Thunderbird), etc. I guess I'm intrigued in the build system in general but the question above didn't seem to be covered in the Firefox docs.That could be interesting to have a 5min crash course on that if/when you're stuck waiting for a build to finish :)
     - [mozconfigwrapper](https://pypi.org/project/mozconfigwrapper/)
     - https://firefox-source-docs.mozilla.org/build/buildsystem/mozconfigs.html
@@ -34,9 +32,3 @@ number: 362
     As i don't believe there is a GUI method to undo this list, could you please demonstrate the sqlite command syntax (terminal or powershell) so that it can be cleared for an existing profile and avoid having to create a brand new firefox profile? thanks for the streams"
     - const { WinTaskbarJumpList } = ChromeUtils.importESModule( "resource:///modules/WindowsJumpLists.sys.mjs" );
     - WinTaskbarJumpList.update()
-
-* [Rate this episode](https://forms.gle/wNVrp498YkmsArqd7)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

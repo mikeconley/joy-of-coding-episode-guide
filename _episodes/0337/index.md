@@ -1,16 +1,14 @@
 ---
 date: 2023-09-06
 number: 337
+airmozilla: https://mzl.la/joy-of-coding-2023-09-06
+agenda: https://mikeconley.ca/joc/agendas/Episode-0337.html
+rating: https://forms.gle/VVQByMgv9xjycJPX9
 ---
 
-# Episode 337: Sep 6th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-09-06)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0337.html)
-
 ## Topics
-* Back to WindowsJumpLists
+
+- Back to WindowsJumpLists
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -41,9 +39,3 @@ number: 337
       - [ ] Maybe all of our mocks should be StrictMocks?
   - [ ] Write a front-end test that registers a fake nsIWinTaskbar or otherwise produces a fake nsIJumpListBuilder to make sure it gets passed the right things.
     - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
-
-* [Rate this episode](https://forms.gle/VVQByMgv9xjycJPX9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

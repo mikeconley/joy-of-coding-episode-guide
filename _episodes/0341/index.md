@@ -1,16 +1,14 @@
 ---
 date: 2023-10-04
 number: 341
+airmozilla: https://mzl.la/joy-of-coding-2023-10-04
+agenda: https://mikeconley.ca/joc/agendas/Episode-0341.html
+rating: https://forms.gle/5uhfcMm6XwNgCmACA
 ---
 
-# Episode 341: Oct 4th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-10-04)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0341.html)
-
 ## Topics
-* Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
+
+- Back to [WindowsJumpLists](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276)
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -49,9 +47,3 @@ number: 341
     - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
   - [ ] Consider making the rejection value of populateJumpList not an nsresult but a more descriptive ErrorResult type.
   - [ ] See if we should ClearJumpList on kPrefTaskbarEnabled pref change or TOPIC_CLEAR_PRIVATE_DATA
-
-* [Rate this episode](https://forms.gle/5uhfcMm6XwNgCmACA)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

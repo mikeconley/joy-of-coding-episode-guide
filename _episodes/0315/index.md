@@ -1,16 +1,14 @@
 ---
 date: 2023-02-08
 number: 315
+airmozilla: https://mzl.la/joy-of-coding-2023-02-08
+agenda: https://mikeconley.ca/joc/agendas/Episode-0315.html
+rating: https://forms.gle/u2wfQcTvcdUgyETKA
 ---
 
-# Episode 315: Feb 8th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-02-08)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0315.html)
-
 ## Topics
-* Still hacking on WindowsJumpLists!
+
+- Still hacking on WindowsJumpLists!
   - Goal: I want the JumpListManager to only ever be accessed off of the main thread, so that the main thread in the parent process never has to await a lock.
     - [x] Get rid of maxListItems, since it doesn't appear to be used
     - [x] Get rid of isListCommitted
@@ -29,9 +27,3 @@ number: 315
       - [ ] Make our approach preffable. Put all the old stuff back (gulp), and update WindowsJumpList to use the new mechanism on a pref.
       - [x] Implement clearJumpList (it's called deleteActiveList)
       - [ ] See if the above works. If it does, get rid of old changes that we don't need and merge patches down
-
-* [Rate this episode](https://forms.gle/u2wfQcTvcdUgyETKA)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

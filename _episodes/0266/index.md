@@ -1,20 +1,18 @@
 ---
 date: 2021-10-20
 number: 266
+airmozilla: https://mzl.la/joy-of-coding-2021-10-20
+agenda: https://mikeconley.ca/joc/agendas/Episode-0266.html
+rating: https://forms.gle/wowyNFhcntTQ8Zdu8
 ---
 
-# Episode 266: Oct 20th, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-10-20)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0266.html)
-
 ## Topics
-* [Bug 1732572](https://bugzilla.mozilla.org/show_bug.cgi?id=1732572) - WebRTC global sharing indicator bug on macOS
+
+- [Bug 1732572](https://bugzilla.mozilla.org/show_bug.cgi?id=1732572) - WebRTC global sharing indicator bug on macOS
   - [Patch](https://phabricator.services.mozilla.com/D129070)
-* WebExtensions and how they interact with DocShells / BrowsingContexts
-* How a patch gets into Firefox, from start to finish!
-* Question time!
+- WebExtensions and how they interact with DocShells / BrowsingContexts
+- How a patch gets into Firefox, from start to finish!
+- Question time!
   - I am a CS student and I often find myself spending too much time doing assignments, trying to be as perfect as possible, especially for less useful activities like Networking etc. How would you deal with perfectionism?
     - The perfect is the enemy of the done. Start small. It's better to have something that you can tinker with and improve incrementally rather than having something perfect right out the gate.
     - Sufficiently complex software is never perfect. There are always problems with it. There are always bugs with it.
@@ -29,9 +27,3 @@ number: 266
     - WebExtensions and how they interact with DocShells / BrowsingContexts
     - How a patch gets into Firefox, from start to finish!
     - How is gbrowser and xpcom used? Can you talk about it too?
-
-* [Rate this episode](https://forms.gle/wowyNFhcntTQ8Zdu8)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

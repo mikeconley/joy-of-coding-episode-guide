@@ -1,17 +1,15 @@
 ---
 date: 2023-01-11
 number: 311
+airmozilla: https://mzl.la/joy-of-coding-2023-01-11
+agenda: https://mikeconley.ca/joc/agendas/Episode-0311.html
+rating: https://forms.gle/zenyCRvp5YH1Ukfr8
 ---
 
-# Episode 311: Jan 11th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-01-11)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0311.html)
-
 ## Topics
-* Reviewing a patch for [Danny Colin!](https://bugzilla.mozilla.org/show_bug.cgi?id=1316727)
-* Still hacking on WindowsJumpLists!
+
+- Reviewing a patch for [Danny Colin!](https://bugzilla.mozilla.org/show_bug.cgi?id=1316727)
+- Still hacking on WindowsJumpLists!
   - Goal: I want the JumpListManager to only ever be accessed off of the main thread, so that the main thread in the parent process never has to await a lock.
     - [x] Get rid of maxListItems, since it doesn't appear to be used
     - [x] Get rid of isListCommitted
@@ -31,11 +29,5 @@ number: 311
     - [ ] Remove the old implementation! Hooray!
     - [ ] Migrate off of dedicated lazy thread to background thread pool
 
-* Question: "What is easiest way to succeed with applying an old patch, bump it to tip and deal with merge conflicts? To handle review feedback. Is it best to apply somewhere close in the Mercurial tree where it was committed?"
+- Question: "What is easiest way to succeed with applying an old patch, bump it to tip and deal with merge conflicts? To handle review feedback. Is it best to apply somewhere close in the Mercurial tree where it was committed?"
   - Answer: It's best if you can take advantage of the VCS's smarts when reviving an old patch. moz-phab patch XYZ --apply-to here just uses the patch command under the hood to apply the patch directly. Rebase the old patch from where it was onto the tip. That will take advantage of what the VCS knows about what has happened since that commit was made.
-
-* [Rate this episode](https://forms.gle/zenyCRvp5YH1Ukfr8)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

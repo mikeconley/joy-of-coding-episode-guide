@@ -1,19 +1,17 @@
 ---
 date: 2023-09-13
 number: 338
+airmozilla: https://mzl.la/joy-of-coding-2023-09-13
+agenda: https://mikeconley.ca/joc/agendas/Episode-0338.html
+rating: https://forms.gle/g3G2T9vuetweJgZRA
 ---
 
-# Episode 338: Sep 13th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-09-13)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0338.html)
-
 ## Topics
-* [Faster Vue.js execution](https://hacks.mozilla.org/2023/09/faster-vue-js-execution-in-firefox/) in Firefox
-* Quick pivot - fixing a thing in the migration wizard: [Bug 1852973](https://bugzilla.mozilla.org/show_bug.cgi?id=1852973)
-* [Writing good commit messages](https://reviewboard.notion.site/Writing-Good-Change-Descriptions-10529e7c207743fa8ca90153d4b21fea)
-* Back to WindowsJumpLists
+
+- [Faster Vue.js execution](https://hacks.mozilla.org/2023/09/faster-vue-js-execution-in-firefox/) in Firefox
+- Quick pivot - fixing a thing in the migration wizard: [Bug 1852973](https://bugzilla.mozilla.org/show_bug.cgi?id=1852973)
+- [Writing good commit messages](https://reviewboard.notion.site/Writing-Good-Change-Descriptions-10529e7c207743fa8ca90153d4b21fea)
+- Back to WindowsJumpLists
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -44,9 +42,3 @@ number: 338
       - [ ] Maybe all of our mocks should be StrictMocks?
   - [ ] Write a front-end test that registers a fake nsIWinTaskbar or otherwise produces a fake nsIJumpListBuilder to make sure it gets passed the right things.
     - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
-
-* [Rate this episode](https://forms.gle/g3G2T9vuetweJgZRA)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

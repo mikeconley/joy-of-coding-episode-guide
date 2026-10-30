@@ -1,24 +1,22 @@
 ---
 date: 2023-08-09
 number: 335
+airmozilla: https://mzl.la/joy-of-coding-2023-08-09
+agenda: https://mikeconley.ca/joc/agendas/Episode-0335.html
+rating: https://forms.gle/NAZ6G6gDjkbKAAKH8
 ---
 
-# Episode 335: Aug 9th, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-08-09)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0335.html)
-
 ## Topics
-* No episodes for the next two weeks due to travel!
-* Feedback:
+
+- No episodes for the next two weeks due to travel!
+- Feedback:
   - Q: If you want to be as sure as possible when filing a bug, if it is a security related bug or not. How would you think about that?
     - https://www.mozilla.org/en-US/security/bug-bounty/
   - After all of this Windows JumpList work is merged and riding the rails to release I think it may be interesting to have a bit of a recap on all the pieces of work you did during all these episodes. Doesn't have to necessarily take up a full episode but maybe it could? 🤷‍♂️
     - I think this is a great idea. This whole project has taken about a year at this point, more or less (we've come and go from the project a bit). I think a recap would be really useful.
 
-* WindowsJumpLists! <b>Let's keep going!</b>
-* TODO
+- WindowsJumpLists! <b>Let's keep going!</b>
+- TODO
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -39,9 +37,3 @@ number: 335
   - [ ] Write a gtest for the JumpListBuilder
   - [ ] Write a front-end test that registers a fake nsIWinTaskbar or otherwise produces a fake nsIJumpListBuilder to make sure it gets passed the right things.
   - [ ] Make a note to migrate the new jump list builder off of the dedicated lazy thread and use the IO thread pool instead.
-
-* [Rate this episode](https://forms.gle/NAZ6G6gDjkbKAAKH8)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

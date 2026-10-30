@@ -1,20 +1,18 @@
 ---
 date: 2025-08-20
 number: 414
+airmozilla: https://mzl.la/joy-of-coding-2025-08-20
+agenda: https://mikeconley.ca/joc/agendas/Episode-0414.html
+rating: https://forms.gle/PAKbxoJrc85e5Zjq8
 ---
 
-# Episode 414: Aug 20th, 2025
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2025-08-20)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0414.html)
-
 ## Topics
-* ![Alt text](https://mikeconley.ca/joc/agendas/images/23f4022ac0c84e4eb7903704898bcdf7 "keanu code 414")
+
+- ![Alt text](https://mikeconley.ca/joc/agendas/images/23f4022ac0c84e4eb7903704898bcdf7 "keanu code 414")
   - https://www.keanu.codes/?code=414
   - 414 - URI Too Long
     - https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/414
-* New Tab trainhop readyness tool
+- New Tab trainhop readyness tool
   - Overarching goal: a tool that can be used by an Eng, PM, TPM to assess the viability of the most recent revision (or a specific revision) of the newtab code in mozilla-central (or main) to train-hop to Beta and / or Release.
     - Train-hop compatibility state from CI
       - Displays train-hop compatibility meta bug stats, and reminds users when a compatibility shim can be removed.
@@ -43,9 +41,3 @@ number: 414
     - Get webext-glue/locales/en-US/newtab.ftl last changed date from GitHub
     - Get locales-report.json from GitHub
     - Use jq-web library (https://github.com/fiatjaf/jq-web) to query Experimenter for active deploys, rollouts and experiments.
-
-* [Rate this episode](https://forms.gle/PAKbxoJrc85e5Zjq8)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

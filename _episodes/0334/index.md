@@ -1,25 +1,23 @@
 ---
 date: 2023-08-02
 number: 334
+airmozilla: https://mzl.la/joy-of-coding-2023-08-02
+agenda: https://mikeconley.ca/joc/agendas/Episode-0334.html
+rating: https://forms.gle/Xx5X3fJcCEbKUGxHA
 ---
 
-# Episode 334: Aug 2nd, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-08-02)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0334.html)
-
 ## Topics
-* Firefox View Next
+
+- Firefox View Next
   - [Metabug for this work](https://bugzilla.mozilla.org/show_bug.cgi?id=1827393)
 
-* No episode next week due to vacation!
-* Special shoutout to the Thunderbird gang!
+- No episode next week due to vacation!
+- Special shoutout to the Thunderbird gang!
   - [Thunderbird 115 is here](https://blog.thunderbird.net/2023/07/our-fastest-most-beautiful-release-ever-thunderbird-115-supernova-is-here/)
   - [Thundercast episode 2 - guest Mike](https://blog.thunderbird.net/2023/05/thundercast-episode-2-with-special-mozilla-guest-mike-conley/)
 
-* WindowsJumpLists! <b>Let's keep going!</b>
-* TODO
+- WindowsJumpLists! <b>Let's keep going!</b>
+- TODO
   - [x] Rename nsIJumpListBuilder to nsILegacyJumpListBuilder
   - [x] Add createLegacyJumpListBuilder to nsIWinTaskBar to use the old mechanism
   - [x] Update WindowsJumpList to use the legacy interface
@@ -47,9 +45,3 @@ number: 334
 // Two implementations: // 1: "Real" one that wraps one of these things: RefPtr jumpListMgr; HRESULT hr = ::CoCreateInstance( CLSIDDestinationList, nullptr, CLSCTXINPROCSERVER, IIDICustomDestinationList, getter_AddRefs(jumpListMgr));
 
 // 2: "Fake" one that allows us to interrogate it for things it has been passed, for testing. class MockJumpListManager HRESULT BeginList(outparam maxitems and outparam IObjectArray) Wants to be prepared to provide an outparam which is an IObjectArray. We can do that by creating an empty collection, or a collection that returns ShellLinks. HRESULT AddUserTasks(collection) Takes an array of tasks and returns an HRESULT. We can then examine what was passed. HRESULT AppendCategory(string, collection) Takes a string and collection for the custom list. HRESULT CommitList Just returns an HRESULT.
-
-* [Rate this episode](https://forms.gle/Xx5X3fJcCEbKUGxHA)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

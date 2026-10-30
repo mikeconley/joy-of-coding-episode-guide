@@ -37,16 +37,15 @@ If you're new to Git, here's some resources to help you:
    ---
    date: YYYY-MM-DD
    number: 1234
+   youtube: "https://..."
+   airmozilla: "https://..."
+   agenda: "https://..."
    ---
 
-   ## Episode 1234: MMM DD, YYYY
-
-   ### Links
-
-   ### Topics
+   ## Topics
    ```
 0. Edit your `index.md` as needed. You can look other episodes' files to see an
-   example.
+   example. If `youtube`, `airmozilla` or `agenda` are empty, do not include them.
 0. Save your changes to your fork
 
    ```

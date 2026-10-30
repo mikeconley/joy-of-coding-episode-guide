@@ -1,20 +1,18 @@
 ---
 date: 2021-09-01
 number: 260
+airmozilla: https://mzl.la/joy-of-coding-2021-09-01
+agenda: https://mikeconley.ca/joc/agendas/Episode-0260.html
+rating: https://forms.gle/xADFGN8CdFDm5uXM8
 ---
 
-# Episode 260: Sep 1st, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-09-01)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0260.html)
-
 ## Topics
-* Fixed the Joy of Coding Episode Guide theme that was broken due to a Jekyll Theme update that probably happened on GitHub's side of things
-* [Bug 1724199](https://bugzilla.mozilla.org/show_bug.cgi?id=1724199) - 10.09 - 9.23% sessionrestore_no_auto_restore / sessionrestore_no_auto_restore + 1 more (Windows) regression on Tue August 3 2021
+
+- Fixed the Joy of Coding Episode Guide theme that was broken due to a Jekyll Theme update that probably happened on GitHub's side of things
+- [Bug 1724199](https://bugzilla.mozilla.org/show_bug.cgi?id=1724199) - 10.09 - 9.23% sessionrestore_no_auto_restore / sessionrestore_no_auto_restore + 1 more (Windows) regression on Tue August 3 2021
   - [Let's see](https://treeherder.mozilla.org/#/jobs?repo=try&revision=2406f69be8f65c5fe2702adca7a88c149825ffb0) if preloadedState is causing the issue. I will post the results in a comment in the bug.
-* [Bug 1725276](https://bugzilla.mozilla.org/show_bug.cgi?id=1725276) - Intermittent docshell/test/browser/browser_TopLevelNavigationDelegate.js | Test timed out -
-* Question time!
+- [Bug 1725276](https://bugzilla.mozilla.org/show_bug.cgi?id=1725276) - Intermittent docshell/test/browser/browser_TopLevelNavigationDelegate.js | Test timed out -
+- Question time!
   - Have Firefox devs sent patches to Chromium and have Google devs sent patches over to Firefox?
     - Yes to both.
     - [Igalia](https://www.igalia.com/)
@@ -26,7 +24,7 @@ number: 260
     - Being alive
     - Great family, great friends, great job that I enjoy, live in Canada
     - Small things: tea, coffee, tasty tap water (Toronto!), Toronto
-      - Don Valley Parkway 
+      - Don Valley Parkway
     - Good books, that I can read them
   - What do you value the most in a friendship and relationship?
     - Ease and fluidity of communication
@@ -40,10 +38,4 @@ number: 260
       - Windows, crashintentionally.exe
         - https://releases.mozilla.org/pub/utilities/crashfirefox-intentionally/
         - Source: https://github.com/bsmedberg/crashfirefox-intentionally
-      - https://firefox-source-docs.mozilla.org/performance/reportingaperformance_problem.html 
-
-* [Rate this episode](https://forms.gle/xADFGN8CdFDm5uXM8)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+      - https://firefox-source-docs.mozilla.org/performance/reportingaperformance_problem.html

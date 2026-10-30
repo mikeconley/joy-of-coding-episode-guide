@@ -1,25 +1,23 @@
 ---
 date: 2021-09-22
 number: 263
+airmozilla: https://mzl.la/joy-of-coding-2021-09-22
+agenda: https://mikeconley.ca/joc/agendas/Episode-0263.html
+rating: https://forms.gle/tQRJeoBX5e4MRCsm9
 ---
 
-# Episode 263: Sep 22nd, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-09-22)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0263.html)
-
 ## Topics
-* New toy to show off!
+
+- New toy to show off!
   - Wacom Cintiq 16
-* [Bug 1730039](https://bugzilla.mozilla.org/show_bug.cgi?id=1730039) - Remove or update probes expiring in Firefox 95: pictureinpicture.
+- [Bug 1730039](https://bugzilla.mozilla.org/show_bug.cgi?id=1730039) - Remove or update probes expiring in Firefox 95: pictureinpicture.
   - [Lean data practices](https://www.mozilla.org/en-US/about/policy/lean-data/)
-* [Bug 1730042](https://bugzilla.mozilla.org/show_bug.cgi?id=1730042) - Remove or update probes expiring in Firefox 95: browser.startup.abouthome_cache_
-* [Bug 1730041](https://bugzilla.mozilla.org/show_bug.cgi?id=1730041) - Remove or update probes expiring in Firefox 95: FX_TAB_CLOSE_
-* [Bug 1619772](https://bugzilla.mozilla.org/show_bug.cgi?id=1619772) - Memory leak after long work
+- [Bug 1730042](https://bugzilla.mozilla.org/show_bug.cgi?id=1730042) - Remove or update probes expiring in Firefox 95: browser.startup.abouthome_cache_
+- [Bug 1730041](https://bugzilla.mozilla.org/show_bug.cgi?id=1730041) - Remove or update probes expiring in Firefox 95: FX_TAB_CLOSE_
+- [Bug 1619772](https://bugzilla.mozilla.org/show_bug.cgi?id=1619772) - Memory leak after long work
   - [Dark matter detector](https://firefox-source-docs.mozilla.org/xpcom/dmd.html)
-* Check what Firefox studies you are taking part of by visiting: [about:studies](about:studies)
-* Question time!
+- Check what Firefox studies you are taking part of by visiting: [about:studies](about:studies)
+- Question time!
   - Picture-in-Picture: Current way to see all available control options is to visit https://support.mozilla.org/en-US/kb/about-picture-picture-firefox#w_keyboard-shortcuts. Would it be possible to add a small button (perhaps only when using PIP for the first time), which could expand to show all available shortcuts or maybe direct user to this page?
     - The general keyboard shortcut problem in Firefox
     - [Shortcut HUD](https://bugzilla.mozilla.org/show_bug.cgi?id=492557)
@@ -33,9 +31,3 @@ number: 263
       - I do write "[These Weeks in Firefox](https://blog.nightly.mozilla.org/)"
     - When it comes to planning (daily, events) - do you use a traditional calendar, a digital calendar or something else?
       - I use a combination of Google Calendar, Rememberthemilk, for work stuff I'll set needinfos on myself in Bugzilla.
-
-* [Rate this episode](https://forms.gle/tQRJeoBX5e4MRCsm9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

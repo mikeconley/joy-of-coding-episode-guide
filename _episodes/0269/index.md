@@ -1,22 +1,20 @@
 ---
 date: 2021-11-10
 number: 269
+airmozilla: https://mzl.la/joy-of-coding-2021-11-10
+agenda: https://mikeconley.ca/joc/agendas/Episode-0269.html
+rating: https://forms.gle/TL5mBP6PN7ktgeaCA
 ---
 
-# Episode 269: Nov 10th, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-11-10)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0269.html)
-
 ## Topics
-* Starting to post to [JoC](https://mikeconley.ca/joc/) instead of :
+
+- Starting to post to [JoC](https://mikeconley.ca/joc/) instead of :
   - Posting to [/r/WatchPeopleCode](https://reddit.com/r/WatchPeopleCode) and crosspost to [/r/firefox](https://reddit.com/r/firefox)
   - Because Reddit has recently expressed that they're going to compute link karma (Reddit karma) using blockchain technology.
-* Congratulations shirshak55 on your first patch for [Bug 1707279](https://bugzilla.mozilla.org/show_bug.cgi?id=1707279)
-* Code review: https://phabricator.services.mozilla.com/D129326
+- Congratulations shirshak55 on your first patch for [Bug 1707279](https://bugzilla.mozilla.org/show_bug.cgi?id=1707279)
+- Code review: https://phabricator.services.mozilla.com/D129326
   - [JSActors documentation](https://firefox-source-docs.mozilla.org/dom/ipc/jsactors.html)
-* Question time! FINALLY answering :
+- Question time! FINALLY answering :
   - WebExtensions and how they interact with [DocShells](https://mikeconley.ca/blog/?s=docshell) / BrowsingContexts
     - [Reading up on DocShells](https://mikeconley.ca/blog/?s=docshell)
     - [A stream](https://mzl.la/joy-of-coding-2021-09-29) where i talked about DocShells and BrowsingContext
@@ -26,9 +24,3 @@ number: 269
   - Are you actively learning to draw on your new graphics tablet?
     - Yes! Following YouTube tutorial on using Krita to do a Bob Ross painting.
   - Next time : How a patch gets into Firefox, from start to finish!
-  
-* [Rate this episode](https://forms.gle/TL5mBP6PN7ktgeaCA)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-

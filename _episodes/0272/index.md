@@ -1,26 +1,18 @@
 ---
 date: 2021-12-01
 number: 272
+airmozilla: https://mzl.la/joy-of-coding-2021-12-01
+agenda: https://mikeconley.ca/joc/agendas/Episode-0272.html
+rating: https://forms.gle/1Dc1G3wit2g4YpSu7
 ---
 
-# Episode 272: Dec 1st, 2021
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2021-12-01)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0272.html)
-
 ## Topics
-* Needinfos:
+
+- Needinfos:
   - [Bug 1575379](https://bugzilla.mozilla.org/show_bug.cgi?id=1575379) - [meta] Make it possible to capture non-warm startup times using frame recording
   - [Bug 1741634](https://bugzilla.mozilla.org/show_bug.cgi?id=1741634) - The search box moves left and right every you type.
   - [Bug 1547349](https://bugzilla.mozilla.org/show_bug.cgi?id=1547349) - PiP Twitter video stops when original video is scrolled out of view
-* Investigating some test failures
+- Investigating some test failures
   - [Bug 1634804](https://bugzilla.mozilla.org/show_bug.cgi?id=1634804) - Intermittent browser/base/content/test/tabcrashed/browser_shownRestartRequired.js | Title element exists. - null == true - JS frame :: chrome://mochitests/content/browser/browser/base/content/test/tabcrashed/browser_shownRestartRequired.js
   - [Bug 1725277](https://bugzilla.mozilla.org/show_bug.cgi?id=1725277) - Intermittent docshell/test/browser/browser_TopLevelNavigationDelegate.js | TopLevelNavigationDelegateParent saw the load attempt. - "undefined" == "http://example.org/2#test" - JS frame :: chrome://mochitests/content/browser/docshell/test/browser/browser
-* Holiday episode on December 15th - going to livestream myself watching Code Rush with periodic commentary.
-
-* [Rate this episode](https://forms.gle/1Dc1G3wit2g4YpSu7)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+- Holiday episode on December 15th - going to livestream myself watching Code Rush with periodic commentary.

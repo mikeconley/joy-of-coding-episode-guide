@@ -1,18 +1,16 @@
 ---
 date: 2023-03-22
 number: 319
+airmozilla: https://mzl.la/joy-of-coding-2023-03-22
+agenda: https://mikeconley.ca/joc/agendas/Episode-0319.html
+rating: https://forms.gle/j8giTgUbTM5NMXgL6
 ---
 
-# Episode 319: Mar 22nd, 2023
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2023-03-22)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0319.html)
-
 ## Topics
-* New Migration Wizard - Sneak peek - by setting browser.migrate.content-modal.enabled to true in about:config. No need to restart. 
+
+- New Migration Wizard - Sneak peek - by setting browser.migrate.content-modal.enabled to true in about:config. No need to restart.
   - [Bug 1529276](https://bugzilla.mozilla.org/show_bug.cgi?id=1529276) - resource:///modules/WindowsJumpLists.jsm still does main thread I/O
-* Still hacking on WindowsJumpLists!
+- Still hacking on WindowsJumpLists!
   - Goal: I want the JumpListManager to only ever be accessed off of the main thread, so that the main thread in the parent process never has to await a lock.
     - [x] Get rid of maxListItems, since it doesn't appear to be used
     - [x] Get rid of isListCommitted
@@ -36,9 +34,4 @@ number: 319
     - [ ] Figure out how to make the above testable. Then write tests.
       - [ ] Let's update WinTaskbar to have a new method that can be accessed from native code (so not through XPCOM), called, like, DoCreateJumpListBuilder or something. Have it take an argument that is a reference to something that implements a JumpListManager interface. Have JumpListBuilder move that thing to the background thread - the background thread owns it. Then, in our tests, have our GTest call DoCreateJumpListBuilder, passing it something that mocks out JumpListManager. And then call it's populateJumpList method for testing.
 
-* Next week, I am travelling and won't be able to stream! Sorry!
-* [Rate this episode](https://forms.gle/j8giTgUbTM5NMXgL6)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
+- Next week, I am travelling and won't be able to stream! Sorry!

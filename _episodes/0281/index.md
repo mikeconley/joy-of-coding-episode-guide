@@ -1,25 +1,23 @@
 ---
 date: 2022-03-02
 number: 281
+airmozilla: https://mzl.la/joy-of-coding-2022-03-02
+agenda: https://mikeconley.ca/joc/agendas/Episode-0281.html
+rating: https://forms.gle/7ShpaeGnymXAfBrh9
 ---
 
-# Episode 281: Mar 2nd, 2022
-
-## Links
-* [Watch this episode on Air Mozilla](https://mzl.la/joy-of-coding-2022-03-02)
-* [Joplin Agenda](https://mikeconley.ca/joc/agendas/Episode-0281.html)
-
 ## Topics
-* Are you Canadian? [Then consider donating to the Ukraine Humanitarian Crisis Appeal](https://donate.redcross.ca/page/100227/donate/1?_ga=2.69967120.1415423639.1645826820-1854297146.1645826820&_gl=1*zqfv37*_ga*MTg1NDI5NzE0Ni4xNjQ1ODI2ODIw*_ga_376D8LHM0R*MTY0NTgyNjgxOS4xLjEuMTY0NTgyNjk1OS4w)
-* [New MDN!](https://hacks.mozilla.org/2022/03/a-new-year-a-new-mdn/)
-* [Bug 1756123](https://bugzilla.mozilla.org/show_bug.cgi?id=1756123) - 4.39 - 0.14% tart / tart (Windows) regression on Fri February 11 2022
+
+- Are you Canadian? [Then consider donating to the Ukraine Humanitarian Crisis Appeal](https://donate.redcross.ca/page/100227/donate/1?_ga=2.69967120.1415423639.1645826820-1854297146.1645826820&_gl=1*zqfv37*_ga*MTg1NDI5NzE0Ni4xNjQ1ODI2ODIw*_ga_376D8LHM0R*MTY0NTgyNjgxOS4xLjEuMTY0NTgyNjk1OS4w)
+- [New MDN!](https://hacks.mozilla.org/2022/03/a-new-year-a-new-mdn/)
+- [Bug 1756123](https://bugzilla.mozilla.org/show_bug.cgi?id=1756123) - 4.39 - 0.14% tart / tart (Windows) regression on Fri February 11 2022
   - Conclusion: WONTFIX
-* [Bug 1550453](https://bugzilla.mozilla.org/show_bug.cgi?id=1550453) - Picture-In-Picture: toggle icon's display place should be customizable
+- [Bug 1550453](https://bugzilla.mozilla.org/show_bug.cgi?id=1550453) - Picture-In-Picture: toggle icon's display place should be customizable
   - Duplicate of [Bug 1680885](https://bugzilla.mozilla.org/show_bug.cgi?id=1680885)
-* [Bug 1756235](https://bugzilla.mozilla.org/show_bug.cgi?id=1756235) - Logspam during crashtest runs: JavaScript error: resource://gre/modules/URLQueryStrippingListService.jsm, line 90: TypeError: can't access property "removeEventListener", Services.cpmm.sharedData is null
+- [Bug 1756235](https://bugzilla.mozilla.org/show_bug.cgi?id=1756235) - Logspam during crashtest runs: JavaScript error: resource://gre/modules/URLQueryStrippingListService.jsm, line 90: TypeError: can't access property "removeEventListener", Services.cpmm.sharedData is null
   - Commented!
 
-* Intermittent failure talk
+- Intermittent failure talk
   - What is an Intermittent Test Failure?
     - (Mike gives his sloppy definition in the video)
   - Mike's guide to dealing with intermittent test failures
@@ -32,9 +30,3 @@ number: 281
         - --start-at / --end-at
         - Or a mixture of the above
   - [Bug 1712012](https://bugzilla.mozilla.org/show_bug.cgi?id=1712012) - Intermittent TEST-UNEXPECTED-TIMEOUT | browser/base/content/test/webrtc/browser_devices_get_user_media_unprompted_access.js | application timed out after 370 seconds with no output
-
-* [Rate this episode](https://forms.gle/7ShpaeGnymXAfBrh9)
-
-## Chat
-* [Join us on Matrix!](https://matrix.to/#/!enWuAmKDOEEPYejXRk:mozilla.org?via=mozilla.org&via=raim.ist)
-
